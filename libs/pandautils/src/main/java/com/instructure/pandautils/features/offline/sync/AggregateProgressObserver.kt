@@ -105,7 +105,7 @@ class AggregateProgressObserver(
                 }
 
                 val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
-                val courseFileSizes = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
+                val courseFileSizes = (courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0) + (courseProgress.additionalFileSyncData?.sumOf { it.fileSize } ?: 0)
                 val courseSize = tabSize + courseFileSizes
 
                 totalSize += courseSize
@@ -122,6 +122,10 @@ class AggregateProgressObserver(
                 }
 
                 fileProgressSum += fileProgress.progress
+                if (fileProgress.externalFile) {
+                    filesSize += fileProgress.totalBytes
+                    totalSize += fileProgress.totalBytes
+                }
             }
 
             val fileProgress = if (fileWorkInfos.isEmpty()) 100 else fileProgressSum / fileWorkInfos.size
@@ -147,8 +151,8 @@ class AggregateProgressObserver(
 
     private val courseProgressObserver = Observer<List<WorkInfo>> {
         val startedCourses = it.filter {
-            it.state.isFinished || it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)
-                ?.fromJson<CourseProgress>()?.fileSyncData != null
+            val courseProgress = it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
+            it.state.isFinished || courseProgress?.fileSyncData != null|| courseProgress?.additionalFileSyncData != null
         }.toSet()
 
         val workerIds = mutableSetOf<UUID>()
@@ -162,9 +166,10 @@ class AggregateProgressObserver(
                 it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>()
             }
 
-            progress?.fileSyncData?.map { UUID.fromString(it.workerId) }?.let {
-                workerIds.addAll(it)
-            }
+            progress?.fileSyncData?.plus(progress.additionalFileSyncData.orEmpty())
+                ?.map { UUID.fromString(it.workerId) }?.let {
+                    workerIds.addAll(it)
+                }
         }
 
         if (workerIds.isNotEmpty()) {

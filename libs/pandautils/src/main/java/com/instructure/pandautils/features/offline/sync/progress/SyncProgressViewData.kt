@@ -21,20 +21,21 @@ package com.instructure.pandautils.features.offline.sync.progress
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.work.WorkInfo
-import com.instructure.pandautils.features.offline.sync.ProgressState
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
-import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FileSyncProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TabProgressItemViewModel
 
 data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
 
 data class CourseProgressViewData(
     val courseName: String,
     val workerId: String,
-    val files: List<FilesTabProgressItemViewModel>,
+    val files: FilesTabProgressItemViewModel?,
+    val additionalFiles: AdditionalFilesProgressItemViewModel,
     @Bindable var tabs: List<TabProgressItemViewModel>? = null,
     @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
     @Bindable var size: String = "",
@@ -109,11 +110,24 @@ data class FileTabProgressViewData(
     }
 }
 
+data class AdditionalFilesProgressViewData(
+    val courseWorkerId: String,
+    @Bindable var totalSize: String = "",
+    @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
+) : BaseObservable() {
+
+    fun updateTotalSize(totalSize: String) {
+        this.totalSize = totalSize
+        notifyPropertyChanged(BR.totalSize)
+    }
+}
+
 enum class ViewType(val viewType: Int) {
     COURSE_PROGRESS(0),
     COURSE_TAB_PROGRESS(1),
     COURSE_FILE_TAB_PROGRESS(2),
-    COURSE_FILE_PROGRESS(3)
+    COURSE_FILE_PROGRESS(3),
+    COURSE_ADDITIONAL_FILES_PROGRESS(4),
 }
 
 data class AggregateProgressViewData(

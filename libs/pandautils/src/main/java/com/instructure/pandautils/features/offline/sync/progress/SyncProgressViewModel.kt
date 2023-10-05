@@ -22,35 +22,26 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.WorkQuery
-import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
 import com.instructure.pandautils.features.offline.sync.AggregateProgressViewData
-import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TAB_PROGRESS_SIZE
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
-import com.instructure.pandautils.utils.fromJson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -100,16 +91,20 @@ class SyncProgressViewModel @Inject constructor(
             workerId = syncProgress.uuid,
             size = context.getString(R.string.syncProgress_syncQueued),
             files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true) {
-                listOf(
                     FilesTabProgressItemViewModel(
                         data = FileTabProgressViewData(courseWorkerId = syncProgress.uuid, items = emptyList()),
                         workManager = workManager,
                         context = context
                     )
-                )
             } else {
-                emptyList()
-            }
+                null
+            },
+            additionalFiles =
+                AdditionalFilesProgressItemViewModel(
+                    data = AdditionalFilesProgressViewData(courseWorkerId = syncProgress.uuid),
+                    workManager = workManager,
+                    context = context
+                )
         )
 
         return CourseProgressItemViewModel(data, workManager, context)

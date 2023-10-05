@@ -50,11 +50,14 @@ data class CourseProgressItemViewModel(
 
     override val viewType: Int = ViewType.COURSE_PROGRESS.viewType
 
+    private var courseTabsAndFilesSize = 0L
+
     private var courseProgressLiveData: LiveData<WorkInfo>? = null
 
     private var aggregateProgressLiveData: LiveData<List<WorkInfo>>? = null
 
     private val aggregateProgressObserver = Observer<List<WorkInfo>> {
+        data.updateSize(NumberHelper.readableFileSize(context, courseTabsAndFilesSize + data.additionalFiles.totalSize))
         when {
             it.all { it.state == WorkInfo.State.SUCCEEDED } -> {
                 data.updateState(WorkInfo.State.SUCCEEDED)
@@ -83,21 +86,21 @@ data class CourseProgressItemViewModel(
             createTabs(courseProgress.tabs, it.id.toString())
         }
 
-        if (courseProgress.fileSyncData == null) return@Observer
+        if (courseProgress.fileSyncData == null && courseProgress.additionalFileSyncData == null) return@Observer
 
-        data.updateSize(
-            NumberHelper.readableFileSize(
-                context,
-                courseProgress.tabs.size * TAB_PROGRESS_SIZE + courseProgress.fileSyncData.sumOf { it.fileSize })
-        )
+        val fileSnycDataSize = courseProgress.fileSyncData?.sumOf { it.fileSize } ?: 0
+        courseTabsAndFilesSize = courseProgress.tabs.size * TAB_PROGRESS_SIZE + fileSnycDataSize
+
+        data.updateSize(NumberHelper.readableFileSize(context, courseTabsAndFilesSize + data.additionalFiles.totalSize))
 
         aggregateProgressLiveData =
-            workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileSyncData.map { UUID.fromString(it.workerId) } + UUID.fromString(
+            workManager.getWorkInfosLiveData(WorkQuery.fromIds(courseProgress.fileSyncData?.map { UUID.fromString(it.workerId) }.orEmpty() +
+                courseProgress.additionalFileSyncData?.map { UUID.fromString(it.workerId) }.orEmpty() + UUID.fromString(
                 data.workerId
             )))
 
+        aggregateProgressLiveData?.removeObserver(aggregateProgressObserver)
         aggregateProgressLiveData?.observeForever(aggregateProgressObserver)
-        clearCourseObserver()
     }
 
     init {
@@ -119,7 +122,7 @@ data class CourseProgressItemViewModel(
         }
 
         data.tabs = tabViewModels
-        items = tabViewModels + data.files
+        items = tabViewModels + listOf(data.files, data.additionalFiles).filterNotNull()
         data.notifyPropertyChanged(BR.tabs)
     }
 
@@ -135,6 +138,7 @@ data class CourseProgressItemViewModel(
         clearCourseObserver()
         clearAggregateObserver()
         data.tabs?.forEach { it.onCleared() }
-        data.files.forEach { it.onCleared() }
+        data.files?.onCleared()
+        data.additionalFiles.onCleared()
     }
 }

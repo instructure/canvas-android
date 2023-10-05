@@ -29,6 +29,7 @@ import androidx.work.workDataOf
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
@@ -52,38 +53,47 @@ class FileSyncWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         val fileId = inputData.getLong(INPUT_FILE_ID, -1)
-        val fileName = "${fileId}_${inputData.getString(INPUT_FILE_NAME) ?: ""}"
+        val inputFileName = inputData.getString(INPUT_FILE_NAME) ?: ""
+        val fileName = when {
+            inputFileName.isNotEmpty() && fileId != -1L -> "${fileId}_$inputFileName"
+            inputFileName.isNotEmpty() -> inputFileName
+            else -> fileId.toString()
+        }
         val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
         val courseId = inputData.getLong(INPUT_COURSE_ID, -1)
 
         var result = Result.failure()
 
-        var downloadedFile = getDownloadFile(fileName)
+        val externalFile = fileId == -1L
 
-        progress = FileSyncProgress(fileName, 0)
+        var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
+
+        progress = FileSyncProgress(fileName, 0, externalFile = externalFile)
         setProgress(workDataOf(PROGRESS to progress.toJson()))
 
-        fileDownloadApi.downloadFile(fileUrl)
+        fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
             .saveFile(downloadedFile)
             .collect {
                 when (it) {
                     is DownloadState.InProgress -> {
-                        progress = FileSyncProgress(fileName, it.progress)
+                        progress = FileSyncProgress(fileName, it.progress, totalBytes = it.totalBytes, externalFile = externalFile)
                         setProgress(workDataOf(PROGRESS to progress.toJson()))
                     }
 
                     is DownloadState.Success -> {
                         if (fileExists) {
-                            downloadedFile = rewriteOriginalFile(downloadedFile, fileName)
+                            downloadedFile = rewriteOriginalFile(downloadedFile, fileName, externalFile, courseId)
                         }
-                        localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
-                        progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED)
+                        if (!externalFile) {
+                            localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
+                        }
+                        progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED, totalBytes = it.totalBytes, externalFile = externalFile)
                         result = Result.success(workDataOf(OUTPUT to progress.toJson()))
                     }
 
                     is DownloadState.Failure -> {
                         downloadedFile.delete()
-                        progress = FileSyncProgress(fileName, 100, ProgressState.ERROR)
+                        progress = FileSyncProgress(fileName, 100, ProgressState.ERROR, externalFile = externalFile)
                         result = Result.failure(workDataOf(OUTPUT to progress.toJson()))
                     }
                 }
@@ -93,11 +103,19 @@ class FileSyncWorker @AssistedInject constructor(
         return result
     }
 
-    private fun getDownloadFile(fileName: String): File {
-        val dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+    private fun getDownloadFile(fileName: String, externalFile: Boolean, courseId: Long): File {
+        var dir = File(context.filesDir, ApiPrefs.user?.id.toString())
         if (!dir.exists()) {
             dir.mkdir()
         }
+
+        if (externalFile) {
+            dir = File(dir, "external_$courseId")
+            if (!dir.exists()) {
+                dir.mkdir()
+            }
+        }
+
         var downloadFile = File(dir, fileName)
         if (downloadFile.exists()) {
             downloadFile = File(dir, "temp_${fileName}")
@@ -106,8 +124,11 @@ class FileSyncWorker @AssistedInject constructor(
         return downloadFile
     }
 
-    private fun rewriteOriginalFile(newFile: File, fileName: String): File {
-        val dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+    private fun rewriteOriginalFile(newFile: File, fileName: String, externalFile: Boolean, courseId: Long): File {
+        var dir = File(context.filesDir, ApiPrefs.user?.id.toString())
+        if (externalFile) {
+            dir = File(dir, "external_$courseId")
+        }
         val originalFile = File(dir, fileName)
         originalFile.delete()
         newFile.renameTo(originalFile)

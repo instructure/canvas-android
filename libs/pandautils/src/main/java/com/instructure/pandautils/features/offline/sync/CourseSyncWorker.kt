@@ -19,11 +19,13 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
+import android.net.Uri
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
@@ -70,12 +72,17 @@ class CourseSyncWorker @AssistedInject constructor(
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
     private val syncSettingsFacade: SyncSettingsFacade,
-    private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface
+    private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
+    private val htmlParser: HtmlParser,
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseProgress
 
     private var fileOperation: Operation? = null
+
+    private val additionalFileIdsToSync = mutableSetOf<Long>()
+    private val externalFilesToSync = mutableSetOf<String>()
 
     override suspend fun doWork(): Result {
         val courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
@@ -90,7 +97,7 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchFiles(courseId)
         }
 
-        syncFiles(courseSettings)
+        val workContinuation = syncFiles(courseSettings)
 
         if (courseSettings.isTabSelected(Tab.PAGES_ID)) {
             fetchPages(courseId)
@@ -144,6 +151,8 @@ class CourseSyncWorker @AssistedInject constructor(
             quizDao.deleteAllByCourseId(courseId)
         }
 
+        syncAdditionalFiles(courseSettings, workContinuation)
+
         return Result.success(workDataOf(OUTPUT to progress.toJson()))
     }
 
@@ -166,7 +175,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
     private suspend fun fetchCalendarEvents(courseId: Long): List<ScheduleItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        return calendarEventApi.getCalendarEvents(
+        val calendarEvents = calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.CALENDAR.apiName,
             null,
@@ -176,11 +185,15 @@ class CourseSyncWorker @AssistedInject constructor(
         ).depaginate {
             calendarEventApi.next(it, restParams)
         }.dataOrThrow
+
+        calendarEvents.forEach { it.description = parseHtmlContent(it.description, courseId) }
+
+        return calendarEvents
     }
 
     private suspend fun fetchCalendarAssignments(courseId: Long): List<ScheduleItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-        return calendarEventApi.getCalendarEvents(
+        val calendarAssignments = calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
             null,
@@ -190,6 +203,10 @@ class CourseSyncWorker @AssistedInject constructor(
         ).depaginate {
             calendarEventApi.next(it, restParams)
         }.dataOrThrow
+
+        calendarAssignments.forEach { it.description = parseHtmlContent(it.description, courseId) }
+
+        return calendarAssignments
     }
 
     private suspend fun fetchPages(courseId: Long) {
@@ -199,6 +216,10 @@ class CourseSyncWorker @AssistedInject constructor(
                 .depaginate { nextUrl ->
                     pageApi.getNextPagePagesList(nextUrl, params)
                 }.dataOrThrow
+
+            pages.forEach {
+                it.body = parseHtmlContent(it.body, courseId)
+            }
 
             pageFacade.insertPages(pages, courseId)
 
@@ -215,6 +236,13 @@ class CourseSyncWorker @AssistedInject constructor(
                 .depaginate { nextUrl ->
                     assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, restParams)
                 }.dataOrThrow
+
+            assignmentGroups.forEach { group ->
+                group.assignments.forEach {
+                    it.description = parseHtmlContent(it.description, courseId)
+                    it.discussionTopicHeader?.message = parseHtmlContent(it.discussionTopicHeader?.message, courseId)
+                }
+            }
 
             fetchQuizzes(assignmentGroups, courseId)
 
@@ -234,6 +262,8 @@ class CourseSyncWorker @AssistedInject constructor(
         val enrollments = course.enrollments.orEmpty().flatMap {
             enrollmentsApi.getEnrollmentsForUserInCourse(courseId, it.userId, params).dataOrThrow
         }.toMutableList()
+
+        course.syllabusBody = parseHtmlContent(course.syllabusBody, courseId)
 
         courseFacade.insertCourse(course.copy(enrollments = enrollments))
 
@@ -266,6 +296,7 @@ class CourseSyncWorker @AssistedInject constructor(
             group.assignments.forEach { assignment ->
                 if (assignment.quizId != 0L) {
                     val quiz = quizApi.getQuiz(assignment.courseId, assignment.quizId, params).dataOrNull
+                    quiz?.description = parseHtmlContent(quiz?.description, courseId)
                     quiz?.let { quizzes.add(QuizEntity(it, assignment.courseId)) }
                 }
             }
@@ -279,6 +310,10 @@ class CourseSyncWorker @AssistedInject constructor(
             val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
                 quizApi.getNextPageQuizzesList(nextUrl, params)
             }.dataOrThrow
+
+            quizzes.forEach {
+                it.description = parseHtmlContent(it.description, courseId)
+            }
 
             quizDao.deleteAndInsertAll(quizzes.map { QuizEntity(it, courseId) }, courseId)
 
@@ -318,6 +353,10 @@ class CourseSyncWorker @AssistedInject constructor(
             val discussions = discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
                 .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrThrow
 
+            discussions.forEach {
+                it.message = parseHtmlContent(it.message, courseId)
+            }
+
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
 
             updateTabSuccess(Tab.DISCUSSIONS_ID)
@@ -331,6 +370,10 @@ class CourseSyncWorker @AssistedInject constructor(
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val announcements = announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
                 .depaginate { nextPage -> announcementApi.getNextPageAnnouncementsList(nextPage, params) }.dataOrThrow
+
+            announcements.forEach {
+                it.message = parseHtmlContent(it.message, courseId)
+            }
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
 
@@ -367,7 +410,14 @@ class CourseSyncWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity) {
+    private suspend fun parseHtmlContent(htmlContent: String?, courseId: Long): String? {
+        val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(htmlContent, courseId)
+        additionalFileIdsToSync.addAll(htmlParsingResult.internalFileIds)
+        externalFilesToSync.addAll(htmlParsingResult.externalFileUrls)
+        return htmlParsingResult.htmlWithLocalFileLinks
+    }
+
+    private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity): WorkContinuation? {
         val courseId = syncSettings.courseId
         val allFiles = getAllFiles(courseId)
         val allFileIds = allFiles.map { it.id }
@@ -394,7 +444,7 @@ class CourseSyncWorker @AssistedInject constructor(
         if (chunkedWorkers.isEmpty()) {
             progress = progress.copy(fileSyncData = emptyList())
             updateProgress()
-            return
+            return null
         }
 
         var continuation = workManager
@@ -408,13 +458,90 @@ class CourseSyncWorker @AssistedInject constructor(
 
         progress = progress.copy(fileSyncData = fileSyncData)
         updateProgress()
+
+        return continuation
+    }
+
+    private suspend fun syncAdditionalFiles(
+        syncSettings: CourseSyncSettingsEntity,
+        workContinuation: WorkContinuation?
+    ) {
+        val courseId = syncSettings.courseId
+
+        val fileSyncData = mutableListOf<FileSyncData>()
+        val fileWorkers = mutableListOf<OneTimeWorkRequest>()
+        val additionalPublicFilesToSync = fileFolderDao.findByIds(additionalFileIdsToSync)
+
+        additionalPublicFilesToSync.forEach {
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
+                    courseId,
+                    it.id,
+                    it.displayName.orEmpty(),
+                    it.url.orEmpty(),
+                    syncSettingsFacade.getSyncSettings().wifiOnly
+                )
+                fileWorkers.add(worker)
+                fileSyncData.add(FileSyncData(worker.id.toString(), it.displayName.orEmpty(), it.size))
+            }
+
+        val nonPublicFileIds = additionalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
+        nonPublicFileIds.forEach {
+            val file = fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
+            if (file != null) {
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
+                    courseId,
+                    file.id,
+                    file.displayName.orEmpty(),
+                    file.url.orEmpty(),
+                    syncSettingsFacade.getSyncSettings().wifiOnly
+                )
+                fileWorkers.add(worker)
+                fileSyncData.add(FileSyncData(worker.id.toString(), file.displayName.orEmpty(), file.size))
+            }
+        }
+
+        externalFilesToSync.forEach {
+            val fileName = Uri.parse(it).lastPathSegment
+            if (fileName != null) {
+                val worker = FileSyncWorker.createOneTimeWorkRequest(
+                    courseId,
+                    -1,
+                    fileName,
+                    it,
+                    syncSettingsFacade.getSyncSettings().wifiOnly
+                )
+                fileWorkers.add(worker)
+                fileSyncData.add(FileSyncData(worker.id.toString(), fileName, 0))
+            }
+        }
+
+        if (fileWorkers.isEmpty()) return
+
+        val chunkedWorkers = fileWorkers.chunked(6)
+
+        if (chunkedWorkers.isEmpty()) {
+            progress = progress.copy(additionalFileSyncData = emptyList())
+            updateProgress()
+            return
+        }
+
+        var continuation = if (workContinuation != null) workContinuation.then(chunkedWorkers.first()) else workManager.beginWith(chunkedWorkers.first())
+
+        chunkedWorkers.drop(1).forEach {
+            continuation = continuation.then(it)
+        }
+
+        continuation.enqueue()
+
+        progress = progress.copy(additionalFileSyncData = fileSyncData)
+        updateProgress()
     }
 
     private suspend fun fetchFiles(courseId: Long) {
         val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
 
         val entities = fileFolders.map { FileFolderEntity(it) }
-        fileFolderDao.replaceAll(entities)
+        fileFolderDao.replaceAll(entities, courseId)
     }
 
     private suspend fun cleanupSyncedFiles(courseId: Long, remoteIds: List<Long>) {
@@ -425,6 +552,11 @@ class CourseSyncWorker @AssistedInject constructor(
         (localRemovedFiles + remoteRemovedFiles).forEach {
             File(it.path).delete()
             localFileDao.delete(it)
+        }
+
+        val file = File(context.filesDir, "${ApiPrefs.user?.id.toString()}/external_$courseId")
+        file.listFiles()?.forEach {
+            it.delete()
         }
 
         fileSyncSettingsDao.deleteAllExcept(courseId, remoteIds)

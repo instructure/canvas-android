@@ -1460,4 +1460,5 @@
         <item quantity="one">%d item is syncing.</item>
         <item quantity="other">%d items are syncing.</item>
     </plurals>
+    <string name="syncProgressAdditionalFiles">Course content images</string>
 </resources>

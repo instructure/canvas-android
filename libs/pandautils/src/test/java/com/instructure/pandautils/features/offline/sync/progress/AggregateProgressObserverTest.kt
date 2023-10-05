@@ -252,6 +252,129 @@ class AggregateProgressObserverTest {
     }
 
     @Test
+    fun `Update total size and progress with additional files`() {
+        val course1Id = UUID.randomUUID()
+
+        val file1Id = UUID.randomUUID()
+        val file2Id = UUID.randomUUID()
+        val file3Id = UUID.randomUUID()
+
+        val syncProgress = listOf(SyncProgressEntity(course1Id.toString(), 1L, "Course 1"))
+
+        coEvery { syncProgressDao.findCourseProgressesLiveData() } returns MutableLiveData(syncProgress)
+
+        var course1Progress = CourseProgress(
+            1L,
+            "Course 1",
+            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
+            fileSyncData = listOf(
+                FileSyncData(file1Id.toString(), "File 1", 1000)),
+            additionalFileSyncData = listOf(
+                FileSyncData(file2Id.toString(), "Additional internal file", 2000),
+                FileSyncData(file3Id.toString(), "Additional external file", 0)
+            )
+        )
+
+        var course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, WorkInfo.State.RUNNING)
+
+        val courseLiveData = MutableLiveData(listOf(course1WorkInfo))
+
+        var file1Progress = FileSyncProgress("File 1", 0, ProgressState.IN_PROGRESS)
+        var file1WorkInfo = createFileWorkInfo(file1Progress, file1Id, WorkInfo.State.RUNNING)
+
+        var file2Progress = FileSyncProgress("Additional internal file", 0, ProgressState.IN_PROGRESS)
+        var file2WorkInfo = createFileWorkInfo(file2Progress, file2Id, WorkInfo.State.RUNNING)
+
+        var file3Progress = FileSyncProgress("Additional external file", 0, ProgressState.IN_PROGRESS, totalBytes = 0, externalFile = true)
+        var file3WorkInfo = createFileWorkInfo(file3Progress, file3Id, WorkInfo.State.RUNNING)
+
+        val aggregateWorkInfo = listOf(
+            course1WorkInfo,
+            file1WorkInfo,
+            file2WorkInfo,
+            file3WorkInfo
+        )
+
+        val aggregateLiveData = MutableLiveData(aggregateWorkInfo)
+
+        val queryCaptor = slot<WorkQuery>()
+        every { workManager.getWorkInfosLiveData(capture(queryCaptor)) } answers {
+            if (queryCaptor.captured.ids.size == 1) {
+                courseLiveData
+            } else {
+                aggregateLiveData
+            }
+        }
+
+        aggregateProgressObserver = createObserver()
+
+        assertEquals(0, aggregateProgressObserver.progressData.value?.progress)
+        assertEquals(
+            "${1000000 + 1000 + 2000} bytes",
+            aggregateProgressObserver.progressData.value?.totalSize
+        )
+
+        file1Progress = file1Progress.copy(
+            progress = 100,
+            progressState = ProgressState.COMPLETED
+        )
+        file1WorkInfo = createFileWorkInfo(file1Progress, file1Id, WorkInfo.State.SUCCEEDED)
+        course1Progress = course1Progress.copy(
+            tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) },
+        )
+        course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, WorkInfo.State.RUNNING)
+
+        courseLiveData.postValue(listOf(course1WorkInfo))
+        aggregateLiveData.postValue(
+            listOf(
+                course1WorkInfo,
+                file1WorkInfo,
+                file2WorkInfo,
+                file3WorkInfo
+            )
+        )
+
+        // Course tabs and files are completed, but additional files are still in progress
+        assertEquals(99, aggregateProgressObserver.progressData.value?.progress)
+
+        file2Progress = file2Progress.copy(progress = 100, progressState = ProgressState.COMPLETED)
+        file2WorkInfo = createFileWorkInfo(file2Progress, file2Id, WorkInfo.State.SUCCEEDED)
+
+        file3Progress = FileSyncProgress("Additional external file", 0, ProgressState.IN_PROGRESS, totalBytes = 3000, externalFile = true)
+        file3WorkInfo = createFileWorkInfo(file3Progress, file3Id, WorkInfo.State.RUNNING)
+
+        aggregateLiveData.postValue(
+            listOf(
+                course1WorkInfo,
+                file1WorkInfo,
+                file2WorkInfo,
+                file3WorkInfo
+            )
+        )
+
+        // Total size is updated with the external file
+        assertEquals("${1000000 + 1000 + 2000 + 3000} bytes", aggregateProgressObserver.progressData.value?.totalSize)
+
+        file3Progress = FileSyncProgress("Additional external file", 100, ProgressState.COMPLETED, totalBytes = 3000, externalFile = true)
+        file3WorkInfo = createFileWorkInfo(file3Progress, file3Id, WorkInfo.State.SUCCEEDED)
+
+        course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, WorkInfo.State.SUCCEEDED)
+
+        aggregateLiveData.postValue(
+            listOf(
+                course1WorkInfo,
+                file1WorkInfo,
+                file2WorkInfo,
+                file3WorkInfo
+            )
+        )
+
+        // External files are downloaded, progress should be 100%
+        assertEquals(100, aggregateProgressObserver.progressData.value?.progress)
+        assertEquals(ProgressState.COMPLETED, aggregateProgressObserver.progressData.value?.progressState)
+    }
+
+    @Test
     fun `Error state`() {
         val course1UUID = UUID.randomUUID().toString()
         val syncProgress = SyncProgressEntity(course1UUID, 1L, "Course 1")

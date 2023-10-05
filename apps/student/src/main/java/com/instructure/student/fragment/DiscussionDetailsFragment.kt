@@ -375,7 +375,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         webView.setBackgroundColor(requireContext().getColor(backgroundColorRes))
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
-        webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
