@@ -900,6 +900,7 @@ class AssignmentsE2ETest: StudentTest() {
         courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "D")
         courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "C")
         courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
+        if(isLowResDevice()) courseGradesPage.swipeUp()
         courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "F")
 
         Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
@@ -907,7 +908,8 @@ class AssignmentsE2ETest: StudentTest() {
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
         Log.d(STEP_TAG, "Refresh the Course Grade Page.")
-        courseGradesPage.refresh()
+        courseGradesPage.refresh() //First go to the top of the recycler view
+        courseGradesPage.refresh() //Actual refresh
 
         Log.d(STEP_TAG, "Assert that the Total Grade is 49.47% and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
         courseGradesPage.assertTotalGrade(ViewMatchers.withText("49.47%"))
@@ -915,6 +917,7 @@ class AssignmentsE2ETest: StudentTest() {
         courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "66.67%")
         courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "11.4/15 (C)")
         courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
+        courseGradesPage.swipeUp()
         courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "3.7/15 (F)")
     }
 

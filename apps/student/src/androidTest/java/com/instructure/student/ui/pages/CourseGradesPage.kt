@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import android.os.SystemClock.sleep
 import android.view.View
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions
@@ -45,7 +46,6 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -93,6 +93,12 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.courseGradesPage), isDisplayed()))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
+        sleep(1000) // Allow some time to react to the update.
+    }
+
+    fun swipeUp() {
+        onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.courseGradesPage), isDisplayed()))
+            .perform(withCustomConstraints(ViewActions.swipeUp(), isDisplayingAtLeast(5)))
         sleep(1000) // Allow some time to react to the update.
     }
 

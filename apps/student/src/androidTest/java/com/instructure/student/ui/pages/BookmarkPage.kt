@@ -79,6 +79,6 @@ class BookmarkPage : BasePage() {
     fun deleteBookmark(bookmarkName: String) {
         clickOnMoreMenu(bookmarkName)
         onView(allOf(withId(R.id.title), withText("Delete"), isDisplayed())).click()
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        onView(withText(android.R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 }
