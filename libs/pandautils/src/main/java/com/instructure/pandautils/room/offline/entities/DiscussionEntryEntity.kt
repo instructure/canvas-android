@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionParticipant
 
 @Entity
 data class DiscussionEntryEntity(
@@ -39,9 +40,10 @@ data class DiscussionEntryEntity(
     val ratingCount: Int,
     var ratingSum: Int,
     val editorId: Long,
-    var _hasRated: Boolean
+    var _hasRated: Boolean,
+    var replyIds: List<Long>?,
 ) {
-    constructor(discussionEntry: DiscussionEntry): this(
+    constructor(discussionEntry: DiscussionEntry, replyIds: List<Long>): this(
         discussionEntry.id,
         discussionEntry.unread,
         discussionEntry.updatedAt,
@@ -57,16 +59,17 @@ data class DiscussionEntryEntity(
         discussionEntry.ratingCount,
         discussionEntry.ratingSum,
         discussionEntry.editorId,
-        discussionEntry._hasRated
+        discussionEntry._hasRated,
+        replyIds,
     )
 
-    fun toApiModel(): DiscussionEntry {
+    fun toApiModel(author: DiscussionParticipant? = null, replyDiscussionEntries: MutableList<DiscussionEntry>? = null): DiscussionEntry {
         return DiscussionEntry(
             id = id,
             unread = unread,
             updatedAt = updatedAt,
             createdAt = createdAt,
-            author = null,
+            author = author,
             description = description,
             userId = userId,
             parentId = parentId,
@@ -77,7 +80,8 @@ data class DiscussionEntryEntity(
             ratingCount = ratingCount,
             ratingSum = ratingSum,
             editorId = editorId,
-            _hasRated = _hasRated
+            _hasRated = _hasRated,
+            replies = replyDiscussionEntries,
         )
     }
 }

@@ -30,12 +30,12 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
         return successfullyMarkedAsReadIds
     }
 
-    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long) {
-        networkDataSource.deleteDiscussionEntry(canvasContext, discussionTopicHeaderId, entryId).dataOrThrow
+    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): Void? {
+        return networkDataSource.deleteDiscussionEntry(canvasContext, discussionTopicHeaderId, entryId).dataOrNull
     }
 
-    suspend fun rateDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryId: Long, rating: Int) {
-        networkDataSource.rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating).dataOrThrow
+    suspend fun rateDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryId: Long, rating: Int): Void? {
+        return networkDataSource.rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating).dataOrNull
     }
 
     suspend fun getAuthenticatedSession(url: String): AuthenticatedSession? {
@@ -51,7 +51,7 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
     }
 
     suspend fun getAllGroups(userId: Long, forceNetwork: Boolean): List<Group> {
-        return dataSource().getFirstPageGroups(userId, forceNetwork).depaginate { nextUrl -> dataSource().getNextPageGroups(nextUrl, forceNetwork) }.dataOrThrow
+        return dataSource().getFirstPageGroups(userId, forceNetwork).depaginate { nextUrl -> dataSource().getNextPageGroups(nextUrl, forceNetwork) }.dataOrNull.orEmpty()
     }
 
     suspend fun getFullDiscussionTopic(canvasContext: CanvasContext, topicId: Long, forceNetwork: Boolean): DiscussionTopic {

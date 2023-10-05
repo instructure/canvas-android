@@ -17,9 +17,18 @@ class DiscussionTopicFacade(
 
 ) {
     suspend fun insertDiscussionTopic(topicId: Long, discussionTopic: DiscussionTopic) {
-        val participantIds = discussionParticipantDao.insertAll(discussionTopic.participants?.map { DiscussionParticipantEntity(it) }.orEmpty())
-        val discussionEntryIds = discussionEntryDao.insertAll(discussionTopic.views.map { DiscussionEntryEntity(it) })
-        discussionTopicDao.insert(DiscussionTopicEntity(discussionTopic, participantIds, discussionEntryIds, topicId))
+        val participantIds = discussionParticipantDao.upsertAll(discussionTopic.participants?.map { DiscussionParticipantEntity(it) }.orEmpty())
+        val discussionEntryIds = insertDiscussionEntries(discussionTopic.views)
+        discussionTopicDao.insert(DiscussionTopicEntity(discussionTopic, discussionTopic.participants?.map{ it.id }, discussionEntryIds, topicId))
+    }
+
+    private suspend fun insertDiscussionEntries(entries: List<DiscussionEntry>): List<Long> {
+        val authorIds = discussionParticipantDao.upsertAll(entries.mapNotNull { it.author?.let { DiscussionParticipantEntity(it) } })
+        val replyIds = mutableListOf<List<Long>>()
+        entries.forEach { entry ->
+            entry.replies?.let { replyIds.add(insertDiscussionEntries(it)) }
+        }
+        return discussionEntryDao.insertAll(entries.mapIndexed { index, discussionEntry -> DiscussionEntryEntity(discussionEntry, replyIds[index]) })
     }
 
     suspend fun getDiscussionTopic(topicId: Long): DiscussionTopic? {
@@ -33,10 +42,19 @@ class DiscussionTopicFacade(
 
         val views = mutableListOf<DiscussionEntry>()
         topicEntity?.viewIds?.forEach {
-            val view = discussionEntryDao.findById(it)
-            view?.let { views.add(it.toApiModel()) }
+            val entry = getDiscussionEntries(it)
+            entry?.let { views.add(it) }
         }
 
         return topicEntity?.toApiModel(participants, views)
+    }
+
+    private suspend fun getDiscussionEntries(discussionEntryId: Long): DiscussionEntry? {
+        val view = discussionEntryDao.findById(discussionEntryId)
+        val author = view?.authorId?.let { discussionParticipantDao.findById(it) }
+        val replies = view?.replyIds?.mapNotNull { replyId ->
+            getDiscussionEntries(replyId)
+        }
+        return view?.toApiModel(author = author?.toApiModel(), replyDiscussionEntries = replies?.toMutableList())
     }
 }

@@ -23,8 +23,9 @@ import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.DiscussionTopicPermission
 import com.instructure.pandautils.utils.orDefault
-import java.util.*
+import java.util.Date
 
 @Entity(
     foreignKeys = [
@@ -67,6 +68,7 @@ data class DiscussionTopicHeaderEntity(
     var podcastUrl: String?,
     var groupCategoryId: String?,
     var announcement: Boolean,
+    var permissionId: Long?,
     //TODO var groupTopicChildren: List<GroupTopicChild>,
     // TODO var lockInfo: LockInfo?,
     var published: Boolean,
@@ -79,7 +81,7 @@ data class DiscussionTopicHeaderEntity(
     var specificSections: String?,
     var anonymousState: String?
 ) {
-    constructor(discussionTopicHeader: DiscussionTopicHeader, courseId: Long) : this(
+    constructor(discussionTopicHeader: DiscussionTopicHeader, courseId: Long, permissionId: Long?) : this(
         discussionTopicHeader.id,
         courseId,
         discussionTopicHeader.discussionType,
@@ -103,6 +105,7 @@ data class DiscussionTopicHeaderEntity(
         discussionTopicHeader.podcastUrl,
         discussionTopicHeader.groupCategoryId,
         discussionTopicHeader.announcement,
+        permissionId,
         discussionTopicHeader.published,
         discussionTopicHeader.allowRating,
         discussionTopicHeader.onlyGradersCanRate,
@@ -116,7 +119,8 @@ data class DiscussionTopicHeaderEntity(
 
     fun toApiModel(
         author: DiscussionParticipant? = null,
-        assignment: Assignment? = null
+        assignment: Assignment? = null,
+        permissions: DiscussionTopicPermission? = null
     ) = DiscussionTopicHeader(
         id = id,
         discussionType = discussionType,
@@ -140,12 +144,11 @@ data class DiscussionTopicHeaderEntity(
         podcastUrl = podcastUrl,
         groupCategoryId = groupCategoryId,
         announcement = announcement,
-        //TODO
         groupTopicChildren = emptyList(),
         //TODO
         attachments = mutableListOf(),
         //TODO
-        permissions = null,
+        permissions = permissions,
         assignment = assignment,
         //TODO
         lockInfo = null,

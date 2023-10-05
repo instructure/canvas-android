@@ -20,7 +20,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,7 +68,9 @@ import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -193,25 +194,37 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Discussion Actions
 
     private fun viewAttachments(remoteFiles: List<RemoteFile>) {
-        // Only one file can be attached to a discussion
-        val remoteFile = remoteFiles.firstOrNull() ?: return
+        if (repository.isOnline()) {
+            // Only one file can be attached to a discussion
+            val remoteFile = remoteFiles.firstOrNull() ?: return
 
-        // Show lock message if file is locked
-        if (remoteFile.lockedForUser) {
-            if (remoteFile.lockExplanation.isValid()) {
-                Snackbar.make(requireView(), remoteFile.lockExplanation!!, Snackbar.LENGTH_SHORT).show()
-            } else {
-                Snackbar.make(requireView(), R.string.fileCurrentlyLocked, Snackbar.LENGTH_SHORT).show()
+            // Show lock message if file is locked
+            if (remoteFile.lockedForUser) {
+                if (remoteFile.lockExplanation.isValid()) {
+                    Snackbar.make(
+                        requireView(),
+                        remoteFile.lockExplanation!!,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Snackbar.make(
+                        requireView(),
+                        R.string.fileCurrentlyLocked,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
             }
-        }
 
-        // Show attachment
-        val attachment = remoteFile.mapToAttachment()
-        openMedia(attachment.contentType, attachment.url, attachment.filename, canvasContext)
+            // Show attachment
+            val attachment = remoteFile.mapToAttachment()
+            openMedia(attachment.contentType, attachment.url, attachment.filename, canvasContext)
+        } else {
+            NoInternetConnectionDialog.show(requireFragmentManager())
+        }
     }
 
     private fun showReplyView(discussionEntryId: Long) {
-        if (APIHelper.hasNetworkConnection()) {
+        if (repository.isOnline()) {
             scrollPosition = binding.discussionsScrollView.scrollY
             val route = DiscussionsReplyFragment.makeRoute(
                 canvasContext,
@@ -252,7 +265,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun askToDeleteDiscussionEntry(discussionEntryId: Long) {
-        if (APIHelper.hasNetworkConnection()) {
+        if (repository.isOnline()) {
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.utils_discussionsDeleteWarning)
             builder.setPositiveButton(android.R.string.yes) { _, _ ->
@@ -277,7 +290,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun deleteDiscussionEntry(entryId: Long) {
-        if (APIHelper.hasNetworkConnection()) {
+        if (repository.isOnline()) {
             lifecycleScope.tryLaunch {
                 repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
 
@@ -296,7 +309,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun showUpdateReplyView(discussionEntryId: Long) {
-        if (APIHelper.hasNetworkConnection()) {
+        if (repository.isOnline()) {
             discussionTopic?.let {
                 val route = DiscussionsUpdateFragment.makeRoute(
                     canvasContext,
@@ -313,22 +326,29 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Liking
 
     private fun likeDiscussionPressed(discussionEntryId: Long) {
-        if (APIHelper.hasNetworkConnection()) {
+        if (repository.isOnline()) {
             discussionTopic?.let { discussionTopic ->
                 DiscussionUtils.findEntry(discussionEntryId, discussionTopic.views)?.let { entry ->
                     val rating = if (discussionTopic.entryRatings.containsKey(discussionEntryId)) discussionTopic.entryRatings[discussionEntryId] else 0
                     val newRating = if (rating == 1) 0 else 1
+
                     lifecycleScope.tryLaunch {
                         repository.rateDiscussionEntry(canvasContext, discussionTopicHeader.id, discussionEntryId, newRating)
+
+                        discussionTopic.entryRatings[discussionEntryId] = newRating
 
                         if (newRating == 1) {
                             entry.ratingSum += 1
                             entry._hasRated = true
-                            updateDiscussionLiked(entry)
+                            withContext(Dispatchers.Main) {
+                                updateDiscussionLiked(entry)
+                            }
                         } else if (entry.ratingSum > 0) {
                             entry.ratingSum -= 1
                             entry._hasRated = false
-                            updateDiscussionUnliked(entry)
+                            withContext(Dispatchers.Main) {
+                                updateDiscussionUnliked(entry)
+                            }
                         }
                     } catch {
                         // Maybe a permissions issue?
@@ -560,13 +580,13 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             } else {
                 // If there is no discussion (ID not set), then we need to load one
                 if (discussionTopicHeader.id == 0L) {
-                    discussionTopicHeader =  repository.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, true)
+                    discussionTopicHeader = repository.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, true)
                 }
 
                 // If we had an offline discussion on the list it might need some additional fields so we need to fetch the whole discussion.
                 // We might not need this if we implement offline mode on the discussion details screen.
                 if (discussionTopicHeader.offline) {
-                    discussionTopicHeader =  repository.getDetailedDiscussion(canvasContext, discussionTopicHeader.id, true)
+                    discussionTopicHeader = repository.getDetailedDiscussion(canvasContext, discussionTopicHeader.id, true)
                 }
             }
 
@@ -713,7 +733,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         }
 
         val displayName = discussionTopicHeader.author?.displayName
-        Log.d("DiscussionDetails", "displayName: $displayName")
         ProfileUtils.loadAvatarForUser(authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
         authorName.text = Pronouns.span(displayName, discussionTopicHeader.author?.pronouns)
@@ -754,7 +773,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)
-        postBeforeViewingRepliesTextView.setGone()
+        if (repository.isOnline()){ postBeforeViewingRepliesTextView.setGone() }
     }
     //endregion Loading
 

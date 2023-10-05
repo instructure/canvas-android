@@ -18,24 +18,32 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.DiscussionTopicPermission
 
-@Entity(
-    foreignKeys = [
-        ForeignKey(
-            entity = DiscussionTopicHeaderEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["discussionTopicId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
-)
+@Entity
 data class DiscussionTopicPermissionEntity(
-    @PrimaryKey
-    val discussionTopicId: Long,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
     val attach: Boolean,
     val update: Boolean,
     val delete: Boolean,
     val reply: Boolean
-)
+) {
+    constructor(permission: DiscussionTopicPermission) : this(
+        0,
+        permission.attach,
+        permission.update,
+        permission.delete,
+        permission.reply
+    )
+
+    fun toApiModel(): DiscussionTopicPermission {
+        return DiscussionTopicPermission(
+            attach,
+            update,
+            delete,
+            reply
+        )
+    }
+}

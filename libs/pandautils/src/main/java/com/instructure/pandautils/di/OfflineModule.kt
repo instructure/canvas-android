@@ -235,6 +235,11 @@ class OfflineModule {
     }
 
     @Provides
+    fun provideDiscussionTopicPermissionDao(offlineDatabase: OfflineDatabase): DiscussionTopicPermissionDao {
+        return offlineDatabase.discussionTopicPermissionDao()
+    }
+
+    @Provides
     fun provideAssignmentFacade(
         assignmentGroupDao: AssignmentGroupDao,
         assignmentDao: AssignmentDao,
@@ -284,9 +289,10 @@ class OfflineModule {
     @Provides
     fun provideDiscussionTopicHeaderFacade(
         discussionTopicHeaderDao: DiscussionTopicHeaderDao,
-        discussionParticipantDao: DiscussionParticipantDao
+        discussionParticipantDao: DiscussionParticipantDao,
+        discussionTopicPermissionDao: DiscussionTopicPermissionDao
     ): DiscussionTopicHeaderFacade {
-        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao)
+        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao)
     }
 
     @Provides

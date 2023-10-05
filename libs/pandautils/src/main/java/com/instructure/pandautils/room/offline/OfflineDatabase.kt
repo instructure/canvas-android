@@ -47,6 +47,7 @@ import com.instructure.pandautils.room.offline.daos.DiscussionEntryDao
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
 import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
@@ -333,4 +334,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun discussionTopicDao(): DiscussionTopicDao
 
     abstract fun groupUserDao(): GroupUserDao
+
+    abstract fun discussionTopicPermissionDao(): DiscussionTopicPermissionDao
 }
