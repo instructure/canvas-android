@@ -23,6 +23,7 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
@@ -31,29 +32,35 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusView
-import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
+import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 
-class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup) :
-    MobiusView<ConferenceListViewState, ConferenceListEvent, FragmentConferenceListBinding>(
-        inflater,
-        FragmentConferenceListBinding::inflate,
-        parent) {
+class ConferenceListView(
+    val canvasContext: CanvasContext,
+    inflater: LayoutInflater,
+    parent: ViewGroup
+) : MobiusView<ConferenceListViewState, ConferenceListEvent, FragmentConferenceListBinding>(
+    inflater,
+    FragmentConferenceListBinding::inflate,
+    parent
+) {
 
-    lateinit var listAdapter: ConferenceListAdapter
+    private lateinit var listAdapter: ConferenceListAdapter
 
     init {
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         binding.toolbar.subtitle = canvasContext.name
 
         // Set up menu
-        with(binding.toolbar.menu.add(0, R.id.openExternallyButton, 0, R.string.openInBrowser)){
+        with(binding.toolbar.menu.add(0, R.id.openExternallyButton, 0, R.string.openInBrowser)) {
             setIcon(R.drawable.ic_open_in_browser)
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener {
-                consumer?.accept(ConferenceListEvent.LaunchInBrowser)
+                (context as? FragmentActivity)?.withRequireNetwork {
+                    consumer?.accept(ConferenceListEvent.LaunchInBrowser)
+                }
                 true
             }
         }
@@ -65,21 +72,13 @@ class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInfla
 
     override fun onConnect(output: Consumer<ConferenceListEvent>) {
         binding.swipeRefreshLayout.setOnRefreshListener { output.accept(ConferenceListEvent.PullToRefresh) }
-        listAdapter =
-            ConferenceListAdapter(
-                object :
-                    ConferenceListAdapterCallback {
-                    override fun onConferenceClicked(conferenceId: Long) {
-                        output.accept(
-                            ConferenceListEvent.ConferenceClicked(
-                                conferenceId
-                            )
-                        )
-                    }
+        listAdapter = ConferenceListAdapter(object : ConferenceListAdapterCallback {
+            override fun onConferenceClicked(conferenceId: Long) {
+                output.accept(ConferenceListEvent.ConferenceClicked(conferenceId))
+            }
 
-                    override fun reload() =
-                        output.accept(ConferenceListEvent.PullToRefresh)
-                })
+            override fun reload() = output.accept(ConferenceListEvent.PullToRefresh)
+        })
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = listAdapter
     }
@@ -101,7 +100,7 @@ class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInfla
     }
 
     fun showConferenceDetails(conference: Conference) {
-        RouteMatcher.route(context, ConferenceDetailsFragment.makeRoute(canvasContext, conference))
+        RouteMatcher.route(activity as FragmentActivity, ConferenceDetailsRepositoryFragment.makeRoute(canvasContext, conference))
     }
 
     fun launchUrl(url: String) {

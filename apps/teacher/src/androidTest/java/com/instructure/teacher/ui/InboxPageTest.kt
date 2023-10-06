@@ -103,6 +103,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
 
+        inboxPage.refresh()
         inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(conversation1.subject!!)
         inboxPage.assertConversationDisplayed(conversation2.subject!!)

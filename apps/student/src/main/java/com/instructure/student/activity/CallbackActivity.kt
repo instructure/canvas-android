@@ -211,6 +211,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             }
             ApiType.CACHE -> if (!APIHelper.hasNetworkConnection()) ApiPrefs.user = user
             ApiType.UNKNOWN -> {}
+            else -> {}
         }
         return false
     }

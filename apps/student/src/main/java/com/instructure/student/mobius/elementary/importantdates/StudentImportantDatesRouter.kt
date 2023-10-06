@@ -20,7 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.router.RouteMatcher
 

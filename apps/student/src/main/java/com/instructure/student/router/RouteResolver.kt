@@ -9,12 +9,28 @@ import com.instructure.pandautils.features.discussion.router.DiscussionRouterFra
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
+import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.list.AssignmentListFragment
+import com.instructure.student.features.coursebrowser.CourseBrowserFragment
+import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
+import com.instructure.student.features.files.details.FileDetailsFragment
+import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.files.search.FileSearchFragment
+import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.modules.list.ModuleListFragment
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
+import com.instructure.student.features.modules.progression.ModuleQuizDecider
+import com.instructure.student.features.pages.details.PageDetailsFragment
+import com.instructure.student.features.pages.list.PageListFragment
+import com.instructure.student.features.people.details.PeopleDetailsFragment
+import com.instructure.student.features.people.list.PeopleListFragment
+import com.instructure.student.features.quiz.list.QuizListFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
@@ -22,11 +38,11 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
-import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
-import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
+import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
-import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
+import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 
 object RouteResolver {
 
@@ -84,13 +100,13 @@ object RouteResolver {
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
             cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
             cls.isA<CreateAnnouncementFragment>() -> CreateAnnouncementFragment.newInstance(route)
-            cls.isA<SyllabusFragment>() -> SyllabusFragment.newInstance(route)
+            cls.isA<SyllabusRepositoryFragment>() -> SyllabusRepositoryFragment.newInstance(route)
             cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
             cls.isA<AnnouncementListFragment>() -> AnnouncementListFragment.newInstance(route)
-            cls.isA<ConferenceDetailsFragment>() -> ConferenceDetailsFragment.newInstance(route)
-            cls.isA<ConferenceListFragment>() -> ConferenceListFragment.newInstance(route)
+            cls.isA<ConferenceDetailsRepositoryFragment>() -> ConferenceDetailsRepositoryFragment.newInstance(route)
+            cls.isA<ConferenceListRepositoryFragment>() -> ConferenceListRepositoryFragment.newInstance(route)
             cls.isA<UnsupportedTabFragment>() -> UnsupportedTabFragment.newInstance(route)
             cls.isA<PageListFragment>() -> PageListFragment.newInstance(route)
             cls.isA<UnsupportedFeatureFragment>() -> UnsupportedFeatureFragment.newInstance(route)
@@ -109,7 +125,7 @@ object RouteResolver {
             cls.isA<AccountPreferencesFragment>() -> AccountPreferencesFragment.newInstance()
             cls.isA<CourseModuleProgressionFragment>() -> CourseModuleProgressionFragment.newInstance(route)
             cls.isA<AssignmentDetailsFragment>() -> AssignmentDetailsFragment.newInstance(route)
-            cls.isA<SubmissionDetailsFragment>() -> SubmissionDetailsFragment.newInstance(route)
+            cls.isA<SubmissionDetailsRepositoryFragment>() -> SubmissionDetailsRepositoryFragment.newInstance(route)
             cls.isA<SubmissionRubricDescriptionFragment>() -> SubmissionRubricDescriptionFragment.newInstance(route)
             cls.isA<DiscussionListFragment>() -> DiscussionListFragment.newInstance(route)
             cls.isA<DiscussionDetailsFragment>() -> DiscussionDetailsFragment.newInstance(route)
@@ -128,6 +144,8 @@ object RouteResolver {
             cls.isA<EmailNotificationPreferencesFragment>() -> EmailNotificationPreferencesFragment.newInstance()
             cls.isA<DiscussionDetailsWebViewFragment>() -> DiscussionDetailsWebViewFragment.newInstance(route)
             cls.isA<DiscussionRouterFragment>() -> DiscussionRouterFragment.newInstance(route.canvasContext!!, route)
+            cls.isA<OfflineContentFragment>() -> OfflineContentFragment.newInstance(route)
+            cls.isA<SyncProgressFragment>() -> SyncProgressFragment.newInstance()
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

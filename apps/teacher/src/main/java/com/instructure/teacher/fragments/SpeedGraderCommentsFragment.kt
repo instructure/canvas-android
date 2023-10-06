@@ -41,10 +41,6 @@ import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.room.appdatabase.daos.*
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.daos.AuthorDao
-import com.instructure.pandautils.room.common.daos.MediaCommentDao
-import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -148,7 +144,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override fun onRefreshStarted() {}
     override fun onRefreshFinished() {}
 
-    private val onAttachmentClicked = { attachment: Attachment -> attachment.view(requireContext()) }
+    private val onAttachmentClicked = { attachment: Attachment -> attachment.view(requireActivity()) }
 
     private val commentLibraryViewModel: CommentLibraryViewModel by activityViewModels()
 

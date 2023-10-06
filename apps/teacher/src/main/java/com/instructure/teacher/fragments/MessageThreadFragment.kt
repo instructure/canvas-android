@@ -130,13 +130,13 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
             if (canvasContext != null && canvasContext is Course) {
                 val bundle = StudentContextFragment.makeBundle(user.id, canvasContext.id, false)
-                RouteMatcher.route(requireContext(), Route(StudentContextFragment::class.java, null, bundle))
+                RouteMatcher.route(requireActivity(), Route(StudentContextFragment::class.java, null, bundle))
             }
         }
 
         override fun onAttachmentClicked(action: AttachmentView.AttachmentAction, attachment: Attachment) {
             if (action == AttachmentView.AttachmentAction.PREVIEW) {
-                attachment.view(requireContext())
+                attachment.view(requireActivity())
             } else if (action == AttachmentView.AttachmentAction.DOWNLOAD) {
                 if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
                     // Download media
@@ -345,7 +345,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             messages = presenter.getMessageChainForMessage(null),
             currentMessage = null
         )
-        RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+        RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
     }
 
     // Same as reply all but scoped to a message
@@ -357,7 +357,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             messages = presenter.getMessageChainForMessage(null),
             currentMessage = message
         )
-        RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+        RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
     }
 
     private fun addMessage(message: Message, isReply: Boolean) {
@@ -368,7 +368,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             messages = presenter.getMessageChainForMessage(message),
             currentMessage = message
         )
-        RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+        RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
     }
 
     private fun getMessageRecipientsForReplyAll(message: Message): ArrayList<BasicUser> {

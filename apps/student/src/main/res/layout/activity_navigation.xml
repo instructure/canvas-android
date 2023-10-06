@@ -31,7 +31,8 @@
         android:clipToPadding="false"
         android:orientation="vertical">
 
-        <FrameLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/fullScreenCoordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
@@ -43,13 +44,26 @@
 
             <include layout="@layout/loading_canvas_view"/>
 
-        </FrameLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <include
+            android:id="@+id/offlineIndicator"
+            layout="@layout/view_offline_indicator"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/backgroundLight"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/backgroundLightestElevated"
+            app:elevation="0dp"
             app:itemIconTint="@color/textDarkest"
             app:itemTextColor="@color/textDarkest"
             app:labelVisibilityMode="labeled" />

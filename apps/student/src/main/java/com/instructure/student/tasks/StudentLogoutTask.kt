@@ -21,19 +21,23 @@ import android.content.Intent
 import android.net.Uri
 import com.google.firebase.messaging.FirebaseMessaging
 import com.heapanalytics.android.Heap
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
+import java.io.File
 
 class StudentLogoutTask(
     type: Type,
     uri: Uri? = null,
     canvasForElementaryFeatureFlag: Boolean = false,
-    typefaceBehavior: TypefaceBehavior? = null
+    typefaceBehavior: TypefaceBehavior? = null,
+    private val databaseProvider: DatabaseProvider? = null
 ) : LogoutTask(type, uri, canvasForElementaryFeatureFlag, typefaceBehavior) {
 
     override fun onCleanup() {
@@ -47,7 +51,7 @@ class StudentLogoutTask(
         return LoginActivity.createIntent(context)
     }
 
-    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? {
+    override fun createQRLoginIntent(context: Context, uri: Uri): Intent {
         return LoginActivity.createIntent(context, uri)
     }
 
@@ -58,6 +62,14 @@ class StudentLogoutTask(
             // with the remaining logout and cleanup tasks.
             val registrationId: String? = tryOrNull { task.result }
             listener(registrationId)
+        }
+    }
+
+    override fun removeOfflineData(userId: Long?) {
+        userId?.let {
+            val dir = File(ContextKeeper.appContext.filesDir, it.toString())
+            dir.deleteRecursively()
+            databaseProvider?.clearDatabase(it)
         }
     }
 }

@@ -134,7 +134,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
                 val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
                 val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx, mAssignment.anonymousGrading)
-                RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
+                RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
         }
     }
@@ -190,7 +190,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
         addMessage.setOnClickListener {
             val args = AddMessageFragment.createBundle(presenter.getRecipients(), filterTitle.text.toString() + " " + getString(R.string.on) + " " + mAssignment.name, mCourse.contextId, false)
-            RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+            RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
         }
     }
 
@@ -291,7 +291,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 }.show(requireActivity().supportFragmentManager, PeopleListFilterDialog::class.java.simpleName)
             }
             R.id.menuPostPolicies -> {
-                RouteMatcher.route(requireContext(), PostPolicyFragment.makeRoute(mCourse, mAssignment))
+                RouteMatcher.route(requireActivity(), PostPolicyFragment.makeRoute(mCourse, mAssignment))
             }
         }
     }

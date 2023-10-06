@@ -15,7 +15,6 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -25,12 +24,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.RecordingMediaType
@@ -69,7 +69,7 @@ class SubmissionDetailsEmptyContentView(
     }
 
     override fun onConnect(output: Consumer<SubmissionDetailsEmptyContentEvent>) {
-        binding.submitButton.onClick { output.accept(SubmissionDetailsEmptyContentEvent.SubmitAssignmentClicked) }
+        binding.submitButton.onClickWithRequireNetwork { output.accept(SubmissionDetailsEmptyContentEvent.SubmitAssignmentClicked) }
     }
 
     override fun render(state: SubmissionDetailsEmptyContentViewState) {
@@ -127,17 +127,17 @@ class SubmissionDetailsEmptyContentView(
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
         logEventWithOrigin(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED)
-        RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
+        RouteMatcher.route(activity as FragmentActivity, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
     }
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
         logEventWithOrigin(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
-        RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
+        RouteMatcher.route(activity as FragmentActivity, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
     }
 
     fun showLTIView(canvasContext: CanvasContext, title: String, ltiTool: LTITool? = null) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-        RouteMatcher.route(context, LtiLaunchFragment.makeRoute(
+        RouteMatcher.route(activity as FragmentActivity, LtiLaunchFragment.makeRoute(
             canvasContext,
             ltiTool?.url ?: "",
             title,
@@ -148,12 +148,12 @@ class SubmissionDetailsEmptyContentView(
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
-        RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
+        RouteMatcher.route(activity as FragmentActivity, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
-        RouteMatcher.route(context, DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeaderId))
+        RouteMatcher.route(activity as FragmentActivity, DiscussionRouterFragment.makeRoute(canvasContext, discussionTopicHeaderId))
     }
 
     fun showMediaRecordingView() {
@@ -179,7 +179,7 @@ class SubmissionDetailsEmptyContentView(
 
     private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
         logEventWithOrigin(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
-        RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
+        RouteMatcher.route(activity as FragmentActivity, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 
     fun showAudioRecordingView() {
@@ -211,23 +211,23 @@ class SubmissionDetailsEmptyContentView(
 
     fun showFileUploadView(assignment: Assignment) {
         logEventWithOrigin(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED)
-        RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission))
+        RouteMatcher.route(activity as FragmentActivity, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission))
     }
 
     fun showQuizOrDiscussionView(url: String) {
-        if (!RouteMatcher.canRouteInternally(context, url, ApiPrefs.domain, true)) {
+        if (!RouteMatcher.canRouteInternally(activity as FragmentActivity, url, ApiPrefs.domain, true)) {
             val intent = Intent(context, InternalWebViewActivity::class.java)
             context.startActivity(intent)
         }
     }
 
     fun launchFilePickerView(uri: Uri, course: Course, assignment: Assignment) {
-        RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(course, assignment, uri))
+        RouteMatcher.route(activity as FragmentActivity, PickerSubmissionUploadFragment.makeRoute(course, assignment, uri))
     }
 
     fun returnToAssignmentDetails() {
         // Not run on main thread of fragment host by default, so force it to run on UI thread
-        (context as Activity).runOnUiThread { (context as Activity).onBackPressed() }
+        activity.runOnUiThread { activity.onBackPressed() }
     }
 
     fun showStudentAnnotationView(assignment: Assignment) {
@@ -236,7 +236,7 @@ class SubmissionDetailsEmptyContentView(
         val submissionId = assignment.submission?.id
         if (submissionId != null) {
             RouteMatcher.route(
-                context,
+                activity as FragmentActivity,
                 AnnotationSubmissionUploadFragment.makeRoute(
                     canvasContext,
                     assignment.annotatableAttachmentId,

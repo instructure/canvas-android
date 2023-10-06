@@ -310,6 +310,8 @@ class MockCanvas {
         }
     }
 
+    var offlineModeEnabled = false
+
     companion object {
         /** Whether the mock Canvas data has been initialized for the current test run */
         val isInitialized: Boolean get() = ::data.isInitialized

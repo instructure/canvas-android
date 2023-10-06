@@ -19,7 +19,6 @@
 
 package com.instructure.student.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -29,6 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.ProgressBar
+import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -46,6 +46,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentWebviewBinding
+import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
@@ -597,12 +598,12 @@ open class InternalWebviewFragment : ParentFragment() {
         fun makeRouteHTML(canvasContext: CanvasContext, html: String): Route =
             makeRoute(canvasContext, null, null, false, html)
 
-        fun loadInternalWebView(context: Context?, route: Route) {
-            if (context == null) {
+        fun loadInternalWebView(activity: FragmentActivity?, route: Route) {
+            if (activity == null) {
                 Logger.e("loadInternalWebView could not complete, context is null")
                 return
             }
-            RouteMatcher.route(context, route)
+            RouteMatcher.route(activity, route)
         }
     }
 }
