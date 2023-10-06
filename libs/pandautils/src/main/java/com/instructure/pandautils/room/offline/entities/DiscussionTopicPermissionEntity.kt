@@ -23,15 +23,15 @@ import com.instructure.canvasapi2.models.DiscussionTopicPermission
 
 @Entity
 data class DiscussionTopicPermissionEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    @PrimaryKey
+    val discussionTopicHeaderId: Long,
     val attach: Boolean,
     val update: Boolean,
     val delete: Boolean,
     val reply: Boolean
 ) {
-    constructor(permission: DiscussionTopicPermission) : this(
-        0,
+    constructor(permission: DiscussionTopicPermission, discussionTopicHeaderId: Long) : this(
+        discussionTopicHeaderId,
         permission.attach,
         permission.update,
         permission.delete,

@@ -24,7 +24,7 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: UserEntity): Long
+    suspend fun insert(entity: UserEntity)
 
     @Delete
     suspend fun delete(entity: UserEntity)

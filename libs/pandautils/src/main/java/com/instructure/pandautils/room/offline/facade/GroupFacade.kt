@@ -15,9 +15,9 @@ class GroupFacade(
     private val userDao: UserDao,
 ) {
     suspend fun insertGroupWithUser(group: Group, user: User) {
-        val groupId = groupDao.insert(GroupEntity(group))
-        val userId = userDao.insert(UserEntity(user))
-        groupUserDao.insert(GroupUserEntity(groupId, userId))
+        groupDao.insert(GroupEntity(group))
+        userDao.insert(UserEntity(user))
+        groupUserDao.insert(GroupUserEntity(group.id, user.id))
     }
 
     suspend fun getGroupsByUserId(userId: Long): List<Group> {

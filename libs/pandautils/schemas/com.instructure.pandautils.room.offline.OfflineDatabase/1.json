@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c70e6a0d74f397ed4d6bbaf8999ec078",
+    "identityHash": "97d9b0fb33c79e997b869d0e42082706",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -1510,11 +1510,11 @@
       },
       {
         "tableName": "DiscussionTopicPermissionEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `attach` INTEGER NOT NULL, `update` INTEGER NOT NULL, `delete` INTEGER NOT NULL, `reply` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`discussionTopicHeaderId` INTEGER NOT NULL, `attach` INTEGER NOT NULL, `update` INTEGER NOT NULL, `delete` INTEGER NOT NULL, `reply` INTEGER NOT NULL, PRIMARY KEY(`discussionTopicHeaderId`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "discussionTopicHeaderId",
+            "columnName": "discussionTopicHeaderId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1544,9 +1544,9 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "discussionTopicHeaderId"
           ]
         },
         "indices": [],
@@ -5126,7 +5126,7 @@
       },
       {
         "tableName": "DiscussionTopicEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `unreadEntries` TEXT NOT NULL, `participantIds` TEXT, `viewIds` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `unreadEntries` TEXT NOT NULL, `participantIds` TEXT, `viewIds` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -5150,7 +5150,7 @@
             "fieldPath": "viewIds",
             "columnName": "viewIds",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -5166,7 +5166,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c70e6a0d74f397ed4d6bbaf8999ec078')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '97d9b0fb33c79e997b869d0e42082706')"
     ]
   }
 }

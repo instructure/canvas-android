@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
 import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicHeaderEntity
 import io.mockk.coEvery
@@ -36,8 +37,9 @@ class DiscussionTopicHeaderFacadeTest {
 
     private val discussionTopicHeaderDao: DiscussionTopicHeaderDao = mockk(relaxed = true)
     private val discussionParticipantDao: DiscussionParticipantDao = mockk(relaxed = true)
+    private val discussionTopicPermissionDao: DiscussionTopicPermissionDao = mockk(relaxed = true)
 
-    private val facade = DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao)
+    private val facade = DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao)
 
     @Test
     fun `Calling insertDiscussion should insert discussion topic header and related entities`() = runTest {

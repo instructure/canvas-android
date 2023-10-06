@@ -43,7 +43,7 @@ data class DiscussionEntryEntity(
     var _hasRated: Boolean,
     var replyIds: List<Long>?,
 ) {
-    constructor(discussionEntry: DiscussionEntry, replyIds: List<Long>): this(
+    constructor(discussionEntry: DiscussionEntry, replyIds: List<Long>? = null): this(
         discussionEntry.id,
         discussionEntry.unread,
         discussionEntry.updatedAt,

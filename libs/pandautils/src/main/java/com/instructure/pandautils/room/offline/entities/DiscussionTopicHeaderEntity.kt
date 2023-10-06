@@ -40,7 +40,7 @@ import java.util.Date
             parentColumns = ["id"],
             childColumns = ["courseId"],
             onDelete = ForeignKey.CASCADE
-        )
+        ),
     ]
 )
 data class DiscussionTopicHeaderEntity(
@@ -81,7 +81,7 @@ data class DiscussionTopicHeaderEntity(
     var specificSections: String?,
     var anonymousState: String?
 ) {
-    constructor(discussionTopicHeader: DiscussionTopicHeader, courseId: Long, permissionId: Long?) : this(
+    constructor(discussionTopicHeader: DiscussionTopicHeader, courseId: Long, permissionId: Long? = null) : this(
         discussionTopicHeader.id,
         courseId,
         discussionTopicHeader.discussionType,

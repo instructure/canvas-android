@@ -12,22 +12,22 @@ data class DiscussionTopicEntity(
     val id: Long,
     val unreadEntries: MutableList<Long>,
     val participantIds: List<Long>?,
-    val viewIds: List<Long>,
+    val viewIds: List<Long>?,
 ) {
-    constructor(discussionTopic: DiscussionTopic, participantIds: List<Long>?, viewIds: List<Long>, topicId: Long): this(
+    constructor(discussionTopic: DiscussionTopic, participantIds: List<Long>?, viewIds: List<Long>?, topicId: Long): this(
         id = topicId,
         unreadEntries = discussionTopic.unreadEntries,
         participantIds = participantIds,
         viewIds = viewIds
     )
 
-    fun toApiModel(participantIds: List<DiscussionParticipant>?, viewIds: List<DiscussionEntry>): DiscussionTopic {
+    fun toApiModel(participants: List<DiscussionParticipant>?, views: List<DiscussionEntry>?): DiscussionTopic {
         return DiscussionTopic(
             unreadEntries = unreadEntries,
-            participants = participantIds,
+            participants = participants,
             unreadEntriesMap = hashMapOf(),
             entryRatings = hashMapOf(),
-            views = viewIds.toMutableList()
+            views = views?.toMutableList().orEmpty().toMutableList()
         )
     }
 }
