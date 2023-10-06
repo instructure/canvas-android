@@ -32,7 +32,7 @@ import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 class AggregateProgressObserver(
     private val context: Context,
     courseProgressDao: CourseProgressDao,
-    private val fileSyncProgressDao: FileSyncProgressDao
+    fileSyncProgressDao: FileSyncProgressDao
 ) {
 
     val progressData: LiveData<AggregateProgressViewData>
@@ -71,32 +71,35 @@ class AggregateProgressObserver(
 
         when {
             courseProgresses.all { it.progressState == ProgressState.STARTING } -> {
-                _progressData.postValue(AggregateProgressViewData(
-                    title = context.getString(R.string.syncProgress_downloadStarting),
-                    progressState = ProgressState.STARTING))
+                _progressData.postValue(
+                    AggregateProgressViewData(
+                        title = context.getString(R.string.syncProgress_downloadStarting),
+                        progressState = ProgressState.STARTING
+                    )
+                )
                 return
             }
 
             courseProgresses.all { it.progressState == ProgressState.COMPLETED } && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
                 val totalSize = _progressData.value?.totalSize.orEmpty()
-                _progressData.value?.copy(
-                    progressState = ProgressState.COMPLETED,
-                    title = context.getString(R.string.syncProgress_downloadSuccess, totalSize, totalSize),
-                    progress = 100
-                )?.let {
-                    _progressData.postValue(it)
-                }
+                _progressData.postValue(
+                    AggregateProgressViewData(
+                        progressState = ProgressState.COMPLETED,
+                        title = context.getString(R.string.syncProgress_downloadSuccess, totalSize, totalSize),
+                        progress = 100
+                    )
+                )
                 return
             }
 
             fileProgresses.all { it.progressState.isFinished() } && courseProgresses.all { it.progressState.isFinished() }
                     && (courseProgresses.any { it.progressState == ProgressState.ERROR } || fileProgresses.any { it.progressState == ProgressState.ERROR }) -> {
-                _progressData.value?.copy(
-                    progressState = ProgressState.ERROR,
-                    title = context.getString(R.string.syncProgress_syncErrorSubtitle)
-                )?.let {
-                    _progressData.postValue(it)
-                }
+                _progressData.postValue(
+                    AggregateProgressViewData(
+                        progressState = ProgressState.ERROR,
+                        title = context.getString(R.string.syncProgress_syncErrorSubtitle)
+                    )
+                )
                 return
             }
         }
@@ -131,6 +134,7 @@ class AggregateProgressObserver(
 
     fun onCleared() {
         courseProgressLiveData?.removeObserver(courseProgressObserver)
+        fileProgressLiveData?.removeObserver(fileProgressObserver)
     }
 }
 
