@@ -31,6 +31,7 @@ import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
 
 class BookmarkPage : BasePage() {
 
@@ -78,6 +79,6 @@ class BookmarkPage : BasePage() {
     fun deleteBookmark(bookmarkName: String) {
         clickOnMoreMenu(bookmarkName)
         onView(allOf(withId(R.id.title), withText("Delete"), isDisplayed())).click()
-        waitForView(withText(android.R.string.ok)).click()
+        waitForView(anyOf(withText(android.R.string.ok), withText(R.string.ok))).click()
     }
 }
