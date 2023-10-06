@@ -18,6 +18,7 @@ package com.instructure.teacher.features.modules.list.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
@@ -137,7 +138,7 @@ class ModuleListView(
             }
             else -> null
         }
-        RouteMatcher.route(context, route)
+        RouteMatcher.route(activity as FragmentActivity, route)
     }
 
     fun routeToFile(
@@ -155,7 +156,7 @@ class ModuleListView(
             iconRes = R.drawable.ic_document
         )
         viewMedia(
-            context = context,
+            activity = activity as FragmentActivity,
             filename = file.displayName.orEmpty(),
             contentType = file.contentType.orEmpty(),
             url = file.url,

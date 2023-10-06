@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -32,7 +33,7 @@ object SubmissionAPI {
     private const val pointsPostFix = "][points]"
     private const val commentsPostFix = "][comments]"
 
-    internal interface SubmissionInterface {
+    interface SubmissionInterface {
 
         @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getSingleSubmission(
@@ -40,14 +41,33 @@ object SubmissionAPI {
                 @Path("assignmentId") assignmentId: Long,
                 @Path("studentId") studentId: Long): Call<Submission>
 
+        @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        suspend fun getSingleSubmission(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Path("studentId") studentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
+
         @GET("courses/{courseId}/students/submissions?include[]=assignment&include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getSubmissionsForMultipleAssignments(
                 @Path("courseId") courseId: Long,
                 @Query("student_ids[]") studentId: Long,
                 @Query("assignment_ids[]") assignmentIds: List<Long>): Call<List<Submission>>
 
+        @GET("courses/{courseId}/students/submissions?include[]=assignment&include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        suspend fun getSubmissionsForMultipleAssignments(
+            @Path("courseId") courseId: Long,
+            @Query("student_ids[]") studentId: Long,
+            @Query("assignment_ids[]") assignmentIds: List<Long>,
+            @Tag restParams: RestParams
+        ): DataResult<List<Submission>>
+
         @GET
         fun getNextPageSubmissions(@Url nextUrl: String): Call<List<Submission>>
+
+        @GET
+        suspend fun getNextPageSubmissions(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Submission>>
 
         @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionRubricAssessmentMap(
@@ -128,6 +148,9 @@ object SubmissionAPI {
 
         @GET
         fun getLtiFromAuthenticationUrl(@Url url: String): Call<LTITool>
+
+        @GET
+        suspend fun getLtiFromAuthenticationUrl(@Url url: String, @Tag restParams: RestParams): DataResult<LTITool>
 
         @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionGrade(@Path("contextId") contextId: Long,

@@ -17,7 +17,6 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.content
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
@@ -25,6 +24,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
@@ -59,12 +59,14 @@ import org.greenrobot.eventbus.ThreadMode
 
 @SuppressLint("ViewConstructor")
 class PdfStudentSubmissionView(
-        context: Context,
-        private val pdfUrl: String,
-        private val fragmentManager: FragmentManager,
-        private val studentAnnotationSubmit: Boolean = false,
-        private val studentAnnotationView: Boolean = false,
-) : PdfSubmissionView(context, studentAnnotationView), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+    private val activity: FragmentActivity,
+    private val pdfUrl: String,
+    private val fragmentManager: FragmentManager,
+    private val studentAnnotationSubmit: Boolean = false,
+    private val studentAnnotationView: Boolean = false,
+) : PdfSubmissionView(
+    activity, studentAnnotationView
+), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewPdfStudentSubmissionBinding
 
@@ -88,8 +90,16 @@ class PdfStudentSubmissionView(
     override fun enableViewPager() {}
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
-    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
-        if (isAttachedToWindow) RouteMatcher.route(context, AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, apiValues, ApiPrefs.user!!.id, !studentAnnotationView))
+    override fun showAnnotationComments(
+        commentList: ArrayList<CanvaDocAnnotation>,
+        headAnnotationId: String,
+        docSession: DocSession,
+        apiValues: ApiValues
+    ) {
+        if (isAttachedToWindow) RouteMatcher.route(
+            activity,
+            AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, apiValues, ApiPrefs.user!!.id, !studentAnnotationView)
+        )
     }
 
     override fun showFileError() {

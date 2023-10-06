@@ -82,7 +82,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
         speedGraderMediaPlayerView.findViewById<ImageButton>(R.id.fullscreenButton).onClick {
             mExoAgent.flagForResume()
             val bundle = BaseViewMediaActivity.makeBundle(mUri.toString(), mThumbnailUrl, mContentType, mDisplayName, false)
-            RouteMatcher.route(requireContext(), Route(bundle, RouteContext.MEDIA))
+            RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.MEDIA))
         }
     }
 

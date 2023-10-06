@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
@@ -89,7 +90,7 @@ class SubmissionCommentsView(
             }
 
             // Set up add files button
-            addFileButton.onClick {
+            addFileButton.onClickWithRequireNetwork {
                 consumer?.accept(SubmissionCommentsEvent.AddFilesClicked)
             }
 
@@ -138,7 +139,7 @@ class SubmissionCommentsView(
 
     fun showFilePicker(canvasContext: CanvasContext, assignment: Assignment, attemptId: Long?) {
         RouteMatcher.route(
-            context,
+            activity as FragmentActivity,
             PickerSubmissionUploadFragment.makeRoute(
                 canvasContext,
                 assignment,
@@ -159,7 +160,7 @@ class SubmissionCommentsView(
     }
 
     fun openMedia(canvasContext: CanvasContext, contentType: String, url: String, fileName: String) {
-        (context as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName)
+        (activity as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName)
     }
 
     fun showPermissionDeniedToast() {

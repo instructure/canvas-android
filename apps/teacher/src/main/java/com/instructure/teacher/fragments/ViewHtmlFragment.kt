@@ -89,7 +89,7 @@ class ViewHtmlFragment : InternalWebViewFragment() {
                 when (menu.itemId) {
                     R.id.edit -> {
                         val args = EditFileFolderFragment.makeBundle(it.file, it.usageRights, it.licenses, it.canvasContext!!.id)
-                        RouteMatcher.route(requireContext(), Route(EditFileFolderFragment::class.java, it.canvasContext, args))
+                        RouteMatcher.route(requireActivity(), Route(EditFileFolderFragment::class.java, it.canvasContext, args))
                     }
                     R.id.copyLink -> {
                         if(it.file.url != null) {

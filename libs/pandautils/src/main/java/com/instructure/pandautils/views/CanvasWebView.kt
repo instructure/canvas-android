@@ -178,6 +178,7 @@ class CanvasWebView @JvmOverloads constructor(
         this.settings.useWideViewPort = true
         this.webViewClient = CanvasWebViewClient()
         this.settings.domStorageEnabled = true
+        this.settings.allowFileAccess = true
         this.settings.mediaPlaybackRequiresUserGesture = false // Disabled to allow videos to be played
 
         // Increase text size based on the devices accessibility setting
@@ -565,7 +566,6 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     fun setCanvasWebChromeClientShowFilePickerCallback(callback: VideoPickerCallback?) {
-        this.settings.allowFileAccess = true
         videoPickerCallback = callback
     }
 

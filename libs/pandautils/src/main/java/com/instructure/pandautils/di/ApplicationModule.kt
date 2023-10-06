@@ -23,10 +23,17 @@ import android.content.res.Resources
 import android.webkit.CookieManager
 import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.offline.sync.HtmlParser
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.StorageUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -90,5 +97,23 @@ class ApplicationModule {
     @Singleton
     fun provideCookieManager(): CookieManager {
         return CookieManager.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorageUtils(@ApplicationContext context: Context): StorageUtils {
+        return StorageUtils(context)
+    }
+
+    @Provides
+    fun provideHtmlParses(
+        localFileDao: LocalFileDao,
+        apiPrefs: ApiPrefs,
+        fileFolderDao: FileFolderDao,
+        @ApplicationContext context: Context,
+        fileSyncSettingsDao: FileSyncSettingsDao,
+        fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    ): HtmlParser {
+        return HtmlParser(localFileDao, apiPrefs, fileFolderDao, context, fileSyncSettingsDao, fileFolderApi)
     }
 }

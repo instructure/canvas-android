@@ -88,7 +88,7 @@ class DashboardE2ETest : StudentTest() {
             dashboardPage.assertDisplaysCourse(course)
         }
 
-        Log.d(STEP_TAG, "Switch to back to Card View.")
+        Log.d(STEP_TAG, "Switch to back to Grid View.")
         dashboardPage.switchCourseView()
 
         for(course in data.coursesList) {
@@ -100,7 +100,7 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertDisplaysGroup(group, course1)
         dashboardPage.assertDisplaysGroup(group2, course1)
 
-        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button. Assert that the Edit Dashboard Page is loaded.")
+        Log.d(STEP_TAG,"Click on 'All Courses' button. Assert that the All Courses Page is loaded.")
         dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
 
@@ -122,7 +122,7 @@ class DashboardE2ETest : StudentTest() {
         courseBrowserPage.assertPageObjects()
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button. Assert that the Edit Dashboard Page is loaded.")
+        Log.d(STEP_TAG,"Click on 'All Courses' button. Assert that the All Courses Page is loaded.")
         dashboardPage.assertPageObjects()
         dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
@@ -185,7 +185,7 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertCourseGrade(course1.name, "N/A")
         dashboardPage.assertCourseGrade(course2.name, "N/A")
 
-        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button.")
+        Log.d(STEP_TAG,"Click on 'All Courses' button.")
         dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
 
@@ -202,7 +202,7 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertDisplaysGroup(group, course1)
         dashboardPage.assertGroupNotDisplayed(group2)
 
-        Log.d(STEP_TAG,"Click on 'Edit Dashboard' button.")
+        Log.d(STEP_TAG,"Click on 'All Courses' button.")
         dashboardPage.clickEditDashboard()
         editDashboardPage.assertPageObjects()
         Thread.sleep(2000) //It can be flaky without this 2 seconds
@@ -220,7 +220,7 @@ class DashboardE2ETest : StudentTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Assert that both of the groups, '${group.name}' and '${group2.name}' are displayed" +
-                "since if there is no group selected on the Edit Dashboard page, we are showing all of them (this is the same logics as with the courses).")
+                "since if there is no group selected on the All Courses page, we are showing all of them (this is the same logics as with the courses).")
         dashboardPage.assertDisplaysGroup(group, course1)
         dashboardPage.assertDisplaysGroup(group2, course1)
     }

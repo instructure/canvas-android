@@ -31,7 +31,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.FakeDateTimeProvider
+import com.instructure.student.ui.utils.di.FakeDateTimeProvider
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest

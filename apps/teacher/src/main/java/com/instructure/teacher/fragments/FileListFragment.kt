@@ -211,12 +211,12 @@ class FileListFragment : BaseSyncFragment<
                     val bundle = ViewHtmlFragment.makeAuthSessionBundle(canvasContext, it, it.displayName.orEmpty(), canvasContext.backgroundColor, editableFile)
                     RouteMatcher.route(requireActivity(), Route(ViewHtmlFragment::class.java, null, bundle))
                 } else {
-                    viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
+                    viewMedia(requireActivity(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
                 }
             } else {
                 // This is a folder
-                val args = FileListFragment.makeBundle(presenter.mCanvasContext, it)
-                RouteMatcher.route(requireContext(), Route(FileListFragment::class.java, presenter.mCanvasContext, args))
+                val args = makeBundle(presenter.mCanvasContext, it)
+                RouteMatcher.route(requireActivity(), Route(FileListFragment::class.java, presenter.mCanvasContext, args))
             }
         }
     }
@@ -309,9 +309,9 @@ class FileListFragment : BaseSyncFragment<
             when (it.itemId) {
                 R.id.edit -> {
                     val bundle = EditFileFolderFragment.makeBundle(presenter.currentFolder, presenter.usageRights, presenter.licenses, presenter.mCanvasContext.id)
-                    RouteMatcher.route(requireContext(), Route(EditFileFolderFragment::class.java, canvasContext, bundle))
+                    RouteMatcher.route(requireActivity(), Route(EditFileFolderFragment::class.java, canvasContext, bundle))
                 }
-                R.id.search -> RouteMatcher.route(requireContext(), Route(FileSearchFragment::class.java, canvasContext, Bundle()))
+                R.id.search -> RouteMatcher.route(requireActivity(), Route(FileSearchFragment::class.java, canvasContext, Bundle()))
             }
         }
 

@@ -145,7 +145,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                 avatarURL = student.avatarUrl,
             )
             val args = AddMessageFragment.createBundle(listOf(recipient), "", "course_${course.id}", true)
-            RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+            RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
         }
 
         studentNameView.text = Pronouns.span(student.shortName, student.pronouns)
@@ -285,7 +285,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                     course.id.toLongOrNull() ?: 0,
                     submission.assignment?.id?.toLongOrNull() ?: 0,
                     listOf(studentSubmission), 0)
-                RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
+                RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
             binding.submissionListContainer.addView(view)
         }

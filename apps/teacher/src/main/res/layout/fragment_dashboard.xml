@@ -85,7 +85,7 @@
             android:paddingTop="27dp"
             android:paddingEnd="16dp"
             android:paddingBottom="2dp"
-            android:text="@string/edit_dashboard"
+            android:text="@string/dashboardAllCoursesButton"
             android:textColor="@color/textInfo" />
 
     </FrameLayout>

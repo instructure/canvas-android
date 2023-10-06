@@ -204,6 +204,8 @@ object ViewStyler {
             intArrayOf(android.R.attr.state_focused, android.R.attr.state_pressed) to brand,
             intArrayOf(-android.R.attr.state_focused, android.R.attr.state_pressed) to brand,
             intArrayOf(android.R.attr.state_checked) to brand,
+            intArrayOf(com.google.android.material.R.attr.state_indeterminate) to brand,
+
             intArrayOf() to defaultColor
     )
 

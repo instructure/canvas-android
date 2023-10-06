@@ -82,6 +82,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
 
     private var mimeType: String? = null
     var url: String = ""
+    var path: String = ""
     var filename: String? = null
         private set
     private var isSubmission = false
@@ -92,7 +93,9 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
 
     init {
         if (args != null) {
-            url = args.getString(Const.URL) ?: throw IllegalArgumentException("Argument ${Const.URL} cannot be null")
+            path = args.getString(Const.PATH) ?: ""
+            url = args.getString(Const.URL) ?: ""
+            if (path.isBlank() && url.isBlank()) throw IllegalArgumentException("Both arguments ${Const.PATH} and ${Const.URL} cannot be null")
             isUseOutsideApps = args.getBoolean(Const.OPEN_OUTSIDE)
             if (args.containsKey(Const.MIME) && args.containsKey(Const.FILE_URL)) {
                 mimeType = args.getString(Const.MIME)
@@ -108,6 +111,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             if (args.containsKey(Const.EXTRAS)) {
                 extras = args.getBundle(Const.EXTRAS)
             }
+
             canvasContext = args.getParcelable(Const.CANVAS_CONTEXT)
         }
     }
@@ -121,7 +125,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             val intent = Intent(Intent.ACTION_VIEW)
             intent.putExtra(Const.IS_MEDIA_TYPE, true)
             if (isHtmlFile && canvasContext != null) {
-                val file = downloadFile(context, url, filename)
+                val file = if (path.isNotBlank()) File(path) else downloadFile(context, url, filename)
                 val bundle = FileUploadUtils.createTaskLoaderBundle(
                     canvasContext,
                     FileProvider.getUriForFile(
@@ -141,7 +145,12 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
                 loadedMedia.setHtmlBundle(bundle)
             } else {
                 loadedMedia.isHtmlFile = isHtmlFile
-                val uri = attemptConnection(url)
+                val uri = if (url.isNotBlank()) {
+                    attemptConnection(url)
+                } else {
+                    val file = File(path)
+                    FileProvider.getUriForFile(context, context.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+                }
                 if (uri != null) {
                     intent.setDataAndType(uri, mimeType)
                     loadedMedia.intent = intent
@@ -235,7 +244,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
     }
 
     private fun attemptDownloadFile(context: Context, intent: Intent, loadedMedia: LoadedMedia, url: String, filename: String?) {
-        val file = downloadFile(context, url, filename)
+        val file = if (path.isNotBlank()) File(path) else downloadFile(context, url, filename)
         val contentResolver = context.contentResolver
         val fileUri: Uri = FileProvider.getUriForFile(
             context,
@@ -313,6 +322,16 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             openMediaBundle.putString(Const.URL, url)
             openMediaBundle.putString(Const.FILE_URL, filename)
             openMediaBundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+            return openMediaBundle
+        }
+
+        fun createLocalBundle(canvasContext: CanvasContext?, mime: String?, path: String?, filename: String?, useOutsideApps: Boolean): Bundle {
+            val openMediaBundle = Bundle()
+            openMediaBundle.putString(Const.MIME, mime)
+            openMediaBundle.putString(Const.PATH, path)
+            openMediaBundle.putString(Const.FILE_URL, filename)
+            openMediaBundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+            openMediaBundle.putBoolean(Const.OPEN_OUTSIDE, useOutsideApps)
             return openMediaBundle
         }
 

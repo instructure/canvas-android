@@ -25,12 +25,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class FeatureFlagModule {
 
     @Provides
+    @Singleton
     fun provideFeatureFlagProvider(userManager: UserManager, apiPrefs: ApiPrefs, featuresApi: FeaturesAPI.FeaturesInterface, environmentFeatureFlagsDao: EnvironmentFeatureFlagsDao): FeatureFlagProvider {
         return FeatureFlagProvider(userManager, apiPrefs, featuresApi, environmentFeatureFlagsDao)
     }

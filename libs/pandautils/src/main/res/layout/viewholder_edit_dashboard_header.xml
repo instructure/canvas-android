@@ -63,6 +63,8 @@
                 android:onClick="@{() -> itemViewModel.onActionClick()}"
                 android:orientation="horizontal"
                 android:padding="4dp"
+                android:clickable="@{itemViewModel.online}"
+                android:alpha="@{itemViewModel.online ? 1.0f : 0.4f}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

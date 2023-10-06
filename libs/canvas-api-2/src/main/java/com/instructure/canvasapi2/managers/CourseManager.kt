@@ -107,23 +107,6 @@ object CourseManager {
         CourseAPI.getFirstPageCoursesWithConcluded(adapter, depaginatedCallback, params)
     }
 
-    fun getCoursesByEnrollmentState(enrollmentState: String, forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
-
-        val adapter = RestBuilder(callback)
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-
-        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
-            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
-                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
-            }
-        }
-
-        adapter.statusCallback = depaginatedCallback
-        CourseAPI.getFirstPageCoursesByEnrollmentState(enrollmentState, adapter, depaginatedCallback, params)
-    }
-
-    fun getCoursesByEnrollmentStateAsync(enrollmentState: String, forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesByEnrollmentState(enrollmentState, forceNetwork, it) }
-
     fun getCoursesWithConcludedAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithConcluded(forceNetwork, it) }
 
     fun getDashboardCoursesAsync(forceNetwork: Boolean) = apiAsync<List<DashboardCard>> { getDashboardCourses(forceNetwork, it) }

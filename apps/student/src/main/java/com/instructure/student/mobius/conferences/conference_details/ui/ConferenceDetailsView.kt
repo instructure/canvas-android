@@ -52,7 +52,7 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
 
     override fun onConnect(output: Consumer<ConferenceDetailsEvent>) {
         binding.swipeRefreshLayout.setOnRefreshListener { output.accept(ConferenceDetailsEvent.PullToRefresh) }
-        binding.joinButton.onClick { output.accept(ConferenceDetailsEvent.JoinConferenceClicked) }
+        binding.joinButton.onClickWithRequireNetwork { output.accept(ConferenceDetailsEvent.JoinConferenceClicked) }
     }
 
     override fun onDispose() = Unit
@@ -86,7 +86,7 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
     private fun makeRecordingListItem(state: ConferenceRecordingViewState): View {
         val binding = AdapterConferenceRecordingItemBinding.inflate(LayoutInflater.from(context), null, false)
         with(binding) {
-            binding.root.onClick { consumer?.accept(ConferenceDetailsEvent.RecordingClicked(state.recordingId)) }
+            binding.root.onClickWithRequireNetwork { consumer?.accept(ConferenceDetailsEvent.RecordingClicked(state.recordingId)) }
             recordingTitle.text = state.title
             recordingDate.text = state.date
             recordingDuration.text = state.duration
