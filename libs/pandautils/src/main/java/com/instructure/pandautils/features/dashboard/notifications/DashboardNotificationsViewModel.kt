@@ -109,7 +109,18 @@ class DashboardNotificationsViewModel @Inject constructor(
     }
 
     private val syncProgressObserver = Observer<AggregateProgressViewData> {
-        createSyncProgressViewModel(it)
+        if (_data.value?.syncProgressItems == null) {
+            _data.value?.syncProgressItems = createSyncProgressViewModel(it)
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            return@Observer
+        }
+
+        if (aggregateProgressObserver.progressData.value?.progressState == ProgressState.COMPLETED) {
+            _data.value?.syncProgressItems = null
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+        } else {
+            _data.value?.syncProgressItems?.update(it)
+        }
     }
 
     private val fileUploads = dashboardFileUploadDao.getAllForUser(apiPrefs.user?.id.orDefault())
@@ -150,20 +161,20 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             val uploadViewModels = getUploads(fileUploads.value)
 
-            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
-
-            aggregateProgressObserver.progressData.value?.let {
+            val syncProgress = aggregateProgressObserver.progressData.value?.let {
                 createSyncProgressViewModel(it)
             }
+
+            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels, syncProgress))
         }
     }
 
-    private fun getSyncProgress(): SyncProgressItemViewModel {
+    private fun getSyncProgress(aggregateProgressViewData: AggregateProgressViewData): SyncProgressItemViewModel {
         return SyncProgressItemViewModel(
             data = SyncProgressViewData(),
             onClick = this::openSyncProgress,
             resources = resources
-        )
+        ).apply { update(aggregateProgressViewData) }
     }
 
     private suspend fun getAccountNotifications(forceNetwork: Boolean): List<ItemViewModel> {
@@ -455,19 +466,11 @@ class DashboardNotificationsViewModel @Inject constructor(
         _events.postValue(Event(DashboardNotificationsActions.OpenSyncProgress))
     }
 
-    private fun createSyncProgressViewModel(aggregateProgressViewData: AggregateProgressViewData) {
-        when {
-            aggregateProgressViewData.progressState != ProgressState.COMPLETED && _data.value?.syncProgressItems == null -> {
-                _data.value?.syncProgressItems = getSyncProgress().apply { update(aggregateProgressViewData) }
-                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
-            }
-            aggregateProgressViewData.progressState == ProgressState.COMPLETED && _data.value?.syncProgressItems != null -> {
-                _data.value?.syncProgressItems = null
-                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
-            }
-            else -> {
-                _data.value?.syncProgressItems?.update(aggregateProgressViewData)
-            }
+    private fun createSyncProgressViewModel(aggregateProgressViewData: AggregateProgressViewData): SyncProgressItemViewModel? {
+        return if (aggregateProgressViewData.progressState != ProgressState.COMPLETED) {
+            getSyncProgress(aggregateProgressViewData)
+        } else {
+            null
         }
     }
 }

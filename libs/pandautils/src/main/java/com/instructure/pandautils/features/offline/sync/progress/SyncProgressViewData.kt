@@ -33,6 +33,7 @@ data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
 
 data class CourseProgressViewData(
     val courseName: String,
+    val courseId: Long,
     val workerId: String,
     val files: List<FilesTabProgressItemViewModel>,
     @Bindable var tabs: List<TabProgressItemViewModel>? = null,

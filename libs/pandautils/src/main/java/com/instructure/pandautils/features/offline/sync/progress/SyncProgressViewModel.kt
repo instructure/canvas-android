@@ -89,6 +89,7 @@ class SyncProgressViewModel @Inject constructor(
         val courseSyncSettings = courseSyncSettingsDao.findWithFilesById(courseProgressEntity.courseId)
         val data = CourseProgressViewData(
             courseName = courseProgressEntity.courseName,
+            courseId = courseProgressEntity.courseId,
             workerId = courseProgressEntity.workerId,
             size = context.getString(R.string.syncProgress_syncQueued),
             files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true) {

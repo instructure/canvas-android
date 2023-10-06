@@ -71,17 +71,15 @@ data class CourseProgressItemViewModel(
             createTabs(courseProgress.tabs, courseProgress.workerId)
         }
 
-        if (fileProgressLiveData == null) {
-            fileProgressLiveData = fileSyncProgressDao.findByCourseIdLiveData(courseProgress.courseId)
-            fileProgressLiveData?.observeForever(fileProgressObserver)
-        }
-
         updateProgress()
     }
 
     init {
         courseProgressLiveData = courseProgressDao.findByWorkerIdLiveData(data.workerId)
         courseProgressLiveData?.observeForever(progressObserver)
+
+        fileProgressLiveData = fileSyncProgressDao.findByCourseIdLiveData(data.courseId)
+        fileProgressLiveData?.observeForever(fileProgressObserver)
     }
 
     private fun createTabs(tabs: Map<String, TabSyncData>, courseWorkerId: String) {
