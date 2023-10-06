@@ -56,6 +56,13 @@ object EnrollmentAPI {
                 @Query("userId") userId: Long,
                 @Query("type[]") enrollmentTypes: Array<String>): Call<List<Enrollment>>
 
+        @GET("courses/{courseId}/enrollments")
+        suspend fun getEnrollmentsForUserInCourse(
+            @Path("courseId") courseId: Long,
+            @Query("user_id") userId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<List<Enrollment>>
+
         @GET
         fun getNextPage(@Url nextUrl: String): Call<List<Enrollment>>
 

@@ -142,6 +142,17 @@ object ApiEndpoint : Endpoint(
                 request.successResponse(plannerOverride!!)
             }
         }
+    ),
+    Segment("features") to Endpoint(
+        Segment("environment") to object : Endpoint(
+            response = {
+                GET {
+                    request.successResponse(mapOf("mobile_offline_mode" to data.offlineModeEnabled))
+                }
+            }
+        ) {
+            override val authModel = DontCareAuthModel
+        }
     )
 )
 

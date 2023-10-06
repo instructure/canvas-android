@@ -26,7 +26,7 @@ interface ModuleNameDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: ModuleNameEntity)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(entities: List<ModuleNameEntity>)
 
     @Delete

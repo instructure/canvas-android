@@ -38,6 +38,7 @@ class SyncSettingsFacadeTest {
     fun `getSyncSettingsListenable should create default settings if value is null`() = runTest {
         val liveData = mockk<LiveData<SyncSettingsEntity?>> { every { value } returns null }
 
+        coEvery { syncSettingsDao.findSyncSettings() } returns null
         every { syncSettingsDao.findSyncSettingsLiveData() } returns liveData
         coEvery { syncSettingsDao.insert(any()) } just Runs
 

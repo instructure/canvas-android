@@ -21,22 +21,8 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
-import com.instructure.pandautils.room.common.daos.AttachmentDao
-import com.instructure.pandautils.room.common.daos.AuthorDao
-import com.instructure.pandautils.room.common.daos.MediaCommentDao
-import com.instructure.pandautils.room.common.daos.SubmissionCommentDao
-import com.instructure.pandautils.room.common.entities.AttachmentEntity
-import com.instructure.pandautils.room.common.entities.AuthorEntity
-import com.instructure.pandautils.room.common.entities.MediaCommentEntity
-import com.instructure.pandautils.room.common.entities.SubmissionCommentEntity
-import com.instructure.pandautils.room.offline.daos.GroupDao
-import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
-import com.instructure.pandautils.room.offline.daos.SubmissionDao
-import com.instructure.pandautils.room.offline.daos.UserDao
-import com.instructure.pandautils.room.offline.entities.GroupEntity
-import com.instructure.pandautils.room.offline.entities.RubricCriterionAssessmentEntity
-import com.instructure.pandautils.room.offline.entities.SubmissionEntity
-import com.instructure.pandautils.room.offline.entities.UserEntity
+import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.entities.*
 
 class SubmissionFacade(
     private val submissionDao: SubmissionDao,
@@ -49,18 +35,17 @@ class SubmissionFacade(
     private val authorDao: AuthorDao,
     private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
 ) {
-
     private val fetchedUsers = mutableMapOf<Long, User?>()
 
-    suspend fun insertSubmission(submission: Submission): Long {
-        val groupId = submission.group?.let { group -> groupDao.insert(GroupEntity(group)) }
+    suspend fun insertSubmission(submission: Submission) {
+        submission.group?.let { group -> groupDao.insertOrUpdate(GroupEntity(group)) }
+
+        submissionDao.insertOrUpdate(SubmissionEntity(submission, submission.group?.id, submission.mediaComment?.mediaId))
+
         submission.mediaComment?.let { mediaComment ->
-            mediaCommentDao.insert(
-                MediaCommentEntity(
-                    mediaComment
-                )
-            )
+            mediaCommentDao.insert(MediaCommentEntity(mediaComment, submission.id, submission.attempt))
         }
+
         if (submission.userId != 0L) {
             val user = submission.user
                 ?: fetchedUsers[submission.userId]
@@ -71,7 +56,7 @@ class SubmissionFacade(
 
             fetchedUsers[submission.userId] = user
             if (user != null) {
-                userDao.insert(UserEntity(user))
+                userDao.insertOrUpdate(UserEntity(user))
             }
         }
 
@@ -84,28 +69,37 @@ class SubmissionFacade(
 
             if (grader != null) {
                 fetchedUsers[grader.id] = grader
-                userDao.insert(UserEntity(grader))
+                userDao.insertOrUpdate(UserEntity(grader))
             }
         }
 
-        submissionCommentDao.insertAll(submission.submissionComments.map { submissionComment ->
-            submissionComment.mediaComment?.let { mediaCommentDao.insert(MediaCommentEntity(it)) }
-            submissionComment.attachments.map { attachmentDao.insert(AttachmentEntity(it, submissionCommentId = submissionComment.id)) }
-            submissionComment.author?.let { authorDao.insert(AuthorEntity(it)) }
-            SubmissionCommentEntity(submissionComment, submission.id)
+        submission.submissionComments.forEach { submissionComment ->
+            submissionCommentDao.insert(SubmissionCommentEntity(submissionComment, submission.id, submission.attempt))
+
+            submissionComment.mediaComment?.let {
+                mediaCommentDao.insert(MediaCommentEntity(it, submission.id, submission.attempt))
+            }
+
+            submissionComment.attachments.map {
+                attachmentDao.insert(AttachmentEntity(it, submissionId = submission.id, submissionCommentId = submissionComment.id))
+            }
+
+            submissionComment.author?.let {
+                authorDao.insert(AuthorEntity(it))
+            }
+        }
+
+        attachmentDao.insertAll(submission.attachments.map {
+            AttachmentEntity(it, submissionId = submission.id, attempt = submission.attempt)
         })
 
-        attachmentDao.insertAll(submission.attachments.map { AttachmentEntity(it, submissionId = submission.id, attempt = submission.attempt) })
-
         rubricCriterionAssessmentDao.insertAll(submission.rubricAssessment.map {
-            RubricCriterionAssessmentEntity(it.value, it.key, submission.id)
+            RubricCriterionAssessmentEntity(it.value, it.key, submission.assignmentId)
         })
 
         submission.submissionHistory.forEach { submissionHistoryItem ->
             submissionHistoryItem?.let { insertSubmission(it) }
         }
-
-        return submissionDao.insert(SubmissionEntity(submission, groupId, submission.mediaComment?.mediaId))
     }
 
     suspend fun getSubmissionById(id: Long): Submission? {
@@ -123,7 +117,7 @@ class SubmissionFacade(
         val groupEntity = submissionEntity.groupId?.let { groupDao.findById(it) }
         val submissionCommentEntities = submissionCommentDao.findBySubmissionId(submissionEntity.id)
         val attachmentEntities = attachmentDao.findBySubmissionId(submissionEntity.id)
-        val rubricCriterionAssessmentEntities = rubricCriterionAssessmentDao.findBySubmissionId(submissionEntity.id)
+        val rubricCriterionAssessmentEntities = rubricCriterionAssessmentDao.findByAssignmentId(submissionEntity.assignmentId)
 
         return submissionEntity.toApiModel(
             mediaComment = mediaCommentEntity?.toApiModel(),

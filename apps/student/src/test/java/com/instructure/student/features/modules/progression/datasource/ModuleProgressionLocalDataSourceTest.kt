@@ -54,7 +54,7 @@ class ModuleProgressionLocalDataSourceTest {
     @Test
     fun `Get quiz api model when entity is found in db`() = runTest {
         val quiz = Quiz(id = 1, title = "Quiz 1")
-        coEvery { quizDao.findById(1) } returns QuizEntity(quiz)
+        coEvery { quizDao.findById(1) } returns QuizEntity(quiz, 1L)
 
         val result = dataSource.getDetailedQuiz("url", 1, true)
 

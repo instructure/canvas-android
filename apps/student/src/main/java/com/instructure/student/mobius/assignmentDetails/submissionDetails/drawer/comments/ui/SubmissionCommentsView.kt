@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
@@ -138,7 +139,7 @@ class SubmissionCommentsView(
 
     fun showFilePicker(canvasContext: CanvasContext, assignment: Assignment, attemptId: Long?) {
         RouteMatcher.route(
-            context,
+            activity as FragmentActivity,
             PickerSubmissionUploadFragment.makeRoute(
                 canvasContext,
                 assignment,

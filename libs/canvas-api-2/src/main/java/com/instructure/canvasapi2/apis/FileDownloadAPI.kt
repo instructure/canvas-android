@@ -18,11 +18,13 @@
 
 package com.instructure.canvasapi2.apis
 
+import com.instructure.canvasapi2.builders.RestParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 import retrofit2.http.GET
 import retrofit2.http.Streaming
+import retrofit2.http.Tag
 import retrofit2.http.Url
 import java.io.File
 
@@ -30,12 +32,12 @@ interface FileDownloadAPI {
 
     @Streaming
     @GET
-    suspend fun downloadFile(@Url url: String): ResponseBody
+    suspend fun downloadFile(@Url url: String, @Tag params: RestParams): ResponseBody
 }
 
 sealed class DownloadState {
-    data class InProgress(val progress: Int) : DownloadState()
-    object Success : DownloadState()
+    data class InProgress(val progress: Int, val totalBytes: Long) : DownloadState()
+    data class Success(val totalBytes: Long) : DownloadState()
     data class Failure(val throwable: Throwable) : DownloadState()
 }
 
@@ -43,12 +45,14 @@ fun ResponseBody.saveFile(file: File): Flow<DownloadState> {
     val debounce = 500L
 
     return flow {
-        emit(DownloadState.InProgress(0))
+        emit(DownloadState.InProgress(0, 0))
         var lastUpdate = System.currentTimeMillis()
         try {
+            var totalBytes: Long
             byteStream().use { inputStream ->
                 file.outputStream().use { outputStream ->
-                    val totalBytes = contentLength()
+                    totalBytes = contentLength()
+                    emit(DownloadState.InProgress(0, totalBytes))
                     val buffer = ByteArray(8 * 1024)
                     var progressBytes = 0L
                     var bytes = inputStream.read(buffer)
@@ -59,13 +63,13 @@ fun ResponseBody.saveFile(file: File): Flow<DownloadState> {
                         bytes = inputStream.read(buffer)
 
                         if (System.currentTimeMillis() - lastUpdate > debounce) {
-                            emit(DownloadState.InProgress((progressBytes * 100 / totalBytes).toInt()))
+                            emit(DownloadState.InProgress((progressBytes * 100 / totalBytes).toInt(), totalBytes))
                             lastUpdate = System.currentTimeMillis()
                         }
                     }
                 }
             }
-            emit(DownloadState.Success)
+            emit(DownloadState.Success(totalBytes))
         } catch (e: Exception) {
             emit(DownloadState.Failure(e))
         }

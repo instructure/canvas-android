@@ -31,6 +31,12 @@ import java.util.*
         ForeignKey(
             entity = UserEntity::class,
             parentColumns = ["id"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = UserEntity::class,
+            parentColumns = ["id"],
             childColumns = ["observedUserId"],
             onDelete = ForeignKey.SET_NULL
         ),
@@ -49,7 +55,7 @@ import java.util.*
     ]
 )
 data class EnrollmentEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Long,
     val role: String,
     val type: String,

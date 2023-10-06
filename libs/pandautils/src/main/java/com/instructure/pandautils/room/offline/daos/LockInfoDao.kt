@@ -24,7 +24,7 @@ import com.instructure.pandautils.room.offline.entities.LockInfoEntity
 interface LockInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: LockInfoEntity)
+    suspend fun insert(entity: LockInfoEntity): Long
 
     @Delete
     suspend fun delete(entity: LockInfoEntity)

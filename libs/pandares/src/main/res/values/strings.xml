@@ -1454,4 +1454,11 @@
     <string name="dashboardAllCoursesButton">All Courses</string>
     <string name="allCoursesOfflineNote">Selecting courses for Dashboard can only be done online. You can navigate to offline course details.</string>
     <string name="allCoursesOfflineNoteTitle">Note</string>
+    <string name="syncProgress_downloadSuccess">Success! Downloaded %1$s of %2$s</string>
+    <string name="syncProgress_syncingOfflineContent">Syncing Offline Content</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">%d item is syncing.</item>
+        <item quantity="other">%d items are syncing.</item>
+    </plurals>
+    <string name="syncProgressAdditionalFiles">Course content images</string>
 </resources>

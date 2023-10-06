@@ -35,6 +35,7 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import dagger.assisted.Assisted
@@ -70,7 +71,7 @@ class FileDownloadWorker @AssistedInject constructor(
         }
         var result = Result.retry()
 
-        fileDownloadApi.downloadFile(fileUrl).saveFile(downloadedFile)
+        fileDownloadApi.downloadFile(fileUrl, RestParams()).saveFile(downloadedFile)
             .collect { downloadState ->
                 when (downloadState) {
                     is DownloadState.InProgress -> {

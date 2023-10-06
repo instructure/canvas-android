@@ -245,7 +245,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     private val adapterToFragmentCallback = object : AdapterToFragmentCallback<Assignment> {
         override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
-            RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+            RouteMatcher.route(requireActivity(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
         }
 
         override fun onRefreshFinished() {

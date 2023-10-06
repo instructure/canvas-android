@@ -1,11 +1,22 @@
-package com.instructure.pandautils.room.common.entities
+package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.SubmissionComment
-import java.util.Date
+import com.instructure.pandautils.room.offline.entities.SubmissionEntity
+import java.util.*
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = SubmissionEntity::class,
+            parentColumns = ["id", "attempt"],
+            childColumns = ["submissionId", "attemptId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class SubmissionCommentEntity(
     @PrimaryKey val id: Long = 0,
     val authorId: Long = 0,
@@ -17,7 +28,7 @@ data class SubmissionCommentEntity(
     val attemptId: Long? = null,
     val submissionId: Long? = null
 ) {
-    constructor(submissionComment: SubmissionComment, submissionId: Long? = null) : this(
+    constructor(submissionComment: SubmissionComment, submissionId: Long, attemptId: Long) : this(
         id = submissionComment.id,
         authorId = submissionComment.authorId,
         authorName = submissionComment.authorName,
@@ -25,7 +36,7 @@ data class SubmissionCommentEntity(
         comment = submissionComment.comment,
         createdAt = submissionComment.createdAt,
         mediaCommentId = submissionComment.mediaComment?.mediaId,
-        attemptId = submissionComment.attempt,
+        attemptId = attemptId,
         submissionId = submissionId
     )
 }

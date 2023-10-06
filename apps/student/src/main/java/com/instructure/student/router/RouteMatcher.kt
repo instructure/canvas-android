@@ -16,7 +16,6 @@
  */
 package com.instructure.student.router
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.os.Bundle
@@ -83,6 +82,7 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     // Be sensitive to the order of items. It really, really matters.
+    @androidx.annotation.OptIn(com.google.android.material.badge.ExperimentalBadgeUtils::class)
     private fun initRoutes() {
         routes.add(Route("/", DashboardFragment::class.java))
         // region Conversations
@@ -95,7 +95,14 @@ object RouteMatcher : BaseRouteMatcher() {
         // Courses
         //////////////////////////
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), CourseBrowserFragment::class.java, NotificationListFragment::class.java, Arrays.asList(":${RouterParams.RECENT_ACTIVITY}"))) // Recent Activity
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}"),
+                CourseBrowserFragment::class.java,
+                NotificationListFragment::class.java,
+                listOf(":${RouterParams.RECENT_ACTIVITY}")
+            )
+        ) // Recent Activity
         if (ApiPrefs.showElementaryView) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}"), ElementaryCourseFragment::class.java))
         } else {
@@ -115,14 +122,55 @@ object RouteMatcher : BaseRouteMatcher() {
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules"), ModuleListFragment::class.java))
         }
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"),
+                ModuleListFragment::class.java,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/:${RouterParams.MODULE_ID}"), ModuleListFragment::class.java))
 
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}"))) // TODO TEST
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"),
+                ModuleListFragment::class.java,
+                CourseModuleProgressionFragment::class.java,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"),
+                ModuleListFragment::class.java,
+                CourseModuleProgressionFragment::class.java,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"),
+                ModuleListFragment::class.java,
+                CourseModuleProgressionFragment::class.java,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                ModuleListFragment::class.java,
+                CourseModuleProgressionFragment::class.java,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"),
+                ModuleListFragment::class.java,
+                CourseModuleProgressionFragment::class.java,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        ) // TODO TEST
         // endregion
 
         // Notifications
@@ -134,45 +182,121 @@ object RouteMatcher : BaseRouteMatcher() {
         } else {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
         }
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"), GradesListFragment::class.java, AssignmentDetailsFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"),
+                GradesListFragment::class.java,
+                AssignmentDetailsFragment::class.java
+            )
+        )
 
         // People
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/users"), PeopleListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/users/:${RouterParams.USER_ID}"), PeopleListFragment::class.java, PeopleDetailsFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/users/:${RouterParams.USER_ID}"),
+                PeopleListFragment::class.java,
+                PeopleDetailsFragment::class.java
+            )
+        )
 
         // Files
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder/:${RouterParams.FOLDER_NAME}"), RouteContext.FILE))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/download"), RouteContext.FILE)) // trigger webview's download listener
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/download"),
+                RouteContext.FILE
+            )
+        ) // trigger webview's download listener
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/preview"), RouteContext.FILE))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), RouteContext.FILE, CourseModuleProgressionFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"),
+                RouteContext.FILE,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder(\\/.*)*/:${RouterParams.FILE_ID}"), RouteContext.FILE))
         routes.add(Route("/files/folder(\\/.*)*/:${RouterParams.FILE_ID}", RouteContext.FILE))
 
         // Discussions
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics"), DiscussionListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, CourseModuleProgressionFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), DiscussionListFragment::class.java, DiscussionRouterFragment::class.java)) // Route for bookmarking
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"),
+                DiscussionListFragment::class.java,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"),
+                DiscussionListFragment::class.java,
+                DiscussionRouterFragment::class.java
+            )
+        ) // Route for bookmarking
 
         // Pages
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages"), PageListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, CourseModuleProgressionFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, PageDetailsFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"),
+                PageListFragment::class.java,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"),
+                PageListFragment::class.java,
+                PageDetailsFragment::class.java
+            )
+        )
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/wiki"), PageListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/wiki/:${RouterParams.PAGE_ID}"), PageListFragment::class.java, PageDetailsFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/wiki/:${RouterParams.PAGE_ID}"),
+                PageListFragment::class.java,
+                PageDetailsFragment::class.java
+            )
+        )
 
         // Announcements
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements"), AnnouncementListFragment::class.java))
         // :message_id because it shares with discussions
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), AnnouncementListFragment::class.java, DiscussionRouterFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"),
+                AnnouncementListFragment::class.java,
+                DiscussionRouterFragment::class.java
+            )
+        )
         // Announcements from the notifications tab
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"), NotificationListFragment::class.java, DiscussionRouterFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/announcements/:${RouterParams.MESSAGE_ID}"),
+                NotificationListFragment::class.java,
+                DiscussionRouterFragment::class.java
+            )
+        )
 
         // Quiz
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes"), QuizListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), QuizListFragment::class.java, CourseModuleProgressionFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), QuizListFragment::class.java, BasicQuizViewFragment::class.java))
-
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"),
+                QuizListFragment::class.java,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"),
+                QuizListFragment::class.java,
+                BasicQuizViewFragment::class.java
+            )
+        )
 
         // Calendar
         routes.add(Route("/calendar", CalendarFragment::class.java))
@@ -183,22 +307,74 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Assignments
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments"), AssignmentListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, CourseModuleProgressionFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, CourseModuleProgressionFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarFragment::class.java, CourseModuleProgressionFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, AssignmentDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, AssignmentDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarFragment::class.java, AssignmentDetailsFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                AssignmentListFragment::class.java,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                NotificationListFragment::class.java,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                CalendarFragment::class.java,
+                CourseModuleProgressionFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                AssignmentListFragment::class.java,
+                AssignmentDetailsFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                NotificationListFragment::class.java,
+                AssignmentDetailsFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                CalendarFragment::class.java,
+                AssignmentDetailsFragment::class.java
+            )
+        )
 
         // Studio
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}/resource_selection"), StudioWebViewFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}/resource_selection"),
+                StudioWebViewFragment::class.java
+            )
+        )
 
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), AssignmentDetailsFragment::class.java, SubmissionDetailsFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"),
+                AssignmentDetailsFragment::class.java,
+                SubmissionDetailsFragment::class.java
+            )
+        )
         // Route to Assignment Details first - no submission/on paper assignments won't have grades on the Submission Details page, but we also need to account for routing to submission comments (Assignment Details will check for that)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentDetailsFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"),
+                AssignmentDetailsFragment::class.java
+            )
+        )
 
         // Settings
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/settings"), CourseSettingsFragment::class.java))
@@ -209,12 +385,26 @@ object RouteMatcher : BaseRouteMatcher() {
         // Unsupported
         // NOTE: An Exception to how the router usually works (Not recommended for urls that are meant to be internally routed)
         //  The .* will catch anything and route to UnsupportedFragment. If the users decides to press "open in browser" from the UnsupportedFragment, then InternalWebviewFragment is setup to handle the unsupportedFeature
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/lti_collaborations.*"), UnsupportedTabFragment::class.java, Tab.COLLABORATIONS_ID))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/lti_collaborations.*"),
+                UnsupportedTabFragment::class.java,
+                Tab.COLLABORATIONS_ID
+            )
+        )
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/collaborations.*"), UnsupportedTabFragment::class.java, Tab.COLLABORATIONS_ID))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/outcomes.*"), UnsupportedTabFragment::class.java, Tab.OUTCOMES_ID))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/conferences.*"), ConferenceListRepositoryFragment::class.java, Tab.CONFERENCES_ID))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/conferences.*"),
+                ConferenceListRepositoryFragment::class.java,
+                Tab.CONFERENCES_ID
+            )
+        )
 
-        routes.add(Route("/files", FileListFragment::class.java).apply{ canvasContext = ApiPrefs.user }) // validRoute for FileListFragment checks for a canvasContext, which is null on deep links
+        routes.add(Route("/files", FileListFragment::class.java).apply {
+            canvasContext = ApiPrefs.user
+        }) // validRoute for FileListFragment checks for a canvasContext, which is null on deep links
         routes.add(Route("/files/folder/:${RouterParams.FOLDER_NAME}", RouteContext.FILE))
         routes.add(Route("/files/:${RouterParams.FILE_ID}/download", RouteContext.FILE)) // trigger webview's download listener
         routes.add(Route("/files/:${RouterParams.FILE_ID}", RouteContext.FILE)) // Triggered by new RCE content file links
@@ -226,13 +416,20 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}"), RouteContext.LTI))
 
         //Single Detail Pages (Typically routing from To-dos (may not be handling every use case)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentDetailsFragment::class.java, null))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                AssignmentDetailsFragment::class.java,
+                null
+            )
+        )
 
         routes.add(Route("/enroll/.*", RouteContext.DO_NOT_ROUTE))
 
         // Catch all (when nothing has matched, these take over)
         // Note: Catch all only happens with supported domains such as instructure.com
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/.*"), UnsupportedFeatureFragment::class.java)) // course_id fetches the course context
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/.*"), UnsupportedFeatureFragment::class.java))
+        // course_id fetches the course context
         routes.add(Route(".*", UnsupportedFeatureFragment::class.java))
     }
 
@@ -244,11 +441,11 @@ object RouteMatcher : BaseRouteMatcher() {
 //        bottomSheetFragments.add(EditFavoritesFragment::class.java)
     }
 
-    fun routeUrl(context: Context, url: String, extras: Bundle? = null) {
-        routeUrl(context, url, ApiPrefs.domain, extras)
+    fun routeUrl(activity: FragmentActivity, url: String, extras: Bundle? = null) {
+        routeUrl(activity, url, ApiPrefs.domain, extras)
     }
 
-    fun routeUrl(context: Context, url: String, domain: String, extras: Bundle? = null, secondaryClass: Class<out Fragment>? = null) {
+    fun routeUrl(activity: FragmentActivity, url: String, domain: String, extras: Bundle? = null, secondaryClass: Class<out Fragment>? = null) {
         /* Possible activity types we can navigate too: Unknown Link, InitActivity, Master/Detail, Fullscreen, WebView, ViewMedia */
 
         //Find the best route
@@ -258,9 +455,11 @@ object RouteMatcher : BaseRouteMatcher() {
         val route = getInternalRoute(url, domain)
 
         // Prevent routing to unsupported features while in student view
-        if (ApiPrefs.isStudentView &&
-            (route?.primaryClass == InboxFragment::class.java ||
-                    route?.tabId == Tab.CONFERENCES_ID || route?.tabId == Tab.COLLABORATIONS_ID)) {
+        if (ApiPrefs.isStudentView
+            && (route?.primaryClass == InboxFragment::class.java
+                    || route?.tabId == Tab.CONFERENCES_ID
+                    || route?.tabId == Tab.COLLABORATIONS_ID)
+        ) {
             route.primaryClass = NothingToSeeHereFragment::class.java
         }
 
@@ -268,7 +467,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // The Group API will not load an individual user's details, so we route to the List fragment by default
         // FIXME: Remove if the group context works with grabbing a user
-        if (route?.getContextType() == CanvasContext.Type.GROUP && route.primaryClass == PeopleListFragment::class.java && route.secondaryClass == PeopleDetailsFragment::class.java ) {
+        if (route?.getContextType() == CanvasContext.Type.GROUP && route.primaryClass == PeopleListFragment::class.java && route.secondaryClass == PeopleDetailsFragment::class.java) {
             route.primaryClass = null
             route.secondaryClass = PeopleListFragment::class.java
         }
@@ -277,29 +476,28 @@ object RouteMatcher : BaseRouteMatcher() {
             route?.secondaryClass = secondaryClass
         }
 
-        route(context, route)
+        route(activity, route)
     }
 
-
-    fun route(context: Context, route: Route?) {
-
+    fun route(activity: FragmentActivity, route: Route?) {
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
                 // No route, no problem
-                handleWebViewUrl(context, route.uri.toString())
+                handleWebViewUrl(activity, route.uri.toString())
             }
-        } else if (route.routeContext == RouteContext.FILE || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true && route.queryParamsHash.containsKey(RouterParams.PREVIEW)) {
+        } else if (route.routeContext == RouteContext.FILE
+            || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true
+            && route.queryParamsHash.containsKey(RouterParams.PREVIEW)
+        ) {
             when {
-                route.secondaryClass == CourseModuleProgressionFragment::class.java -> handleFullscreenRoute(context, route)
+                route.secondaryClass == CourseModuleProgressionFragment::class.java -> handleFullscreenRoute(activity, route)
                 route.queryParamsHash.containsKey(RouterParams.VERIFIER) && route.queryParamsHash.containsKey(RouterParams.DOWNLOAD_FRD) -> {
                     if (route.removePreviousScreen) {
-                        val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
-                        fragmentManager?.popBackStackImmediate()
+                        val fragmentManager = activity.supportFragmentManager
+                        fragmentManager.popBackStackImmediate()
                     }
                     if (route.uri != null) {
-                        openMedia(context as FragmentActivity, route.uri.toString())
-                    } else if (route.uri != null) {
-                        openMedia(context as FragmentActivity, route.uri!!.toString())
+                        openMedia(activity, route.uri.toString())
                     }
                 }
                 route.paramsHash.containsKey(RouterParams.FOLDER_NAME) && !route.queryParamsHash.containsKey(RouterParams.PREVIEW) -> {
@@ -310,30 +508,32 @@ object RouteMatcher : BaseRouteMatcher() {
                     }
                     route.routeContext = RouteContext.UNKNOWN
                     route.primaryClass = FileListFragment::class.java
-                    handleFullscreenRoute(context, route)
+                    handleFullscreenRoute(activity, route)
                 }
                 else -> {
                     if (route.removePreviousScreen) {
-                        val fragmentManager = (context as? FragmentActivity)?.supportFragmentManager
-                        fragmentManager?.popBackStackImmediate()
+                        val fragmentManager = activity.supportFragmentManager
+                        fragmentManager.popBackStackImmediate()
                     }
                     val isGroupRoute = "groups" == route.uri?.pathSegments?.get(0)
                     handleSpecificFile(
-                        context as FragmentActivity,
-                        (if (route.queryParamsHash.containsKey(RouterParams.PREVIEW)) route.queryParamsHash[RouterParams.PREVIEW] else route.paramsHash[RouterParams.FILE_ID]) ?: "",
+                        activity,
+                        (if (route.queryParamsHash.containsKey(RouterParams.PREVIEW)) route.queryParamsHash[RouterParams.PREVIEW] else route.paramsHash[RouterParams.FILE_ID])
+                            ?: "",
                         route,
-                        isGroupRoute)
+                        isGroupRoute
+                    )
                 }
             }
         } else if (route.routeContext == RouteContext.MEDIA) {
-            handleMediaRoute(context, route)
+            handleMediaRoute(activity, route)
         } else if (route.routeContext == RouteContext.SPEED_GRADER) {
             //handleSpeedGraderRoute(context, route) //Annotations for student maybe?
-        } else if (context.resources.getBoolean(R.bool.isDeviceTablet)) {
-            handleTabletRoute(context, route)
+        } else if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
+            handleTabletRoute(activity, route)
         } else {
-            handleFullscreenRoute(context, route)
-            (context as? InterwebsToApplication)?.finish()
+            handleFullscreenRoute(activity, route)
+            (activity as? InterwebsToApplication)?.finish()
         }
     }
 
@@ -360,17 +560,17 @@ object RouteMatcher : BaseRouteMatcher() {
         Logger.i("RouteMatcher:handleWebViewRoute()")
     }
 
-    private fun getLoaderCallbacks(activity: Activity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
+    private fun getLoaderCallbacks(activity: FragmentActivity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
         if (openMediaCallbacks == null) {
 
             openMediaCallbacks = object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
                 var dialog: AlertDialog? = null
 
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
-                    if(!activity.isFinishing) {
+                    if (!activity.isFinishing) {
                         dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
-                                .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
-                                .create()
+                            .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
+                            .create()
                         dialog!!.show()
                     }
                     return OpenMediaAsyncTaskLoader(activity, args)
@@ -384,14 +584,23 @@ object RouteMatcher : BaseRouteMatcher() {
                     try {
                         if (loadedMedia.isError) {
                             if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ErrorType.NO_APPS) {
-                                val args = ViewUnsupportedFileFragment.newInstance(loadedMedia.intent!!.data!!, (loader as OpenMediaAsyncTaskLoader).filename!!, loadedMedia.intent!!.type!!, null, R.drawable.ic_attachment).nonNullArgs
-                                RouteMatcher.route(activity, Route(ViewUnsupportedFileFragment::class.java, null, args))
+                                val args = ViewUnsupportedFileFragment.newInstance(
+                                    loadedMedia.intent!!.data!!,
+                                    (loader as OpenMediaAsyncTaskLoader).filename!!,
+                                    loadedMedia.intent!!.type!!,
+                                    null,
+                                    R.drawable.ic_attachment
+                                ).nonNullArgs
+                                route(activity, Route(ViewUnsupportedFileFragment::class.java, null, args))
                             } else {
                                 Toast.makeText(activity, activity.resources.getString(loadedMedia.errorMessage), Toast.LENGTH_LONG).show()
                             }
                         } else if (loadedMedia.isHtmlFile) {
-                            val args = ViewHtmlFragment.newInstance(loadedMedia.bundle!!.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle!!.getString(Const.ACTION_BAR_TITLE)!!).nonNullArgs
-                            RouteMatcher.route(activity, Route(ViewHtmlFragment::class.java, null, args))
+                            val args = ViewHtmlFragment.newInstance(
+                                loadedMedia.bundle!!.getString(Const.INTERNAL_URL)!!,
+                                loadedMedia.bundle!!.getString(Const.ACTION_BAR_TITLE)!!
+                            ).nonNullArgs
+                            route(activity, Route(ViewHtmlFragment::class.java, null, args))
                         } else if (loadedMedia.intent != null) {
                             if (loadedMedia.intent!!.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
                                 // Show pdf with PSPDFkit
@@ -399,12 +608,24 @@ object RouteMatcher : BaseRouteMatcher() {
                                 val submissionTarget = loadedMedia.bundle?.getParcelable<ShareFileSubmissionTarget>(Const.SUBMISSION_TARGET)
                                 FileUtils.showPdfDocument(uri!!, loadedMedia, activity, submissionTarget)
                             } else if (loadedMedia.intent?.type == "video/mp4") {
-                                val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent!!.data!!.toString(), null, "video/mp4", loadedMedia.intent!!.dataString, true)
-                                RouteMatcher.route(activity, Route(bundle, RouteContext.MEDIA))
+                                val bundle = BaseViewMediaActivity.makeBundle(
+                                    loadedMedia.intent!!.data!!.toString(),
+                                    null,
+                                    "video/mp4",
+                                    loadedMedia.intent!!.dataString,
+                                    true
+                                )
+                                route(activity, Route(bundle, RouteContext.MEDIA))
 
                             } else if (loadedMedia.intent?.type?.startsWith("image/") == true) {
-                                val args = ViewImageFragment.newInstance(loadedMedia.intent!!.dataString!!, loadedMedia.intent!!.data!!, "image/*", true, 0).nonNullArgs
-                                RouteMatcher.route(activity, Route(ViewImageFragment::class.java, null, args))
+                                val args = ViewImageFragment.newInstance(
+                                    loadedMedia.intent!!.dataString!!,
+                                    loadedMedia.intent!!.data!!,
+                                    "image/*",
+                                    true,
+                                    0
+                                ).nonNullArgs
+                                route(activity, Route(ViewImageFragment::class.java, null, args))
                             } else {
                                 activity.startActivity(loadedMedia.intent)
                             }
@@ -428,7 +649,9 @@ object RouteMatcher : BaseRouteMatcher() {
         if (activity != null) {
             openMediaCallbacks = null
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url)
-            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID)
+            LoaderUtils.restartLoaderWithBundle(
+                LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID
+            )
         }
     }
 
@@ -447,18 +670,28 @@ object RouteMatcher : BaseRouteMatcher() {
         } else {
             openMediaCallbacks = null
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename, route.arguments)
-            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID)
+            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+                LoaderManager.getInstance(
+                    activity
+                ), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID
+            )
         }
     }
 
     private fun handleSpecificFile(activity: FragmentActivity, fileID: String?, route: Route, isGroupFile: Boolean) {
-
         val fileFolderStatusCallback = object : StatusCallback<FileFolder>() {
             override fun onResponse(response: Response<FileFolder>, linkHeaders: LinkHeaders, type: ApiType) {
                 super.onResponse(response, linkHeaders, type)
                 response.body()?.let { fileFolder ->
                     if (!isGroupFile && (fileFolder.isLocked || fileFolder.isLockedForUser)) {
-                        Toast.makeText(activity, String.format(activity.getString(R.string.fileLocked), if (fileFolder.displayName == null) activity.getString(R.string.file) else fileFolder.displayName), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            activity,
+                            String.format(
+                                activity.getString(R.string.fileLocked),
+                                if (fileFolder.displayName == null) activity.getString(R.string.file) else fileFolder.displayName
+                            ),
+                            Toast.LENGTH_LONG
+                        ).show()
                     } else {
                         // This is either a group file (which have no permissions), or a file that is accessible by the user
                         openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
@@ -487,7 +720,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     @JvmOverloads
     fun canRouteInternally(
-        context: Context,
+        activity: FragmentActivity?,
         url: String,
         domain: String,
         routeIfPossible: Boolean,
@@ -495,30 +728,33 @@ object RouteMatcher : BaseRouteMatcher() {
     ): Boolean {
         val route = getInternalRoute(url, domain)
         val canRoute = route != null && (allowUnsupported || route.primaryClass != UnsupportedFeatureFragment::class.java)
-        if (canRoute && routeIfPossible) routeUrl(context, url)
+        if (canRoute && routeIfPossible) activity?.let { routeUrl(activity, url) }
         return canRoute
     }
 
-
     fun generateUrl(url: String?, queryParams: HashMap<String, String>): String? {
-        if(url == null) return null
+        if (url == null) return null
         return createQueryParamString(url, queryParams)
     }
-
 
     fun generateUrl(type: CanvasContext.Type, masterCls: Class<out Fragment>?, replacementParams: HashMap<String, String>): String? {
         return generateUrl(type, masterCls, null, replacementParams, null)
     }
 
-
-    fun generateUrl(type: CanvasContext.Type, masterCls: Class<out Fragment>?, detailCls: Class<out Fragment>?, replacementParams: HashMap<String, String>?, queryParams: HashMap<String, String>?): String? {
+    fun generateUrl(
+        type: CanvasContext.Type,
+        masterCls: Class<out Fragment>?,
+        detailCls: Class<out Fragment>?,
+        replacementParams: HashMap<String, String>?,
+        queryParams: HashMap<String, String>?
+    ): String? {
         val domain = ApiPrefs.fullDomain
 
         // Workaround for the discussion details because we bookmark a different class that we use for routing
         val detailsClass = if (detailCls == DiscussionDetailsFragment::class.java) DiscussionRouterFragment::class.java else detailCls
 
         val urlRoute = getInternalRoute(masterCls, detailsClass)
-        if(urlRoute != null) {
+        if (urlRoute != null) {
             var path = urlRoute.createUrl(replacementParams)
             if (path.contains(COURSE_OR_GROUP_REGEX)) {
                 val pattern = Pattern.compile(COURSE_OR_GROUP_REGEX, Pattern.LITERAL)
@@ -543,4 +779,3 @@ object RouteMatcher : BaseRouteMatcher() {
         initRoutes()
     }
 }
-

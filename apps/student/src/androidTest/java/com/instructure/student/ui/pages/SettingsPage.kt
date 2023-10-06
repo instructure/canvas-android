@@ -16,15 +16,8 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.TextViewColorAssertion
-import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withParent
-import com.instructure.espresso.page.withText
-import com.instructure.espresso.scrollTo
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 
 class SettingsPage : BasePage(R.id.settingsFragment) {
@@ -41,6 +34,7 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     private val remoteConfigLabel by OnViewWithId(R.id.remoteConfigParams)
     private val appThemeTitle by OnViewWithId(R.id.appThemeTitle)
     private val appThemeStatus by OnViewWithId(R.id.appThemeStatus)
+    private val offlineContent by OnViewWithId(R.id.offlineSyncSettingsContainer)
 
     fun openAboutPage() {
         aboutLabel.scrollTo().click()
@@ -85,5 +79,17 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
 
     fun assertAppThemeStatusTextColor(expectedTextColor: String) {
         appThemeStatus.check(TextViewColorAssertion(expectedTextColor))
+    }
+
+    fun openOfflineContentPage() {
+        offlineContent.scrollTo().click()
+    }
+
+    fun assertOfflineContentDisplayed() {
+        offlineContent.scrollTo().assertDisplayed()
+    }
+
+    fun assertOfflineContentNotDisplayed() {
+        offlineContent.assertNotDisplayed()
     }
 }

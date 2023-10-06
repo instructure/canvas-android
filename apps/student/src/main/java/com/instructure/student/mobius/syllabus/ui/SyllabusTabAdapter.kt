@@ -87,26 +87,24 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
             override fun onPageFinishedCallback(webView: WebView, url: String) {}
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
-                return RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, false)
+                return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
             }
 
             override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
             }
         }
-        webView.canvasEmbeddedWebViewCallback =
-            object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
-                    return true
-                }
-
-                override fun launchInternalWebViewFragment(url: String) {
-                    InternalWebviewFragment.loadInternalWebView(
-                        webView.context,
-                        InternalWebviewFragment.makeRoute(canvasContext, url, false)
-                    )
-                }
+        webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
+                return true
             }
 
+            override fun launchInternalWebViewFragment(url: String) {
+                InternalWebviewFragment.loadInternalWebView(
+                    activity,
+                    InternalWebviewFragment.makeRoute(canvasContext, url, false)
+                )
+            }
+        }
     }
 }

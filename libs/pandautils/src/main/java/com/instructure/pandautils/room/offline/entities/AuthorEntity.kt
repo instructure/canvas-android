@@ -1,4 +1,4 @@
-package com.instructure.pandautils.room.common.entities
+package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -12,7 +12,7 @@ data class AuthorEntity(
     val htmlUrl: String? = null,
     val pronouns: String? = null
 ) {
-    constructor(author: Author): this(
+    constructor(author: Author) : this(
         author.id,
         author.displayName,
         author.avatarImageUrl,

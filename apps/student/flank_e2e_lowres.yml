@@ -16,7 +16,7 @@ gcloud:
   - notAnnotation com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
   device:
   - model: NexusLowRes
-    version: 26
+    version: 29
     locale: en_US
     orientation: portrait
 

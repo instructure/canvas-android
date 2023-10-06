@@ -22,13 +22,16 @@ data class CourseProgress(
     val courseId: Long,
     val courseName: String,
     val tabs: Map<String, TabSyncData>,
-    val fileSyncData: List<FileSyncData>? = null
+    val fileSyncData: List<FileSyncData>? = null,
+    val additionalFileSyncData: List<FileSyncData>? = null
 )
 
 data class FileSyncProgress(
     val fileName: String,
     val progress: Int,
-    val progressState: ProgressState = ProgressState.IN_PROGRESS
+    val progressState: ProgressState = ProgressState.IN_PROGRESS,
+    val totalBytes: Long = 0,
+    val externalFile: Boolean = false
 )
 
 data class TabSyncData(

@@ -17,11 +17,7 @@
 
 package com.instructure.student.test.assignment.details.submissionDetails
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CourseSettings
-import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
@@ -56,7 +52,8 @@ class SubmissionDetailsLocalDataSourceTest {
 
     @Before
     fun setup() {
-        localDataSource = SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao, courseSettingsDao)
+        localDataSource =
+            SubmissionDetailsLocalDataSource(enrollmentFacade, submissionFacade, assignmentFacade, quizDao, courseFeaturesDao, courseSettingsDao)
     }
 
     @Test
@@ -157,7 +154,7 @@ class SubmissionDetailsLocalDataSourceTest {
     fun `Return quiz api model`() = runTest {
         val expected = Quiz(1)
 
-        coEvery { quizDao.findById(1) } returns QuizEntity(expected)
+        coEvery { quizDao.findById(1) } returns QuizEntity(expected, 1L)
 
         val result = localDataSource.getQuiz(1, 1, true)
 

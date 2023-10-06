@@ -72,11 +72,11 @@ class SubmissionRubricDescriptionFragment : DialogFragment() {
                 override fun onPageStartedCallback(webView: WebView, url: String) {}
                 override fun onPageFinishedCallback(webView: WebView, url: String) {}
                 override fun canRouteInternallyDelegate(url: String): Boolean {
-                    return RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+                    return RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
                 }
 
                 override fun routeInternallyCallback(url: String) {
-                    RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
+                    RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
                 }
             }
 

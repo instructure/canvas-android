@@ -26,6 +26,9 @@ interface TermDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: TermEntity)
 
+    @Upsert(entity = TermEntity::class)
+    suspend fun insertOrUpdate(entity: TermEntity)
+
     @Delete
     suspend fun delete(entity: TermEntity)
 

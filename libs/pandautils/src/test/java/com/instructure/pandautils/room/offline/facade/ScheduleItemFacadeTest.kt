@@ -18,10 +18,12 @@
 
 package com.instructure.pandautils.room.offline.facade
 
+import androidx.room.withTransaction
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentOverride
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.AssignmentDao
 import com.instructure.pandautils.room.offline.daos.AssignmentOverrideDao
 import com.instructure.pandautils.room.offline.daos.ScheduleItemAssignmentOverrideDao
@@ -30,12 +32,11 @@ import com.instructure.pandautils.room.offline.entities.AssignmentEntity
 import com.instructure.pandautils.room.offline.entities.AssignmentOverrideEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemAssignmentOverrideEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemEntity
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -45,13 +46,35 @@ class ScheduleItemFacadeTest {
     private val assignmentOverrideDao: AssignmentOverrideDao = mockk(relaxed = true)
     private val scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao = mockk(relaxed = true)
     private val assignmentDao: AssignmentDao = mockk(relaxed = true)
+    private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
     private lateinit var scheduleItemFacade: ScheduleItemFacade
 
     @Before
     fun setup() {
-        scheduleItemFacade =
-            ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentDao)
+        scheduleItemFacade = ScheduleItemFacade(
+            scheduleItemDao,
+            assignmentOverrideDao,
+            scheduleItemAssignmentOverrideDao,
+            assignmentDao,
+            offlineDatabase
+        )
+
+        MockKAnnotations.init(this)
+
+        mockkStatic(
+            "androidx.room.RoomDatabaseKt"
+        )
+
+        val transactionLambda = slot<suspend () -> Unit>()
+        coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
+            transactionLambda.captured.invoke()
+        }
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -64,10 +87,10 @@ class ScheduleItemFacadeTest {
             )
         )
 
-        scheduleItemFacade.insertScheduleItems(listOf(scheduleItem))
+        scheduleItemFacade.insertScheduleItems(listOf(scheduleItem), 1L)
 
         coVerify(exactly = 1) {
-            scheduleItemDao.insert(ScheduleItemEntity(scheduleItem))
+            scheduleItemDao.insert(ScheduleItemEntity(scheduleItem, 1L))
             assignmentOverrideDao.insert(AssignmentOverrideEntity(scheduleItem.assignmentOverrides?.first()!!))
             scheduleItemAssignmentOverrideDao.insert(ScheduleItemAssignmentOverrideEntity(1L, "event_1"))
         }
@@ -83,9 +106,7 @@ class ScheduleItemFacadeTest {
             assignmentOverrides = assignmentOverrides
         )
         coEvery { scheduleItemDao.findByItemType(any(), any()) } returns listOf(
-            ScheduleItemEntity(
-                scheduleItem
-            )
+            ScheduleItemEntity(scheduleItem, 1L)
         )
 
         coEvery { assignmentDao.findById(any()) } returns AssignmentEntity(assignment, null, null, null, null)

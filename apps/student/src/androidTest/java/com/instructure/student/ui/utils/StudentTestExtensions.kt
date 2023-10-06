@@ -22,6 +22,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import androidx.fragment.app.FragmentActivity
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -222,8 +223,8 @@ fun StudentTest.routeTo(route: String, domain: String) {
     context.startActivity(intent)
 }
 
-fun StudentTest.routeTo(route: Route) {
-    RouteMatcher.route(InstrumentationRegistry.getInstrumentation().targetContext, route)
+fun StudentTest.routeTo(route: Route, activity: FragmentActivity) {
+    RouteMatcher.route(activity, route)
 }
 
 fun StudentTest.seedAssignmentSubmission(

@@ -18,26 +18,38 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.GradingRule
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class AssignmentGroupEntity(
     @PrimaryKey
     val id: Long,
     val name: String?,
     val position: Int,
     val groupWeight: Double,
-    val rules: GradingRule?
+    val rules: GradingRule?,
+    val courseId: Long
 ) {
-    constructor(assignmentGroup: AssignmentGroup) : this(
+    constructor(assignmentGroup: AssignmentGroup, courseId: Long) : this(
         assignmentGroup.id,
         assignmentGroup.name,
         assignmentGroup.position,
         assignmentGroup.groupWeight,
-        assignmentGroup.rules
+        assignmentGroup.rules,
+        courseId
     )
 
     fun toApiModel(assignments: List<Assignment> = emptyList()) = AssignmentGroup(

@@ -383,15 +383,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         webView.setBackgroundColor(requireContext().getColor(backgroundColorRes))
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
-        webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun routeInternallyCallback(url: String) {
                 if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)) {
-                    RouteMatcher.route(requireContext(),
-                        InternalWebviewFragment.makeRoute(url, url, false, "")
-                    )
+                    RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(url, url, false, ""))
                 }
             }
 

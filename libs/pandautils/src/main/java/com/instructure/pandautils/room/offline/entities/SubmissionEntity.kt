@@ -30,7 +30,14 @@ import java.util.*
             entity = GroupEntity::class,
             parentColumns = ["id"],
             childColumns = ["groupId"],
-            onDelete = ForeignKey.SET_NULL
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = AssignmentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["assignmentId"],
+            onDelete = ForeignKey.CASCADE,
+            deferred = true
         ),
         ForeignKey(
             entity = UserEntity::class,

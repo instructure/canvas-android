@@ -23,14 +23,14 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.ModuleContentDetails
 
 @Entity(
-    foreignKeys = [(
+    foreignKeys = [
         ForeignKey(
             entity = ModuleItemEntity::class,
             parentColumns = ["id"],
             childColumns = ["id"],
             onDelete = ForeignKey.CASCADE
         )
-        )]
+    ]
 )
 data class ModuleContentDetailsEntity(
     @PrimaryKey

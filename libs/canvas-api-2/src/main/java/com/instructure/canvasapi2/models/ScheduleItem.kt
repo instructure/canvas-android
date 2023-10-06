@@ -32,7 +32,7 @@ data class ScheduleItem(
         @SerializedName("id")
         var itemId: String = "", // Can be different values - check the getId() override method below
         val title: String? = null,
-        val description: String? = null,
+        var description: String? = null,
         @SerializedName("start_at")
         val startAt: String? = null,
         @SerializedName("end_at")

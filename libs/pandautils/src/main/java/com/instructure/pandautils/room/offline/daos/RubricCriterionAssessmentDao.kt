@@ -35,6 +35,6 @@ interface RubricCriterionAssessmentDao {
     @Update
     suspend fun update(entity: RubricCriterionAssessmentEntity)
 
-    @Query("SELECT * FROM RubricCriterionAssessmentEntity WHERE submissionId = :submissionId")
-    suspend fun findBySubmissionId(submissionId: Long): List<RubricCriterionAssessmentEntity>
+    @Query("SELECT * FROM RubricCriterionAssessmentEntity WHERE assignmentId = :assignmentId")
+    suspend fun findByAssignmentId(assignmentId: Long): List<RubricCriterionAssessmentEntity>
 }

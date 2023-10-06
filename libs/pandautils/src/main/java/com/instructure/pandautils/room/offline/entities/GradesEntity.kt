@@ -23,31 +23,31 @@ import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.Grades
 
 @Entity(
-    foreignKeys = [ForeignKey(
-        entity = EnrollmentEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["enrollmentId"],
-        onDelete = ForeignKey.CASCADE
-    )]
+    foreignKeys = [
+        ForeignKey(
+            entity = EnrollmentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["enrollmentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 class GradesEntity(
     @PrimaryKey
-    val id: Long,
-    val enrollmentId: Long,
-    val htmlUrl: String?,
+    val htmlUrl: String,
     val currentScore: Double?,
     val finalScore: Double?,
     val currentGrade: String?,
-    val finalGrade: String?
+    val finalGrade: String?,
+    val enrollmentId: Long
 ) {
     constructor(grades: Grades, enrollmentId: Long) : this(
-        grades.id,
-        enrollmentId,
-        grades.htmlUrl,
+        grades.htmlUrl.orEmpty(),
         grades.currentScore,
         grades.finalScore,
         grades.currentGrade,
-        grades.finalGrade
+        grades.finalGrade,
+        enrollmentId
     )
 
     fun toApiModel() = Grades(
