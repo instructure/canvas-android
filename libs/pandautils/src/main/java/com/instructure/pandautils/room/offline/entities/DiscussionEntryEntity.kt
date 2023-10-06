@@ -41,9 +41,9 @@ data class DiscussionEntryEntity(
     var ratingSum: Int,
     val editorId: Long,
     var _hasRated: Boolean,
-    var replyIds: List<Long>?,
+    var replyIds: List<Long>,
 ) {
-    constructor(discussionEntry: DiscussionEntry, replyIds: List<Long>? = null): this(
+    constructor(discussionEntry: DiscussionEntry, replyIds: List<Long> = emptyList()): this(
         discussionEntry.id,
         discussionEntry.unread,
         discussionEntry.updatedAt,
@@ -63,7 +63,7 @@ data class DiscussionEntryEntity(
         replyIds,
     )
 
-    fun toApiModel(author: DiscussionParticipant? = null, replyDiscussionEntries: MutableList<DiscussionEntry>? = null): DiscussionEntry {
+    fun toApiModel(author: DiscussionParticipant? = null, replyDiscussionEntries: MutableList<DiscussionEntry> = mutableListOf()): DiscussionEntry {
         return DiscussionEntry(
             id = id,
             unread = unread,

@@ -36,7 +36,7 @@ class DiscussionTopicFacadeTest {
 
         facade.insertDiscussionTopic(1L, discussionTopic)
 
-        coVerify(exactly = 1) { discussionTopicDao.upsert(any()) }
+        coVerify(exactly = 1) { discussionTopicDao.insert(any()) }
         coVerify(exactly = 4) { discussionParticipantDao.upsertAll(any()) }
         coVerify(exactly = 3) { discussionEntryDao.insertAll(any()) }
     }

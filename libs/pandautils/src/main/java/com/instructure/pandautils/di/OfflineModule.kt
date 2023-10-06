@@ -285,10 +285,10 @@ class OfflineModule {
     fun provideDiscussionTopicHeaderFacade(
         discussionTopicHeaderDao: DiscussionTopicHeaderDao,
         discussionParticipantDao: DiscussionParticipantDao,
-        offlineDatabase: OfflineDatabase
-        discussionTopicPermissionDao: DiscussionTopicPermissionDao
+        discussionTopicPermissionDao: DiscussionTopicPermissionDao,
+        offlineDatabase: OfflineDatabase,
     ): DiscussionTopicHeaderFacade {
-        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao)
+        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao, offlineDatabase)
     }
 
     @Provides

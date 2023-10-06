@@ -21,14 +21,13 @@ package com.instructure.pandautils.features.offline.sync
 import android.content.Context
 import android.net.Uri
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
-import com.instructure.canvasapi2.apis.*
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.Operation
+import androidx.work.WorkContinuation
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -38,15 +37,15 @@ import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
@@ -58,12 +57,16 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
-import com.instructure.pandautils.room.offline.daos.*
+import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
-import com.instructure.pandautils.room.offline.facade.*
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -402,6 +405,8 @@ class CourseSyncWorker @AssistedInject constructor(
 
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
 
+            fetchDiscussionDetails(discussions, courseId)
+
             updateTabSuccess(Tab.DISCUSSIONS_ID)
         } catch (e: Exception) {
             updateTabError(Tab.DISCUSSIONS_ID)
@@ -419,6 +424,8 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
+
+            fetchDiscussionDetails(announcements, courseId)
 
             updateTabSuccess(Tab.ANNOUNCEMENTS_ID)
         } catch (e: Exception) {

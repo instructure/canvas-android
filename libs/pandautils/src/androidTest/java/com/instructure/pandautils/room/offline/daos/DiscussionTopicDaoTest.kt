@@ -36,11 +36,11 @@ class DiscussionTopicDaoTest {
 
     @Test
     fun testInsertReplace() = runTest {
-        val discussionTopicEntity = DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), null, null, 1L)
-        discussionTopicDao.upsert(discussionTopicEntity)
+        val discussionTopicEntity = DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), emptyList(), emptyList(), 1L)
+        discussionTopicDao.insert(discussionTopicEntity)
 
         val updated = discussionTopicEntity.copy(unreadEntries = mutableListOf(3L, 4L))
-        discussionTopicDao.upsert(updated)
+        discussionTopicDao.insert(updated)
 
         val result = discussionTopicDao.findById(1L)
 
@@ -50,13 +50,13 @@ class DiscussionTopicDaoTest {
     @Test
     fun testInsertAllReplace() = runTest {
         val discussionTopicEntities = listOf(
-            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), null, null, 1L),
-            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), null, null, 2L)
+            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), emptyList(), emptyList(), 1L),
+            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), emptyList(), emptyList(), 2L)
         )
-        discussionTopicDao.upsertAll(discussionTopicEntities)
+        discussionTopicDao.insertAll(discussionTopicEntities)
 
         val updated = discussionTopicEntities.map { it.copy(unreadEntries = mutableListOf(3L, 4L)) }
-        discussionTopicDao.upsertAll(updated)
+        discussionTopicDao.insertAll(updated)
 
         val result0 = discussionTopicDao.findById(1L)
         val result1 = discussionTopicDao.findById(2L)
@@ -67,10 +67,10 @@ class DiscussionTopicDaoTest {
 
     fun testFindById() = runTest {
         val discussionTopicEntities = listOf(
-            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), null, null, 1L),
-            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), null, null, 2L)
+            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), emptyList(), emptyList(), 1L),
+            DiscussionTopicEntity(DiscussionTopic(mutableListOf(1L, 2L)), emptyList(), emptyList(), 2L)
         )
-        discussionTopicDao.upsertAll(discussionTopicEntities)
+        discussionTopicDao.insertAll(discussionTopicEntities)
 
         val result = discussionTopicDao.findById(1L)
 

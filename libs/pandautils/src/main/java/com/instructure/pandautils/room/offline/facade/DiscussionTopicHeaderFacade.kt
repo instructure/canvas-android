@@ -30,8 +30,7 @@ import com.instructure.pandautils.room.offline.entities.DiscussionTopicPermissio
 class DiscussionTopicHeaderFacade(
     private val discussionTopicHeaderDao: DiscussionTopicHeaderDao,
     private val discussionParticipantDao: DiscussionParticipantDao,
-    private val discussionTopicPermissionDao: DiscussionTopicPermissionDao
-    private val discussionParticipantDao: DiscussionParticipantDao,
+    private val discussionTopicPermissionDao: DiscussionTopicPermissionDao,
     private val offlineDatabase: OfflineDatabase
 ) {
     suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader, courseId: Long): Long {
@@ -48,12 +47,27 @@ class DiscussionTopicHeaderFacade(
                 .mapNotNull { it.author }
                 .map { DiscussionParticipantEntity(it) }
 
-            discussionParticipantDao.insertAll(authors)
+            discussionParticipantDao.upsertAll(authors)
 
-        val permissionId = discussionTopicPermissionDao.upsertAll(discussionTopicHeaders.mapNotNull { it.permissions }.mapIndexed { index, permission -> DiscussionTopicPermissionEntity(permission, discussionTopicHeaders[index].id ) })
+            val permissionId =
+                discussionTopicPermissionDao.upsertAll(discussionTopicHeaders.mapNotNull { it.permissions }
+                    .mapIndexed { index, permission ->
+                        DiscussionTopicPermissionEntity(
+                            permission,
+                            discussionTopicHeaders[index].id
+                        )
+                    })
 
-        val discussionEntities = discussionTopicHeaders.mapIndexed { index, discussionTopicHeader -> DiscussionTopicHeaderEntity(discussionTopicHeader, courseId, permissionId[index]) }
-        discussionTopicHeaderDao.upsertAll(discussionEntities)
+            val discussionEntities =
+                discussionTopicHeaders.mapIndexed { index, discussionTopicHeader ->
+                    DiscussionTopicHeaderEntity(
+                        discussionTopicHeader,
+                        courseId,
+                        permissionId[index]
+                    )
+                }
+            discussionTopicHeaderDao.upsertAll(discussionEntities)
+        }
     }
 
     suspend fun getDiscussionsForCourse(courseId: Long): List<DiscussionTopicHeader> {

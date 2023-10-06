@@ -26,7 +26,13 @@ import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
 import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicHeaderEntity
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -42,7 +48,7 @@ class DiscussionTopicHeaderFacadeTest {
     private val discussionTopicPermissionDao: DiscussionTopicPermissionDao = mockk(relaxed = true)
     private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
-    private val facade = DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, offlineDatabase)
+    private val facade = DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao, offlineDatabase)
 
     @Before
     fun setup() {

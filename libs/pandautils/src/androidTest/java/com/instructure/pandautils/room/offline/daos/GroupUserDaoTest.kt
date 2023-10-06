@@ -2,9 +2,9 @@ package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
 import androidx.room.Room
-import com.instructure.canvasapi2.models.DiscussionEntry
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.entities.DiscussionEntryEntity
 import com.instructure.pandautils.room.offline.entities.GroupUserEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

@@ -19,7 +19,7 @@ class DiscussionTopicFacade(
     suspend fun insertDiscussionTopic(topicId: Long, discussionTopic: DiscussionTopic) {
         val participantIds = discussionParticipantDao.upsertAll(discussionTopic.participants?.map { DiscussionParticipantEntity(it) }.orEmpty())
         val discussionEntryIds = insertDiscussionEntries(discussionTopic.views)
-        discussionTopicDao.insert(DiscussionTopicEntity(discussionTopic, discussionTopic.participants?.map{ it.id }, discussionEntryIds, topicId))
+        discussionTopicDao.insert(DiscussionTopicEntity(discussionTopic, discussionTopic.participants?.map{ it.id }.orEmpty(), discussionEntryIds, topicId))
     }
 
     private suspend fun insertDiscussionEntries(entries: List<DiscussionEntry>): List<Long> {
@@ -55,6 +55,6 @@ class DiscussionTopicFacade(
         val replies = view?.replyIds?.mapNotNull { replyId ->
             getDiscussionEntries(replyId)
         }
-        return view?.toApiModel(author = author?.toApiModel(), replyDiscussionEntries = replies?.toMutableList())
+        return view?.toApiModel(author = author?.toApiModel(), replyDiscussionEntries = replies?.toMutableList().orEmpty().toMutableList())
     }
 }
