@@ -24,7 +24,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TAB_PROGRESS_SIZE
 import com.instructure.pandautils.room.offline.daos.CourseProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
@@ -102,21 +101,11 @@ class AggregateProgressObserver(
             }
         }
 
-        var totalSize = 0L
-
-        var downloadedTabSize = 0L
-        var itemCount = fileProgresses.size
-
-        courseProgresses.forEach { courseProgress ->
-
-            val tabSize = courseProgress.tabs.count() * TAB_PROGRESS_SIZE
-            totalSize += tabSize
-
-            downloadedTabSize += courseProgress.tabs.count { it.value.state == ProgressState.COMPLETED } * TAB_PROGRESS_SIZE
-            itemCount += courseProgress.tabs.count()
-        }
-
+        val totalSize = courseProgresses.sumOf { it.totalSize() } + fileProgresses.sumOf { it.fileSize }
+        val downloadedTabSize = courseProgresses.sumOf { it.downloadedSize() }
+        val itemCount = courseProgresses.sumOf { it.tabs.size } + fileProgresses.size
         val filesSize = fileProgresses.sumOf { it.fileSize }
+
         val fileProgressSum = fileProgresses.sumOf { it.progress }
 
         val fileProgress = if (fileProgresses.isEmpty()) 100 else fileProgressSum / fileProgresses.size

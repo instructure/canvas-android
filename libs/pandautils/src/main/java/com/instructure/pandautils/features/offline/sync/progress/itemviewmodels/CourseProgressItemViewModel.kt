@@ -36,8 +36,6 @@ import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 
-const val TAB_PROGRESS_SIZE = 100 * 1000
-
 data class CourseProgressItemViewModel(
     val data: CourseProgressViewData,
     private val context: Context,
@@ -109,7 +107,7 @@ data class CourseProgressItemViewModel(
         data.updateSize(
             NumberHelper.readableFileSize(
                 context,
-                (courseProgressEntity?.tabs?.size?.times(TAB_PROGRESS_SIZE) ?: 0)
+                (courseProgressEntity?.totalSize() ?: 0)
                         + fileProgresses.sumOf { it.fileSize })
         )
 

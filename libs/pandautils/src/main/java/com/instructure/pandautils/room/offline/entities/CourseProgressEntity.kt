@@ -24,6 +24,8 @@ import com.instructure.pandautils.features.offline.sync.FileSyncData
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 
+const val TAB_PROGRESS_SIZE = 100 * 1000
+
 @Entity
 data class CourseProgressEntity(
     @PrimaryKey
@@ -32,4 +34,8 @@ data class CourseProgressEntity(
     val courseName: String,
     val tabs: Map<String, TabSyncData> = emptyMap(),
     val progressState: ProgressState = ProgressState.STARTING,
-)
+) {
+    fun totalSize() = tabs.size * TAB_PROGRESS_SIZE
+
+    fun downloadedSize() = tabs.count { it.value.state == ProgressState.COMPLETED } * TAB_PROGRESS_SIZE
+}
