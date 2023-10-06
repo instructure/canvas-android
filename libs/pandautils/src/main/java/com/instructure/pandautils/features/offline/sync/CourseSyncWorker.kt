@@ -81,13 +81,13 @@ class CourseSyncWorker @AssistedInject constructor(
     private var fileOperation: Operation? = null
 
     override suspend fun doWork(): Result {
-        val courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
+        val courseSettingsWithFiles =
+            courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
         val courseId = courseSettings.courseId
         val course = fetchCourseDetails(courseId)
 
         progress = initProgress(courseSettings, course)
-        updateProgress()
 
         if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
             fetchFiles(courseId)
@@ -147,7 +147,8 @@ class CourseSyncWorker @AssistedInject constructor(
             quizDao.deleteAllByCourseId(courseId)
         }
 
-        progress = progress.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
+        progress =
+            progress.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
         courseProgressDao.update(progress)
 
         return Result.success()
@@ -321,8 +322,9 @@ class CourseSyncWorker @AssistedInject constructor(
     private suspend fun fetchDiscussions(courseId: Long) {
         try {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-            val discussions = discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
-                .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrThrow
+            val discussions =
+                discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
+                    .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrThrow
 
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
 
@@ -335,8 +337,14 @@ class CourseSyncWorker @AssistedInject constructor(
     private suspend fun fetchAnnouncements(courseId: Long) {
         try {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-            val announcements = announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
-                .depaginate { nextPage -> announcementApi.getNextPageAnnouncementsList(nextPage, params) }.dataOrThrow
+            val announcements =
+                announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
+                    .depaginate { nextPage ->
+                        announcementApi.getNextPageAnnouncementsList(
+                            nextPage,
+                            params
+                        )
+                    }.dataOrThrow
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
 
@@ -454,20 +462,29 @@ class CourseSyncWorker @AssistedInject constructor(
     private suspend fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgressEntity {
         val availableTabs = course.tabs?.map { it.tabId } ?: emptyList()
         val selectedTabs = courseSettings.tabs.filter { availableTabs.contains(it.key) && it.value == true }.keys
-        val progress = CourseProgressEntity(
+        val progress = (courseProgressDao.findByCourseId(course.id) ?: createNewProgress(courseSettings))
+            .copy(
+                tabs = selectedTabs.associateWith { tabId ->
+                    TabSyncData(
+                        course.tabs?.find { it.tabId == tabId }?.label ?: tabId,
+                        ProgressState.IN_PROGRESS
+                    )
+                }
+            )
+
+        courseProgressDao.update(progress)
+        return progress
+    }
+
+    private suspend fun createNewProgress(courseSettings: CourseSyncSettingsEntity): CourseProgressEntity {
+        val newProgress = CourseProgressEntity(
             workerId = workerParameters.id.toString(),
             courseId = courseSettings.courseId,
             courseName = courseSettings.courseName,
-            tabs = selectedTabs.associateWith { tabId ->
-                TabSyncData(
-                    course.tabs?.find { it.tabId == tabId }?.label ?: tabId,
-                    ProgressState.IN_PROGRESS
-                )
-            },
             progressState = ProgressState.STARTING,
         )
-        courseProgressDao.insert(progress)
-        return progress
+        courseProgressDao.insert(newProgress)
+        return newProgress
     }
 
     private suspend fun updateTabError(tabId: String) {

@@ -25,14 +25,15 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
-import com.instructure.pandautils.room.offline.daos.SyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
 import com.instructure.pandautils.room.offline.entities.EnrollmentState
-import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -51,9 +52,10 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val dashboardCardDao: DashboardCardDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val syncSettingsFacade: SyncSettingsFacade,
-    private val syncProgressDao: SyncProgressDao,
     private val editDashboardItemDao: EditDashboardItemDao,
-    private val courseDao: CourseDao
+    private val courseDao: CourseDao,
+    private val courseProgressDao: CourseProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -85,16 +87,18 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseWorkers = courses.filter { it.anySyncEnabled }
             .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
 
-        val syncProgress = courseWorkers.map {
+        val courseProgresses = courseWorkers.map {
             val courseId = it.workSpec.input.getLong(CourseSyncWorker.COURSE_ID, 0)
-            SyncProgressEntity(
-                it.id.toString(),
-                courseId,
-                settingsMap[courseId]?.courseName.orEmpty(),
+            CourseProgressEntity(
+                workerId = it.id.toString(),
+                courseId = courseId,
+                courseName = settingsMap[courseId]?.courseName.orEmpty(),
             )
         }
 
-        syncProgressDao.clearAndInsert(syncProgress)
+        courseProgressDao.deleteAll()
+        fileSyncProgressDao.deleteAll()
+        courseProgressDao.insertAll(courseProgresses)
 
         workManager.beginWith(courseWorkers)
             .enqueue()

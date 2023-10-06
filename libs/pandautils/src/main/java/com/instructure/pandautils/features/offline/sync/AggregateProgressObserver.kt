@@ -22,23 +22,17 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.TAB_PROGRESS_SIZE
 import com.instructure.pandautils.room.offline.daos.CourseProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
-import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
 
 class AggregateProgressObserver(
-    private val workManager: WorkManager,
     private val context: Context,
-    syncProgressDao: SyncProgressDao,
-    private val courseProgressDao: CourseProgressDao,
+    courseProgressDao: CourseProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
 ) {
 
@@ -49,53 +43,26 @@ class AggregateProgressObserver(
     private var courseProgressLiveData: LiveData<List<CourseProgressEntity>>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
-    private val courseProgresses = mutableMapOf<String, CourseProgressEntity>()
-    private val fileProgresses = mutableMapOf<String, FileSyncProgressEntity>()
-
-    private val syncProgressObserver = Observer<List<SyncProgressEntity>> {
-        courseProgressLiveData?.removeObserver(courseProgressObserver)
-        val courseIds = it.map { it.courseId }
-        if (courseIds.isEmpty()) {
-            _progressData.postValue(
-                AggregateProgressViewData(
-                    title = "",
-                    progressState = ProgressState.COMPLETED
-                )
-            )
-        } else {
-            setCourseWorkerIds(courseIds)
-        }
-    }
+    private var courseProgresses = mutableMapOf<String, CourseProgressEntity>()
+    private var fileProgresses = mutableMapOf<String, FileSyncProgressEntity>()
 
     private val courseProgressObserver = Observer<List<CourseProgressEntity>> {
-        val startedCourses = it.filter { it.progressState != ProgressState.IN_PROGRESS }
-
-        startedCourses.forEach {
-            courseProgresses[it.workerId] = it
-        }
+        courseProgresses = it.associateBy { it.workerId }.toMutableMap()
 
         calculateProgress()
     }
 
     private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> {
-        it.forEach {
-            fileProgresses[it.workerId] = it
-        }
+        fileProgresses = it.associateBy { it.workerId }.toMutableMap()
 
         calculateProgress()
     }
 
     init {
-        syncProgressDao.findCourseProgressesLiveData().observeForever(syncProgressObserver)
-    }
-
-    private fun setCourseWorkerIds(courseIds: List<Long>) {
-        if (courseIds.isEmpty()) return
-
-        courseProgressLiveData = courseProgressDao.findByCourseIdsLiveData(courseIds)
+        courseProgressLiveData = courseProgressDao.findAllLiveData()
         courseProgressLiveData?.observeForever(courseProgressObserver)
 
-        fileProgressLiveData = fileSyncProgressDao.findByCourseIdsLiveData(courseIds)
+        fileProgressLiveData = fileSyncProgressDao.findAllLiveData()
         fileProgressLiveData?.observeForever(fileProgressObserver)
     }
 
@@ -104,6 +71,13 @@ class AggregateProgressObserver(
         val fileProgresses = fileProgresses.values.toList()
 
         when {
+            courseProgresses.all { it.progressState == ProgressState.STARTING } -> {
+                _progressData.postValue(AggregateProgressViewData(
+                    title = context.getString(R.string.syncProgress_downloadStarting),
+                    progressState = ProgressState.STARTING))
+                return
+            }
+
             courseProgresses.all { it.progressState == ProgressState.COMPLETED } && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
                 val totalSize = _progressData.value?.totalSize.orEmpty()
                 _progressData.value?.copy(

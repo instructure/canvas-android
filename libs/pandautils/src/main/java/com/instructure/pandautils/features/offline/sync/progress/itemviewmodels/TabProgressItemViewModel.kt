@@ -19,32 +19,25 @@
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.offline.sync.CourseProgress
-import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.fromJson
-import java.util.UUID
+import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
 
-data class TabProgressItemViewModel(val data: TabProgressViewData, val workManager: WorkManager) : ItemViewModel {
+data class TabProgressItemViewModel(
+    val data: TabProgressViewData,
+    val courseProgressDao: CourseProgressDao
+) : ItemViewModel {
     override val layoutId = R.layout.item_tab_progress
 
     override val viewType = ViewType.COURSE_TAB_PROGRESS.viewType
 
-    private val progressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId))
+    private val progressLiveData = courseProgressDao.findByWorkerIdLiveData(data.workerId)
 
-    private val progressObserver = Observer<WorkInfo> {
-        val progress = if (it.state.isFinished) {
-            it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@Observer
-        } else {
-            it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
-        }
-
-        progress.tabs[data.tabId]?.let { tabProgress ->
+    private val progressObserver = Observer<CourseProgressEntity?> { progress ->
+        progress?.tabs?.get(data.tabId)?.let { tabProgress ->
             data.updateState(tabProgress.state)
         }
     }

@@ -73,7 +73,6 @@ import com.instructure.pandautils.room.offline.entities.*
         SectionEntity::class,
         SubmissionDiscussionEntryEntity::class,
         SubmissionEntity::class,
-        SyncProgressEntity::class,
         SyncSettingsEntity::class,
         TabEntity::class,
         TermEntity::class,
@@ -202,8 +201,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun fileFolderDao(): FileFolderDao
 
     abstract fun localFileDao(): LocalFileDao
-
-    abstract fun syncProgressDao(): SyncProgressDao
 
     abstract fun editDashboardItemDao(): EditDashboardItemDao
 

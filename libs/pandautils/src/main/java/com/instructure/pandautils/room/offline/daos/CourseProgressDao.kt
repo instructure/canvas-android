@@ -20,8 +20,10 @@ package com.instructure.pandautils.room.offline.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
 
@@ -31,12 +33,30 @@ interface CourseProgressDao {
     @Insert
     suspend fun insert(courseProgressEntity: CourseProgressEntity)
 
+    @Insert
+    suspend fun insertAll(entities: List<CourseProgressEntity>)
+
     @Update
     suspend fun update(courseProgressEntity: CourseProgressEntity)
+
+    @Query("SELECT * FROM CourseProgressEntity")
+    suspend fun findAll(): List<CourseProgressEntity>
+
+    @Query("SELECT * FROM CourseProgressEntity")
+    fun findAllLiveData(): LiveData<List<CourseProgressEntity>>
 
     @Query("SELECT * FROM CourseProgressEntity WHERE workerId = :workerId")
     suspend fun findByWorkerId(workerId: String): CourseProgressEntity?
 
+    @Query("SELECT * FROM CourseProgressEntity WHERE courseId = :courseId")
+    suspend fun findByCourseId(courseId: Long): CourseProgressEntity?
+
+    @Query("SELECT * FROM CourseProgressEntity WHERE workerId = :workerId")
+    fun findByWorkerIdLiveData(workerId: String): LiveData<CourseProgressEntity?>
+
     @Query("SELECT * FROM CourseProgressEntity WHERE courseId IN (:courseIds)")
     fun findByCourseIdsLiveData(courseIds: List<Long>): LiveData<List<CourseProgressEntity>>
+
+    @Query("DELETE FROM CourseProgressEntity")
+    suspend fun deleteAll()
 }

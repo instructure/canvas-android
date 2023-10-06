@@ -264,14 +264,13 @@ class OfflineModule {
         groupDao: GroupDao,
         mediaCommentDao: MediaCommentDao,
         userDao: UserDao,
-        userApi: UserAPI.UsersInterface,
         submissionCommentDao: SubmissionCommentDao,
         attachmentDao: AttachmentDao,
         authorDao: AuthorDao,
         rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
     ): SubmissionFacade {
         return SubmissionFacade(
-            submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+            submissionDao, groupDao, mediaCommentDao, userDao,
             submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
         )
     }
@@ -468,11 +467,6 @@ class OfflineModule {
     @Provides
     fun provideLocalFileDao(appDatabase: OfflineDatabase): LocalFileDao {
         return appDatabase.localFileDao()
-    }
-
-    @Provides
-    fun provideSyncProgressDao(appDatabase: OfflineDatabase): SyncProgressDao {
-        return appDatabase.syncProgressDao()
     }
 
     @Provides

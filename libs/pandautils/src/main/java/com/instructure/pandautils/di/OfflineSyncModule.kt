@@ -24,7 +24,6 @@ import com.instructure.pandautils.features.offline.sync.AggregateProgressObserve
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.room.offline.daos.CourseProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.daos.SyncProgressDao
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import dagger.Module
 import dagger.Provides
@@ -48,11 +47,9 @@ class OfflineSyncModule {
     @Provides
     fun provideAggregateProgressObserver(
         @ApplicationContext context: Context,
-        workManager: WorkManager,
-        syncProgressDao: SyncProgressDao,
         courseProgressDao: CourseProgressDao,
         fileSyncProgressDao: FileSyncProgressDao
     ): AggregateProgressObserver {
-        return AggregateProgressObserver(workManager, context, syncProgressDao, courseProgressDao, fileSyncProgressDao)
+        return AggregateProgressObserver(context, courseProgressDao, fileSyncProgressDao)
     }
 }

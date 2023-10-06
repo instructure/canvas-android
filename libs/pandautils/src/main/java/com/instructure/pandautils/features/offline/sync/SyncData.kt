@@ -18,19 +18,6 @@
 
 package com.instructure.pandautils.features.offline.sync
 
-data class CourseProgress(
-    val courseId: Long,
-    val courseName: String,
-    val tabs: Map<String, TabSyncData>,
-    val fileSyncData: List<FileSyncData>? = null
-)
-
-data class FileSyncProgress(
-    val fileName: String,
-    val progress: Int,
-    val progressState: ProgressState = ProgressState.IN_PROGRESS
-)
-
 data class TabSyncData(
     val tabName: String,
     val state: ProgressState
@@ -49,4 +36,6 @@ enum class ProgressState {
     ERROR;
 
     fun isFinished() = this == COMPLETED || this == ERROR
+
+    fun isRunning() = this == IN_PROGRESS || this == STARTING
 }

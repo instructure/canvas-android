@@ -21,7 +21,16 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.instructure.pandautils.features.offline.sync.ProgressState
-@Entity
+@Entity(
+    foreignKeys = [
+        androidx.room.ForeignKey(
+            entity = CourseSyncSettingsEntity::class,
+            parentColumns = ["courseId"],
+            childColumns = ["courseId"],
+            onDelete = androidx.room.ForeignKey.CASCADE
+        )
+    ]
+)
 data class FileSyncProgressEntity(
     @PrimaryKey
     val workerId: String,

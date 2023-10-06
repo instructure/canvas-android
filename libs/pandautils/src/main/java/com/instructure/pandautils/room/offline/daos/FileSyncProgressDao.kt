@@ -40,9 +40,18 @@ interface FileSyncProgressDao {
     @Query("SELECT * FROM FileSyncProgressEntity WHERE workerId = :workerId")
     suspend fun findByWorkerId(workerId: String): FileSyncProgressEntity?
 
+    @Query("SELECT * FROM FileSyncProgressEntity WHERE workerId = :workerId")
+    fun findByWorkerIdLiveData(workerId: String): LiveData<FileSyncProgressEntity?>
+
     @Query("SELECT * FROM FileSyncProgressEntity WHERE courseId = :courseId")
-    fun findByCourseIdLiveData(courseId: Long): List<FileSyncProgressEntity>
+    fun findByCourseIdLiveData(courseId: Long): LiveData<List<FileSyncProgressEntity>>
 
     @Query("SELECT * FROM FileSyncProgressEntity WHERE courseId IN (:courseIds)")
     fun findByCourseIdsLiveData(courseIds: List<Long>): LiveData<List<FileSyncProgressEntity>>
+
+    @Query("SELECT * FROM FileSyncProgressEntity")
+    fun findAllLiveData(): LiveData<List<FileSyncProgressEntity>>
+
+    @Query("DELETE FROM FileSyncProgressEntity")
+    suspend fun deleteAll()
 }

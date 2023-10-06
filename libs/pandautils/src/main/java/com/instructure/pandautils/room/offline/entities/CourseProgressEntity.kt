@@ -24,21 +24,12 @@ import com.instructure.pandautils.features.offline.sync.FileSyncData
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 
-@Entity(
-    foreignKeys = [
-        androidx.room.ForeignKey(
-            entity = SyncProgressEntity::class,
-            parentColumns = ["uuid"],
-            childColumns = ["workerId"],
-            onDelete = androidx.room.ForeignKey.CASCADE
-        )
-    ]
-)
+@Entity
 data class CourseProgressEntity(
     @PrimaryKey
-    val workerId: String,
     val courseId: Long,
+    val workerId: String,
     val courseName: String,
-    val tabs: Map<String, TabSyncData>,
+    val tabs: Map<String, TabSyncData> = emptyMap(),
     val progressState: ProgressState = ProgressState.STARTING,
 )
