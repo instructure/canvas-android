@@ -50,6 +50,8 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
@@ -437,7 +439,10 @@ class CourseSyncWorker @AssistedInject constructor(
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         discussions.forEach { discussionTopicHeader ->
             val discussionTopic = discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, discussionTopicHeader.id, 1, params).dataOrNull
-            discussionTopic?.let { discussionTopicFacade.insertDiscussionTopic(discussionTopicHeader.id, it) }
+            discussionTopic?.let {
+                val topic = parseDiscussionTopicHtml(it, courseId)
+                discussionTopicFacade.insertDiscussionTopic(discussionTopicHeader.id, topic)
+            }
         }
 
         val groups = groupApi.getFirstPageGroups(params).depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }.dataOrNull
@@ -447,6 +452,18 @@ class CourseSyncWorker @AssistedInject constructor(
                 ApiPrefs.user?.let { groupFacade.insertGroupWithUser(group, it) }
             }
         }
+    }
+
+    private suspend fun parseDiscussionTopicHtml(discussionTopic: DiscussionTopic, courseId: Long): DiscussionTopic {
+        discussionTopic.views.map { parseHtmlContent(it.message, courseId) }
+        discussionTopic.views.map { it.replies?.map { parseDiscussionEntryHtml(it, courseId) } }
+        return  discussionTopic
+    }
+
+    private suspend fun parseDiscussionEntryHtml(discussionEntry: DiscussionEntry, courseId: Long): DiscussionEntry {
+        discussionEntry.message = parseHtmlContent(discussionEntry.message, courseId)
+        discussionEntry.replies?.map { parseDiscussionEntryHtml(it, courseId) }
+        return discussionEntry
     }
 
     private suspend fun fetchModules(courseId: Long) {
