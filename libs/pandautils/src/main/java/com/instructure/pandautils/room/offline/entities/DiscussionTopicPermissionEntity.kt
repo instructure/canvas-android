@@ -18,12 +18,23 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = DiscussionTopicHeaderEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["discussionTopicHeaderId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class DiscussionTopicPermissionEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
     val discussionTopicHeaderId: Long,
     val attach: Boolean,
     val update: Boolean,
@@ -31,6 +42,7 @@ data class DiscussionTopicPermissionEntity(
     val reply: Boolean
 ) {
     constructor(permission: DiscussionTopicPermission, discussionTopicHeaderId: Long) : this(
+        0,
         discussionTopicHeaderId,
         permission.attach,
         permission.update,

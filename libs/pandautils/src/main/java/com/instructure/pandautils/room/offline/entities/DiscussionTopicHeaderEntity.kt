@@ -36,6 +36,12 @@ import java.util.Date
             onDelete = ForeignKey.SET_NULL
         ),
         ForeignKey(
+            entity = DiscussionTopicPermissionEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["permissionId"],
+            onDelete = ForeignKey.SET_NULL
+        ),
+        ForeignKey(
             entity = CourseEntity::class,
             parentColumns = ["id"],
             childColumns = ["courseId"],

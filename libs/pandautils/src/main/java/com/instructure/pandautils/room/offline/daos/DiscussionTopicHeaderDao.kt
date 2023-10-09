@@ -26,14 +26,8 @@ interface DiscussionTopicHeaderDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: DiscussionTopicHeaderEntity): Long
 
-    @Upsert
-    suspend fun upsert(entity: DiscussionTopicHeaderEntity): Long
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(entities: List<DiscussionTopicHeaderEntity>): List<Long>
-
-    @Upsert
-    suspend fun upsertAll(entities: List<DiscussionTopicHeaderEntity>): List<Long>
 
     @Delete
     suspend fun delete(entity: DiscussionTopicHeaderEntity)

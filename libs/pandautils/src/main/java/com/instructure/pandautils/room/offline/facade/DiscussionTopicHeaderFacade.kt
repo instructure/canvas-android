@@ -35,8 +35,10 @@ class DiscussionTopicHeaderFacade(
 ) {
     suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader, courseId: Long): Long {
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
-        val permissionId = discussionTopicHeader.permissions?.let { discussionTopicPermissionDao.upsert(DiscussionTopicPermissionEntity(it, discussionTopicHeader.id)) }
-        return discussionTopicHeaderDao.upsert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId, permissionId))
+        val discussionTopicHeaderId = discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId, null))
+        val permissionId = discussionTopicHeader.permissions?.let { discussionTopicPermissionDao.insert(DiscussionTopicPermissionEntity(it, discussionTopicHeaderId)) }
+        discussionTopicHeaderDao.update(DiscussionTopicHeaderEntity(discussionTopicHeader.copy(id = discussionTopicHeaderId), courseId, permissionId))
+        return discussionTopicHeaderId
     }
 
     suspend fun insertDiscussions(discussionTopicHeaders: List<DiscussionTopicHeader>, courseId: Long, isAnnouncement: Boolean) {
@@ -49,24 +51,25 @@ class DiscussionTopicHeaderFacade(
 
             discussionParticipantDao.upsertAll(authors)
 
-            val permissionId =
-                discussionTopicPermissionDao.upsertAll(discussionTopicHeaders.mapNotNull { it.permissions }
-                    .mapIndexed { index, permission ->
-                        DiscussionTopicPermissionEntity(
-                            permission,
-                            discussionTopicHeaders[index].id
-                        )
-                    })
-
             val discussionEntities =
                 discussionTopicHeaders.mapIndexed { index, discussionTopicHeader ->
                     DiscussionTopicHeaderEntity(
                         discussionTopicHeader,
                         courseId,
-                        permissionId[index]
+                        null
                     )
                 }
-            discussionTopicHeaderDao.upsertAll(discussionEntities)
+            discussionTopicHeaderDao.insertAll(discussionEntities)
+
+            val permissionIds = discussionTopicHeaders.mapIndexed { index, discussionTopicHeader ->
+                discussionTopicHeader.permissions?.let {
+                    discussionTopicPermissionDao.insert(DiscussionTopicPermissionEntity(it, discussionEntities[index].id))
+                }
+            }
+
+            discussionEntities.forEachIndexed { index, entity ->
+                discussionTopicHeaderDao.update(entity.copy(permissionId = permissionIds[index]))
+            }
         }
     }
 
@@ -74,7 +77,7 @@ class DiscussionTopicHeaderFacade(
         return discussionTopicHeaderDao.findAllDiscussionsForCourse(courseId)
             .map { discussionTopic ->
                 val authorEntity = discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
-                val permission = discussionTopicPermissionDao.findById(discussionTopic.id)
+                val permission = discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopic.id)
                 discussionTopic.toApiModel(author = authorEntity?.toApiModel(), permissions = permission?.toApiModel())
             }
     }
@@ -95,7 +98,7 @@ class DiscussionTopicHeaderFacade(
 
     private suspend fun createDiscussionApiModel(discussionTopicHeaderEntity: DiscussionTopicHeaderEntity): DiscussionTopicHeader {
         val authorEntity = discussionTopicHeaderEntity.authorId?.let { discussionParticipantDao.findById(it) }
-        val permission = discussionTopicPermissionDao.findById(discussionTopicHeaderEntity.id)
+        val permission = discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopicHeaderEntity.id)
         return discussionTopicHeaderEntity.toApiModel(authorEntity?.toApiModel(), permissions = permission?.toApiModel())
     }
 }
