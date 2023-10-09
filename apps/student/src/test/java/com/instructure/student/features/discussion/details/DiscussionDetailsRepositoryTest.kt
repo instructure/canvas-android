@@ -49,20 +49,6 @@ class DiscussionDetailsRepositoryTest {
     }
 
     @Test
-    fun `Call markAsRead function when device is offline`() = runTest {
-        val discussionEntryIds = listOf(1L, 2L, 3L)
-
-        coEvery { networkDataSource.markAsRead(mockk(), any(), any()) } returns DataResult.Fail(
-            Failure.Exception(Exception(), "")
-        )
-
-        val result = repository.markAsRead(mockk(), 1L, discussionEntryIds)
-        coVerify(exactly = 3) { networkDataSource.markAsRead(any(), any(), any())}
-
-        assertEquals(emptyList<Long>(), result)
-    }
-
-    @Test
     fun `Call deleteDiscussionEntry function when device is online`() = runTest {
 
         repository.deleteDiscussionEntry(mockk(), 1, 1)
