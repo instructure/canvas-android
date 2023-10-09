@@ -60,7 +60,7 @@ class SyncProgressViewModel @Inject constructor(
         get() = _data
     private val _data = MutableLiveData<SyncProgressViewData>()
 
-    val progressData: LiveData<AggregateProgressViewData>
+    val progressData: LiveData<AggregateProgressViewData?>
         get() = aggregateProgressObserver.progressData
 
     val events: LiveData<Event<SyncProgressAction>>

@@ -58,6 +58,8 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -83,6 +85,8 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val fileUploadInputDao: FileUploadInputDao,
     private val fileUploadUtilsHelper: FileUploadUtilsHelper,
     private val aggregateProgressObserver: AggregateProgressObserver,
+    private val courseProgressDao: CourseProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -108,9 +112,15 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private val syncProgressObserver = Observer<AggregateProgressViewData> {
+    private val syncProgressObserver = Observer<AggregateProgressViewData?> { aggregateProgressViewData ->
+        if (aggregateProgressViewData == null) {
+            _data.value?.syncProgressItems = null
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            return@Observer
+        }
+
         if (_data.value?.syncProgressItems == null) {
-            _data.value?.syncProgressItems = createSyncProgressViewModel(it)
+            _data.value?.syncProgressItems = createSyncProgressViewModel(aggregateProgressViewData)
             _data.value?.notifyPropertyChanged(BR.concatenatedItems)
             return@Observer
         }
@@ -119,7 +129,7 @@ class DashboardNotificationsViewModel @Inject constructor(
             _data.value?.syncProgressItems = null
             _data.value?.notifyPropertyChanged(BR.concatenatedItems)
         } else {
-            _data.value?.syncProgressItems?.update(it)
+            _data.value?.syncProgressItems?.update(aggregateProgressViewData)
         }
     }
 
@@ -173,6 +183,7 @@ class DashboardNotificationsViewModel @Inject constructor(
         return SyncProgressItemViewModel(
             data = SyncProgressViewData(),
             onClick = this::openSyncProgress,
+            onDismiss = this::dismissSyncProgress,
             resources = resources
         ).apply { update(aggregateProgressViewData) }
     }
@@ -464,6 +475,13 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private fun openSyncProgress() {
         _events.postValue(Event(DashboardNotificationsActions.OpenSyncProgress))
+    }
+
+    private fun dismissSyncProgress() {
+        viewModelScope.launch {
+            fileSyncProgressDao.deleteAll()
+            courseProgressDao.deleteAll()
+        }
     }
 
     private fun createSyncProgressViewModel(aggregateProgressViewData: AggregateProgressViewData): SyncProgressItemViewModel? {

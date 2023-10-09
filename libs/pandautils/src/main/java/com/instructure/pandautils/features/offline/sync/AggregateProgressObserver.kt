@@ -35,9 +35,9 @@ class AggregateProgressObserver(
     fileSyncProgressDao: FileSyncProgressDao
 ) {
 
-    val progressData: LiveData<AggregateProgressViewData>
+    val progressData: LiveData<AggregateProgressViewData?>
         get() = _progressData
-    private val _progressData = MutableLiveData<AggregateProgressViewData>()
+    private val _progressData = MutableLiveData<AggregateProgressViewData?>()
 
     private var courseProgressLiveData: LiveData<List<CourseProgressEntity>>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
@@ -68,6 +68,11 @@ class AggregateProgressObserver(
     private fun calculateProgress() {
         val courseProgresses = courseProgresses.values.toList()
         val fileProgresses = fileProgresses.values.toList()
+
+        if (courseProgresses.isEmpty() && fileProgresses.isEmpty()) {
+            _progressData.postValue(null)
+            return
+        }
 
         when {
             courseProgresses.all { it.progressState == ProgressState.STARTING } -> {

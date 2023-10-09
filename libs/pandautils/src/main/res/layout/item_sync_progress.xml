@@ -26,6 +26,8 @@
             type="com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.SyncProgressItemViewModel" />
 
         <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -43,14 +45,30 @@
 
             <TextView
                 android:id="@+id/syncProgressTitle"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:text="@{itemViewModel.data.title}"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/dismissButton"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Syncing offline content" />
+
+            <ImageView
+                android:id="@+id/dismissButton"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/a11y_contentDescription_syncDashboardNotificationDismiss"
+                android:src="@drawable/ic_close"
+                android:visibility="@{itemViewModel.data.progressState == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+                app:accessibleTouchTarget="@{true}"
+                app:layout_constraintBottom_toBottomOf="@id/syncProgressTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/syncProgressTitle"
+                android:onClick="@{() -> itemViewModel.onDismiss.invoke()}"/>
 
             <TextView
                 android:id="@+id/syncProgressSubtitle"
@@ -70,8 +88,9 @@
                 android:indeterminate="@{itemViewModel.data.progressState == ProgressState.STARTING}"
                 android:indeterminateTint="@color/white"
                 android:progress="@{itemViewModel.data.progress}"
-                android:progressTint="@color/white"
                 android:progressBackgroundTint="@color/white"
+                android:progressTint="@color/white"
+                android:visibility="@{itemViewModel.data.progressState == ProgressState.ERROR ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toBottomOf="@id/syncProgressSubtitle"
                 tools:progress="50" />
 
