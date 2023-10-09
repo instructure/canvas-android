@@ -135,6 +135,22 @@ class AssignmentDetailsViewModelTest {
     }
 
     @Test
+    fun `Authentication error`() {
+        val generalError = "There was a problem loading this assignment. Please check your connection and try again."
+        val authError = "This assignment is no longer available."
+
+        every { resources.getString(R.string.errorLoadingAssignment) } returns generalError
+        every { resources.getString(R.string.assignmentNoLongerAvailable) } returns authError
+
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } throws IllegalAccessException()
+
+        val viewModel = getViewModel()
+
+        Assert.assertEquals(ViewState.Error(authError), viewModel.state.value)
+        Assert.assertEquals(authError, (viewModel.state.value as? ViewState.Error)?.errorMessage)
+    }
+
+    @Test
     fun `Load fully locked assignment`() {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
@@ -682,5 +698,29 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
 
         Assert.assertEquals("", viewModel.data.value?.points)
+    }
+
+    @Test
+    fun `Do not show content if assignment is null`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } throws IllegalStateException()
+
+        val viewModel = getViewModel()
+
+        Assert.assertFalse(viewModel.showContent(viewModel.state.value))
+    }
+
+    @Test
+    fun `Show content on assignment success`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment(submission = Submission(), pointsPossible = 20.0)
+
+        val viewModel = getViewModel()
+
+        Assert.assertTrue(viewModel.showContent(viewModel.state.value))
     }
 }

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -82,6 +83,13 @@ class AssignmentDetailsNetworkDataSourceTest {
     @Test(expected = IllegalStateException::class)
     fun `Get assignment failure throws exception`() = runTest {
         coEvery { assignmentInterface.getAssignmentWithHistory(any(), any(), any()) } returns DataResult.Fail()
+
+        dataSource.getAssignment(false, 1, 1, true)
+    }
+
+    @Test(expected = IllegalAccessException::class)
+    fun `Get assignment failure throws IllegalAccessException on auth error`() = runTest {
+        coEvery { assignmentInterface.getAssignmentWithHistory(any(), any(), any()) } returns DataResult.Fail(failure = Failure.Authorization())
 
         dataSource.getAssignment(false, 1, 1, true)
     }

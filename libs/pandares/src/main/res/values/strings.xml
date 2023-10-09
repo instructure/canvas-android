@@ -1461,4 +1461,5 @@
         <item quantity="other">%d items are syncing.</item>
     </plurals>
     <string name="syncProgressAdditionalFiles">Course content images</string>
+    <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
 </resources>
