@@ -23,12 +23,6 @@ data class TabSyncData(
     val state: ProgressState
 )
 
-data class FileSyncData(
-    val workerId: String,
-    val fileName: String,
-    val fileSize: Long
-)
-
 enum class ProgressState {
     STARTING,
     IN_PROGRESS,

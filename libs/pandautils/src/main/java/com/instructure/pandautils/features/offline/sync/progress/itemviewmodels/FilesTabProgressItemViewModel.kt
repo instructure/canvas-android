@@ -29,16 +29,16 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.FileSyncProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.FileTabProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import java.util.UUID
 
 data class FilesTabProgressItemViewModel(
     val data: FileTabProgressViewData,
     private val context: Context,
-    private val courseProgressDao: CourseProgressDao,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
 ) : GroupItemViewModel(collapsable = true, items = data.items, collapsed = true) {
     override val layoutId = R.layout.item_file_tab_progress
@@ -46,7 +46,7 @@ data class FilesTabProgressItemViewModel(
     override val viewType = ViewType.COURSE_FILE_TAB_PROGRESS.viewType
 
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
-    private val courseProgressLiveData = courseProgressDao.findByWorkerIdLiveData(data.courseWorkerId)
+    private val courseProgressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.courseWorkerId)
 
     private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> { progresses ->
         if (progresses.isEmpty()) {
@@ -79,7 +79,7 @@ data class FilesTabProgressItemViewModel(
         }
     }
 
-    private val courseProgressObserver = Observer<CourseProgressEntity?> { progress ->
+    private val courseProgressObserver = Observer<CourseSyncProgressEntity?> { progress ->
         if (progress == null) return@Observer
         if (progress.progressState == ProgressState.STARTING) return@Observer
 

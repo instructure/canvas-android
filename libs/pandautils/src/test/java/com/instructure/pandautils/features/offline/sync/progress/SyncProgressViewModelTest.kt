@@ -34,10 +34,10 @@ import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import io.mockk.coEvery
@@ -74,7 +74,7 @@ class SyncProgressViewModelTest {
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
     private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
     private val aggregateProgressObserver: AggregateProgressObserver = mockk(relaxed = true)
-    private val courseProgressDao: CourseProgressDao = mockk(relaxed = true)
+    private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
 
     private lateinit var viewModel: SyncProgressViewModel
@@ -98,7 +98,7 @@ class SyncProgressViewModelTest {
 
     @Test
     fun `Move back if sync is not running`() = runTest {
-        coEvery { courseProgressDao.findAll() } returns emptyList()
+        coEvery { courseSyncProgressDao.findAll() } returns emptyList()
 
         viewModel = createViewModel()
 
@@ -111,11 +111,11 @@ class SyncProgressViewModelTest {
         val course2UUID = UUID.randomUUID().toString()
 
         val courseProgresses = listOf(
-            CourseProgressEntity(1L, course1UUID, "Course 1", emptyMap()),
-            CourseProgressEntity(2L, course2UUID, "Course 2", emptyMap())
+            CourseSyncProgressEntity(1L, course1UUID, "Course 1", emptyMap()),
+            CourseSyncProgressEntity(2L, course2UUID, "Course 2", emptyMap())
         )
 
-        coEvery { courseProgressDao.findAll() } returns courseProgresses
+        coEvery { courseSyncProgressDao.findAll() } returns courseProgresses
 
         coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns CourseSyncSettingsWithFiles(
             courseSyncSettings = CourseSyncSettingsEntity(1L, "Course 1", true, fullFileSync = true),
@@ -141,14 +141,14 @@ class SyncProgressViewModelTest {
                                 items = emptyList(),
                             ),
                             context = context,
-                            courseProgressDao = courseProgressDao,
+                            courseSyncProgressDao = courseSyncProgressDao,
                             fileSyncProgressDao = fileSyncProgressDao
                         )
                     ),
                     workerId = course1UUID
                 ),
                 context = context,
-                courseProgressDao = courseProgressDao,
+                courseSyncProgressDao = courseSyncProgressDao,
                 fileSyncProgressDao = fileSyncProgressDao
             ),
             CourseProgressItemViewModel(
@@ -159,7 +159,7 @@ class SyncProgressViewModelTest {
                     courseId = 2L
                 ),
                 context = context,
-                courseProgressDao = courseProgressDao,
+                courseSyncProgressDao = courseSyncProgressDao,
                 fileSyncProgressDao = fileSyncProgressDao
             )
         )
@@ -170,9 +170,9 @@ class SyncProgressViewModelTest {
     @Test
     fun `Retry`() = runTest {
         val course1UUID = UUID.randomUUID().toString()
-        val courseProgress = CourseProgressEntity(1L, course1UUID, "Course 1", emptyMap(), ProgressState.ERROR)
+        val courseProgress = CourseSyncProgressEntity(1L, course1UUID, "Course 1", emptyMap(), ProgressState.ERROR)
 
-        coEvery { courseProgressDao.findAll() } returns listOf(courseProgress)
+        coEvery { courseSyncProgressDao.findAll() } returns listOf(courseProgress)
 
         coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns CourseSyncSettingsWithFiles(
             courseSyncSettings = CourseSyncSettingsEntity(1L, "Course 1", true, fullFileSync = true),
@@ -193,7 +193,7 @@ class SyncProgressViewModelTest {
         viewModel.onActionClicked()
 
         coVerify {
-            courseProgressDao.deleteAll()
+            courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
             offlineSyncHelper.syncOnce(listOf(1L))
         }
@@ -204,9 +204,9 @@ class SyncProgressViewModelTest {
     @Test
     fun `Cancel`() = runTest {
         val course1UUID = UUID.randomUUID().toString()
-        val syncProgress = CourseProgressEntity(1L, course1UUID, "Course 1", emptyMap(), ProgressState.IN_PROGRESS)
+        val syncProgress = CourseSyncProgressEntity(1L, course1UUID, "Course 1", emptyMap(), ProgressState.IN_PROGRESS)
 
-        coEvery { courseProgressDao.findAll() } returns listOf(syncProgress)
+        coEvery { courseSyncProgressDao.findAll() } returns listOf(syncProgress)
 
         coEvery { courseSyncSettingsDao.findWithFilesById(1L) } returns CourseSyncSettingsWithFiles(
             courseSyncSettings = CourseSyncSettingsEntity(1L, "Course 1", true, fullFileSync = true),
@@ -233,7 +233,7 @@ class SyncProgressViewModelTest {
         coVerify {
             workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
             workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
-            courseProgressDao.deleteAll()
+            courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
         }
 
@@ -247,7 +247,7 @@ class SyncProgressViewModelTest {
             courseSyncSettingsDao,
             offlineSyncHelper,
             aggregateProgressObserver,
-            courseProgressDao,
+            courseSyncProgressDao,
             fileSyncProgressDao
         )
     }

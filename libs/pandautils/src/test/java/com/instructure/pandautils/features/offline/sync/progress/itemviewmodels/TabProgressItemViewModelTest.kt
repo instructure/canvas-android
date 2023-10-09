@@ -24,8 +24,8 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import io.mockk.every
 import io.mockk.mockk
@@ -39,14 +39,14 @@ class TabProgressItemViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val courseProgressDao: CourseProgressDao = mockk(relaxed = true)
+    private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
 
     private lateinit var tabProgressItemViewModel: TabProgressItemViewModel
 
     @Test
     fun `Progress updates`() {
         val uuid = UUID.randomUUID()
-        var courseProgress = CourseProgressEntity(
+        var courseProgress = CourseSyncProgressEntity(
             1L,
             uuid.toString(),
             "Course",
@@ -54,7 +54,7 @@ class TabProgressItemViewModelTest {
         )
         val courseLiveData = MutableLiveData(courseProgress)
 
-        every { courseProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
 
         tabProgressItemViewModel = createItemViewModel(uuid)
 
@@ -77,7 +77,7 @@ class TabProgressItemViewModelTest {
                 uuid.toString(),
                 ProgressState.IN_PROGRESS
             ),
-            courseProgressDao
+            courseSyncProgressDao
         )
     }
 }

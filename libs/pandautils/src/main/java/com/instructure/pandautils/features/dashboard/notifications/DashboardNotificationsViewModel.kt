@@ -58,7 +58,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -85,7 +85,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val fileUploadInputDao: FileUploadInputDao,
     private val fileUploadUtilsHelper: FileUploadUtilsHelper,
     private val aggregateProgressObserver: AggregateProgressObserver,
-    private val courseProgressDao: CourseProgressDao,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
 ) : ViewModel() {
 
@@ -480,7 +480,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     private fun dismissSyncProgress() {
         viewModelScope.launch {
             fileSyncProgressDao.deleteAll()
-            courseProgressDao.deleteAll()
+            courseSyncProgressDao.deleteAll()
         }
     }
 

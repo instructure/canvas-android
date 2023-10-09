@@ -25,12 +25,12 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.room.offline.daos.CourseDao
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
 import com.instructure.pandautils.room.offline.entities.EnrollmentState
@@ -54,7 +54,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val syncSettingsFacade: SyncSettingsFacade,
     private val editDashboardItemDao: EditDashboardItemDao,
     private val courseDao: CourseDao,
-    private val courseProgressDao: CourseProgressDao,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
@@ -89,16 +89,16 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         val courseProgresses = courseWorkers.map {
             val courseId = it.workSpec.input.getLong(CourseSyncWorker.COURSE_ID, 0)
-            CourseProgressEntity(
+            CourseSyncProgressEntity(
                 workerId = it.id.toString(),
                 courseId = courseId,
                 courseName = settingsMap[courseId]?.courseName.orEmpty(),
             )
         }
 
-        courseProgressDao.deleteAll()
+        courseSyncProgressDao.deleteAll()
         fileSyncProgressDao.deleteAll()
-        courseProgressDao.insertAll(courseProgresses)
+        courseSyncProgressDao.insertAll(courseProgresses)
 
         workManager.beginWith(courseWorkers)
             .enqueue()

@@ -475,8 +475,8 @@ class OfflineModule {
     }
 
     @Provides
-    fun provideCourseProgressDao(appDatabase: OfflineDatabase): CourseProgressDao {
-        return appDatabase.courseProgressDao()
+    fun provideCourseProgressDao(appDatabase: OfflineDatabase): CourseSyncProgressDao {
+        return appDatabase.courseSyncProgressDao()
     }
 
     @Provides

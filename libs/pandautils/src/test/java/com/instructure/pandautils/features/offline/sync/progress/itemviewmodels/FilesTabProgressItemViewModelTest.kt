@@ -24,9 +24,9 @@ import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.FileTabProgressViewData
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import io.mockk.every
 import io.mockk.mockk
@@ -45,7 +45,7 @@ class FilesTabProgressItemViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val courseProgressDao: CourseProgressDao = mockk(relaxed = true)
+    private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
 
@@ -66,10 +66,10 @@ class FilesTabProgressItemViewModelTest {
     @Test
     fun `Success if no files`() {
         val courseUUID = UUID.randomUUID()
-        val courseProgress = CourseProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), ProgressState.COMPLETED)
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), ProgressState.COMPLETED)
         val courseLiveData = MutableLiveData(courseProgress)
 
-        every { courseProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
         every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
 
         filesTabProgressItemViewModel = createItemViewModel(courseUUID)
@@ -86,11 +86,11 @@ class FilesTabProgressItemViewModelTest {
             FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 0,3000, ProgressState.IN_PROGRESS),
         )
 
-        val courseProgress = CourseProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), ProgressState.IN_PROGRESS)
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), ProgressState.IN_PROGRESS)
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileSyncProgresses)
 
-        every { courseProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
         every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns fileLiveData
 
         filesTabProgressItemViewModel = createItemViewModel(courseUUID)
@@ -113,11 +113,11 @@ class FilesTabProgressItemViewModelTest {
             FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 2", 50,2000, ProgressState.IN_PROGRESS),
             FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 100,3000, ProgressState.COMPLETED),
         )
-        val courseProgress = CourseProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), progressState = ProgressState.COMPLETED)
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), progressState = ProgressState.COMPLETED)
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileSyncData)
 
-        every { courseProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
         every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns fileLiveData
 
         filesTabProgressItemViewModel = createItemViewModel(courseUUID)
@@ -154,7 +154,7 @@ class FilesTabProgressItemViewModelTest {
                 emptyList(),
             ),
             context,
-            courseProgressDao,
+            courseSyncProgressDao,
             fileSyncProgressDao
         )
     }

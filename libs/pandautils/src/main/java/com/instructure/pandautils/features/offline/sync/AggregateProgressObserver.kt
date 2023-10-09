@@ -24,14 +24,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 
 class AggregateProgressObserver(
     private val context: Context,
-    courseProgressDao: CourseProgressDao,
+    courseSyncProgressDao: CourseSyncProgressDao,
     fileSyncProgressDao: FileSyncProgressDao
 ) {
 
@@ -39,13 +39,13 @@ class AggregateProgressObserver(
         get() = _progressData
     private val _progressData = MutableLiveData<AggregateProgressViewData?>()
 
-    private var courseProgressLiveData: LiveData<List<CourseProgressEntity>>? = null
+    private var courseProgressLiveData: LiveData<List<CourseSyncProgressEntity>>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
-    private var courseProgresses = mutableMapOf<String, CourseProgressEntity>()
+    private var courseProgresses = mutableMapOf<String, CourseSyncProgressEntity>()
     private var fileProgresses = mutableMapOf<String, FileSyncProgressEntity>()
 
-    private val courseProgressObserver = Observer<List<CourseProgressEntity>> {
+    private val courseProgressObserver = Observer<List<CourseSyncProgressEntity>> {
         courseProgresses = it.associateBy { it.workerId }.toMutableMap()
 
         calculateProgress()
@@ -58,7 +58,7 @@ class AggregateProgressObserver(
     }
 
     init {
-        courseProgressLiveData = courseProgressDao.findAllLiveData()
+        courseProgressLiveData = courseSyncProgressDao.findAllLiveData()
         courseProgressLiveData?.observeForever(courseProgressObserver)
 
         fileProgressLiveData = fileSyncProgressDao.findAllLiveData()

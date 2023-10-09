@@ -25,9 +25,9 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import io.mockk.every
@@ -48,7 +48,7 @@ class AggregateProgressObserverTest {
     var instantExecutorRule = InstantTaskExecutorRule()
 
     private val context: Context = mockk(relaxed = true)
-    private val courseProgressDao: CourseProgressDao = mockk(relaxed = true)
+    private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
 
     private lateinit var aggregateProgressObserver: AggregateProgressObserver
@@ -70,7 +70,7 @@ class AggregateProgressObserverTest {
     @Test
     fun `Course update aggregate progress`() {
         val course1UUID = UUID.randomUUID().toString()
-        var courseProgress = CourseProgressEntity(
+        var courseProgress = CourseSyncProgressEntity(
             1L,
             course1UUID,
             "Course 1",
@@ -80,7 +80,7 @@ class AggregateProgressObserverTest {
 
         val courseProgressLiveData = MutableLiveData(listOf(courseProgress))
 
-        every { courseProgressDao.findAllLiveData() } returns courseProgressLiveData
+        every { courseSyncProgressDao.findAllLiveData() } returns courseProgressLiveData
 
         aggregateProgressObserver = createObserver()
 
@@ -110,14 +110,14 @@ class AggregateProgressObserverTest {
         val file1Id = UUID.randomUUID()
         val file2Id = UUID.randomUUID()
 
-        var course1 = CourseProgressEntity(
+        var course1 = CourseSyncProgressEntity(
             1L,
             course1Id.toString(),
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
             ProgressState.IN_PROGRESS
         )
-        var course2 = CourseProgressEntity(
+        var course2 = CourseSyncProgressEntity(
             2L,
             course2Id.toString(),
             "Course 2",
@@ -131,7 +131,7 @@ class AggregateProgressObserverTest {
         val courseLiveData = MutableLiveData(listOf(course1, course2))
         val fileLiveData = MutableLiveData(listOf(file1, file2))
 
-        every { courseProgressDao.findAllLiveData() } returns courseLiveData
+        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
         every { fileSyncProgressDao.findAllLiveData() } returns fileLiveData
 
         aggregateProgressObserver = createObserver()
@@ -178,7 +178,7 @@ class AggregateProgressObserverTest {
     fun `Error state`() {
         val course1UUID = UUID.randomUUID().toString()
 
-        var course1 = CourseProgressEntity(
+        var course1 = CourseSyncProgressEntity(
             1L,
             course1UUID,
             "Course 1",
@@ -188,7 +188,7 @@ class AggregateProgressObserverTest {
 
         val courseLiveData = MutableLiveData(listOf(course1))
 
-        every { courseProgressDao.findAllLiveData() } returns courseLiveData
+        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
 
         aggregateProgressObserver = createObserver()
 
@@ -203,6 +203,6 @@ class AggregateProgressObserverTest {
     }
 
     private fun createObserver(): AggregateProgressObserver {
-        return AggregateProgressObserver(context, courseProgressDao, fileSyncProgressDao)
+        return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao)
     }
 }

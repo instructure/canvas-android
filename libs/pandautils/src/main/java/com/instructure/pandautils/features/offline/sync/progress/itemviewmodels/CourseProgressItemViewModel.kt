@@ -31,15 +31,15 @@ import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 
 data class CourseProgressItemViewModel(
     val data: CourseProgressViewData,
     private val context: Context,
-    private val courseProgressDao: CourseProgressDao,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
 ) :
     GroupItemViewModel(collapsable = true, items = emptyList(), collapsed = true) {
@@ -48,10 +48,10 @@ data class CourseProgressItemViewModel(
 
     override val viewType: Int = ViewType.COURSE_PROGRESS.viewType
 
-    private var courseProgressLiveData: LiveData<CourseProgressEntity?>? = null
+    private var courseProgressLiveData: LiveData<CourseSyncProgressEntity?>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
-    private var courseProgressEntity: CourseProgressEntity? = null
+    private var courseSyncProgressEntity: CourseSyncProgressEntity? = null
     private val fileProgresses = mutableMapOf<String, FileSyncProgressEntity>()
 
     private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> {
@@ -62,10 +62,10 @@ data class CourseProgressItemViewModel(
         updateProgress()
     }
 
-    private val progressObserver = Observer<CourseProgressEntity?> { courseProgress ->
+    private val progressObserver = Observer<CourseSyncProgressEntity?> { courseProgress ->
         if (courseProgress == null) return@Observer
 
-        courseProgressEntity = courseProgress
+        courseSyncProgressEntity = courseProgress
 
         if (data.tabs == null && courseProgress.tabs.isNotEmpty()) {
             createTabs(courseProgress.tabs, courseProgress.workerId)
@@ -75,7 +75,7 @@ data class CourseProgressItemViewModel(
     }
 
     init {
-        courseProgressLiveData = courseProgressDao.findByWorkerIdLiveData(data.workerId)
+        courseProgressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.workerId)
         courseProgressLiveData?.observeForever(progressObserver)
 
         fileProgressLiveData = fileSyncProgressDao.findByCourseIdLiveData(data.courseId)
@@ -91,7 +91,7 @@ data class CourseProgressItemViewModel(
                     courseWorkerId,
                     tabEntry.value.state
                 ),
-                courseProgressDao
+                courseSyncProgressDao
             )
         }
 
@@ -105,18 +105,18 @@ data class CourseProgressItemViewModel(
         data.updateSize(
             NumberHelper.readableFileSize(
                 context,
-                (courseProgressEntity?.totalSize() ?: 0)
+                (courseSyncProgressEntity?.totalSize() ?: 0)
                         + fileProgresses.sumOf { it.fileSize })
         )
 
         when {
-            courseProgressEntity?.progressState == ProgressState.COMPLETED && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
+            courseSyncProgressEntity?.progressState == ProgressState.COMPLETED && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
                 data.updateState(WorkInfo.State.SUCCEEDED)
                 clearObservers()
             }
 
-            courseProgressEntity?.progressState?.isFinished() == true && fileProgresses.all { it.progressState.isFinished() }
-                    && (courseProgressEntity?.progressState == ProgressState.ERROR) || fileProgresses.any { it.progressState == ProgressState.ERROR } -> {
+            courseSyncProgressEntity?.progressState?.isFinished() == true && fileProgresses.all { it.progressState.isFinished() }
+                    && (courseSyncProgressEntity?.progressState == ProgressState.ERROR) || fileProgresses.any { it.progressState == ProgressState.ERROR } -> {
                 data.updateState(WorkInfo.State.FAILED)
                 clearObservers()
             }

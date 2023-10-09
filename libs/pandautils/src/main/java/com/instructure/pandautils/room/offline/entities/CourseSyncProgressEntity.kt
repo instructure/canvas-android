@@ -20,14 +20,13 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.instructure.pandautils.features.offline.sync.FileSyncData
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 
 const val TAB_PROGRESS_SIZE = 100 * 1000
 
 @Entity
-data class CourseProgressEntity(
+data class CourseSyncProgressEntity(
     @PrimaryKey
     val courseId: Long,
     val workerId: String,

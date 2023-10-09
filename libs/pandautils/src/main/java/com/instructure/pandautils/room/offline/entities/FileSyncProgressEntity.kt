@@ -24,7 +24,7 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 @Entity(
     foreignKeys = [
         androidx.room.ForeignKey(
-            entity = CourseSyncSettingsEntity::class,
+            entity = CourseSyncProgressEntity::class,
             parentColumns = ["courseId"],
             childColumns = ["courseId"],
             onDelete = androidx.room.ForeignKey.CASCADE

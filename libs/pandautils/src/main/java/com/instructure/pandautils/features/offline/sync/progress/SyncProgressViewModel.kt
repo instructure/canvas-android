@@ -35,10 +35,10 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -52,7 +52,7 @@ class SyncProgressViewModel @Inject constructor(
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val offlineSyncHelper: OfflineSyncHelper,
     private val aggregateProgressObserver: AggregateProgressObserver,
-    private val courseProgressDao: CourseProgressDao,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
 ) : ViewModel() {
 
@@ -71,7 +71,7 @@ class SyncProgressViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val courseSyncProgresses = courseProgressDao.findAll()
+            val courseSyncProgresses = courseSyncProgressDao.findAll()
             if (courseSyncProgresses.isEmpty()) {
                 _events.postValue(Event(SyncProgressAction.Back))
                 return@launch
@@ -85,19 +85,19 @@ class SyncProgressViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createCourseItem(courseProgressEntity: CourseProgressEntity): CourseProgressItemViewModel {
-        val courseSyncSettings = courseSyncSettingsDao.findWithFilesById(courseProgressEntity.courseId)
+    private suspend fun createCourseItem(courseSyncProgressEntity: CourseSyncProgressEntity): CourseProgressItemViewModel {
+        val courseSyncSettings = courseSyncSettingsDao.findWithFilesById(courseSyncProgressEntity.courseId)
         val data = CourseProgressViewData(
-            courseName = courseProgressEntity.courseName,
-            courseId = courseProgressEntity.courseId,
-            workerId = courseProgressEntity.workerId,
+            courseName = courseSyncProgressEntity.courseName,
+            courseId = courseSyncProgressEntity.courseId,
+            workerId = courseSyncProgressEntity.workerId,
             size = context.getString(R.string.syncProgress_syncQueued),
             files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true) {
                 listOf(
                     FilesTabProgressItemViewModel(
-                        data = FileTabProgressViewData(courseWorkerId = courseProgressEntity.workerId, items = emptyList()),
+                        data = FileTabProgressViewData(courseWorkerId = courseSyncProgressEntity.workerId, items = emptyList()),
                         context = context,
-                        courseProgressDao = courseProgressDao,
+                        courseSyncProgressDao = courseSyncProgressDao,
                         fileSyncProgressDao = fileSyncProgressDao
                     )
                 )
@@ -106,13 +106,13 @@ class SyncProgressViewModel @Inject constructor(
             }
         )
 
-        return CourseProgressItemViewModel(data, context, courseProgressDao, fileSyncProgressDao)
+        return CourseProgressItemViewModel(data, context, courseSyncProgressDao, fileSyncProgressDao)
     }
 
     fun cancel() {
         cancelRunningWorkers()
         viewModelScope.launch {
-            courseProgressDao.deleteAll()
+            courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
         }
         _events.postValue(Event(SyncProgressAction.Back))
@@ -131,7 +131,7 @@ class SyncProgressViewModel @Inject constructor(
         when (progressData.value?.progressState) {
             ProgressState.ERROR -> {
                 viewModelScope.launch {
-                    courseProgressDao.deleteAll()
+                    courseSyncProgressDao.deleteAll()
                     fileSyncProgressDao.deleteAll()
                 }
                 retry()

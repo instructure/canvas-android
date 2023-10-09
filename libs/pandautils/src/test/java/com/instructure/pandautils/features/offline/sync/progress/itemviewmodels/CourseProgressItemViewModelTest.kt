@@ -26,9 +26,9 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.features.offline.sync.progress.CourseProgressViewData
-import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import io.mockk.every
@@ -49,7 +49,7 @@ class CourseProgressItemViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val courseProgressDao: CourseProgressDao = mockk(relaxed = true)
+    private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
 
@@ -70,7 +70,7 @@ class CourseProgressItemViewModelTest {
     @Test
     fun `Create tab items`() {
         val uuid = UUID.randomUUID()
-        val courseProgress = CourseProgressEntity(
+        val courseProgress = CourseSyncProgressEntity(
             1L,
             uuid.toString(),
             "Course",
@@ -79,7 +79,7 @@ class CourseProgressItemViewModelTest {
         )
 
         val courseLiveData = MutableLiveData(courseProgress)
-        every { courseProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
         every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
 
         courseProgressItemViewModel = createItemViewModel(uuid)
@@ -95,7 +95,7 @@ class CourseProgressItemViewModelTest {
     @Test
     fun `Failed course sync`() {
         val uuid = UUID.randomUUID()
-        val courseProgress = CourseProgressEntity(
+        val courseProgress = CourseSyncProgressEntity(
             1L,
             uuid.toString(),
             "Course",
@@ -104,7 +104,7 @@ class CourseProgressItemViewModelTest {
         )
 
         val courseLiveData = MutableLiveData(courseProgress)
-        every { courseProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
         every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
 
         courseProgressItemViewModel = createItemViewModel(uuid)
@@ -115,7 +115,7 @@ class CourseProgressItemViewModelTest {
     @Test
     fun `Failed file sync`() {
         val uuid = UUID.randomUUID()
-        val courseProgress = CourseProgressEntity(
+        val courseProgress = CourseSyncProgressEntity(
             1L,
             uuid.toString(),
             "Course",
@@ -131,7 +131,7 @@ class CourseProgressItemViewModelTest {
 
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileProgresses)
-        every { courseProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
         every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns fileLiveData
 
         fileProgresses = listOf(
@@ -158,7 +158,7 @@ class CourseProgressItemViewModelTest {
     @Test
     fun `Sync success`() {
         val uuid = UUID.randomUUID()
-        val courseProgress = CourseProgressEntity(
+        val courseProgress = CourseSyncProgressEntity(
             1L,
             uuid.toString(),
             "Course",
@@ -174,7 +174,7 @@ class CourseProgressItemViewModelTest {
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileProgresses)
 
-        every { courseProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
         every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns fileLiveData
 
         courseProgressItemViewModel = createItemViewModel(uuid)
@@ -193,7 +193,7 @@ class CourseProgressItemViewModelTest {
                 size = "Queued"
             ),
             context = context,
-            courseProgressDao = courseProgressDao,
+            courseSyncProgressDao = courseSyncProgressDao,
             fileSyncProgressDao = fileSyncProgressDao
         )
     }

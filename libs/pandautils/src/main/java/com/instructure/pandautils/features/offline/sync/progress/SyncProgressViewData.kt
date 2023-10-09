@@ -117,13 +117,6 @@ enum class ViewType(val viewType: Int) {
     COURSE_FILE_PROGRESS(3)
 }
 
-data class AggregateProgressViewData(
-    val totalSize: String,
-    val downloadedSize: String,
-    val progress: Int,
-    val queued: Int,
-)
-
 sealed class SyncProgressAction {
     object CancelConfirmation : SyncProgressAction()
     object Back : SyncProgressAction()

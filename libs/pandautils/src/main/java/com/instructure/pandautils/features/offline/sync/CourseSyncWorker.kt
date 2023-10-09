@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
-import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
@@ -72,11 +72,11 @@ class CourseSyncWorker @AssistedInject constructor(
     private val workManager: WorkManager,
     private val syncSettingsFacade: SyncSettingsFacade,
     private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
-    private val courseProgressDao: CourseProgressDao,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
-    private lateinit var progress: CourseProgressEntity
+    private lateinit var progress: CourseSyncProgressEntity
 
     private var fileOperation: Operation? = null
 
@@ -149,7 +149,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
         progress =
             progress.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
-        courseProgressDao.update(progress)
+        courseSyncProgressDao.update(progress)
 
         return Result.success()
     }
@@ -456,13 +456,13 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun updateProgress() {
-        courseProgressDao.update(progress)
+        courseSyncProgressDao.update(progress)
     }
 
-    private suspend fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgressEntity {
+    private suspend fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseSyncProgressEntity {
         val availableTabs = course.tabs?.map { it.tabId } ?: emptyList()
         val selectedTabs = courseSettings.tabs.filter { availableTabs.contains(it.key) && it.value == true }.keys
-        val progress = (courseProgressDao.findByCourseId(course.id) ?: createNewProgress(courseSettings))
+        val progress = (courseSyncProgressDao.findByCourseId(course.id) ?: createNewProgress(courseSettings))
             .copy(
                 tabs = selectedTabs.associateWith { tabId ->
                     TabSyncData(
@@ -472,18 +472,18 @@ class CourseSyncWorker @AssistedInject constructor(
                 }
             )
 
-        courseProgressDao.update(progress)
+        courseSyncProgressDao.update(progress)
         return progress
     }
 
-    private suspend fun createNewProgress(courseSettings: CourseSyncSettingsEntity): CourseProgressEntity {
-        val newProgress = CourseProgressEntity(
+    private suspend fun createNewProgress(courseSettings: CourseSyncSettingsEntity): CourseSyncProgressEntity {
+        val newProgress = CourseSyncProgressEntity(
             workerId = workerParameters.id.toString(),
             courseId = courseSettings.courseId,
             courseName = courseSettings.courseName,
             progressState = ProgressState.STARTING,
         )
-        courseProgressDao.insert(newProgress)
+        courseSyncProgressDao.insert(newProgress)
         return newProgress
     }
 

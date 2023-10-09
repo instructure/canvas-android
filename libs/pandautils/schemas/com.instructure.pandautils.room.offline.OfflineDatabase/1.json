@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b3d67425f156e266f9720d4e002130d8",
+    "identityHash": "4fff74b7d090086e43542338f11e124f",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -5314,7 +5314,7 @@
         ]
       },
       {
-        "tableName": "CourseProgressEntity",
+        "tableName": "CourseSyncProgressEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `workerId` TEXT NOT NULL, `courseName` TEXT NOT NULL, `tabs` TEXT NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
@@ -5359,7 +5359,7 @@
       },
       {
         "tableName": "FileSyncProgressEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncSettingsEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "workerId",
@@ -5407,7 +5407,7 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "CourseSyncSettingsEntity",
+            "table": "CourseSyncProgressEntity",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
@@ -5423,7 +5423,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b3d67425f156e266f9720d4e002130d8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4fff74b7d090086e43542338f11e124f')"
     ]
   }
 }
