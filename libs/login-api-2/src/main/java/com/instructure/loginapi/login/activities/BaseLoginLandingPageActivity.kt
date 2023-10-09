@@ -126,7 +126,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         if(loginWithQRCodeEnabled()) {
             qrLogin.setVisible()
             qrDivider.setVisible()
-            qrLogin.onClick {
+            qrLogin.onClickWithRequireNetwork {
                 Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_CLICKED)
                 startActivity(loginWithQRIntent())
             }

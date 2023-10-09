@@ -61,6 +61,9 @@ class ApplicationSettingsFragment : ParentFragment() {
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
 
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
     private val binding by viewBinding(FragmentApplicationSettingsBinding::bind)
 
     override fun title(): String = getString(R.string.settings)
@@ -72,6 +75,18 @@ class ApplicationSettingsFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
         setupViews()
+
+        networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
+            handleOnlineState(isOnline == true)
+        }
+    }
+
+    private fun handleOnlineState(online: Boolean) = with(binding) {
+        profileSettings.alpha = if (online) 1f else 0.5f
+        pushNotifications.alpha = if (online) 1f else 0.5f
+        emailNotifications.alpha = if (online) 1f else 0.5f
+        pairObserver.alpha = if (online) 1f else 0.5f
+        legal.alpha = if (online) 1f else 0.5f
     }
 
     override fun applyTheme() = with(binding) {
@@ -81,7 +96,7 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun setupViews() = with(binding) {
-        profileSettings.onClick {
+        profileSettings.onClickWithRequireNetwork {
             val frag = if (ApiPrefs.isStudentView) {
                 // Profile settings not available in Student View
                 NothingToSeeHereFragment.newInstance()
@@ -98,25 +113,21 @@ class ApplicationSettingsFragment : ParentFragment() {
             accountPreferences.onClick { addFragment(AccountPreferencesFragment.newInstance()) }
         }
 
-        legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
+        legal.onClickWithRequireNetwork { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
         if (ApiPrefs.canGeneratePairingCode == true) {
             pairObserver.setVisible()
-            pairObserver.onClick {
-                if (APIHelper.hasNetworkConnection()) {
-                    addFragment(PairObserverFragment.newInstance())
-                } else {
-                    NoInternetConnectionDialog.show(requireFragmentManager())
-                }
+            pairObserver.onClickWithRequireNetwork {
+                addFragment(PairObserverFragment.newInstance())
             }
         }
 
-        pushNotifications.onClick {
+        pushNotifications.onClickWithRequireNetwork {
             addFragment(PushNotificationPreferencesFragment.newInstance())
         }
 
-        emailNotifications.onClick {
+        emailNotifications.onClickWithRequireNetwork {
             addFragment(EmailNotificationPreferencesFragment.newInstance())
         }
 
