@@ -6,7 +6,6 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -22,10 +21,10 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
 ) : Repository<DiscussionDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun markAsRead(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryIds: List<Long>): List<Long> {
-        val successfullyMarkedAsReadIds: MutableList<Long> = ArrayList(discussionEntryIds.size)
+        val successfullyMarkedAsReadIds: MutableList<Long> = mutableListOf()
         discussionEntryIds.forEach { entryId ->
             val result = networkDataSource.markAsRead(canvasContext, discussionTopicHeaderId, entryId)
-            if (result is DataResult.Success){ successfullyMarkedAsReadIds.add(entryId) }
+            successfullyMarkedAsReadIds.add(entryId)
         }
         return successfullyMarkedAsReadIds
     }
