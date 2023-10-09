@@ -59,6 +59,8 @@ import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -103,6 +105,8 @@ class DashboardNotificationsViewModelTest {
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
     private val aggregateProgressObserver: AggregateProgressObserver = mockk(relaxed = true)
+    private val courseProgressDao: CourseProgressDao = mockk(relaxed = true)
+    private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
 
     private lateinit var uploadsLiveData: MutableLiveData<List<DashboardFileUploadEntity>>
     private lateinit var progressLiveData: MutableLiveData<AggregateProgressViewData>
@@ -164,7 +168,9 @@ class DashboardNotificationsViewModelTest {
             dashboardFileUploadDao,
             fileUploadInputDao,
             fileUploadUtilsHelper,
-            aggregateProgressObserver
+            aggregateProgressObserver,
+            courseProgressDao,
+            fileSyncProgressDao
         )
 
         viewModel.data.observe(lifecycleOwner, {})

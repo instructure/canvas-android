@@ -113,6 +113,7 @@ class SyncProgressViewModel @Inject constructor(
         cancelRunningWorkers()
         viewModelScope.launch {
             courseProgressDao.deleteAll()
+            fileSyncProgressDao.deleteAll()
         }
         _events.postValue(Event(SyncProgressAction.Back))
     }
@@ -131,6 +132,7 @@ class SyncProgressViewModel @Inject constructor(
             ProgressState.ERROR -> {
                 viewModelScope.launch {
                     courseProgressDao.deleteAll()
+                    fileSyncProgressDao.deleteAll()
                 }
                 retry()
                 _events.postValue(Event(SyncProgressAction.Back))

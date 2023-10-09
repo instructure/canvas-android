@@ -20,17 +20,13 @@ package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.workDataOf
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.pandautils.features.offline.sync.CourseProgress
-import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.features.offline.sync.progress.TabProgressViewData
+import com.instructure.pandautils.room.offline.daos.CourseProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
-import com.instructure.pandautils.utils.toJson
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -43,35 +39,32 @@ class TabProgressItemViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val workManager: WorkManager = mockk(relaxed = true)
+    private val courseProgressDao: CourseProgressDao = mockk(relaxed = true)
 
     private lateinit var tabProgressItemViewModel: TabProgressItemViewModel
 
     @Test
     fun `Progress updates`() {
         val uuid = UUID.randomUUID()
-        var courseProgress = CourseProgress(
+        var courseProgress = CourseProgressEntity(
             1L,
+            uuid.toString(),
             "Course",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            emptyList()
         )
-        val courseLiveData = MutableLiveData(createCourseWorkInfo(courseProgress, uuid, WorkInfo.State.RUNNING))
+        val courseLiveData = MutableLiveData(courseProgress)
 
-        every { workManager.getWorkInfoByIdLiveData(uuid) } returns courseLiveData
+        every { courseProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
 
         tabProgressItemViewModel = createItemViewModel(uuid)
 
         assertEquals(ProgressState.IN_PROGRESS, tabProgressItemViewModel.data.state)
 
-        courseProgress = CourseProgress(
-            1L,
-            "Course",
-            CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) },
-            emptyList()
+        courseProgress = courseProgress.copy(
+            tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) }
         )
 
-        courseLiveData.postValue(createCourseWorkInfo(courseProgress, uuid, WorkInfo.State.SUCCEEDED))
+        courseLiveData.postValue(courseProgress)
 
         assertEquals(ProgressState.COMPLETED, tabProgressItemViewModel.data.state)
     }
@@ -84,21 +77,7 @@ class TabProgressItemViewModelTest {
                 uuid.toString(),
                 ProgressState.IN_PROGRESS
             ),
-            workManager
-        )
-    }
-
-    private fun createCourseWorkInfo(courseProgress: CourseProgress, uuid: UUID, state: WorkInfo.State): WorkInfo {
-        return WorkInfo(
-            uuid,
-            state,
-            if (state == WorkInfo.State.SUCCEEDED) workDataOf(CourseSyncWorker.OUTPUT to courseProgress.toJson()) else workDataOf(),
-            listOf(CourseSyncWorker.TAG),
-            workDataOf(
-                CourseSyncWorker.COURSE_PROGRESS to courseProgress.toJson()
-            ),
-            0,
-            0
+            courseProgressDao
         )
     }
 }
