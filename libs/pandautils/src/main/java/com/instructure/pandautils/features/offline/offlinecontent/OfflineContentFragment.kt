@@ -58,8 +58,8 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
             updateMenuText(data.selectedCount)
         }
 
-        viewModel.events.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
         }

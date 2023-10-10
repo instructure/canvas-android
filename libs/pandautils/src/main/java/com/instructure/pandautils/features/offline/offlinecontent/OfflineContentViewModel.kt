@@ -91,7 +91,17 @@ class OfflineContentViewModel @Inject constructor(
                 val coursesData = createCourseItemViewModels()
                 val data = OfflineContentViewData(storageInfo, coursesData, 0)
                 _data.postValue(data)
-                _state.postValue(ViewState.Success)
+                if (coursesData.isEmpty()) {
+                    _state.postValue(
+                        ViewState.Empty(
+                            R.string.offline_content_empty_title,
+                            R.string.offline_content_empty_message,
+                            R.drawable.ic_panda_space
+                        )
+                    )
+                } else {
+                    _state.postValue(ViewState.Success)
+                }
             } catch (ex: Exception) {
                 _state.postValue(ViewState.Error(context.getString(R.string.offline_content_loading_error)))
             }
@@ -161,7 +171,6 @@ class OfflineContentViewModel @Inject constructor(
         val size = Formatter.formatShortFileSize(context, files.sumOf { it.size })
         val tabs = course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }.orEmpty()
 
-
         val collapsed = _data.value?.courseItems?.find { it.courseId == courseId }?.collapsed ?: (this.course == null)
 
         return CourseItemViewModel(
@@ -188,9 +197,7 @@ class OfflineContentViewModel @Inject constructor(
         toggleCourse(courseItemViewModel.courseId, checked)
 
         val newCourseViewModel = createCourseItemViewModel(courseItemViewModel.courseId)
-        val newList =
-            _data.value?.courseItems?.map { if (it == courseItemViewModel) newCourseViewModel else it }
-                .orEmpty()
+        val newList = _data.value?.courseItems?.map { if (it == courseItemViewModel) newCourseViewModel else it }.orEmpty()
 
         val selectedCount = getSelectedItemCount(newList)
 
@@ -383,8 +390,7 @@ class OfflineContentViewModel @Inject constructor(
         val usedSpace = totalSpace - storageUtils.getFreeSpace()
         val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
-        val canvasPercent =
-            if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
+        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
         val storageInfoText = context.getString(
             R.string.offline_content_storage_info,
             Formatter.formatShortFileSize(context, usedSpace),
@@ -394,4 +400,3 @@ class OfflineContentViewModel @Inject constructor(
         return StorageInfo(otherPercent, canvasPercent, storageInfoText)
     }
 }
-

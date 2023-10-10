@@ -75,7 +75,8 @@ data class FileViewData(
 enum class OfflineItemViewModelType(val viewType: Int) {
     COURSE(1),
     COURSE_TAB(2),
-    FILE(3)
+    FILE(3),
+    EMPTY_COURSE_CONTENT(4)
 }
 
 sealed class OfflineContentAction {

@@ -1419,6 +1419,10 @@
     <string name="offline_content_select_all">Select All</string>
     <string name="offline_content_deselect_all">Deselect All</string>
     <string name="offline_content_loading_error">An error occurred while loading the content.</string>
+    <string name="offline_content_empty_title">No Courses</string>
+    <string name="offline_content_empty_message">Your courses will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_empty_course_title">No Course Content</string>
+    <string name="offline_content_empty_course_message">The course content will be listed here, and then you can make them available for offline usage.</string>
     <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off then no synchronization will happen. The already downloaded content will not be deleted.</string>
     <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
     <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
