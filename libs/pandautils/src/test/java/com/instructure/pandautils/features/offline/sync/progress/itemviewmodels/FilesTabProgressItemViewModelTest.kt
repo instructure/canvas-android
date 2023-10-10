@@ -66,11 +66,19 @@ class FilesTabProgressItemViewModelTest {
     @Test
     fun `Success if no files`() {
         val courseUUID = UUID.randomUUID()
-        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), ProgressState.COMPLETED)
+        val courseProgress =
+            CourseSyncProgressEntity(
+                1L,
+                courseUUID.toString(),
+                "Course",
+                emptyMap(),
+                additionalFilesStarted = true,
+                progressState = ProgressState.COMPLETED
+            )
         val courseLiveData = MutableLiveData(courseProgress)
 
         every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
-        every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
+        every { fileSyncProgressDao.findCourseFilesByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
 
         filesTabProgressItemViewModel = createItemViewModel(courseUUID)
 
@@ -81,17 +89,45 @@ class FilesTabProgressItemViewModelTest {
     fun `Create file items`() {
         val courseUUID = UUID.randomUUID()
         val fileSyncProgresses = listOf(
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 1", 0,1000, ProgressState.IN_PROGRESS),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 2", 0,2000, ProgressState.IN_PROGRESS),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 0,3000, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 1",
+                0,
+                1000,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 2",
+                0,
+                2000,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 3",
+                0,
+                3000,
+                progressState = ProgressState.IN_PROGRESS
+            ),
         )
 
-        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), ProgressState.IN_PROGRESS)
+        val courseProgress = CourseSyncProgressEntity(
+            1L,
+            courseUUID.toString(),
+            "Course",
+            emptyMap(),
+            additionalFilesStarted = true,
+            progressState = ProgressState.IN_PROGRESS
+        )
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileSyncProgresses)
 
         every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
-        every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns fileLiveData
+        every { fileSyncProgressDao.findCourseFilesByCourseIdLiveData(1L) } returns fileLiveData
 
         filesTabProgressItemViewModel = createItemViewModel(courseUUID)
 
@@ -109,16 +145,43 @@ class FilesTabProgressItemViewModelTest {
     fun `Progress updates`() {
         val courseUUID = UUID.randomUUID()
         var fileSyncData = listOf(
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 1", 0,1000, ProgressState.IN_PROGRESS),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 2", 50,2000, ProgressState.IN_PROGRESS),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 100,3000, ProgressState.COMPLETED),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 1",
+                0,
+                1000,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 2",
+                50,
+                2000,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 3",
+                100,
+                3000,
+                progressState = ProgressState.COMPLETED
+            ),
         )
-        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), progressState = ProgressState.COMPLETED)
+        val courseProgress = CourseSyncProgressEntity(
+            1L,
+            courseUUID.toString(),
+            "Course",
+            emptyMap(),
+            progressState = ProgressState.COMPLETED
+        )
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileSyncData)
 
         every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
-        every { fileSyncProgressDao.findByCourseIdLiveData(1L) } returns fileLiveData
+        every { fileSyncProgressDao.findCourseFilesByCourseIdLiveData(1L) } returns fileLiveData
 
         filesTabProgressItemViewModel = createItemViewModel(courseUUID)
 
@@ -126,9 +189,30 @@ class FilesTabProgressItemViewModelTest {
         assertEquals(50, filesTabProgressItemViewModel.data.progress)
 
         fileSyncData = listOf(
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 1", 50,1000, ProgressState.IN_PROGRESS),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 2", 100,2000, ProgressState.COMPLETED),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 100,3000, ProgressState.COMPLETED),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 1",
+                50,
+                1000,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 2",
+                100,
+                2000,
+                progressState = ProgressState.COMPLETED
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 3",
+                100,
+                3000,
+                progressState = ProgressState.COMPLETED
+            ),
         )
         fileLiveData.postValue(fileSyncData)
 
@@ -136,9 +220,30 @@ class FilesTabProgressItemViewModelTest {
         assertEquals(83, filesTabProgressItemViewModel.data.progress)
 
         fileSyncData = listOf(
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 1", 100,1000, ProgressState.COMPLETED),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 2", 100,2000, ProgressState.COMPLETED),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 100,3000, ProgressState.COMPLETED),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 1",
+                100,
+                1000,
+                progressState = ProgressState.COMPLETED
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 2",
+                100,
+                2000,
+                progressState = ProgressState.COMPLETED
+            ),
+            FileSyncProgressEntity(
+                UUID.randomUUID().toString(),
+                1L,
+                "File 3",
+                100,
+                3000,
+                progressState = ProgressState.COMPLETED
+            ),
         )
         fileLiveData.postValue(fileSyncData)
 

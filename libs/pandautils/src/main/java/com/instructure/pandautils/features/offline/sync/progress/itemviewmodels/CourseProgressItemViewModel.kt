@@ -48,8 +48,6 @@ data class CourseProgressItemViewModel(
 
     override val viewType: Int = ViewType.COURSE_PROGRESS.viewType
 
-    private var courseTabsAndFilesSize = 0L
-
     private var courseProgressLiveData: LiveData<CourseSyncProgressEntity?>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
@@ -113,18 +111,18 @@ data class CourseProgressItemViewModel(
 
         when {
             courseSyncProgressEntity?.progressState == ProgressState.COMPLETED && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
-                data.updateState(WorkInfo.State.SUCCEEDED)
+                data.updateState(ProgressState.COMPLETED)
                 clearObservers()
             }
 
             courseSyncProgressEntity?.progressState?.isFinished() == true && fileProgresses.all { it.progressState.isFinished() }
                     && (courseSyncProgressEntity?.progressState == ProgressState.ERROR) || fileProgresses.any { it.progressState == ProgressState.ERROR } -> {
-                data.updateState(WorkInfo.State.FAILED)
+                data.updateState(ProgressState.ERROR)
                 clearObservers()
             }
 
             else -> {
-                data.updateState(WorkInfo.State.RUNNING)
+                data.updateState(ProgressState.IN_PROGRESS)
             }
         }
     }

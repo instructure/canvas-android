@@ -32,6 +32,7 @@ data class CourseSyncProgressEntity(
     val workerId: String,
     val courseName: String,
     val tabs: Map<String, TabSyncData> = emptyMap(),
+    val additionalFilesStarted: Boolean = false,
     val progressState: ProgressState = ProgressState.STARTING,
 ) {
     fun totalSize() = tabs.size * TAB_PROGRESS_SIZE

@@ -69,7 +69,7 @@ class CourseSyncProgressDaoTest {
             UUID.randomUUID().toString(),
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS
         )
         courseSyncProgressDao.insert(entity)
 
@@ -85,14 +85,14 @@ class CourseSyncProgressDaoTest {
                 UUID.randomUUID().toString(),
                 "Course 1",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             ),
             CourseSyncProgressEntity(
                 2L,
                 UUID.randomUUID().toString(),
                 "Course 2",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             )
         )
 
@@ -113,14 +113,14 @@ class CourseSyncProgressDaoTest {
                 UUID.randomUUID().toString(),
                 "Course 1",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             ),
             CourseSyncProgressEntity(
                 2L,
                 UUID.randomUUID().toString(),
                 "Course 2",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             )
         )
 
@@ -138,14 +138,14 @@ class CourseSyncProgressDaoTest {
                 UUID.randomUUID().toString(),
                 "Course 1",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             ),
             CourseSyncProgressEntity(
                 2L,
                 UUID.randomUUID().toString(),
                 "Course 2",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             )
         )
 
@@ -164,14 +164,14 @@ class CourseSyncProgressDaoTest {
                 UUID.randomUUID().toString(),
                 "Course 1",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             ),
             CourseSyncProgressEntity(
                 2L,
                 UUID.randomUUID().toString(),
                 "Course 2",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             )
         )
 
@@ -191,21 +191,21 @@ class CourseSyncProgressDaoTest {
                 UUID.randomUUID().toString(),
                 "Course 1",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             ),
             CourseSyncProgressEntity(
                 2L,
                 UUID.randomUUID().toString(),
                 "Course 2",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             )
         )
 
         courseSyncProgressDao.insertAll(entities)
 
         val result = courseSyncProgressDao.findAllLiveData()
-        result.observeForever {  }
+        result.observeForever { }
 
         assertEquals(entities, result.value)
     }
@@ -218,21 +218,21 @@ class CourseSyncProgressDaoTest {
                 UUID.randomUUID().toString(),
                 "Course 1",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             ),
             CourseSyncProgressEntity(
                 2L,
                 UUID.randomUUID().toString(),
                 "Course 2",
                 CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-                ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS
             )
         )
 
         courseSyncProgressDao.insertAll(entities)
 
         val result = courseSyncProgressDao.findByWorkerIdLiveData(entities[1].workerId)
-        result.observeForever {  }
+        result.observeForever { }
 
         assertEquals(entities[1], result.value)
     }

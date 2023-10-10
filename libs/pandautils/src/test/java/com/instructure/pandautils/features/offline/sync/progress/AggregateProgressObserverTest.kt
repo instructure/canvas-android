@@ -30,12 +30,14 @@ import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -75,7 +77,7 @@ class AggregateProgressObserverTest {
             course1UUID,
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS
         )
 
         val courseProgressLiveData = MutableLiveData(listOf(courseProgress))
@@ -115,18 +117,20 @@ class AggregateProgressObserverTest {
             course1Id.toString(),
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS
         )
         var course2 = CourseSyncProgressEntity(
             2L,
             course2Id.toString(),
             "Course 2",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS
         )
 
-        var file1 = FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, ProgressState.IN_PROGRESS)
-        var file2 = FileSyncProgressEntity(file2Id.toString(), 2L, "File 1", 0, 2000, ProgressState.IN_PROGRESS)
+        var file1 =
+            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, progressState = ProgressState.IN_PROGRESS)
+        var file2 =
+            FileSyncProgressEntity(file2Id.toString(), 2L, "File 1", 0, 2000, progressState = ProgressState.IN_PROGRESS)
 
         val courseLiveData = MutableLiveData(listOf(course1, course2))
         val fileLiveData = MutableLiveData(listOf(file1, file2))
@@ -182,52 +186,44 @@ class AggregateProgressObserverTest {
         val file2Id = UUID.randomUUID()
         val file3Id = UUID.randomUUID()
 
-        val syncProgress = listOf(SyncProgressEntity(course1Id.toString(), 1L, "Course 1"))
-
-        coEvery { syncProgressDao.findCourseProgressesLiveData() } returns MutableLiveData(syncProgress)
-
-        var course1Progress = CourseProgress(
+        var course1Progress = CourseSyncProgressEntity(
             1L,
+            course1Id.toString(),
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            fileSyncData = listOf(
-                FileSyncData(file1Id.toString(), "File 1", 1000)),
-            additionalFileSyncData = listOf(
-                FileSyncData(file2Id.toString(), "Additional internal file", 2000),
-                FileSyncData(file3Id.toString(), "Additional external file", 0)
-            )
+            additionalFilesStarted = true,
+            progressState = ProgressState.IN_PROGRESS
         )
 
-        var course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, WorkInfo.State.RUNNING)
+        val courseLiveData = MutableLiveData(listOf(course1Progress))
 
-        val courseLiveData = MutableLiveData(listOf(course1WorkInfo))
-
-        var file1Progress = FileSyncProgress("File 1", 0, ProgressState.IN_PROGRESS)
-        var file1WorkInfo = createFileWorkInfo(file1Progress, file1Id, WorkInfo.State.RUNNING)
-
-        var file2Progress = FileSyncProgress("Additional internal file", 0, ProgressState.IN_PROGRESS)
-        var file2WorkInfo = createFileWorkInfo(file2Progress, file2Id, WorkInfo.State.RUNNING)
-
-        var file3Progress = FileSyncProgress("Additional external file", 0, ProgressState.IN_PROGRESS, totalBytes = 0, externalFile = true)
-        var file3WorkInfo = createFileWorkInfo(file3Progress, file3Id, WorkInfo.State.RUNNING)
-
-        val aggregateWorkInfo = listOf(
-            course1WorkInfo,
-            file1WorkInfo,
-            file2WorkInfo,
-            file3WorkInfo
+        var file1Progress =
+            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, false, false, ProgressState.IN_PROGRESS)
+        var file2Progress = FileSyncProgressEntity(
+            file2Id.toString(),
+            1L,
+            "Additional internal file",
+            0,
+            2000,
+            true,
+            false,
+            ProgressState.IN_PROGRESS
+        )
+        var file3Progress = FileSyncProgressEntity(
+            file3Id.toString(),
+            1L,
+            "Additional external file",
+            0,
+            0,
+            true,
+            true,
+            ProgressState.IN_PROGRESS
         )
 
-        val aggregateLiveData = MutableLiveData(aggregateWorkInfo)
+        val fileLiveData = MutableLiveData(listOf(file1Progress, file2Progress, file3Progress))
 
-        val queryCaptor = slot<WorkQuery>()
-        every { workManager.getWorkInfosLiveData(capture(queryCaptor)) } answers {
-            if (queryCaptor.captured.ids.size == 1) {
-                courseLiveData
-            } else {
-                aggregateLiveData
-            }
-        }
+        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
+        every { fileSyncProgressDao.findAllLiveData() } returns fileLiveData
 
         aggregateProgressObserver = createObserver()
 
@@ -241,59 +237,57 @@ class AggregateProgressObserverTest {
             progress = 100,
             progressState = ProgressState.COMPLETED
         )
-        file1WorkInfo = createFileWorkInfo(file1Progress, file1Id, WorkInfo.State.SUCCEEDED)
         course1Progress = course1Progress.copy(
             tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) },
         )
-        course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, WorkInfo.State.RUNNING)
 
-        courseLiveData.postValue(listOf(course1WorkInfo))
-        aggregateLiveData.postValue(
-            listOf(
-                course1WorkInfo,
-                file1WorkInfo,
-                file2WorkInfo,
-                file3WorkInfo
-            )
-        )
+        courseLiveData.postValue(listOf(course1Progress))
+        fileLiveData.postValue(listOf(file1Progress, file2Progress, file3Progress))
 
         // Course tabs and files are completed, but additional files are still in progress
         assertEquals(99, aggregateProgressObserver.progressData.value?.progress)
 
         file2Progress = file2Progress.copy(progress = 100, progressState = ProgressState.COMPLETED)
-        file2WorkInfo = createFileWorkInfo(file2Progress, file2Id, WorkInfo.State.SUCCEEDED)
 
-        file3Progress = FileSyncProgress("Additional external file", 0, ProgressState.IN_PROGRESS, totalBytes = 3000, externalFile = true)
-        file3WorkInfo = createFileWorkInfo(file3Progress, file3Id, WorkInfo.State.RUNNING)
-
-        aggregateLiveData.postValue(
-            listOf(
-                course1WorkInfo,
-                file1WorkInfo,
-                file2WorkInfo,
-                file3WorkInfo
-            )
+        file3Progress = FileSyncProgressEntity(
+            file3Id.toString(),
+            1L,
+            "Additional external file",
+            0,
+            3000,
+            true,
+            true,
+            ProgressState.IN_PROGRESS
         )
+
+        fileLiveData.postValue(listOf(file1Progress, file2Progress, file3Progress))
 
         // Total size is updated with the external file
         assertEquals("${1000000 + 1000 + 2000 + 3000} bytes", aggregateProgressObserver.progressData.value?.totalSize)
 
-        file3Progress = FileSyncProgress("Additional external file", 100, ProgressState.COMPLETED, totalBytes = 3000, externalFile = true)
-        file3WorkInfo = createFileWorkInfo(file3Progress, file3Id, WorkInfo.State.SUCCEEDED)
+        file3Progress = FileSyncProgressEntity(
+            file3Id.toString(),
+            1L,
+            "Additional external file",
+            100,
+            3000,
+            true,
+            true,
+            ProgressState.COMPLETED
+        )
 
-        course1WorkInfo = createCourseWorkInfo(course1Progress, course1Id, WorkInfo.State.SUCCEEDED)
-
-        aggregateLiveData.postValue(
-            listOf(
-                course1WorkInfo,
-                file1WorkInfo,
-                file2WorkInfo,
-                file3WorkInfo
-            )
+        course1Progress = course1Progress.copy(
+            progressState = ProgressState.COMPLETED
+        )
+        courseLiveData.postValue(listOf(course1Progress))
+        fileLiveData.postValue(
+            listOf(file1Progress, file2Progress, file3Progress)
         )
 
         // External files are downloaded, progress should be 100%
-        assertEquals(100, aggregateProgressObserver.progressData.value?.progress)
+        assertEquals(
+            100, aggregateProgressObserver.progressData.value?.progress
+        )
         assertEquals(ProgressState.COMPLETED, aggregateProgressObserver.progressData.value?.progressState)
     }
 
@@ -306,7 +300,7 @@ class AggregateProgressObserverTest {
             course1UUID,
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
-            ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS
         )
 
         val courseLiveData = MutableLiveData(listOf(course1))

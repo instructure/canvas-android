@@ -146,9 +146,10 @@ class SyncProgressViewModelTest {
                             fileSyncProgressDao = fileSyncProgressDao
                         ),
                     additionalFiles = AdditionalFilesProgressItemViewModel(
-                        AdditionalFilesProgressViewData(course1UUID),
-                        workManager,
-                        context
+                        data = AdditionalFilesProgressViewData(course1UUID),
+                        context = context,
+                        courseSyncProgressDao = courseSyncProgressDao,
+                        fileSyncProgressDao = fileSyncProgressDao
                     ),
                     workerId = course1UUID
                 ),
@@ -161,9 +162,10 @@ class SyncProgressViewModelTest {
                     courseName = "Course 2",
                     files = null,
                     additionalFiles = AdditionalFilesProgressItemViewModel(
-                        AdditionalFilesProgressViewData(course2UUID),
-                        workManager,
-                        context
+                        data = AdditionalFilesProgressViewData(course2UUID),
+                        context = context,
+                        courseSyncProgressDao = courseSyncProgressDao,
+                        fileSyncProgressDao = fileSyncProgressDao
                     ),
                     workerId = course2UUID,
                     courseId = 2L
@@ -180,7 +182,7 @@ class SyncProgressViewModelTest {
     @Test
     fun `Retry`() = runTest {
         val course1UUID = UUID.randomUUID().toString()
-        val courseProgress = CourseSyncProgressEntity(1L, course1UUID, "Course 1", emptyMap(), ProgressState.ERROR)
+        val courseProgress = CourseSyncProgressEntity(1L, course1UUID, "Course 1", emptyMap(), progressState = ProgressState.ERROR)
 
         coEvery { courseSyncProgressDao.findAll() } returns listOf(courseProgress)
 
@@ -214,7 +216,7 @@ class SyncProgressViewModelTest {
     @Test
     fun `Cancel`() = runTest {
         val course1UUID = UUID.randomUUID().toString()
-        val syncProgress = CourseSyncProgressEntity(1L, course1UUID, "Course 1", emptyMap(), ProgressState.IN_PROGRESS)
+        val syncProgress = CourseSyncProgressEntity(1L, course1UUID, "Course 1", emptyMap(), progressState = ProgressState.IN_PROGRESS)
 
         coEvery { courseSyncProgressDao.findAll() } returns listOf(syncProgress)
 

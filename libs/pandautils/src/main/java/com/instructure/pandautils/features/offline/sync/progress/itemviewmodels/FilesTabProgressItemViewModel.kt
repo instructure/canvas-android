@@ -83,7 +83,7 @@ data class FilesTabProgressItemViewModel(
         if (progress == null) return@Observer
         if (progress.progressState == ProgressState.STARTING) return@Observer
 
-        fileProgressLiveData = fileSyncProgressDao.findByCourseIdLiveData(progress.courseId)
+        fileProgressLiveData = fileSyncProgressDao.findCourseFilesByCourseIdLiveData(progress.courseId)
         fileProgressLiveData?.observeForever(fileProgressObserver)
     }
 

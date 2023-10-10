@@ -312,9 +312,8 @@ class OfflineModule {
         userDao: UserDao,
         enrollmentDao: EnrollmentDao,
         gradesDao: GradesDao,
-        userApi: UserAPI.UsersInterface
     ): EnrollmentFacade {
-        return EnrollmentFacade(userDao, enrollmentDao, gradesDao, userApi)
+        return EnrollmentFacade(userDao, enrollmentDao, gradesDao)
     }
 
     @Provides

@@ -31,7 +31,6 @@ class EnrollmentFacade(
     private val userDao: UserDao,
     private val enrollmentDao: EnrollmentDao,
     private val gradesDao: GradesDao,
-    private val userApi: UserAPI.UsersInterface
 ) {
 
     suspend fun insertEnrollment(enrollment: Enrollment, courseId: Long) {

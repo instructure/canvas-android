@@ -65,8 +65,6 @@ class FileSyncWorker @AssistedInject constructor(
         val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
         val courseId = inputData.getLong(INPUT_COURSE_ID, -1)
 
-        var result = Result.failure()
-
         val externalFile = fileId == -1L
 
         var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
@@ -74,7 +72,7 @@ class FileSyncWorker @AssistedInject constructor(
         progress = fileSyncProgressDao.findByWorkerId(workerParameters.id.toString()) ?: return Result.failure()
 
         try {
-            fileDownloadApi.downloadFile(fileUrl)
+            fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
                 .dataOrThrow
                 .saveFile(downloadedFile)
                 .collect {
@@ -91,7 +89,7 @@ class FileSyncWorker @AssistedInject constructor(
                             if (!externalFile) {
                                 localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
                             }
-                        progress = progress.copy(progress = 100, progressState = ProgressState.COMPLETED, totalBytes = it.totalBytes, externalFile = externalFile)
+                        progress = progress.copy(progress = 100, progressState = ProgressState.COMPLETED, fileSize = it.totalBytes, externalFile = externalFile)
                             fileSyncProgressDao.update(progress)
                         }
 

@@ -42,7 +42,6 @@ import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import com.instructure.canvasapi2.utils.ApiPrefs
 import java.io.File
 
 const val COURSE_IDS = "course-ids"
@@ -60,7 +59,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val editDashboardItemDao: EditDashboardItemDao,
     private val courseDao: CourseDao,
     private val courseSyncProgressDao: CourseSyncProgressDao,
-    private val fileSyncProgressDao: FileSyncProgressDao
+    private val fileSyncProgressDao: FileSyncProgressDao,
     private val apiPrefs: ApiPrefs,
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao
@@ -96,7 +95,7 @@ class OfflineSyncWorker @AssistedInject constructor(
         val settingsMap = courses.associateBy { it.courseId }
 
         val courseWorkers = courses.filter { it.anySyncEnabled }
-            .map { CourseSyncWorker.createOneTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
+            .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
 
         val courseProgresses = courseWorkers.map {
             val courseId = it.workSpec.input.getLong(CourseSyncWorker.COURSE_ID, 0)

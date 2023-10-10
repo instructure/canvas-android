@@ -32,12 +32,14 @@ import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -103,8 +105,9 @@ class SyncProgressViewModel @Inject constructor(
             },
             additionalFiles =
                 AdditionalFilesProgressItemViewModel(
-                    data = AdditionalFilesProgressViewData(courseWorkerId = syncProgress.uuid),
-                    workManager = workManager,
+                    data = AdditionalFilesProgressViewData(courseWorkerId = courseSyncProgressEntity.workerId),
+                    fileSyncProgressDao = fileSyncProgressDao,
+                    courseSyncProgressDao = courseSyncProgressDao,
                     context = context
                 )
         )
