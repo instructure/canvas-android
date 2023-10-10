@@ -98,6 +98,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     init {
         markSubmissionAsRead()
         submissionQuery.addListener(this)
+        _state.postValue(ViewState.Loading)
         loadData()
     }
 
@@ -157,7 +158,6 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun loadData(forceNetwork: Boolean = false) {
-        _state.postValue(ViewState.Loading)
         viewModelScope.launch {
             try {
                 val courseResult = assignmentDetailsRepository.getCourseWithGrade(course?.id.orDefault(), forceNetwork)
@@ -206,7 +206,12 @@ class AssignmentDetailsViewModel @Inject constructor(
                 _data.postValue(getViewData(assignmentResult, hasDraft))
                 _state.postValue(ViewState.Success)
             } catch (ex: Exception) {
-                _state.postValue(ViewState.Error(resources.getString(R.string.errorLoadingAssignment)))
+                val errorString = if (ex is IllegalAccessException) {
+                    resources.getString(R.string.assignmentNoLongerAvailable)
+                } else {
+                    resources.getString(R.string.errorLoadingAssignment)
+                }
+                _state.postValue(ViewState.Error(errorString))
             }
         }
     }
@@ -447,6 +452,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     fun refresh() {
+        _state.postValue(ViewState.Refresh)
         loadData(true)
     }
 
@@ -545,5 +551,9 @@ class AssignmentDetailsViewModel @Inject constructor(
         } else {
             postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.audioRecordingError)))
         }
+    }
+
+    fun showContent(viewState: ViewState?): Boolean {
+        return (viewState == ViewState.Success || viewState == ViewState.Refresh) && assignment != null
     }
 }
