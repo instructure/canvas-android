@@ -448,7 +448,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
                                 sectionsMapped.values.toList(),
                                 groupsMapped.values.toList(),
                                 studentsMapped.values.toList())
-                        RouteMatcher.route(requireContext(), Route(AssigneeListFragment::class.java, canvasContext, args))
+                        RouteMatcher.route(requireActivity(), Route(AssigneeListFragment::class.java, canvasContext, args))
                         scrollBackToOverride = v
                     }
 

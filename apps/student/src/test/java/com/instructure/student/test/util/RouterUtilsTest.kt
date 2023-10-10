@@ -17,6 +17,7 @@
 
 package com.instructure.student.test.util
 
+import androidx.fragment.app.FragmentActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -41,14 +42,16 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.router.RouteMatcher
+import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RuntimeEnvironment
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class RouterUtilsTest : TestCase() {
+
+    private val activity: FragmentActivity = mockk(relaxed = true)
 
     @Test
     fun testCanRouteInternally_misc() {
@@ -87,7 +90,7 @@ class RouterUtilsTest : TestCase() {
     }
 
     private fun callCanRouteInternally(url: String): Boolean {
-        return RouteMatcher.canRouteInternally(RuntimeEnvironment.application, url, "mobiledev.instructure.com", false)
+        return RouteMatcher.canRouteInternally(activity, url, "mobiledev.instructure.com", false)
     }
 
     private fun callGetInternalRoute(url: String): Route? {

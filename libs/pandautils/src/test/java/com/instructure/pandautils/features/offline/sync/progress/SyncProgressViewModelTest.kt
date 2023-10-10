@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.FilesTabProgressItemViewModel
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
@@ -134,7 +135,7 @@ class SyncProgressViewModelTest {
                 data = CourseProgressViewData(
                     courseName = "Course 1",
                     courseId = 1L,
-                    files = listOf(
+                    files =
                         FilesTabProgressItemViewModel(
                             data = FileTabProgressViewData(
                                 courseWorkerId = course1UUID,
@@ -143,7 +144,11 @@ class SyncProgressViewModelTest {
                             context = context,
                             courseSyncProgressDao = courseSyncProgressDao,
                             fileSyncProgressDao = fileSyncProgressDao
-                        )
+                        ),
+                    additionalFiles = AdditionalFilesProgressItemViewModel(
+                        AdditionalFilesProgressViewData(course1UUID),
+                        workManager,
+                        context
                     ),
                     workerId = course1UUID
                 ),
@@ -154,7 +159,12 @@ class SyncProgressViewModelTest {
             CourseProgressItemViewModel(
                 data = CourseProgressViewData(
                     courseName = "Course 2",
-                    files = emptyList(),
+                    files = null,
+                    additionalFiles = AdditionalFilesProgressItemViewModel(
+                        AdditionalFilesProgressViewData(course2UUID),
+                        workManager,
+                        context
+                    ),
                     workerId = course2UUID,
                     courseId = 2L
                 ),

@@ -76,6 +76,15 @@ class ModulesPage : BasePage() {
     }
 
     /**
+     * Click on the module item with the given title to open it's detailer.
+     *
+     * @param itemTitle The title of the module item.
+     */
+    fun clickOnModuleItem(itemTitle: String) {
+        onView(allOf(withId(R.id.moduleItemTitle), withText(itemTitle))).click()
+    }
+
+    /**
      * Asserts that the module item with the specified name is published.
      *
      * @param moduleItemName The name of the module item.

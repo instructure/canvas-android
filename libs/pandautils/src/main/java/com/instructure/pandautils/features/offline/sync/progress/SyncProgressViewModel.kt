@@ -38,7 +38,6 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
-import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -93,17 +92,21 @@ class SyncProgressViewModel @Inject constructor(
             workerId = courseSyncProgressEntity.workerId,
             size = context.getString(R.string.syncProgress_syncQueued),
             files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true) {
-                listOf(
                     FilesTabProgressItemViewModel(
                         data = FileTabProgressViewData(courseWorkerId = courseSyncProgressEntity.workerId, items = emptyList()),
                         context = context,
                         courseSyncProgressDao = courseSyncProgressDao,
                         fileSyncProgressDao = fileSyncProgressDao
                     )
-                )
             } else {
-                emptyList()
-            }
+                null
+            },
+            additionalFiles =
+                AdditionalFilesProgressItemViewModel(
+                    data = AdditionalFilesProgressViewData(courseWorkerId = syncProgress.uuid),
+                    workManager = workManager,
+                    context = context
+                )
         )
 
         return CourseProgressItemViewModel(data, context, courseSyncProgressDao, fileSyncProgressDao)

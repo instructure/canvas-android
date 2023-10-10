@@ -106,7 +106,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = PageListRecyclerAdapter(requireContext(), repository, canvasContext, object : AdapterToFragmentCallback<Page> {
             override fun onRowClicked(page: Page, position: Int, isOpenDetail: Boolean) {
-                RouteMatcher.route(requireContext(),
+                RouteMatcher.route(requireActivity(),
                     PageDetailsFragment.makeRoute(
                         canvasContext,
                         page
@@ -131,7 +131,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
                 canvasContext,
                 Page.FRONT_PAGE_NAME
             ).apply { ignoreDebounce = true}
-            RouteMatcher.route(requireContext(), route)
+            RouteMatcher.route(requireActivity(), route)
         }
     }
 

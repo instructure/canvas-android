@@ -103,7 +103,7 @@
                 android:max="100"
                 android:min="0"
                 android:progress="@{viewModel.progressData.progress}"
-                android:progressTint="@color/backgroundInfo"
+                android:progressTint="@{viewModel.progressData.progressState == ProgressState.COMPLETED ? @color/backgroundSuccess : @color/backgroundInfo}"
                 android:visibility="@{viewModel.progressData.progressState == ProgressState.ERROR ? View.INVISIBLE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/downloadProgressText"

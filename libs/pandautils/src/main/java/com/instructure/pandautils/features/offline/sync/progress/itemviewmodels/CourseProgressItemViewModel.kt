@@ -48,6 +48,8 @@ data class CourseProgressItemViewModel(
 
     override val viewType: Int = ViewType.COURSE_PROGRESS.viewType
 
+    private var courseTabsAndFilesSize = 0L
+
     private var courseProgressLiveData: LiveData<CourseSyncProgressEntity?>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
@@ -96,7 +98,7 @@ data class CourseProgressItemViewModel(
         }
 
         data.tabs = tabViewModels
-        items = tabViewModels + data.files
+        items = tabViewModels + listOf(data.files, data.additionalFiles).filterNotNull()
         data.notifyPropertyChanged(BR.tabs)
     }
 
@@ -135,6 +137,7 @@ data class CourseProgressItemViewModel(
     override fun onCleared() {
         clearObservers()
         data.tabs?.forEach { it.onCleared() }
-        data.files.forEach { it.onCleared() }
+        data.files?.onCleared()
+        data.additionalFiles.onCleared()
     }
 }

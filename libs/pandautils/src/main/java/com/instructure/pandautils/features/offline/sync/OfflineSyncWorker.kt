@@ -24,12 +24,15 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
@@ -39,6 +42,8 @@ import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import com.instructure.canvasapi2.utils.ApiPrefs
+import java.io.File
 
 const val COURSE_IDS = "course-ids"
 
@@ -56,6 +61,9 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val courseDao: CourseDao,
     private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao
+    private val apiPrefs: ApiPrefs,
+    private val fileFolderDao: FileFolderDao,
+    private val localFileDao: LocalFileDao
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -81,11 +89,14 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         val courseIdsToRemove = courseSyncSettingsDao.findAll().filter { !it.anySyncEnabled }.map { it.courseId }
         courseDao.deleteByIds(courseIdsToRemove)
+        courseIdsToRemove.forEach {
+            cleanupFiles(it)
+        }
 
         val settingsMap = courses.associateBy { it.courseId }
 
         val courseWorkers = courses.filter { it.anySyncEnabled }
-            .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
+            .map { CourseSyncWorker.createOneTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
 
         val courseProgresses = courseWorkers.map {
             val courseId = it.workSpec.input.getLong(CourseSyncWorker.COURSE_ID, 0)
@@ -104,5 +115,16 @@ class OfflineSyncWorker @AssistedInject constructor(
             .enqueue()
 
         return Result.success()
+    }
+
+    private suspend fun cleanupFiles(courseId: Long) {
+        val file = File(context.filesDir, "${apiPrefs.user?.id.toString()}/external_$courseId")
+        file.deleteRecursively()
+
+        fileFolderDao.deleteAllByCourseId(courseId)
+        localFileDao.findRemovedFiles(courseId, emptyList()).forEach { localFile ->
+            File(localFile.path).delete()
+            localFileDao.delete(localFile)
+        }
     }
 }

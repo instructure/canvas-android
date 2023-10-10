@@ -142,7 +142,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.search) {
-            RouteMatcher.route(requireContext(), Route(FileSearchFragment::class.java, canvasContext, Bundle()))
+            RouteMatcher.route(requireActivity(), Route(FileSearchFragment::class.java, canvasContext, Bundle()))
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -212,7 +212,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             override fun onItemClicked(item: FileFolder) {
                 when {
                     item.fullName != null -> {
-                        RouteMatcher.route(requireContext(), makeRoute(canvasContext, item))
+                        RouteMatcher.route(requireActivity(), makeRoute(canvasContext, item))
                     }
                     item.isHtmlFile && item.isLocalFile -> {
                         recordFilePreviewEvent(item)
@@ -277,7 +277,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
                     accessed as an authenticated preview to work correctly */
         RouteMatcher.route(
-            requireContext(), InternalWebviewFragment.makeRoute(
+            requireActivity(), InternalWebviewFragment.makeRoute(
                 canvasContext = canvasContext,
                 url = fileFolder.getFilePreviewUrl(ApiPrefs.fullDomain, canvasContext),
                 authenticate = true,
@@ -294,7 +294,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             val file = File(it)
             val uri = FileProvider.getUriForFile(requireContext(), requireContext().applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
             RouteMatcher.route(
-                requireContext(), InternalWebviewFragment.makeRoute(
+                requireActivity(), InternalWebviewFragment.makeRoute(
                     canvasContext = canvasContext,
                     url = uri.toString(),
                     authenticate = false,

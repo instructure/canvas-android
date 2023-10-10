@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
@@ -67,7 +68,7 @@ class SubmissionRubricView(
     override fun applyTheme() = Unit
 
     fun displayCriterionDescription(title: String, description: String) {
-        RouteMatcher.route(context, SubmissionRubricDescriptionFragment.makeRoute(title, description))
+        RouteMatcher.route(activity as FragmentActivity, SubmissionRubricDescriptionFragment.makeRoute(title, description))
     }
 }
 

@@ -153,7 +153,7 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
         waitForView(withId(R.id.addFolderFab)).click()
         waitForView(withId(R.id.alertTitle)).assertDisplayed()
         onView(withId(R.id.newFolderName)).typeText(folderName)
-        onView(withText(R.string.ok)).click()
+        onView(withText(android.R.string.ok)).click()
     }
 
     /**

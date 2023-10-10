@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 
 class AssignmentDetailsNetworkDataSource(
     private val coursesInterface: CourseAPI.CoursesInterface,
@@ -40,10 +42,16 @@ class AssignmentDetailsNetworkDataSource(
     }
 
     override suspend fun getAssignment(isObserver: Boolean, assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
-        return if (isObserver) {
+        val assignmentResult = if (isObserver) {
             getAssignmentIncludeObservees(assignmentId, courseId, forceNetwork)
         } else {
             getAssignmentWithHistory(assignmentId, courseId, forceNetwork)
+        }
+
+        if (assignmentResult is DataResult.Fail && assignmentResult.failure is Failure.Authorization) {
+            throw IllegalAccessException("User is not authorized to view this assignment")
+        } else {
+            return assignmentResult.dataOrThrow
         }
     }
 
@@ -62,13 +70,13 @@ class AssignmentDetailsNetworkDataSource(
         return submissionInterface.getLtiFromAuthenticationUrl(url, params).dataOrThrow
     }
 
-    private suspend fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+    private suspend fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment?> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentInterface.getAssignmentIncludeObservees(courseId, assignmentId, params).map { it.toAssignmentForObservee() }.dataOrThrow
+        return assignmentInterface.getAssignmentIncludeObservees(courseId, assignmentId, params).map { it.toAssignmentForObservee() }
     }
 
-    private suspend fun getAssignmentWithHistory(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+    private suspend fun getAssignmentWithHistory(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment?> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentInterface.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
+        return assignmentInterface.getAssignmentWithHistory(courseId, assignmentId, params)
     }
 }

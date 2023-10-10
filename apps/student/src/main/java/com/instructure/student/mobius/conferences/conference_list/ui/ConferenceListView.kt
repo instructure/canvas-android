@@ -100,7 +100,7 @@ class ConferenceListView(
     }
 
     fun showConferenceDetails(conference: Conference) {
-        RouteMatcher.route(context, ConferenceDetailsRepositoryFragment.makeRoute(canvasContext, conference))
+        RouteMatcher.route(activity as FragmentActivity, ConferenceDetailsRepositoryFragment.makeRoute(canvasContext, conference))
     }
 
     fun launchUrl(url: String) {

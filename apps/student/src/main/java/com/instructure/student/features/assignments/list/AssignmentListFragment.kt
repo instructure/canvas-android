@@ -112,7 +112,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
-            RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+            RouteMatcher.route(requireActivity(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
         }
 
         override fun onRefreshFinished() {
