@@ -41,7 +41,65 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.espresso.StudentHiltTestApplication_Application
-import com.instructure.student.ui.pages.*
+import com.instructure.student.ui.pages.AboutPage
+import com.instructure.student.ui.pages.AnnotationCommentListPage
+import com.instructure.student.ui.pages.AnnouncementListPage
+import com.instructure.student.ui.pages.AssignmentDetailsPage
+import com.instructure.student.ui.pages.AssignmentListPage
+import com.instructure.student.ui.pages.BookmarkPage
+import com.instructure.student.ui.pages.CalendarEventPage
+import com.instructure.student.ui.pages.CanvasWebViewPage
+import com.instructure.student.ui.pages.ConferenceDetailsPage
+import com.instructure.student.ui.pages.ConferenceListPage
+import com.instructure.student.ui.pages.CourseBrowserPage
+import com.instructure.student.ui.pages.CourseGradesPage
+import com.instructure.student.ui.pages.DashboardPage
+import com.instructure.student.ui.pages.DiscussionDetailsPage
+import com.instructure.student.ui.pages.DiscussionListPage
+import com.instructure.student.ui.pages.EditDashboardPage
+import com.instructure.student.ui.pages.ElementaryCoursePage
+import com.instructure.student.ui.pages.ElementaryDashboardPage
+import com.instructure.student.ui.pages.FileListPage
+import com.instructure.student.ui.pages.FileUploadPage
+import com.instructure.student.ui.pages.GradesPage
+import com.instructure.student.ui.pages.GroupBrowserPage
+import com.instructure.student.ui.pages.HelpPage
+import com.instructure.student.ui.pages.HomeroomPage
+import com.instructure.student.ui.pages.ImportantDatesPage
+import com.instructure.student.ui.pages.InboxConversationPage
+import com.instructure.student.ui.pages.InboxPage
+import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
+import com.instructure.student.ui.pages.LegalPage
+import com.instructure.student.ui.pages.LoginFindSchoolPage
+import com.instructure.student.ui.pages.LoginLandingPage
+import com.instructure.student.ui.pages.LoginSignInPage
+import com.instructure.student.ui.pages.ModuleProgressionPage
+import com.instructure.student.ui.pages.ModulesPage
+import com.instructure.student.ui.pages.NewMessagePage
+import com.instructure.student.ui.pages.NotificationPage
+import com.instructure.student.ui.pages.PageListPage
+import com.instructure.student.ui.pages.PairObserverPage
+import com.instructure.student.ui.pages.PandaAvatarPage
+import com.instructure.student.ui.pages.PeopleListPage
+import com.instructure.student.ui.pages.PersonDetailsPage
+import com.instructure.student.ui.pages.PickerSubmissionUploadPage
+import com.instructure.student.ui.pages.ProfileSettingsPage
+import com.instructure.student.ui.pages.QRLoginPage
+import com.instructure.student.ui.pages.QuizListPage
+import com.instructure.student.ui.pages.QuizTakingPage
+import com.instructure.student.ui.pages.RemoteConfigSettingsPage
+import com.instructure.student.ui.pages.ResourcesPage
+import com.instructure.student.ui.pages.SchedulePage
+import com.instructure.student.ui.pages.SettingsPage
+import com.instructure.student.ui.pages.ShareExtensionStatusPage
+import com.instructure.student.ui.pages.ShareExtensionTargetPage
+import com.instructure.student.ui.pages.SubmissionDetailsPage
+import com.instructure.student.ui.pages.SyllabusPage
+import com.instructure.student.ui.pages.SyncSettingsPage
+import com.instructure.student.ui.pages.TextSubmissionUploadPage
+import com.instructure.student.ui.pages.TodoPage
+import com.instructure.student.ui.pages.UrlSubmissionUploadPage
+import com.instructure.student.ui.pages.offline.ManageOfflineContentPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
@@ -144,6 +202,7 @@ abstract class StudentTest : CanvasTest() {
     val shareExtensionTargetPage = ShareExtensionTargetPage()
     val shareExtensionStatusPage = ShareExtensionStatusPage()
     val syncSettingsPage = SyncSettingsPage()
+    val manageOfflineContentPage = ManageOfflineContentPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
