@@ -113,7 +113,17 @@ class HtmlContentFormatter(
     }
 
     private suspend fun authenticateLTIUrl(ltiUrl: String): String {
-        return awaitApi<AuthenticatedSession> { oAuthManager.getAuthenticatedSession(ltiUrl, it) }.sessionUrl
+        return awaitApi<AuthenticatedSession> {
+            try {
+                oAuthManager.getAuthenticatedSession(
+                    ltiUrl,
+                    it
+                )
+            }
+            catch (e: Exception) {
+
+            }
+        }.sessionUrl
     }
 
     private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {

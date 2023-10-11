@@ -595,13 +595,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
             loadDiscussionTopicHeaderViews(discussionTopicHeader)
             addAccessibilityButton()
-
             // We only want to request the full discussion if it is not anonymous. Anonymous discussions are not supported by the API
             if (forceRefresh || discussionTopic == null && discussionTopicHeader.anonymousState == null) {
                 // forceRefresh is true, fetch the discussion topic
                 discussionTopic = getDiscussionTopic()
 
-                discussionTopic?.views?.forEach { it.init(discussionTopic!!, it) }
+                withContext(Dispatchers.IO){ discussionTopic?.views?.forEach { it.init(discussionTopic!!, it, repository.isOnline()) } }
             }
 
             if (discussionTopic == null || discussionTopic?.views?.isEmpty() == true && DiscussionCaching(discussionTopicHeader.id).isEmpty()) {
@@ -620,7 +619,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                             canvasContext,
                             discussionTopicHeader,
                             discussionTopic!!.views,
-                            discussionEntryId)
+                            discussionEntryId
+                        )
 
                 loadDiscussionTopicViews(html)
 
