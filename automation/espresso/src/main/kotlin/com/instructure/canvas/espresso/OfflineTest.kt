@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 - present Instructure, Inc.
+ * Copyright (C) 2023 - present Instructure, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 
 package com.instructure.canvas.espresso
 
-// Apply on a test method which is failing on Firebase Test Lab (FTL) on some API levels. Write the failing API Levels into the parameter.
+// When applied to a test method, denotes that the test is the part of the Offline mode test case suite.
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class StubMultiAPILevel(val failedApiLevels: String = "", val explanation: String = "")
+annotation class OfflineTest(val explanation: String = "")
