@@ -83,7 +83,7 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
 
     fun createNewFolder(folderName: String) {
         waitForViewWithId(R.id.textInput).typeText(folderName)
-        onView(withText(R.string.ok)).click()
+        onView(withText(android.R.string.ok)).click()
     }
 
     fun assertPdfPreviewDisplayed() {
@@ -108,7 +108,7 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
         onView(withId(R.id.textInput)).clearText()
         onView(withId(R.id.textInput)).typeText(newName)
         onView(containsTextCaseInsensitive("OK")).click()
-        Espresso.pressBack() //Close soft keyboard
+        Espresso.closeSoftKeyboard()
         refresh()
     }
 
