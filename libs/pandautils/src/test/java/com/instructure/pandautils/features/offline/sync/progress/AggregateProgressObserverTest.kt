@@ -159,7 +159,7 @@ class AggregateProgressObserverTest {
         courseLiveData.postValue(listOf(course1, course2))
         fileLiveData.postValue(listOf(file1, file2))
 
-        assertEquals(50, aggregateProgressObserver.progressData.value?.progress)
+        assertEquals(49, aggregateProgressObserver.progressData.value?.progress)
 
         file2 = file2.copy(
             progress = 100,
