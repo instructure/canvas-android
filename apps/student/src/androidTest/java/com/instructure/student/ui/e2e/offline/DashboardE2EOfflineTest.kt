@@ -22,6 +22,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.OfflineTest
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -42,6 +43,7 @@ class DashboardE2EOfflineTest : StudentTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
+    @OfflineTest
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testOfflineDashboardE2E() {
