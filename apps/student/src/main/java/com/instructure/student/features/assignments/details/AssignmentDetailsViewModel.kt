@@ -419,7 +419,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             submissionStatusVisible = submissionStatusVisible,
             lockedMessage = partialLockedMessage,
             submitButtonText = submitButtonText,
-            submitEnabled = submitEnabled && assignmentDetailsRepository.isOnline(),
+            submitEnabled = (submitEnabled && assignmentDetailsRepository.isOnline()) || (submitEnabled && assignment.turnInType == Assignment.TurnInType.DISCUSSION),
             submitVisible = submitVisible,
             attempts = attempts,
             selectedGradeCellViewData = GradeCellViewData.fromSubmission(

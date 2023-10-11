@@ -24,6 +24,7 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
         val successfullyMarkedAsReadIds: MutableList<Long> = mutableListOf()
         discussionEntryIds.forEach { entryId ->
             val result = networkDataSource.markAsRead(canvasContext, discussionTopicHeaderId, entryId)
+            //TODO: Only successful results should be added to the list, but currently the API returns DataResult.Failed for all requests
             successfullyMarkedAsReadIds.add(entryId)
         }
         return successfullyMarkedAsReadIds

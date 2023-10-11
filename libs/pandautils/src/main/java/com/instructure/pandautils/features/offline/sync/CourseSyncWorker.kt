@@ -436,7 +436,7 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchDiscussionDetails(discussions: List<DiscussionTopicHeader>, courseId: Long) {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        val params = RestParams(isForceReadFromNetwork = true)
         discussions.forEach { discussionTopicHeader ->
             val discussionTopic = discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, discussionTopicHeader.id, 1, params).dataOrNull
             discussionTopic?.let {

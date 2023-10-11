@@ -69,6 +69,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -103,6 +104,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private var scrollPosition: Int = 0
     private var authenticatedSessionURL: String? = null
+
+    private var markAsReadJob: Job? = null
 
     //region Analytics
     @Suppress("unused")
@@ -240,7 +243,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun markAsRead(discussionEntryIds: List<Long>) {
-        lifecycleScope.tryLaunch {
+        if (markAsReadJob?.isActive == true) return
+        markAsReadJob = lifecycleScope.tryLaunch {
             repository.markAsRead(canvasContext, discussionTopicHeader.id, discussionEntryIds).forEach { entryId ->
                 discussionTopic?.let {
                     val entry = DiscussionUtils.findEntry(entryId, it.views)
@@ -290,22 +294,20 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun deleteDiscussionEntry(entryId: Long) {
-        if (repository.isOnline()) {
-            lifecycleScope.tryLaunch {
-                repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
+        lifecycleScope.tryLaunch {
+            repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
 
-                discussionTopic?.let {
-                    DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
-                        entry.deleted = true
-                        updateDiscussionAsDeleted(entry)
-                        discussionTopicHeader.decrementDiscussionSubentryCount()
-                        if (!groupDiscussion) {
-                            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
-                        }
+            discussionTopic?.let {
+                DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
+                    entry.deleted = true
+                    updateDiscussionAsDeleted(entry)
+                    discussionTopicHeader.decrementDiscussionSubentryCount()
+                    if (!groupDiscussion) {
+                        DiscussionTopicHeaderEvent(discussionTopicHeader).post()
                     }
                 }
             }
-        } else NoInternetConnectionDialog.show(requireFragmentManager())
+        }
     }
 
     private fun showUpdateReplyView(discussionEntryId: Long) {

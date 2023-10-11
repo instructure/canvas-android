@@ -6,15 +6,23 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.GroupFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isGroup
+import com.instructure.pandautils.utils.orDefault
 
 class DiscussionRouteHelper(
     private val featuresManager: FeaturesManager,
     private val featureFlagProvider: FeatureFlagProvider,
     private val discussionManager: DiscussionManager,
-    private val groupManager: GroupManager
+    private val groupManager: GroupManager,
+    private val groupFacade: GroupFacade,
+    private val networkStateProvider: NetworkStateProvider,
+    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
 ) {
 
     suspend fun isDiscussionRedesignEnabled(canvasContext: CanvasContext): Boolean {
@@ -35,13 +43,23 @@ class DiscussionRouteHelper(
     suspend fun getDiscussionHeader(
         canvasContext: CanvasContext,
         discussionTopicHeaderId: Long
-    ): DiscussionTopicHeader {
-        return discussionManager.getDiscussionTopicHeaderAsync(canvasContext, discussionTopicHeaderId, false)
-            .await().dataOrThrow
-    }
+    ): DiscussionTopicHeader? {
+       return if (networkStateProvider.isOnline()) {
+           discussionManager.getDiscussionTopicHeaderAsync(canvasContext, discussionTopicHeaderId, false)
+               .await().dataOrNull
+        }
+        else {
+              discussionTopicHeaderFacade.getDiscussionTopicHeaderById(discussionTopicHeaderId)
+          }
+       }
 
     suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
-        val groups = groupManager.getAllGroupsAsync(false).await().dataOrNull
+        val groups = if (networkStateProvider.isOnline()) {
+            groupManager.getAllGroupsAsync(false).await().dataOrNull
+        }
+        else {
+            groupFacade.getGroupsByUserId(ApiPrefs.user?.id.orDefault())
+        }
         for (group in groups ?: emptyList()) {
             val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({ it.groupId }, { it.id })
             if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {

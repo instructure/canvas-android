@@ -4,7 +4,10 @@ import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.GroupFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,8 +22,11 @@ class DiscussionModule {
         featuresManager: FeaturesManager,
         featureFlagProvider: FeatureFlagProvider,
         discussionManager: DiscussionManager,
-        groupManager: GroupManager
+        groupManager: GroupManager,
+        groupFacade: GroupFacade,
+        networkStateProvider: NetworkStateProvider,
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
     ): DiscussionRouteHelper {
-        return DiscussionRouteHelper(featuresManager, featureFlagProvider, discussionManager, groupManager)
+        return DiscussionRouteHelper(featuresManager, featureFlagProvider, discussionManager, groupManager, groupFacade, networkStateProvider, discussionTopicHeaderFacade)
     }
 }

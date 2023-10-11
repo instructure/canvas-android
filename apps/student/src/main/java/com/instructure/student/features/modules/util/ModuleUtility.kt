@@ -31,13 +31,13 @@ import com.instructure.pandautils.features.discussion.details.DiscussionDetailsW
 import com.instructure.student.R
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment.Companion.makeRoute
+import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
+import com.instructure.student.features.discussion.details.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.LockedModuleItemFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
-import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
-import com.instructure.student.features.discussion.details.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
 import com.instructure.student.fragment.MasteryPathSelectionFragment
@@ -67,8 +67,8 @@ object ModuleUtility {
             }
         }
         "Discussion" -> {
-            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context) {
-                if (isDiscussionRedesignEnabled) {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.DISCUSSIONS_ID) {
+                if (isDiscussionRedesignEnabled && isOnline) {
                     DiscussionDetailsWebViewFragment.newInstance(getDiscussionRedesignRoute(item, course))
                 } else {
                     DiscussionDetailsFragment.newInstance(getDiscussionRoute(item, course))
