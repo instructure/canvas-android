@@ -74,41 +74,6 @@ class AggregateProgressObserver(
             return
         }
 
-        when {
-            courseProgresses.all { it.progressState == ProgressState.STARTING } -> {
-                _progressData.postValue(
-                    AggregateProgressViewData(
-                        title = context.getString(R.string.syncProgress_downloadStarting),
-                        progressState = ProgressState.STARTING
-                    )
-                )
-                return
-            }
-
-            courseProgresses.all { it.progressState == ProgressState.COMPLETED } && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
-                val totalSize = _progressData.value?.totalSize.orEmpty()
-                _progressData.postValue(
-                    AggregateProgressViewData(
-                        progressState = ProgressState.COMPLETED,
-                        title = context.getString(R.string.syncProgress_downloadSuccess, totalSize, totalSize),
-                        progress = 100
-                    )
-                )
-                return
-            }
-
-            fileProgresses.all { it.progressState.isFinished() } && courseProgresses.all { it.progressState.isFinished() }
-                    && (courseProgresses.any { it.progressState == ProgressState.ERROR } || fileProgresses.any { it.progressState == ProgressState.ERROR }) -> {
-                _progressData.postValue(
-                    AggregateProgressViewData(
-                        progressState = ProgressState.ERROR,
-                        title = context.getString(R.string.syncProgress_syncErrorSubtitle)
-                    )
-                )
-                return
-            }
-        }
-
         val totalSize = courseProgresses.sumOf { it.totalSize() } + fileProgresses.sumOf { it.fileSize }
         val downloadedTabSize = courseProgresses.sumOf { it.downloadedSize() }
         val itemCount = courseProgresses.sumOf { it.tabs.size } + fileProgresses.size
@@ -121,20 +86,50 @@ class AggregateProgressObserver(
         val downloadedSize = downloadedTabSize + downloadedFileSize.toLong()
         val progress = (downloadedSize.toDouble() / totalSize.toDouble() * 100.0).toInt()
 
-        _progressData.postValue(
-            AggregateProgressViewData(
-                title = context.getString(
-                    R.string.syncProgress_downloadProgress,
-                    NumberHelper.readableFileSize(context, downloadedSize),
-                    NumberHelper.readableFileSize(context, totalSize)
-                ),
-                totalSize = NumberHelper.readableFileSize(context, totalSize),
-                progress = progress,
-                itemCount = itemCount,
-                progressState = ProgressState.IN_PROGRESS
-            )
-        )
+        val viewData = when {
+            courseProgresses.all { it.progressState == ProgressState.STARTING } -> {
+                AggregateProgressViewData(
+                    title = context.getString(R.string.syncProgress_downloadStarting),
+                    progressState = ProgressState.STARTING
+                )
 
+            }
+
+            courseProgresses.all { it.progressState == ProgressState.COMPLETED } && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
+                val totalSizeString = NumberHelper.readableFileSize(context, totalSize)
+                AggregateProgressViewData(
+                    progressState = ProgressState.COMPLETED,
+                    title = context.getString(R.string.syncProgress_downloadSuccess, totalSizeString, totalSizeString),
+                    progress = 100
+                )
+
+            }
+
+            fileProgresses.all { it.progressState.isFinished() } && courseProgresses.all { it.progressState.isFinished() }
+                    && (courseProgresses.any { it.progressState == ProgressState.ERROR } || fileProgresses.any { it.progressState == ProgressState.ERROR }) -> {
+                AggregateProgressViewData(
+                    progressState = ProgressState.ERROR,
+                    title = context.getString(R.string.syncProgress_syncErrorSubtitle)
+                )
+
+            }
+
+            else -> {
+                AggregateProgressViewData(
+                    title = context.getString(
+                        R.string.syncProgress_downloadProgress,
+                        NumberHelper.readableFileSize(context, downloadedSize),
+                        NumberHelper.readableFileSize(context, totalSize)
+                    ),
+                    totalSize = NumberHelper.readableFileSize(context, totalSize),
+                    progress = progress,
+                    itemCount = itemCount,
+                    progressState = ProgressState.IN_PROGRESS
+                )
+            }
+        }
+
+        _progressData.postValue(viewData)
     }
 
     fun onCleared() {
