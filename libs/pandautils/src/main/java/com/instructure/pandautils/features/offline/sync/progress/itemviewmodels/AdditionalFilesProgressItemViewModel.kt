@@ -44,9 +44,16 @@ data class AdditionalFilesProgressItemViewModel(
     override val viewType = ViewType.COURSE_ADDITIONAL_FILES_PROGRESS.viewType
 
     private val totalFilesProgressObserver = Observer<List<FileSyncProgressEntity>> {
-        if (it.all { it.progressState == ProgressState.COMPLETED }) {
-            data.state = ProgressState.COMPLETED
-            data.notifyPropertyChanged(BR.state)
+        when {
+            it.all { it.progressState == ProgressState.COMPLETED } -> {
+                data.state = ProgressState.COMPLETED
+                data.notifyPropertyChanged(BR.state)
+            }
+
+            it.any { it.progressState == ProgressState.ERROR } -> {
+                data.state = ProgressState.ERROR
+                data.notifyPropertyChanged(BR.state)
+            }
         }
 
         val totalSize = it.sumOf { it.fileSize }

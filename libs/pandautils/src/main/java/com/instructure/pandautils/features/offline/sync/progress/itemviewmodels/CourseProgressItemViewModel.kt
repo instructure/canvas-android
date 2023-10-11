@@ -112,13 +112,11 @@ data class CourseProgressItemViewModel(
         when {
             courseSyncProgressEntity?.progressState == ProgressState.COMPLETED && fileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
                 data.updateState(ProgressState.COMPLETED)
-                clearObservers()
             }
 
             courseSyncProgressEntity?.progressState?.isFinished() == true && fileProgresses.all { it.progressState.isFinished() }
                     && (courseSyncProgressEntity?.progressState == ProgressState.ERROR) || fileProgresses.any { it.progressState == ProgressState.ERROR } -> {
                 data.updateState(ProgressState.ERROR)
-                clearObservers()
             }
 
             else -> {
