@@ -307,7 +307,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         requestNotificationsPermission()
 
         networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
-            setOfflineIndicator(!isOnline)
+            setOfflineState(!isOnline)
             handleTokenCheck(isOnline)
         }
     }
@@ -610,7 +610,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerColorOverlaySwitch, ThemePrefs.brandColor)
     }
 
-    private fun setOfflineIndicator(isOffline: Boolean) {
+    private fun setOfflineState(isOffline: Boolean) {
         binding.offlineIndicator.root.setVisible(isOffline)
         with(navigationDrawerBinding) {
             navigationDrawerOfflineIndicator.setVisible(isOffline)
@@ -619,6 +619,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             navigationDrawerItemHelp.alpha = if (isOffline) 0.5f else 1f
             navigationDrawerItemBookmarks.alpha = if (isOffline) 0.5f else 1f
             navigationDrawerItemFiles.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemColorOverlay.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerColorOverlaySwitch.isEnabled = !isOffline
+        }
+
+        with(binding.bottomBar.menu) {
+            findItem(R.id.bottomNavigationCalendar).isEnabled = !isOffline
+            findItem(R.id.bottomNavigationToDo).isEnabled = !isOffline
+            findItem(R.id.bottomNavigationNotifications).isEnabled = !isOffline
+            findItem(R.id.bottomNavigationInbox).isEnabled = !isOffline
         }
     }
 
