@@ -138,6 +138,30 @@ class AdditionalFilesProgressItemViewModelTest {
         assertEquals("6000 bytes", itemViewModel.data.totalSize) // Already counted external files
     }
 
+    @Test
+    fun `Error state`() {
+        val courseUUID = UUID.randomUUID()
+        val file1UUID = UUID.randomUUID()
+        val file2UUID = UUID.randomUUID()
+        val file3UUID = UUID.randomUUID()
+        val additionalFileSyncData = listOf(
+            FileSyncProgressEntity(file1UUID.toString(), 1L, "File 1", 0, 1000, true, false, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(file2UUID.toString(), 1L, "File 2", 0, 2000, true, false, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(file3UUID.toString(), 1L, "File 3", 0, 0, true, true, ProgressState.ERROR),
+        )
+
+        val fileLiveData = MutableLiveData(additionalFileSyncData)
+        every { fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L) } returns fileLiveData
+
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), additionalFilesStarted = true, progressState = ProgressState.IN_PROGRESS)
+        val courseLiveData = MutableLiveData(courseProgress)
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+
+        itemViewModel = createItemViewModel(courseUUID)
+
+        assertEquals(ProgressState.ERROR, itemViewModel.data.state)
+    }
+
     private fun createItemViewModel(uuid: UUID): AdditionalFilesProgressItemViewModel {
         return AdditionalFilesProgressItemViewModel(
             data = AdditionalFilesProgressViewData(courseWorkerId = uuid.toString()),

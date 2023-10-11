@@ -295,4 +295,102 @@ class FileSyncProgressDaoTest {
         assert(result.value!!.isEmpty())
     }
 
+    @Test
+    fun testFindAdditionalFilesByCourseIdLiveDataTest() = runTest {
+        val entities = listOf(
+            FileSyncProgressEntity(
+                workerId = "workerId",
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                workerId = "workerId2",
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                workerId = "workerId3",
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 1000L,
+                additionalFile = true,
+                externalFile = false,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                workerId = "workerId4",
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 0,
+                additionalFile = true,
+                externalFile = true,
+                progressState = ProgressState.IN_PROGRESS
+            )
+        )
+
+        fileSyncProgressDao.insertAll(entities)
+
+        val result = fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L)
+        result.observeForever { }
+
+        assertEquals(entities.subList(2, 4), result.value)
+    }
+
+    @Test
+    fun testFindCourseFilesByCourseIdLiveData() = runTest {
+        val entities = listOf(
+            FileSyncProgressEntity(
+                workerId = "workerId",
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                workerId = "workerId2",
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                workerId = "workerId3",
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 1000L,
+                additionalFile = true,
+                externalFile = false,
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            FileSyncProgressEntity(
+                workerId = "workerId4",
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 0,
+                additionalFile = true,
+                externalFile = true,
+                progressState = ProgressState.IN_PROGRESS
+            )
+        )
+
+        fileSyncProgressDao.insertAll(entities)
+
+        val result = fileSyncProgressDao.findCourseFilesByCourseIdLiveData(1L)
+        result.observeForever { }
+
+        assertEquals(entities.subList(0, 2), result.value)
+    }
+
 }
