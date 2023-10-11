@@ -57,12 +57,12 @@ object ModuleUtility {
         context: Context
     ): Fragment? = when (item.type) {
         "Page" -> {
-            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.PAGES_ID) {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, setOf(Tab.PAGES_ID)) {
                 PageDetailsFragment.newInstance(PageDetailsFragment.makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
             }
         }
         "Assignment" -> {
-            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.ASSIGNMENTS_ID) {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID)) {
                 AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
             }
         }
@@ -78,7 +78,7 @@ object ModuleUtility {
         "Locked" -> LockedModuleItemFragment.newInstance(LockedModuleItemFragment.makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
         "SubHeader" -> null // Don't do anything with headers, they're just dividers so we don't show them here.
         "Quiz" -> {
-            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.QUIZZES_ID) {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, setOf(Tab.QUIZZES_ID)) {
                 val apiURL = removeDomain(item.url)
                 ModuleQuizDecider.newInstance(ModuleQuizDecider.makeRoute(course, item.htmlUrl!!, apiURL!!, item.contentId))
             }
@@ -112,13 +112,13 @@ object ModuleUtility {
         item: ModuleItem,
         syncedTabs: Set<String>,
         context: Context,
-        tab: String? = null,
+        tabs: Set<String> = emptySet(),
         creationBlock: () -> Fragment?
     ): Fragment? {
-        return if (isOnline || syncedTabs.contains(tab)) {
+        return if (isOnline || tabs.any { syncedTabs.contains(it) }) {
             creationBlock()
         } else {
-            val descriptionResource = if (tab == null) R.string.notAvailableOfflineDescription else R.string.notAvailableOfflineDescriptionForTabs
+            val descriptionResource = if (tabs.isEmpty()) R.string.notAvailableOfflineDescription else R.string.notAvailableOfflineDescriptionForTabs
             NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(descriptionResource)))
         }
     }
