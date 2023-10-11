@@ -59,11 +59,11 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     init {
-        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.setupAsBackButton { activity.onBackPressed() }
         binding.toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
         binding.toolbar.subtitle = canvasContext.name
 
-        adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
+        adapter = SyllabusTabAdapter(activity, canvasContext, getTabTitles())
 
         binding.syllabusPager.adapter = adapter
         binding.syllabusTabLayout.setupWithViewPager(binding.syllabusPager, true)
