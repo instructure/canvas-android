@@ -34,7 +34,6 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Test
-import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class DashboardE2EOfflineTest : StudentTest() {
@@ -66,12 +65,18 @@ class DashboardE2EOfflineTest : StudentTest() {
         manageOfflineContentPage.selectEntireCourseForSync(course1.name)
         manageOfflineContentPage.clickOnSyncButton()
 
-        //TODO: Dynamic wait for the sync to be completed.
-        sleep(8000)
+        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
+        manageOfflineContentPage.waitForSyncProgressDownloadStartedNotification()
+        manageOfflineContentPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
+
+        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
+        manageOfflineContentPage.waitForSyncProgressStartingNotification()
+        manageOfflineContentPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         OfflineTestUtils.turnOffConnectionViaADB()
 
+        Log.d(STEP_TAG, "Press the 'Home' button on the device.")
         device.pressHome()
         Log.d(STEP_TAG, "Click 'Recent Apps' device button and bring Canvas Student into the foreground again." +
                 "Assert that the Dashboard Page is displayed.")
@@ -81,6 +86,8 @@ class DashboardE2EOfflineTest : StudentTest() {
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
         dashboardPage.waitForRender()
 
+        //TODO: https://instructure.atlassian.net/browse/MBL-17103?atlOrigin=eyJpIjoiNDAzMzc0ZWRjOTQxNGMwYTk0NzMzYTc0OTYzYjkyMGMiLCJwIjoiaiJ9
+        //After the above ticket has been developed, this test should be refactored because the offline sync icon will be visible without relogging.
         Log.d(STEP_TAG, "Log out with ${student.name} student.")
         leftSideNavigationDrawerPage.logout()
 
@@ -101,12 +108,13 @@ class DashboardE2EOfflineTest : StudentTest() {
         dashboardPage.selectCourse(course1)
         courseBrowserPage.selectAnnouncements()
 
-        Log.d(STEP_TAG,"Assert that the '${testAnnouncement.title}' titled announcement is displayed.")
+        Log.d(STEP_TAG,"Assert that the '${testAnnouncement.title}' titled announcement is displayed, so the user is able to see it in offline mode because it was synced.")
         announcementListPage.assertTopicDisplayed(testAnnouncement.title)
     }
 
     @After
     fun tearDown() {
+        Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
         OfflineTestUtils.turnOnConnectionViaADB()
     }
 
