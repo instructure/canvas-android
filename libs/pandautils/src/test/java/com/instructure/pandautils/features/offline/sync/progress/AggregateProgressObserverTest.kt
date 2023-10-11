@@ -198,7 +198,7 @@ class AggregateProgressObserverTest {
         val courseLiveData = MutableLiveData(listOf(course1Progress))
 
         var file1Progress =
-            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, false, false, ProgressState.IN_PROGRESS)
+            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, false, ProgressState.IN_PROGRESS)
         var file2Progress = FileSyncProgressEntity(
             file2Id.toString(),
             1L,
@@ -206,7 +206,6 @@ class AggregateProgressObserverTest {
             0,
             2000,
             true,
-            false,
             ProgressState.IN_PROGRESS
         )
         var file3Progress = FileSyncProgressEntity(
@@ -215,7 +214,6 @@ class AggregateProgressObserverTest {
             "Additional external file",
             0,
             0,
-            true,
             true,
             ProgressState.IN_PROGRESS
         )
@@ -256,7 +254,6 @@ class AggregateProgressObserverTest {
             0,
             3000,
             true,
-            true,
             ProgressState.IN_PROGRESS
         )
 
@@ -271,7 +268,6 @@ class AggregateProgressObserverTest {
             "Additional external file",
             100,
             3000,
-            true,
             true,
             ProgressState.COMPLETED
         )

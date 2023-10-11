@@ -307,7 +307,6 @@ class CourseProgressItemViewModelTest {
                 100,
                 3000,
                 additionalFile = true,
-                externalFile = false,
                 progressState = ProgressState.COMPLETED
             ),
             FileSyncProgressEntity(
@@ -317,7 +316,6 @@ class CourseProgressItemViewModelTest {
                 0,
                 0,
                 additionalFile = true,
-                externalFile = true,
                 progressState = ProgressState.IN_PROGRESS
             ),
         )

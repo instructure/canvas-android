@@ -321,7 +321,6 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 1000L,
                 additionalFile = true,
-                externalFile = false,
                 progressState = ProgressState.IN_PROGRESS
             ),
             FileSyncProgressEntity(
@@ -331,7 +330,6 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 0,
                 additionalFile = true,
-                externalFile = true,
                 progressState = ProgressState.IN_PROGRESS
             )
         )
@@ -370,7 +368,6 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 1000L,
                 additionalFile = true,
-                externalFile = false,
                 progressState = ProgressState.IN_PROGRESS
             ),
             FileSyncProgressEntity(
@@ -380,7 +377,6 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 0,
                 additionalFile = true,
-                externalFile = true,
                 progressState = ProgressState.IN_PROGRESS
             )
         )

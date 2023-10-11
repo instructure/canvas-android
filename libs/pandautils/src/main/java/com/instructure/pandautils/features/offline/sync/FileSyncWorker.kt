@@ -89,7 +89,7 @@ class FileSyncWorker @AssistedInject constructor(
                             if (!externalFile) {
                                 localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
                             }
-                        progress = progress.copy(progress = 100, progressState = ProgressState.COMPLETED, fileSize = it.totalBytes, externalFile = externalFile)
+                        progress = progress.copy(progress = 100, progressState = ProgressState.COMPLETED, fileSize = it.totalBytes)
                             fileSyncProgressDao.update(progress)
                         }
 
@@ -100,7 +100,7 @@ class FileSyncWorker @AssistedInject constructor(
                 }
         } catch (e: Exception) {
             downloadedFile.delete()
-            progress = progress.copy(progressState = ProgressState.ERROR, externalFile = externalFile)
+            progress = progress.copy(progressState = ProgressState.ERROR)
             fileSyncProgressDao.update(progress)
         }
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e49d17b025af05819a44dc43ffe8fcb2",
+    "identityHash": "5fcddde40bed9875c5dd4b5e15e1b2da",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -5365,7 +5365,7 @@
       },
       {
         "tableName": "FileSyncProgressEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `additionalFile` INTEGER NOT NULL, `externalFile` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `additionalFile` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "workerId",
@@ -5404,12 +5404,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "externalFile",
-            "columnName": "externalFile",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "progressState",
             "columnName": "progressState",
             "affinity": "TEXT",
@@ -5441,7 +5435,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e49d17b025af05819a44dc43ffe8fcb2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5fcddde40bed9875c5dd4b5e15e1b2da')"
     ]
   }
 }

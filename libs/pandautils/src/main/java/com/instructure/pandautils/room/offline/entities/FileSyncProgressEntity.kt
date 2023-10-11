@@ -39,6 +39,5 @@ data class FileSyncProgressEntity(
     val progress: Int,
     val fileSize: Long,
     val additionalFile: Boolean = false,
-    val externalFile: Boolean = false,
     val progressState: ProgressState
 )
