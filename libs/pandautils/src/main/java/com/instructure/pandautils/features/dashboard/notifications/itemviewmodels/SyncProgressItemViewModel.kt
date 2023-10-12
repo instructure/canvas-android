@@ -28,6 +28,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 data class SyncProgressItemViewModel(
     val data: SyncProgressViewData,
     val onClick: () -> Unit,
+    val onDismiss: () -> Unit,
     private val resources: Resources
 ) : ItemViewModel {
 

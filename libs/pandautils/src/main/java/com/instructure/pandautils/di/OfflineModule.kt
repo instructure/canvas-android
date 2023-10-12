@@ -264,14 +264,13 @@ class OfflineModule {
         groupDao: GroupDao,
         mediaCommentDao: MediaCommentDao,
         userDao: UserDao,
-        userApi: UserAPI.UsersInterface,
         submissionCommentDao: SubmissionCommentDao,
         attachmentDao: AttachmentDao,
         authorDao: AuthorDao,
         rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
     ): SubmissionFacade {
         return SubmissionFacade(
-            submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+            submissionDao, groupDao, mediaCommentDao, userDao,
             submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
         )
     }
@@ -313,9 +312,8 @@ class OfflineModule {
         userDao: UserDao,
         enrollmentDao: EnrollmentDao,
         gradesDao: GradesDao,
-        userApi: UserAPI.UsersInterface
     ): EnrollmentFacade {
-        return EnrollmentFacade(userDao, enrollmentDao, gradesDao, userApi)
+        return EnrollmentFacade(userDao, enrollmentDao, gradesDao)
     }
 
     @Provides
@@ -471,12 +469,17 @@ class OfflineModule {
     }
 
     @Provides
-    fun provideSyncProgressDao(appDatabase: OfflineDatabase): SyncProgressDao {
-        return appDatabase.syncProgressDao()
+    fun provideEditDashboardItemDao(appDatabase: OfflineDatabase): EditDashboardItemDao {
+        return appDatabase.editDashboardItemDao()
     }
 
     @Provides
-    fun provideEditDashboardItemDao(appDatabase: OfflineDatabase): EditDashboardItemDao {
-        return appDatabase.editDashboardItemDao()
+    fun provideCourseProgressDao(appDatabase: OfflineDatabase): CourseSyncProgressDao {
+        return appDatabase.courseSyncProgressDao()
+    }
+
+    @Provides
+    fun provideFileSyncProgressDao(appDatabase: OfflineDatabase): FileSyncProgressDao {
+        return appDatabase.fileSyncProgressDao()
     }
 }

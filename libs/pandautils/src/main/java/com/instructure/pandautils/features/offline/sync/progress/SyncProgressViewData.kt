@@ -33,20 +33,21 @@ data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
 
 data class CourseProgressViewData(
     val courseName: String,
+    val courseId: Long,
     val workerId: String,
     val files: FilesTabProgressItemViewModel?,
     val additionalFiles: AdditionalFilesProgressItemViewModel,
     @Bindable var tabs: List<TabProgressItemViewModel>? = null,
-    @Bindable var state: WorkInfo.State = WorkInfo.State.ENQUEUED,
+    @Bindable var state: ProgressState = ProgressState.STARTING,
     @Bindable var size: String = "",
     @Bindable var failed: Boolean = false
 ) : BaseObservable() {
 
-    fun updateState(newState: WorkInfo.State) {
+    fun updateState(newState: ProgressState) {
         state = newState
         notifyPropertyChanged(BR.state)
 
-        if (state == WorkInfo.State.FAILED || state == WorkInfo.State.CANCELLED) {
+        if (state == ProgressState.ERROR) {
             failed = true
             notifyPropertyChanged(BR.failed)
         }
@@ -129,13 +130,6 @@ enum class ViewType(val viewType: Int) {
     COURSE_FILE_PROGRESS(3),
     COURSE_ADDITIONAL_FILES_PROGRESS(4),
 }
-
-data class AggregateProgressViewData(
-    val totalSize: String,
-    val downloadedSize: String,
-    val progress: Int,
-    val queued: Int,
-)
 
 sealed class SyncProgressAction {
     object CancelConfirmation : SyncProgressAction()

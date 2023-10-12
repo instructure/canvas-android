@@ -20,8 +20,11 @@ package com.instructure.pandautils.room.offline
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.instructure.canvasapi2.models.GradingRule
+import com.instructure.pandautils.features.offline.sync.TabSyncData
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
+import com.instructure.pandautils.utils.toJson
 
 @TypeConverters
 class OfflineConverters {
@@ -46,5 +49,15 @@ class OfflineConverters {
     @TypeConverter
     fun toSyncFrequency(string: String): SyncFrequency {
         return SyncFrequency.valueOf(string)
+    }
+
+    @TypeConverter
+    fun stringToTabSyncMap(value: String): Map<String, TabSyncData> {
+        return Gson().fromJson(value,  object : TypeToken<Map<String, TabSyncData>>() {}.type)
+    }
+
+    @TypeConverter
+    fun tabSyncMapToString(value: Map<String, TabSyncData>): String {
+        return value.toJson()
     }
 }

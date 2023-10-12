@@ -27,7 +27,7 @@
 
         <import type="android.view.View" />
 
-        <import type="androidx.work.WorkInfo.State" />
+        <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
     </data>
 
     <LinearLayout
@@ -117,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_checkmark"
-                    android:visibility="@{itemViewModel.data.state == State.SUCCEEDED ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{itemViewModel.data.state == ProgressState.COMPLETED ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:tint="@color/textDarkest" />
             </FrameLayout>
