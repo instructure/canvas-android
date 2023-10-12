@@ -123,7 +123,7 @@ class DashboardRecyclerAdapter(
     override fun loadData() {
         mApiCalls?.cancel()
         mApiCalls = tryWeave {
-            if (isRefresh) {
+            if (isRefresh && repository.isOnline()) {
                 ColorApiHelper.awaitSync()
                 FlutterComm.sendUpdatedTheme()
             }

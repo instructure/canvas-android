@@ -83,6 +83,9 @@ class DashboardFragment : ParentFragment() {
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
 
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
 
@@ -112,6 +115,11 @@ class DashboardFragment : ParentFragment() {
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
         applyTheme()
+
+        networkStateProvider.isOnlineLiveData.observe(this) { online ->
+            recyclerAdapter?.refresh()
+            if (online) recyclerBinding.swipeRefreshLayout.isRefreshing = true
+        }
     }
 
 
