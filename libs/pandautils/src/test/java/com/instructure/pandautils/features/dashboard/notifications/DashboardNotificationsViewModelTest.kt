@@ -59,7 +59,10 @@ import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -103,6 +106,8 @@ class DashboardNotificationsViewModelTest {
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
     private val aggregateProgressObserver: AggregateProgressObserver = mockk(relaxed = true)
+    private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
+    private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
 
     private lateinit var uploadsLiveData: MutableLiveData<List<DashboardFileUploadEntity>>
     private lateinit var progressLiveData: MutableLiveData<AggregateProgressViewData>
@@ -164,7 +169,9 @@ class DashboardNotificationsViewModelTest {
             dashboardFileUploadDao,
             fileUploadInputDao,
             fileUploadUtilsHelper,
-            aggregateProgressObserver
+            aggregateProgressObserver,
+            courseSyncProgressDao,
+            fileSyncProgressDao
         )
 
         viewModel.data.observe(lifecycleOwner, {})
@@ -803,5 +810,50 @@ class DashboardNotificationsViewModelTest {
         viewModel.data.value?.syncProgressItems?.onClick?.invoke()
 
         assertEquals(DashboardNotificationsActions.OpenSyncProgress, viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Dismiss progress notification`() {
+        val progressData = AggregateProgressViewData(
+            title = "Course 1",
+            progressState = ProgressState.ERROR,
+            progress = 0,
+            totalSize = "0 bytes"
+        )
+
+        viewModel.loadData()
+
+        progressLiveData.postValue(
+            progressData
+        )
+
+        viewModel.data.value?.syncProgressItems?.onDismiss?.invoke()
+
+        coVerify {
+            courseSyncProgressDao.deleteAll()
+            fileSyncProgressDao.deleteAll()
+        }
+    }
+
+    @Test
+    fun `Clear progress notification`() {
+        val progressData = AggregateProgressViewData(
+            title = "Course 1",
+            progressState = ProgressState.ERROR,
+            progress = 0,
+            totalSize = "0 bytes"
+        )
+
+        viewModel.loadData()
+
+        progressLiveData.postValue(
+            progressData
+        )
+
+        assertNotNull(viewModel.data.value?.syncProgressItems)
+
+        progressLiveData.postValue(null)
+
+        assertNull(viewModel.data.value?.syncProgressItems)
     }
 }

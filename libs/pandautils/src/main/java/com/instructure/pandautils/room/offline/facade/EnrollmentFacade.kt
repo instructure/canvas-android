@@ -31,16 +31,11 @@ class EnrollmentFacade(
     private val userDao: UserDao,
     private val enrollmentDao: EnrollmentDao,
     private val gradesDao: GradesDao,
-    private val userApi: UserAPI.UsersInterface
 ) {
 
     suspend fun insertEnrollment(enrollment: Enrollment, courseId: Long) {
-        if (enrollment.userId != 0L) {
-            val user = enrollment.user ?: userApi.getUser(
-                enrollment.userId,
-                RestParams(isForceReadFromNetwork = true)
-            ).dataOrThrow
-            userDao.insertOrUpdate(UserEntity(user))
+        enrollment.user?.let {
+            userDao.insertOrUpdate(UserEntity(it))
         }
 
         enrollment.observedUser?.let { observedUser ->

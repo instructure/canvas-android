@@ -26,8 +26,18 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.AccountNotificationManager
+import com.instructure.canvasapi2.managers.ConferenceManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.BR
@@ -48,14 +58,15 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
-import com.instructure.pandautils.room.offline.daos.SyncProgressDao
-import com.instructure.pandautils.room.offline.entities.SyncProgressEntity
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,6 +85,8 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val fileUploadInputDao: FileUploadInputDao,
     private val fileUploadUtilsHelper: FileUploadUtilsHelper,
     private val aggregateProgressObserver: AggregateProgressObserver,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -99,8 +112,25 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private val syncProgressObserver = Observer<AggregateProgressViewData> {
-        createSyncProgressViewModel(it)
+    private val syncProgressObserver = Observer<AggregateProgressViewData?> { aggregateProgressViewData ->
+        if (aggregateProgressViewData == null) {
+            _data.value?.syncProgressItems = null
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            return@Observer
+        }
+
+        if (_data.value?.syncProgressItems == null) {
+            _data.value?.syncProgressItems = createSyncProgressViewModel(aggregateProgressViewData)
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            return@Observer
+        }
+
+        if (aggregateProgressObserver.progressData.value?.progressState == ProgressState.COMPLETED) {
+            _data.value?.syncProgressItems = null
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+        } else {
+            _data.value?.syncProgressItems?.update(aggregateProgressViewData)
+        }
     }
 
     private val fileUploads = dashboardFileUploadDao.getAllForUser(apiPrefs.user?.id.orDefault())
@@ -141,20 +171,21 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             val uploadViewModels = getUploads(fileUploads.value)
 
-            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
-
-            aggregateProgressObserver.progressData.value?.let {
+            val syncProgress = aggregateProgressObserver.progressData.value?.let {
                 createSyncProgressViewModel(it)
             }
+
+            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels, syncProgress))
         }
     }
 
-    private fun getSyncProgress(): SyncProgressItemViewModel {
+    private fun getSyncProgress(aggregateProgressViewData: AggregateProgressViewData): SyncProgressItemViewModel {
         return SyncProgressItemViewModel(
             data = SyncProgressViewData(),
             onClick = this::openSyncProgress,
+            onDismiss = this::dismissSyncProgress,
             resources = resources
-        )
+        ).apply { update(aggregateProgressViewData) }
     }
 
     private suspend fun getAccountNotifications(forceNetwork: Boolean): List<ItemViewModel> {
@@ -446,19 +477,18 @@ class DashboardNotificationsViewModel @Inject constructor(
         _events.postValue(Event(DashboardNotificationsActions.OpenSyncProgress))
     }
 
-    private fun createSyncProgressViewModel(aggregateProgressViewData: AggregateProgressViewData) {
-        when {
-            aggregateProgressViewData.progressState != ProgressState.COMPLETED && _data.value?.syncProgressItems == null -> {
-                _data.value?.syncProgressItems = getSyncProgress().apply { update(aggregateProgressViewData) }
-                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
-            }
-            aggregateProgressViewData.progressState == ProgressState.COMPLETED && _data.value?.syncProgressItems != null -> {
-                _data.value?.syncProgressItems = null
-                _data.value?.notifyPropertyChanged(BR.concatenatedItems)
-            }
-            else -> {
-                _data.value?.syncProgressItems?.update(aggregateProgressViewData)
-            }
+    private fun dismissSyncProgress() {
+        viewModelScope.launch {
+            fileSyncProgressDao.deleteAll()
+            courseSyncProgressDao.deleteAll()
+        }
+    }
+
+    private fun createSyncProgressViewModel(aggregateProgressViewData: AggregateProgressViewData): SyncProgressItemViewModel? {
+        return if (aggregateProgressViewData.progressState != ProgressState.COMPLETED) {
+            getSyncProgress(aggregateProgressViewData)
+        } else {
+            null
         }
     }
 }

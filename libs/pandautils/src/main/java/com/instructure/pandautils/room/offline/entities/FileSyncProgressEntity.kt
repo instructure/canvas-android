@@ -20,11 +20,24 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
-@Entity
-data class SyncProgressEntity(
+import com.instructure.pandautils.features.offline.sync.ProgressState
+@Entity(
+    foreignKeys = [
+        androidx.room.ForeignKey(
+            entity = CourseSyncProgressEntity::class,
+            parentColumns = ["courseId"],
+            childColumns = ["courseId"],
+            onDelete = androidx.room.ForeignKey.CASCADE
+        )
+    ]
+)
+data class FileSyncProgressEntity(
     @PrimaryKey
-    val uuid: String,
+    val workerId: String,
     val courseId: Long,
-    val title: String
+    val fileName: String,
+    val progress: Int,
+    val fileSize: Long,
+    val additionalFile: Boolean = false,
+    val progressState: ProgressState
 )

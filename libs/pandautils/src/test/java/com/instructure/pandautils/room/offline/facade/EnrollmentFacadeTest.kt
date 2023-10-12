@@ -42,24 +42,18 @@ class EnrollmentFacadeTest {
     private val userDao: UserDao = mockk(relaxed = true)
     private val enrollmentDao: EnrollmentDao = mockk(relaxed = true)
     private val gradesDao: GradesDao = mockk(relaxed = true)
-    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
 
-    private val facade = EnrollmentFacade(userDao, enrollmentDao, gradesDao, userApi)
+    private val facade = EnrollmentFacade(userDao, enrollmentDao, gradesDao)
 
     @Test
     fun `Calling insertEnrollment should insert enrollment and related entities`() = runTest {
         val courseId = 1L
-        val user = User(id = 1L)
         val enrollmentId = 1L
         val grades = Grades(finalGrade = "finalGrade")
         val enrollment = Enrollment(id = enrollmentId, userId = 1L, grades = grades, observedUser = User(id = 2L))
 
-        coEvery { userApi.getUser(any(), any()) } returns DataResult.Success(user)
-
         facade.insertEnrollment(enrollment, courseId)
 
-        coVerify { userApi.getUser(user.id, any()) }
-        coVerify { userDao.insertOrUpdate(UserEntity(user)) }
         coVerify { enrollmentDao.insertOrUpdate(EnrollmentEntity(enrollment, courseId, observedUserId = enrollment.observedUser?.id)) }
         coVerify { gradesDao.insert(any()) }
     }

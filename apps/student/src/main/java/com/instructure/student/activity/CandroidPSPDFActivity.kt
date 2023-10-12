@@ -28,10 +28,12 @@ import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.core.text.TextUtilsCompat
 import com.instructure.annotations.CanvasPdfMenuGrouping
+import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PSPDFKIT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.features.shareextension.StudentShareExtensionActivity
@@ -45,9 +47,12 @@ import com.pspdfkit.ui.toolbar.AnnotationCreationToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PSPDFKIT)
+@AndroidEntryPoint
 class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener {
     override fun onDisplayContextualToolbar(p0: ContextualToolbar<*>) {}
     override fun onRemoveContextualToolbar(p0: ContextualToolbar<*>) {}
@@ -55,6 +60,9 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     private var menuItems: List<ContextualToolbarMenuItem>? = null
 
     private val submissionTarget by lazy { intent?.extras?.getParcelable<ShareFileSubmissionTarget>(Const.SUBMISSION_TARGET) }
+
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
 
     override fun onPrepareContextualToolbar(toolbar: ContextualToolbar<*>) {
         if(toolbar is AnnotationCreationToolbar) {
@@ -122,10 +130,14 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
 
     private fun uploadDocumentToCanvas() {
         if (document != null) {
-            DocumentSharingManager.shareDocument(
+            if (networkStateProvider.isOnline()) {
+                DocumentSharingManager.shareDocument(
                     CandroidDocumentSharingController(this, submissionTarget),
                     document!!,
                     SharingOptions(PdfProcessorTask.AnnotationProcessingMode.FLATTEN))
+            } else {
+                NoInternetConnectionDialog.show(supportFragmentManager)
+            }
         }
     }
 

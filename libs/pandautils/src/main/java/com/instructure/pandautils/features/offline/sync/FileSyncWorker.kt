@@ -31,7 +31,9 @@ import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
@@ -42,14 +44,15 @@ import java.util.Date
 @HiltWorker
 class FileSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters,
+    @Assisted private val workerParameters: WorkerParameters,
     private val fileDownloadApi: FileDownloadAPI,
-    private val localFileDao: LocalFileDao
+    private val localFileDao: LocalFileDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private var fileExists = false
 
-    private lateinit var progress: FileSyncProgress
+    private lateinit var progress: FileSyncProgressEntity
 
     override suspend fun doWork(): Result {
         val fileId = inputData.getLong(INPUT_FILE_ID, -1)
@@ -62,45 +65,46 @@ class FileSyncWorker @AssistedInject constructor(
         val fileUrl = inputData.getString(INPUT_FILE_URL) ?: ""
         val courseId = inputData.getLong(INPUT_COURSE_ID, -1)
 
-        var result = Result.failure()
-
         val externalFile = fileId == -1L
 
         var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
 
-        progress = FileSyncProgress(fileName, 0, externalFile = externalFile)
-        setProgress(workDataOf(PROGRESS to progress.toJson()))
+        progress = fileSyncProgressDao.findByWorkerId(workerParameters.id.toString()) ?: return Result.failure()
 
-        fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
-            .saveFile(downloadedFile)
-            .collect {
-                when (it) {
-                    is DownloadState.InProgress -> {
-                        progress = FileSyncProgress(fileName, it.progress, totalBytes = it.totalBytes, externalFile = externalFile)
-                        setProgress(workDataOf(PROGRESS to progress.toJson()))
-                    }
-
-                    is DownloadState.Success -> {
-                        if (fileExists) {
-                            downloadedFile = rewriteOriginalFile(downloadedFile, fileName, externalFile, courseId)
+        try {
+            fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
+                .dataOrThrow
+                .saveFile(downloadedFile)
+                .collect {
+                    when (it) {
+                        is DownloadState.InProgress -> {
+                            progress = progress.copy(progress = it.progress, progressState = ProgressState.IN_PROGRESS)
+                            fileSyncProgressDao.update(progress)
                         }
-                        if (!externalFile) {
-                            localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
-                        }
-                        progress = FileSyncProgress(fileName, 100, ProgressState.COMPLETED, totalBytes = it.totalBytes, externalFile = externalFile)
-                        result = Result.success(workDataOf(OUTPUT to progress.toJson()))
-                    }
 
-                    is DownloadState.Failure -> {
-                        downloadedFile.delete()
-                        progress = FileSyncProgress(fileName, 100, ProgressState.ERROR, externalFile = externalFile)
-                        result = Result.failure(workDataOf(OUTPUT to progress.toJson()))
+                        is DownloadState.Success -> {
+                            if (fileExists) {
+                                downloadedFile = rewriteOriginalFile(downloadedFile, fileName, externalFile, courseId)
+                            }
+                            if (!externalFile) {
+                                localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
+                            }
+                        progress = progress.copy(progress = 100, progressState = ProgressState.COMPLETED, fileSize = it.totalBytes)
+                            fileSyncProgressDao.update(progress)
+                        }
+
+                        is DownloadState.Failure -> {
+                            throw it.throwable
+                        }
                     }
                 }
-            }
+        } catch (e: Exception) {
+            downloadedFile.delete()
+            progress = progress.copy(progressState = ProgressState.ERROR)
+            fileSyncProgressDao.update(progress)
+        }
 
-
-        return result
+        return Result.success()
     }
 
     private fun getDownloadFile(fileName: String, externalFile: Boolean, courseId: Long): File {

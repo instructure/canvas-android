@@ -39,7 +39,7 @@ class SyncProgressItemViewModelTest {
     @Before
     fun setup() {
         setupStrings()
-        itemViewModel = SyncProgressItemViewModel(SyncProgressViewData(), mockk(), resources)
+        itemViewModel = SyncProgressItemViewModel(SyncProgressViewData(), mockk(), mockk(), resources)
     }
 
     private fun setupStrings() {
