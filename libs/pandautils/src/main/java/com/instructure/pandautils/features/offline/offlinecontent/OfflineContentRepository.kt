@@ -28,13 +28,16 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 
 class OfflineContentRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val fileSyncSettingsDao: FileSyncSettingsDao,
-    private val courseFileSharedRepository: CourseFileSharedRepository
+    private val courseFileSharedRepository: CourseFileSharedRepository,
+    private val syncSettingsFacade: SyncSettingsFacade
 ) {
     suspend fun getCourse(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -49,7 +52,6 @@ class OfflineContentRepository(
 
         return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
     }
-
 
     suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
         return courseFileSharedRepository.getCourseFiles(courseId)
@@ -89,5 +91,9 @@ class OfflineContentRepository(
 
     suspend fun deleteFileSettings(fileIds: List<Long>) {
         fileSyncSettingsDao.deleteByIds(fileIds)
+    }
+
+    suspend fun getSyncSettings(): SyncSettingsEntity {
+        return syncSettingsFacade.getSyncSettings()
     }
 }

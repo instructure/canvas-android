@@ -1423,6 +1423,12 @@
     <string name="offline_content_empty_message">Your courses will be listed here, and then you can make them available for offline usage.</string>
     <string name="offline_content_empty_course_title">No Course Content</string>
     <string name="offline_content_empty_course_message">The course content will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_discard_dialog_title">Discard Changes?</string>
+    <string name="offline_content_discard_dialog_message">If you choose to discard, the changes will not be saved.</string>
+    <string name="offline_content_discard_dialog_positive">Discard</string>
+    <string name="offline_content_sync_dialog_title">Sync Offline Content?</string>
+    <string name="offline_content_sync_dialog_message">This will download ~%s of content selected for offline availability. Try to stay connected to Wi-Fi during the sync. Otherwise, it might use cellular data which may result in extra fees from your data provider.</string>
+    <string name="offline_content_sync_dialog_positive">Sync</string>
     <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off then no synchronization will happen. The already downloaded content will not be deleted.</string>
     <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
     <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>

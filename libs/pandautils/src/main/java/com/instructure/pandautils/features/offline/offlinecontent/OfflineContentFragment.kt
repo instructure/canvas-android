@@ -17,10 +17,14 @@
 
 package com.instructure.pandautils.features.offline.offlinecontent
 
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
@@ -40,6 +44,22 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var binding: FragmentOfflineContentBinding
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (viewModel.shouldShowDiscardDialog()) {
+                showDialog(
+                    getString(R.string.offline_content_discard_dialog_title),
+                    getString(R.string.offline_content_discard_dialog_message),
+                    getString(R.string.offline_content_discard_dialog_positive)
+                ) {
+                    navigateBack()
+                }
+            } else {
+                navigateBack()
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentOfflineContentBinding.inflate(inflater, container, false).apply {
@@ -65,9 +85,25 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activity?.onBackPressedDispatcher?.addCallback(backPressedCallback)
+    }
+
+    private fun navigateBack() {
+        backPressedCallback.remove()
+        requireActivity().onBackPressedDispatcher.onBackPressed()
+    }
+
     private fun handleAction(action: OfflineContentAction) {
         when (action) {
-            is OfflineContentAction.Back -> requireActivity().onBackPressedDispatcher.onBackPressed()
+            is OfflineContentAction.Back -> navigateBack()
+            is OfflineContentAction.Dialog -> showDialog(
+                title = action.title,
+                message = action.message,
+                positive = action.positive,
+                positiveCallback = action.positiveCallback
+            )
         }
     }
 
@@ -93,6 +129,22 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
     }
 
     override fun getFragment(): Fragment = this
+
+    private fun showDialog(title: String, message: String, positive: String, positiveCallback: () -> Unit) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(positive) { _, _ -> positiveCallback() }
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
+        }
+
+        dialog.show()
+    }
 
     private fun updateMenuText(selectedCount: Int) {
         binding.toolbar.menu.items.firstOrNull()?.title = getString(

@@ -57,7 +57,7 @@ data class CourseTabViewData(
 ) : BaseObservable() {
 
     fun checkedState(): Int {
-        return when{
+        return when {
             synced -> MaterialCheckBox.STATE_CHECKED
             files.isNotEmpty() && files.all { it.data.checked } -> MaterialCheckBox.STATE_CHECKED
             files.any { it.data.checked } -> MaterialCheckBox.STATE_INDETERMINATE
@@ -81,4 +81,10 @@ enum class OfflineItemViewModelType(val viewType: Int) {
 
 sealed class OfflineContentAction {
     object Back : OfflineContentAction()
+    data class Dialog(
+        val title: String,
+        val message: String,
+        val positive: String,
+        val positiveCallback: () -> Unit
+    ) : OfflineContentAction()
 }

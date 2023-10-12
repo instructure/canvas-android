@@ -22,6 +22,7 @@ import com.instructure.pandautils.features.offline.offlinecontent.CourseFileShar
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentRepository
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,8 +37,9 @@ class OfflineContentModule {
         coursesApi: CourseAPI.CoursesInterface,
         courseSyncSettingsDao: CourseSyncSettingsDao,
         fileSyncSettingsDao: FileSyncSettingsDao,
-        courseFileSharedRepository: CourseFileSharedRepository
+        courseFileSharedRepository: CourseFileSharedRepository,
+        syncSettingsFacade: SyncSettingsFacade
     ): OfflineContentRepository {
-        return OfflineContentRepository(coursesApi, courseSyncSettingsDao, fileSyncSettingsDao, courseFileSharedRepository)
+        return OfflineContentRepository(coursesApi, courseSyncSettingsDao, fileSyncSettingsDao, courseFileSharedRepository, syncSettingsFacade)
     }
 }
