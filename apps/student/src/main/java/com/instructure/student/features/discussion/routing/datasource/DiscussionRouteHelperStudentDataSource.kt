@@ -6,5 +6,5 @@ import com.instructure.canvasapi2.models.Group
 
 interface DiscussionRouteHelperStudentDataSource {
     suspend fun getDiscussionTopicHeader(canvasContext: CanvasContext, discussionTopicHeaderId: Long, forceNetwork: Boolean): DiscussionTopicHeader?
-    suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, userId: Long, forceNetwork: Boolean): Pair<Group, Long>?
+    suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, userId: Long, forceNetwork: Boolean): List<Group>
 }

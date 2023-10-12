@@ -40,7 +40,7 @@ class DiscussionRouteHelperTeacherRepositoryTest {
 
     @Test
     fun `getAllGroups() calls networkDataSource`() = runTest {
-        val expected = Pair(Group(1L), 1L)
+        val expected = listOf(Group(1L))
 
         coEvery { networkDataSource.getAllGroups(any(), any(), any()) } returns expected
 

@@ -28,7 +28,7 @@ class DiscussionRouteHelperTeacherRepository(
         discussionTopicHeader: DiscussionTopicHeader,
         userId: Long,
         forceNetwork: Boolean
-    ): Pair<Group, Long>? {
+    ): List<Group> {
         return networkDataSource.getAllGroups(discussionTopicHeader, userId, forceNetwork)
     }
 }

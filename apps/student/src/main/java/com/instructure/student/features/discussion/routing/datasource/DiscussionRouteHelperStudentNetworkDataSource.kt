@@ -37,21 +37,8 @@ class DiscussionRouteHelperStudentNetworkDataSource(
         return discussionApi.getDiscussionTopicHeader(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, params).dataOrNull
     }
 
-    override suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, userId: Long, forceNetwork: Boolean): Pair<Group, Long>? {
+    override suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, userId: Long, forceNetwork: Boolean): List<Group> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
-        val groups = groupApi.getFirstPageGroups(params).depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }.dataOrNull
-
-        for (group in groups ?: emptyList()) {
-            val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({ it.groupId }, { it.id })
-            if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {
-                groupsMap[group.id]?.let { topicHeaderId ->
-                    return Pair(group, topicHeaderId)
-                }
-
-                return null // There is a group, but not a matching topic header id
-            }
-        }
-        // If we made it to here, there are no groups that match this
-        return null
+        return groupApi.getFirstPageGroups(params).depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }.dataOrNull.orEmpty()
     }
 }

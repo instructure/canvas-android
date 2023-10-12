@@ -69,13 +69,12 @@ class DiscussionRouteHelperStudentNetworkDataSourceTest {
             GroupTopicChild(1L, 1L)
         ))
         val groups = listOf(Group(1L))
-        val expected = Pair(groups[0], 1L)
 
         coEvery { groupApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
         coEvery { groupApi.getNextPageGroups(any(), any()) } returns DataResult.Success(emptyList())
 
         val result = dataSource.getAllGroups(discussionTopicHeader, 1L, true)
 
-        assertEquals(expected, result)
+        assertEquals(groups, result)
     }
 }

@@ -84,8 +84,8 @@ class DiscussionRouteHelperStudentRepositoryTest {
 
     @Test
     fun `Call getAllGroups function when device is online`() = runTest {
-        val onlineExpected = Pair(Group(1L), 1L)
-        val offlineExpected = Pair(Group(2L), 2L)
+        val onlineExpected = listOf(Group(1L))
+        val offlineExpected = listOf(Group(2L))
 
         coEvery { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getAllGroups(any(), any(), any()) } returns onlineExpected
@@ -98,8 +98,8 @@ class DiscussionRouteHelperStudentRepositoryTest {
 
     @Test
     fun `Call getAllGroups function when device is offline`() = runTest {
-        val onlineExpected = Pair(Group(1L), 1L)
-        val offlineExpected = Pair(Group(2L), 2L)
+        val onlineExpected = listOf(Group(1L))
+        val offlineExpected = listOf(Group(2L))
 
         coEvery { networkStateProvider.isOnline() } returns false
         coEvery { networkDataSource.getAllGroups(any(), any(), any()) } returns onlineExpected

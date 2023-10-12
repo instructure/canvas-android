@@ -22,6 +22,18 @@ class DiscussionRouteHelper(
        }
 
     suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
-        return discussionRouteHelperRepository.getAllGroups(discussionTopicHeader, ApiPrefs.user?.id.orDefault(), false)
+        val groups = discussionRouteHelperRepository.getAllGroups(discussionTopicHeader, ApiPrefs.user?.id.orDefault(), false)
+        for (group in groups) {
+            val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({ it.groupId }, { it.id })
+            if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {
+                groupsMap[group.id]?.let { topicHeaderId ->
+                    return Pair(group, topicHeaderId)
+                }
+
+                return null // There is a group, but not a matching topic header id
+            }
+        }
+        // If we made it to here, there are no groups that match this
+        return null
     }
 }

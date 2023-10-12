@@ -32,7 +32,7 @@ class DiscussionRouteHelperStudentRepository(
         return dataSource().getDiscussionTopicHeader(canvasContext, discussionTopicHeaderId, forceNetwork)
     }
 
-    override suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, userId: Long, forceNetwork: Boolean): Pair<Group, Long>? {
+    override suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, userId: Long, forceNetwork: Boolean): List<Group> {
         return dataSource().getAllGroups(discussionTopicHeader, userId, forceNetwork)
     }
 }
