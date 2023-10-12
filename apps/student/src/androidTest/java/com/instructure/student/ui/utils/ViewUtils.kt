@@ -16,7 +16,11 @@
 
 package com.instructure.student.ui.utils
 
+import android.view.View
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions
+import org.hamcrest.Matcher
 
 object ViewUtils {
 
@@ -24,5 +28,20 @@ object ViewUtils {
         for(i in 1..times) {
             Espresso.pressBack()
         }
+    }
+
+    fun waitForViewToDisappear(viewMatcher: Matcher<View>, timeoutInSeconds: Long) {
+        val startTime = System.currentTimeMillis()
+
+        while (System.currentTimeMillis() - startTime < (timeoutInSeconds * 1000)) {
+            try {
+                onView(viewMatcher)
+                    .check(ViewAssertions.doesNotExist())
+                return
+            } catch (e: AssertionError) {
+                Thread.sleep(200)
+            }
+        }
+        throw AssertionError("The view has not been displayed within $timeoutInSeconds seconds.")
     }
 }
