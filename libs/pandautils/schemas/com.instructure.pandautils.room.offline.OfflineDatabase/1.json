@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "689c500e3fb199738d27545a6b6b56f4",
+    "identityHash": "5fcddde40bed9875c5dd4b5e15e1b2da",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -1122,7 +1122,7 @@
       },
       {
         "tableName": "DiscussionEntryEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `unread` INTEGER NOT NULL, `updatedAt` TEXT, `createdAt` TEXT, `authorId` INTEGER, `description` TEXT, `userId` INTEGER NOT NULL, `parentId` INTEGER NOT NULL, `message` TEXT, `deleted` INTEGER NOT NULL, `totalChildren` INTEGER NOT NULL, `unreadChildren` INTEGER NOT NULL, `ratingCount` INTEGER NOT NULL, `ratingSum` INTEGER NOT NULL, `editorId` INTEGER NOT NULL, `_hasRated` INTEGER NOT NULL, `replyIds` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `unread` INTEGER NOT NULL, `updatedAt` TEXT, `createdAt` TEXT, `authorId` INTEGER, `description` TEXT, `userId` INTEGER NOT NULL, `parentId` INTEGER NOT NULL, `message` TEXT, `deleted` INTEGER NOT NULL, `totalChildren` INTEGER NOT NULL, `unreadChildren` INTEGER NOT NULL, `ratingCount` INTEGER NOT NULL, `ratingSum` INTEGER NOT NULL, `editorId` INTEGER NOT NULL, `_hasRated` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -1219,12 +1219,6 @@
             "columnName": "_hasRated",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "replyIds",
-            "columnName": "replyIds",
-            "affinity": "TEXT",
-            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1282,7 +1276,7 @@
       },
       {
         "tableName": "DiscussionTopicHeaderEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `discussionType` TEXT, `title` TEXT, `message` TEXT, `htmlUrl` TEXT, `postedDate` INTEGER, `delayedPostDate` INTEGER, `lastReplyDate` INTEGER, `requireInitialPost` INTEGER NOT NULL, `discussionSubentryCount` INTEGER NOT NULL, `readState` TEXT, `unreadCount` INTEGER NOT NULL, `position` INTEGER NOT NULL, `assignmentId` INTEGER, `locked` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `pinned` INTEGER NOT NULL, `authorId` INTEGER, `podcastUrl` TEXT, `groupCategoryId` TEXT, `announcement` INTEGER NOT NULL, `permissionId` INTEGER, `published` INTEGER NOT NULL, `allowRating` INTEGER NOT NULL, `onlyGradersCanRate` INTEGER NOT NULL, `sortByRating` INTEGER NOT NULL, `subscribed` INTEGER NOT NULL, `lockAt` INTEGER, `userCanSeePosts` INTEGER NOT NULL, `specificSections` TEXT, `anonymousState` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`authorId`) REFERENCES `DiscussionParticipantEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`permissionId`) REFERENCES `DiscussionTopicPermissionEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `discussionType` TEXT, `title` TEXT, `message` TEXT, `htmlUrl` TEXT, `postedDate` INTEGER, `delayedPostDate` INTEGER, `lastReplyDate` INTEGER, `requireInitialPost` INTEGER NOT NULL, `discussionSubentryCount` INTEGER NOT NULL, `readState` TEXT, `unreadCount` INTEGER NOT NULL, `position` INTEGER NOT NULL, `assignmentId` INTEGER, `locked` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `pinned` INTEGER NOT NULL, `authorId` INTEGER, `podcastUrl` TEXT, `groupCategoryId` TEXT, `announcement` INTEGER NOT NULL, `published` INTEGER NOT NULL, `allowRating` INTEGER NOT NULL, `onlyGradersCanRate` INTEGER NOT NULL, `sortByRating` INTEGER NOT NULL, `subscribed` INTEGER NOT NULL, `lockAt` INTEGER, `userCanSeePosts` INTEGER NOT NULL, `specificSections` TEXT, `anonymousState` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`authorId`) REFERENCES `DiscussionParticipantEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1423,12 +1417,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "permissionId",
-            "columnName": "permissionId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
             "fieldPath": "published",
             "columnName": "published",
             "affinity": "INTEGER",
@@ -1503,17 +1491,6 @@
             ]
           },
           {
-            "table": "DiscussionTopicPermissionEntity",
-            "onDelete": "SET NULL",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "permissionId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
             "table": "CourseEntity",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
@@ -1528,17 +1505,11 @@
       },
       {
         "tableName": "DiscussionTopicPermissionEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `discussionTopicHeaderId` INTEGER NOT NULL, `attach` INTEGER NOT NULL, `update` INTEGER NOT NULL, `delete` INTEGER NOT NULL, `reply` INTEGER NOT NULL, FOREIGN KEY(`discussionTopicHeaderId`) REFERENCES `DiscussionTopicHeaderEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`discussionTopicId` INTEGER NOT NULL, `attach` INTEGER NOT NULL, `update` INTEGER NOT NULL, `delete` INTEGER NOT NULL, `reply` INTEGER NOT NULL, PRIMARY KEY(`discussionTopicId`), FOREIGN KEY(`discussionTopicId`) REFERENCES `DiscussionTopicHeaderEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "discussionTopicHeaderId",
-            "columnName": "discussionTopicHeaderId",
+            "fieldPath": "discussionTopicId",
+            "columnName": "discussionTopicId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -1568,9 +1539,9 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "discussionTopicId"
           ]
         },
         "indices": [],
@@ -1580,7 +1551,7 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "discussionTopicHeaderId"
+              "discussionTopicId"
             ],
             "referencedColumns": [
               "id"
@@ -2373,14 +2344,8 @@
       },
       {
         "tableName": "GroupUserEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `groupId` INTEGER NOT NULL, `userId` INTEGER NOT NULL, FOREIGN KEY(`groupId`) REFERENCES `GroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupId` INTEGER NOT NULL, `userId` INTEGER NOT NULL, PRIMARY KEY(`groupId`, `userId`), FOREIGN KEY(`groupId`) REFERENCES `GroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "groupId",
             "columnName": "groupId",
@@ -2395,9 +2360,10 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
-            "id"
+            "groupId",
+            "userId"
           ]
         },
         "indices": [],
@@ -3943,38 +3909,6 @@
         ]
       },
       {
-        "tableName": "SyncProgressEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `title` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
-        "fields": [
-          {
-            "fieldPath": "uuid",
-            "columnName": "uuid",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "courseId",
-            "columnName": "courseId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "title",
-            "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "uuid"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "SyncSettingsEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `autoSyncEnabled` INTEGER NOT NULL, `syncFrequency` TEXT NOT NULL, `wifiOnly` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
@@ -5380,30 +5314,42 @@
         ]
       },
       {
-        "tableName": "DiscussionTopicEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `unreadEntries` TEXT NOT NULL, `participantIds` TEXT NOT NULL, `viewIds` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "tableName": "CourseSyncProgressEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `workerId` TEXT NOT NULL, `courseName` TEXT NOT NULL, `tabs` TEXT NOT NULL, `additionalFilesStarted` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "courseId",
+            "columnName": "courseId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "unreadEntries",
-            "columnName": "unreadEntries",
+            "fieldPath": "workerId",
+            "columnName": "workerId",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "participantIds",
-            "columnName": "participantIds",
+            "fieldPath": "courseName",
+            "columnName": "courseName",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "viewIds",
-            "columnName": "viewIds",
+            "fieldPath": "tabs",
+            "columnName": "tabs",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "additionalFilesStarted",
+            "columnName": "additionalFilesStarted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progressState",
+            "columnName": "progressState",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -5411,17 +5357,85 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "id"
+            "courseId"
           ]
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "FileSyncProgressEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `additionalFile` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "workerId",
+            "columnName": "workerId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileName",
+            "columnName": "fileName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progress",
+            "columnName": "progress",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileSize",
+            "columnName": "fileSize",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "additionalFile",
+            "columnName": "additionalFile",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progressState",
+            "columnName": "progressState",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "workerId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "CourseSyncProgressEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
+            ],
+            "referencedColumns": [
+              "courseId"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '689c500e3fb199738d27545a6b6b56f4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5fcddde40bed9875c5dd4b5e15e1b2da')"
     ]
   }
 }

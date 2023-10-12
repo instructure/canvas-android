@@ -59,7 +59,7 @@ class SyncProgressFragment : Fragment() {
         applyTheme()
 
         viewModel.progressData.observe(viewLifecycleOwner) {
-            when (it.progressState) {
+            when (it?.progressState) {
                 ProgressState.IN_PROGRESS -> {
                     setActionTitle(getString(R.string.cancel))
                 }

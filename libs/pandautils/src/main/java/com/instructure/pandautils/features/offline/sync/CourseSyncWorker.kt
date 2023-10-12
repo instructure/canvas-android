@@ -21,66 +21,22 @@ package com.instructure.pandautils.features.offline.sync
 import android.content.Context
 import android.net.Uri
 import androidx.hilt.work.HiltWorker
-import androidx.work.Constraints
-import androidx.work.CoroutineWorker
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.Operation
-import androidx.work.WorkContinuation
-import androidx.work.WorkManager
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.apis.AssignmentAPI
-import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.apis.ConferencesApi
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.DiscussionAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.FeaturesAPI
-import com.instructure.canvasapi2.apis.FileFolderAPI
-import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.ModuleAPI
-import com.instructure.canvasapi2.apis.PageAPI
-import com.instructure.canvasapi2.apis.QuizAPI
-import com.instructure.canvasapi2.apis.UserAPI
+import androidx.work.*
+import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.canvasapi2.models.DiscussionTopic
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
-import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
-import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.FileFolderDao
-import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.LocalFileDao
-import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
-import com.instructure.pandautils.room.offline.facade.AssignmentFacade
-import com.instructure.pandautils.room.offline.facade.ConferenceFacade
-import com.instructure.pandautils.room.offline.facade.CourseFacade
-import com.instructure.pandautils.room.offline.facade.DiscussionTopicFacade
-import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
-import com.instructure.pandautils.room.offline.facade.GroupFacade
-import com.instructure.pandautils.room.offline.facade.ModuleFacade
-import com.instructure.pandautils.room.offline.facade.PageFacade
-import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
-import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
-import com.instructure.pandautils.room.offline.facade.UserFacade
-import com.instructure.pandautils.utils.toJson
+import com.instructure.pandautils.room.offline.facade.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
@@ -88,7 +44,7 @@ import java.io.File
 @HiltWorker
 class CourseSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
-    @Assisted workerParameters: WorkerParameters,
+    @Assisted private val workerParameters: WorkerParameters,
     private val courseApi: CourseAPI.CoursesInterface,
     private val pageApi: PageAPI.PagesInterface,
     private val userApi: UserAPI.UsersInterface,
@@ -121,11 +77,13 @@ class CourseSyncWorker @AssistedInject constructor(
     private val groupFacade: GroupFacade,
     private val syncSettingsFacade: SyncSettingsFacade,
     private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao,
     private val htmlParser: HtmlParser,
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) : CoroutineWorker(context, workerParameters) {
 
-    private lateinit var progress: CourseProgress
+    private lateinit var progress: CourseSyncProgressEntity
 
     private var fileOperation: Operation? = null
 
@@ -133,13 +91,13 @@ class CourseSyncWorker @AssistedInject constructor(
     private val externalFilesToSync = mutableSetOf<String>()
 
     override suspend fun doWork(): Result {
-        val courseSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
+        val courseSettingsWithFiles =
+            courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
         val courseId = courseSettings.courseId
         val course = fetchCourseDetails(courseId)
 
         progress = initProgress(courseSettings, course)
-        updateProgress()
 
         if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
             fetchFiles(courseId)
@@ -201,7 +159,11 @@ class CourseSyncWorker @AssistedInject constructor(
 
         syncAdditionalFiles(courseSettings, workContinuation)
 
-        return Result.success(workDataOf(OUTPUT to progress.toJson()))
+        progress =
+            progress.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
+        courseSyncProgressDao.update(progress)
+
+        return Result.success()
     }
 
     private suspend fun fetchSyllabus(courseId: Long) {
@@ -398,8 +360,9 @@ class CourseSyncWorker @AssistedInject constructor(
     private suspend fun fetchDiscussions(courseId: Long) {
         try {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-            val discussions = discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
-                .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrThrow
+            val discussions =
+                discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
+                    .depaginate { nextPage -> discussionApi.getNextPage(nextPage, params) }.dataOrThrow
 
             discussions.forEach {
                 it.message = parseHtmlContent(it.message, courseId)
@@ -418,8 +381,14 @@ class CourseSyncWorker @AssistedInject constructor(
     private suspend fun fetchAnnouncements(courseId: Long) {
         try {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
-            val announcements = announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
-                .depaginate { nextPage -> announcementApi.getNextPageAnnouncementsList(nextPage, params) }.dataOrThrow
+            val announcements =
+                announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
+                    .depaginate { nextPage ->
+                        announcementApi.getNextPageAnnouncementsList(
+                            nextPage,
+                            params
+                        )
+                    }.dataOrThrow
 
             announcements.forEach {
                 it.message = parseHtmlContent(it.message, courseId)
@@ -507,7 +476,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
         cleanupSyncedFiles(courseId, allFileIds)
 
-        val fileSyncData = mutableListOf<FileSyncData>()
+        val fileSyncEntities = mutableListOf<FileSyncProgressEntity>()
         val fileWorkers = mutableListOf<OneTimeWorkRequest>()
         fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
             .forEach {
@@ -519,16 +488,29 @@ class CourseSyncWorker @AssistedInject constructor(
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
                 fileWorkers.add(worker)
-                fileSyncData.add(FileSyncData(worker.id.toString(), it.displayName.orEmpty(), it.size))
+                fileSyncEntities.add(
+                    FileSyncProgressEntity(
+                        workerId = worker.id.toString(),
+                        courseId = courseId,
+                        fileName = it.displayName.orEmpty(),
+                        progress = 0,
+                        fileSize = it.size,
+                        progressState = ProgressState.STARTING
+                    )
+                )
             }
+
+        fileSyncProgressDao.insertAll(fileSyncEntities)
 
         val chunkedWorkers = fileWorkers.chunked(6)
 
         if (chunkedWorkers.isEmpty()) {
-            progress = progress.copy(fileSyncData = emptyList())
+            progress = progress.copy(progressState = ProgressState.IN_PROGRESS)
             updateProgress()
+
             return null
         }
+
 
         var continuation = workManager
             .beginWith(chunkedWorkers.first())
@@ -539,7 +521,7 @@ class CourseSyncWorker @AssistedInject constructor(
 
         fileOperation = continuation.enqueue()
 
-        progress = progress.copy(fileSyncData = fileSyncData)
+        progress = progress.copy(progressState = ProgressState.IN_PROGRESS)
         updateProgress()
 
         return continuation
@@ -551,21 +533,31 @@ class CourseSyncWorker @AssistedInject constructor(
     ) {
         val courseId = syncSettings.courseId
 
-        val fileSyncData = mutableListOf<FileSyncData>()
+        val fileSyncEntities = mutableListOf<FileSyncProgressEntity>()
         val fileWorkers = mutableListOf<OneTimeWorkRequest>()
         val additionalPublicFilesToSync = fileFolderDao.findByIds(additionalFileIdsToSync)
 
         additionalPublicFilesToSync.forEach {
-                val worker = FileSyncWorker.createOneTimeWorkRequest(
-                    courseId,
-                    it.id,
-                    it.displayName.orEmpty(),
-                    it.url.orEmpty(),
-                    syncSettingsFacade.getSyncSettings().wifiOnly
+            val worker = FileSyncWorker.createOneTimeWorkRequest(
+                courseId,
+                it.id,
+                it.displayName.orEmpty(),
+                it.url.orEmpty(),
+                syncSettingsFacade.getSyncSettings().wifiOnly
+            )
+            fileWorkers.add(worker)
+            fileSyncEntities.add(
+                FileSyncProgressEntity(
+                    workerId = worker.id.toString(),
+                    courseId = courseId,
+                    fileName = it.displayName.orEmpty(),
+                    progress = 0,
+                    fileSize = it.size,
+                    additionalFile = true,
+                    progressState = ProgressState.STARTING
                 )
-                fileWorkers.add(worker)
-                fileSyncData.add(FileSyncData(worker.id.toString(), it.displayName.orEmpty(), it.size))
-            }
+            )
+        }
 
         val nonPublicFileIds = additionalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
         nonPublicFileIds.forEach {
@@ -579,7 +571,17 @@ class CourseSyncWorker @AssistedInject constructor(
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
                 fileWorkers.add(worker)
-                fileSyncData.add(FileSyncData(worker.id.toString(), file.displayName.orEmpty(), file.size))
+                fileSyncEntities.add(
+                    FileSyncProgressEntity(
+                        workerId = worker.id.toString(),
+                        courseId = courseId,
+                        fileName = file.displayName.orEmpty(),
+                        progress = 0,
+                        fileSize = file.size,
+                        additionalFile = true,
+                        progressState = ProgressState.STARTING
+                    )
+                )
             }
         }
 
@@ -594,30 +596,39 @@ class CourseSyncWorker @AssistedInject constructor(
                     syncSettingsFacade.getSyncSettings().wifiOnly
                 )
                 fileWorkers.add(worker)
-                fileSyncData.add(FileSyncData(worker.id.toString(), fileName, 0))
+                fileSyncEntities.add(
+                    FileSyncProgressEntity(
+                        workerId = worker.id.toString(),
+                        courseId = courseId,
+                        fileName = fileName,
+                        progress = 0,
+                        fileSize = 0,
+                        additionalFile = true,
+                        progressState = ProgressState.STARTING
+                    )
+                )
             }
         }
+
+        fileSyncProgressDao.insertAll(fileSyncEntities)
+
+        progress = progress.copy(additionalFilesStarted = true)
+        updateProgress()
 
         if (fileWorkers.isEmpty()) return
 
         val chunkedWorkers = fileWorkers.chunked(6)
 
-        if (chunkedWorkers.isEmpty()) {
-            progress = progress.copy(additionalFileSyncData = emptyList())
-            updateProgress()
-            return
-        }
-
-        var continuation = if (workContinuation != null) workContinuation.then(chunkedWorkers.first()) else workManager.beginWith(chunkedWorkers.first())
+        var continuation =
+            if (workContinuation != null) workContinuation.then(chunkedWorkers.first()) else workManager.beginWith(
+                chunkedWorkers.first()
+            )
 
         chunkedWorkers.drop(1).forEach {
             continuation = continuation.then(it)
         }
 
         continuation.enqueue()
-
-        progress = progress.copy(additionalFileSyncData = fileSyncData)
-        updateProgress()
     }
 
     private suspend fun fetchFiles(courseId: Long) {
@@ -650,23 +661,38 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun updateProgress() {
-        setProgress(workDataOf(COURSE_PROGRESS to progress.toJson()))
+        courseSyncProgressDao.update(progress)
     }
 
-    private fun initProgress(courseSettings: CourseSyncSettingsEntity, course: Course): CourseProgress {
+    private suspend fun initProgress(
+        courseSettings: CourseSyncSettingsEntity,
+        course: Course
+    ): CourseSyncProgressEntity {
         val availableTabs = course.tabs?.map { it.tabId } ?: emptyList()
         val selectedTabs = courseSettings.tabs.filter { availableTabs.contains(it.key) && it.value == true }.keys
-        return CourseProgress(
+        val progress = (courseSyncProgressDao.findByCourseId(course.id) ?: createNewProgress(courseSettings))
+            .copy(
+                tabs = selectedTabs.associateWith { tabId ->
+                    TabSyncData(
+                        course.tabs?.find { it.tabId == tabId }?.label ?: tabId,
+                        ProgressState.IN_PROGRESS
+                    )
+                }
+            )
+
+        courseSyncProgressDao.update(progress)
+        return progress
+    }
+
+    private suspend fun createNewProgress(courseSettings: CourseSyncSettingsEntity): CourseSyncProgressEntity {
+        val newProgress = CourseSyncProgressEntity(
+            workerId = workerParameters.id.toString(),
             courseId = courseSettings.courseId,
             courseName = courseSettings.courseName,
-            tabs = selectedTabs.associateWith { tabId ->
-                TabSyncData(
-                    course.tabs?.find { it.tabId == tabId }?.label ?: tabId,
-                    ProgressState.IN_PROGRESS
-                )
-            },
-            fileSyncData = null
+            progressState = ProgressState.STARTING,
         )
+        courseSyncProgressDao.insert(newProgress)
+        return newProgress
     }
 
     private suspend fun updateTabError(tabId: String) {

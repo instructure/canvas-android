@@ -112,7 +112,7 @@ class EditDashboardViewModel @Inject constructor(
                 val items = createListItems(currentCourses, pastCourses, futureCourses, groups)
                 _data.postValue(EditDashboardViewData(items))
                 if (items.isEmpty()) {
-                    _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+                    postEmptyState()
                 } else {
                     _state.postValue(ViewState.Success)
                 }
@@ -121,6 +121,15 @@ class EditDashboardViewModel @Inject constructor(
                 _state.postValue(ViewState.Error())
                 Logger.d("Failed to grab courses: ${e.printStackTrace()}")
             }
+        }
+    }
+
+    private fun postEmptyState() {
+        val offlineMode = offlineEnabled && !networkStateProvider.isOnline()
+        if (offlineMode) {
+            _state.postValue(ViewState.Empty(R.string.editDashboardOfflineMode, R.string.editDashboardOfflineModeMessage, R.drawable.ic_panda_nocourses))
+        } else {
+            _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title,R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
         }
     }
 
@@ -456,7 +465,7 @@ class EditDashboardViewModel @Inject constructor(
             createListItems(queriedCurrentCourses, queriedPastCourses, queriedFutureCourses, queriedGroups, true)
         }
         if (items.isEmpty()) {
-            _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+            postEmptyState()
         } else {
             _state.postValue(ViewState.Success)
         }

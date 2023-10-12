@@ -19,6 +19,7 @@
 package com.instructure.canvasapi2.apis
 
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.utils.DataResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
@@ -32,7 +33,7 @@ interface FileDownloadAPI {
 
     @Streaming
     @GET
-    suspend fun downloadFile(@Url url: String, @Tag params: RestParams): ResponseBody
+    suspend fun downloadFile(@Url url: String, @Tag params: RestParams): DataResult<ResponseBody>
 }
 
 sealed class DownloadState {

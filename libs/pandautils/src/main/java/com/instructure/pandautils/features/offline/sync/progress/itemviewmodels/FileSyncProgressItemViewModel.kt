@@ -20,42 +20,33 @@ package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
-import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.progress.FileSyncProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.fromJson
-import java.util.UUID
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 
 data class FileSyncProgressItemViewModel(
     val data: FileSyncProgressViewData,
-    val workManager: WorkManager
+    val fileSyncProgressDao: FileSyncProgressDao
 ) : ItemViewModel {
     override val layoutId = R.layout.item_file_sync_progress
 
     override val viewType = ViewType.COURSE_FILE_PROGRESS.viewType
 
-    private var fileSyncProgressLiveData: LiveData<WorkInfo>? = null
+    private var fileSyncProgressLiveData: LiveData<FileSyncProgressEntity?>? = null
 
-    private val fileSyncProgressObserver = Observer<WorkInfo> {
-        val progress: FileSyncProgress = if (it.state.isFinished) {
-            it.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson() ?: return@Observer
-        } else {
-            it.progress.getString(FileSyncWorker.PROGRESS)?.fromJson() ?: return@Observer
-        }
-        notifyChange(progress)
+    private val fileSyncProgressObserver = Observer<FileSyncProgressEntity?> { progress ->
+        progress?.let { notifyChange(it) }
     }
 
     init {
-        fileSyncProgressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.workerId))
+        fileSyncProgressLiveData = fileSyncProgressDao.findByWorkerIdLiveData(data.workerId)
         fileSyncProgressLiveData?.observeForever(fileSyncProgressObserver)
     }
 
-    private fun notifyChange(fileSyncProgress: FileSyncProgress) {
+    private fun notifyChange(fileSyncProgress: FileSyncProgressEntity) {
         data.updateProgress(fileSyncProgress.progress)
         data.updateState(fileSyncProgress.progressState)
     }
