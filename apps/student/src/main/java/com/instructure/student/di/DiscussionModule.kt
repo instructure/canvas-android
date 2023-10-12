@@ -3,7 +3,7 @@ package com.instructure.student.di
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.discussion.StudentDiscussionRouter
+import com.instructure.student.features.discussion.routing.StudentDiscussionRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

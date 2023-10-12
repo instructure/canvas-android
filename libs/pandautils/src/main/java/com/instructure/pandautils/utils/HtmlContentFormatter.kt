@@ -115,13 +115,10 @@ class HtmlContentFormatter(
     private suspend fun authenticateLTIUrl(ltiUrl: String): String {
         return awaitApi<AuthenticatedSession> {
             try {
-                oAuthManager.getAuthenticatedSession(
-                    ltiUrl,
-                    it
-                )
+                oAuthManager.getAuthenticatedSession(ltiUrl, it)
             }
             catch (e: Exception) {
-
+                AuthenticatedSession(ltiUrl)
             }
         }.sessionUrl
     }

@@ -164,6 +164,9 @@ object DiscussionAPI {
 
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}")
         fun getDiscussionTopicHeader(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
+
+        @GET("{contextType}/{contextId}/discussion_topics/{topicId}")
+        suspend fun getDiscussionTopicHeader(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Tag params: RestParams): DataResult<DiscussionTopicHeader>
     }
 
     fun createDiscussion(adapter: RestBuilder,

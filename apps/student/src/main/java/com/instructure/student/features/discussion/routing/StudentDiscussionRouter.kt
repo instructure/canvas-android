@@ -1,4 +1,4 @@
-package com.instructure.student.features.discussion
+package com.instructure.student.features.discussion.routing
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
