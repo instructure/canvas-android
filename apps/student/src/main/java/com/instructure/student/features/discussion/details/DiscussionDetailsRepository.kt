@@ -6,6 +6,7 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -24,18 +25,19 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
         val successfullyMarkedAsReadIds: MutableList<Long> = mutableListOf()
         discussionEntryIds.forEach { entryId ->
             val result = networkDataSource.markAsRead(canvasContext, discussionTopicHeaderId, entryId)
-            //TODO: Only successful results should be added to the list, but currently the API returns DataResult.Failed for all requests
-            successfullyMarkedAsReadIds.add(entryId)
+            if (result is DataResult.Success) {
+                successfullyMarkedAsReadIds.add(entryId)
+            }
         }
         return successfullyMarkedAsReadIds
     }
 
-    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): Unit? {
-        return networkDataSource.deleteDiscussionEntry(canvasContext, discussionTopicHeaderId, entryId).dataOrNull
+    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): DataResult<Unit> {
+        return networkDataSource.deleteDiscussionEntry(canvasContext, discussionTopicHeaderId, entryId)
     }
 
-    suspend fun rateDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryId: Long, rating: Int): Unit? {
-        return networkDataSource.rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating).dataOrNull
+    suspend fun rateDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryId: Long, rating: Int): DataResult<Unit> {
+        return networkDataSource.rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating)
     }
 
     suspend fun getAuthenticatedSession(url: String): AuthenticatedSession? {

@@ -295,15 +295,17 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun deleteDiscussionEntry(entryId: Long) {
         lifecycleScope.tryLaunch {
-            repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
+            val result = repository.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId)
 
-            discussionTopic?.let {
-                DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
-                    entry.deleted = true
-                    updateDiscussionAsDeleted(entry)
-                    discussionTopicHeader.decrementDiscussionSubentryCount()
-                    if (!groupDiscussion) {
-                        DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+            if (result is DataResult.Success) {
+                discussionTopic?.let {
+                    DiscussionUtils.findEntry(entryId, it.views)?.let { entry ->
+                        entry.deleted = true
+                        updateDiscussionAsDeleted(entry)
+                        discussionTopicHeader.decrementDiscussionSubentryCount()
+                        if (!groupDiscussion) {
+                            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+                        }
                     }
                 }
             }
