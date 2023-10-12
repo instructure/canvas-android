@@ -36,7 +36,7 @@ class DiscussionRouteHelperTeacherNetworkDataSource(
         return discussionApi.getDiscussionTopicHeader(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, params).dataOrNull
     }
 
-    override suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, forceNetwork: Boolean): Pair<Group, Long>? {
+    override suspend fun getAllGroups(discussionTopicHeader: DiscussionTopicHeader, userId: Long, forceNetwork: Boolean): Pair<Group, Long>? {
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
         val groups = groupApi.getFirstPageGroups(params).depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }.dataOrNull
 

@@ -3,10 +3,8 @@ package com.instructure.student.features.discussion.routing.datasource
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 import com.instructure.pandautils.room.offline.facade.GroupFacade
-import com.instructure.pandautils.utils.orDefault
 
 class DiscussionRouteHelperStudentLocalDataSource(
     private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
@@ -23,9 +21,10 @@ class DiscussionRouteHelperStudentLocalDataSource(
 
     override suspend fun getAllGroups(
         discussionTopicHeader: DiscussionTopicHeader,
+        userId: Long,
         forceNetwork: Boolean
     ): Pair<Group, Long>? {
-        val groups = groupFacade.getGroupsByUserId(ApiPrefs.user?.id.orDefault())
+        val groups = groupFacade.getGroupsByUserId(userId)
         for (group in groups) {
             val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({ it.groupId }, { it.id })
             if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {

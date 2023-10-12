@@ -26,8 +26,9 @@ class DiscussionRouteHelperTeacherRepository(
 
     override suspend fun getAllGroups(
         discussionTopicHeader: DiscussionTopicHeader,
+        userId: Long,
         forceNetwork: Boolean
     ): Pair<Group, Long>? {
-        return networkDataSource.getAllGroups(discussionTopicHeader, forceNetwork)
+        return networkDataSource.getAllGroups(discussionTopicHeader, userId, forceNetwork)
     }
 }

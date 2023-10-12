@@ -3,6 +3,8 @@ package com.instructure.pandautils.features.discussion.router
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.orDefault
 
 class DiscussionRouteHelper(
     private val discussionRouteHelperRepository: DiscussionRouteHelperRepository,
@@ -20,6 +22,6 @@ class DiscussionRouteHelper(
        }
 
     suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
-        return discussionRouteHelperRepository.getAllGroups(discussionTopicHeader, false)
+        return discussionRouteHelperRepository.getAllGroups(discussionTopicHeader, ApiPrefs.user?.id.orDefault(), false)
     }
 }
