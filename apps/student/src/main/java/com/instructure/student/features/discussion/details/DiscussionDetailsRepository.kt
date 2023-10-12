@@ -30,11 +30,11 @@ class DiscussionDetailsRepository(localDataSource: DiscussionDetailsLocalDataSou
         return successfullyMarkedAsReadIds
     }
 
-    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): Void? {
+    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): Unit? {
         return networkDataSource.deleteDiscussionEntry(canvasContext, discussionTopicHeaderId, entryId).dataOrNull
     }
 
-    suspend fun rateDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryId: Long, rating: Int): Void? {
+    suspend fun rateDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, discussionEntryId: Long, rating: Int): Unit? {
         return networkDataSource.rateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, rating).dataOrNull
     }
 

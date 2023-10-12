@@ -98,7 +98,7 @@ object DiscussionAPI {
         fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int): Call<Void>
 
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/rating")
-        suspend fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int, @Tag params: RestParams): DataResult<Void>
+        suspend fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int, @Tag params: RestParams): DataResult<Unit>
 
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/read")
         fun markDiscussionTopicRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<Void>
@@ -107,7 +107,7 @@ object DiscussionAPI {
         fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
 
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
-        suspend fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Void>
+        suspend fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Unit>
 
         @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
         fun markDiscussionTopicEntryUnread(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
@@ -125,7 +125,7 @@ object DiscussionAPI {
         fun deleteDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
 
         @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}")
-        suspend fun deleteDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Void>
+        suspend fun deleteDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Unit>
 
         @Multipart
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/replies")

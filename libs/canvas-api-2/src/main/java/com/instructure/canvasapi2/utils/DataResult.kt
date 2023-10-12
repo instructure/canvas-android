@@ -76,6 +76,7 @@ sealed class Failure(open val message: String?) {
     data class Network(override val message: String? = null, val errorCode: Int? = null) : Failure(message) // Covers 404/500, no internet, etc. Generic case for failed request
     data class Authorization(override val message: String? = null) : Failure(message) // Covers 401, or permission errors.
     data class Exception(val exception: Throwable, override val message: String? = null) : Failure(message)
+    object ParsingError : Failure("Response was successful, but couldn't be converted to the expected type")
 }
 
 internal fun <T> Call<T>.dataResult(): DataResult<T> {

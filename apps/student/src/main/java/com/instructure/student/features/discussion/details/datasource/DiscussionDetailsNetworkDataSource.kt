@@ -23,12 +23,12 @@ class DiscussionDetailsNetworkDataSource(
         canvasContext: CanvasContext,
         discussionTopicHeaderId: Long,
         discussionEntryId: Long
-    ): DataResult<Void> {
+    ): DataResult<Unit> {
         val params = RestParams(isForceReadFromNetwork = true)
         return discussionApi.markDiscussionTopicEntryRead(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, discussionEntryId, params)
     }
 
-    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): DataResult<Void> {
+    suspend fun deleteDiscussionEntry(canvasContext: CanvasContext, discussionTopicHeaderId: Long, entryId: Long): DataResult<Unit> {
         val params = RestParams(isForceReadFromNetwork = true)
         return discussionApi.deleteDiscussionEntry(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, entryId, params)
     }
@@ -38,7 +38,7 @@ class DiscussionDetailsNetworkDataSource(
         discussionTopicHeaderId: Long,
         discussionEntryId: Long,
         rating: Int
-    ): DataResult<Void> {
+    ): DataResult<Unit> {
         val params = RestParams(isForceReadFromNetwork = true)
         return discussionApi.rateDiscussionEntry(canvasContext.apiContext(), canvasContext.id, discussionTopicHeaderId, discussionEntryId, rating, params)
     }
