@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.syllabus.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
 
-class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
+class SyllabusTabAdapter(private val context: Context, private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
 
     var eventsBinding: FragmentSyllabusEventsBinding? = null
     var webviewBinding: FragmentSyllabusWebviewBinding? = null
@@ -76,7 +77,7 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
     private fun isSyllabusPosition(position: Int) = position == 0
 
     private fun setupWebView(webView: CanvasWebView) {
-        val activity = (webView.context as? FragmentActivity)
+        val activity = (context as? FragmentActivity)
         activity?.let { webView.addVideoClient(it) }
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
