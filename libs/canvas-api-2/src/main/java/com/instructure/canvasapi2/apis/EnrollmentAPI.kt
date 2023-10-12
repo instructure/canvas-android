@@ -56,7 +56,7 @@ object EnrollmentAPI {
                 @Query("userId") userId: Long,
                 @Query("type[]") enrollmentTypes: Array<String>): Call<List<Enrollment>>
 
-        @GET("courses/{courseId}/enrollments")
+        @GET("courses/{courseId}/enrollments?include[]=current_points")
         suspend fun getEnrollmentsForUserInCourse(
             @Path("courseId") courseId: Long,
             @Query("user_id") userId: Long,
