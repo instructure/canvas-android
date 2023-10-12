@@ -67,7 +67,7 @@ object ModuleUtility {
             }
         }
         "Discussion" -> {
-            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, Tab.DISCUSSIONS_ID) {
+            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, setOf(Tab.DISCUSSIONS_ID)) {
                 if (isDiscussionRedesignEnabled && isOnline) {
                     DiscussionDetailsWebViewFragment.newInstance(getDiscussionRedesignRoute(item, course))
                 } else {

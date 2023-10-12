@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.di
 
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
@@ -492,6 +491,11 @@ class OfflineModule {
     @Provides
     fun provideDiscussionTopicDao(appDatabase: OfflineDatabase): DiscussionTopicDao {
         return appDatabase.discussionTopicDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicPermissionDao(appDatabase: OfflineDatabase): DiscussionTopicPermissionDao {
+        return appDatabase.discussionTopicPermissionDao()
     }
 
     @Provides
