@@ -20,7 +20,7 @@ import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
-import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.R
 import com.instructure.pandautils.discussions.DiscussionHtmlTemplates
 import com.instructure.pandautils.views.CanvasWebView
@@ -113,14 +113,12 @@ class HtmlContentFormatter(
     }
 
     private suspend fun authenticateLTIUrl(ltiUrl: String): String {
-        return awaitApi<AuthenticatedSession> {
-            try {
-                oAuthManager.getAuthenticatedSession(ltiUrl, it)
-            }
-            catch (e: Exception) {
-                AuthenticatedSession(ltiUrl)
-            }
-        }.sessionUrl
+        val ltiResult = apiAsync<AuthenticatedSession> { oAuthManager.getAuthenticatedSession(ltiUrl, it) }.await()
+        return if (ltiResult.isSuccess) {
+            return ltiResult.dataOrNull?.sessionUrl ?: ltiUrl
+        } else {
+            ltiUrl
+        }
     }
 
     private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {
