@@ -17,7 +17,10 @@
 
 package com.instructure.pandautils.features.offline.sync
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkManager
@@ -25,6 +28,7 @@ import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -43,6 +47,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
+import kotlin.random.Random
 
 const val COURSE_IDS = "course-ids"
 
@@ -62,23 +67,46 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val fileSyncProgressDao: FileSyncProgressDao,
     private val apiPrefs: ApiPrefs,
     private val fileFolderDao: FileFolderDao,
-    private val localFileDao: LocalFileDao
+    private val localFileDao: LocalFileDao,
 ) : CoroutineWorker(context, workerParameters) {
+
+    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val notificationId = Random.nextInt()
 
     override suspend fun doWork(): Result {
         if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) return Result.success()
 
-        val dashboardCards = courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
+        val dashboardCards =
+            courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
         dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
 
         val params = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
         val currentCourses = courseApi.firstPageCoursesByEnrollmentState("active", params).dataOrNull.orEmpty()
         val pastCourses = courseApi.firstPageCoursesByEnrollmentState("completed", params).dataOrNull.orEmpty()
-        val futureCourses = courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params).dataOrNull.orEmpty()
+        val futureCourses =
+            courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params).dataOrNull.orEmpty()
 
-        val allCourses = currentCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.CURRENT, index) } +
-            pastCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.PAST, index) } +
-            futureCourses.mapIndexed { index, course -> EditDashboardItemEntity(course, EnrollmentState.FUTURE, index) }
+        val allCourses = currentCourses.mapIndexed { index, course ->
+            EditDashboardItemEntity(
+                course,
+                EnrollmentState.CURRENT,
+                index
+            )
+        } +
+                pastCourses.mapIndexed { index, course ->
+                    EditDashboardItemEntity(
+                        course,
+                        EnrollmentState.PAST,
+                        index
+                    )
+                } +
+                futureCourses.mapIndexed { index, course ->
+                    EditDashboardItemEntity(
+                        course,
+                        EnrollmentState.FUTURE,
+                        index
+                    )
+                }
         editDashboardItemDao.updateEntities(allCourses)
 
         val courseIds = inputData.getLongArray(COURSE_IDS)
@@ -113,7 +141,54 @@ class OfflineSyncWorker @AssistedInject constructor(
         workManager.beginWith(courseWorkers)
             .enqueue()
 
+        while (true) {
+            kotlinx.coroutines.delay(1000)
+
+            val runningCourseProgresses = courseSyncProgressDao.findAll()
+            val runningFileProgresses = fileSyncProgressDao.findAll()
+
+            when {
+                runningCourseProgresses.all { it.progressState == ProgressState.COMPLETED } && runningFileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
+                    registerNotificationChannel(context)
+                    showNotification(runningCourseProgresses.sumOf { it.tabs.size } + runningFileProgresses.size)
+                    break
+                }
+
+                runningCourseProgresses.all { it.progressState.isFinished() } && runningFileProgresses.all { it.progressState.isFinished() } -> {
+                    break
+                }
+            }
+        }
+
         return Result.success()
+    }
+
+    private fun showNotification(itemCount: Int) {
+        val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+            .setContentTitle(context.getString(R.string.offlineContentSyncSuccessNotificationTitle))
+            .setContentText(
+                context.resources.getQuantityString(
+                    R.plurals.offlineContentSyncSuccessNotificationBody,
+                    itemCount,
+                    itemCount
+                )
+            )
+            .setAutoCancel(true)
+            .build()
+        notificationManager.notify(notificationId, notification)
+    }
+
+    private fun registerNotificationChannel(context: Context) {
+        if (notificationManager.notificationChannels.any { it.id == CHANNEL_ID }) return
+
+        val name = context.getString(R.string.notificationChannelNameSyncUpdates)
+        val description = context.getString(R.string.notificationChannelNameSyncUpdatesDescription)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(CHANNEL_ID, name, importance)
+        channel.description = description
+
+        notificationManager.createNotificationChannel(channel)
     }
 
     private suspend fun cleanupFiles(courseId: Long) {
@@ -125,5 +200,9 @@ class OfflineSyncWorker @AssistedInject constructor(
             File(localFile.path).delete()
             localFileDao.delete(localFile)
         }
+    }
+
+    companion object {
+        const val CHANNEL_ID = "syncChannel"
     }
 }
