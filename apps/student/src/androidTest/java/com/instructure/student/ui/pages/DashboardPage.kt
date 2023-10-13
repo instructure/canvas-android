@@ -258,6 +258,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
             .perform(click());
     }
 
+    fun openGlobalManageOfflineContentPage() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        onView(withText(containsString("Manage Offline Content")))
+            .perform(click());
+    }
+
     fun clickEditDashboard() {
         onView(withId(R.id.editDashboardTextView)).scrollTo().click()
     }
@@ -332,6 +338,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertOfflineIndicatorNotDisplayed() {
         onView(withId(R.id.offlineIndicator)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    }
+
+    fun assertCourseOfflineSyncIcon(courseName: String, visibility: Visibility) {
+        onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(visibility)))
     }
 }
 

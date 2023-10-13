@@ -29,13 +29,11 @@ class SubmissionFacade(
     private val groupDao: GroupDao,
     private val mediaCommentDao: MediaCommentDao,
     private val userDao: UserDao,
-    private val userApi: UserAPI.UsersInterface,
     private val submissionCommentDao: SubmissionCommentDao,
     private val attachmentDao: AttachmentDao,
     private val authorDao: AuthorDao,
     private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
 ) {
-    private val fetchedUsers = mutableMapOf<Long, User?>()
 
     suspend fun insertSubmission(submission: Submission) {
         submission.group?.let { group -> groupDao.insertOrUpdate(GroupEntity(group)) }
@@ -46,31 +44,8 @@ class SubmissionFacade(
             mediaCommentDao.insert(MediaCommentEntity(mediaComment, submission.id, submission.attempt))
         }
 
-        if (submission.userId != 0L) {
-            val user = submission.user
-                ?: fetchedUsers[submission.userId]
-                ?: userApi.getUser(
-                    submission.userId,
-                    RestParams(isForceReadFromNetwork = true)
-                ).dataOrNull
-
-            fetchedUsers[submission.userId] = user
-            if (user != null) {
-                userDao.insertOrUpdate(UserEntity(user))
-            }
-        }
-
-        if (submission.graderId != 0L) {
-            val grader = fetchedUsers[submission.graderId]
-                ?: userApi.getUser(
-                    submission.graderId,
-                    RestParams(isForceReadFromNetwork = true)
-                ).dataOrNull
-
-            if (grader != null) {
-                fetchedUsers[grader.id] = grader
-                userDao.insertOrUpdate(UserEntity(grader))
-            }
+        submission.user?.let {
+            userDao.insertOrUpdate(UserEntity(it))
         }
 
         submission.submissionComments.forEach { submissionComment ->

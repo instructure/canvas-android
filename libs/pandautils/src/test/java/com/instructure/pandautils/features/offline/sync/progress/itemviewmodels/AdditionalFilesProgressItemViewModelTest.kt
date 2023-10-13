@@ -23,13 +23,14 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.features.offline.sync.CourseProgress
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
-import com.instructure.pandautils.features.offline.sync.FileSyncData
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.AdditionalFilesProgressViewData
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.utils.toJson
 import io.mockk.every
 import io.mockk.mockk
@@ -48,7 +49,8 @@ class AdditionalFilesProgressItemViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val workManager: WorkManager = mockk(relaxed = true)
+    private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
+    private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
 
     private lateinit var itemViewModel: AdditionalFilesProgressItemViewModel
@@ -68,9 +70,11 @@ class AdditionalFilesProgressItemViewModelTest {
     @Test
     fun `Success if no files`() {
         val courseUUID = UUID.randomUUID()
-        val courseProgress = CourseProgress(1L, "Course", emptyMap(), additionalFileSyncData = emptyList())
-        val courseLiveData = MutableLiveData(createCourseWorkInfo(courseProgress, courseUUID, WorkInfo.State.SUCCEEDED))
-        every { workManager.getWorkInfoByIdLiveData(courseUUID) } returns courseLiveData
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), progressState = ProgressState.COMPLETED, additionalFilesStarted = true)
+        val courseLiveData = MutableLiveData(courseProgress)
+
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
 
         itemViewModel = createItemViewModel(courseUUID)
 
@@ -81,13 +85,17 @@ class AdditionalFilesProgressItemViewModelTest {
     fun `Add internal files sizes to total size when progress is starting`() {
         val courseUUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
-            FileSyncData(UUID.randomUUID().toString(), "File 1", 1000),
-            FileSyncData(UUID.randomUUID().toString(), "File 2", 2000),
-            FileSyncData(UUID.randomUUID().toString(), "File 3", 0)
+            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 1", 0, 1000, true, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 2", 0, 2000, true,  ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 0, 0, true, ProgressState.IN_PROGRESS)
         )
-        val courseProgress = CourseProgress(1L, "Course", emptyMap(), additionalFileSyncData = additionalFileSyncData)
-        val courseLiveData = MutableLiveData(createCourseWorkInfo(courseProgress, courseUUID, WorkInfo.State.RUNNING))
-        every { workManager.getWorkInfoByIdLiveData(courseUUID) } returns courseLiveData
+        val fileLiveData = MutableLiveData(additionalFileSyncData)
+
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), additionalFilesStarted = true)
+        val courseLiveData = MutableLiveData(courseProgress)
+
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L) } returns fileLiveData
 
         itemViewModel = createItemViewModel(courseUUID)
 
@@ -102,96 +110,64 @@ class AdditionalFilesProgressItemViewModelTest {
         val file2UUID = UUID.randomUUID()
         val file3UUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
-            FileSyncData(file1UUID.toString(), "File 1", 1000),
-            FileSyncData(file2UUID.toString(), "File 2", 2000),
-            FileSyncData(file3UUID.toString(), "File 3", 0)
-        )
-        val courseProgress = CourseProgress(1L, "Course", emptyMap(), additionalFileSyncData = additionalFileSyncData)
-        val courseLiveData = MutableLiveData(createCourseWorkInfo(courseProgress, courseUUID, WorkInfo.State.RUNNING))
-        every { workManager.getWorkInfoByIdLiveData(courseUUID) } returns courseLiveData
-
-        var fileWorkInfos = listOf(
-            createFileWorkInfo(
-                FileSyncProgress("File 1", 100, ProgressState.COMPLETED),
-                file1UUID,
-                WorkInfo.State.SUCCEEDED
-            ),
-            createFileWorkInfo(
-                FileSyncProgress("File 2", 50, ProgressState.IN_PROGRESS),
-                file2UUID,
-                WorkInfo.State.RUNNING
-            ),
-            createFileWorkInfo(
-                FileSyncProgress("File 3", 0, ProgressState.IN_PROGRESS, totalBytes = 0, externalFile = true),
-                file3UUID,
-                WorkInfo.State.RUNNING
-            )
+            FileSyncProgressEntity(file1UUID.toString(), 1L, "File 1", 0, 1000, true, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(file2UUID.toString(), 1L, "File 2", 0, 2000, true, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(file3UUID.toString(), 1L, "File 3", 0, 0, true, ProgressState.IN_PROGRESS),
         )
 
-        val fileLiveData = MutableLiveData(fileWorkInfos)
-        every { workManager.getWorkInfosLiveData(any()) } returns fileLiveData
+        val fileLiveData = MutableLiveData(additionalFileSyncData)
+        every { fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L) } returns fileLiveData
+
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), additionalFilesStarted = true, progressState = ProgressState.IN_PROGRESS)
+        val courseLiveData = MutableLiveData(courseProgress)
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
 
         itemViewModel = createItemViewModel(courseUUID)
 
         assertEquals(ProgressState.IN_PROGRESS, itemViewModel.data.state)
         assertEquals("3000 bytes", itemViewModel.data.totalSize)
 
-        fileWorkInfos = listOf(
-            createFileWorkInfo(
-                FileSyncProgress("File 1", 100, ProgressState.COMPLETED),
-                file1UUID,
-                WorkInfo.State.SUCCEEDED
-            ),
-            createFileWorkInfo(
-                FileSyncProgress("File 2", 100, ProgressState.COMPLETED),
-                file2UUID,
-                WorkInfo.State.SUCCEEDED
-            ),
-            createFileWorkInfo(
-                FileSyncProgress("File 3", 100, ProgressState.COMPLETED, totalBytes = 3000, externalFile = true),
-                file3UUID,
-                WorkInfo.State.SUCCEEDED
-            )
-        )
-        fileLiveData.postValue(fileWorkInfos)
+
+        fileLiveData.postValue(additionalFileSyncData.map { it.copy(
+            progress = 100,
+            progressState = ProgressState.COMPLETED,
+            fileSize = if (it.fileSize == 0L) 3000 else it.fileSize
+        ) })
 
         assertEquals(ProgressState.COMPLETED, itemViewModel.data.state)
         assertEquals("6000 bytes", itemViewModel.data.totalSize) // Already counted external files
     }
 
+    @Test
+    fun `Error state`() {
+        val courseUUID = UUID.randomUUID()
+        val file1UUID = UUID.randomUUID()
+        val file2UUID = UUID.randomUUID()
+        val file3UUID = UUID.randomUUID()
+        val additionalFileSyncData = listOf(
+            FileSyncProgressEntity(file1UUID.toString(), 1L, "File 1", 0, 1000, true, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(file2UUID.toString(), 1L, "File 2", 0, 2000, true, ProgressState.IN_PROGRESS),
+            FileSyncProgressEntity(file3UUID.toString(), 1L, "File 3", 0, 0, true, ProgressState.ERROR),
+        )
+
+        val fileLiveData = MutableLiveData(additionalFileSyncData)
+        every { fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L) } returns fileLiveData
+
+        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), additionalFilesStarted = true, progressState = ProgressState.IN_PROGRESS)
+        val courseLiveData = MutableLiveData(courseProgress)
+        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+
+        itemViewModel = createItemViewModel(courseUUID)
+
+        assertEquals(ProgressState.ERROR, itemViewModel.data.state)
+    }
+
     private fun createItemViewModel(uuid: UUID): AdditionalFilesProgressItemViewModel {
         return AdditionalFilesProgressItemViewModel(
-            AdditionalFilesProgressViewData(courseWorkerId = uuid.toString()),
-            workManager,
-            context
-        )
-    }
-
-    private fun createCourseWorkInfo(courseProgress: CourseProgress, uuid: UUID, state: WorkInfo.State): WorkInfo {
-        return WorkInfo(
-            uuid,
-            state,
-            if (state == WorkInfo.State.SUCCEEDED) workDataOf(CourseSyncWorker.OUTPUT to courseProgress.toJson()) else workDataOf(),
-            listOf(CourseSyncWorker.TAG),
-            workDataOf(
-                CourseSyncWorker.COURSE_PROGRESS to courseProgress.toJson()
-            ),
-            0,
-            0
-        )
-    }
-
-    private fun createFileWorkInfo(fileSyncProgress: FileSyncProgress, uuid: UUID, state: WorkInfo.State): WorkInfo {
-        return WorkInfo(
-            uuid,
-            state,
-            if (state == WorkInfo.State.SUCCEEDED) workDataOf(FileSyncWorker.OUTPUT to fileSyncProgress.toJson()) else workDataOf(),
-            listOf(FileSyncWorker.TAG),
-            workDataOf(
-                FileSyncWorker.PROGRESS to fileSyncProgress.toJson()
-            ),
-            0,
-            0
+            data = AdditionalFilesProgressViewData(courseWorkerId = uuid.toString()),
+            context = context,
+            fileSyncProgressDao = fileSyncProgressDao,
+            courseSyncProgressDao = courseSyncProgressDao
         )
     }
 }

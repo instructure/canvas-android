@@ -42,14 +42,13 @@ class SubmissionFacadeTest {
     private val groupDao: GroupDao = mockk(relaxed = true)
     private val mediaCommentDao: MediaCommentDao = mockk(relaxed = true)
     private val userDao: UserDao = mockk(relaxed = true)
-    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
     private val submissionCommentDao: SubmissionCommentDao = mockk(relaxed = true)
     private val attachmentDao: AttachmentDao = mockk(relaxed = true)
     private val authorDao: AuthorDao = mockk(relaxed = true)
     private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao = mockk(relaxed = true)
 
     private val facade = SubmissionFacade(
-        submissionDao, groupDao, mediaCommentDao, userDao, userApi,
+        submissionDao, groupDao, mediaCommentDao, userDao,
         submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
     )
 

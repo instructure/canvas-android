@@ -27,11 +27,11 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
 
 class BookmarkPage : BasePage() {
 
@@ -79,6 +79,6 @@ class BookmarkPage : BasePage() {
     fun deleteBookmark(bookmarkName: String) {
         clickOnMoreMenu(bookmarkName)
         onView(allOf(withId(R.id.title), withText("Delete"), isDisplayed())).click()
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        waitForView(anyOf(withText(android.R.string.ok), withText(R.string.ok))).click()
     }
 }

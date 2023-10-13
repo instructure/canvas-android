@@ -73,7 +73,6 @@ import com.instructure.pandautils.room.offline.entities.*
         SectionEntity::class,
         SubmissionDiscussionEntryEntity::class,
         SubmissionEntity::class,
-        SyncProgressEntity::class,
         SyncSettingsEntity::class,
         TabEntity::class,
         TermEntity::class,
@@ -91,7 +90,9 @@ import com.instructure.pandautils.room.offline.entities.*
         AttachmentEntity::class,
         MediaCommentEntity::class,
         AuthorEntity::class,
-        SubmissionCommentEntity::class
+        SubmissionCommentEntity::class,
+        CourseSyncProgressEntity::class,
+        FileSyncProgressEntity::class,
     ], version = 1
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
@@ -201,7 +202,9 @@ abstract class OfflineDatabase : RoomDatabase() {
 
     abstract fun localFileDao(): LocalFileDao
 
-    abstract fun syncProgressDao(): SyncProgressDao
-
     abstract fun editDashboardItemDao(): EditDashboardItemDao
+
+    abstract fun courseSyncProgressDao(): CourseSyncProgressDao
+
+    abstract fun fileSyncProgressDao(): FileSyncProgressDao
 }

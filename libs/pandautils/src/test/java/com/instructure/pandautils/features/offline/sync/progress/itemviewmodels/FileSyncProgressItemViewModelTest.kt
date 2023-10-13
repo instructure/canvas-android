@@ -20,14 +20,10 @@ package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.workDataOf
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
-import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.FileSyncProgressViewData
-import com.instructure.pandautils.utils.toJson
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -40,31 +36,31 @@ class FileSyncProgressItemViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val workManager: WorkManager = mockk(relaxed = true)
+    private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
 
     private lateinit var fileSyncProgressItemViewModel: FileSyncProgressItemViewModel
 
     @Test
     fun `Progress update`() {
         val uuid = UUID.randomUUID()
-        var fileProgress = createFileProgress(0, ProgressState.IN_PROGRESS)
-        val fileLiveData = MutableLiveData(createFileWorkInfo(fileProgress, uuid, WorkInfo.State.RUNNING))
+        var fileProgress = createFileProgress(uuid.toString(), 1L, 0, ProgressState.IN_PROGRESS)
+        val fileLiveData = MutableLiveData(fileProgress)
 
-        every { workManager.getWorkInfoByIdLiveData(uuid) } returns fileLiveData
+        every { fileSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns fileLiveData
 
         fileSyncProgressItemViewModel = createItemViewModel(uuid)
 
         assertEquals(0, fileSyncProgressItemViewModel.data.progress)
         assertEquals(ProgressState.IN_PROGRESS, fileSyncProgressItemViewModel.data.state)
 
-        fileProgress = createFileProgress(50, ProgressState.IN_PROGRESS)
-        fileLiveData.postValue(createFileWorkInfo(fileProgress, uuid, WorkInfo.State.RUNNING))
+        fileProgress = createFileProgress(uuid.toString(), 1L, 50, ProgressState.IN_PROGRESS)
+        fileLiveData.postValue(fileProgress)
 
         assertEquals(50, fileSyncProgressItemViewModel.data.progress)
         assertEquals(ProgressState.IN_PROGRESS, fileSyncProgressItemViewModel.data.state)
 
-        fileProgress = createFileProgress(100, ProgressState.COMPLETED)
-        fileLiveData.postValue(createFileWorkInfo(fileProgress, uuid, WorkInfo.State.SUCCEEDED))
+        fileProgress = createFileProgress(uuid.toString(), 1L, 100, ProgressState.COMPLETED)
+        fileLiveData.postValue(fileProgress)
 
         assertEquals(100, fileSyncProgressItemViewModel.data.progress)
         assertEquals(ProgressState.COMPLETED, fileSyncProgressItemViewModel.data.state)
@@ -79,29 +75,23 @@ class FileSyncProgressItemViewModelTest {
                 progress = 0,
                 state = ProgressState.IN_PROGRESS
             ),
-            workManager = workManager
+            fileSyncProgressDao = fileSyncProgressDao
         )
     }
 
-    private fun createFileProgress(progress: Int, state: ProgressState): FileSyncProgress {
-        return FileSyncProgress(
+    private fun createFileProgress(
+        workerId: String,
+        courseId: Long,
+        progress: Int,
+        state: ProgressState
+    ): FileSyncProgressEntity {
+        return FileSyncProgressEntity(
+            workerId = workerId,
+            courseId = courseId,
             fileName = "File",
             progress = progress,
+            fileSize = 1000,
             progressState = state
-        )
-    }
-
-    private fun createFileWorkInfo(fileSyncProgress: FileSyncProgress, uuid: UUID, state: WorkInfo.State): WorkInfo {
-        return WorkInfo(
-            uuid,
-            state,
-            if (state == WorkInfo.State.SUCCEEDED) workDataOf(FileSyncWorker.OUTPUT to fileSyncProgress.toJson()) else workDataOf(),
-            listOf(FileSyncWorker.TAG),
-            workDataOf(
-                FileSyncWorker.PROGRESS to fileSyncProgress.toJson()
-            ),
-            0,
-            0
         )
     }
 }

@@ -21,99 +21,63 @@ package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.offline.sync.CourseProgress
-import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
-import com.instructure.pandautils.features.offline.sync.FileSyncData
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
-import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.AdditionalFilesProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.fromJson
-import java.util.UUID
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 
 data class AdditionalFilesProgressItemViewModel(
     val data: AdditionalFilesProgressViewData,
-    private val workManager: WorkManager,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao,
     private val context: Context
 ) : ItemViewModel {
     override val layoutId = R.layout.item_additional_files_progress
 
     override val viewType = ViewType.COURSE_ADDITIONAL_FILES_PROGRESS.viewType
 
-    private var totalFilesProgressLiveData: LiveData<List<WorkInfo>>? = null
-
-    private val filesCounted = mutableSetOf<String>()
-    var totalSize = 0L
-        private set
-
-    private val totalFilesProgressObserver = Observer<List<WorkInfo>> {
-        if (it.all { it.state.isFinished }) {
-            data.state = ProgressState.COMPLETED
-            data.notifyPropertyChanged(BR.state)
-        }
-
-        it.forEach { workInfo ->
-            val progress: FileSyncProgress? = if (workInfo.state.isFinished) {
-                workInfo.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson()
-            } else {
-                workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson()
+    private val totalFilesProgressObserver = Observer<List<FileSyncProgressEntity>> {
+        when {
+            it.all { it.progressState == ProgressState.COMPLETED } -> {
+                data.state = ProgressState.COMPLETED
+                data.notifyPropertyChanged(BR.state)
             }
-            if (progress != null && progress.externalFile && !filesCounted.contains(progress.fileName) && progress.totalBytes > 0) {
-                filesCounted.add(progress.fileName)
-                totalSize += progress.totalBytes
+
+            it.any { it.progressState == ProgressState.ERROR } -> {
+                data.state = ProgressState.ERROR
+                data.notifyPropertyChanged(BR.state)
             }
         }
+
+        val totalSize = it.sumOf { it.fileSize }
+
         data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
     }
 
-    private val courseProgressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.courseWorkerId))
+    private val courseProgressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.courseWorkerId)
+    private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
-    private val courseProgressObserver = Observer<WorkInfo> {
-        val progress = if (it.state.isFinished) {
-            it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@Observer
-        } else {
-            it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
-        }
+    private val courseProgressObserver = Observer<CourseSyncProgressEntity?> { progress ->
+        if (progress == null) return@Observer
+        if (!progress.additionalFilesStarted) return@Observer
 
-        if (progress.additionalFileSyncData == null) return@Observer
-
-        if (progress.additionalFileSyncData.isEmpty()) {
-            data.state = ProgressState.COMPLETED
-            data.notifyPropertyChanged(BR.state)
-        } else {
-            startObserving(progress.additionalFileSyncData)
-        }
+        fileProgressLiveData = fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(progress.courseId)
+        fileProgressLiveData?.observeForever(totalFilesProgressObserver)
     }
 
     init {
         courseProgressLiveData.observeForever(courseProgressObserver)
     }
 
-    private fun startObserving(fileSyncData: List<FileSyncData>) {
-        val workerIds = mutableListOf<UUID>()
-        fileSyncData.forEach {
-            workerIds.add(UUID.fromString(it.workerId))
-            if (!filesCounted.contains(it.fileName) && it.fileSize > 0) {
-                filesCounted.add(it.fileName)
-                totalSize += it.fileSize
-            }
-        }
-
-        data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
-        totalFilesProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))
-        totalFilesProgressLiveData?.observeForever(totalFilesProgressObserver)
-    }
-
     override fun onCleared() {
         courseProgressLiveData.removeObserver(courseProgressObserver)
-        totalFilesProgressLiveData?.removeObserver(totalFilesProgressObserver)
+        fileProgressLiveData?.removeObserver(totalFilesProgressObserver)
     }
 }

@@ -21,80 +21,77 @@ package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.WorkQuery
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.GroupItemViewModel
-import com.instructure.pandautils.features.offline.sync.CourseProgress
-import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.FileSyncProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.FileTabProgressViewData
 import com.instructure.pandautils.features.offline.sync.progress.ViewType
-import com.instructure.pandautils.utils.fromJson
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import java.util.UUID
-import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.offline.sync.FileSyncData
-import com.instructure.pandautils.features.offline.sync.FileSyncProgress
-import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 
 data class FilesTabProgressItemViewModel(
     val data: FileTabProgressViewData,
-    private val workManager: WorkManager,
-    private val context: Context
+    private val context: Context,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) : GroupItemViewModel(collapsable = true, items = data.items, collapsed = true) {
     override val layoutId = R.layout.item_file_tab_progress
 
     override val viewType = ViewType.COURSE_FILE_TAB_PROGRESS.viewType
 
-    private var totalProgressLiveData: LiveData<List<WorkInfo>>? = null
+    private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
+    private val courseProgressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.courseWorkerId)
 
-    private val totalProgressObserver = Observer<List<WorkInfo>> {
-        var totalProgress = 0
-        if (it.all { it.state.isFinished }) {
+    private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> { progresses ->
+        if (progresses.isEmpty()) {
             data.state = ProgressState.COMPLETED
             data.notifyPropertyChanged(BR.state)
-        }
-
-        it.forEach { workInfo ->
-            val progress: FileSyncProgress? = if (workInfo.state.isFinished) {
-                workInfo.outputData.getString(FileSyncWorker.OUTPUT)?.fromJson()
-            } else {
-                workInfo.progress.getString(FileSyncWorker.PROGRESS)?.fromJson()
+        } else {
+            if (data.items.isEmpty()) {
+                createFileItems(progresses)
+                data.toggleable = true
+                data.notifyPropertyChanged(BR.toggleable)
             }
-            totalProgress += progress?.progress ?: 0
+
+            if (progresses.all { it.progressState.isFinished() }) {
+                when {
+                    progresses.all { it.progressState == ProgressState.COMPLETED } -> {
+                        data.state = ProgressState.COMPLETED
+                        data.notifyPropertyChanged(BR.state)
+                    }
+
+                    progresses.any { it.progressState == ProgressState.ERROR } -> {
+                        data.state = ProgressState.ERROR
+                        data.notifyPropertyChanged(BR.state)
+                    }
+                }
+            }
+
+            val totalProgress = progresses.sumOf { it.progress }
+
+            data.updateProgress(totalProgress / progresses.size)
         }
-        data.updateProgress(totalProgress / it.size)
     }
 
-    private val progressLiveData = workManager.getWorkInfoByIdLiveData(UUID.fromString(data.courseWorkerId))
+    private val courseProgressObserver = Observer<CourseSyncProgressEntity?> { progress ->
+        if (progress == null) return@Observer
+        if (progress.progressState == ProgressState.STARTING) return@Observer
 
-    private val progressObserver = Observer<WorkInfo> {
-        val progress = if (it.state.isFinished) {
-            it.outputData.getString(CourseSyncWorker.OUTPUT)?.fromJson<CourseProgress>() ?: return@Observer
-        } else {
-            it.progress.getString(CourseSyncWorker.COURSE_PROGRESS)?.fromJson<CourseProgress>() ?: return@Observer
-        }
-
-        if (progress.fileSyncData == null) return@Observer
-
-        if (progress.fileSyncData.isEmpty()) {
-            data.state = ProgressState.COMPLETED
-            data.notifyPropertyChanged(BR.state)
-        } else {
-            createFileItems(progress.fileSyncData)
-            data.toggleable = true
-            data.notifyPropertyChanged(BR.toggleable)
-        }
+        fileProgressLiveData = fileSyncProgressDao.findCourseFilesByCourseIdLiveData(progress.courseId)
+        fileProgressLiveData?.observeForever(fileProgressObserver)
     }
 
     init {
-        progressLiveData.observeForever(progressObserver)
+        courseProgressLiveData.observeForever(courseProgressObserver)
     }
 
-    private fun createFileItems(fileSyncData: List<FileSyncData>) {
+    private fun createFileItems(fileSyncData: List<FileSyncProgressEntity>) {
         val fileItems = mutableListOf<FileSyncProgressItemViewModel>()
         var totalSize = 0L
         val workerIds = mutableListOf<UUID>()
@@ -106,15 +103,12 @@ data class FilesTabProgressItemViewModel(
                     progress = 0,
                     workerId = it.workerId,
                 ),
-                workManager = workManager
+                fileSyncProgressDao = fileSyncProgressDao
             )
             workerIds.add(UUID.fromString(it.workerId))
             fileItems.add(item)
             totalSize += it.fileSize
         }
-
-        totalProgressLiveData = workManager.getWorkInfosLiveData(WorkQuery.fromIds(workerIds))
-        totalProgressLiveData?.observeForever(totalProgressObserver)
 
         data.items = fileItems
         items = data.items
@@ -122,7 +116,7 @@ data class FilesTabProgressItemViewModel(
     }
 
     override fun onCleared() {
-        progressLiveData.removeObserver(progressObserver)
-        totalProgressLiveData?.removeObserver(totalProgressObserver)
+        courseProgressLiveData.removeObserver(courseProgressObserver)
+        fileProgressLiveData?.removeObserver(fileProgressObserver)
     }
 }
