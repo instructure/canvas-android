@@ -24,9 +24,12 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -46,9 +49,19 @@ class OfflineContentRepositoryTest {
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk(relaxed = true)
     private val fileSyncSettingsDao: FileSyncSettingsDao = mockk(relaxed = true)
     private val courseFileSharedRepository: CourseFileSharedRepository = mockk(relaxed = true)
+    private val syncSettingsFacade: SyncSettingsFacade = mockk(relaxed = true)
+    private val localFileDao: LocalFileDao = mockk(relaxed = true)
+    private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
 
-    private val repository =
-        OfflineContentRepository(coursesApi, courseSyncSettingsDao, fileSyncSettingsDao, courseFileSharedRepository)
+    private val repository = OfflineContentRepository(
+        coursesApi,
+        courseSyncSettingsDao,
+        fileSyncSettingsDao,
+        courseFileSharedRepository,
+        syncSettingsFacade,
+        localFileDao,
+        fileSyncProgressDao
+    )
 
     @Test
     fun `Returns course`() = runTest {
