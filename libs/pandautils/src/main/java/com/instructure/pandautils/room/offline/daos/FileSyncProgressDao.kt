@@ -47,7 +47,10 @@ interface FileSyncProgressDao {
     fun findByCourseIdLiveData(courseId: Long): LiveData<List<FileSyncProgressEntity>>
 
     @Query("SELECT * FROM FileSyncProgressEntity WHERE courseId = :courseId")
-    fun findByCourseId(courseId: Long): List<FileSyncProgressEntity>
+    suspend fun findByCourseId(courseId: Long): List<FileSyncProgressEntity>
+
+    @Query("SELECT * FROM FileSyncProgressEntity WHERE fileId = :fileId")
+    suspend fun findByFileId(fileId: Long): FileSyncProgressEntity?
 
     @Query("SELECT * FROM FileSyncProgressEntity WHERE additionalFile = 1 AND courseId = :courseId")
     fun findAdditionalFilesByCourseIdLiveData(courseId: Long): LiveData<List<FileSyncProgressEntity>>

@@ -25,7 +25,9 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
@@ -37,7 +39,9 @@ class OfflineContentRepository(
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val courseFileSharedRepository: CourseFileSharedRepository,
-    private val syncSettingsFacade: SyncSettingsFacade
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val localFileDao: LocalFileDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) {
     suspend fun getCourse(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -95,5 +99,14 @@ class OfflineContentRepository(
 
     suspend fun getSyncSettings(): SyncSettingsEntity {
         return syncSettingsFacade.getSyncSettings()
+    }
+
+    suspend fun isFileSynced(fileId: Long): Boolean {
+        return localFileDao.existsById(fileId)
+    }
+
+    suspend fun getInProgressFileSize(fileId: Long): Long {
+        val file = fileSyncProgressDao.findByFileId(fileId) ?: return 0
+        return (file.fileSize * (file.progress / 100.0)).toLong()
     }
 }

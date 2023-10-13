@@ -18,12 +18,7 @@
 
 package com.instructure.pandautils.room.offline.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 
 @Dao
@@ -40,6 +35,9 @@ interface LocalFileDao {
 
     @Query("SELECT * FROM LocalFileEntity WHERE id = :id")
     suspend fun findById(id: Long): LocalFileEntity?
+
+    @Query("SELECT EXISTS(SELECT * FROM LocalFileEntity WHERE id = :id)")
+    suspend fun existsById(id: Long): Boolean
 
     @Query("SELECT * FROM LocalFileEntity WHERE id IN (:ids)")
     suspend fun findByIds(ids: List<Long>): List<LocalFileEntity>
