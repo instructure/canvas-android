@@ -34,20 +34,20 @@ import com.instructure.canvasapi2.models.Grades
 )
 class GradesEntity(
     @PrimaryKey
+    val enrollmentId: Long,
     val htmlUrl: String,
     val currentScore: Double?,
     val finalScore: Double?,
     val currentGrade: String?,
     val finalGrade: String?,
-    val enrollmentId: Long
 ) {
     constructor(grades: Grades, enrollmentId: Long) : this(
+        enrollmentId,
         grades.htmlUrl.orEmpty(),
         grades.currentScore,
         grades.finalScore,
         grades.currentGrade,
         grades.finalGrade,
-        enrollmentId
     )
 
     fun toApiModel() = Grades(

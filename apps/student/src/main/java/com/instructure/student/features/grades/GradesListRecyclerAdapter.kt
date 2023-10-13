@@ -206,7 +206,7 @@ open class GradesListRecyclerAdapter(
                         course.enrollments = mutableListOf(it)
                         courseGrade = course.getCourseGradeFromEnrollment(it, false)
                         val restrictQuantitativeData = course.settings?.restrictQuantitativeData ?: false
-                            adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, course.gradingScheme)
+                        adapterToGradesCallback?.notifyGradeChanged(courseGrade, restrictQuantitativeData, course.gradingScheme)
                     }
                 }
             } catch (e: CancellationException) {
