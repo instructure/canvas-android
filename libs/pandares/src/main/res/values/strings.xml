@@ -1466,6 +1466,7 @@
     <string name="editDashboardOfflineMode">You are offline</string>
     <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Offline Content Sync Success</string>
+    <string name="offlineContentSyncFailureNotificationTitle">Offline Content Sync Success</string>
     <string name="notificationChannelNameSyncUpdates">Offline Sync updates</string>
     <string name="notificationChannelNameSyncUpdatesDescription">Canvas notifications for offline sync updates.</string>
     <plurals name="offlineContentSyncSuccessNotificationBody">

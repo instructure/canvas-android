@@ -68,6 +68,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val apiPrefs: ApiPrefs,
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao,
+    private val syncRouter: SyncRouter
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -147,34 +148,43 @@ class OfflineSyncWorker @AssistedInject constructor(
             val runningCourseProgresses = courseSyncProgressDao.findAll()
             val runningFileProgresses = fileSyncProgressDao.findAll()
 
-            when {
-                runningCourseProgresses.all { it.progressState == ProgressState.COMPLETED } && runningFileProgresses.all { it.progressState == ProgressState.COMPLETED } -> {
-                    registerNotificationChannel(context)
-                    showNotification(runningCourseProgresses.sumOf { it.tabs.size } + runningFileProgresses.size)
-                    break
-                }
-
-                runningCourseProgresses.all { it.progressState.isFinished() } && runningFileProgresses.all { it.progressState.isFinished() } -> {
-                    break
-                }
+            if (runningCourseProgresses.all { it.progressState.isFinished() } && runningFileProgresses.all { it.progressState.isFinished() }) {
+                val itemCount = runningCourseProgresses.sumOf { it.tabs.size } + runningFileProgresses.size
+                val isSuccess =
+                    runningCourseProgresses.all { it.progressState == ProgressState.COMPLETED } && runningFileProgresses.all { it.progressState == ProgressState.COMPLETED }
+                showNotification(itemCount, isSuccess)
+                break
             }
         }
 
         return Result.success()
     }
 
-    private fun showNotification(itemCount: Int) {
+    private fun showNotification(itemCount: Int, success: Boolean) {
+        registerNotificationChannel(context)
+
+        val pendingIntent = syncRouter.routeToSyncProgress(context)
+
+        val title: String
+        val subtitle: String
+        if (success) {
+            title = context.getString(R.string.offlineContentSyncSuccessNotificationTitle)
+            subtitle = context.resources.getQuantityString(
+                R.plurals.offlineContentSyncSuccessNotificationBody,
+                itemCount,
+                itemCount
+            )
+        } else {
+            title = context.getString(R.string.offlineContentSyncFailureNotificationTitle)
+            subtitle = context.getString(R.string.syncProgress_syncErrorSubtitle)
+        }
+
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-            .setContentTitle(context.getString(R.string.offlineContentSyncSuccessNotificationTitle))
-            .setContentText(
-                context.resources.getQuantityString(
-                    R.plurals.offlineContentSyncSuccessNotificationBody,
-                    itemCount,
-                    itemCount
-                )
-            )
+            .setContentTitle(title)
+            .setContentText(subtitle)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
             .build()
         notificationManager.notify(notificationId, notification)
     }
