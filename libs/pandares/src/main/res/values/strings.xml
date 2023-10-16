@@ -1458,8 +1458,8 @@
     <string name="syncProgress_syncingOfflineContent">Syncing Offline Content</string>
     <string name="a11y_contentDescription_syncDashboardNotificationDismiss">Dismiss notification</string>
     <plurals name="syncProgress_itemCount">
-        <item quantity="one">%d item is syncing.</item>
-        <item quantity="other">%d items are syncing.</item>
+        <item quantity="one">%d course is syncing.</item>
+        <item quantity="other">%d courses are syncing.</item>
     </plurals>
     <string name="syncProgressAdditionalFiles">Course content images</string>
     <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
@@ -1470,7 +1470,7 @@
     <string name="notificationChannelNameSyncUpdates">Offline Sync updates</string>
     <string name="notificationChannelNameSyncUpdatesDescription">Canvas notifications for offline sync updates.</string>
     <plurals name="offlineContentSyncSuccessNotificationBody">
-        <item quantity="one">%d item has been synced.</item>
-        <item quantity="other">%d items have been synced.</item>
+        <item quantity="one">%d course has been synced.</item>
+        <item quantity="other">%d courses have been synced.</item>
     </plurals>
 </resources>

@@ -149,7 +149,7 @@ class OfflineSyncWorker @AssistedInject constructor(
             val runningFileProgresses = fileSyncProgressDao.findAll()
 
             if (runningCourseProgresses.all { it.progressState.isFinished() } && runningFileProgresses.all { it.progressState.isFinished() }) {
-                val itemCount = runningCourseProgresses.sumOf { it.tabs.size } + runningFileProgresses.size
+                val itemCount = runningCourseProgresses.size
                 val isSuccess =
                     runningCourseProgresses.all { it.progressState == ProgressState.COMPLETED } && runningFileProgresses.all { it.progressState == ProgressState.COMPLETED }
                 showNotification(itemCount, isSuccess)

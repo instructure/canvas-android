@@ -80,7 +80,7 @@ class AggregateProgressObserver(
         val downloadedSize = downloadedTabSize + downloadedFileSize.toLong()
         val progress = (downloadedSize.toDouble() / totalSize.toDouble() * 100.0).toInt()
 
-        val itemCount = courseProgresses.sumOf { it.tabs.size } + fileProgresses.size
+        val itemCount = courseProgresses.size
 
         val viewData = when {
             courseProgresses.all { it.progressState == ProgressState.STARTING } -> {
