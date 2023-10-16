@@ -3,6 +3,7 @@ package com.instructure.pandautils.features.discussion.router
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.orDefault
 
@@ -21,8 +22,9 @@ class DiscussionRouteHelper(
        return discussionRouteHelperRepository.getDiscussionTopicHeader(canvasContext, discussionTopicHeaderId, false)
        }
 
-    suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader): Pair<Group, Long>? {
-        val groups = discussionRouteHelperRepository.getAllGroups(discussionTopicHeader, ApiPrefs.user?.id.orDefault(), false)
+    suspend fun getDiscussionGroup(discussionTopicHeader: DiscussionTopicHeader, user: User? = null): Pair<Group, Long>? {
+        val userId = user?.id ?: ApiPrefs.user?.id.orDefault()
+        val groups = discussionRouteHelperRepository.getAllGroups(discussionTopicHeader, userId, false)
         for (group in groups) {
             val groupsMap = discussionTopicHeader.groupTopicChildren.associateBy({ it.groupId }, { it.id })
             if (groupsMap.contains(group.id) && groupsMap[group.id] != null) {

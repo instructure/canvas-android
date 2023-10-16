@@ -130,7 +130,7 @@ class DiscussionTopicHeaderFacadeTest {
         val result = facade.getDiscussionTopicHeaderById(discussionTopicHeaderId)!!
 
         Assert.assertEquals(discussionParticipant, result.author)
-        Assert.assertEquals(discussionTopicHeader.copy(offline = true), result)
+        Assert.assertEquals(discussionTopicHeader, result)
     }
 
     @Test
@@ -151,7 +151,7 @@ class DiscussionTopicHeaderFacadeTest {
         Assert.assertEquals(2, result.size)
         Assert.assertEquals(discussionParticipant, result[0].author)
         Assert.assertEquals(discussionParticipant, result[1].author)
-        Assert.assertEquals(discussionTopicHeader.copy(offline = true), result[0])
-        Assert.assertEquals(discussionTopicHeader2.copy(offline = true), result[1])
+        Assert.assertEquals(discussionTopicHeader, result[0])
+        Assert.assertEquals(discussionTopicHeader2, result[1])
     }
 }
