@@ -36,12 +36,11 @@ class DiscussionRouteHelperStudentLocalDataSourceTest {
             GroupTopicChild(1L, 1L)
         ))
         val groups = listOf(Group(1L))
-        val expected = Pair(groups[0], 1L)
 
         coEvery { groupFacade.getGroupsByUserId(any()) } returns groups
 
         val result = dataSource.getAllGroups(discussionTopicHeader, 1L, true)
 
-        TestCase.assertEquals(expected, result)
+        TestCase.assertEquals(groups, result)
     }
 }
