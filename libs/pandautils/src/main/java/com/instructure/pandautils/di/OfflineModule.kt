@@ -34,7 +34,8 @@ class OfflineModule {
 
     @Provides
     fun provideOfflineDatabase(offlineDatabaseProvider: DatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
-        return offlineDatabaseProvider.getDatabase(apiPrefs.user?.id)
+        val userId = if (apiPrefs.isMasquerading || apiPrefs.isMasqueradingFromQRCode) apiPrefs.masqueradeId else apiPrefs.user?.id
+        return offlineDatabaseProvider.getDatabase(userId)
     }
 
     @Provides

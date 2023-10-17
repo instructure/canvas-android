@@ -73,7 +73,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     protected var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: DiscussionListRecyclerAdapter
+    private var recyclerAdapter: DiscussionListRecyclerAdapter? = null
 
     private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var discussionRecyclerView: RecyclerView
@@ -116,7 +116,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                         setRefreshing(false)
                         // Show the FAB.
                         if (canPost) createNewDiscussion.show()
-                        if (recyclerAdapter.size() == 0) {
+                        if (recyclerAdapter == null || recyclerAdapter?.size() == 0) {
                             emptyView.let {
                                 if (isAnnouncement) {
                                     setEmptyView(
@@ -144,14 +144,16 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                     }
                 })
 
-            this@DiscussionListFragment.discussionRecyclerView = configureRecyclerView(
-                binding.root,
-                requireContext(),
-                recyclerAdapter,
-                R.id.swipeRefreshLayout,
-                R.id.emptyView,
-                R.id.discussionRecyclerView
-            )
+            recyclerAdapter?.let { adapter ->
+                this@DiscussionListFragment.discussionRecyclerView = configureRecyclerView(
+                    binding.root,
+                    requireContext(),
+                    adapter,
+                    R.id.swipeRefreshLayout,
+                    R.id.emptyView,
+                    R.id.discussionRecyclerView
+                )
+            }
             linearLayoutManager.orientation = RecyclerView.VERTICAL
 
             discussionRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -186,7 +188,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     override fun onConfigurationChanged(newConfig: Configuration) = with(binding) {
         super.onConfigurationChanged(newConfig)
-        if (recyclerAdapter.size() == 0) {
+        if (recyclerAdapter == null || recyclerAdapter?.size() == 0) {
             emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
@@ -219,7 +221,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
         super.onDestroyView()
         featureFlagsJob?.cancel()
         groupsJob?.cancel()
-        recyclerAdapter.cancel()
+        recyclerAdapter?.cancel()
     }
     //endregion
 
@@ -241,7 +243,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 } else {
                     emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
                 }
-                recyclerAdapter.searchQuery = query
+                recyclerAdapter?.searchQuery = query
             }
             ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext)
         }
@@ -272,7 +274,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onDiscussionUpdated(event: DiscussionUpdatedEvent) {
         event.once(javaClass.simpleName) {
-            recyclerAdapter.refresh()
+            recyclerAdapter?.refresh()
         }
     }
 
@@ -292,13 +294,13 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             // Gets written over on phones - added also to {@link #onRefreshFinished()}
             when {
                 it.pinned -> {
-                    recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.PINNED, it)
+                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.PINNED, it)
                 }
                 it.locked -> {
-                    recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS, it)
+                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.CLOSED_FOR_COMMENTS, it)
                 }
                 else -> {
-                    recyclerAdapter.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
+                    recyclerAdapter?.addOrUpdateItem(DiscussionListRecyclerAdapter.UNPINNED, it)
                 }
             }
         }
@@ -308,7 +310,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onDiscussionCreated(event: DiscussionCreatedEvent) {
         event.once(javaClass.simpleName) {
-            recyclerAdapter.refresh()
+            recyclerAdapter?.refresh()
         }
     }
     //endregion

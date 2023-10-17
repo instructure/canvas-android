@@ -68,14 +68,14 @@ class SyncProgressItemViewModelTest {
             totalSize = "10000 B",
             progress = 50,
             progressState = ProgressState.IN_PROGRESS,
-            itemCount = 10
+            itemCount = 1
         )
 
         itemViewModel.update(progressData)
 
         val expected = SyncProgressViewData(
             title = "Syncing Offline Content",
-            subtitle = "10 items are syncing",
+            subtitle = "1 items are syncing",
             progress = 50,
             progressState = ProgressState.IN_PROGRESS
         )
@@ -90,7 +90,7 @@ class SyncProgressItemViewModelTest {
             totalSize = "10000 B",
             progress = 50,
             progressState = ProgressState.ERROR,
-            itemCount = 10
+            itemCount = 1
         )
 
         itemViewModel.update(progressData)
@@ -112,7 +112,7 @@ class SyncProgressItemViewModelTest {
             totalSize = "10000 B",
             progress = 50,
             progressState = ProgressState.STARTING,
-            itemCount = 10
+            itemCount = 1
         )
 
         itemViewModel.update(progressData)
@@ -134,7 +134,7 @@ class SyncProgressItemViewModelTest {
             totalSize = "10000 B",
             progress = 50,
             progressState = ProgressState.COMPLETED,
-            itemCount = 10
+            itemCount = 1
         )
 
         itemViewModel.update(progressData)

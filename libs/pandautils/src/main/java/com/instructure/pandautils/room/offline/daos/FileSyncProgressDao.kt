@@ -58,6 +58,9 @@ interface FileSyncProgressDao {
     @Query("SELECT * FROM FileSyncProgressEntity")
     fun findAllLiveData(): LiveData<List<FileSyncProgressEntity>>
 
+    @Query("SELECT * FROM FileSyncProgressEntity")
+    suspend fun findAll(): List<FileSyncProgressEntity>
+
     @Query("DELETE FROM FileSyncProgressEntity")
     suspend fun deleteAll()
 }

@@ -126,6 +126,7 @@ class InterwebsToApplication : AppCompatActivity() {
                     val intent = if(tokenResponse.realUser != null && tokenResponse.user != null) {
                         // We need to set the masquerade request to the user (masqueradee), the real user it the admin user currently masquerading
                         ApiPrefs.isMasqueradingFromQRCode = true
+                        ApiPrefs.masqueradeId = tokenResponse.user!!.id
                         NavigationActivity.createIntent(this@InterwebsToApplication, tokenResponse.user!!.id)
                     } else {
                         // Log the analytics - only for real logins, not masquerading
