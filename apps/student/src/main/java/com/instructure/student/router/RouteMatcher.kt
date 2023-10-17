@@ -38,6 +38,7 @@ import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -424,6 +425,8 @@ object RouteMatcher : BaseRouteMatcher() {
         )
 
         routes.add(Route("/enroll/.*", RouteContext.DO_NOT_ROUTE))
+
+        routes.add(Route("/syncProgress", SyncProgressFragment::class.java))
 
         // Catch all (when nothing has matched, these take over)
         // Note: Catch all only happens with supported domains such as instructure.com
