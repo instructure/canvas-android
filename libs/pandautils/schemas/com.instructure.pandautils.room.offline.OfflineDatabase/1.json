@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a7c15b73a10b956c337474552c871005",
+    "identityHash": "b19db140fb6d7ea170405eca6521d018",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -2134,8 +2134,14 @@
       },
       {
         "tableName": "GradesEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`htmlUrl` TEXT NOT NULL, `currentScore` REAL, `finalScore` REAL, `currentGrade` TEXT, `finalGrade` TEXT, `enrollmentId` INTEGER NOT NULL, PRIMARY KEY(`htmlUrl`), FOREIGN KEY(`enrollmentId`) REFERENCES `EnrollmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`enrollmentId` INTEGER NOT NULL, `htmlUrl` TEXT NOT NULL, `currentScore` REAL, `finalScore` REAL, `currentGrade` TEXT, `finalGrade` TEXT, PRIMARY KEY(`enrollmentId`), FOREIGN KEY(`enrollmentId`) REFERENCES `EnrollmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
+          {
+            "fieldPath": "enrollmentId",
+            "columnName": "enrollmentId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "htmlUrl",
             "columnName": "htmlUrl",
@@ -2165,18 +2171,12 @@
             "columnName": "finalGrade",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "enrollmentId",
-            "columnName": "enrollmentId",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "htmlUrl"
+            "enrollmentId"
           ]
         },
         "indices": [],
@@ -5441,7 +5441,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a7c15b73a10b956c337474552c871005')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b19db140fb6d7ea170405eca6521d018')"
     ]
   }
 }
