@@ -13,7 +13,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.instructure.teacher.fragments
+package com.instructure.teacher.features.discussion
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
@@ -57,6 +57,17 @@ import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.events.DiscussionEntryEvent
 import com.instructure.teacher.factory.DiscussionsDetailsPresenterFactory
+import com.instructure.teacher.fragments.AssignmentSubmissionListFragment
+import com.instructure.teacher.fragments.CreateDiscussionFragment
+import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
+import com.instructure.teacher.fragments.DiscussionBottomSheetChoice
+import com.instructure.teacher.fragments.DiscussionBottomSheetMenuFragment
+import com.instructure.teacher.fragments.DiscussionsReplyFragment
+import com.instructure.teacher.fragments.DiscussionsUpdateFragment
+import com.instructure.teacher.fragments.DueDatesFragment
+import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
+import com.instructure.teacher.fragments.InternalWebViewFragment
+import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -437,7 +448,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if (isAccessibilityEnabled(requireContext()) && discussionTopicHeader.htmlUrl != null) {
             alternateViewButton.visibility = View.VISIBLE
             alternateViewButton.setOnClickListener {
-                val bundle = InternalWebViewFragment.makeBundle(discussionTopicHeader.htmlUrl!!, discussionTopicHeader.title!!, shouldAuthenticate = true)
+                val bundle = InternalWebViewFragment.makeBundle(
+                    discussionTopicHeader.htmlUrl!!,
+                    discussionTopicHeader.title!!,
+                    shouldAuthenticate = true
+                )
                 RouteMatcher.route(requireActivity(), Route(null, InternalWebViewFragment::class.java, canvasContext, bundle))
             }
         }

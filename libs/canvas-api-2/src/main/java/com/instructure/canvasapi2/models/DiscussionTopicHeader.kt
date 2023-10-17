@@ -116,10 +116,6 @@ data class DiscussionTopicHeader(
 
         @SerializedName("anonymous_state")
         var anonymousState: String? = null,
-
-        // Used to check if this discussion was converted from an offline entity so the details screen could fetch the whole discussion.
-        // We might not need this if we implement offline mode on the discussion details screen.
-        val offline: Boolean = false
 ) : CanvasModel<DiscussionTopicHeader>() {
     override val comparisonDate: Date?
         get() = if (lastReplyDate != null)

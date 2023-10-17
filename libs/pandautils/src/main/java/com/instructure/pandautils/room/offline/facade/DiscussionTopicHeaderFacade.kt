@@ -22,17 +22,23 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
 import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicHeaderEntity
+import com.instructure.pandautils.room.offline.entities.DiscussionTopicPermissionEntity
 
 class DiscussionTopicHeaderFacade(
     private val discussionTopicHeaderDao: DiscussionTopicHeaderDao,
     private val discussionParticipantDao: DiscussionParticipantDao,
+    private val discussionTopicPermissionDao: DiscussionTopicPermissionDao,
     private val offlineDatabase: OfflineDatabase
 ) {
     suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader, courseId: Long): Long {
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
-        return discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId))
+        val discussionTopicHeaderId = discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId, null))
+        val permissionId = discussionTopicHeader.permissions?.let { discussionTopicPermissionDao.insert(DiscussionTopicPermissionEntity(it, discussionTopicHeaderId)) }
+        discussionTopicHeaderDao.update(DiscussionTopicHeaderEntity(discussionTopicHeader.copy(id = discussionTopicHeaderId), courseId, permissionId))
+        return discussionTopicHeaderId
     }
 
     suspend fun insertDiscussions(discussionTopicHeaders: List<DiscussionTopicHeader>, courseId: Long, isAnnouncement: Boolean) {
@@ -43,18 +49,37 @@ class DiscussionTopicHeaderFacade(
                 .mapNotNull { it.author }
                 .map { DiscussionParticipantEntity(it) }
 
-            discussionParticipantDao.insertAll(authors)
+            discussionParticipantDao.upsertAll(authors)
 
-            val discussionEntities = discussionTopicHeaders.map { DiscussionTopicHeaderEntity(it, courseId) }
+            val discussionEntities =
+                discussionTopicHeaders.mapIndexed { index, discussionTopicHeader ->
+                    DiscussionTopicHeaderEntity(
+                        discussionTopicHeader,
+                        courseId,
+                        null
+                    )
+                }
             discussionTopicHeaderDao.insertAll(discussionEntities)
+
+            val permissionIds = discussionTopicHeaders.mapIndexed { index, discussionTopicHeader ->
+                discussionTopicHeader.permissions?.let {
+                    discussionTopicPermissionDao.insert(DiscussionTopicPermissionEntity(it, discussionEntities[index].id))
+                }
+            }
+
+            discussionEntities.forEachIndexed { index, entity ->
+                discussionTopicHeaderDao.update(entity.copy(permissionId = permissionIds[index]))
+            }
         }
     }
 
     suspend fun getDiscussionsForCourse(courseId: Long): List<DiscussionTopicHeader> {
-        return discussionTopicHeaderDao.findAllDiscussionsForCourse(courseId).map { discussionTopic ->
-            val authorEntity = discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
-            discussionTopic.toApiModel(authorEntity?.toApiModel())
-        }
+        return discussionTopicHeaderDao.findAllDiscussionsForCourse(courseId)
+            .map { discussionTopic ->
+                val authorEntity = discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
+                val permission = discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopic.id)
+                discussionTopic.toApiModel(author = authorEntity?.toApiModel(), permissions = permission?.toApiModel())
+            }
     }
 
     suspend fun getAnnouncementsForCourse(courseId: Long): List<DiscussionTopicHeader> {
@@ -73,6 +98,7 @@ class DiscussionTopicHeaderFacade(
 
     private suspend fun createDiscussionApiModel(discussionTopicHeaderEntity: DiscussionTopicHeaderEntity): DiscussionTopicHeader {
         val authorEntity = discussionTopicHeaderEntity.authorId?.let { discussionParticipantDao.findById(it) }
-        return discussionTopicHeaderEntity.toApiModel(authorEntity?.toApiModel())
+        val permission = discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopicHeaderEntity.id)
+        return discussionTopicHeaderEntity.toApiModel(authorEntity?.toApiModel(), permissions = permission?.toApiModel())
     }
 }
