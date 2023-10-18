@@ -1,10 +1,7 @@
 package com.instructure.pandautils.di
 
-import com.instructure.canvasapi2.managers.DiscussionManager
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
-import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,11 +13,8 @@ class DiscussionModule {
 
     @Provides
     fun provideDiscussionRouteHelper(
-        featuresManager: FeaturesManager,
-        featureFlagProvider: FeatureFlagProvider,
-        discussionManager: DiscussionManager,
-        groupManager: GroupManager
+        discussionRouteHelperRepository: DiscussionRouteHelperRepository
     ): DiscussionRouteHelper {
-        return DiscussionRouteHelper(featuresManager, featureFlagProvider, discussionManager, groupManager)
+        return DiscussionRouteHelper(discussionRouteHelperRepository)
     }
 }

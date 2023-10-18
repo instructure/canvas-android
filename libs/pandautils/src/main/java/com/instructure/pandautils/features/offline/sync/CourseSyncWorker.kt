@@ -72,6 +72,9 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
+    private val discussionTopicFacade: DiscussionTopicFacade,
+    private val groupApi: GroupAPI.GroupInterface,
+    private val groupFacade: GroupFacade,
     private val syncSettingsFacade: SyncSettingsFacade,
     private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
     private val courseSyncProgressDao: CourseSyncProgressDao,
@@ -367,6 +370,8 @@ class CourseSyncWorker @AssistedInject constructor(
 
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
 
+            fetchDiscussionDetails(discussions, courseId)
+
             updateTabSuccess(Tab.DISCUSSIONS_ID)
         } catch (e: Exception) {
             updateTabError(Tab.DISCUSSIONS_ID)
@@ -391,10 +396,43 @@ class CourseSyncWorker @AssistedInject constructor(
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
 
+            fetchDiscussionDetails(announcements, courseId)
+
             updateTabSuccess(Tab.ANNOUNCEMENTS_ID)
         } catch (e: Exception) {
             updateTabError(Tab.ANNOUNCEMENTS_ID)
         }
+    }
+
+    private suspend fun fetchDiscussionDetails(discussions: List<DiscussionTopicHeader>, courseId: Long) {
+        val params = RestParams(isForceReadFromNetwork = true)
+        discussions.forEach { discussionTopicHeader ->
+            val discussionTopic = discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, discussionTopicHeader.id, 1, params).dataOrNull
+            discussionTopic?.let {
+                val topic = parseDiscussionTopicHtml(it, courseId)
+                discussionTopicFacade.insertDiscussionTopic(discussionTopicHeader.id, topic)
+            }
+        }
+
+        val groups = groupApi.getFirstPageGroups(params).depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }.dataOrNull
+
+        groups?.let {
+            it.forEach { group ->
+                ApiPrefs.user?.let { groupFacade.insertGroupWithUser(group, it) }
+            }
+        }
+    }
+
+    private suspend fun parseDiscussionTopicHtml(discussionTopic: DiscussionTopic, courseId: Long): DiscussionTopic {
+        discussionTopic.views.map { parseHtmlContent(it.message, courseId) }
+        discussionTopic.views.map { it.replies?.map { parseDiscussionEntryHtml(it, courseId) } }
+        return  discussionTopic
+    }
+
+    private suspend fun parseDiscussionEntryHtml(discussionEntry: DiscussionEntry, courseId: Long): DiscussionEntry {
+        discussionEntry.message = parseHtmlContent(discussionEntry.message, courseId)
+        discussionEntry.replies?.map { parseDiscussionEntryHtml(it, courseId) }
+        return discussionEntry
     }
 
     private suspend fun fetchModules(courseId: Long) {
