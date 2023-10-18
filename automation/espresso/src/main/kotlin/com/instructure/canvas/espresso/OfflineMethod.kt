@@ -16,7 +16,7 @@
 
 package com.instructure.canvas.espresso
 
-// When applied to a test method, denotes that the test is the part of the Offline mode test case suite.
+// When applied to a test method, denotes that the method is specifically made for offline mode testing.
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class OfflineTest(val explanation: String = "")
+annotation class OfflineMethod()

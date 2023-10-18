@@ -29,6 +29,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.canvas.espresso.OfflineMethod
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
@@ -332,14 +333,17 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.uploadSubtitle) + withText(subTitle)).click()
     }
 
+    @OfflineMethod
     fun assertOfflineIndicatorDisplayed() {
         waitForView(withId(R.id.offlineIndicator)).assertDisplayed()
     }
 
+    @OfflineMethod
     fun assertOfflineIndicatorNotDisplayed() {
         onView(withId(R.id.offlineIndicator)).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
+    @OfflineMethod
     fun assertCourseOfflineSyncIcon(courseName: String, visibility: Visibility) {
         onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(visibility)))
     }

@@ -18,6 +18,7 @@
 package com.instructure.student.ui.pages.offline
 
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import com.instructure.canvas.espresso.OfflinePage
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -30,6 +31,7 @@ import com.instructure.espresso.page.withText
 import com.instructure.pandautils.R
 import com.instructure.student.ui.utils.ViewUtils
 
+@OfflinePage
 class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
