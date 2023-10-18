@@ -1427,7 +1427,8 @@
     <string name="offline_content_discard_dialog_message">If you choose to discard, the changes will not be saved.</string>
     <string name="offline_content_discard_dialog_positive">Discard</string>
     <string name="offline_content_sync_dialog_title">Sync Offline Content?</string>
-    <string name="offline_content_sync_dialog_message">This will download ~%s of content selected for offline availability. Try to stay connected to Wi-Fi during the sync. Otherwise, it might use cellular data which may result in extra fees from your data provider.</string>
+    <string name="offline_content_sync_dialog_message">This will sync ~%s content. It may result in additional charges from your data provider, if you are not connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">This will sync ~%s content while you are connected to a Wi-Fi network only.</string>
     <string name="offline_content_sync_dialog_positive">Sync</string>
     <string name="offline_content_sync_loading_title">Loading...</string>
     <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>

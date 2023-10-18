@@ -29,8 +29,4 @@ class FakeNetworkStateProvider(private val fakeLiveData: LiveData<Boolean>) : Ne
     override fun isOnline(): Boolean {
         return fakeLiveData.value.orDefault()
     }
-
-    override fun isWifiConnected(): Boolean {
-        return true
-    }
 }

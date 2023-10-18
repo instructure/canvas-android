@@ -31,9 +31,11 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.EmptyCourseContentViewModel
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -372,6 +374,29 @@ class OfflineContentViewModelTest {
         val dialog = viewModel.events.value?.peekContent() as OfflineContentAction.Dialog
         Assert.assertEquals("Title", dialog.title)
         Assert.assertEquals("Message 900 kb", dialog.message)
+        Assert.assertEquals("Sync", dialog.positive)
+    }
+
+    @Test
+    fun `Show wifi only dialog on sync click`() {
+        every { context.getString(R.string.offline_content_sync_dialog_title) } returns "Title"
+        every { context.getString(R.string.offline_content_sync_dialog_message_wifi_only, any()) } answers { "Wifi only message ${secondArg<Array<Any>>().first()}" }
+        every { context.getString(R.string.offline_content_sync_dialog_positive) } returns "Sync"
+        coEvery { offlineContentRepository.getSyncSettings() } returns SyncSettingsEntity(1L, true, SyncFrequency.DAILY, true)
+
+        mockkCourseViewModels()
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        viewModel.onSyncClicked()
+
+        assert(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Dialog)
+        val dialog = viewModel.events.value?.peekContent() as OfflineContentAction.Dialog
+        Assert.assertEquals("Title", dialog.title)
+        Assert.assertEquals("Wifi only message 900 kb", dialog.message)
         Assert.assertEquals("Sync", dialog.positive)
     }
 

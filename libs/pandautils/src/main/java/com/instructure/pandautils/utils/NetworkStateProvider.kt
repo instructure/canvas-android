@@ -28,7 +28,6 @@ import androidx.lifecycle.MutableLiveData
 interface NetworkStateProvider {
     val isOnlineLiveData: LiveData<Boolean>
     fun isOnline(): Boolean
-    fun isWifiConnected(): Boolean
 }
 
 class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
@@ -60,12 +59,5 @@ class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
 
     override fun isOnline(): Boolean {
         return _isOnlineLiveData.value.orDefault()
-    }
-
-    override fun isWifiConnected(): Boolean {
-        return connectivityManager
-            .getNetworkCapabilities(connectivityManager.activeNetwork)
-            ?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-            .orDefault()
     }
 }

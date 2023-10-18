@@ -380,15 +380,13 @@ class OfflineContentViewModel @Inject constructor(
     fun onSyncClicked() {
         viewModelScope.launch {
             val wifiOnly = offlineContentRepository.getSyncSettings().wifiOnly
-            val isWifiConnected = networkStateProvider.isWifiConnected()
-            //TODO multiple dialog types
-
             _events.postValue(
                 Event(
                     OfflineContentAction.Dialog(
                         context.getString(R.string.offline_content_sync_dialog_title),
                         context.getString(
-                            R.string.offline_content_sync_dialog_message,
+                            if (wifiOnly) R.string.offline_content_sync_dialog_message_wifi_only
+                            else R.string.offline_content_sync_dialog_message,
                             Formatter.formatShortFileSize(context, getSelectedSize())
                         ),
                         context.getString(R.string.offline_content_sync_dialog_positive),
