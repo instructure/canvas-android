@@ -92,6 +92,7 @@ dependencies:
   #webview_flutter: 0.3.19+5
   webview_flutter: # TODO: Remove once the flutter plugin supports baseUrl https://github.com/flutter/plugins/pull/2463
     path: ./plugins/webview_flutter
+  url_launcher: ^6.1.14
 
   # Routing
   fluro: ^2.0.5
