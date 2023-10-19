@@ -11,8 +11,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'dart:async';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/help_link.dart';
@@ -20,7 +18,6 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/help/help_screen_interactor.dart';
-import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
@@ -64,9 +61,6 @@ void main() {
 
     expect(find.text(l10n.helpShareLoveLabel), findsOneWidget);
     expect(find.text(l10n.helpShareLoveDescription), findsOneWidget);
-
-    expect(find.text(l10n.helpLegalLabel), findsOneWidget);
-    expect(find.text(l10n.helpLegalDescription), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('tapping search launches url', (tester) async {
@@ -145,19 +139,6 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(intentVeneer.launchEmailWithBody(l10n.featureRequestSubject, emailBody)).called(1);
-  });
-
-  testWidgetsWithAccessibilityChecks('tapping legal shows legal screen', (tester) async {
-    when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([]));
-
-    await tester.pumpWidget(TestApp(HelpScreen()));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text(l10n.helpLegalLabel));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(LegalScreen), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('tapping telephone link launches correct intent', (tester) async {
