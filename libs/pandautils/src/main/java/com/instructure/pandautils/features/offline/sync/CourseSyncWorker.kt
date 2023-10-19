@@ -37,6 +37,7 @@ import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.*
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
@@ -80,7 +81,8 @@ class CourseSyncWorker @AssistedInject constructor(
     private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao,
     private val htmlParser: HtmlParser,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    private val pageDao: PageDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseSyncProgressEntity
@@ -145,16 +147,16 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchUsers(courseId)
         }
 
-        if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
-            fetchModules(courseId)
-        } else {
-            moduleFacade.deleteAllByCourseId(courseId)
-        }
-
         if (courseSettings.isTabSelected(Tab.QUIZZES_ID)) {
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseId)
         } else if (!courseSettings.areAnyTabsSelected(setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID))) {
             quizDao.deleteAllByCourseId(courseId)
+        }
+
+        if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
+            fetchModules(courseId, courseSettingsWithFiles)
+        } else {
+            moduleFacade.deleteAllByCourseId(courseId)
         }
 
         syncAdditionalFiles(courseSettings, workContinuation)
@@ -435,7 +437,7 @@ class CourseSyncWorker @AssistedInject constructor(
         return discussionEntry
     }
 
-    private suspend fun fetchModules(courseId: Long) {
+    private suspend fun fetchModules(courseId: Long, courseSettings: CourseSyncSettingsWithFiles) {
         try {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val moduleObjects = moduleApi.getFirstPageModuleObjects(
@@ -456,9 +458,58 @@ class CourseSyncWorker @AssistedInject constructor(
 
             moduleFacade.insertModules(moduleObjects, courseId)
 
+            val moduleItems = moduleObjects.flatMap { it.items }
+            moduleItems.forEach {
+                when (it.type) {
+                    ModuleItem.Type.Page.name -> fetchPageModuleItem(courseId, it, params)
+                    ModuleItem.Type.File.name -> fetchFileModuleItem(courseId, it, params, courseSettings)
+                    ModuleItem.Type.Quiz.name -> fetchQuizModuleItem(courseId, it, params)
+                }
+            }
+
             updateTabSuccess(Tab.MODULES_ID)
         } catch (e: Exception) {
             updateTabError(Tab.MODULES_ID)
+        }
+    }
+
+    private suspend fun fetchPageModuleItem(
+        courseId: Long,
+        it: ModuleItem,
+        params: RestParams
+    ) {
+        if (it.pageUrl != null && pageDao.findByUrl(it.pageUrl!!) == null) {
+            val page = pageApi.getDetailedPage(courseId, it.pageUrl!!, params).dataOrNull
+            page?.body = parseHtmlContent(page?.body, courseId)
+            page?.let { pageFacade.insertPage(it, courseId) }
+        }
+    }
+
+    private suspend fun fetchFileModuleItem(
+        courseId: Long,
+        it: ModuleItem,
+        params: RestParams,
+        courseSettings: CourseSyncSettingsWithFiles
+    ) {
+        val fileId = it.contentId
+        if (courseSettings.files.any { it.id == fileId }) return // File is selected for sync so we don't need to sync it
+
+        val file = fileFolderApi.getCourseFile(courseId, it.contentId, params).dataOrNull
+        if (file?.id != null) {
+            additionalFileIdsToSync.add(file.id)
+            fileFolderDao.insert(FileFolderEntity(file))
+        }
+    }
+
+    private suspend fun fetchQuizModuleItem(
+        courseId: Long,
+        it: ModuleItem,
+        params: RestParams
+    ) {
+        if (quizDao.findById(it.contentId) == null) {
+            val quiz = quizApi.getQuiz(courseId, it.contentId, params).dataOrNull
+            quiz?.description = parseHtmlContent(quiz?.description, courseId)
+            quiz?.let { quizDao.insert(QuizEntity(it, courseId)) }
         }
     }
 
