@@ -53,7 +53,7 @@ class SyllabusRepositoryTest {
     @Before
     fun setUp() {
         repository = SyllabusRepository(syllabusLocalDataSource, syllabusNetworkDataSource, networkStateProvider, featureFlagProvider)
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
     }
 
     @Test

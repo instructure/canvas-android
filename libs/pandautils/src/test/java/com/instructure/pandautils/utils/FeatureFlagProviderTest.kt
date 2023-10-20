@@ -151,13 +151,26 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Check environment feature flag`() = runTest {
-        val featureFlags = mapOf("feature_flag" to true,
-            "feature_flag_2" to false)
+    fun `Offline is enabled when feature flag is enabled and not user is not elementary user`() = runTest {
+        every { apiPrefs.canvasForElementary } returns false
+        coEvery { environmentFeatureFlags.findByUserId(any()) } returns EnvironmentFeatureFlags(1L, mapOf(FEATURE_FLAG_OFFLINE to true))
 
-        coEvery { environmentFeatureFlags.findByUserId(any()) } returns EnvironmentFeatureFlags(1L, featureFlags)
+        assertTrue(featureFlagProvider.offlineEnabled())
+    }
 
-        assert(featureFlagProvider.checkEnvironmentFeatureFlag("feature_flag"))
-        assertFalse(featureFlagProvider.checkEnvironmentFeatureFlag("feature_flag_2"))
+    @Test
+    fun `Offline is disabled when feature flag is disabled`() = runTest {
+        every { apiPrefs.canvasForElementary } returns false
+        coEvery { environmentFeatureFlags.findByUserId(any()) } returns EnvironmentFeatureFlags(1L, mapOf(FEATURE_FLAG_OFFLINE to false))
+
+        assertFalse(featureFlagProvider.offlineEnabled())
+    }
+
+    @Test
+    fun `Offline is disabled when feature flag is enabled and not user is an elementary user`() = runTest {
+        every { apiPrefs.canvasForElementary } returns true
+        coEvery { environmentFeatureFlags.findByUserId(any()) } returns EnvironmentFeatureFlags(1L, mapOf(FEATURE_FLAG_OFFLINE to true))
+
+        assertFalse(featureFlagProvider.offlineEnabled())
     }
 }
