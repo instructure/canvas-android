@@ -82,11 +82,14 @@ class OfflineContentViewModel @Inject constructor(
 
     private fun loadData(isRefresh: Boolean = false) {
         _state.postValue(
-            ViewState.LoadingWithImage(
-                R.string.offline_content_sync_loading_title,
-                R.string.offline_content_sync_loading_message,
-                R.drawable.ic_panda_super_stars
-            )
+            if (isRefresh) {
+                ViewState.Loading
+            } else
+                ViewState.LoadingWithImage(
+                    R.string.offline_content_sync_loading_title,
+                    R.string.offline_content_sync_loading_message,
+                    R.drawable.ic_panda_super_stars
+                )
         )
         if (isRefresh) {
             _data.value = _data.value?.copy(courseItems = emptyList(), selectedCount = 0)

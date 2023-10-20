@@ -118,7 +118,7 @@ class OfflineContentViewModelTest {
 
         createViewModel()
 
-        assert(viewModel.data.value?.courseItems?.first()?.items?.first() is EmptyCourseContentViewModel)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.items?.first() is EmptyCourseContentViewModel)
     }
 
     @Test
@@ -322,8 +322,8 @@ class OfflineContentViewModelTest {
                 onCheckedChanged.invoke(true, this)
             }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -370,7 +370,7 @@ class OfflineContentViewModelTest {
 
         viewModel.onSyncClicked()
 
-        assert(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Dialog)
+        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Dialog)
         val dialog = viewModel.events.value?.peekContent() as OfflineContentAction.Dialog
         Assert.assertEquals("Title", dialog.title)
         Assert.assertEquals("Message 900 kb", dialog.message)
@@ -380,7 +380,12 @@ class OfflineContentViewModelTest {
     @Test
     fun `Show wifi only dialog on sync click`() {
         every { context.getString(R.string.offline_content_sync_dialog_title) } returns "Title"
-        every { context.getString(R.string.offline_content_sync_dialog_message_wifi_only, any()) } answers { "Wifi only message ${secondArg<Array<Any>>().first()}" }
+        every {
+            context.getString(
+                R.string.offline_content_sync_dialog_message_wifi_only,
+                any()
+            )
+        } answers { "Wifi only message ${secondArg<Array<Any>>().first()}" }
         every { context.getString(R.string.offline_content_sync_dialog_positive) } returns "Sync"
         coEvery { offlineContentRepository.getSyncSettings() } returns SyncSettingsEntity(1L, true, SyncFrequency.DAILY, true)
 
@@ -393,7 +398,7 @@ class OfflineContentViewModelTest {
 
         viewModel.onSyncClicked()
 
-        assert(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Dialog)
+        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Dialog)
         val dialog = viewModel.events.value?.peekContent() as OfflineContentAction.Dialog
         Assert.assertEquals("Title", dialog.title)
         Assert.assertEquals("Wifi only message 900 kb", dialog.message)
@@ -408,7 +413,7 @@ class OfflineContentViewModelTest {
 
         (viewModel.events.value?.getContentIfNotHandled() as OfflineContentAction.Dialog).positiveCallback.invoke()
 
-        assert(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Back)
+        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Back)
     }
 
     @Test
@@ -456,8 +461,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.SYLLABUS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.SYLLABUS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -470,8 +475,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.PAGES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.PAGES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -484,8 +489,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -498,8 +503,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.GRADES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.GRADES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     private fun createViewModel() {

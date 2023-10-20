@@ -18,7 +18,6 @@
 package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -131,19 +130,12 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
     override fun getFragment(): Fragment = this
 
     private fun showDialog(title: String, message: String, positive: String, positiveCallback: () -> Unit) {
-        val dialog = AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle(title)
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(positive) { _, _ -> positiveCallback() }
-            .create()
-
-        dialog.setOnShowListener {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
-        }
-
-        dialog.show()
+            .showThemed()
     }
 
     private fun updateMenuText(selectedCount: Int) {

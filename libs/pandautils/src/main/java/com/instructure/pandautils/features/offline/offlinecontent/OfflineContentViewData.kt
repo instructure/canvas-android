@@ -33,7 +33,7 @@ data class OfflineContentViewData(
 data class StorageInfo(val otherAppsReservedPercent: Int, val allAppsReservedPercent: Int, val storageInfoText: String)
 
 data class CourseItemViewData(
-    val fullContentSync: Boolean,
+    var fullContentSync: Boolean,
     val title: String,
     val size: String,
     val tabs: List<CourseTabViewModel>
@@ -50,7 +50,7 @@ data class CourseItemViewData(
 }
 
 data class CourseTabViewData(
-    val synced: Boolean,
+    var synced: Boolean,
     val title: String,
     val size: String,
     val files: List<FileViewModel>
@@ -67,7 +67,7 @@ data class CourseTabViewData(
 }
 
 data class FileViewData(
-    val checked: Boolean,
+    var checked: Boolean,
     val title: String,
     val size: String
 ) : BaseObservable()

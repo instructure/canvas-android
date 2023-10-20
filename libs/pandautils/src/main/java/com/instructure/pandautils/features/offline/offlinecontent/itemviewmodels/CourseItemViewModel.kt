@@ -38,6 +38,11 @@ data class CourseItemViewModel(
         if (cb.isPressed) onCheckedChanged(checked, this)
     }
 
+    fun onRowClicked() {
+        data.fullContentSync = !data.fullContentSync
+        onCheckedChanged(data.fullContentSync, this)
+    }
+
     override fun areContentsTheSame(other: ItemViewModel): Boolean {
         return other is CourseItemViewModel
                 && other.courseId == this.courseId

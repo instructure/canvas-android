@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
@@ -31,6 +32,7 @@ import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -187,20 +189,30 @@ class OfflineContentRepositoryTest {
 
     @Test
     fun `Get sync settings calls facade`() = runTest {
-        repository.getSyncSettings()
+        val expected = SyncSettingsEntity(1L, true, SyncFrequency.DAILY, true)
+        coEvery { syncSettingsFacade.getSyncSettings() } returns expected
+
+        val result = repository.getSyncSettings()
 
         coVerify(exactly = 1) { syncSettingsFacade.getSyncSettings() }
+        assertEquals(expected, result)
     }
 
     @Test
     fun `Is file synced calls dao`() = runTest {
-        repository.isFileSynced(1L)
+        val expected = true
+        coEvery { localFileDao.existsById(1L) } returns expected
+
+        val result = repository.isFileSynced(1L)
 
         coVerify(exactly = 1) { localFileDao.existsById(1L) }
+        assertEquals(expected, result)
     }
 
     @Test
     fun `Get in progress file size returns 0 when not found`() = runTest {
+        coEvery { fileSyncProgressDao.findByFileId(1L) } returns null
+
         val result = repository.getInProgressFileSize(1L)
 
         coVerify(exactly = 1) { fileSyncProgressDao.findByFileId(1L) }

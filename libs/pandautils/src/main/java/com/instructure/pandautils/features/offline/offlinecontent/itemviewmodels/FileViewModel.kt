@@ -38,6 +38,11 @@ data class FileViewModel(
         if (cb.isPressed) onCheckedChanged(checked, this)
     }
 
+    fun onRowClicked() {
+        data.checked = !data.checked
+        onCheckedChanged(data.checked, this)
+    }
+
     override fun areContentsTheSame(other: ItemViewModel): Boolean {
         return other is FileViewModel
                 && other.courseId == this.courseId
