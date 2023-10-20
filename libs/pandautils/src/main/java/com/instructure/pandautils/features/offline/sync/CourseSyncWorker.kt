@@ -22,6 +22,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
@@ -80,7 +81,8 @@ class CourseSyncWorker @AssistedInject constructor(
     private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao,
     private val htmlParser: HtmlParser,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseSyncProgressEntity
@@ -167,7 +169,7 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchSyllabus(courseId: Long) {
-        try {
+        fetchTab(Tab.SYLLABUS_ID) {
             val calendarEvents = fetchCalendarEvents(courseId)
             val assignmentEvents = fetchCalendarAssignments(courseId)
             val scheduleItems = mutableListOf<ScheduleItem>()
@@ -176,10 +178,6 @@ class CourseSyncWorker @AssistedInject constructor(
             scheduleItems.addAll(assignmentEvents)
 
             scheduleItemFacade.insertScheduleItems(scheduleItems, courseId)
-
-            updateTabSuccess(Tab.SYLLABUS_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.SYLLABUS_ID)
         }
     }
 
@@ -220,7 +218,7 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchPages(courseId: Long) {
-        try {
+        fetchTab(Tab.PAGES_ID) {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val pages = pageApi.getFirstPagePagesWithBody(courseId, CanvasContext.Type.COURSE.apiString, params)
                 .depaginate { nextUrl ->
@@ -232,15 +230,11 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             pageFacade.insertPages(pages, courseId)
-
-            updateTabSuccess(Tab.PAGES_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.PAGES_ID)
         }
     }
 
     private suspend fun fetchAssignments(courseId: Long) {
-        try {
+        fetchTab(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID) {
             val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
                 .depaginate { nextUrl ->
@@ -257,12 +251,6 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchQuizzes(assignmentGroups, courseId)
 
             assignmentFacade.insertAssignmentGroups(assignmentGroups, courseId)
-
-            updateTabSuccess(Tab.ASSIGNMENTS_ID)
-            updateTabSuccess(Tab.GRADES_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.ASSIGNMENTS_ID)
-            updateTabError(Tab.GRADES_ID)
         }
     }
 
@@ -286,16 +274,12 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchUsers(courseId: Long) {
-        try {
+        fetchTab(Tab.PEOPLE_ID) {
             val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val users = userApi.getFirstPagePeopleList(courseId, CanvasContext.Type.COURSE.apiString, restParams)
                 .depaginate { userApi.getNextPagePeopleList(it, restParams) }.dataOrThrow
 
             userFacade.insertUsers(users, courseId)
-
-            updateTabSuccess(Tab.PEOPLE_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.PEOPLE_ID)
         }
     }
 
@@ -315,7 +299,7 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchAllQuizzes(contextType: String, courseId: Long) {
-        try {
+        fetchTab(Tab.QUIZZES_ID) {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val quizzes = quizApi.getFirstPageQuizzesList(contextType, courseId, params).depaginate { nextUrl ->
                 quizApi.getNextPageQuizzesList(nextUrl, params)
@@ -326,22 +310,14 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             quizDao.deleteAndInsertAll(quizzes.map { QuizEntity(it, courseId) }, courseId)
-
-            updateTabSuccess(Tab.QUIZZES_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.QUIZZES_ID)
         }
     }
 
     private suspend fun fetchConferences(courseId: Long) {
-        try {
+        fetchTab(Tab.CONFERENCES_ID) {
             val conferences = getConferencesForContext(CanvasContext.emptyCourseContext(courseId), true).dataOrThrow
 
             conferenceFacade.insertConferences(conferences, courseId)
-
-            updateTabSuccess(Tab.CONFERENCES_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.CONFERENCES_ID)
         }
     }
 
@@ -358,7 +334,7 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchDiscussions(courseId: Long) {
-        try {
+        fetchTab(Tab.DISCUSSIONS_ID) {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val discussions =
                 discussionApi.getFirstPageDiscussionTopicHeaders(CanvasContext.Type.COURSE.apiString, courseId, params)
@@ -371,15 +347,11 @@ class CourseSyncWorker @AssistedInject constructor(
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
 
             fetchDiscussionDetails(discussions, courseId)
-
-            updateTabSuccess(Tab.DISCUSSIONS_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.DISCUSSIONS_ID)
         }
     }
 
     private suspend fun fetchAnnouncements(courseId: Long) {
-        try {
+        fetchTab(Tab.ANNOUNCEMENTS_ID) {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val announcements =
                 announcementApi.getFirstPageAnnouncementsList(CanvasContext.Type.COURSE.apiString, courseId, params)
@@ -395,12 +367,6 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
-
-            fetchDiscussionDetails(announcements, courseId)
-
-            updateTabSuccess(Tab.ANNOUNCEMENTS_ID)
-        } catch (e: Exception) {
-            updateTabError(Tab.ANNOUNCEMENTS_ID)
         }
     }
 
@@ -436,7 +402,7 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchModules(courseId: Long) {
-        try {
+        fetchTab(Tab.MODULES_ID) {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val moduleObjects = moduleApi.getFirstPageModuleObjects(
                 CanvasContext.Type.COURSE.apiString, courseId, params
@@ -455,10 +421,16 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             moduleFacade.insertModules(moduleObjects, courseId)
+        }
+    }
 
-            updateTabSuccess(Tab.MODULES_ID)
+    private suspend fun fetchTab(vararg tabIds: String, fetchBlock: suspend () -> Unit) {
+        try {
+            fetchBlock()
+            updateTabSuccess(*tabIds)
         } catch (e: Exception) {
-            updateTabError(Tab.MODULES_ID)
+            updateTabError(*tabIds)
+            firebaseCrashlytics.recordException(e)
         }
     }
 
@@ -695,21 +667,26 @@ class CourseSyncWorker @AssistedInject constructor(
         return newProgress
     }
 
-    private suspend fun updateTabError(tabId: String) {
+    private suspend fun updateTabError(vararg tabIds: String) {
         progress = progress.copy(
             tabs = progress.tabs.toMutableMap().apply {
-                val newProgress = get(tabId)?.copy(state = ProgressState.ERROR) ?: return@apply
-                put(tabId, newProgress)
+                tabIds.forEach { tabId ->
+                    val newProgress = get(tabId)?.copy(state = ProgressState.ERROR) ?: return@apply
+                    put(tabId, newProgress)
+                }
+
             },
         )
         updateProgress()
     }
 
-    private suspend fun updateTabSuccess(tabId: String) {
+    private suspend fun updateTabSuccess(vararg tabIds: String) {
         progress = progress.copy(
             tabs = progress.tabs.toMutableMap().apply {
-                val newProgress = get(tabId)?.copy(state = ProgressState.COMPLETED) ?: return@apply
-                put(tabId, newProgress)
+                tabIds.forEach { tabId ->
+                    val newProgress = get(tabId)?.copy(state = ProgressState.COMPLETED) ?: return@apply
+                    put(tabId, newProgress)
+                }
             },
         )
         updateProgress()
@@ -717,8 +694,6 @@ class CourseSyncWorker @AssistedInject constructor(
 
     companion object {
         const val COURSE_ID = "course_id"
-        const val COURSE_PROGRESS = "courseProgress"
-        const val OUTPUT = "output"
         const val TAG = "CourseSyncWorker"
 
         fun createOnTimeWork(courseId: Long, wifiOnly: Boolean): OneTimeWorkRequest {
