@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
@@ -23,6 +22,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../../utils/veneers/android_intent_veneer.dart';
 
 class TermsOfUseScreen extends StatefulWidget {
   final String? accountId;
@@ -79,10 +79,19 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
               onWebViewCreated: (controller) {
                 controller.loadHtml(snapshot.data!.content!, horizontalPadding: 16);
               },
+              navigationDelegate: _handleNavigation
             );
           },
         ),
       ),
     );
+  }
+
+  NavigationDecision _handleNavigation(NavigationRequest request) {
+    if (request.url.contains("mailto:")) {
+      locator<AndroidIntentVeneer>().launchEmail(request.url);
+      return NavigationDecision.prevent;
+    }
+    return NavigationDecision.navigate;
   }
 }
