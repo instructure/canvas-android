@@ -21,8 +21,8 @@ import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../../utils/veneers/android_intent_veneer.dart';
 
 class TermsOfUseScreen extends StatefulWidget {
   final String? accountId;
@@ -89,7 +89,7 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
 
   NavigationDecision _handleNavigation(NavigationRequest request) {
     if (request.url.contains("mailto:")) {
-      launchUrl(Uri(scheme: "mailto", path: request.url));
+      locator<AndroidIntentVeneer>().launchEmail(request.url);
       return NavigationDecision.prevent;
     }
     return NavigationDecision.navigate;
