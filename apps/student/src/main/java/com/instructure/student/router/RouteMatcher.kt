@@ -38,6 +38,7 @@ import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
@@ -49,6 +50,7 @@ import com.instructure.student.activity.*
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
+import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.list.FileListFragment
@@ -424,6 +426,8 @@ object RouteMatcher : BaseRouteMatcher() {
         )
 
         routes.add(Route("/enroll/.*", RouteContext.DO_NOT_ROUTE))
+
+        routes.add(Route("/syncProgress", SyncProgressFragment::class.java))
 
         // Catch all (when nothing has matched, these take over)
         // Note: Catch all only happens with supported domains such as instructure.com

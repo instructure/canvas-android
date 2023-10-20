@@ -40,6 +40,15 @@ class PageFacade(
         }
     }
 
+    suspend fun insertPage(page: Page, courseId: Long) {
+        offlineDatabase.withTransaction {
+            pageDao.insert(PageEntity(page, courseId))
+            page.lockInfo?.let {
+                lockedInfoFacade.insertLockInfoForPage(it, page.id)
+            }
+        }
+    }
+
     suspend fun getFrontPage(courseId: Long): Page? {
         return pageDao.getFrontPage(courseId)?.let { createFullApiModel(it) }
     }

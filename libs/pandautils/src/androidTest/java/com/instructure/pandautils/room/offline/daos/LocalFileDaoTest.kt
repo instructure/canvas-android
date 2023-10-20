@@ -30,7 +30,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import java.util.*
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 class LocalFileDaoTest {
@@ -114,6 +114,22 @@ class LocalFileDaoTest {
         val result = localFileDao.findRemovedFiles(1L, listOf(1L, 3L, 4L))
 
         assertEquals(listOf(files[1]), result)
+    }
+
+    @Test
+    fun testFindByCourseId() = runTest {
+        val files = listOf(
+            LocalFileEntity(3L, 1L, Date(), ""),
+            LocalFileEntity(4L, 2L, Date(), "")
+        )
+
+        files.forEach {
+            localFileDao.insert(it)
+        }
+
+        val result = localFileDao.findByCourseId(1L)
+
+        assertEquals(files.take(1), result)
     }
 
     @Test

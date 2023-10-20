@@ -19,9 +19,9 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
 @Entity(
-    primaryKeys = ["groupId", "userId"],
     foreignKeys = [
         ForeignKey(
             entity = GroupEntity::class,
@@ -38,6 +38,10 @@ import androidx.room.ForeignKey
     ]
 )
 data class GroupUserEntity(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
     val groupId: Long,
     val userId: Long
-)
+) {
+    constructor(groupId: Long, userId: Long) : this(0, groupId, userId)
+}

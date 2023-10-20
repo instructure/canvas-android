@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.di
 
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
@@ -34,7 +33,8 @@ class OfflineModule {
 
     @Provides
     fun provideOfflineDatabase(offlineDatabaseProvider: DatabaseProvider, apiPrefs: ApiPrefs): OfflineDatabase {
-        return offlineDatabaseProvider.getDatabase(apiPrefs.user?.id)
+        val userId = if (apiPrefs.isMasquerading || apiPrefs.isMasqueradingFromQRCode) apiPrefs.masqueradeId else apiPrefs.user?.id
+        return offlineDatabaseProvider.getDatabase(userId)
     }
 
     @Provides
@@ -279,9 +279,10 @@ class OfflineModule {
     fun provideDiscussionTopicHeaderFacade(
         discussionTopicHeaderDao: DiscussionTopicHeaderDao,
         discussionParticipantDao: DiscussionParticipantDao,
-        offlineDatabase: OfflineDatabase
+        discussionTopicPermissionDao: DiscussionTopicPermissionDao,
+        offlineDatabase: OfflineDatabase,
     ): DiscussionTopicHeaderFacade {
-        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, offlineDatabase)
+        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao, offlineDatabase)
     }
 
     @Provides
@@ -482,4 +483,43 @@ class OfflineModule {
     fun provideFileSyncProgressDao(appDatabase: OfflineDatabase): FileSyncProgressDao {
         return appDatabase.fileSyncProgressDao()
     }
+
+    @Provides
+    fun provideDiscussionEntryDao(appDatabase: OfflineDatabase): DiscussionEntryDao {
+        return appDatabase.discussionEntryDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicDao(appDatabase: OfflineDatabase): DiscussionTopicDao {
+        return appDatabase.discussionTopicDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicPermissionDao(appDatabase: OfflineDatabase): DiscussionTopicPermissionDao {
+        return appDatabase.discussionTopicPermissionDao()
+    }
+
+    @Provides
+    fun provideGroupUserDao(appDatabase: OfflineDatabase): GroupUserDao {
+        return appDatabase.groupUserDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicFacade(
+        discussionEntryDao: DiscussionEntryDao,
+        discussionParticipantDao: DiscussionParticipantDao,
+        discussionTopicDao: DiscussionTopicDao,
+    ): DiscussionTopicFacade {
+        return DiscussionTopicFacade(discussionTopicDao, discussionParticipantDao, discussionEntryDao)
+    }
+
+    @Provides
+    fun provideGroupFacade(
+        groupUserDao: GroupUserDao,
+        groupDao: GroupDao,
+        userDao: UserDao,
+    ): GroupFacade {
+        return GroupFacade(groupUserDao, groupDao, userDao)
+    }
+
 }

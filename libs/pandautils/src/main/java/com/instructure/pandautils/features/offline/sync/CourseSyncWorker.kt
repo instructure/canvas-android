@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.offline.offlinecontent.CourseFileShar
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.room.offline.facade.*
+import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
@@ -67,12 +68,16 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val localFileDao: LocalFileDao,
     private val workManager: WorkManager,
+    private val discussionTopicFacade: DiscussionTopicFacade,
+    private val groupApi: GroupAPI.GroupInterface,
+    private val groupFacade: GroupFacade,
     private val syncSettingsFacade: SyncSettingsFacade,
     private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
     private val courseSyncProgressDao: CourseSyncProgressDao,
     private val fileSyncProgressDao: FileSyncProgressDao,
     private val htmlParser: HtmlParser,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    private val pageDao: PageDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseSyncProgressEntity
@@ -137,16 +142,16 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchUsers(courseId)
         }
 
-        if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
-            fetchModules(courseId)
-        } else {
-            moduleFacade.deleteAllByCourseId(courseId)
-        }
-
         if (courseSettings.isTabSelected(Tab.QUIZZES_ID)) {
             fetchAllQuizzes(CanvasContext.Type.COURSE.apiString, courseId)
         } else if (!courseSettings.areAnyTabsSelected(setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID))) {
             quizDao.deleteAllByCourseId(courseId)
+        }
+
+        if (courseSettings.isTabSelected(Tab.MODULES_ID)) {
+            fetchModules(courseId, courseSettingsWithFiles)
+        } else {
+            moduleFacade.deleteAllByCourseId(courseId)
         }
 
         syncAdditionalFiles(courseSettings, workContinuation)
@@ -362,6 +367,8 @@ class CourseSyncWorker @AssistedInject constructor(
 
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
 
+            fetchDiscussionDetails(discussions, courseId)
+
             updateTabSuccess(Tab.DISCUSSIONS_ID)
         } catch (e: Exception) {
             updateTabError(Tab.DISCUSSIONS_ID)
@@ -386,13 +393,46 @@ class CourseSyncWorker @AssistedInject constructor(
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
 
+            fetchDiscussionDetails(announcements, courseId)
+
             updateTabSuccess(Tab.ANNOUNCEMENTS_ID)
         } catch (e: Exception) {
             updateTabError(Tab.ANNOUNCEMENTS_ID)
         }
     }
 
-    private suspend fun fetchModules(courseId: Long) {
+    private suspend fun fetchDiscussionDetails(discussions: List<DiscussionTopicHeader>, courseId: Long) {
+        val params = RestParams(isForceReadFromNetwork = true)
+        discussions.forEach { discussionTopicHeader ->
+            val discussionTopic = discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, discussionTopicHeader.id, 1, params).dataOrNull
+            discussionTopic?.let {
+                val topic = parseDiscussionTopicHtml(it, courseId)
+                discussionTopicFacade.insertDiscussionTopic(discussionTopicHeader.id, topic)
+            }
+        }
+
+        val groups = groupApi.getFirstPageGroups(params).depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }.dataOrNull
+
+        groups?.let {
+            it.forEach { group ->
+                ApiPrefs.user?.let { groupFacade.insertGroupWithUser(group, it) }
+            }
+        }
+    }
+
+    private suspend fun parseDiscussionTopicHtml(discussionTopic: DiscussionTopic, courseId: Long): DiscussionTopic {
+        discussionTopic.views.map { parseHtmlContent(it.message, courseId) }
+        discussionTopic.views.map { it.replies?.map { parseDiscussionEntryHtml(it, courseId) } }
+        return  discussionTopic
+    }
+
+    private suspend fun parseDiscussionEntryHtml(discussionEntry: DiscussionEntry, courseId: Long): DiscussionEntry {
+        discussionEntry.message = parseHtmlContent(discussionEntry.message, courseId)
+        discussionEntry.replies?.map { parseDiscussionEntryHtml(it, courseId) }
+        return discussionEntry
+    }
+
+    private suspend fun fetchModules(courseId: Long, courseSettings: CourseSyncSettingsWithFiles) {
         try {
             val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
             val moduleObjects = moduleApi.getFirstPageModuleObjects(
@@ -413,9 +453,58 @@ class CourseSyncWorker @AssistedInject constructor(
 
             moduleFacade.insertModules(moduleObjects, courseId)
 
+            val moduleItems = moduleObjects.flatMap { it.items }
+            moduleItems.forEach {
+                when (it.type) {
+                    ModuleItem.Type.Page.name -> fetchPageModuleItem(courseId, it, params)
+                    ModuleItem.Type.File.name -> fetchFileModuleItem(courseId, it, params, courseSettings)
+                    ModuleItem.Type.Quiz.name -> fetchQuizModuleItem(courseId, it, params)
+                }
+            }
+
             updateTabSuccess(Tab.MODULES_ID)
         } catch (e: Exception) {
             updateTabError(Tab.MODULES_ID)
+        }
+    }
+
+    private suspend fun fetchPageModuleItem(
+        courseId: Long,
+        it: ModuleItem,
+        params: RestParams
+    ) {
+        if (it.pageUrl != null && pageDao.findByUrl(it.pageUrl!!) == null) {
+            val page = pageApi.getDetailedPage(courseId, it.pageUrl!!, params).dataOrNull
+            page?.body = parseHtmlContent(page?.body, courseId)
+            page?.let { pageFacade.insertPage(it, courseId) }
+        }
+    }
+
+    private suspend fun fetchFileModuleItem(
+        courseId: Long,
+        it: ModuleItem,
+        params: RestParams,
+        courseSettings: CourseSyncSettingsWithFiles
+    ) {
+        val fileId = it.contentId
+        if (courseSettings.files.any { it.id == fileId }) return // File is selected for sync so we don't need to sync it
+
+        val file = fileFolderApi.getCourseFile(courseId, it.contentId, params).dataOrNull
+        if (file?.id != null) {
+            additionalFileIdsToSync.add(file.id)
+            fileFolderDao.insert(FileFolderEntity(file))
+        }
+    }
+
+    private suspend fun fetchQuizModuleItem(
+        courseId: Long,
+        it: ModuleItem,
+        params: RestParams
+    ) {
+        if (quizDao.findById(it.contentId) == null) {
+            val quiz = quizApi.getQuiz(courseId, it.contentId, params).dataOrNull
+            quiz?.description = parseHtmlContent(quiz?.description, courseId)
+            quiz?.let { quizDao.insert(QuizEntity(it, courseId)) }
         }
     }
 

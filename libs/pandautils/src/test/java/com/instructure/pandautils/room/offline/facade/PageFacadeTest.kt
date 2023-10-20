@@ -76,6 +76,17 @@ class PageFacadeTest {
     }
 
     @Test
+    fun `Calling insertPage should insert page and related entities`() = runTest {
+        val lockInfo = LockInfo(unlockAt = Date().toApiString())
+        val page = Page(id = 1L, title = "Page 1", lockInfo = lockInfo)
+
+        facade.insertPage(page, 1L)
+
+        coVerify { pageDao.insert(PageEntity(page, 1L)) }
+        coVerify { lockInfoFacade.insertLockInfoForPage(lockInfo, 1L) }
+    }
+
+    @Test
     fun `Calling findByCourseId should return pages with the specified course ID`() = runTest {
         val lockInfo = LockInfo(unlockAt = Date().toApiString())
         val pages = listOf(Page(id = 1L, title = "Page 1", lockInfo = lockInfo), Page(id = 2L, title = "Page 2", lockInfo = lockInfo))

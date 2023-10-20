@@ -1,4 +1,4 @@
-package com.instructure.teacher.features.discussion
+package com.instructure.teacher.features.discussion.routing
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
@@ -8,7 +8,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.teacher.activities.FullscreenActivity
-import com.instructure.teacher.fragments.DiscussionsDetailsFragment
+import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherDiscussionRouter(private val activity: FragmentActivity) : DiscussionRouter {
@@ -21,7 +21,10 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
         val route = when {
             isRedesign -> DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeader)
             else -> {
-                val bundle = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, isAnnouncement || discussionTopicHeader.announcement)
+                val bundle = DiscussionsDetailsFragment.makeBundle(
+                    discussionTopicHeader,
+                    isAnnouncement || discussionTopicHeader.announcement
+                )
                 Route(null, DiscussionsDetailsFragment::class.java, canvasContext, bundle)
             }
         }

@@ -23,8 +23,10 @@ import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -39,6 +41,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 class ModuleProgressionRepositoryTest {
@@ -48,8 +51,9 @@ class ModuleProgressionRepositoryTest {
     private val networkStateProvider: NetworkStateProvider = mockk()
     private val featureFlagProvider: FeatureFlagProvider = mockk()
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
+    private val localFileDao: LocalFileDao = mockk()
 
-    private val repository = ModuleProgressionRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao)
+    private val repository = ModuleProgressionRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, courseSyncSettingsDao, localFileDao)
 
     @Before
     fun setup() = runTest {
@@ -210,41 +214,20 @@ class ModuleProgressionRepositoryTest {
 
     @Test
     fun `getSyncedFileIds returns only the synced file ids from dao`() = runTest {
-        val files = listOf(
-            FileSyncSettingsEntity(
-                id = 1,
-                courseId = 1,
-                url = "url 1",
-                fileName = "File 1",
-            ),
-            FileSyncSettingsEntity(
-                id = 2,
-                courseId = 1,
-                url = "url 2",
-                fileName = "File 2",
-            ),
-        )
-
-        val courseSyncSettingsEntity = CourseSyncSettingsEntity(1, "Course name", false, mapOf(
-            "Page" to true,
-            "Quiz" to false,
-            "Assignment" to true,
-            "Files" to false
-        ))
-        
-        coEvery { courseSyncSettingsDao.findWithFilesById(1) } returns CourseSyncSettingsWithFiles(
-            courseSyncSettings = courseSyncSettingsEntity,
-            files = files,
+        coEvery { localFileDao.findByCourseId(1) } returns listOf(
+            LocalFileEntity(1, 1, Date(), "path"), LocalFileEntity(2, 1, Date(), "path2")
         )
 
         val result = repository.getSyncedFileIds(1)
 
-        Assert.assertEquals(files.map { it.id }, result)
+        Assert.assertEquals(2, result.size)
+        Assert.assertTrue(result.contains(1))
+        Assert.assertTrue(result.contains(2))
     }
 
     @Test
-    fun `getSyncedFileIds returns empty list if course is not synced`() = runTest {
-        coEvery { courseSyncSettingsDao.findWithFilesById(1) } returns null
+    fun `getSyncedFileIds returns empty list if no file is found`() = runTest {
+        coEvery { localFileDao.findByCourseId(1) } returns emptyList()
 
         val result = repository.getSyncedFileIds(1)
 

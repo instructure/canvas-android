@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.post
-import com.instructure.teacher.fragments.DiscussionsDetailsFragment
+import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateDiscussionView
 import instructure.androidblueprint.FragmentPresenter

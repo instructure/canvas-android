@@ -35,7 +35,7 @@ import com.instructure.teacher.events.DiscussionCreatedEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.DiscussionUpdatedEvent
 import com.instructure.teacher.events.post
-import com.instructure.teacher.fragments.DiscussionsDetailsFragment
+import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
 import instructure.androidblueprint.FragmentPresenter
