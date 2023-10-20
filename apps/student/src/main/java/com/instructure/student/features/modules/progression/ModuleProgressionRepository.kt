@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.progression.datasource.ModuleProgressionDataSource
@@ -35,7 +36,8 @@ class ModuleProgressionRepository(
     private val networkDataSource: ModuleProgressionNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-    private val courseSyncSettingsDao: CourseSyncSettingsDao
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val localFileDao: LocalFileDao
 ) : Repository<ModuleProgressionDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
@@ -68,7 +70,7 @@ class ModuleProgressionRepository(
     }
 
     suspend fun getSyncedFileIds(courseId: Long): List<Long> {
-        val courseSyncSettingsWithFiles = courseSyncSettingsDao.findWithFilesById(courseId)
-        return courseSyncSettingsWithFiles?.files?.map { it.id }.orEmpty()
+        val syncedFiles = localFileDao.findByCourseId(courseId)
+        return syncedFiles.map { it.id }
     }
 }

@@ -61,6 +61,11 @@ object PageAPI {
                 @Path("contextId") contextId: Long,
                 @Path("pageId") pageId: String): Call<Page>
 
+        @GET("courses/{contextId}/pages/{pageId}")
+        suspend fun getDetailedPage(@Path("contextId") contextId: Long,
+                                           @Path("pageId") pageId: String,
+                                           @Tag params: RestParams): DataResult<Page>
+
         @GET("{contextType}/{contextId}/pages/{pageId}")
         suspend fun getDetailedPage(
             @Path("contextType") contextType: String,
