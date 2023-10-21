@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
@@ -56,6 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _webViewDarkModeSwitch(context),
               _highContrastModeSwitch(context),
               _about(context),
+              _legal(context),
               if (_interactor.isDebugMode()) _themeViewer(context),
               if (_interactor.isDebugMode()) _remoteConfigs(context)
             ],
@@ -195,6 +195,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [Text(L10n(context).about, style: Theme.of(context).textTheme.bodyMedium)],
       ),
       onTap: () => _interactor.showAboutDialog(context));
+
+  Widget _legal(BuildContext context) => ListTile(
+      title: Text(L10n(context).helpLegalLabel, style: Theme.of(context).textTheme.bodyMedium),
+      onTap: () => _interactor.routeToLegal(context));
 
   Widget _themeViewer(BuildContext context) => ListTile(
         key: Key('theme-viewer'),

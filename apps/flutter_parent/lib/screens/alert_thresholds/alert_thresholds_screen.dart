@@ -131,10 +131,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
                 if (!busy)
                   TextButton(
                     child: Text(L10n(context).cancel.toUpperCase()),
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: TextButton.styleFrom(
-                      textStyle: TextStyle(color: ParentColors.ash),
-                    ),
+                    onPressed: () => Navigator.of(context).pop()
                   ),
                 if (!busy)
                   TextButton(

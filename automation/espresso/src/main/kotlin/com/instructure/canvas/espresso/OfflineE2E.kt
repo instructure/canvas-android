@@ -19,4 +19,4 @@ package com.instructure.canvas.espresso
 // When applied to a test method, denotes that the test is the part of the Offline mode test case suite.
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class OfflineTest(val explanation: String = "")
+annotation class OfflineE2E(val explanation: String = "")

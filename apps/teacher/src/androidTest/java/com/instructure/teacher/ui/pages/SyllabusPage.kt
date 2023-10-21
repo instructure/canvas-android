@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.pages
 
 import android.app.Activity
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -44,7 +45,6 @@ import org.hamcrest.Matchers.comparesEqualTo
 open class SyllabusPage : BasePage(R.id.syllabusPage) {
 
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
-    private val webView by WaitForViewWithId(R.id.contentWebView)
 
     /**
      * Asserts the display of an item on the Syllabus page.
@@ -107,7 +107,7 @@ open class SyllabusPage : BasePage(R.id.syllabusPage) {
      */
     fun assertDisplaysSyllabus(syllabusBody: String, shouldDisplayTabs: Boolean = true) {
         if (shouldDisplayTabs) tabs.assertDisplayed() else tabs.assertNotDisplayed()
-        webView.assertDisplayed()
+        waitForView(allOf(withId(R.id.contentWebView), ViewMatchers.isDisplayed()))
         Web.onWebView()
             .withElement(findElement(Locator.TAG_NAME, "html"))
             .check(WebViewAssertions.webMatches(getText(), comparesEqualTo(syllabusBody)))

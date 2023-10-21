@@ -13,7 +13,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
@@ -56,6 +55,18 @@ void main() {
 
   setUp(() {
     reset(analytics);
+  });
+
+  testWidgetsWithAccessibilityChecks('Displays about button', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.about), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Displays legal button', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.helpLegalLabel), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Displays theme viewer button in debug mode', (tester) async {

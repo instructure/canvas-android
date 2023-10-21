@@ -13,7 +13,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -25,6 +24,8 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+import '../../router/panda_router.dart';
 import '../theme_viewer_screen.dart';
 
 class SettingsInteractor {
@@ -36,6 +37,10 @@ class SettingsInteractor {
 
   void routeToRemoteConfig(BuildContext context) {
     locator<QuickNav>().push(context, RemoteConfigScreen());
+  }
+
+  void routeToLegal(BuildContext context) {
+    locator<QuickNav>().pushRoute(context, PandaRouter.legal());
   }
 
   void toggleDarkMode(BuildContext context, GlobalKey<State<StatefulWidget>>? anchorKey) {

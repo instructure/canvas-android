@@ -333,14 +333,17 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.uploadSubtitle) + withText(subTitle)).click()
     }
 
+    //OfflineMethod
     fun assertOfflineIndicatorDisplayed() {
         waitForView(withId(R.id.offlineIndicator)).assertDisplayed()
     }
 
+    //OfflineMethod
     fun assertOfflineIndicatorNotDisplayed() {
         onView(withId(R.id.offlineIndicator)).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
+    //OfflineMethod
     fun assertCourseOfflineSyncIcon(courseName: String, visibility: Visibility) {
         onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(visibility)))
     }
