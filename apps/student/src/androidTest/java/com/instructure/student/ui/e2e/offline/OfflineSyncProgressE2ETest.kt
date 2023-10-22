@@ -17,11 +17,8 @@
 package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
-import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.OfflineTest
+import androidx.test.espresso.Espresso
+import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -40,15 +37,14 @@ class OfflineSyncProgressE2ETest : StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @E2E
-    @OfflineTest
+    @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    fun testOfflineSyncProgressE2E() {
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYNC_PROGRESS, TestCategory.E2E)
+    fun testOfflineGlobalCourseSyncProgressE2E() {
+
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
         val student = data.studentsList[0]
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
         val testAnnouncement = data.announcementsList[0]
@@ -72,24 +68,38 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         manageOfflineContentPage.waitForSyncProgressStartingNotification()
         dashboardPage.clickOnSyncProgressNotification()
 
+        Log.d(STEP_TAG, "Assert that the Sync Progress has started.")
+        syncProgressPage.waitForDownloadStarting()
+
+        Log.d(STEP_TAG, "Assert that the Sync Progress has been successful (so to have the success title and the course success indicator).")
+        syncProgressPage.assertDownloadProgressSuccessDetails()
+        syncProgressPage.assertCourseSyncedSuccessfully(course1.name)
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page and wait for it to be rendered.")
+        Espresso.pressBack()
+
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         OfflineTestUtils.turnOffConnectionViaADB()
-
-        Log.d(STEP_TAG, "Press the 'Home' button on the device.")
-        device.pressHome()
-        Log.d(STEP_TAG, "Click 'Recent Apps' device button and bring Canvas Student into the foreground again." +
-                "Assert that the Dashboard Page is displayed.")
-        device.pressRecentApps()
-        device.findObject(UiSelector().descriptionContains("Canvas")).click()
-
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
         dashboardPage.waitForRender()
 
+        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        OfflineTestUtils.assertOfflineIndicator()
+
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
+        dashboardPage.assertCourseOfflineSyncIconGone(course2.name)
+
+        Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
+        dashboardPage.selectCourse(course1)
+        courseBrowserPage.selectAnnouncements()
+
+        Log.d(STEP_TAG,"Assert that the '${testAnnouncement.title}' titled announcement is displayed, so the user is able to see it in offline mode because it was synced.")
+        announcementListPage.assertTopicDisplayed(testAnnouncement.title)
     }
 
     @After
     fun tearDown() {
-        Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
+        Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device via ADB, so it will come back online.")
         OfflineTestUtils.turnOnConnectionViaADB()
     }
 

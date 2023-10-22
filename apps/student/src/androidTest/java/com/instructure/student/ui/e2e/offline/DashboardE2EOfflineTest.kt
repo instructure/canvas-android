@@ -17,7 +17,6 @@
 package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
@@ -99,8 +98,8 @@ class DashboardE2EOfflineTest : StudentTest() {
         OfflineTestUtils.assertOfflineIndicator()
 
         Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's cours card.")
-        dashboardPage.assertCourseOfflineSyncIcon(course1.name, ViewMatchers.Visibility.VISIBLE)
-        dashboardPage.assertCourseOfflineSyncIcon(course2.name, ViewMatchers.Visibility.GONE)
+        dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
+        dashboardPage.assertCourseOfflineSyncIconGone(course2.name)
 
         Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course1)

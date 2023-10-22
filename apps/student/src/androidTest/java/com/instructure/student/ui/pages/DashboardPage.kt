@@ -344,8 +344,13 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     //OfflineMethod
-    fun assertCourseOfflineSyncIcon(courseName: String, visibility: Visibility) {
-        onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(visibility)))
+    fun assertCourseOfflineSyncIconVisible(courseName: String) {
+        waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    //OfflineMethod
+    fun assertCourseOfflineSyncIconGone(courseName: String) {
+        onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
     fun clickOnSyncProgressNotification() {
