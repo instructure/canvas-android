@@ -34,7 +34,6 @@ import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,8 +50,7 @@ class OfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val offlineContentRepository: OfflineContentRepository,
     private val storageUtils: StorageUtils,
-    private val offlineSyncHelper: OfflineSyncHelper,
-    private val networkStateProvider: NetworkStateProvider
+    private val offlineSyncHelper: OfflineSyncHelper
 ) : ViewModel() {
 
     val course = savedStateHandle.get<Course>(Const.CANVAS_CONTEXT)
