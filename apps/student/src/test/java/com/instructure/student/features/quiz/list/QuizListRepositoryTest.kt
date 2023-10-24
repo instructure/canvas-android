@@ -43,7 +43,7 @@ class QuizListRepositoryTest {
 
     @Before
     fun setup() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
     }
 
     @Test

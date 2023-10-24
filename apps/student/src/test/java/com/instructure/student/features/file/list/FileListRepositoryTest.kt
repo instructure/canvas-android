@@ -53,7 +53,7 @@ class FileListRepositoryTest {
 
     @Before
     fun setup() {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
         coEvery { networkStateProvider.isOnline() } returns true
     }
 

@@ -13,7 +13,7 @@ abstract class Repository<T>(
 
     fun isOnline() = networkStateProvider.isOnline()
 
-    suspend fun isOfflineEnabled() = featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)
+    suspend fun isOfflineEnabled() = featureFlagProvider.offlineEnabled()
 
     suspend fun dataSource(): T {
         return if (isOnline() || !isOfflineEnabled()) {

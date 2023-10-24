@@ -50,7 +50,7 @@ class RepositoryTest {
     @Test
     fun `Return network data source if online`() = runTest {
         every { networkStateProvider.isOnline() } returns true
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
 
         assertEquals("Network", testRepository.dataSource().getTestString())
     }
@@ -58,7 +58,7 @@ class RepositoryTest {
     @Test
     fun `Return local data source if offline`() = runTest {
         every { networkStateProvider.isOnline() } returns false
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
 
         assertEquals("Local", testRepository.dataSource().getTestString())
     }
@@ -66,7 +66,7 @@ class RepositoryTest {
     @Test
     fun `Return network data source if online and feature flag is off`() = runTest {
         every { networkStateProvider.isOnline() } returns true
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
 
         assertEquals("Network", testRepository.dataSource().getTestString())
     }
@@ -74,7 +74,7 @@ class RepositoryTest {
     @Test
     fun `Return network data source if offline and feature flag is off`() = runTest {
         every { networkStateProvider.isOnline() } returns false
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
 
         assertEquals("Network", testRepository.dataSource().getTestString())
     }

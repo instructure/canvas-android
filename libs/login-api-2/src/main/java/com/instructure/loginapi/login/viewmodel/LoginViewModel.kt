@@ -49,7 +49,7 @@ class LoginViewModel @Inject constructor(
     fun checkLogin(checkToken: Boolean, checkElementary: Boolean): LiveData<Event<LoginResultAction>> {
         viewModelScope.launch {
             try {
-                val offlineEnabled = featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)
+                val offlineEnabled = featureFlagProvider.offlineEnabled()
                 val offlineLogin = offlineEnabled && !networkStateProvider.isOnline()
                 if (checkToken && !offlineLogin) {
                     val selfResult = userManager.getSelfAsync(true).await()

@@ -218,7 +218,7 @@ class DashboardFragment : ParentFragment() {
         dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
         lifecycleScope.launch {
-            if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
+            if (!featureFlagProvider.offlineEnabled()) {
                 toolbar.menu.removeItem(R.id.menu_dashboard_offline)
                 toolbar.menu.findItem(R.id.menu_dashboard_cards).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             }
