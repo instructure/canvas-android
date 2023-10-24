@@ -23,17 +23,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
@@ -41,8 +41,10 @@ import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
@@ -67,8 +69,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.util.FileUtils
-import retrofit2.Call
-import retrofit2.Response
+import com.instructure.student.util.onMainThread
 import java.util.*
 import java.util.regex.Pattern
 
@@ -76,6 +77,9 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private var openMediaBundle: Bundle? = null
     private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? = null // I'll bet this causes a memory leak
+
+    var offlineDb: OfflineDatabase? = null
+    var networkStateProvider: NetworkStateProvider? = null
 
     init {
         initRoutes()
@@ -658,6 +662,49 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
+    private fun handleSpecificFile(activity: FragmentActivity, fileID: String?, route: Route, isGroupFile: Boolean) {
+        if (fileID == null || offlineDb == null) {
+            Toast.makeText(activity, R.string.fileNotFound, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        activity.lifecycleScope.tryLaunch {
+            val fileFolder = if (networkStateProvider?.isOnline() == true) {
+                FileFolderManager.getFileFolderFromUrlAsync("files/$fileID", true).await().dataOrNull
+            } else {
+                getFileFolderFromURL(fileID.toLong(), offlineDb!!)
+            }
+
+            if (fileFolder == null) {
+                Toast.makeText(activity, R.string.fileNotFound, Toast.LENGTH_SHORT).show()
+                return@tryLaunch
+            }
+
+            if (!isGroupFile && (fileFolder.isLocked || fileFolder.isLockedForUser)) {
+                val fileName = if (fileFolder.displayName == null) activity.getString(R.string.file) else fileFolder.displayName
+                Toast.makeText(activity, String.format(activity.getString(R.string.fileLocked), fileName), Toast.LENGTH_LONG).show()
+            } else {
+                // This is either a group file (which have no permissions), or a file that is accessible by the user
+                if (networkStateProvider?.isOnline() == true) {
+                    openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
+                } else {
+                    openLocalMedia(activity, fileFolder.contentType, fileFolder.url, fileFolder.displayName, route.canvasContext!!)
+                }
+            }
+        } catch {
+            Toast.makeText(activity, R.string.fileNotFound, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    suspend fun getFileFolderFromURL(fileId: Long, offlineDatabase: OfflineDatabase): FileFolder? {
+        val fileFolderDao = offlineDatabase.fileFolderDao()
+        val localFileFolderDao = offlineDatabase.localFileDao()
+
+        val file = fileFolderDao.findById(fileId) ?: return null
+        val localFile = localFileFolderDao.findById(fileId) ?: return null
+        return file.copy(url = localFile.path).toApiModel()
+    }
+
     private fun openMedia(activity: FragmentActivity?, mime: String, url: String, filename: String, route: Route, fileId: String?) {
         if (activity == null) {
             return
@@ -681,34 +728,18 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    private fun handleSpecificFile(activity: FragmentActivity, fileID: String?, route: Route, isGroupFile: Boolean) {
-        val fileFolderStatusCallback = object : StatusCallback<FileFolder>() {
-            override fun onResponse(response: Response<FileFolder>, linkHeaders: LinkHeaders, type: ApiType) {
-                super.onResponse(response, linkHeaders, type)
-                response.body()?.let { fileFolder ->
-                    if (!isGroupFile && (fileFolder.isLocked || fileFolder.isLockedForUser)) {
-                        Toast.makeText(
-                            activity,
-                            String.format(
-                                activity.getString(R.string.fileLocked),
-                                if (fileFolder.displayName == null) activity.getString(R.string.file) else fileFolder.displayName
-                            ),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        // This is either a group file (which have no permissions), or a file that is accessible by the user
-                        openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
-                    }
-                } ?: Toast.makeText(activity, activity.getString(R.string.errorOccurred), Toast.LENGTH_LONG).show()
-            }
-
-            override fun onFail(call: Call<FileFolder>?, error: Throwable, response: Response<*>?) {
-                super.onFail(call, error, response)
-                Toast.makeText(activity, R.string.fileNotFound, Toast.LENGTH_SHORT).show()
-            }
+    private fun openLocalMedia(activity: FragmentActivity?, mime: String?, path: String?, filename: String?, canvasContext: CanvasContext) {
+        val owner = activity ?: return
+        onMainThread {
+            openMediaCallbacks = null
+            openMediaBundle = OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, path, filename, false)
+            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+                LoaderManager.getInstance(owner),
+                openMediaBundle,
+                getLoaderCallbacks(owner),
+                R.id.openMediaLoaderID
+            )
         }
-
-        FileFolderManager.getFileFolderFromURL("files/$fileID", true, fileFolderStatusCallback)
     }
 
     /**
