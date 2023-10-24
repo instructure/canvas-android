@@ -13,22 +13,6 @@ class DiscussionRouteHelper(
 
     suspend fun isDiscussionRedesignEnabled(canvasContext: CanvasContext): Boolean {
         return discussionRouteHelperRepository.getEnabledFeaturesForCourse(canvasContext, false)
-        return if (canvasContext.isCourse) {
-            val featureFlags =
-                featuresManager.getEnabledFeaturesForCourseAsync(canvasContext.id, false).await().dataOrNull
-            featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
-        } else if (canvasContext.isGroup) {
-            val group = canvasContext as Group
-            val discussionFeatureFlagEnabled = if (group.courseId == 0L) {
-                val featureFlags = featuresManager.getEnvironmentFeatureFlagsAsync(false).await().dataOrNull
-                featureFlags?.get("react_discussions_post") == true
-            } else {
-                featuresManager.getEnabledFeaturesForCourseAsync(group.courseId, false).await().dataOrNull?.contains("react_discussions_post") == true
-            }
-            discussionFeatureFlagEnabled && featureFlagProvider.getDiscussionRedesignFeatureFlag()
-        } else {
-            false
-        }
     }
 
     suspend fun getDiscussionHeader(

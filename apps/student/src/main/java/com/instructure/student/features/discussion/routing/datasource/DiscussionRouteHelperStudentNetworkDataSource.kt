@@ -25,8 +25,13 @@ class DiscussionRouteHelperStudentNetworkDataSource(
             val featureFlags = featuresApi.getEnabledFeaturesForCourse(canvasContext.id, params).dataOrNull
             featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
         } else if (canvasContext.isGroup) {
-            val featureFlags = featuresApi.getEnabledFeaturesForCourse((canvasContext as Group).courseId, params).dataOrNull
-            featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+            val group = canvasContext as Group
+            if (group.courseId == 0L) {
+                featureFlagProvider.getDiscussionRedesignFeatureFlag()
+            } else {
+                val featureFlags = featuresApi.getEnabledFeaturesForCourse(group.courseId, params).dataOrNull
+                featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+            }
         } else {
             false
         }
