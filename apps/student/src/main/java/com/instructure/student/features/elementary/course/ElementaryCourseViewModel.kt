@@ -18,7 +18,6 @@ package com.instructure.student.features.elementary.course
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -68,7 +67,18 @@ class ElementaryCourseViewModel @Inject constructor(
                 val isElementaryCourse = dashboardCards.any { it.id == canvasContext.id && it.isK5Subject }
 
                 if (isElementaryCourse) {
-                    loadDataForElementary(canvasContext)
+                    val tabs = loadTabs(canvasContext)
+
+                    val isTabHidden = tabId.isNotEmpty() && tabs.find { it.tabId == tabId } == null
+                    if (isTabHidden) {
+                        handleNonElementaryCourse(tabId)
+                        return@launch
+                    }
+
+                    val tabViewData = createTabs(canvasContext, tabs).toMutableList()
+
+                    _data.postValue(ElementaryCourseViewData(tabViewData, canvasContext.backgroundColor))
+                    _state.postValue(ViewState.Success)
                 } else {
                     handleNonElementaryCourse(tabId)
                 }
@@ -79,7 +89,7 @@ class ElementaryCourseViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadDataForElementary(canvasContext: CanvasContext) {
+    private suspend fun loadTabs(canvasContext: CanvasContext): List<Tab> {
         val tabs = tabManager.getTabsForElementaryAsync(canvasContext, false).await().dataOrThrow
         val hasResources = tabs.firstOrNull { it.isExternal } != null
         var filteredTabs = tabs.filter { !it.isHidden && !it.isExternal }.sortedBy { it.position }
@@ -94,9 +104,7 @@ class ElementaryCourseViewModel @Inject constructor(
             )
         }
 
-        val tabViewData = createTabs(canvasContext, filteredTabs)
-        _data.postValue(ElementaryCourseViewData(tabViewData, canvasContext.backgroundColor))
-        _state.postValue(ViewState.Success)
+        return filteredTabs
     }
 
     private fun handleNonElementaryCourse(tabId: String) {
@@ -107,37 +115,46 @@ class ElementaryCourseViewModel @Inject constructor(
         }
     }
 
+    private fun getIconDrawable(tabId: String): Drawable? {
+        return when (tabId) {
+            Tab.HOME_ID -> {
+                resources.getDrawable(R.drawable.ic_home)
+            }
+
+            Tab.SCHEDULE_ID -> {
+                resources.getDrawable(R.drawable.ic_schedule)
+            }
+
+            Tab.MODULES_ID -> {
+                resources.getDrawable(R.drawable.ic_modules)
+            }
+
+            Tab.GRADES_ID -> {
+                resources.getDrawable(R.drawable.ic_grades)
+            }
+
+            Tab.RESOURCES_ID -> {
+                resources.getDrawable(R.drawable.ic_resources)
+            }
+
+            else -> {
+                null
+            }
+        }
+    }
+
     private suspend fun createTabs(canvasContext: CanvasContext, tabs: List<Tab>): List<ElementaryCourseTab> {
         val prefix =
             if (canvasContext.isCourse) "${apiPrefs.fullDomain}/courses/${canvasContext.id}?embed=true" else "${apiPrefs.fullDomain}/groups/${canvasContext.id}?embed=true"
         return tabs.map {
-            val drawable: Drawable?
-            val url: String
-            when (it.tabId) {
-                Tab.HOME_ID -> {
-                    drawable = resources.getDrawable(R.drawable.ic_home)
-                    url = "$prefix#home"
-                }
-                Tab.SCHEDULE_ID -> {
-                    drawable = resources.getDrawable(R.drawable.ic_schedule)
-                    url = "$prefix#schedule"
-                }
-                Tab.MODULES_ID -> {
-                    drawable = resources.getDrawable(R.drawable.ic_modules)
-                    url = "$prefix#modules"
-                }
-                Tab.GRADES_ID -> {
-                    drawable = resources.getDrawable(R.drawable.ic_grades)
-                    url = "$prefix#grades"
-                }
-                Tab.RESOURCES_ID -> {
-                    drawable = resources.getDrawable(R.drawable.ic_resources)
-                    url = "$prefix#resources"
-                }
-                else -> {
-                    drawable = null
-                    url = it.htmlUrl ?: ""
-                }
+            val drawable = getIconDrawable(it.tabId)
+            val url = when (it.tabId) {
+                Tab.HOME_ID -> "$prefix#home"
+                Tab.SCHEDULE_ID -> "$prefix#schedule"
+                Tab.MODULES_ID -> "$prefix#modules"
+                Tab.GRADES_ID -> "$prefix#grades"
+                Tab.RESOURCES_ID -> "$prefix#resources"
+                else -> it.htmlUrl ?: ""
             }
 
             val authenticatedUrl = if (apiPrefs.isStudentView) {

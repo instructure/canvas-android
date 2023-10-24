@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Efase</string>
 
+    <string name="gradeUpdated">Klas aktyalize</string>
     <string name="loadingCanvas">Chajman Kontni Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1117,6 +1118,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Ou ka ouvri detay Soumisyon yo la a</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Klas: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minit</item>
         <item quantity="other">%s Minit</item>
@@ -1292,9 +1296,17 @@
     <string name="a11y_closeProgress">Fèmen dyalìg pwogrè</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">Transfere nan Fichye</string>
+    <string name="fileUploadFailedSubtitle">Gen yonn oswa plizyè fichye pa rive transfere. Verifye koneksyon entènèt ou a epi eseye re voye yo ankò</string>
     <string name="submissionProgressSubtitle">Transfere Soumisyon nan \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Chajman Soumisyon</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Ajoute Fichye</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Soumisyon Reyisi</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Soumisyon Echwe</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Transfè Fichye</item>
+        <item quantity="other">Ajoute Fichye</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Transfè Fichye Reyisi</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Transfè Fichye Echwe</string>
     <string name="cancelSubmissionDialogTitle">Anile Soumisyon</string>
     <string name="cancelSubmissionDialogMessage">Aksyon sa a ap anile epi efase soumisyon w lan.</string>
     <string name="fileUploadError">Transfè Fichye Echwe</string>
@@ -1302,7 +1314,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Transfere nan Fichye Mwen</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Soumèt devwa</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Chwazi yon kou</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Chwazi yon kou, kou ki seleksyone a se: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Chwazi yon devwa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Chwazi yon devwa, devwa ki seleksyone a se: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Anile Transfè?</string>
     <string name="cancelFileUploadMessage">Sa ap anile transfè w la.</string>
@@ -1317,4 +1331,64 @@
     <string name="createdByStudentView">Kreye pa Afichaj Elèv</string>
     <string name="discussionErrorToast">Yon erè pase. Sijè a kapab pa disponib ankò.</string>
     <string name="cameraPermissionPermanentlyDenied">Pèmisyon kamera a te refize an pèmanans. Ale nan paramèt app la pou otorize li.</string>
+    <string name="unpublish_assignment_error">Yo paka depibliye yon devwa si elèv yo fè soumisyon.</string>
+    <string name="subscribeToCalendar">Abòne nan fil RSS Kalandriye</string>
+    <string name="subscribeToCalendarMessage">Ou ka senkwonize kalandriye Canvas ou ak kont Google Calendar ou depi w klike sou bouton Enskri ki nan dyalòg sa a. Apre sa, ou prale sou app Google Calendar ki sou aparèy ou a epi aktive senkwonizasyon an nan paramèt yo pou nouvo kalandriye a.</string>
+    <string name="subscribeButton">Enskri</string>
+    <string name="switchToLightMode">Pase a Mòd Klè</string>
+    <string name="switchToDarkMode">Pase a Mòd Sonm</string>
+    <string name="acceptableUsePolicyDescription">Swa ou se yon nouvo itilizatè oswa Politik Itilizasyon Akseptab la chanje aprè dènye fwa w te aksepte li a. Aksepte politik Itilizasyon Akseptab la anvan w kontinye.</string>
+    <string name="acceptableUsePolicyTitle">Politik Itilizasyon Akseptab</string>
+    <string name="acceptableUsePolicyButton">Politik Itilizasyon Akseptab</string>
+    <string name="acceptableUsePolicyAgree">Mwen dakò ak Politik Itilizasyon Akseptab la.</string>
+    <string name="acceptableUsePolicySubmit">Soumèt</string>
+    <string name="acceptFail">Echèk pou voye kondisyon akseptasyon yo.</string>
+    <string name="attempt">Tantativ: %d</string>
+    <string name="quizQuestions">Kesyon: %d</string>
+    <string name="quizTimeLimit">Limit tan: %s</string>
+    <string name="allowedAttempts">Tantativ otorize: %s</string>
+    <string name="usedAttempts">Tantativ itilize: %d</string>
+    <string name="generalUnexpectedError">Yon erè fèt sanzatann.</string>
+
+    <string name="deleteSelected">Efase</string>
+    <string name="archiveSelected">Achiv</string>
+    <string name="unarchiveSelected">Anile Achivaj</string>
+    <string name="markAsReadSelected">Make tankou li</string>
+    <string name="markAsUnreadSelected">Make tankou poko li</string>
+    <string name="starSelected">Etwal</string>
+    <string name="unstarSelected">Pa evalye</string>
+
+    <string name="inboxOperationFailed">Echwe pou fè operasyon</string>
+    <string name="inboxDeletedConfirmation">%s efase</string>
+    <string name="inboxArchivedConfirmation">%s achiv</string>
+    <string name="inboxUnarchivedConfirmation">%s dezachive</string>
+    <string name="inboxMarkAsReadConfirmation">%s make tankou li</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s make tankou poko li</string>
+    <string name="inboxStarredConfirmation">%s make</string>
+    <string name="inboxUnstarredConfirmation">%s demake</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Konvèsasyon sa a ap elimine nan bwat resepsyon sou tout aparèy ou yo. Aksyon sa a paka defèt.</item>
+        <item quantity="other">Konvèsasyon sa yo ap elimine nan bwat resepsyon sou tout aparèy ou yo. Aksyon sa a paka defèt.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Echèk chajman pwochen paj. Verifye koneksyon entènèt ou a.</string>
+    <string name="conversationsRefreshFailed">Echèk aktyalizasyon konvèsasyon yo. Verifye koneksyon entènèt ou a.</string>
+    <string name="inboxScopeInbox">Bwat resepsyon</string>
+    <string name="inboxContextSelectorTitle">Seleksyone Kou oswa Gwoup</string>
+    <string name="inboxClearFilter">Efase</string>
+    <string name="a11y_courseFilterContentDescription">Filtè kou: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">seleksyone</string>
+    <string name="a11y_itemSelectedSwipeForActions">Konvèsasyon seleksyone. Mòd seleksyon aktive. Navige pou aksyon.</string>
+    <string name="a11y_conversationSelected">Konvèsasyon seleksyone</string>
+    <string name="a11y_conversationDeselected">Konvèsasyon deseleksyone</string>
+    <string name="a11y_exitSelectionMode">Sòti nan mòd seleksyon</string>
+    <string name="a11y_selectionModeDeactivated">Mòd seleksyon dezaktive.</string>
+    <string name="a11y_avatarContentDescription">Avatar %s</string>
+    <string name="inboxUndo">Defèt</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domèn</string>
+    <string name="aboutLoginTitle">ID Koneksyon</string>
+    <string name="aboutEmailTitle">Imèl</string>
+    <string name="aboutVersionTitle">Vèsyon</string>
+    <string name="assignmentRefreshError">Te gen yon pwoblèm pou rechaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
 </resources>

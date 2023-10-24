@@ -26,12 +26,13 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
+import com.instructure.student.databinding.AdapterCourseBrowserBinding
+import com.instructure.student.databinding.AdapterCourseBrowserHomeBinding
+import com.instructure.student.databinding.AdapterCourseBrowserWebViewBinding
 import com.instructure.student.util.TabHelper
-import kotlinx.android.synthetic.main.adapter_course_browser.view.*
-import kotlinx.android.synthetic.main.adapter_course_browser_home.view.*
-import kotlinx.android.synthetic.main.adapter_course_browser_web_view.view.*
 
 class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContext, private val homePageTitle: String? = null, val callback: (Tab) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -75,10 +76,11 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
 class CourseBrowserHomeViewHolder(view: View, val canvasContext: CanvasContext, private val homePageTitle: String? = null) : RecyclerView.ViewHolder(view) {
 
     fun bind(holder: CourseBrowserHomeViewHolder, tab: Tab, clickedCallback: (Tab) -> Unit) {
-        holder.itemView.homeLabel.text = tab.label
+        val binding = AdapterCourseBrowserHomeBinding.bind(holder.itemView)
+        binding.homeLabel.text = tab.label
 
-        if(canvasContext is Course && TabHelper.isHomeTabAPage(canvasContext)) holder.itemView.homeSubLabel.text = homePageTitle
-        else holder.itemView.homeSubLabel.text = TabHelper.getHomePageDisplayString(canvasContext)
+        if(canvasContext is Course && TabHelper.isHomeTabAPage(canvasContext)) binding.homeSubLabel.text = homePageTitle
+        else binding.homeSubLabel.text = TabHelper.getHomePageDisplayString(canvasContext)
         holder.itemView.setOnClickListener {
             clickedCallback(tab)
         }
@@ -113,10 +115,13 @@ class CourseBrowserWebViewHolder(view: View, val color: Int) : RecyclerView.View
      * @param callback What we do when the user clicks this tab
      */
     private fun setupTab(tab: Tab, drawable: Drawable, callback: (Tab) -> Unit) {
-        itemView.unsupportedLabel.text = tab.label
-        itemView.unsupportedIcon.setImageDrawable(drawable)
-        itemView.unsupportedSubLabel.setText(R.string.opensInWebView)
-        itemView.setOnClickListener { callback(tab) }
+        val binding = AdapterCourseBrowserWebViewBinding.bind(itemView)
+        binding.unsupportedLabel.text = tab.label
+        binding.unsupportedIcon.setImageDrawable(drawable)
+        binding.unsupportedSubLabel.setText(R.string.opensInWebView)
+        itemView.isEnabled = tab.enabled
+        itemView.alpha = if (tab.enabled) 1f else 0.5f
+        itemView.onClickWithRequireNetwork { callback(tab) }
     }
 
     companion object {
@@ -165,10 +170,19 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
      * @param callback What we do when the user clicks this tab
      */
     private fun setupTab(tab: Tab, drawable: Drawable, callback: (Tab) -> Unit) {
-        itemView.label.text = tab.label
-        itemView.icon.setImageDrawable(drawable)
-        itemView.setOnClickListener {
-            callback(tab)
+        val binding = AdapterCourseBrowserBinding.bind(itemView)
+        binding.label.text = tab.label
+        binding.icon.setImageDrawable(drawable)
+        itemView.isEnabled = tab.enabled
+        itemView.alpha = if (tab.enabled) 1f else 0.5f
+        if (tab.type == Tab.TYPE_EXTERNAL) {
+            itemView.onClickWithRequireNetwork {
+                callback(tab)
+            }
+        } else {
+            itemView.setOnClickListener {
+                callback(tab)
+            }
         }
     }
 

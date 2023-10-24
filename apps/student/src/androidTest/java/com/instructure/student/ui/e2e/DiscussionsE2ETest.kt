@@ -21,7 +21,10 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.ViewUtils
+import com.instructure.espresso.getCurrentDateInCanvasFormat
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -34,13 +37,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DiscussionsE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -54,28 +53,16 @@ class DiscussionsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed a discussion topic.")
-        val topic1 = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = teacher.token
-        )
+        val topic1 = createDiscussion(course, teacher)
 
         Log.d(PREPARATION_TAG,"Seed another discussion topic.")
-        val topic2 = DiscussionTopicsApi.createDiscussion(
-            courseId = course.id,
-            token = teacher.token
-        )
+        val topic2 = createDiscussion(course, teacher)
 
         Log.d(STEP_TAG,"Seed an announcement for ${course.name} course.")
-        val announcement = DiscussionTopicsApi.createAnnouncement(
-            courseId = course.id,
-            token = teacher.token
-        )
+        val announcement = createAnnouncement(course, teacher)
 
         Log.d(STEP_TAG,"Seed another announcement for ${course.name} course.")
-        val announcement2 = DiscussionTopicsApi.createAnnouncement(
-            courseId = course.id,
-            token = teacher.token
-        )
+        val announcement2 = createAnnouncement(course, teacher)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -84,7 +71,7 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Select course: ${course.name}.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Verify that the Discussions and Assignments Tabs are both displayed on the CourseBrowser Page.")
+        Log.d(STEP_TAG,"Verify that the Discussions and Announcements Tabs are both displayed on the CourseBrowser Page.")
         courseBrowserPage.assertTabDisplayed("Announcements")
         courseBrowserPage.assertTabDisplayed("Discussions")
 
@@ -101,8 +88,8 @@ class DiscussionsE2ETest: StudentTest() {
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on the 'Search' button and search for ${announcement2.title}. announcement.")
-        discussionListPage.clickOnSearchButton()
-        discussionListPage.typeToSearchBar(announcement2.title)
+        discussionListPage.searchable.clickOnSearchButton()
+        discussionListPage.searchable.typeToSearchBar(announcement2.title)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the searching method is working well, so ${announcement.title} won't be displayed and ${announcement2.title} is displayed.")
         discussionListPage.pullToUpdate()
@@ -110,7 +97,7 @@ class DiscussionsE2ETest: StudentTest() {
         discussionListPage.assertTopicNotDisplayed(announcement.title)
 
         Log.d(STEP_TAG,"Clear the search input field and assert that both announcements, ${announcement.title} and ${announcement2.title} has been diplayed.")
-        discussionListPage.clickOnClearSearchButton()
+        discussionListPage.searchable.clickOnClearSearchButton()
         discussionListPage.waitForDiscussionTopicToDisplay(announcement.title)
         discussionListPage.assertTopicDisplayed(announcement2.title)
 
@@ -163,9 +150,30 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Navigate back to Discussions Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the previously sent reply has been counted.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the previously sent reply has been counted, and there are no unread replies.")
         discussionListPage.pullToUpdate()
         discussionListPage.assertReplyCount(newTopicName, 1)
+        discussionListPage.assertUnreadReplyCount(newTopicName, 0)
+
+        Log.d(STEP_TAG, "Assert that the due date is the current date (in the expected format).")
+        val currentDate = getCurrentDateInCanvasFormat()
+        discussionListPage.assertDueDate(newTopicName, currentDate)
 
     }
+
+    private fun createAnnouncement(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = DiscussionTopicsApi.createAnnouncement(
+        courseId = course.id,
+        token = teacher.token
+    )
+
+    private fun createDiscussion(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = DiscussionTopicsApi.createDiscussion(
+        courseId = course.id,
+        token = teacher.token
+    )
 }

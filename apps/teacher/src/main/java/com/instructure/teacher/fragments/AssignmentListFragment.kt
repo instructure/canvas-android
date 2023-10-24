@@ -28,13 +28,16 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssignmentAdapter
+import com.instructure.teacher.databinding.FragmentAssignmentListBinding
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.factory.AssignmentListPresenterFactory
 import com.instructure.teacher.presenters.AssignmentListPresenter
@@ -44,11 +47,11 @@ import com.instructure.teacher.utils.setHeaderVisibilityListener
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AssignmentListView
-import kotlinx.android.synthetic.main.fragment_assignment_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView(url = "{canvasContext}/assignments")
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
 class AssignmentListFragment : BaseExpandableSyncFragment<
         AssignmentGroup,
@@ -57,17 +60,19 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         AssignmentAdapter>(), AssignmentListView {
 
-    private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
-    private var mPairedWithSubmissions: Boolean = false
-    private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
+    private val binding by viewBinding(FragmentAssignmentListBinding::bind)
+
+    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    private var pairedWithSubmissions: Boolean = false
+    private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
 
-    private var mGradingPeriodMenu: PopupMenu? = null
-    private var mNeedToForceNetwork = false
+    private var gradingPeriodMenu: PopupMenu? = null
+    private var needToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_list
-    override val recyclerView: RecyclerView get() = assignmentRecyclerView
-    override fun getPresenterFactory() = AssignmentListPresenterFactory(mCanvasContext)
+    override val recyclerView: RecyclerView get() = binding.assignmentRecyclerView
+    override fun getPresenterFactory() = AssignmentListPresenterFactory(canvasContext)
     override fun onPresenterPrepared(presenter: AssignmentListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
             rootView = rootView,
@@ -79,18 +84,18 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
             emptyViewResId = R.id.emptyPandaView,
             emptyViewText = getString(R.string.noAssignments)
         )
-        mRecyclerView.setHeaderVisibilityListener(divider)
+        mRecyclerView.setHeaderVisibilityListener(binding.divider)
     }
 
     override fun onCreateView(view: View) {
-        mLinearLayoutManager.orientation = RecyclerView.VERTICAL
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
     }
 
     override fun onReadySetGo(presenter: AssignmentListPresenter) {
         if (recyclerView.adapter == null) {
             mRecyclerView.adapter = adapter
         }
-        presenter.loadData(mNeedToForceNetwork)
+        presenter.loadData(needToForceNetwork)
     }
 
     override fun onResume() {
@@ -109,31 +114,30 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onPause() {
-        if(mGradingPeriodMenu != null) {
-            mGradingPeriodMenu?.dismiss()
+        if(gradingPeriodMenu != null) {
+            gradingPeriodMenu?.dismiss()
         }
         super.onPause()
     }
 
     override fun createAdapter(): AssignmentAdapter {
-        return AssignmentAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor) { assignment ->
-            if (mPairedWithSubmissions) {
+        return AssignmentAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { assignment ->
+            if (pairedWithSubmissions) {
                 val args = AssignmentSubmissionListFragment.makeBundle(assignment)
-                RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, mCanvasContext, args))
+                RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, canvasContext, args))
             } else {
                 if (assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
                     val args = QuizDetailsFragment.makeBundle(assignment.quizId)
-                    RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
+                    RouteMatcher.route(requireActivity(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
                 } else {
                     val args = AssignmentDetailsFragment.makeBundle(assignment)
-                    RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, mCanvasContext, args))
+                    RouteMatcher.route(requireActivity(), Route(null, AssignmentDetailsFragment::class.java, canvasContext, args))
                 }
             }
         }
     }
 
-
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted() = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.visibility  = View.VISIBLE
@@ -142,10 +146,10 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         emptyPandaView.setMessageText(R.string.noAssignmentsTeacher)
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_space))
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
@@ -161,23 +165,23 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         }
 
         //setup toolbar icon to access this menu
-        assignmentListToolbar.setupMenu(R.menu.menu_assignment_list, menuItemCallback)
+        binding.assignmentListToolbar.setupMenu(R.menu.menu_assignment_list, menuItemCallback)
         addSearch()
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, requireContext().getColor(R.color.white))
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), binding.assignmentListToolbar, requireContext().getColor(R.color.white))
 
         //setup popup menu
         val menuItemView = rootView.findViewById<View>(R.id.menu_grading_periods_filter)
-        mGradingPeriodMenu = PopupMenu(requireContext(), menuItemView, Gravity.TOP, 0,
+        gradingPeriodMenu = PopupMenu(requireContext(), menuItemView, Gravity.TOP, 0,
                 R.style.Widget_AppCompat_PopupMenu_Overflow)
 
-        mGradingPeriodMenu?.setOnMenuItemClickListener { menuItem ->
+        gradingPeriodMenu?.setOnMenuItemClickListener { menuItem ->
             presenter.selectGradingPeriodIndex(menuItem.itemId)
             true
         }
 
         //add grading periods
         gradingPeriods.forEachIndexed { i, gradingPeriod ->
-            mGradingPeriodMenu?.menu?.add(0, i, 0, gradingPeriod.title)
+            gradingPeriodMenu?.menu?.add(0, i, 0, gradingPeriod.title)
         }
 
         //set the grading periods to the selection
@@ -186,12 +190,12 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         configureGradingPeriodState(selectedGradingPeriod.title ?: getDefaultGradingPeriodTitle(), true, isFilterVisible)
     }
 
-    private fun addSearch() {
+    private fun addSearch() = with(binding) {
         assignmentListToolbar.addSearch(getString(R.string.searchAssignmentsHint)) { query ->
             if (query.isBlank()) {
-                emptyPandaView?.emptyViewText(R.string.no_items_to_display_short)
+                emptyPandaView.emptyViewText(R.string.no_items_to_display_short)
             } else {
-                emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                emptyPandaView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
             presenter.searchQuery = query
         }
@@ -199,19 +203,19 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
 
     override fun perPageCount() = ApiPrefs.perPageCount
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         assignmentListToolbar.title = getString(R.string.assignments)
-        assignmentListToolbar.subtitle = mCanvasContext.name
-        assignmentListToolbar.setupBackButton(this)
+        assignmentListToolbar.subtitle = canvasContext.name
+        assignmentListToolbar.setupBackButton(this@AssignmentListFragment)
 
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
     override fun adjustGradingPeriodHeader(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {
         configureGradingPeriodState(gradingPeriod, isVisible, isFilterVisible)
     }
 
-    private fun configureGradingPeriodState(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) {
+    private fun configureGradingPeriodState(gradingPeriod: String, isVisible: Boolean, isFilterVisible: Boolean) = with(binding) {
         if(isVisible) {
             gradingPeriodContainer.visibility = View.VISIBLE
 
@@ -234,7 +238,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_grading_periods_filter -> {
-                mGradingPeriodMenu?.show()
+                gradingPeriodMenu?.show()
             }
         }
     }
@@ -246,18 +250,18 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
             // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
             // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
             // overwrite the data from the network if we refresh the presenter from here.
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
         }
     }
 
-    override fun onHandleBackPressed() = assignmentListToolbar.closeSearch()
+    override fun onHandleBackPressed() = binding.assignmentListToolbar.closeSearch()
 
     companion object {
         @JvmStatic val PAIRED_WITH_SUBMISSIONS = "pairedWithSubmissions"
 
         fun getInstance(canvasContext: CanvasContext, args: Bundle) = AssignmentListFragment().apply {
-            mPairedWithSubmissions = args.getBoolean(PAIRED_WITH_SUBMISSIONS, false)
-            mCanvasContext = canvasContext
+            pairedWithSubmissions = args.getBoolean(PAIRED_WITH_SUBMISSIONS, false)
+            this.canvasContext = canvasContext
         }
     }
 }

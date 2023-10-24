@@ -34,15 +34,15 @@ class ParentApp extends StatefulWidget {
   @override
   _ParentAppState createState() => _ParentAppState();
 
-  ParentApp(this._appCompleter, {Key key}) : super(key: key);
+  ParentApp(this._appCompleter, {super.key});
 
-  static _ParentAppState of(BuildContext context) {
+  static _ParentAppState? of(BuildContext context) {
     return context.findAncestorStateOfType<_ParentAppState>();
   }
 }
 
 class _ParentAppState extends State<ParentApp> {
-  Locale _locale;
+  late Locale? _locale;
   GlobalKey<NavigatorState> _navKey = GlobalKey();
 
   rebuild(locale) {
@@ -65,7 +65,7 @@ class _ParentAppState extends State<ParentApp> {
             if (!widget._appCompleter.isCompleted) {
               widget._appCompleter.complete();
             }
-            return MasqueradeUI(navKey: _navKey, child: child);
+            return MasqueradeUI(navKey: _navKey, child: child!);
           },
           title: 'Canvas Parent',
           locale: _locale,
@@ -89,10 +89,10 @@ class _ParentAppState extends State<ParentApp> {
   // Get notified when there's a new system locale so we can rebuild the app with the new language
   LocaleResolutionCallback _localeCallback() => (locale, supportedLocales) {
         // If there is no user locale, they want the system locale. If there is a user locale, we should use it over the system locale
-        Locale newLocale = ApiPrefs.getUser()?.locale == null ? locale : _locale;
+        Locale newLocale = ApiPrefs.getUser()?.locale == null ? locale! : _locale!;
 
         const fallback = Locale('en');
-        Locale resolvedLocale =
+        Locale? resolvedLocale =
             AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(newLocale, supportedLocales);
 
         // Update the state if the locale changed

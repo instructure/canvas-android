@@ -17,7 +17,6 @@
 
 package com.instructure.student.fragment
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
@@ -37,16 +37,19 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentLtiLaunchBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 @PageView
 class LtiLaunchFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
 
     var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
@@ -76,8 +79,8 @@ class LtiLaunchFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadingView.setOverrideColor(canvasContext.backgroundColor)
-        toolName.setTextForVisibility(title().validOrNull())
+        binding.loadingView.setOverrideColor(canvasContext.backgroundColor)
+        binding.toolName.setTextForVisibility(title().validOrNull())
     }
 
     override fun applyTheme() = Unit
@@ -100,10 +103,18 @@ class LtiLaunchFragment : ParentFragment() {
                     when {
                         sessionLessLaunch -> {
                             // This is specific for Studio and Gauge
-                            url = when (canvasContext) {
-                                is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
-                                is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
-                                else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                            val id = url.substringAfterLast("/external_tools/").substringBefore("?")
+                            url = when {
+                                (id.toIntOrNull() != null) -> when (canvasContext) {
+                                    is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?id=$id"
+                                    is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?id=$id"
+                                    else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?id=$id"
+                                }
+                                else -> when (canvasContext) {
+                                    is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
+                                    is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${canvasContext.id}/external_tools/sessionless_launch?url=$url"
+                                    else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                                }
                             }
                             loadSessionlessLtiUrl(url)
                         }
@@ -219,9 +230,9 @@ class LtiLaunchFragment : ParentFragment() {
             return LtiLaunchFragment().withArgs(route.argsWithContext)
         }
 
-        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
-            val args = makeLTIBundle(URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+        fun routeLtiLaunchFragment(activity: FragmentActivity, canvasContext: CanvasContext?, url: String) {
+            val args = makeLTIBundle(URLDecoder.decode(url, "utf-8"), activity.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(activity, Route(LtiLaunchFragment::class.java, canvasContext, args))
         }
     }
 }

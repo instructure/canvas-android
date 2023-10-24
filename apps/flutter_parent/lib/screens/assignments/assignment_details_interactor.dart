@@ -23,13 +23,13 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AssignmentDetailsInteractor {
-  Future<AssignmentDetails> loadAssignmentDetails(
+  Future<AssignmentDetails?> loadAssignmentDetails(
     bool forceRefresh,
     String courseId,
     String assignmentId,
-    String studentId,
+    String? studentId,
   ) async {
-    final course = locator<CourseApi>().getCourse(courseId);
+    final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
     final assignment = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(
@@ -44,7 +44,7 @@ class AssignmentDetailsInteractor {
     String assignmentId,
     String studentId,
   ) async {
-    final course = locator<CourseApi>().getCourse(courseId);
+    final course = locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
     final quiz = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
 
     return AssignmentDetails(
@@ -53,19 +53,24 @@ class AssignmentDetailsInteractor {
     );
   }
 
-  Future<Reminder> loadReminder(String assignmentId) async {
-    final reminder = await locator<ReminderDb>().getByItem(
-      ApiPrefs.getDomain(),
-      ApiPrefs.getUser().id,
-      Reminder.TYPE_ASSIGNMENT,
-      assignmentId,
-    );
+  Future<Reminder?> loadReminder(String assignmentId) async {
+    Reminder? reminder = null;
+    String? domain = ApiPrefs.getDomain();
+    String? id = ApiPrefs.getUser()?.id;
+    if (domain != null && id != null) {
+      reminder = await locator<ReminderDb>().getByItem(
+        domain,
+        id,
+        Reminder.TYPE_ASSIGNMENT,
+        assignmentId,
+      );
+    }
 
     /* If the user dismisses a reminder notification without tapping it, then NotificationUtil won't have a chance
        to remove it from the database. Given that we cannot time travel (yet), if the reminder we just retrieved
        has a date set in the past then we will opt to delete it here. */
     if (reminder?.date?.isBefore(DateTime.now()) == true) {
-      await deleteReminder(reminder);
+      await deleteReminder(reminder!);
       return null;
     }
 
@@ -77,12 +82,12 @@ class AssignmentDetailsInteractor {
     DateTime date,
     String assignmentId,
     String courseId,
-    String title,
+    String? title,
     String body,
   ) async {
     var reminder = Reminder((b) => b
           ..userDomain = ApiPrefs.getDomain()
-          ..userId = ApiPrefs.getUser().id
+          ..userId = ApiPrefs.getUser()?.id
           ..type = Reminder.TYPE_ASSIGNMENT
           ..itemId = assignmentId
           ..courseId = courseId
@@ -90,21 +95,24 @@ class AssignmentDetailsInteractor {
         );
 
     // Saving to the database will generate an ID for this reminder
-    reminder = await locator<ReminderDb>().insert(reminder);
+    var insertedReminder = await locator<ReminderDb>().insert(reminder);
+    if (insertedReminder != null) {
+      reminder = insertedReminder;
+      await locator<NotificationUtil>().scheduleReminder(l10n, title, body, reminder);
+    }
 
-    await locator<NotificationUtil>().scheduleReminder(l10n, title, body, reminder);
   }
 
-  Future<void> deleteReminder(Reminder reminder) async {
+  Future<void> deleteReminder(Reminder? reminder) async {
     if (reminder == null) return;
-    await locator<NotificationUtil>().deleteNotification(reminder.id);
-    await locator<ReminderDb>().deleteById(reminder.id);
+    await locator<NotificationUtil>().deleteNotification(reminder.id!);
+    await locator<ReminderDb>().deleteById(reminder.id!);
   }
 }
 
 class AssignmentDetails {
-  final Course course;
-  final Assignment assignment;
+  final Course? course;
+  final Assignment? assignment;
 
   AssignmentDetails({this.course, this.assignment});
 }

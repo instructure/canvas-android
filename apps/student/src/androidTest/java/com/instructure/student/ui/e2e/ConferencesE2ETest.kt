@@ -16,13 +16,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class ConferencesE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     // Fairly basic test that we can create and view a conference with the app.
     // I didn't attempt to actually start the conference because that goes through

@@ -15,7 +15,6 @@
  */
 package com.instructure.student.ui.renderTests
 
-import android.os.Build
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.student.R
@@ -55,9 +54,10 @@ class QuizSubmissionViewRenderTest : StudentRenderTest() {
         page.assertUrlMatches(url)
     }
 
-    private fun loadPageWithUrl(url: String) {
-        val fragment = QuizSubmissionViewFragment.newInstance(url)
-        activityRule.activity.loadFragment(fragment)
+    private fun loadPageWithUrl(url: String) = with(activityRule.activity) {
+        runOnUiThread {
+            val fragment = QuizSubmissionViewFragment.newInstance(url)
+            loadFragment(fragment)
+        }
     }
-
 }

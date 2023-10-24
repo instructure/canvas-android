@@ -17,9 +17,10 @@ class _$AssignmentOverrideSerializer
   final String wireName = 'AssignmentOverride';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, AssignmentOverride object,
+  Iterable<Object?> serialize(
+      Serializers serializers, AssignmentOverride object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'assignment_id',
@@ -30,101 +31,95 @@ class _$AssignmentOverrideSerializer
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])),
     ];
-    result.add('title');
-    if (object.title == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.title,
-          specifiedType: const FullType(String)));
-    }
-    result.add('due_at');
-    if (object.dueAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.dueAt,
+    Object? value;
+    value = object.title;
+
+    result
+      ..add('title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.dueAt;
+
+    result
+      ..add('due_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('all_day');
-    if (object.allDay == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.allDay,
-          specifiedType: const FullType(bool)));
-    }
-    result.add('all_day_date');
-    if (object.allDayDate == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.allDayDate,
+    value = object.allDay;
+
+    result
+      ..add('all_day')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+    value = object.allDayDate;
+
+    result
+      ..add('all_day_date')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('unlock_at');
-    if (object.unlockAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.unlockAt,
+    value = object.unlockAt;
+
+    result
+      ..add('unlock_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('lock_at');
-    if (object.lockAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockAt,
+    value = object.lockAt;
+
+    result
+      ..add('lock_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
+
     return result;
   }
 
   @override
   AssignmentOverride deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AssignmentOverrideBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'assignment_id':
           result.assignmentId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'title':
           result.title = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'due_at':
           result.dueAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'all_day':
           result.allDay = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case 'all_day_date':
           result.allDayDate = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'unlock_at':
           result.unlockAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'lock_at':
           result.lockAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'student_ids':
           result.studentIds.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltList, const [const FullType(String)]))
-              as BuiltList<Object>);
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -139,44 +134,40 @@ class _$AssignmentOverride extends AssignmentOverride {
   @override
   final String assignmentId;
   @override
-  final String title;
+  final String? title;
   @override
-  final DateTime dueAt;
+  final DateTime? dueAt;
   @override
-  final bool allDay;
+  final bool? allDay;
   @override
-  final DateTime allDayDate;
+  final DateTime? allDayDate;
   @override
-  final DateTime unlockAt;
+  final DateTime? unlockAt;
   @override
-  final DateTime lockAt;
+  final DateTime? lockAt;
   @override
   final BuiltList<String> studentIds;
 
   factory _$AssignmentOverride(
-          [void Function(AssignmentOverrideBuilder) updates]) =>
-      (new AssignmentOverrideBuilder()..update(updates)).build();
+          [void Function(AssignmentOverrideBuilder)? updates]) =>
+      (new AssignmentOverrideBuilder()..update(updates))._build();
 
   _$AssignmentOverride._(
-      {this.id,
-      this.assignmentId,
+      {required this.id,
+      required this.assignmentId,
       this.title,
       this.dueAt,
       this.allDay,
       this.allDayDate,
       this.unlockAt,
       this.lockAt,
-      this.studentIds})
+      required this.studentIds})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('AssignmentOverride', 'id');
-    }
-    if (assignmentId == null) {
-      throw new BuiltValueNullFieldError('AssignmentOverride', 'assignmentId');
-    }
-    if (studentIds == null) {
-      throw new BuiltValueNullFieldError('AssignmentOverride', 'studentIds');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'AssignmentOverride', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        assignmentId, r'AssignmentOverride', 'assignmentId');
+    BuiltValueNullFieldError.checkNotNull(
+        studentIds, r'AssignmentOverride', 'studentIds');
   }
 
   @override
@@ -205,25 +196,23 @@ class _$AssignmentOverride extends AssignmentOverride {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc($jc($jc(0, id.hashCode), assignmentId.hashCode),
-                                title.hashCode),
-                            dueAt.hashCode),
-                        allDay.hashCode),
-                    allDayDate.hashCode),
-                unlockAt.hashCode),
-            lockAt.hashCode),
-        studentIds.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, assignmentId.hashCode);
+    _$hash = $jc(_$hash, title.hashCode);
+    _$hash = $jc(_$hash, dueAt.hashCode);
+    _$hash = $jc(_$hash, allDay.hashCode);
+    _$hash = $jc(_$hash, allDayDate.hashCode);
+    _$hash = $jc(_$hash, unlockAt.hashCode);
+    _$hash = $jc(_$hash, lockAt.hashCode);
+    _$hash = $jc(_$hash, studentIds.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('AssignmentOverride')
+    return (newBuiltValueToStringHelper(r'AssignmentOverride')
           ..add('id', id)
           ..add('assignmentId', assignmentId)
           ..add('title', title)
@@ -239,44 +228,44 @@ class _$AssignmentOverride extends AssignmentOverride {
 
 class AssignmentOverrideBuilder
     implements Builder<AssignmentOverride, AssignmentOverrideBuilder> {
-  _$AssignmentOverride _$v;
+  _$AssignmentOverride? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _assignmentId;
-  String get assignmentId => _$this._assignmentId;
-  set assignmentId(String assignmentId) => _$this._assignmentId = assignmentId;
+  String? _assignmentId;
+  String? get assignmentId => _$this._assignmentId;
+  set assignmentId(String? assignmentId) => _$this._assignmentId = assignmentId;
 
-  String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String? _title;
+  String? get title => _$this._title;
+  set title(String? title) => _$this._title = title;
 
-  DateTime _dueAt;
-  DateTime get dueAt => _$this._dueAt;
-  set dueAt(DateTime dueAt) => _$this._dueAt = dueAt;
+  DateTime? _dueAt;
+  DateTime? get dueAt => _$this._dueAt;
+  set dueAt(DateTime? dueAt) => _$this._dueAt = dueAt;
 
-  bool _allDay;
-  bool get allDay => _$this._allDay;
-  set allDay(bool allDay) => _$this._allDay = allDay;
+  bool? _allDay;
+  bool? get allDay => _$this._allDay;
+  set allDay(bool? allDay) => _$this._allDay = allDay;
 
-  DateTime _allDayDate;
-  DateTime get allDayDate => _$this._allDayDate;
-  set allDayDate(DateTime allDayDate) => _$this._allDayDate = allDayDate;
+  DateTime? _allDayDate;
+  DateTime? get allDayDate => _$this._allDayDate;
+  set allDayDate(DateTime? allDayDate) => _$this._allDayDate = allDayDate;
 
-  DateTime _unlockAt;
-  DateTime get unlockAt => _$this._unlockAt;
-  set unlockAt(DateTime unlockAt) => _$this._unlockAt = unlockAt;
+  DateTime? _unlockAt;
+  DateTime? get unlockAt => _$this._unlockAt;
+  set unlockAt(DateTime? unlockAt) => _$this._unlockAt = unlockAt;
 
-  DateTime _lockAt;
-  DateTime get lockAt => _$this._lockAt;
-  set lockAt(DateTime lockAt) => _$this._lockAt = lockAt;
+  DateTime? _lockAt;
+  DateTime? get lockAt => _$this._lockAt;
+  set lockAt(DateTime? lockAt) => _$this._lockAt = lockAt;
 
-  ListBuilder<String> _studentIds;
+  ListBuilder<String>? _studentIds;
   ListBuilder<String> get studentIds =>
       _$this._studentIds ??= new ListBuilder<String>();
-  set studentIds(ListBuilder<String> studentIds) =>
+  set studentIds(ListBuilder<String>? studentIds) =>
       _$this._studentIds = studentIds;
 
   AssignmentOverrideBuilder() {
@@ -284,16 +273,17 @@ class AssignmentOverrideBuilder
   }
 
   AssignmentOverrideBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _assignmentId = _$v.assignmentId;
-      _title = _$v.title;
-      _dueAt = _$v.dueAt;
-      _allDay = _$v.allDay;
-      _allDayDate = _$v.allDayDate;
-      _unlockAt = _$v.unlockAt;
-      _lockAt = _$v.lockAt;
-      _studentIds = _$v.studentIds?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _assignmentId = $v.assignmentId;
+      _title = $v.title;
+      _dueAt = $v.dueAt;
+      _allDay = $v.allDay;
+      _allDayDate = $v.allDayDate;
+      _unlockAt = $v.unlockAt;
+      _lockAt = $v.lockAt;
+      _studentIds = $v.studentIds.toBuilder();
       _$v = null;
     }
     return this;
@@ -301,25 +291,27 @@ class AssignmentOverrideBuilder
 
   @override
   void replace(AssignmentOverride other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AssignmentOverride;
   }
 
   @override
-  void update(void Function(AssignmentOverrideBuilder) updates) {
+  void update(void Function(AssignmentOverrideBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$AssignmentOverride build() {
+  AssignmentOverride build() => _build();
+
+  _$AssignmentOverride _build() {
     _$AssignmentOverride _$result;
     try {
       _$result = _$v ??
           new _$AssignmentOverride._(
-              id: id,
-              assignmentId: assignmentId,
+              id: BuiltValueNullFieldError.checkNotNull(
+                  id, r'AssignmentOverride', 'id'),
+              assignmentId: BuiltValueNullFieldError.checkNotNull(
+                  assignmentId, r'AssignmentOverride', 'assignmentId'),
               title: title,
               dueAt: dueAt,
               allDay: allDay,
@@ -328,13 +320,13 @@ class AssignmentOverrideBuilder
               lockAt: lockAt,
               studentIds: studentIds.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'studentIds';
         studentIds.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'AssignmentOverride', _$failedField, e.toString());
+            r'AssignmentOverride', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -343,4 +335,4 @@ class AssignmentOverrideBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

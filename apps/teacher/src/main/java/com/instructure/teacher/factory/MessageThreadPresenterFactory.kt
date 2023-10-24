@@ -22,8 +22,7 @@ import instructure.androidblueprint.PresenterFactory
 
 class MessageThreadPresenterFactory(
     private val conversation: Conversation? = null,
-    private val position: Int = 0,
     private val conversationId: Long = conversation?.id ?: 0
 ) : PresenterFactory<MessageThreadView, MessageThreadPresenter> {
-    override fun create() = MessageThreadPresenter(conversation, position, conversationId)
+    override fun create() = MessageThreadPresenter(conversation, conversationId)
 }

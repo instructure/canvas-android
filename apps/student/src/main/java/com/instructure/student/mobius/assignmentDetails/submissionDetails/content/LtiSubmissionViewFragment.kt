@@ -22,14 +22,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentLtiSubmissionViewBinding
 import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType.ExternalToolContent
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_lti_submission_view.*
 
 class LtiSubmissionViewFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentLtiSubmissionViewBinding::bind)
     private var canvasContext: CanvasContext by ParcelableArg()
     private var url: String by StringArg()
 
@@ -39,10 +45,10 @@ class LtiSubmissionViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewStyler.themeButton(viewLtiButton)
-        viewLtiButton.onClick {
+        ViewStyler.themeButton(binding.viewLtiButton)
+        binding.viewLtiButton.onClickWithRequireNetwork {
             val route = LtiLaunchFragment.makeRoute(canvasContext = canvasContext, url = url)
-            RouteMatcher.route(requireContext(), route)
+            RouteMatcher.route(requireActivity(), route)
         }
     }
 

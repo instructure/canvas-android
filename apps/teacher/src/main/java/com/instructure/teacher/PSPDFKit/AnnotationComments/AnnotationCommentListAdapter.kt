@@ -17,8 +17,11 @@
 package com.instructure.teacher.PSPDFKit.AnnotationComments
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.teacher.databinding.AdapterAnnotationCommentBinding
 import instructure.androidblueprint.ListRecyclerAdapter
 
 class AnnotationCommentListAdapter(
@@ -28,14 +31,17 @@ class AnnotationCommentListAdapter(
         private val deleteCallback: (CanvaDocAnnotation, Int) -> Unit
 ) : ListRecyclerAdapter<CanvaDocAnnotation, AnnotationCommentViewHolder, AnnotationCommentListView>(context, presenter) {
 
-    override fun createViewHolder(v: View, viewType: Int): AnnotationCommentViewHolder = AnnotationCommentViewHolder(v)
-    override fun itemLayoutResId(viewType: Int) = AnnotationCommentViewHolder.HOLDER_RES
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = AnnotationCommentViewHolder(binding as AdapterAnnotationCommentBinding)
+
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterAnnotationCommentBinding::inflate
+
     override fun bindHolder(model: CanvaDocAnnotation, holder: AnnotationCommentViewHolder, position: Int) {
-        val canDelete = (presenter as AnnotationCommentListPresenter).docSession.annotationMetadata?.canManage() == true
-                || (presenter.docSession.annotationMetadata?.canWrite() == true
-                && model.userId == presenter.docSession.annotationMetadata?.userId)
-        val canEdit = presenter.docSession.annotationMetadata?.canWrite() == true
-                && model.userId == (presenter.docSession.annotationMetadata?.userId)
+        val annotationCommentPresenter = presenter as AnnotationCommentListPresenter
+        val canDelete = annotationCommentPresenter.docSession.annotationMetadata?.canManage() == true
+                || (annotationCommentPresenter.docSession.annotationMetadata?.canWrite() == true
+                && model.userId == annotationCommentPresenter.docSession.annotationMetadata?.userId)
+        val canEdit = annotationCommentPresenter.docSession.annotationMetadata?.canWrite() == true
+                && model.userId == (annotationCommentPresenter.docSession.annotationMetadata?.userId)
 
         holder.bind(model, canEdit, canDelete, editCallback, deleteCallback)
     }

@@ -16,6 +16,8 @@
 
 package com.instructure.pandautils.utils
 
+import androidx.work.Data
+import androidx.work.WorkInfo
 import com.google.gson.Gson
 import java.util.*
 import kotlin.math.ln
@@ -47,4 +49,13 @@ fun Int?.orDefault(default: Int = 0): Int {
 
 fun Boolean?.orDefault(default: Boolean = false): Boolean {
     return this ?: default
+}
+
+fun Double?.orDefault(default: Double = 0.0): Double {
+    return this ?: default
+}
+
+fun Data.newBuilder(): Data.Builder {
+    return Data.Builder()
+        .putAll(this)
 }

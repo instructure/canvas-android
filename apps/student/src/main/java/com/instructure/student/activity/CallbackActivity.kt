@@ -21,11 +21,7 @@ import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
-import com.instructure.canvasapi2.managers.ThemeManager
-import com.instructure.canvasapi2.managers.UnreadCountManager
-import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
@@ -35,11 +31,11 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.RatingDialog
+import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.fragment.InboxFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
@@ -47,7 +43,7 @@ import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
 
-abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
+abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
 
     private var loadInitialDataJob: Job? = null
 
@@ -214,6 +210,8 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 return ApiPrefs.effectiveLocale != oldLocale
             }
             ApiType.CACHE -> if (!APIHelper.hasNetworkConnection()) ApiPrefs.user = user
+            ApiType.UNKNOWN -> {}
+            else -> {}
         }
         return false
     }

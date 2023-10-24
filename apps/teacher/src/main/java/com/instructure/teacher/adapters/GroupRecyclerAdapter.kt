@@ -29,8 +29,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.instructure.pandarecycler.util.GroupSortedList
 import java.util.*
-import kotlin.Comparator
-
 
 abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
     context: Context,
@@ -154,7 +152,7 @@ abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
     @Suppress("UNCHECKED_CAST")
     private fun <I : T> getBinder(item: I): ListItemBinder<I, C> =
         registeredBinders[item::class.java] as? ListItemBinder<I, C>
-                ?: throw IllegalStateException("No binder registered for ${item::class.java.name}")
+            ?: throw IllegalStateException("No binder registered for ${item::class.java.name}")
 
     private fun performBind(item: T, holder: ViewHolder, isExpanded: Boolean) {
         val binder = getBinder(item)
@@ -438,8 +436,3 @@ abstract class ListItemBinder<T : Any, C : ListItemCallback> {
 }
 
 interface ListItemCallback
-
-
-
-
-

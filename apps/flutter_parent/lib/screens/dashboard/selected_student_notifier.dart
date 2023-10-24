@@ -17,7 +17,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class SelectedStudentNotifier extends ValueNotifier<User> {
+class SelectedStudentNotifier extends ValueNotifier<User?> {
   SelectedStudentNotifier() : super(null);
 
   update(User student) {

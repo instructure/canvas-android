@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Supprimé</string>
 
+    <string name="gradeUpdated">Note mise à jour</string>
     <string name="loadingCanvas">Chargement du contenu de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1114,9 +1115,12 @@
     <string name="discussions_unknown_date">Date inconnue</string>
     <string name="a11y_gradeLetterMinusContentDescription">%s. moins</string>
     <string name="a11y_letterGrade">%s.</string>
-    <string name="a11y_gradeCellContentDescription">%1$s %2$s</string>
-    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%1$s %2$s, %3$s</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Vous pouvez ouvrir les détails de l’envoi à partir d’ici</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Note : %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
         <item quantity="other">%s Minutes</item>
@@ -1139,7 +1143,7 @@
     <string name="conferenceInProgress">Conférences en cours</string>
 
     <string name="a11y_criterion_content_description">Notes du critère %s</string>
-    <string name="a11y_criterion_description_content_description">%1$s, %2$s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">plus d\'informations</string>
     <string name="a11y_create_file_folder_visible">Les boutons « Créer un fichier » et « Créer un dossier » sont visibles</string>
     <string name="a11y_create_file_folder_gone">Les boutons « Créer un fichier » et « Créer un dossier » sont invisibles</string>
@@ -1292,9 +1296,17 @@
     <string name="a11y_closeProgress">Fermer le dialogue de progression</string>
     <string name="fileUploadProgress">%1$s sur %2$s</string>
     <string name="fileUploadProgressSubtitle">Téléversement des fichiers</string>
+    <string name="fileUploadFailedSubtitle">Le téléversement d’un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
     <string name="submissionProgressSubtitle">Téléversement de l’envoi vers \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Téléversement de l’envoi</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Téléversement des fichiers</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Envoi réussi</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Échec de l’envoi</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Téléversement du fichier</item>
+        <item quantity="other">Téléversement des fichiers</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Le téléversement du fichier a réussi</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Le téléversement du fichier a échoué</string>
     <string name="cancelSubmissionDialogTitle">Annuler l\'envoi</string>
     <string name="cancelSubmissionDialogMessage">Cela annulera et supprimera votre envoi.</string>
     <string name="fileUploadError">Le téléversement du fichier a échoué</string>
@@ -1302,7 +1314,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Téléversement vers Mes Fichiers</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Envoyer la tâche</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choisir un cours</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choisissez un cours, le cours sélectionné est : %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choisir une tâche</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choisissez une tâche, la tâche sélectionnée est : %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Annuler le téléversement?</string>
     <string name="cancelFileUploadMessage">Cela annulera votre téléversement.</string>
@@ -1317,4 +1331,64 @@
     <string name="createdByStudentView">Créé par Student View</string>
     <string name="discussionErrorToast">Une erreur est survenue. Le sujet n’est peut-être plus disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">L’autorisation de la caméra a été définitivement refusée. Accédez aux paramètres de l’application pour l’autoriser.</string>
+    <string name="unpublish_assignment_error">On ne peut pas annuler la publication d’une tâche s\'il y a des envois d\'étudiants.</string>
+    <string name="subscribeToCalendar">Souscrire au flux du calendrier</string>
+    <string name="subscribeToCalendarMessage">Vous pouvez synchroniser votre calendrier Canvas avec votre compte Google Calendar en cliquant sur le bouton S\'abonner dans cette boîte de dialogue. Ensuite, vous devrez accéder à l\'application Google Agenda sur votre appareil et activer la synchronisation dans les paramètres du nouvel agenda.</string>
+    <string name="subscribeButton">S’inscrire</string>
+    <string name="switchToLightMode">Passer en mode lumière</string>
+    <string name="switchToDarkMode">Passer en mode sombre</string>
+    <string name="acceptableUsePolicyDescription">Soit vous êtes un nouvel utilisateur, soit la politique d’utilisation acceptable a changé depuis que vous l’avez acceptée pour la dernière fois. Veuillez accepter la Politique d’utilisation acceptable avant de continuer.</string>
+    <string name="acceptableUsePolicyTitle">Politique d’utilisation acceptable</string>
+    <string name="acceptableUsePolicyButton">Politique d’utilisation acceptable</string>
+    <string name="acceptableUsePolicyAgree">J’accepte la Politique d\'utilisation acceptable.</string>
+    <string name="acceptableUsePolicySubmit">Envoyer</string>
+    <string name="acceptFail">Échec de l’envoi de l’acceptation des conditions.</string>
+    <string name="attempt">Tentative %d</string>
+    <string name="quizQuestions">Questions : %d</string>
+    <string name="quizTimeLimit">Limite de temps : %s</string>
+    <string name="allowedAttempts">Tentatives autorisées : %s</string>
+    <string name="usedAttempts">Tentatives utilisées : %d</string>
+    <string name="generalUnexpectedError">Une erreur inattendue s’est produite.</string>
+
+    <string name="deleteSelected">Supprimer</string>
+    <string name="archiveSelected">Archiver</string>
+    <string name="unarchiveSelected">Désarchiver</string>
+    <string name="markAsReadSelected">Marquer comme lues</string>
+    <string name="markAsUnreadSelected">Marquer comme non lues</string>
+    <string name="starSelected">Astérisque</string>
+    <string name="unstarSelected">Enlever l’astérisque</string>
+
+    <string name="inboxOperationFailed">Échec de l’exécution de l’opération</string>
+    <string name="inboxDeletedConfirmation">%s supprimé(s)</string>
+    <string name="inboxArchivedConfirmation">%s archivé(s)</string>
+    <string name="inboxUnarchivedConfirmation">%s désarchivé(s)</string>
+    <string name="inboxMarkAsReadConfirmation">%s marqué(s) comme lu</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marqué(s) comme non lu</string>
+    <string name="inboxStarredConfirmation">%s marqué(s) d’un astérisque</string>
+    <string name="inboxUnstarredConfirmation">%s avec étoile enlevé(s)</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Cette conversation sera supprimée de la boîte de réception sur tous vos appareils. Cette action ne peut pas être annulée.</item>
+        <item quantity="other">Ces conversations seront supprimées de la boîte de réception sur tous vos appareils. Cette action ne peut pas être annulée.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Échec du chargement de la page suivante. Vérifiez votre connexion Internet.</string>
+    <string name="conversationsRefreshFailed">Échec de l’actualisation des conversations. Vérifiez votre connexion Internet.</string>
+    <string name="inboxScopeInbox">Boîte de réception</string>
+    <string name="inboxContextSelectorTitle">Sélectionner un cours ou un groupe</string>
+    <string name="inboxClearFilter">Effacer</string>
+    <string name="a11y_courseFilterContentDescription">Filtrer les cours : %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">sélectionner</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversation sélectionnée. Mode de sélection activé. Naviguer pour les actions.</string>
+    <string name="a11y_conversationSelected">Conversation sélectionnée</string>
+    <string name="a11y_conversationDeselected">Conversation désélectionnée</string>
+    <string name="a11y_exitSelectionMode">Quitter le mode de sélection</string>
+    <string name="a11y_selectionModeDeactivated">Mode de sélection désactivé.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Annuler</string>
+    <string name="aboutAppTitle">Appl.</string>
+    <string name="aboutDomainTitle">Domaine</string>
+    <string name="aboutLoginTitle">Identifiant de connexion</string>
+    <string name="aboutEmailTitle">Adresse électronique</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Un problème est survenu lors du rechargement de cette tâche. Veuillez vérifier votre connexion et réessayer.</string>
 </resources>

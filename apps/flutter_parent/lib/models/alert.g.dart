@@ -105,9 +105,9 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
   final String wireName = 'Alert';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Alert object,
+  Iterable<Object?> serialize(Serializers serializers, Alert object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'observer_alert_threshold_id',
@@ -125,9 +125,6 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       'workflow_state',
       serializers.serialize(object.workflowState,
           specifiedType: const FullType(AlertWorkflowState)),
-      'action_date',
-      serializers.serialize(object.actionDate,
-          specifiedType: const FullType(DateTime)),
       'title',
       serializers.serialize(object.title,
           specifiedType: const FullType(String)),
@@ -144,70 +141,76 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       serializers.serialize(object.lockedForUser,
           specifiedType: const FullType(bool)),
     ];
+    Object? value;
+    value = object.actionDate;
+
+    result
+      ..add('action_date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
 
     return result;
   }
 
   @override
-  Alert deserialize(Serializers serializers, Iterable<Object> serialized,
+  Alert deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AlertBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'observer_alert_threshold_id':
           result.observerAlertThresholdId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'context_type':
           result.contextType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'context_id':
           result.contextId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'alert_type':
           result.alertType = serializers.deserialize(value,
-              specifiedType: const FullType(AlertType)) as AlertType;
+              specifiedType: const FullType(AlertType))! as AlertType;
           break;
         case 'workflow_state':
           result.workflowState = serializers.deserialize(value,
-                  specifiedType: const FullType(AlertWorkflowState))
+                  specifiedType: const FullType(AlertWorkflowState))!
               as AlertWorkflowState;
           break;
         case 'action_date':
           result.actionDate = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'title':
           result.title = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'user_id':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'observer_id':
           result.observerId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'locked_for_user':
           result.lockedForUser = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -249,7 +252,8 @@ class _$AlertTypeSerializer implements PrimitiveSerializer<AlertType> {
   @override
   AlertType deserialize(Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
-      AlertType.valueOf(_fromWire[serialized] ?? serialized as String);
+      AlertType.valueOf(
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$AlertWorkflowStateSerializer
@@ -284,7 +288,7 @@ class _$Alert extends Alert {
   @override
   final AlertWorkflowState workflowState;
   @override
-  final DateTime actionDate;
+  final DateTime? actionDate;
   @override
   final String title;
   @override
@@ -296,59 +300,37 @@ class _$Alert extends Alert {
   @override
   final bool lockedForUser;
 
-  factory _$Alert([void Function(AlertBuilder) updates]) =>
-      (new AlertBuilder()..update(updates)).build();
+  factory _$Alert([void Function(AlertBuilder)? updates]) =>
+      (new AlertBuilder()..update(updates))._build();
 
   _$Alert._(
-      {this.id,
-      this.observerAlertThresholdId,
-      this.contextType,
-      this.contextId,
-      this.alertType,
-      this.workflowState,
+      {required this.id,
+      required this.observerAlertThresholdId,
+      required this.contextType,
+      required this.contextId,
+      required this.alertType,
+      required this.workflowState,
       this.actionDate,
-      this.title,
-      this.userId,
-      this.observerId,
-      this.htmlUrl,
-      this.lockedForUser})
+      required this.title,
+      required this.userId,
+      required this.observerId,
+      required this.htmlUrl,
+      required this.lockedForUser})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Alert', 'id');
-    }
-    if (observerAlertThresholdId == null) {
-      throw new BuiltValueNullFieldError('Alert', 'observerAlertThresholdId');
-    }
-    if (contextType == null) {
-      throw new BuiltValueNullFieldError('Alert', 'contextType');
-    }
-    if (contextId == null) {
-      throw new BuiltValueNullFieldError('Alert', 'contextId');
-    }
-    if (alertType == null) {
-      throw new BuiltValueNullFieldError('Alert', 'alertType');
-    }
-    if (workflowState == null) {
-      throw new BuiltValueNullFieldError('Alert', 'workflowState');
-    }
-    if (actionDate == null) {
-      throw new BuiltValueNullFieldError('Alert', 'actionDate');
-    }
-    if (title == null) {
-      throw new BuiltValueNullFieldError('Alert', 'title');
-    }
-    if (userId == null) {
-      throw new BuiltValueNullFieldError('Alert', 'userId');
-    }
-    if (observerId == null) {
-      throw new BuiltValueNullFieldError('Alert', 'observerId');
-    }
-    if (htmlUrl == null) {
-      throw new BuiltValueNullFieldError('Alert', 'htmlUrl');
-    }
-    if (lockedForUser == null) {
-      throw new BuiltValueNullFieldError('Alert', 'lockedForUser');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'Alert', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        observerAlertThresholdId, r'Alert', 'observerAlertThresholdId');
+    BuiltValueNullFieldError.checkNotNull(contextType, r'Alert', 'contextType');
+    BuiltValueNullFieldError.checkNotNull(contextId, r'Alert', 'contextId');
+    BuiltValueNullFieldError.checkNotNull(alertType, r'Alert', 'alertType');
+    BuiltValueNullFieldError.checkNotNull(
+        workflowState, r'Alert', 'workflowState');
+    BuiltValueNullFieldError.checkNotNull(title, r'Alert', 'title');
+    BuiltValueNullFieldError.checkNotNull(userId, r'Alert', 'userId');
+    BuiltValueNullFieldError.checkNotNull(observerId, r'Alert', 'observerId');
+    BuiltValueNullFieldError.checkNotNull(htmlUrl, r'Alert', 'htmlUrl');
+    BuiltValueNullFieldError.checkNotNull(
+        lockedForUser, r'Alert', 'lockedForUser');
   }
 
   @override
@@ -378,35 +360,26 @@ class _$Alert extends Alert {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(0, id.hashCode),
-                                                observerAlertThresholdId
-                                                    .hashCode),
-                                            contextType.hashCode),
-                                        contextId.hashCode),
-                                    alertType.hashCode),
-                                workflowState.hashCode),
-                            actionDate.hashCode),
-                        title.hashCode),
-                    userId.hashCode),
-                observerId.hashCode),
-            htmlUrl.hashCode),
-        lockedForUser.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, observerAlertThresholdId.hashCode);
+    _$hash = $jc(_$hash, contextType.hashCode);
+    _$hash = $jc(_$hash, contextId.hashCode);
+    _$hash = $jc(_$hash, alertType.hashCode);
+    _$hash = $jc(_$hash, workflowState.hashCode);
+    _$hash = $jc(_$hash, actionDate.hashCode);
+    _$hash = $jc(_$hash, title.hashCode);
+    _$hash = $jc(_$hash, userId.hashCode);
+    _$hash = $jc(_$hash, observerId.hashCode);
+    _$hash = $jc(_$hash, htmlUrl.hashCode);
+    _$hash = $jc(_$hash, lockedForUser.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Alert')
+    return (newBuiltValueToStringHelper(r'Alert')
           ..add('id', id)
           ..add('observerAlertThresholdId', observerAlertThresholdId)
           ..add('contextType', contextType)
@@ -424,57 +397,57 @@ class _$Alert extends Alert {
 }
 
 class AlertBuilder implements Builder<Alert, AlertBuilder> {
-  _$Alert _$v;
+  _$Alert? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _observerAlertThresholdId;
-  String get observerAlertThresholdId => _$this._observerAlertThresholdId;
-  set observerAlertThresholdId(String observerAlertThresholdId) =>
+  String? _observerAlertThresholdId;
+  String? get observerAlertThresholdId => _$this._observerAlertThresholdId;
+  set observerAlertThresholdId(String? observerAlertThresholdId) =>
       _$this._observerAlertThresholdId = observerAlertThresholdId;
 
-  String _contextType;
-  String get contextType => _$this._contextType;
-  set contextType(String contextType) => _$this._contextType = contextType;
+  String? _contextType;
+  String? get contextType => _$this._contextType;
+  set contextType(String? contextType) => _$this._contextType = contextType;
 
-  String _contextId;
-  String get contextId => _$this._contextId;
-  set contextId(String contextId) => _$this._contextId = contextId;
+  String? _contextId;
+  String? get contextId => _$this._contextId;
+  set contextId(String? contextId) => _$this._contextId = contextId;
 
-  AlertType _alertType;
-  AlertType get alertType => _$this._alertType;
-  set alertType(AlertType alertType) => _$this._alertType = alertType;
+  AlertType? _alertType;
+  AlertType? get alertType => _$this._alertType;
+  set alertType(AlertType? alertType) => _$this._alertType = alertType;
 
-  AlertWorkflowState _workflowState;
-  AlertWorkflowState get workflowState => _$this._workflowState;
-  set workflowState(AlertWorkflowState workflowState) =>
+  AlertWorkflowState? _workflowState;
+  AlertWorkflowState? get workflowState => _$this._workflowState;
+  set workflowState(AlertWorkflowState? workflowState) =>
       _$this._workflowState = workflowState;
 
-  DateTime _actionDate;
-  DateTime get actionDate => _$this._actionDate;
-  set actionDate(DateTime actionDate) => _$this._actionDate = actionDate;
+  DateTime? _actionDate;
+  DateTime? get actionDate => _$this._actionDate;
+  set actionDate(DateTime? actionDate) => _$this._actionDate = actionDate;
 
-  String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String? _title;
+  String? get title => _$this._title;
+  set title(String? title) => _$this._title = title;
 
-  String _userId;
-  String get userId => _$this._userId;
-  set userId(String userId) => _$this._userId = userId;
+  String? _userId;
+  String? get userId => _$this._userId;
+  set userId(String? userId) => _$this._userId = userId;
 
-  String _observerId;
-  String get observerId => _$this._observerId;
-  set observerId(String observerId) => _$this._observerId = observerId;
+  String? _observerId;
+  String? get observerId => _$this._observerId;
+  set observerId(String? observerId) => _$this._observerId = observerId;
 
-  String _htmlUrl;
-  String get htmlUrl => _$this._htmlUrl;
-  set htmlUrl(String htmlUrl) => _$this._htmlUrl = htmlUrl;
+  String? _htmlUrl;
+  String? get htmlUrl => _$this._htmlUrl;
+  set htmlUrl(String? htmlUrl) => _$this._htmlUrl = htmlUrl;
 
-  bool _lockedForUser;
-  bool get lockedForUser => _$this._lockedForUser;
-  set lockedForUser(bool lockedForUser) =>
+  bool? _lockedForUser;
+  bool? get lockedForUser => _$this._lockedForUser;
+  set lockedForUser(bool? lockedForUser) =>
       _$this._lockedForUser = lockedForUser;
 
   AlertBuilder() {
@@ -482,19 +455,20 @@ class AlertBuilder implements Builder<Alert, AlertBuilder> {
   }
 
   AlertBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _observerAlertThresholdId = _$v.observerAlertThresholdId;
-      _contextType = _$v.contextType;
-      _contextId = _$v.contextId;
-      _alertType = _$v.alertType;
-      _workflowState = _$v.workflowState;
-      _actionDate = _$v.actionDate;
-      _title = _$v.title;
-      _userId = _$v.userId;
-      _observerId = _$v.observerId;
-      _htmlUrl = _$v.htmlUrl;
-      _lockedForUser = _$v.lockedForUser;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _observerAlertThresholdId = $v.observerAlertThresholdId;
+      _contextType = $v.contextType;
+      _contextId = $v.contextId;
+      _alertType = $v.alertType;
+      _workflowState = $v.workflowState;
+      _actionDate = $v.actionDate;
+      _title = $v.title;
+      _userId = $v.userId;
+      _observerId = $v.observerId;
+      _htmlUrl = $v.htmlUrl;
+      _lockedForUser = $v.lockedForUser;
       _$v = null;
     }
     return this;
@@ -502,36 +476,46 @@ class AlertBuilder implements Builder<Alert, AlertBuilder> {
 
   @override
   void replace(Alert other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Alert;
   }
 
   @override
-  void update(void Function(AlertBuilder) updates) {
+  void update(void Function(AlertBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Alert build() {
+  Alert build() => _build();
+
+  _$Alert _build() {
     final _$result = _$v ??
         new _$Alert._(
-            id: id,
-            observerAlertThresholdId: observerAlertThresholdId,
-            contextType: contextType,
-            contextId: contextId,
-            alertType: alertType,
-            workflowState: workflowState,
+            id: BuiltValueNullFieldError.checkNotNull(id, r'Alert', 'id'),
+            observerAlertThresholdId: BuiltValueNullFieldError.checkNotNull(
+                observerAlertThresholdId, r'Alert', 'observerAlertThresholdId'),
+            contextType: BuiltValueNullFieldError.checkNotNull(
+                contextType, r'Alert', 'contextType'),
+            contextId: BuiltValueNullFieldError.checkNotNull(
+                contextId, r'Alert', 'contextId'),
+            alertType: BuiltValueNullFieldError.checkNotNull(
+                alertType, r'Alert', 'alertType'),
+            workflowState: BuiltValueNullFieldError.checkNotNull(
+                workflowState, r'Alert', 'workflowState'),
             actionDate: actionDate,
-            title: title,
-            userId: userId,
-            observerId: observerId,
-            htmlUrl: htmlUrl,
-            lockedForUser: lockedForUser);
+            title:
+                BuiltValueNullFieldError.checkNotNull(title, r'Alert', 'title'),
+            userId: BuiltValueNullFieldError.checkNotNull(
+                userId, r'Alert', 'userId'),
+            observerId: BuiltValueNullFieldError.checkNotNull(
+                observerId, r'Alert', 'observerId'),
+            htmlUrl: BuiltValueNullFieldError.checkNotNull(
+                htmlUrl, r'Alert', 'htmlUrl'),
+            lockedForUser:
+                BuiltValueNullFieldError.checkNotNull(lockedForUser, r'Alert', 'lockedForUser'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

@@ -35,13 +35,14 @@ import 'package:mockito/mockito.dart';
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   mockNetworkImageResponse();
   final l10n = AppLocalizations();
 
   testWidgetsWithAccessibilityChecks('Displays loading state', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var completer = Completer<List<Conversation>>();
@@ -55,7 +56,7 @@ void main() {
 
   // TODO Fix test
   testWidgetsWithAccessibilityChecks('Displays empty state', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     when(interactor.getConversations()).thenAnswer((_) => Future.value([]));
@@ -70,7 +71,7 @@ void main() {
 
   // TODO Fix test
   testWidgetsWithAccessibilityChecks('Displays error state with retry', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     when(interactor.getConversations()).thenAnswer((_) => Future.error('Error'));
@@ -82,7 +83,7 @@ void main() {
     var errorIcon = await tester.widget<Icon>(find.byType(Icon).first).icon;
     expect(errorIcon, equals(CanvasIcons.warning));
     expect(find.text('There was an error loading your inbox messages.'), findsOneWidget);
-    expect(find.widgetWithText(FlatButton, l10n.retry), findsOneWidget);
+    expect(find.widgetWithText(TextButton, l10n.retry), findsOneWidget);
 
     // Retry with success
     reset(interactor);
@@ -92,11 +93,11 @@ void main() {
 
     // Should no longer show error state
     expect(find.text('There was an error loading your inbox messages.'), findsNothing);
-    expect(find.widgetWithText(FlatButton, l10n.retry), findsNothing);
+    expect(find.widgetWithText(TextButton, l10n.retry), findsNothing);
   }, skip: true);
 
   testWidgetsWithAccessibilityChecks('Displays subject, course name, message preview, and date', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var now = DateTime.now();
@@ -113,13 +114,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(conversation.subject), findsOneWidget);
-    expect(find.text(conversation.contextName), findsOneWidget);
-    expect(find.text(conversation.lastMessage), findsOneWidget);
+    expect(find.text(conversation.contextName!), findsOneWidget);
+    expect(find.text(conversation.lastMessage!), findsOneWidget);
     expect(find.text('Dec 25'), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Adds year to date if not this year', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var now = DateTime.now();
@@ -138,7 +139,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays time if date is today', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var now = DateTime.now();
@@ -156,7 +157,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays single avatar for single participant', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var now = DateTime.now();
@@ -179,7 +180,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays double avatar for two participants', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var now = DateTime.now();
@@ -204,7 +205,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays group icon for more than two participants', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var now = DateTime.now();
@@ -232,7 +233,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping add button shows messageable course list', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     when(interactor.getConversations()).thenAnswer((_) => Future.error(''));
@@ -246,7 +247,7 @@ void main() {
     when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
     when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
 
-    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
+    await tester.tap(find.byTooltip(l10n.newMessageTitle));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -290,7 +291,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows error in messegable course list', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var completer = Completer<List<Course>>();
@@ -300,7 +301,7 @@ void main() {
     await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
+    await tester.tap(find.byTooltip(l10n.newMessageTitle));
     await tester.pump();
 
     completer.completeError('');
@@ -310,7 +311,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays unread message indicator', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockConversationListInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
     var now = DateTime.now();
@@ -332,8 +333,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Refreshes on new message created', (tester) async {
-    var interactor = _MockInteractor();
-    var nav = _MockNav();
+    var interactor = MockConversationListInteractor();
+    var nav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<QuickNav>(() => nav);
       locator.registerFactory<ConversationListInteractor>(() => interactor);
@@ -350,7 +351,7 @@ void main() {
     when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
     when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
 
-    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
+    await tester.tap(find.byTooltip(l10n.newMessageTitle));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -381,12 +382,12 @@ void main() {
     await tester.tap(find.text('Course 1'));
     await tester.pumpAndSettle(Duration(seconds: 1));
 
-    expect(find.text(conversation.lastMessage), findsOneWidget);
+    expect(find.text(conversation.lastMessage!), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Refreshes on conversation updated', (tester) async {
-    var interactor = _MockInteractor();
-    var nav = _MockNav();
+    var interactor = MockConversationListInteractor();
+    var nav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<QuickNav>(() => nav);
       locator.registerFactory<ConversationListInteractor>(() => interactor);
@@ -405,7 +406,7 @@ void main() {
     await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text(conversation.lastMessage), findsOneWidget);
+    expect(find.text(conversation.lastMessage!), findsOneWidget);
     expect(find.byKey(Key('unread-indicator')), findsOneWidget);
 
     final updatedConversation = conversation.rebuild((b) => b
@@ -414,14 +415,10 @@ void main() {
     when(interactor.getConversations(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([updatedConversation]));
 
-    await tester.tap(find.text(conversation.lastMessage));
+    await tester.tap(find.text(conversation.lastMessage!));
     await tester.pumpAndSettle();
 
-    expect(find.text(updatedConversation.lastMessage), findsOneWidget);
+    expect(find.text(updatedConversation.lastMessage!), findsOneWidget);
     expect(find.byKey(Key('unread-indicator')), findsNothing);
   });
 }
-
-class _MockInteractor extends Mock implements ConversationListInteractor {}
-
-class _MockNav extends Mock implements QuickNav {}

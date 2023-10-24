@@ -28,11 +28,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderCourseCardBinding
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.util.StudentPrefs
-import kotlinx.android.synthetic.main.viewholder_course_card.view.*
 
 class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -41,7 +42,9 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     @SuppressLint("SetTextI18n")
-    fun bind(course: Course, callback: CourseAdapterToFragmentCallback): Unit = with(itemView) {
+    fun bind(courseItem: DashboardCourseItem, isOfflineEnabled: Boolean, callback: CourseAdapterToFragmentCallback): Unit = with(ViewholderCourseCardBinding.bind(itemView)) {
+        val course = courseItem.course
+
         titleTextView.text = course.name
         courseCode.text = course.courseCode
 
@@ -56,6 +59,18 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.backgroundColor)
         courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
 
+        if (courseItem.available || !isOfflineEnabled) {
+            cardView.alpha = 1f
+            cardView.isEnabled = true
+            overflow.isEnabled = true
+        } else {
+            cardView.alpha = 0.5f
+            cardView.isEnabled = false
+            overflow.isEnabled = false
+        }
+
+        offlineSyncIcon.setVisible(courseItem.availableOffline)
+
         cardView.setOnClickListener { callback.onCourseSelected(course)}
 
         overflow.onClickWithRequireNetwork {
@@ -65,18 +80,22 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             // Add things to the popup menu
             menu.add(0, 0, 0, R.string.editNickname)
             menu.add(0, 1, 1, R.string.editCourseColor)
+            if (isOfflineEnabled) {
+                menu.add(0, 2, 2, R.string.course_menu_manage_offline_content)
+            }
 
             // Add click listener
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     0 -> callback.onEditCourseNickname(course)
                     1 -> callback.onPickCourseColor(course)
+                    2 -> callback.onManageOfflineContent(course)
                 }
                 true
             }
             popup.show()
         }
-        overflow.contentDescription = context.getString(R.string.courseOptionsFormatted, course.name)
+        overflow.contentDescription = root.context.getString(R.string.courseOptionsFormatted, course.name)
 
         val courseGrade = course.getCourseGrade(false)
 
@@ -85,24 +104,39 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if(courseGrade.isLocked) {
                 gradeTextView.setGone()
                 lockedGradeImage.setVisible()
-                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_lock, course.textAndIconColor))
+                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(root.context, R.drawable.ic_lock, course.textAndIconColor))
             } else {
                 gradeTextView.setVisible()
                 lockedGradeImage.setGone()
-                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, context)
+                setGradeView(gradeTextView, courseGrade, course.textAndIconColor, root.context, course.settings?.restrictQuantitativeData ?: false)
             }
         } else {
             gradeLayout.setGone()
         }
     }
 
-    private fun setGradeView(textView: TextView, courseGrade: CourseGrade, color: Int, context: Context) {
+    private fun setGradeView(
+        textView: TextView,
+        courseGrade: CourseGrade,
+        color: Int,
+        context: Context,
+        restrictQuantitativeData: Boolean
+    ) {
         if(courseGrade.noCurrentGrade) {
             textView.text = context.getString(R.string.noGradeText)
         } else {
-            val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
-            textView.text = "${if(courseGrade.hasCurrentGradeString()) courseGrade.currentGrade else ""} $scoreString"
-            textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade ?: "", context)
+            if (restrictQuantitativeData) {
+                if (courseGrade.currentGrade.isNullOrEmpty()) {
+                    textView.text = context.getString(R.string.noGradeText)
+                } else {
+                    textView.text = "${courseGrade.currentGrade.orEmpty()}"
+                    textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade.orEmpty(), context)
+                }
+            } else {
+                val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
+                textView.text = if(courseGrade.hasCurrentGradeString()) "${courseGrade.currentGrade} $scoreString" else scoreString
+                textView.contentDescription = getContentDescriptionForMinusGradeString(courseGrade.currentGrade ?: "", context)
+            }
         }
         textView.setTextColor(color)
     }

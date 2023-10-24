@@ -27,7 +27,6 @@ import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
-import java.util.Collections.emptyList
 
 class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
     override fun performInit(model: SubmissionDetailsModel): First<SubmissionDetailsModel, SubmissionDetailsEffect> {
@@ -68,8 +67,12 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                 }
             }
             is SubmissionDetailsEvent.DataLoaded -> {
+                val selectedSubmission = event.rootSubmissionResult.dataOrNull?.submissionHistory?.find {
+                    it?.attempt == model.initialSelectedSubmissionAttempt
+                } ?: event.rootSubmissionResult.dataOrNull
+
                 val submissionType = getSubmissionContentType(
-                    event.rootSubmissionResult.dataOrNull,
+                    selectedSubmission,
                     event.assignment.dataOrNull,
                     model.canvasContext,
                     event.isStudioEnabled,
@@ -83,8 +86,10 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         isLoading = false,
                         assignmentResult = event.assignment,
                         rootSubmissionResult = event.rootSubmissionResult,
-                        selectedSubmissionAttempt = event.rootSubmissionResult.dataOrNull?.attempt,
-                        quizResult = event.quizResult
+                        selectedSubmissionAttempt = selectedSubmission?.attempt,
+                        quizResult = event.quizResult,
+                        assignmentEnhancementsEnabled = event.assignmentEnhancementsEnabled,
+                        restrictQuantitativeData = event.restrictQuantitativeData
                     ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }
@@ -142,6 +147,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             SubmissionDetailsEvent.SubmissionUploadFinished ->  Next.next(
                 model.copy(isLoading = true),
                 setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId)))
+            is SubmissionDetailsEvent.SubmissionCommentsUpdated -> Next.next(model.copy(submissionComments = event.submissionComments))
         }
     }
 
@@ -156,9 +162,9 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
         isObserver: Boolean = false
     ): SubmissionDetailsContentType {
         return when {
-            Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.NoneContent
-            Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.OnPaperContent
-            Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw ?: emptyList() -> {
+            Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.NoneContent
+            Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.OnPaperContent
+            Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw.orEmpty() -> {
                 if (assignment?.isAllowedToSubmit == true)
                     SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "")
                 else SubmissionDetailsContentType.LockedContent

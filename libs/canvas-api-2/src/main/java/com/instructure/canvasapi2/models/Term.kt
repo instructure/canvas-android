@@ -19,14 +19,14 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.toDate
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Term(
         override val id: Long = 0,
         val name: String? = null,
         @SerializedName("start_at")
-        private val startAt: String? = null,
+        val startAt: String? = null,
         @SerializedName("end_at")
         val endAt: String? = null,
 

@@ -17,14 +17,15 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.content
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.ApiValues
@@ -44,40 +45,44 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewPdfStudentSubmissionBinding
 import com.instructure.student.router.RouteMatcher
 import com.pspdfkit.preferences.PSPDFKitPreferences
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
 import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
-import kotlinx.android.synthetic.main.view_pdf_student_submission.view.*
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.ArrayList
 
 @SuppressLint("ViewConstructor")
 class PdfStudentSubmissionView(
-        context: Context,
-        private val pdfUrl: String,
-        private val studentAnnotationSubmit: Boolean = false,
-        private val studentAnnotationView: Boolean = false
-) : PdfSubmissionView(context, studentAnnotationView), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+    private val activity: FragmentActivity,
+    private val pdfUrl: String,
+    private val fragmentManager: FragmentManager,
+    private val studentAnnotationSubmit: Boolean = false,
+    private val studentAnnotationView: Boolean = false,
+) : PdfSubmissionView(
+    activity, studentAnnotationView
+), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+
+    private val binding: ViewPdfStudentSubmissionBinding
 
     private var initJob: Job? = null
     private var deleteJob: Job? = null
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
-        get() = findViewById(R.id.annotationToolbarLayout)
+        get() = binding.annotationToolbarLayout
     override val inspectorCoordinatorLayout: PropertyInspectorCoordinatorLayout
-        get() = findViewById(R.id.inspectorCoordinatorLayout)
+        get() = binding.inspectorCoordinatorLayout
     override val commentsButton: ImageView
-        get() = findViewById(R.id.commentsButton)
+        get() = binding.commentsButton
     override val loadingContainer: FrameLayout
-        get() = findViewById(R.id.loadingContainer)
+        get() = binding.loadingContainer
     override val progressBar: ProgressiveCanvasLoadingView
-        get() = findViewById(R.id.progressBar)
+        get() = binding.progressBar
     override val progressColor: Int
         get() = R.color.login_studentAppTheme
 
@@ -85,14 +90,22 @@ class PdfStudentSubmissionView(
     override fun enableViewPager() {}
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
-    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
-        if (isAttachedToWindow) RouteMatcher.route(context, AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, apiValues, ApiPrefs.user!!.id, !studentAnnotationView))
+    override fun showAnnotationComments(
+        commentList: ArrayList<CanvaDocAnnotation>,
+        headAnnotationId: String,
+        docSession: DocSession,
+        apiValues: ApiValues
+    ) {
+        if (isAttachedToWindow) RouteMatcher.route(
+            activity,
+            AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, apiValues, ApiPrefs.user!!.id, !studentAnnotationView)
+        )
     }
 
     override fun showFileError() {
-        loadingView.setGone()
-        retryLoadingContainer.setVisible()
-        retryLoadingButton.onClick {
+        binding.loadingView.setGone()
+        binding.retryLoadingContainer.setVisible()
+        binding.retryLoadingButton.onClick {
             setLoading(true)
             setup()
         }
@@ -123,7 +136,7 @@ class PdfStudentSubmissionView(
     }
 
     override fun showNoInternetDialog() {
-        NoInternetConnectionDialog.show(supportFragmentManager)
+        NoInternetConnectionDialog.show(fragmentManager)
     }
 
     init {
@@ -131,14 +144,14 @@ class PdfStudentSubmissionView(
             PSPDFKitPreferences.get(getContext()).setAnnotationCreator(ApiPrefs.user?.name)
         }
 
-        View.inflate(context, R.layout.view_pdf_student_submission, this)
+        binding = ViewPdfStudentSubmissionBinding.inflate(LayoutInflater.from(context), this, true)
 
         setLoading(true)
     }
 
     private fun setLoading(isLoading: Boolean) {
-        loadingView?.setVisible(isLoading)
-        contentRoot?.setVisible(!isLoading)
+        binding.loadingView.setVisible(isLoading)
+        binding.contentRoot.setVisible(!isLoading)
     }
 
     override fun onAttachedToWindow() {
@@ -177,13 +190,13 @@ class PdfStudentSubmissionView(
 
     @SuppressLint("CommitTransaction")
     override fun setFragment(fragment: Fragment) {
-        if (isAttachedToWindow) supportFragmentManager.beginTransaction().replace(R.id.content, fragment).commitNowAllowingStateLoss()
+        if (isAttachedToWindow) fragmentManager.beginTransaction().replace(binding.content.id, fragment).commitNowAllowingStateLoss()
     }
 
     override fun removeContentFragment() {
-        val contentFragment = supportFragmentManager.findFragmentById(R.id.content)
+        val contentFragment = fragmentManager.findFragmentById(binding.content.id)
         if (contentFragment != null) {
-            supportFragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
+            fragmentManager.beginTransaction().remove(contentFragment).commitAllowingStateLoss()
         }
     }
 

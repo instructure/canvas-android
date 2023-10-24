@@ -41,15 +41,24 @@ object WaitForViewMatcher {
     // https://github.com/braintree/braintree_android/blob/25513d76da88fe2ce9f476c4dc51f24cf6e26104/TestUtils/src/main/java/com/braintreepayments/testutils/ui/ViewHelper.java#L30
 
     // The viewMatcher is called on every view to determine what matches. Must be fast!
-    fun waitForView(viewMatcher: Matcher<View>, duration: Long = 10): ViewInteraction {
+    fun waitForView(viewMatcher: Matcher<View>?, duration: Long = 10): ViewInteraction {
+        log.i("Wait for View to be visible.")
+        return waitForViewWithCustomMatcher(viewMatcher!!, duration, withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))
+    }
+
+    fun waitForViewToBeClickable(viewMatcher: Matcher<View>, duration: Long = 10): ViewInteraction {
+        log.i("Wait for View to be clickable.")
+        return waitForViewWithCustomMatcher(viewMatcher, duration, ViewMatchers.isClickable())
+    }
+
+    private fun waitForViewWithCustomMatcher(viewMatcher: Matcher<View>, duration: Long = 10, customMatcher: Matcher<View>): ViewInteraction {
         waiting.set(true)
         val waitTime = TimeUnit.SECONDS.toMillis(duration)
         val endTime = System.currentTimeMillis() + waitTime
 
-        log.i("waitForView matching...")
         do {
             try {
-                val result = onView(viewMatcher).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                val result = onView(viewMatcher).check(matches(customMatcher))
                 waiting.set(false)
                 return result
             } catch (ignored: Exception) {
@@ -59,6 +68,6 @@ object WaitForViewMatcher {
         } while (System.currentTimeMillis() < endTime)
 
         waiting.set(false)
-        return onView(viewMatcher).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        return onView(viewMatcher).check(matches(customMatcher))
     }
 }

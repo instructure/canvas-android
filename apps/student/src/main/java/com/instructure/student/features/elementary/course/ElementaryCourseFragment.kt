@@ -27,18 +27,19 @@ import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
-import com.instructure.student.fragment.CourseBrowserFragment
-import com.instructure.student.fragment.GradesListFragment
-import com.instructure.student.fragment.ModuleListFragment
+import com.instructure.student.features.coursebrowser.CourseBrowserFragment
+import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_elementary_course.*
 
+@PageView(url = "{canvasContext}")
 @ScreenView(SCREEN_VIEW_ELEMENTARY_COURSE)
 @AndroidEntryPoint
 class ElementaryCourseFragment : Fragment() {
@@ -48,11 +49,13 @@ class ElementaryCourseFragment : Fragment() {
 
     private val viewModel: ElementaryCourseViewModel by viewModels()
 
+    private lateinit var binding: FragmentElementaryCourseBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
+        binding = FragmentElementaryCourseBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         if (canvasContext.isCourse) {
@@ -63,10 +66,10 @@ class ElementaryCourseFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
-        viewModel.getData(canvasContext, tabId)
+        this@ElementaryCourseFragment.viewModel.getData(canvasContext, tabId)
 
         courseTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
@@ -80,7 +83,7 @@ class ElementaryCourseFragment : Fragment() {
             }
         })
 
-        viewModel.data.observe(viewLifecycleOwner, { data ->
+        this@ElementaryCourseFragment.viewModel.data.observe(viewLifecycleOwner) { data ->
             data?.let {
                 courseTabPager.offscreenPageLimit = it.tabs.size
                 courseTabPager.adapter = ElementaryCoursePagerAdapter(it.tabs)
@@ -95,18 +98,18 @@ class ElementaryCourseFragment : Fragment() {
                 }
 
             }
-        })
+        }
 
-        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+        this@ElementaryCourseFragment.viewModel.events.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
             }
         })
     }
 
-    private fun applyTheme() {
+    private fun applyTheme() = with(binding) {
         toolbar.title = canvasContext.name
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@ElementaryCourseFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
@@ -119,7 +122,7 @@ class ElementaryCourseFragment : Fragment() {
     }
 
     private fun redirect(route: Route) {
-        RouteMatcher.route(requireContext(), route.copy(removePreviousScreen = true))
+        RouteMatcher.route(requireActivity(), route.copy(removePreviousScreen = true))
     }
 
     companion object {

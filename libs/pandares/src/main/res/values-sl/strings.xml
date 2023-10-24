@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Odstranjeno</string>
 
+    <string name="gradeUpdated">Ocena je posodobljena</string>
     <string name="loadingCanvas">Nalaganje vsebine sistema Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1117,6 +1118,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Tukaj lahko odprete podrobnosti o oddaji</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Ocena: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuta</item>
         <item quantity="other">%s minut</item>
@@ -1292,9 +1296,17 @@
     <string name="a11y_closeProgress">Zapri pogovorno okno za napredovanje</string>
     <string name="fileUploadProgress">%1$s od %2$s</string>
     <string name="fileUploadProgressSubtitle">Nalagam v datoteke</string>
+    <string name="fileUploadFailedSubtitle">Nalaganje ene ali več datotek ni uspelo. Preverite internetno povezavo in poskusite poslati znova.</string>
     <string name="submissionProgressSubtitle">Nalagam oddajo v \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Nalaganje oddaje</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Nalaganje datotek</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Oddaja je uspela</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Oddaja ni uspela</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Nalagam datoteko</item>
+        <item quantity="other">Nalagam datoteke</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Datoteka je uspešno naložena</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Nalaganje datoteke ni uspelo</string>
     <string name="cancelSubmissionDialogTitle">Prekliči oddajo</string>
     <string name="cancelSubmissionDialogMessage">S tem boste preklicali in izbrisali oddajo.</string>
     <string name="fileUploadError">Nalaganje datoteke ni uspelo</string>
@@ -1302,7 +1314,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Nalagam v Moje datoteke</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Oddaj nalogo</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Izberite predmet</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Izberite predmet; izbrani predmet je: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Izberite nalogo</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Izberite nalogo, izbrana naloga je: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Želite preklicati nalaganje?</string>
     <string name="cancelFileUploadMessage">S tem boste nalaganje preklicali.</string>
@@ -1317,4 +1331,64 @@
     <string name="createdByStudentView">Ustvarjeno v pogledu študenta</string>
     <string name="discussionErrorToast">Prišlo je napake. Tema morda ni več na voljo.</string>
     <string name="cameraPermissionPermanentlyDenied">Dovoljenje za kamero je bilo trajno zavrnjeno. Pojdite v nastavitve aplikacije, da to omogočite.</string>
+    <string name="unpublish_assignment_error">Če obstajajo oddaje študenta, objave naloge ni mogoče preklicati.</string>
+    <string name="subscribeToCalendar">Naročite se na vir koledarja</string>
+    <string name="subscribeToCalendarMessage">Svoj koledar Canvas lahko sinhronizirate z računom Google Koledar, tako da v tem pogovornem oknu kliknete gumb Naroči se. Nato boste morali na svoji napravi odpreti aplikacijo Google Koledar in v nastavitvah novega koledarja omogočiti sinhronizacijo.</string>
+    <string name="subscribeButton">Naroči se</string>
+    <string name="switchToLightMode">Preklopi v svetli način</string>
+    <string name="switchToDarkMode">Preklopi v temni način</string>
+    <string name="acceptableUsePolicyDescription">Ste nov uporabnik ali pa so Pravilnik o sprejemljivi rabi spremenili, odkar ste se nazadnje strinjali z njim. Pred nadaljevanjem potrdite, da se strinjate s Pravilnikom o sprejemljivi rabi.</string>
+    <string name="acceptableUsePolicyTitle">Pravilnik o sprejemljivi rabi</string>
+    <string name="acceptableUsePolicyButton">Pravilnik o sprejemljivi rabi</string>
+    <string name="acceptableUsePolicyAgree">Strinjam se s Pravilnikom o sprejemljivi rabi.</string>
+    <string name="acceptableUsePolicySubmit">Oddaj</string>
+    <string name="acceptFail">Oddaja sprejetja pogojev ni uspela.</string>
+    <string name="attempt">Poskus %d</string>
+    <string name="quizQuestions">Vprašanja: %d</string>
+    <string name="quizTimeLimit">Časovna omejitev: %s</string>
+    <string name="allowedAttempts">Dovoljeni poskusi: %s</string>
+    <string name="usedAttempts">Porabljeni poskusi: %d</string>
+    <string name="generalUnexpectedError">Prišlo je do nepričakovane napake.</string>
+
+    <string name="deleteSelected">Odstrani</string>
+    <string name="archiveSelected">Arhiviraj</string>
+    <string name="unarchiveSelected">Razveljavi arhiviranje</string>
+    <string name="markAsReadSelected">Označi kot prebrano</string>
+    <string name="markAsUnreadSelected">Označi kot neprebrano</string>
+    <string name="starSelected">Zvezdica</string>
+    <string name="unstarSelected">Odstrani zvezdico</string>
+
+    <string name="inboxOperationFailed">Postopka ni bilo mogoče izvesti</string>
+    <string name="inboxDeletedConfirmation">%s izbrisano</string>
+    <string name="inboxArchivedConfirmation">%s arhivirano</string>
+    <string name="inboxUnarchivedConfirmation">%s vzeto iz arhiva</string>
+    <string name="inboxMarkAsReadConfirmation">%s označeno kot prebrano</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s označeno kot neprebrano</string>
+    <string name="inboxStarredConfirmation">%s označeno z zvezdico</string>
+    <string name="inboxUnstarredConfirmation">%s odstranjenih zvezdic</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Ta pogovor bo izbrisan iz mape »Prejeto« na vseh vaših napravah. Tega dejanja ni mogoče razveljaviti.</item>
+        <item quantity="other">Ti pogovori bodo izbrisani iz mape »Prejeto« na vseh vaših napravah. Tega dejanja ni mogoče razveljaviti.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Nalaganje naslednje strani ni uspelo. Preveritete internetno povezavo.</string>
+    <string name="conversationsRefreshFailed">Osveževanje pogovorov ni uspelo. Preveritete internetno povezavo.</string>
+    <string name="inboxScopeInbox">Pošta</string>
+    <string name="inboxContextSelectorTitle">Izberite predmet ali skupino</string>
+    <string name="inboxClearFilter">Počisti</string>
+    <string name="a11y_courseFilterContentDescription">Filter predmetov: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">izbira</string>
+    <string name="a11y_itemSelectedSwipeForActions">Pogovor je izbran. Aktiviran je način izbire. Pomaknite se za izbiro dejanja.</string>
+    <string name="a11y_conversationSelected">Pogovor je izbran</string>
+    <string name="a11y_conversationDeselected">Izbira pogovora je odstranjena</string>
+    <string name="a11y_exitSelectionMode">Izhod iz načina izbire</string>
+    <string name="a11y_selectionModeDeactivated">Način izbire je deaktiviran.</string>
+    <string name="a11y_avatarContentDescription">Avatar osebe %s</string>
+    <string name="inboxUndo">Razveljavi</string>
+    <string name="aboutAppTitle">Aplikacija</string>
+    <string name="aboutDomainTitle">Domena</string>
+    <string name="aboutLoginTitle">ID prijave</string>
+    <string name="aboutEmailTitle">E-pošta</string>
+    <string name="aboutVersionTitle">Različica</string>
+    <string name="assignmentRefreshError">Prišlo je do težave z ponovnim nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
 </resources>

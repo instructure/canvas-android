@@ -40,7 +40,7 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
                 title: Text(L10n(context).locateQRCode),
                 automaticallyImplyLeading: true,
                 actions: <Widget>[_nextButton(context)],
-                bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+                bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
               ),
               body: _body(context),
             ));
@@ -50,25 +50,25 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
     return MaterialButton(
       minWidth: 20,
       highlightColor: Colors.transparent,
-      splashColor: Theme.of(context).accentColor.withAlpha(100),
-      textColor: Theme.of(context).accentColor,
+      splashColor: Theme.of(context).colorScheme.secondary.withAlpha(100),
+      textColor: Theme.of(context).colorScheme.secondary,
       shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
       onPressed: () async {
         var barcodeResult = await locator<QRLoginTutorialScreenInteractor>().scan();
-        if (barcodeResult.isSuccess) {
-          final result = await locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result));
+        if (barcodeResult.isSuccess && barcodeResult.result != null) {
+          final result = await locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result!));
 
           // Await this result so we can show an error message if the splash screen has to pop after a login issue
           // (This is typically in the case of the same QR code being scanned twice)
-          if (result != null) {
+          if (result != null && result is String) {
             _showSnackBarError(context, result);
           }
         } else if (barcodeResult.errorType == QRError.invalidQR || barcodeResult.errorType == QRError.cameraError) {
           // We only want to display an error for invalid and camera denied, the other case is the user cancelled
-          locator<Analytics>().logMessage(barcodeResult?.errorType?.toString() ?? 'No barcode result');
+          locator<Analytics>().logMessage(barcodeResult.errorType.toString());
           _showSnackBarError(
               context,
-              barcodeResult?.errorType == QRError.invalidQR
+              barcodeResult.errorType == QRError.invalidQR
                   ? L10n(context).invalidQRCodeError
                   : L10n(context).qrCodeNoCameraError);
         }
@@ -108,7 +108,7 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
   }
 
   _showSnackBarError(BuildContext context, String error) {
-    _scaffoldKey.currentState.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(error)));
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
   }
 }

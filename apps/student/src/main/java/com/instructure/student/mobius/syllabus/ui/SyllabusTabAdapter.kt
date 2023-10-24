@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.syllabus.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,12 +28,16 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentSyllabusEventsBinding
+import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_syllabus_events.view.*
-import kotlinx.android.synthetic.main.fragment_syllabus_webview.view.*
 
-class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
+class SyllabusTabAdapter(private val context: Context, private val canvasContext: CanvasContext, private val titles: List<String>) : PagerAdapter() {
+
+    var eventsBinding: FragmentSyllabusEventsBinding? = null
+    var webviewBinding: FragmentSyllabusWebviewBinding? = null
+
     override fun isViewFromObject(view: View, `object`: Any) = view === `object`
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -43,9 +48,11 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
         container.addView(view)
 
         if (!isSyllabusPosition(position)) {
-            view.syllabusEventsRecycler.layoutManager = LinearLayoutManager(container.context)
+            eventsBinding = FragmentSyllabusEventsBinding.bind(view)
+            eventsBinding?.syllabusEventsRecycler?.layoutManager = LinearLayoutManager(container.context)
         } else {
-            setupWebView(view.syllabusWebViewWrapper.webView)
+            webviewBinding = FragmentSyllabusWebviewBinding.bind(view)
+            setupWebView(webviewBinding!!.syllabusWebViewWrapper.webView)
         }
 
         return view
@@ -70,7 +77,7 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
     private fun isSyllabusPosition(position: Int) = position == 0
 
     private fun setupWebView(webView: CanvasWebView) {
-        val activity = (webView.context as? FragmentActivity)
+        val activity = (context as? FragmentActivity)
         activity?.let { webView.addVideoClient(it) }
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -81,26 +88,24 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
             override fun onPageFinishedCallback(webView: WebView, url: String) {}
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
-                return RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, false)
+                return RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
             }
 
             override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(webView.context, url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
             }
         }
-        webView.canvasEmbeddedWebViewCallback =
-            object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
-                    return true
-                }
-
-                override fun launchInternalWebViewFragment(url: String) {
-                    InternalWebviewFragment.loadInternalWebView(
-                        webView.context,
-                        InternalWebviewFragment.makeRoute(canvasContext, url, false)
-                    )
-                }
+        webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
+                return true
             }
 
+            override fun launchInternalWebViewFragment(url: String) {
+                InternalWebviewFragment.loadInternalWebView(
+                    activity,
+                    InternalWebviewFragment.makeRoute(canvasContext, url, false)
+                )
+            }
+        }
     }
 }

@@ -24,58 +24,58 @@ import 'assignment_details_page.dart';
 import 'event_details_page.dart';
 
 class CourseSummaryPage {
-  static Future<void> verifyAssignmentPresent(FlutterDriver driver, Assignment assignment) async {
+  static Future<void> verifyAssignmentPresent(FlutterDriver? driver, Assignment assignment) async {
     var titleFinder = find.byValueKey('summary_item_title_${assignment.id}');
-    await driver.scrollIntoView(titleFinder);
-    var title = await driver.getText(titleFinder);
+    await driver?.scrollIntoView(titleFinder);
+    var title = await driver?.getText(titleFinder);
     expect(title, assignment.name, reason: "assignment title");
     await _validateDueDate(driver, assignment.id, assignment.dueAt);
 
     // Lets click through to the assignment details, validate them, and come back
-    await driver.tap(titleFinder);
+    await driver?.tap(titleFinder);
     await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignment);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
   }
 
-  static Future<void> verifyQuizPresent(FlutterDriver driver, Quiz quiz) async {
+  static Future<void> verifyQuizPresent(FlutterDriver? driver, Quiz quiz) async {
     var titleFinder = find.byValueKey('summary_item_title_${quiz.id}');
-    await driver.scrollIntoView(titleFinder);
-    var title = await driver.getText(titleFinder);
+    await driver?.scrollIntoView(titleFinder);
+    var title = await driver?.getText(titleFinder);
     expect(title, quiz.title, reason: "quiz title");
     await _validateDueDate(driver, quiz.id, quiz.dueAt);
 
     // Lets click through to the quiz/assignment details, validate them, and come back
-    await driver.tap(titleFinder);
+    await driver?.tap(titleFinder);
     await AssignmentDetailsPage.validateUnsubmittedQuiz(driver, quiz);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
   }
 
-  static Future<void> verifyEventPresent(FlutterDriver driver, ScheduleItem event) async {
+  static Future<void> verifyEventPresent(FlutterDriver? driver, ScheduleItem event) async {
     var titleFinder = find.byValueKey('summary_item_title_${event.id}');
-    await driver.scrollIntoView(titleFinder);
-    var title = await driver.getText(titleFinder);
+    await driver?.scrollIntoView(titleFinder);
+    var title = await driver?.getText(titleFinder);
     expect(title, event.title, reason: "calendar event title");
 
     await _validateDueDate(driver, event.id, event.isAllDay ? event.allDayDate : event.startAt);
 
     // Let's click through to the event details, validate them, and come back
-    await driver.tap(titleFinder);
+    await driver?.tap(titleFinder);
     await EventDetailsPage.verifyEventDisplayed(driver, event);
-    await driver.tap(find.pageBack());
+    await driver?.tap(find.pageBack());
   }
 
-  static Future<void> _validateDueDate(FlutterDriver driver, String itemId, DateTime dueDate) async {
+  static Future<void> _validateDueDate(FlutterDriver? driver, String itemId, DateTime? dueDate) async {
     var dateFinder = find.byValueKey('summary_item_subtitle_${itemId}');
-    await driver.scrollIntoView(dateFinder);
-    var text = await driver.getText(dateFinder);
+    await driver?.scrollIntoView(dateFinder);
+    var text = await driver?.getText(dateFinder);
     if (dueDate == null) {
       expect(text, "No Due Date", reason: "Due date");
     } else {
       var localDate = dueDate.toLocal();
       String date = (DateFormat.MMMd(supportedDateLocale)).format(localDate);
       String time = (DateFormat.jm(supportedDateLocale)).format(localDate);
-      expect(text.contains(date), true, reason: "Expected due date ($text) to contain $date");
-      expect(text.contains(time), true, reason: "Expected due date ($text) to contain $time");
+      expect(text?.contains(date), true, reason: "Expected due date ($text) to contain $date");
+      expect(text?.contains(time), true, reason: "Expected due date ($text) to contain $time");
     }
   }
 }

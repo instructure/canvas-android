@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.StringArg
 
 class PdfSubmissionViewFragment : Fragment() {
@@ -29,7 +28,7 @@ class PdfSubmissionViewFragment : Fragment() {
     private var pdfUrl by StringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return PdfStudentSubmissionView(requireContext(), pdfUrl)
+        return PdfStudentSubmissionView(requireActivity(), pdfUrl, childFragmentManager)
     }
 
     companion object {

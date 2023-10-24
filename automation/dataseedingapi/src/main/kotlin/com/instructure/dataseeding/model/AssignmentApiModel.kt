@@ -74,8 +74,10 @@ data class AssignmentApiModel (
         @SerializedName("submission_types")
         val submissionTypes: List<String>? = null,
         @SerializedName("allowed_extensions")
-        val allowedExtensions: List<String>? = null
-)
+        val allowedExtensions: List<String>? = null,
+        @SerializedName("attempt")
+        val attempt: Int? = null
+        )
 
 // region AssignmentOverrides
 

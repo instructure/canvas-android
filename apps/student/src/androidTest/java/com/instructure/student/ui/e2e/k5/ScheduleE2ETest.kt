@@ -21,6 +21,8 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.page.getStringFromResource
@@ -36,6 +38,7 @@ import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.Timeout
 import java.util.*
 
@@ -50,6 +53,7 @@ class ScheduleE2ETest : StudentTest() {
     var globalTimeout: Timeout = Timeout.millis(600000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
 
     @E2E
+    @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
     fun scheduleE2ETest() {
 
@@ -70,40 +74,13 @@ class ScheduleE2ETest : StudentTest() {
         val twoWeeksAfterCalendar = getCustomDateCalendar(15)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' MISSING assignment for ${nonHomeroomCourses[2].name} course.")
-        val testMissingAssignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = nonHomeroomCourses[2].id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.LETTER_GRADE,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = currentDateCalendar.time.toApiString()
-            )
-        )
+        val testMissingAssignment = createAssignment(nonHomeroomCourses[2].id, teacher, currentDateCalendar, GradingType.LETTER_GRADE,100.0)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' Two weeks before end date assignment for ${nonHomeroomCourses[1].name} course.")
-        val testTwoWeeksBeforeAssignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = nonHomeroomCourses[1].id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.PERCENT,
-                teacherToken = teacher.token,
-                pointsPossible = 100.0,
-                dueAt = twoWeeksBeforeCalendar.time.toApiString()
-            )
-        )
+        val testTwoWeeksBeforeAssignment = createAssignment(nonHomeroomCourses[1].id, teacher, twoWeeksBeforeCalendar, GradingType.PERCENT,100.0)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' Two weeks after end date assignment for ${nonHomeroomCourses[0].name} course.")
-        val testTwoWeeksAfterAssignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = nonHomeroomCourses[0].id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 25.0,
-                dueAt = twoWeeksAfterCalendar.time.toApiString()
-            )
-        )
+        val testTwoWeeksAfterAssignment = createAssignment(nonHomeroomCourses[0].id, teacher, twoWeeksAfterCalendar, GradingType.POINTS,25.0)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)
@@ -197,7 +174,7 @@ class ScheduleE2ETest : StudentTest() {
             Log.d(STEP_TAG, "Open '${testMissingAssignment.name}' assignment and verify if we are landing on the ${testMissingAssignment.name} assignment's details page by checking it's title, which is actually is the assignment's name.")
             schedulePage.clickScheduleItem(testMissingAssignment.name)
             assignmentDetailsPage.assertPageObjects()
-            assignmentDetailsPage.verifyAssignmentTitle(testMissingAssignment.name)
+            assignmentDetailsPage.assertAssignmentTitle(testMissingAssignment.name)
 
             Log.d(STEP_TAG, "Navigate back to Schedule Page and assert it is loaded.")
             Espresso.pressBack()
@@ -235,6 +212,25 @@ class ScheduleE2ETest : StudentTest() {
         cal.set(Calendar.MINUTE, 1)
         cal.set(Calendar.SECOND, 1)
         return cal
+    }
+
+    private fun createAssignment(
+        courseId: Long,
+        teacher: CanvasUserApiModel,
+        calendar: Calendar,
+        gradingType: GradingType,
+        pointsPossible: Double
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = courseId,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = gradingType,
+                teacherToken = teacher.token,
+                pointsPossible = pointsPossible,
+                dueAt = calendar.time.toApiString()
+            )
+        )
     }
 
 }

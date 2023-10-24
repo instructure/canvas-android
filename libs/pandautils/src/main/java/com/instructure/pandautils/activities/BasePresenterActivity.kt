@@ -57,8 +57,10 @@ abstract class BasePresenterActivity<PRESENTER : Presenter<VIEW>, VIEW> : Presen
             if (supportFragmentManager.backStackEntryCount > 0) {
                 val fragments = supportFragmentManager.fragments
                 if (fragments.isNotEmpty()) {
-                    return fragments[supportFragmentManager.backStackEntryCount - 1]
+                    return fragments.getOrNull(supportFragmentManager.backStackEntryCount - 1)
                 }
+            } else {
+                return supportFragmentManager.fragments.lastOrNull()
             }
             return null
         }

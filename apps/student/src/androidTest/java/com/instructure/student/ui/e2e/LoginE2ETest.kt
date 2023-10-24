@@ -39,13 +39,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class LoginE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -64,7 +60,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student1)
 
         Log.d(STEP_TAG, "Log out with ${student1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
         loginWithUser(student2, true)
@@ -73,7 +69,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student2)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -85,7 +81,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student1)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -102,7 +98,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student2)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
-        dashboardPage.pressChangeUser()
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
 
         Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -135,7 +131,7 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(student1)
 
         Log.d(STEP_TAG, "Log out with ${student1.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
         loginWithLastSavedSchool(student2)
@@ -173,7 +169,7 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${student.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         loginWithUser(teacher, true)
@@ -185,7 +181,7 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${teacher.name} teacher.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${ta.name}, login id: ${ta.loginId}.")
         loginWithUser(ta, true)
@@ -197,7 +193,7 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${ta.name} teacher assistant.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
         loginWithUser(parent, true)
@@ -206,7 +202,48 @@ class LoginE2ETest : StudentTest() {
         assertDashboardPageDisplayed(parent)
 
         Log.d(STEP_TAG,"Log out with ${parent.name} parent.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testInvalidAndEmptyLoginCredentialsE2E() {
+
+        val INVALID_USERNAME = "invalidusercred@test.com"
+        val INVALID_PASSWORD = "invalidpw"
+        val INVALID_CREDENTIALS_ERROR_MESSAGE = "Invalid username or password. Trouble logging in?"
+        val NO_PASSWORD_GIVEN_ERROR_MESSAGE = "No password was given"
+        val DOMAIN = "mobileqa.beta"
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG,"Enter domain: $DOMAIN.instructure.com.")
+        loginFindSchoolPage.enterDomain(DOMAIN)
+
+        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ($INVALID_USERNAME, $INVALID_PASSWORD)." +
+                "Assert that the invalid credentials error message is displayed.")
+        loginSignInPage.loginAs(INVALID_USERNAME, INVALID_PASSWORD)
+        loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
+
+        Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field." +
+                "Assert that the no password was given error message is displayed.")
+        loginSignInPage.loginAs(EMPTY_STRING, EMPTY_STRING)
+        loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
+
+        Log.d(STEP_TAG, "Try to login with leaving only the password field empty." +
+                "Assert that the no password was given error message is displayed.")
+        loginSignInPage.loginAs(INVALID_USERNAME, EMPTY_STRING)
+        loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
+
+        Log.d(STEP_TAG, "Try to login with leaving only the username field empty." +
+                "Assert that the invalid credentials error message is displayed.")
+        loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
+        loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
     }
 
     // Verify that students can sign into vanity domain
@@ -229,20 +266,10 @@ class LoginE2ETest : StudentTest() {
         val course = CoursesApi.createCourse(coursesService = coursesService)
 
         Log.d(PREPARATION_TAG,"Enroll ${student.name} student to ${course.name} course.")
-        EnrollmentsApi.enrollUser(
-                courseId = course.id,
-                userId = student.id,
-                enrollmentType = STUDENT_ENROLLMENT,
-                enrollmentService = enrollmentsService
-        )
+        enrollUser(course, student, STUDENT_ENROLLMENT, enrollmentsService)
 
         Log.d(PREPARATION_TAG,"Enroll ${teacher.name} teacher to ${course.name} course.")
-        EnrollmentsApi.enrollUser(
-                courseId = course.id,
-                userId = teacher.id,
-                enrollmentType = TEACHER_ENROLLMENT,
-                enrollmentService = enrollmentsService
-        )
+        enrollUser(course, teacher, TEACHER_ENROLLMENT, enrollmentsService)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         loginWithUser(student)
@@ -254,7 +281,21 @@ class LoginE2ETest : StudentTest() {
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Log out with ${student.name} student.")
-        dashboardPage.logOut()
+        leftSideNavigationDrawerPage.logout()
+    }
+
+    private fun enrollUser(
+        course: CourseApiModel,
+        student: CanvasUserApiModel,
+        enrollmentType: String,
+        enrollmentsService: EnrollmentsApi.EnrollmentsService
+    ) {
+        EnrollmentsApi.enrollUser(
+            courseId = course.id,
+            userId = student.id,
+            enrollmentType = enrollmentType,
+            enrollmentService = enrollmentsService
+        )
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
@@ -302,7 +343,7 @@ class LoginE2ETest : StudentTest() {
     private fun assertDashboardPageDisplayed(user: CanvasUserApiModel)
     {
         dashboardPage.waitForRender()
-        dashboardPage.assertUserLoggedIn(user)
+        leftSideNavigationDrawerPage.assertUserLoggedIn(user)
         dashboardPage.assertDisplaysCourses()
         dashboardPage.assertPageObjects()
     }

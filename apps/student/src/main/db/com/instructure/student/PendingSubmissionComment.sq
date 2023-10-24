@@ -21,22 +21,23 @@ import com.instructure.student.db.sqlColAdapters.ErrorColAdapter;
 CREATE TABLE pendingSubmissionComment (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     accountDomain TEXT NOT NULL,
-    canvasContext TEXT as CanvasContext NOT NULL,
+    canvasContext TEXT AS CanvasContext NOT NULL,
     assignmentName TEXT NOT NULL,
     assignmentId INTEGER NOT NULL,
-    lastActivityDate TEXT as Date NOT NULL,
-    isGroupMessage INTEGER as Boolean NOT NULL,
+    lastActivityDate TEXT AS Date NOT NULL,
+    isGroupMessage INTEGER AS Boolean NOT NULL,
     message TEXT,
     mediaPath TEXT,
     currentFile INTEGER NOT NULL DEFAULT 0,
     fileCount INTEGER NOT NULL DEFAULT 0,
     progress REAL,
-    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0
+    errorFlag INTEGER AS Boolean NOT NULL DEFAULT 0,
+    attemptId INTEGER
 );
 
 insertComment:
-INSERT INTO pendingSubmissionComment (accountDomain, canvasContext, assignmentName, assignmentId, lastActivityDate, isGroupMessage, message, mediaPath)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO pendingSubmissionComment (accountDomain, canvasContext, assignmentName, assignmentId, lastActivityDate, isGroupMessage, message, mediaPath, attemptId)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 getAllComments:
 SELECT *

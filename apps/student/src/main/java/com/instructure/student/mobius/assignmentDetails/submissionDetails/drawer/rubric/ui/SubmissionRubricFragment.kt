@@ -22,17 +22,22 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_RUBRIC
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.student.databinding.FragmentSubmissionRubricBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
+private const val RESTRICT_QUANTITATIVE_DATA = "restrictQuantitativeData"
+
 @ScreenView(SCREEN_VIEW_SUBMISSION_RUBRIC)
 class SubmissionRubricFragment :
-    MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState>() {
+    MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState, FragmentSubmissionRubricBinding>() {
     private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
     private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
+    private var restrictQuantitativeData by BooleanArg(key = RESTRICT_QUANTITATIVE_DATA)
 
     override fun makeEffectHandler() = SubmissionRubricEffectHandler()
 
@@ -42,13 +47,13 @@ class SubmissionRubricFragment :
 
     override fun makePresenter() = SubmissionRubricPresenter
 
-    override fun makeInitModel() = SubmissionRubricModel(assignment, submission)
+    override fun makeInitModel() = SubmissionRubricModel(assignment, submission, restrictQuantitativeData)
 
     companion object {
         fun newInstance(data: SubmissionDetailsTabData.RubricData) = SubmissionRubricFragment().apply {
             submission = data.submission
             assignment = data.assignment
+            restrictQuantitativeData = data.restrictQuantitativeData
         }
     }
-
 }

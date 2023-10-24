@@ -17,17 +17,22 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui
 
 import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
+import com.instructure.student.databinding.AdapterSubmissionFileBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFileData
-import kotlinx.android.synthetic.main.adapter_submission_file.view.*
 
 internal class SubmissionFilesAdapter(val consumer: (fileId: Long) -> Unit) :
     RecyclerView.Adapter<SubmissionFilesHolder>() {
@@ -53,16 +58,34 @@ internal class SubmissionFilesAdapter(val consumer: (fileId: Long) -> Unit) :
 }
 
 internal class SubmissionFilesHolder(view: View) : RecyclerView.ViewHolder(view) {
-    fun bind(data: SubmissionFileData, consumer: (fileId: Long) -> Unit) = with(itemView) {
+    fun bind(data: SubmissionFileData, consumer: (fileId: Long) -> Unit) = with(AdapterSubmissionFileBinding.bind(itemView)) {
         // File icon
         fileIcon.setImageResource(data.icon)
         fileIcon.imageTintList = ColorStateList.valueOf(data.iconColor)
         fileIcon.setVisible(!data.thumbnailUrl.isValid())
 
         // Thumbnail
-        Glide.with(context).clear(thumbnail)
+        Glide.with(root.context).clear(thumbnail)
         thumbnail.setVisible(data.thumbnailUrl.isValid())
-        data.thumbnailUrl.validOrNull()?.let { Glide.with(context).load(it).into(thumbnail) }
+        data.thumbnailUrl.validOrNull()?.let {
+            Glide.with(root.context).load(it).listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    fileIcon.setVisible(true)
+                    thumbnail.setVisible(false)
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            }).into(thumbnail)
+        }
 
         // Title
         fileName.text = data.name
@@ -70,6 +93,6 @@ internal class SubmissionFilesHolder(view: View) : RecyclerView.ViewHolder(view)
         // Selection
         selectedIcon.setVisible(data.isSelected)
         selectedIcon.imageTintList = ColorStateList.valueOf(data.selectionColor)
-        setOnClickListener { consumer(data.id) }
+        root.setOnClickListener { consumer(data.id) }
     }
 }

@@ -21,8 +21,21 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.canvas.espresso.countConstraintLayoutsInRecyclerView
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasChild
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -56,7 +69,9 @@ class ImportantDatesPage : BasePage(R.id.importantDatesPage) {
     }
 
     fun assertRecyclerViewItemCount(expectedCount: Int) {
-        importantDatesRecyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
+        val importantDatesCount =
+            countConstraintLayoutsInRecyclerView(importantDatesRecyclerView)
+        assert(importantDatesCount == expectedCount)
     }
 
     fun assertDayTextIsDisplayed(dayText: String) {

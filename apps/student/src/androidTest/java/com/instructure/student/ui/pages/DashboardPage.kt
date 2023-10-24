@@ -27,16 +27,13 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
@@ -53,7 +50,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
     private val selectFavorites by WaitForViewWithId(R.id.editDashboardTextView)
-    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
     // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
     // in the UI stack.  We want to choose the one that is displayed.
@@ -64,7 +60,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
         listView.assertDisplayed()
         onViewWithText("Courses").assertDisplayed()
-        onViewWithText("Edit Dashboard").assertDisplayed()
+        onViewWithText("All Courses").assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: CourseApiModel) {
@@ -72,8 +68,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(courseName: String) {
-        val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
-        scrollAndAssertDisplayed(matcher)
+        val matcher = allOf(withText(courseName), withId(R.id.titleTextView), withAncestor(R.id.dashboardPage))
+        waitForView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: Course) {
@@ -82,8 +78,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
             // This is the RIGHT way to do it, but it inexplicably fails most of the time.
             scrollRecyclerView(R.id.listView, matcher)
             onView(matcher).assertDisplayed()
-        }
-        catch(pe: PerformException) {
+        } catch (pe: PerformException) {
             // Revert to this weaker operation if the one above fails.
             scrollAndAssertDisplayed(matcher)
         }
@@ -97,74 +92,30 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         assertDisplaysGroupCommon(group.name, course.name)
     }
 
+    fun assertDisplaysGroup(group: GroupApiModel, courseName: String) {
+        assertDisplaysGroupCommon(group.name, courseName)
+    }
+
     fun assertDisplaysGroup(group: Group, course: Course) {
         assertDisplaysGroupCommon(group.name!!, course.name)
     }
 
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().assertDisplayed()
-        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView))
-        onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
+        waitForView(groupNameMatcher).scrollTo().assertDisplayed()
+        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView), hasSibling(groupNameMatcher))
+        waitForView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
         emptyView.assertDisplayed()
-        onViewWithText(R.string.welcome).assertDisplayed()
-        onViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
-        onViewWithId(R.id.addCoursesButton).assertDisplayed()
-    }
-
-    fun logOut() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
-        onViewWithText(android.R.string.yes).click()
-        // It can potentially take a long time for the sign-out to take effect, especially on
-        // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
-        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(matches(isDisplayed()))
-
+        waitForViewWithText(R.string.welcome).assertDisplayed()
+        waitForViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
+        waitForViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
     fun assertCourseLabelTextColor(expectedTextColor: String) {
         onView(withId(R.id.courseLabel)).check(TextViewColorAssertion(expectedTextColor))
-    }
-
-    fun pressChangeUser() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
-    }
-
-    fun goToHelp() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
-    }
-
-    fun gotoGlobalFiles() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_files).click()
-    }
-
-    fun gotoBookmarks() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_bookmarks).click()
-    }
-
-    fun assertUserLoggedIn(user: CanvasUserApiModel) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(user: User) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName!!).assertDisplayed()
-        Espresso.pressBack()
-    }
-
-    fun assertUserLoggedIn(userName: String) {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithText(userName).assertDisplayed()
-        Espresso.pressBack()
     }
 
     fun assertUnreadEmails(count: Int) {
@@ -202,22 +153,20 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 //                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
 
         // Now make sure that it is displayed
-        Espresso.onView(matcher).assertDisplayed()
+        Espresso.onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun editFavorites() {
         selectFavorites.click()
     }
 
-    fun setShowGrades(showGrades: Boolean) {
-        hamburgerButton.click()
-        onViewWithId(R.id.navigationDrawerShowGradesSwitch).perform(SetSwitchCompat(showGrades))
-        Espresso.pressBack()
-    }
-
     // Assumes one course, which is favorited
     fun assertShowsGrades() {
         onView(withId(R.id.gradeTextView)).assertDisplayed()
+    }
+
+    fun assertGradeText(gradeText: String) {
+        onViewWithId(R.id.gradeTextView).assertHasText(gradeText)
     }
 
     // Assumes one course, which is favorited
@@ -232,27 +181,17 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().click()
-    }
-
-    fun launchSettingsPage() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerSettings).click()
-    }
-
-    fun openHelpMenu() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_help).scrollTo().click()
-    }
-
-    fun toggleShowGrades() {
-        onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerShowGradesSwitch).scrollTo().click()
+        waitForView(groupNameMatcher).scrollTo().click()
     }
 
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
-        onView(withText(course.name)).click()
+        onView(withText(course.name) + withId(R.id.titleTextView)).click()
+    }
+
+    fun selectGroup(group: GroupApiModel) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        onView(groupNameMatcher).scrollTo().click()
     }
 
     fun assertAnnouncementShowing(announcement: AccountNotification) {
@@ -314,11 +253,19 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun switchCourseView() {
-        onView(ViewMatchers.withId(R.id.menu_dashboard_cards)).click()
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        onView(withText(containsString("Switch to")))
+            .perform(click());
+    }
+
+    fun openGlobalManageOfflineContentPage() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        onView(withText(containsString("Manage Offline Content")))
+            .perform(click());
     }
 
     fun clickEditDashboard() {
-        onView(withId(R.id.editDashboardTextView)).click()
+        onView(withId(R.id.editDashboardTextView)).scrollTo().click()
     }
 
     fun assertCourseNotDisplayed(course: CourseApiModel) {
@@ -330,14 +277,35 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(matcher).check(doesNotExist())
     }
 
+    fun assertGroupNotDisplayed(group: GroupApiModel) {
+        val matcher = allOf(
+            withText(group.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
+    fun assertGroupNotDisplayed(group: Group) {
+        val matcher = allOf(
+            withText(group.name),
+            withId(R.id.titleTextView),
+            withAncestor(R.id.swipeRefreshLayout)
+        )
+        onView(matcher).check(doesNotExist())
+    }
+
     fun changeCourseNickname(changeTo: String) {
         onView(withId(R.id.newCourseNickname)).replaceText(changeTo)
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        onView(withText(android.R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
-        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
-        onView(courseOverflowMatcher).click()
+        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(
+            withId(R.id.cardView)
+                    + withDescendant(withId(R.id.titleTextView) + withText(courseTitle))
+        )
+        onView(courseOverflowMatcher).scrollTo().click()
         waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
 
@@ -345,7 +313,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
         val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
 
-        onView(matcher).assertDisplayed()
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertCourseGradeNotDisplayed(courseName: String, courseGrade: String) {
@@ -353,6 +321,30 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
 
         onView(matcher).check(matches(Matchers.not(isDisplayed())))
+    }
+
+    fun assertDashboardNotificationDisplayed(title: String, subTitle: String) {
+        onView(withId(R.id.uploadTitle) + withText(title)).assertDisplayed()
+        onView(withId(R.id.uploadSubtitle) + withText(subTitle)).assertDisplayed()
+    }
+
+    fun clickOnDashboardNotification(subTitle: String) {
+        onView(withId(R.id.uploadSubtitle) + withText(subTitle)).click()
+    }
+
+    //OfflineMethod
+    fun assertOfflineIndicatorDisplayed() {
+        waitForView(withId(R.id.offlineIndicator)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertOfflineIndicatorNotDisplayed() {
+        onView(withId(R.id.offlineIndicator)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    }
+
+    //OfflineMethod
+    fun assertCourseOfflineSyncIcon(courseName: String, visibility: Visibility) {
+        onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(visibility)))
     }
 }
 
@@ -362,7 +354,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
  */
 class SetSwitchCompat(val position: Boolean) : ViewAction {
     override fun getDescription(): String {
-        val desiredPosition =  if(position) "On" else "Off"
+        val desiredPosition = if (position) "On" else "Off"
         return "Set SwitchCompat to $desiredPosition"
     }
 
@@ -372,7 +364,7 @@ class SetSwitchCompat(val position: Boolean) : ViewAction {
 
     override fun perform(uiController: UiController?, view: View?) {
         val switch = view as SwitchCompat
-        if(switch != null) {
+        if (switch != null) {
             switch.isChecked = position
         }
     }

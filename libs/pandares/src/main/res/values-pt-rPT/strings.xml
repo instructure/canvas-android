@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Eliminado</string>
 
+    <string name="gradeUpdated">Nota atualizada</string>
     <string name="loadingCanvas">A carregar o conteúdo da tela&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1117,6 +1118,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Podes abrir detalhes de Submissão a partir daqui</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nota: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
         <item quantity="other">%s minutos</item>
@@ -1292,9 +1296,17 @@
     <string name="a11y_closeProgress">Fechar diálogo de progresso</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">Carregamento para ficheiros</string>
+    <string name="fileUploadFailedSubtitle">Um ou mais arquivos não foram carregados. Verifique sua conexão com a Internet e tente enviar novamente.</string>
     <string name="submissionProgressSubtitle">A carregar o envio para \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">A carregar o envio</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Carregamento de ficheiros</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submissão bem sucedida</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Falha na submissão</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Carregamento de ficheiro</item>
+        <item quantity="other">Carregamento de ficheiros</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Carregamento de ficheiros com sucesso</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Carregamento de ficheiros falhado</string>
     <string name="cancelSubmissionDialogTitle">Cancelar subscrição</string>
     <string name="cancelSubmissionDialogMessage">Isto irá cancelar e eliminar a sua submissão.</string>
     <string name="fileUploadError">Carregamento de ficheiros falhado</string>
@@ -1302,7 +1314,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Carregar para os Meus Ficheiros</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Enviar tarefa</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Escolha uma disciplina</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Escolher um curso, o curso selecionado é: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Escolha uma tarefa</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment"> Escolher um trabalho, o trabalho seleccionado é: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Cancelar carregamento?</string>
     <string name="cancelFileUploadMessage">Isto irá cancelar o seu carregamento.</string>
@@ -1317,4 +1331,64 @@
     <string name="createdByStudentView">Criado por Vista de aluno</string>
     <string name="discussionErrorToast">Um erro ocorreu. O tópico pode já não estar disponível.</string>
     <string name="cameraPermissionPermanentlyDenied">A permissão da câmara foi permanentemente negada. Ir para as definições da aplicação para a permitir.</string>
+    <string name="unpublish_assignment_error">Não é possível inutilizar o trabalho se houver candidaturas de alunos.</string>
+    <string name="subscribeToCalendar">Subscrever Feed de calendário</string>
+    <string name="subscribeToCalendarMessage">Pode sincronizar o seu calendário Canvas com a sua conta Google Calendar clicando no botão Subscrever neste diálogo. Depois, terá de ir para a aplicação Google Calendar no seu dispositivo e ativar a sincronização nas definições para o novo calendário.</string>
+    <string name="subscribeButton">Subscrever</string>
+    <string name="switchToLightMode">Mudar para o modo de luz</string>
+    <string name="switchToDarkMode">Mudar para o Modo Escuro</string>
+    <string name="acceptableUsePolicyDescription">Ou é um novo utilizador ou a Política de Utilização Aceitável mudou desde a última vez que concordou com ela. Por favor, aceite a Política de Utilização Aceitável antes de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política de Utilização Aceitável</string>
+    <string name="acceptableUsePolicyButton">Política de Utilização Aceitável</string>
+    <string name="acceptableUsePolicyAgree">Concordo com a Política de Utilização Aceitável.</string>
+    <string name="acceptableUsePolicySubmit">Submeter</string>
+    <string name="acceptFail">Falha em submeter a aceitação dos termos.</string>
+    <string name="attempt">Tentativa %d</string>
+    <string name="quizQuestions">Perguntas: %d</string>
+    <string name="quizTimeLimit">Limite de tempo: %s</string>
+    <string name="allowedAttempts">Tentativas permitidas: %s</string>
+    <string name="usedAttempts">Tentativas usadas: %d</string>
+    <string name="generalUnexpectedError">Ocorreu um erro inesperado.</string>
+
+    <string name="deleteSelected">Eliminar</string>
+    <string name="archiveSelected">Ficheiro</string>
+    <string name="unarchiveSelected">Desarquivar</string>
+    <string name="markAsReadSelected">Marcar como lida</string>
+    <string name="markAsUnreadSelected">Marcar como não lida</string>
+    <string name="starSelected">Marcar</string>
+    <string name="unstarSelected">Desmarcar</string>
+
+    <string name="inboxOperationFailed">Falha na execução da operação</string>
+    <string name="inboxDeletedConfirmation">%s eliminado</string>
+    <string name="inboxArchivedConfirmation">%s arquivado</string>
+    <string name="inboxUnarchivedConfirmation">%s desarquivado</string>
+    <string name="inboxMarkAsReadConfirmation">%s marcado como lido</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marcado como não lido</string>
+    <string name="inboxStarredConfirmation">%s estrelado</string>
+    <string name="inboxUnstarredConfirmation">%s não estrelado</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Esta conversa será eliminada da Caixa de Entrada em todos os teus dispositivos. Essa ação não pode ser desfeita.</item>
+        <item quantity="other">Estas conversas serão eliminadas da Caixa de Entrada em todos os teus dispositivos. Essa ação não pode ser desfeita.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Falha ao carregar a página seguinte. Verifica a tua ligação à Internet.</string>
+    <string name="conversationsRefreshFailed">Falha em atualizar as conversas. Verifica a tua ligação à Internet.</string>
+    <string name="inboxScopeInbox">Caixa de entrada</string>
+    <string name="inboxContextSelectorTitle">Selecionar Disciplina ou Grupo</string>
+    <string name="inboxClearFilter">Limpar</string>
+    <string name="a11y_courseFilterContentDescription">Filtro da disciplina: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">selecionar</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversação selecionada. Modo de selecção ativado. Navegar para ações.</string>
+    <string name="a11y_conversationSelected">Conversação selecionada.</string>
+    <string name="a11y_conversationDeselected">Conversação desmarcada</string>
+    <string name="a11y_exitSelectionMode">Sair do modo de seleção</string>
+    <string name="a11y_selectionModeDeactivated">Modo de seleção desativado.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfazer</string>
+    <string name="aboutAppTitle">Aplicação</string>
+    <string name="aboutDomainTitle">Domínio</string>
+    <string name="aboutLoginTitle">ID de login</string>
+    <string name="aboutEmailTitle">E-mail</string>
+    <string name="aboutVersionTitle">Versão</string>
+    <string name="assignmentRefreshError">Ocorreu um problema ao recarregar esta atribuição. É favor verificar sua conexão e tente novamente.</string>
 </resources>

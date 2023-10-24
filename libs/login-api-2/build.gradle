@@ -19,7 +19,7 @@ import java.security.MessageDigest
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -85,11 +85,8 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 configurations {

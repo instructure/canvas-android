@@ -30,16 +30,19 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentFileSearchBinding
 import com.instructure.student.fragment.ParentFragment
-import kotlinx.android.synthetic.main.fragment_file_search.*
 import com.instructure.pandautils.utils.ColorUtils as PandaColorUtils
 
 @ScreenView(SCREEN_VIEW_FILE_SEARCH)
 class FileSearchFragment : ParentFragment(), FileSearchView {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+
+    private val binding by viewBinding(FragmentFileSearchBinding::bind)
 
     private fun makePageViewUrl() =
         if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"
@@ -56,20 +59,22 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fileSearchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        fileSearchRecyclerView.adapter = searchAdapter
+        binding.fileSearchRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = searchAdapter
+        }
         setupViews()
     }
 
     override fun onRefreshStarted() {
-        progressBar.setVisible()
+        binding.progressBar.setVisible()
     }
 
     override fun onRefreshFinished() {
-        progressBar.setInvisible()
+        binding.progressBar.setInvisible()
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         themeSearchBar()
 
         // Set up empty state
@@ -98,7 +103,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
         queryInput.postDelayed({ queryInput.showKeyboard() }, 500)
     }
 
-    private fun themeSearchBar() {
+    private fun themeSearchBar() = with(binding) {
         val primaryColor = canvasContext.backgroundColor
         val primaryTextColor = if (canvasContext.isUser) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.white)
         ViewStyler.setStatusBarDark(requireActivity(), primaryColor)
@@ -109,7 +114,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
         PandaColorUtils.colorIt(primaryTextColor, clearButton)
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         emptyPandaView.setTitleText(getString(R.string.noFilesFound))
         emptyPandaView.setMessageText(getString(R.string.noItemsMatchingQuery, searchAdapter.searchQuery))
         emptyPandaView.setVisible(searchAdapter.isEmpty && searchAdapter.searchQuery.isNotBlank())
@@ -136,12 +141,14 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
     }
 
     override fun onMediaLoadingStarted() {
-        mediaLoadingView.setVisible()
-        mediaLoadingView.announceForAccessibility(getString(R.string.loading))
+        binding.mediaLoadingView.apply {
+            setVisible()
+            announceForAccessibility(getString(R.string.loading))
+        }
     }
 
     override fun onMediaLoadingComplete() {
-        mediaLoadingView.setGone()
+        binding.mediaLoadingView.setGone()
     }
 
     override fun displayError() = toast(R.string.errorLoadingFiles)

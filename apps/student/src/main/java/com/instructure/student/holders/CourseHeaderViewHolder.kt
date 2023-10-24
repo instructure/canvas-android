@@ -17,13 +17,13 @@
 
 package com.instructure.student.holders
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-import com.instructure.student.R
-import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClick
-import kotlinx.android.synthetic.main.viewholder_course_header.view.*
+import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderCourseHeaderBinding
+import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 
 class CourseHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -31,7 +31,7 @@ class CourseHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         const val HOLDER_RES_ID: Int = R.layout.viewholder_course_header
     }
 
-    fun bind(callback: CourseAdapterToFragmentCallback) = with(itemView) {
+    fun bind(callback: CourseAdapterToFragmentCallback) = with(ViewholderCourseHeaderBinding.bind(itemView)) {
         editDashboardTextView.setTextColor(ThemePrefs.textButtonColor)
         editDashboardTextView.onClick { callback.onSeeAllCourses() }
     }

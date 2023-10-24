@@ -20,6 +20,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import com.instructure.canvas.espresso.StubMultiAPILevel
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
@@ -57,7 +58,7 @@ class SettingsInteractionTest : StudentTest() {
     fun testLegal_showCanvasOnGithub() {
         setUpAndSignIn()
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openLegalPage()
 
         Intents.init()
@@ -78,7 +79,7 @@ class SettingsInteractionTest : StudentTest() {
     fun testLegal_showTermsOfUse() {
         setUpAndSignIn()
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openLegalPage()
         legalPage.openTermsOfUse()
         legalPage.assertTermsOfUseDisplayed()
@@ -87,10 +88,11 @@ class SettingsInteractionTest : StudentTest() {
     // Should display the privacy policy in a WebView
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @StubMultiAPILevel("Failed API levels = { 28 }", "Somehow the Privacy Policy URL does not load on API lvl 28, but does on other API lvl devices.")
     fun testLegal_showPrivacyPolicy() {
         setUpAndSignIn()
 
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openLegalPage()
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
@@ -106,7 +108,7 @@ class SettingsInteractionTest : StudentTest() {
         setUpAndSignIn()
 
         ApiPrefs.canGeneratePairingCode = true
-        dashboardPage.launchSettingsPage()
+        leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openPairObserverPage()
 
         pairObserverPage.hasCode("1")
@@ -114,14 +116,35 @@ class SettingsInteractionTest : StudentTest() {
         pairObserverPage.hasCode("2")
     }
 
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineContent_notDisplayedIfFeatureIsDisabled() {
+        setUpAndSignIn(offlineEnabled = false)
+
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+        settingsPage.assertOfflineContentNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testOfflineContent_displayedIfFeatureIsEnabled() {
+        setUpAndSignIn(offlineEnabled = true)
+
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+        settingsPage.assertOfflineContentDisplayed()
+    }
+
     // Mock a single student and course, sign in, then navigate to the dashboard.
-    private fun setUpAndSignIn(): MockCanvas {
+    private fun setUpAndSignIn(offlineEnabled: Boolean = false): MockCanvas {
 
         // Basic info
         val data = MockCanvas.init(
-                studentCount = 1,
-                courseCount = 1,
-                favoriteCourseCount = 1)
+            studentCount = 1,
+            courseCount = 1,
+            favoriteCourseCount = 1
+        )
+
+        data.offlineModeEnabled = offlineEnabled
 
         course = data.courses.values.first()
         // Sign in
@@ -132,5 +155,4 @@ class SettingsInteractionTest : StudentTest() {
 
         return data
     }
-
 }

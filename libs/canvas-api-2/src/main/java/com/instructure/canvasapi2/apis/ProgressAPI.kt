@@ -20,14 +20,18 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
 object ProgressAPI {
 
-    internal interface ProgressInterface {
+    interface ProgressInterface {
         @GET("progress/{progressId}")
         fun getProgress(@Path("progressId") progressId: String): Call<Progress>
+
+        @GET("progress/{progressId}")
+        suspend fun getProgress(@Path("progressId") progressId: String, @Tag params: RestParams): DataResult<Progress>
     }
 
     fun getProgress(adapter: RestBuilder, params: RestParams, progressId: String, callback: StatusCallback<Progress>) {

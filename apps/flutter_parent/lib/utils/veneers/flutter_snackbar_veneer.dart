@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 
 class FlutterSnackbarVeneer {
   showSnackBar(context, String message) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
     ));
   }

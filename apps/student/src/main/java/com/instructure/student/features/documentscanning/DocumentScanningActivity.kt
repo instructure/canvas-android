@@ -24,6 +24,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityDocumentScanningBinding
@@ -31,7 +32,6 @@ import com.zynksoftware.documentscanner.ScanActivity
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.model.ScannerResults
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_document_scanning.*
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -40,11 +40,13 @@ import java.util.*
 @AndroidEntryPoint
 class DocumentScanningActivity : ScanActivity() {
 
+    private lateinit var binding: ActivityDocumentScanningBinding
+
     private val viewModel: DocumentScanningViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityDocumentScanningBinding>(this, R.layout.activity_document_scanning)
+        binding = DataBindingUtil.setContentView<ActivityDocumentScanningBinding>(this, R.layout.activity_document_scanning)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -95,7 +97,7 @@ class DocumentScanningActivity : ScanActivity() {
     }
 
     private fun setupToolbar() {
-        toolbar.apply {
+        binding.toolbar.apply {
             setTitle(R.string.documentScanningTitle)
             navigationIcon = ContextCompat.getDrawable(this@DocumentScanningActivity, R.drawable.ic_back_arrow)
             navigationIcon?.isAutoMirrored = true

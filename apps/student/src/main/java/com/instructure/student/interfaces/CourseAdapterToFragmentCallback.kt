@@ -17,8 +17,6 @@
 
 package com.instructure.student.interfaces
 
-import com.instructure.canvasapi2.models.AccountNotification
-import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 
@@ -29,4 +27,5 @@ interface CourseAdapterToFragmentCallback {
     fun onCourseSelected(course: Course)
     fun onEditCourseNickname(course: Course)
     fun onPickCourseColor(course: Course)
+    fun onManageOfflineContent(course: Course)
 }

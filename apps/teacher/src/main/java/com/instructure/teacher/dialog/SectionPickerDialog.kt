@@ -34,10 +34,12 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.dialog_section_picker.view.*
-import kotlinx.android.synthetic.main.view_section_list_item.view.*
+import com.instructure.teacher.databinding.DialogSectionPickerBinding
+import com.instructure.teacher.databinding.ViewSectionListItemBinding
 
 class SectionPickerDialog : DialogFragment() {
+
+    private lateinit var binding: DialogSectionPickerBinding
 
     init {
         retainInstance = true
@@ -72,13 +74,13 @@ class SectionPickerDialog : DialogFragment() {
         val sectionsAdapter = SectionRecyclerViewAdapter(mutableSections, mutableSelectedSections, updatedCallback)
 
         val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.dialog_section_picker, null, false)
-        view.sectionRecyclerView.adapter = sectionsAdapter
-        view.sectionRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        binding = DialogSectionPickerBinding.inflate(inflater, null, false)
+        binding.sectionRecyclerView.adapter = sectionsAdapter
+        binding.sectionRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
             .apply { orientation = RecyclerView.VERTICAL }
 
         val dialog = AlertDialog.Builder(requireActivity())
-                .setView(view)
+                .setView(binding.root)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     // Return the ids of the selected sections
                     callback(mutableSelectedSections.map { it.id }.joinToString(separator = ",") { it.toString() })
@@ -114,12 +116,16 @@ class SectionPickerDialog : DialogFragment() {
     }
 }
 
-class SectionRecyclerViewAdapter(val sections: List<Section>, val selectedSections: MutableList<Section>, private val updatedCallback: (MutableList<Section>) -> Unit) : RecyclerView.Adapter<SectionRecyclerViewAdapter.SectionViewHolder>() {
+class SectionRecyclerViewAdapter(
+    val sections: List<Section>,
+    private val selectedSections: MutableList<Section>,
+    private val updatedCallback: (MutableList<Section>) -> Unit
+) : RecyclerView.Adapter<SectionRecyclerViewAdapter.SectionViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder {
-        val sectionCheckView = LayoutInflater.from(parent.context).inflate(R.layout.view_section_list_item, parent, false)
-        sectionCheckView.checkbox.applyTheme(ThemePrefs.brandColor)
-        return SectionViewHolder(sectionCheckView)
+        val binding = ViewSectionListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding.checkbox.applyTheme(ThemePrefs.brandColor)
+        return SectionViewHolder(binding)
     }
 
     override fun getItemCount(): Int = sections.size
@@ -156,17 +162,18 @@ class SectionRecyclerViewAdapter(val sections: List<Section>, val selectedSectio
         }
     }
 
-    class SectionViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(sectionName: String, checked: Boolean, callback: (Boolean) -> Unit) {
-            view.sectionName.text = sectionName
+    inner class SectionViewHolder(val binding: ViewSectionListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-            if ((checked && !view.checkbox.isChecked) || (!checked && view.checkbox.isChecked)) {
+        fun bind(sectionName: String, checked: Boolean, callback: (Boolean) -> Unit) {
+            binding.sectionName.text = sectionName
+
+            if ((checked && !binding.checkbox.isChecked) || (!checked && binding.checkbox.isChecked)) {
                 // Checked state changed; update the checkbox
-                view.checkbox.toggle()
+                binding.checkbox.toggle()
             }
 
-            view.checkbox.setOnClickListener { callback(view.checkbox.isChecked); (it as CheckBox).toggle()  }
-            view.setOnClickListener { view.checkbox.performClick(); }
+            binding.checkbox.setOnClickListener { callback(binding.checkbox.isChecked); (it as CheckBox).toggle() }
+            binding.root.setOnClickListener { binding.checkbox.performClick() }
         }
     }
 }

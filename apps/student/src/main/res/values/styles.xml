@@ -38,7 +38,7 @@
     </style>
 
     <!-- Used for stand alone PSPDFKit activity, pdf fragment uses values in CanvasMaterialTheme_Default-->
-    <style name="PSPDFKitTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="PSPDFKitTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <item name="colorPrimary">@color/ash</item>
         <item name="colorAccent">@color/ash</item>
         <item name="colorPrimaryDark">@color/ash</item>
@@ -49,6 +49,7 @@
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/PSPDFAnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__actionBarIconsStyle">@style/PSPDFKitActionBarIconsStyle</item>
+        <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
     </style>
 
     <style name="PSPDFKitActionBarIconsStyle">
@@ -59,6 +60,7 @@
     <style name="ContextualToolbarStyle">
         <item name="pspdf__backgroundColor">@color/ash</item>
         <item name="pspdf__submenuBackgroundColor">@color/licorice</item>
+        <item name="pspdf__iconsColor">@color/white</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -251,6 +253,11 @@
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_marginEnd">18dp</item>
         <item name="android:tint">@color/textDark</item>
+    </style>
+
+    <style name="DatePickerStyle" parent="@android:style/Widget.DeviceDefault.DatePicker">
+        <item name="android:headerMonthTextAppearance">@style/DatePickerTextAppearance</item>
+        <item name="android:headerBackground">@color/licorice</item>
     </style>
 
 </resources>

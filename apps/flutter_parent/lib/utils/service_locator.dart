@@ -36,6 +36,7 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interac
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
+import 'package:flutter_parent/screens/aup/acceptable_use_policy_interactor.dart';
 import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
@@ -63,6 +64,7 @@ import 'package:flutter_parent/screens/remote_config/remote_config_interactor.da
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/utils/alert_helper.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
@@ -70,7 +72,6 @@ import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interac
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/db/user_colors_db.dart';
-import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/permission_handler.dart';
@@ -82,7 +83,6 @@ import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:get_it/get_it.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'common_widgets/view_attachment/fetcher/attachment_fetcher_interactor.dart';
@@ -117,6 +117,7 @@ void setupLocator() {
   locator.registerLazySingleton<UserColorsDb>(() => UserColorsDb());
 
   // Interactors
+  locator.registerFactory<AcceptableUsePolicyInteractor>(() => AcceptableUsePolicyInteractor());
   locator.registerFactory<AccountCreationInteractor>(() => AccountCreationInteractor());
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
   locator.registerFactory<AlertThresholdsInteractor>(() => AlertThresholdsInteractor());
@@ -171,4 +172,5 @@ void setupLocator() {
   locator.registerLazySingleton<QRLoginUtil>(() => QRLoginUtil());
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
   locator.registerLazySingleton<StudentAddedNotifier>(() => StudentAddedNotifier());
+  locator.registerLazySingleton<AlertsHelper>(() => AlertsHelper());
 }

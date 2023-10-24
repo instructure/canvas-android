@@ -35,7 +35,7 @@
         android:contentDescription="@{@string/a11y_contentDescriptionUploadDashboardNotification(itemViewModel.data.title)}"
         android:minHeight="55dp"
         android:onClick="@{() -> itemViewModel.open()}"
-        app:borderColor="@{@color/backgroundInfo}"
+        app:borderColor="@{context.getColor(itemViewModel.data.backgroundColorTint)}"
         tools:backgroundTint="#00ACEC">
 
         <FrameLayout
@@ -43,7 +43,7 @@
             android:layout_width="40dp"
             android:layout_height="0dp"
             android:background="@drawable/announcement_card_icon_background"
-            android:backgroundTint="@color/backgroundInfo"
+            android:backgroundTint="@{context.getColor(itemViewModel.data.backgroundColorTint)}"
             android:importantForAccessibility="noHideDescendants"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_upload"
+                app:imageRes="@{itemViewModel.data.icon}"
                 app:tint="@color/white" />
 
         </FrameLayout>
@@ -74,29 +74,35 @@
             <TextView
                 android:id="@+id/uploadTitle"
                 style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:importantForAccessibility="no"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.title}"
                 android:textColor="@color/textDarkest"
                 android:textSize="16sp"
+                app:layout_constraintEnd_toStartOf="@id/loader"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Uploading Submission" />
 
             <TextView
                 android:id="@+id/uploadSubtitle"
                 style="@style/TextFont.Regular"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@{itemViewModel.data.subTitle}"
                 android:textColor="@color/textDark"
                 android:textSize="14sp"
                 android:visibility="@{itemViewModel.data.subTitle.empty ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toStartOf="@id/loader"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/uploadTitle" />
 
             <ProgressBar
@@ -107,8 +113,33 @@
                 android:max="100"
                 android:progress="@{itemViewModel.progress}"
                 android:progressTint="@color/backgroundInfo"
+                android:visibility="@{itemViewModel.data.uploading ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/uploadSubtitle"
                 tools:progress="25" />
+
+            <ProgressBar
+                android:id="@+id/loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:progressTint="@color/backgroundInfo"
+                android:visibility="@{itemViewModel.loading ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/dismiss"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/dismiss"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@string/dismiss"
+                android:onClick="@{() -> itemViewModel.remove()}"
+                android:src="@drawable/ic_close"
+                android:visibility="@{itemViewModel.data.uploading ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/textDarkest" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

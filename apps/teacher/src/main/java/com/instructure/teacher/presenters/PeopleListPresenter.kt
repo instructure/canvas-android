@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
-import com.instructure.canvasapi2.utils.isValid
 import com.instructure.teacher.viewinterface.PeopleListView
 import instructure.androidblueprint.SyncPresenter
 import retrofit2.Response
@@ -233,11 +232,11 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
         }
     }
 
-    private inner class RecipientRunnable internal constructor(val constraint: String) : Runnable {
+    private inner class RecipientRunnable(val constraint: String) : Runnable {
         private var isKilled = false
 
         override fun run() {
-            if (!isKilled && constraint.isValid() && mCanvasContext != null) {
+            if (!isKilled && mCanvasContext != null) {
                 onRefreshStarted()
                 RecipientManager.searchAllRecipientsNoSyntheticContexts(true, constraint, mCanvasContext.contextId, mRecipientCallback)
             } else {

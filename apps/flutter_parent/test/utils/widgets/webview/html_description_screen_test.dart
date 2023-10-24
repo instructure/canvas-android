@@ -19,13 +19,14 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../accessibility_utils.dart';
 import '../../test_app.dart';
 import '../../test_helpers/mock_helpers.dart';
+import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   setupTestLocator((locator) => locator..registerLazySingleton<WebContentInteractor>(() => MockWebContentInteractor()));
 
   // Can't test html content in webview, so just make sure it renders one on the screen
   testWidgetsWithAccessibilityChecks('renders', (tester) async {
-    await tester.pumpWidget(TestApp(HtmlDescriptionScreen('anything')));
+    await tester.pumpWidget(TestApp(HtmlDescriptionScreen('anything', 'Description')));
     await tester.pumpAndSettle();
 
     expect(find.byType(CanvasWebView), findsOneWidget);

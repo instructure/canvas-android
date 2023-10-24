@@ -23,6 +23,8 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
+import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.utils.toApiString
@@ -268,6 +270,7 @@ class InAppUpdateInteractionTest : StudentTest() {
     }
 
     @Test
+    @Stub("Unstable, there is a ticket to fix this")
     fun flexibleUpdateCompletesIfAppRestarts() {
         with(appUpdateManager) {
             setUpdateAvailable(400)

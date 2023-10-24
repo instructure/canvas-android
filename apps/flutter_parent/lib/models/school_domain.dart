@@ -24,11 +24,10 @@ abstract class SchoolDomain implements Built<SchoolDomain, SchoolDomainBuilder> 
   static Serializer<SchoolDomain> get serializer => _$schoolDomainSerializer;
 
   String get domain;
-  String get name;
+  String? get name;
 
-  @nullable
   @BuiltValueField(wireName: 'authentication_provider')
-  String get authenticationProvider;
+  String? get authenticationProvider;
 
   SchoolDomain._();
   factory SchoolDomain([void Function(SchoolDomainBuilder) updates]) = _$SchoolDomain;

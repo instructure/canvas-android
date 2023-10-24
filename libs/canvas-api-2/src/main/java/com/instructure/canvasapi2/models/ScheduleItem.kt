@@ -23,8 +23,8 @@ import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.toSimpleDate
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
@@ -32,7 +32,7 @@ data class ScheduleItem(
         @SerializedName("id")
         var itemId: String = "", // Can be different values - check the getId() override method below
         val title: String? = null,
-        val description: String? = null,
+        var description: String? = null,
         @SerializedName("start_at")
         val startAt: String? = null,
         @SerializedName("end_at")

@@ -31,7 +31,7 @@ import java.io.IOException
 
 object OAuthAPI {
 
-    internal interface OAuthInterface {
+    interface OAuthInterface {
         @DELETE("/login/oauth2/token")
         fun deleteToken(): Call<Void>
 
@@ -46,6 +46,9 @@ object OAuthAPI {
 
         @GET("/login/session_token")
         fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
+
+        @GET("/login/session_token")
+        suspend fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Tag params: RestParams): DataResult<AuthenticatedSession>
 
         @GET("/api/v1/login/session_token")
         fun getAuthenticatedSessionMasquerading(@Query("return_to") targetUrl: String, @Query("as_user_id") userId: Long): Call<AuthenticatedSession>

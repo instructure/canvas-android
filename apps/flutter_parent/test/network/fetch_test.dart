@@ -21,11 +21,12 @@ import 'package:test/test.dart';
 
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   group('fetch', () {
     test('deserializes a response', () async {
-      final User response = await fetch(_request(_rawUser()));
+      final User? response = await fetch(_request(_rawUser()));
       expect(response, _getUser());
     });
 
@@ -33,6 +34,7 @@ void main() {
       bool fail = false;
       await fetch(_requestFail()).catchError((_) {
         fail = true; // Don't return, just update the flag
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
@@ -44,14 +46,15 @@ void main() {
         _getUser(id: '0'),
         _getUser(id: '1'),
       ];
-      final PagedList<User> response = await fetchFirstPage(_request(_rawUserList()));
-      expect(response.data, expected);
+      final PagedList<User>? response = await fetchFirstPage(_request(_rawUserList()));
+      expect(response?.data, expected);
     });
 
     test('catches errors and returns a Future.error', () async {
       bool fail = false;
       await fetchFirstPage(_requestFail()).catchError((_) {
-        fail = true; // Don't return, just update the flag
+        fail = true;
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
@@ -64,7 +67,8 @@ void main() {
       await setupPlatformChannels();
       bool fail = false;
       await fetchNextPage(null).catchError((_) {
-        fail = true; // Don't return, just update the flag
+        fail = true;
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
@@ -76,7 +80,7 @@ void main() {
         _getUser(id: '0'),
         _getUser(id: '1'),
       ];
-      final List<User> response = await fetchList(_request(_rawUserList()));
+      final List<User>? response = await fetchList(_request(_rawUserList()));
       expect(response, expected);
     });
 
@@ -100,7 +104,7 @@ void main() {
       when(dio.options).thenReturn(BaseOptions());
       when(dio.get(pageUrl)).thenAnswer((_) => _request(_rawUserList(startIndex: 2)));
 
-      final List<User> response = await fetchList(request, depaginateWith: dio);
+      final List<User>? response = await fetchList(request, depaginateWith: dio);
       expect(response, expected);
     });
 
@@ -108,13 +112,14 @@ void main() {
       bool fail = false;
       await fetchList(_requestFail()).catchError((_) {
         fail = true; // Don't return, just update the flag
+        return Future.value(null);
       });
       expect(fail, isTrue);
     });
   });
 }
 
-Future<Response<dynamic>> _request(data, {Headers headers}) async => Response(data: data, headers: headers);
+Future<Response<dynamic>> _request(data, {Headers? headers}) async => Response(data: data, headers: headers, requestOptions: RequestOptions(path: ''));
 
 Future<Response<dynamic>> _requestFail() async => throw 'ErRoR';
 

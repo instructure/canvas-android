@@ -53,7 +53,7 @@ void main() {
 
       List<String> serializedLogins = logins.map((it) => json.encode(serialize(it))).toList();
 
-      String calledMethod;
+      String? calledMethod;
       OldAppMigration.channel.setMockMethodCallHandler((MethodCall methodCall) async {
         calledMethod = methodCall.method;
         return serializedLogins;
@@ -85,7 +85,7 @@ void main() {
 
     test('calls platform channel and sets checked value', () async {
       bool channelReturnValue = true;
-      String calledMethod;
+      String? calledMethod;
 
       OldAppMigration.channel.setMockMethodCallHandler((MethodCall methodCall) async {
         calledMethod = methodCall.method;

@@ -36,7 +36,7 @@ object FileUploadManager {
         onProgress: ProgressRequestUpdateListener? = null
     ): DataResult<Attachment> {
         val adapter = RestBuilder()
-        val params = RestParams(shouldIgnoreToken = true)
+        val params = RestParams(shouldIgnoreToken = false)
         val attachment = FileUploadAPI.uploadSynchronous(uploadParams, file, adapter, params, onProgress)
         return if (attachment != null) DataResult.Success(attachment) else DataResult.Fail()
     }

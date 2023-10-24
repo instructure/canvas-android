@@ -1,7 +1,7 @@
 package com.instructure.pandautils.di
 
-import com.instructure.pandautils.room.AppDatabase
-import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.appdatabase.AppDatabase
+import com.instructure.pandautils.room.appdatabase.daos.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,5 +46,17 @@ class DatabaseModule {
     @Singleton
     fun providePendingSubmissionCommentDao(appDatabase: AppDatabase): PendingSubmissionCommentDao {
         return appDatabase.pendingSubmissionCommentDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDashboardFileUploadDao(appDatabase: AppDatabase): DashboardFileUploadDao {
+        return appDatabase.dashboardFileUploadDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEnvironmentFeatureFlagsDao(appDatabase: AppDatabase): EnvironmentFeatureFlagsDao {
+        return appDatabase.environmentFeatureFlagsDao()
     }
 }

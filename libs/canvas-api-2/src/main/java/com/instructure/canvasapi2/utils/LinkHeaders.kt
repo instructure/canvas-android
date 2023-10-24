@@ -18,12 +18,12 @@
 package com.instructure.canvasapi2.utils
 
 
-class LinkHeaders {
-    var prevUrl: String? = null
-    var nextUrl: String? = null
-    var lastUrl: String? = null
-    var firstUrl: String? = null
-
+data class LinkHeaders(
+    val prevUrl: String? = null,
+    val nextUrl: String? = null,
+    val lastUrl: String? = null,
+    val firstUrl: String? = null
+) {
     override fun toString(): String
         = "PREV: $prevUrl\nNEXT: $nextUrl\nLAST: $lastUrl\nFIRST: $firstUrl"
 }

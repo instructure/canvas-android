@@ -22,11 +22,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.SecondaryFeatureCategory
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.panda_annotations.*
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
@@ -128,7 +124,8 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
                         isGroupMessage = false,
                         lastActivityDate = Date.now(),
                         mediaPath = "/media/path",
-                        message = "Pending Message"
+                        message = "Pending Message",
+                        attemptId = 1
                 )
         )
     }
@@ -251,7 +248,9 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         val data = SubmissionDetailsTabData.CommentData( // ?? I don't know what this does, but I need to provide it
             name = "Name",
             assignment = baseAssignment,
-            submission = baseSubmission
+            submission = baseSubmission,
+            attemptId = 1,
+            true
         )
         val fragment = SubmissionCommentsFragment.newInstance(data).apply {
             overrideInitViewState = state
@@ -270,7 +269,8 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         lastActivityDate: Date,
         isGroupMessage: Boolean,
         message: String?,
-        mediaPath: String?
+        mediaPath: String?,
+        attemptId: Long?
     ) : PendingSubmissionComment {
         db.insertComment(
             accountDomain,
@@ -280,7 +280,8 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
             lastActivityDate,
             isGroupMessage,
             message,
-            mediaPath
+            mediaPath,
+            attemptId
         )
         val id = db.getLastInsert().executeAsOne()
         return db.getCommentById(id).executeAsOne()

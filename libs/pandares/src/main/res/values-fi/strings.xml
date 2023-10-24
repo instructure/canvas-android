@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Poistettu</string>
 
+    <string name="gradeUpdated">Arvosana päivitetty</string>
     <string name="loadingCanvas">Ladataan Canvas-sisältöä&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1117,6 +1118,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Voit avata tehtävän palautustiedot täältä</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Arvosana: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minuutti</item>
         <item quantity="other">%s minuuttia</item>
@@ -1292,9 +1296,17 @@
     <string name="a11y_closeProgress">Sulje edistymisruutu</string>
     <string name="fileUploadProgress">%1$s/%2$s</string>
     <string name="fileUploadProgressSubtitle">Ladataan tiedostoihin</string>
+    <string name="fileUploadFailedSubtitle">Yksi tai useampi tiedosto ei latautunut. Tarkista Internet-yhteytesi ja yritä lähettää uudelleen.</string>
     <string name="submissionProgressSubtitle">Ladataan lähetystä kohteeseen \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Ladataan tehtäväpalautusta</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Ladataan tiedostoja</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Lähetys onnistui</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Tehtäväpalautus epäonnistui</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Ladataan tiedostoa</item>
+        <item quantity="other">Ladataan tiedostoja</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Tiedoston lataus onnistui</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Tiedoston lataus epäonnistui</string>
     <string name="cancelSubmissionDialogTitle">Peruuta lähetys</string>
     <string name="cancelSubmissionDialogMessage">Tämä peruuttaa ja poistaa lähetyksesi.</string>
     <string name="fileUploadError">Tiedoston lataus epäonnistui</string>
@@ -1302,7 +1314,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Lataa omiin tiedostoihin</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Lähetä tehtävä</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Valitse kurssi</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Valitse kurssi, valittu kurssi on: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Valitse tehtävä</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Valitse tehtävä, valittu tehtävä on: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Peruutetaanko lataus?</string>
     <string name="cancelFileUploadMessage">Tämä peruuttaa latauksesi.</string>
@@ -1317,4 +1331,64 @@
     <string name="createdByStudentView">Opiskelijanäkymän luoma</string>
     <string name="discussionErrorToast">Ilmeni virhe. Aihe ei ehkä enää ole saatavilla.</string>
     <string name="cameraPermissionPermanentlyDenied">Kameran käyttöoikeus kiellettiin pysyvästi. Voit sallia käyttöoikeuden sovellusasetuksista.</string>
+    <string name="unpublish_assignment_error">Tehtävää ei voida peruuttaa, jos on opiskelijalähetyksiä.</string>
+    <string name="subscribeToCalendar">Tilaa kalenterin syöte</string>
+    <string name="subscribeToCalendarMessage">Voit synkronoida Canvas-kalenterisi Google-kalenteritiliin napsauttamalla tässä keskustelussa olevaa Tilaa-painiketta. Sitten sinun täytyy siirtyä Google-kalenterisovelluksiin ja ottaa synkronointi käyttöön uuden kalenterin asetuksissa.</string>
+    <string name="subscribeButton">Tilaa</string>
+    <string name="switchToLightMode">Vaihda valoisaan tilaan</string>
+    <string name="switchToDarkMode">Vaihda pimeään tilaan</string>
+    <string name="acceptableUsePolicyDescription">Olet joko uusi käyttäjä tai hyväksyttävää käyttöä koskeva käytäntö on muuttunut sen jälkeen, kun viimeksi hyväksyit sen. Hyväksy hyväksyttävää käyttöä koskeva käytäntö ennen kuin jatkat.</string>
+    <string name="acceptableUsePolicyTitle">Hyväksyttävää käyttöä koskeva käytäntö</string>
+    <string name="acceptableUsePolicyButton">Hyväksyttävää käyttöä koskeva käytäntö</string>
+    <string name="acceptableUsePolicyAgree">Sinun täytyy hyväksyä hyväksyttävää käyttöä koskeva käytäntö</string>
+    <string name="acceptableUsePolicySubmit">Lähetä</string>
+    <string name="acceptFail">Ehtojen hyväksynnän lähettäminen epäonnistui.</string>
+    <string name="attempt">Yritys %d</string>
+    <string name="quizQuestions">Kysymyksiä: %d</string>
+    <string name="quizTimeLimit">Aikaraja: %s</string>
+    <string name="allowedAttempts">Sallitut yritykset: %s</string>
+    <string name="usedAttempts">Yritystä käytetty: %d</string>
+    <string name="generalUnexpectedError">Ilmeni odottamaton virhe.</string>
+
+    <string name="deleteSelected">Poista</string>
+    <string name="archiveSelected">Arkisto</string>
+    <string name="unarchiveSelected">Peru arkistointi</string>
+    <string name="markAsReadSelected">Merkitse luetuksi</string>
+    <string name="markAsUnreadSelected">Merkitse lukemattomaksi</string>
+    <string name="starSelected">Tähti</string>
+    <string name="unstarSelected">Poista tähti</string>
+
+    <string name="inboxOperationFailed">Toiminnon suorittaminen epäonnistui</string>
+    <string name="inboxDeletedConfirmation">%s poistettu</string>
+    <string name="inboxArchivedConfirmation">%s arkistoitu</string>
+    <string name="inboxUnarchivedConfirmation">%s arkistointi peruttu</string>
+    <string name="inboxMarkAsReadConfirmation">%s merkitse luetuksi</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s merkitty lukemattomaksi</string>
+    <string name="inboxStarredConfirmation">%s tähdellä merkityt</string>
+    <string name="inboxUnstarredConfirmation">%s tähdellä merkintä poistettu</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Tämä keskustelu poistetaan kaikista saapuvien postilaatikoista laitteillasi. Tätä toimintoa ei voida peruuttaa.</item>
+        <item quantity="other">Nämä keskustelut poistetaan kaikista saapuvien postilaatikoista laitteillasi. Tätä toimintoa ei voida peruuttaa.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Seuraavan sivun lataus epäonnistui. Tarkista verkkoyhteys.</string>
+    <string name="conversationsRefreshFailed">Keskusteluiden päivitys epäonnistui. Tarkista verkkoyhteys.</string>
+    <string name="inboxScopeInbox">Saapuvin postien laatikko</string>
+    <string name="inboxContextSelectorTitle">Valitse kurssi tai ryhmä</string>
+    <string name="inboxClearFilter">Tyhjennä</string>
+    <string name="a11y_courseFilterContentDescription">Kurssisuodatin: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">valitse</string>
+    <string name="a11y_itemSelectedSwipeForActions">Keskustelu valittu. Valintatila aktivoitu. Siirry toimintoihin.</string>
+    <string name="a11y_conversationSelected">Keskustelu valittu.</string>
+    <string name="a11y_conversationDeselected">Keskustelun valinta poistettu.</string>
+    <string name="a11y_exitSelectionMode">Poistu valintatilasta</string>
+    <string name="a11y_selectionModeDeactivated">Valintatilan aktivointi poistettu.</string>
+    <string name="a11y_avatarContentDescription">Kohteen %s avatar</string>
+    <string name="inboxUndo">Peruuta</string>
+    <string name="aboutAppTitle">Sovellus</string>
+    <string name="aboutDomainTitle">Verkkotunnus</string>
+    <string name="aboutLoginTitle">Käyttäjätunnus</string>
+    <string name="aboutEmailTitle">Sähköposti</string>
+    <string name="aboutVersionTitle">Versio</string>
+    <string name="assignmentRefreshError">Tämän tehtävän uudelleenlataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
 </resources>

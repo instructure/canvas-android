@@ -23,12 +23,14 @@ import java.io.InputStream
 
 object FileCache {
 
+    var versionCode = 0
+
     private val DEFAULT_DISK_CACHE_MAX_SIZE_MB = 250
     private val MEGABYTE = 1024 * 1024
     private val DEFAULT_DISK_CACHE_SIZE = DEFAULT_DISK_CACHE_MAX_SIZE_MB * MEGABYTE
 
     private val mSimpleDiskCache: SimpleDiskCache by lazy {
-        SimpleDiskCache.open(ContextKeeper.appContext.externalCacheDir!!, BuildConfig.VERSION_CODE, DEFAULT_DISK_CACHE_SIZE.toLong())
+        SimpleDiskCache.open(ContextKeeper.appContext.externalCacheDir!!, versionCode, DEFAULT_DISK_CACHE_SIZE.toLong())
     }
 
     fun getInputStream(url: String, callback: FetchFileAsyncTask.FetchFileCallback) = FetchFileAsyncTask.download(mSimpleDiskCache, url, callback)

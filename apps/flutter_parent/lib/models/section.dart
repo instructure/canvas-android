@@ -29,12 +29,10 @@ abstract class Section implements Built<Section, SectionBuilder> {
   String get name;
 
   @BuiltValueField(wireName: 'start_at')
-  @nullable
-  DateTime get startAt;
+  DateTime? get startAt;
 
   @BuiltValueField(wireName: 'end_at')
-  @nullable
-  DateTime get endAt;
+  DateTime? get endAt;
 
   Section._();
   factory Section([void Function(SectionBuilder) updates]) = _$Section;

@@ -23,15 +23,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.FeatureFlagPref
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
+import com.instructure.student.databinding.AdapterFeatureFlagBinding
+import com.instructure.student.databinding.FragmentFeatureFlagsBinding
 import com.instructure.student.util.FeatureFlagPrefs
-import kotlinx.android.synthetic.main.adapter_feature_flag.view.*
-import kotlinx.android.synthetic.main.fragment_feature_flags.*
 
 class FeatureFlagsFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentFeatureFlagsBinding::bind)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_feature_flags, container, false)
@@ -40,12 +43,12 @@ class FeatureFlagsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        recyclerView.adapter = FeatureFlagAdapter()
+        binding.recyclerView.adapter = FeatureFlagAdapter()
     }
 
     private fun setupToolbar() {
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        binding.toolbar.setupAsBackButton(this)
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 }
 
@@ -53,16 +56,18 @@ private class FeatureFlagAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     val flags = FeatureFlagPrefs.delegates.filterIsInstance<FeatureFlagPref>()
 
+    private lateinit var binding: AdapterFeatureFlagBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val layout = LayoutInflater.from(parent.context).inflate(R.layout.adapter_feature_flag, parent, false)
-        return object : RecyclerView.ViewHolder(layout) {}
+        binding = AdapterFeatureFlagBinding.inflate(LayoutInflater.from(parent.context))
+        return object : RecyclerView.ViewHolder(binding.root) {}
     }
 
     override fun getItemCount(): Int = flags.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val flag = flags[position]
-        with (holder.itemView) {
+        with (binding) {
             featureSwitch.setOnCheckedChangeListener(null)
             featureSwitch.text = flag.description
             featureSwitch.isChecked = flag.getValue(FeatureFlagPrefs, flag.property)

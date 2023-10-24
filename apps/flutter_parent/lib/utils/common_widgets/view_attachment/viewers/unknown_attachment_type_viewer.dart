@@ -20,7 +20,7 @@ import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 class UnknownAttachmentTypeViewer extends StatelessWidget {
   final Attachment attachment;
 
-  const UnknownAttachmentTypeViewer(this.attachment, {Key key}) : super(key: key);
+  const UnknownAttachmentTypeViewer(this.attachment, {super.key});
 
   @override
   Widget build(BuildContext context) {

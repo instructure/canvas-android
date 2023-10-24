@@ -34,8 +34,8 @@ import 'conversation_reply_interactor.dart';
 class ConversationReplyScreen extends StatefulWidget {
   ConversationReplyScreen(this.conversation, this.message, this.replyAll);
 
-  final Conversation conversation;
-  final Message message;
+  final Conversation? conversation;
+  final Message? message;
   final bool replyAll;
 
   static final sendKey = Key('sendButton');
@@ -77,7 +77,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
 
   _send() async {
     setState(() => _sending = true);
-    var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
+    var attachmentIds = _attachments.map((it) => it.attachment?.id).toList().nonNulls.toList();
     try {
       var result = await _interactor.createReply(
         widget.conversation,
@@ -86,31 +86,32 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
         attachmentIds,
         widget.replyAll,
       );
-      var newMessage = result.messages[0];
-      var updatedConversation = widget.conversation.rebuild((c) => c..messages.insert(0, newMessage));
+      var newMessage = result?.messages?.first;
+      Conversation? updatedConversation = null;
+      if (newMessage != null) updatedConversation = widget.conversation?.rebuild((c) => c..messages.insert(0, newMessage));
       Navigator.of(context).pop(updatedConversation); // Return updated conversation
     } catch (e) {
       setState(() => _sending = false);
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(L10n(context).errorSendingMessage)),
       );
     }
   }
 
-  Future<bool> _onWillPop() {
+  Future<bool> _onWillPop() async {
     if (_sending) return Future.value(false);
     if (_bodyText.isEmpty && _attachments.isEmpty) return Future.value(true);
-    return showDialog(
+    return await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
             title: new Text(L10n(context).unsavedChangesDialogTitle),
             content: new Text(L10n(context).unsavedChangesDialogBody),
             actions: <Widget>[
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text(L10n(context).no),
               ),
-              new FlatButton(
+              new TextButton(
                 onPressed: () {
                   _attachments.forEach((it) => it.deleteAttachment());
                   Navigator.of(context).pop(true);
@@ -140,15 +141,15 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
     );
   }
 
-  Widget _appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
-      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+      bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(widget.replyAll ? L10n(context).replyAll : L10n(context).reply),
-          Text(widget.conversation.subject, style: Theme.of(context).textTheme.caption),
+          Text(widget.replyAll ? L10n(context).replyAll : L10n(context).reply, style: Theme.of(context).textTheme.bodySmall),
+          Text(widget.conversation?.subject ?? '', style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       actions: [
@@ -189,8 +190,8 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
             tooltip: L10n(context).sendMessage,
             key: ConversationReplyScreen.sendKey,
             icon: Icon(Icons.send),
-            color: Theme.of(context).accentColor,
-            disabledColor: Theme.of(context).iconTheme.color.withOpacity(0.25),
+            color: Theme.of(context).colorScheme.secondary,
+            disabledColor: Theme.of(context).iconTheme.color?.withOpacity(0.25),
             onPressed: _canSend() ? _send : null,
           )
       ],
@@ -204,7 +205,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
         children: <Widget>[
           MessageWidget(
             conversation: widget.conversation,
-            message: widget.message ?? widget.conversation.messages[0],
+            message: widget.message ?? widget.conversation?.messages?[0],
             currentUserId: _interactor.getCurrentUserId(),
             onAttachmentClicked: (attachment) {
               locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
@@ -260,7 +261,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
         textCapitalization: TextCapitalization.sentences,
         minLines: 4,
         maxLines: null,
-        style: Theme.of(context).textTheme.bodyText2,
+        style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
           hintText: L10n(context).messageBodyInputHint,
           contentPadding: EdgeInsets.all(16),

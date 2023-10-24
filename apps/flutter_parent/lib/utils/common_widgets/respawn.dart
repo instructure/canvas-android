@@ -16,14 +16,14 @@ import 'package:flutter/widgets.dart';
 
 /// Widget that can be respawned with a clean state. To perform respawn, call Respawn.of(context).kill()
 class Respawn extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
 
-  const Respawn({Key key, this.child}) : super(key: key);
+  const Respawn({this.child, super.key});
 
   @override
   _RespawnState createState() => _RespawnState();
 
-  static _RespawnState of(BuildContext context) {
+  static _RespawnState? of(BuildContext context) {
     return context.findAncestorStateOfType<_RespawnState>();
   }
 }

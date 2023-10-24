@@ -31,11 +31,11 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.FakeDateTimeProvider
+import com.instructure.student.ui.utils.di.FakeDateTimeProvider
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Before
+import junit.framework.AssertionFailedError
 import org.junit.Test
 import java.util.*
 import javax.inject.Inject
@@ -216,7 +216,7 @@ class ScheduleInteractionTest : StudentTest() {
         schedulePage.clickScheduleItem(assignment.name!!)
 
         assignmentDetailsPage.assertPageObjects()
-        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
     @Test
@@ -268,8 +268,15 @@ class ScheduleInteractionTest : StudentTest() {
         val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
 
         goToScheduleTab(data)
+
+        //This try-catch is needed because we don't know if the swipe is enough to go away from 'Today' and to make the Today button displayed.
         schedulePage.swipeUp()
-        schedulePage.assertTodayButtonDisplayed()
+        try {
+            schedulePage.assertTodayButtonDisplayed()
+        } catch(e: AssertionFailedError) {
+            schedulePage.swipeDown()
+            schedulePage.assertTodayButtonDisplayed()
+        }
         schedulePage.clickOnTodayButton()
         schedulePage.assertCourseHeaderDisplayed(courses[0].name)
         schedulePage.assertScheduleItemDisplayed(assignment1.name!!)

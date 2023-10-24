@@ -31,16 +31,19 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.isCourseOrGroup
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ActivityFullscreenBinding
 import com.instructure.teacher.router.RouteResolver
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_fullscreen.*
 import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
 class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
+
+    private val binding by viewBinding(ActivityFullscreenBinding::inflate)
 
     private var mRoute: Route? = null
     private var groupApiCall: Job? = null
@@ -48,7 +51,7 @@ class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fullscreen)
+        setContentView(binding.root)
 
         if (savedInstanceState == null) {
             mRoute = intent.extras!!.getParcelable(Route.ROUTE)
@@ -90,6 +93,7 @@ class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
                             setupWithCanvasContext(group)
                         } catch {}
                     }
+                    else -> {}
                 }
             }
         }
@@ -103,12 +107,12 @@ class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
         if(fragment == null) throw IllegalStateException("FullscreenActivity.class addFragment was null")
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
-        val currentFragment = fm.findFragmentById(container.id)
+        val currentFragment = fm.findFragmentById(binding.container.id)
         if(currentFragment != null) {
             // Add to back stack if a fragment exists
             ft.addToBackStack(fragment.javaClass.simpleName)
         }
-        ft.replace(container.id, fragment, fragment.javaClass.simpleName)
+        ft.replace(binding.container.id, fragment, fragment.javaClass.simpleName)
         ft.commit() // This may need to become a commitAllowingStateLoss(), as its the result of an async call
     }
 

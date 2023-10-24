@@ -18,29 +18,33 @@ package com.instructure.teacher.fragments
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
 import com.google.android.exoplayer2.upstream.HttpDataSource
-import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_MEDIA
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.interfaces.ShareableFile
+import com.instructure.pandautils.utils.*
+import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentSpeedGraderMediaBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.MediaContent
-import kotlinx.android.synthetic.main.exo_player_control_view.view.*
-import kotlinx.android.synthetic.main.fragment_speed_grader_media.*
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
 class ViewMediaFragment : Fragment(), ShareableFile {
+
+    private val binding by viewBinding(FragmentSpeedGraderMediaBinding::bind)
 
     private var mUri by ParcelableArg(Uri.EMPTY)
     private var mContentType by StringArg()
@@ -54,10 +58,10 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        speedGraderMediaPlayerView.toolbar.setGone()
+        binding.speedGraderMediaPlayerView.findViewById<Toolbar>(R.id.toolbar).setGone()
     }
 
-    override fun onStart() {
+    override fun onStart() = with(binding) {
         super.onStart()
 
         Glide.with(requireContext()).load(mThumbnailUrl).into(mediaThumbnailView)
@@ -65,7 +69,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
         prepareMediaButton.onClick {
             MobileDataWarningDialog.showIfNeeded(
                     manager = requireActivity().supportFragmentManager,
-                    onProceed = this::prepare
+                    onProceed = this@ViewMediaFragment::prepare
             )
         }
 
@@ -75,10 +79,10 @@ class ViewMediaFragment : Fragment(), ShareableFile {
         ViewStyler.themeButton(openExternallyButton)
         openExternallyButton.onClick { mUri.viewExternally(requireContext(), mContentType) }
 
-        speedGraderMediaPlayerView.fullscreenButton.onClick {
+        speedGraderMediaPlayerView.findViewById<ImageButton>(R.id.fullscreenButton).onClick {
             mExoAgent.flagForResume()
             val bundle = BaseViewMediaActivity.makeBundle(mUri.toString(), mThumbnailUrl, mContentType, mDisplayName, false)
-            RouteMatcher.route(requireContext(), Route(bundle, RouteContext.MEDIA))
+            RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.MEDIA))
         }
     }
 
@@ -86,7 +90,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
         mUri.viewExternally(requireContext(), mContentType)
     }
 
-    override fun onResume() {
+    override fun onResume() = with(binding) {
         super.onResume()
 
         mExoAgent.attach(speedGraderMediaPlayerView, object : ExoInfoListener {
@@ -143,7 +147,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
         })
     }
 
-    private fun prepare() = mExoAgent.prepare(speedGraderMediaPlayerView)
+    private fun prepare() = mExoAgent.prepare(binding.speedGraderMediaPlayerView)
 
     override fun onDetach() {
         mExoAgent.release()

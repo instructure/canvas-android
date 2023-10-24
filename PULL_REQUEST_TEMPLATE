@@ -1,4 +1,11 @@
 --- edit or delete this section ---
+
+Test plan:
+
+refs: 
+affects: 
+release note:
+
 ## Screenshots
 
 <table>
@@ -12,7 +19,8 @@
 ## Checklist
 
 - [ ] Follow-up e2e test ticket created or not needed
+- [ ] Run E2E test suite
 - [ ] Tested in dark mode
 - [ ] Tested in light mode
 - [ ] A11y checked
-- [ ] Approve from product or not needed
+- [ ] Approve from product

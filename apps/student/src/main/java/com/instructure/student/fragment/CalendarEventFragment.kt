@@ -36,13 +36,13 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.databinding.FragmentCalendarEventBinding
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.calendar_event_layout.*
-import kotlinx.android.synthetic.main.fragment_calendar_event.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -52,6 +52,8 @@ import java.util.*
 
 @ScreenView(SCREEN_VIEW_CALENDAR_EVENT)
 class CalendarEventFragment : ParentFragment() {
+
+    private val binding by viewBinding(FragmentCalendarEventBinding::bind)
 
     // Bundle args
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -90,12 +92,12 @@ class CalendarEventFragment : ParentFragment() {
 
     override fun onResume() {
         super.onResume()
-        calendarEventWebViewWrapper?.webView?.onResume()
+        binding.calendarEventLayout.calendarEventWebViewWrapper.webView.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        calendarEventWebViewWrapper?.webView?.onPause()
+        binding.calendarEventLayout.calendarEventWebViewWrapper.webView.onPause()
     }
 
     override fun onStop() {
@@ -111,12 +113,12 @@ class CalendarEventFragment : ParentFragment() {
     //endregion
 
     //region Fragment Interaction Overrides
-    override fun applyTheme() {
+    override fun applyTheme() = with(binding) {
         if (scheduleItem?.contextId ?: canvasContext.id == ApiPrefs.user?.id) {
             setupToolbarMenu(toolbar, R.menu.calendar_event_menu)
         }
 
-        toolbar.setupAsBackButtonAsBackPressedOnly(this)
+        toolbar.setupAsBackButtonAsBackPressedOnly(this@CalendarEventFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 
@@ -124,7 +126,7 @@ class CalendarEventFragment : ParentFragment() {
     //endregion
 
     //region Parent Fragment Overrides
-    override fun handleBackPressed(): Boolean = calendarEventWebViewWrapper?.webView?.handleGoBack()
+    override fun handleBackPressed(): Boolean = binding.calendarEventLayout.calendarEventWebViewWrapper.webView.handleGoBack()
             ?: super.handleBackPressed()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -147,9 +149,9 @@ class CalendarEventFragment : ParentFragment() {
     fun onBackStackChangedEvent(event: OnBackStackChangedEvent) {
         event.get { clazz ->
             if (clazz != null && clazz.isAssignableFrom(CalendarEventFragment::class.java)) {
-                calendarEventWebViewWrapper?.webView?.onResume()
+                binding.calendarEventLayout.calendarEventWebViewWrapper?.webView?.onResume()
             } else {
-                calendarEventWebViewWrapper?.webView?.onPause()
+                binding.calendarEventLayout.calendarEventWebViewWrapper?.webView?.onPause()
             }
         }
     }
@@ -157,7 +159,7 @@ class CalendarEventFragment : ParentFragment() {
 
     //region Setup
     private fun initViews() {
-        with (calendarEventWebViewWrapper.webView) {
+        with (binding.calendarEventLayout.calendarEventWebViewWrapper.webView) {
             addVideoClient(requireActivity())
             canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
                 override fun launchInternalWebViewFragment(url: String) = RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, url, false))
@@ -180,9 +182,9 @@ class CalendarEventFragment : ParentFragment() {
         populateViews()
     }
 
-    private fun populateViews() {
+    private fun populateViews() = with(binding.calendarEventLayout) {
         scheduleItem?.let {
-            toolbar.title = title()
+            binding.toolbar.title = title()
             val content: String? = it.description
 
             calendarView.setVisible()
@@ -226,16 +228,18 @@ class CalendarEventFragment : ParentFragment() {
                 loadHtmlJob = calendarEventWebViewWrapper?.webView?.loadHtmlWithIframes(requireContext(), content, { html ->
                     loadCalendarHtml(html, it.title)
                 }) { url ->
-                    LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, url)
+                    LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, url)
                 }
             }
         }
     }
 
     private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebViewWrapper?.setVisible()
-        calendarEventWebViewWrapper?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
-        calendarEventWebViewWrapper?.loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+        binding.calendarEventLayout.calendarEventWebViewWrapper.apply {
+            setVisible()
+            setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.backgroundLightest))
+            loadHtml(html, contentDescription, baseUrl = scheduleItem?.htmlUrl)
+        }
     }
 
     private fun setUpCallback() {

@@ -16,14 +16,17 @@
  */
 package com.instructure.canvasapi2.utils
 
+import okhttp3.Response
 import retrofit2.Call
 
 sealed class DataResult<out A> {
 
-    data class Success<A>(val data: A) : DataResult<A>()
+    // Default api type is unknown because previusly we haven't stored this and would need to change evereywhere in the codebase.
+    data class Success<A>(val data: A, val linkHeaders: LinkHeaders = LinkHeaders(), val apiType: ApiType = ApiType.UNKNOWN) : DataResult<A>()
 
     data class Fail(
-            val failure: Failure? = null
+        val failure: Failure? = null,
+        val response: Response? = null,
     ) : DataResult<Nothing>()
 
     val isSuccess get() = this is Success<A>
@@ -54,9 +57,7 @@ sealed class DataResult<out A> {
 
     fun <B> map(block: (A) -> B): DataResult<B> {
         return when (this) {
-            is Success -> Success(
-                block(data)
-            )
+            is Success -> Success(block(data), linkHeaders, apiType)
             is Fail -> this
         }
     }
@@ -72,9 +73,10 @@ sealed class DataResult<out A> {
 
 // Simple abstraction for repository layer errors, add to as needed
 sealed class Failure(open val message: String?) {
-    data class Network(override val message: String? = null) : Failure(message) // Covers 404/500, no internet, etc. Generic case for failed request
+    data class Network(override val message: String? = null, val errorCode: Int? = null) : Failure(message) // Covers 404/500, no internet, etc. Generic case for failed request
     data class Authorization(override val message: String? = null) : Failure(message) // Covers 401, or permission errors.
     data class Exception(val exception: Throwable, override val message: String? = null) : Failure(message)
+    object ParsingError : Failure("Response was successful, but couldn't be converted to the expected type")
 }
 
 internal fun <T> Call<T>.dataResult(): DataResult<T> {

@@ -17,12 +17,16 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterAssigneeBinding
+import com.instructure.teacher.databinding.AdapterAssigneeHeaderBinding
 import com.instructure.teacher.holders.AssigneeItemViewHolder
 import com.instructure.teacher.holders.AssigneeTypeViewHolder
 import com.instructure.teacher.holders.AssigneeViewHolder
@@ -31,18 +35,28 @@ import com.instructure.teacher.presenters.AssigneeListPresenter
 import com.instructure.teacher.viewinterface.AssigneeListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
-class AssigneeListAdapter(context: Context, val presenter: AssigneeListPresenter) : SyncExpandableRecyclerAdapter<AssigneeCategory, CanvasComparable<*>, AssigneeViewHolder, AssigneeListView>(context, presenter) {
+class AssigneeListAdapter(
+    context: Context, val presenter: AssigneeListPresenter
+) : SyncExpandableRecyclerAdapter<AssigneeCategory, CanvasComparable<*>, AssigneeViewHolder, AssigneeListView>(context, presenter) {
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: AssigneeCategory, isExpanded: Boolean) {
         (holder as? AssigneeTypeViewHolder)?.bind(group)
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: AssigneeCategory, item: CanvasComparable<*>) {
-        (holder as? AssigneeItemViewHolder)?.bind(item, presenter, context?.getColor(R.color.backgroundInfo) ?: ThemePrefs.brandColor)
+        (holder as? AssigneeItemViewHolder)?.bind(
+            item,
+            presenter,
+            context?.getColor(R.color.backgroundInfo) ?: ThemePrefs.brandColor
+        )
     }
 
-    override fun itemLayoutResId(viewType: Int)
-            = if (viewType == Types.TYPE_ITEM) AssigneeItemViewHolder.HOLDER_RES_ID else AssigneeTypeViewHolder.HOLDER_RES_ID
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
+        Types.TYPE_ITEM -> AdapterAssigneeBinding::inflate
+        else -> AdapterAssigneeHeaderBinding::inflate
+    }
 
-    override fun createViewHolder(v: View, viewType: Int)
-            = if (viewType == Types.TYPE_ITEM) AssigneeItemViewHolder(v) else AssigneeTypeViewHolder(v)
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> AssigneeItemViewHolder(binding as AdapterAssigneeBinding)
+        else -> AssigneeTypeViewHolder(binding as AdapterAssigneeHeaderBinding)
+    }
 }

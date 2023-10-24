@@ -22,27 +22,36 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
+import com.instructure.espresso.swipeUp
 import com.instructure.espresso.typeText
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
@@ -50,13 +59,30 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
-    fun verifyAssignmentDetails(assignment: Assignment) {
+    val toolbar by OnViewWithId(R.id.toolbar)
+    val points by OnViewWithId(R.id.points)
+    val date by OnViewWithId(R.id.dueDateTextView)
+    val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)
+
+    fun assertDisplayToolbarTitle() {
+        onView(allOf(withText(R.string.assignmentDetails), withParent(R.id.toolbar))).assertDisplayed()
+    }
+
+    fun assertDisplayToolbarSubtitle(courseNameText: String) {
+        onView(allOf(withText(courseNameText), withParent(R.id.toolbar))).assertDisplayed()
+    }
+
+    fun assertDisplaysDate(dateText: String) {
+        date.assertHasText(dateText)
+    }
+
+    fun assertAssignmentDetails(assignment: Assignment) {
         onView(withId(R.id.assignmentName)).assertHasText(assignment.name!!)
         onView(allOf(withId(R.id.points), isDisplayed()))
                 .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
     }
 
-    fun verifyAssignmentTitle(assignmentName: String) {
+    fun assertAssignmentTitle(assignmentName: String) {
         onView(withId(R.id.assignmentName)).assertHasText(assignmentName)
     }
 
@@ -65,15 +91,41 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
     }
 
-    fun verifyAssignmentGraded(score: String) {
-        onView(withId(R.id.gradeContainer)).scrollTo().assertDisplayed()
+    fun assertAssignmentGraded(score: String) {
+        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
     }
 
-    fun verifyAssignmentLocked() {
-        onView(withId(R.id.lockMessageTextView)).assertDisplayed()
-        onView(withId(R.id.lockMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
+    fun assertGradeDisplayed(grade: String) {
+        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
+        onView(withId(R.id.grade)).scrollTo().assertContainsText(grade)
+    }
+
+    fun assertGradeNotDisplayed() {
+        onView(withId(R.id.grade)).assertNotDisplayed()
+    }
+
+    fun assertOutOfTextDisplayed(outOfText: String) {
+        onView(withId(R.id.outOf)).scrollTo().assertContainsText(outOfText)
+    }
+
+    fun assertOutOfTextNotDisplayed() {
+        onView(withId(R.id.outOf)).assertNotDisplayed()
+    }
+
+    fun assertScoreDisplayed(score: String) {
+        onView(withId(R.id.score)).scrollTo().assertContainsText(score)
+    }
+
+    fun assertScoreNotDisplayed() {
+        onView(withId(R.id.score)).assertNotDisplayed()
+    }
+
+    fun assertAssignmentLocked() {
+        if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.assignmentDetailsPage)).swipeUp()
+        onView(withId(R.id.lockedMessageTextView)).assertDisplayed()
+        onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked by the module")))
     }
 
     fun refresh() {
@@ -89,11 +141,27 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun goToSubmissionDetails() {
-        onView(withId(R.id.submissionAndRubricLabel)).scrollTo().click()
+        onView(withId(R.id.gradeCell)).scrollTo().click()
     }
 
-    fun assertSubmittedStatus() {
-        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(R.string.submitted)))
+    fun assertSubmissionAndRubricLabel() {
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).assertDisplayed()
+    }
+
+    private fun assertStatus(statusResourceId: Int) {
+        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(statusResourceId)))
+    }
+
+    fun assertStatusSubmitted() {
+        assertStatus(R.string.submitted)
+    }
+
+    fun assertStatusNotSubmitted() {
+        assertStatus(R.string.notSubmitted)
+    }
+
+    fun assertStatusMissing() {
+        assertStatus(R.string.missingAssignment)
     }
 
     fun viewQuiz() {
@@ -106,19 +174,52 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun scrollToAssignmentDescription() {
         Thread.sleep(3000)
-        waitForMatcherWithSleeps(withId(R.id.contentWebView), waitMs = 30000, sleepMs = 1000).scrollTo()
+        waitForMatcherWithSleeps(withId(R.id.contentWebView), timeout = 30000, pollInterval = 1000).scrollTo()
     }
 
     fun addBookmark(bookmarkName: String) {
-        Espresso.onView(
-                allOf(
-                        ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
-                        isDisplayed()
-                )).click()
+        openOverflowMenu()
         Espresso.onView(withText("Add Bookmark")).click()
         Espresso.onView(withId(R.id.bookmarkEditText)).clearText()
         Espresso.onView(withId(R.id.bookmarkEditText)).typeText(bookmarkName)
+        if(CanvasTest.isLandscapeDevice()) Espresso.pressBack()
         Espresso.onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("Save"))).click()
+    }
+
+    fun openOverflowMenu() {
+        Espresso.onView(
+            allOf(
+                ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
+                isDisplayed()
+            )).click()
+    }
+
+    fun assertDisplaysAddBookmarkButton() {
+        onViewWithText(R.string.addBookmark).assertDisplayed()
+    }
+
+    fun assertSelectedAttempt(attemptNumber: Int) {
+        assertAttemptInformation()
+        onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)), withText("Attempt $attemptNumber"))).assertDisplayed()
+    }
+
+    fun assertNoAttemptSpinner() {
+        onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).check(doesNotExist())
+        onView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).check(doesNotExist())
+    }
+
+    fun assertAttemptSpinnerDisplayed() {
+        onView(withId(R.id.attemptSpinner)).assertDisplayed()
+    }
+
+    fun selectAttempt(attemptNumber: Int) {
+        onView(withId(R.id.attemptSpinner)).click()
+        onView(allOf(withId(R.id.attemptTitle), withText("Attempt $attemptNumber"))).click()
+    }
+
+    private fun assertAttemptInformation() {
+        waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
+        waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
     }
 }
 

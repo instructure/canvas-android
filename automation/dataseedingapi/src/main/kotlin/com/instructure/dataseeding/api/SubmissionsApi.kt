@@ -76,9 +76,10 @@ object SubmissionsApi {
     fun commentOnSubmission(studentToken: String,
                             courseId: Long,
                             assignmentId: Long,
-                            fileIds: MutableList<Long>): AssignmentApiModel {
+                            fileIds: MutableList<Long>,
+                            attempt: Int = 1): AssignmentApiModel {
 
-        val comment = Randomizer.randomSubmissionComment(fileIds)
+        val comment = Randomizer.randomSubmissionComment(fileIds, attempt)
 
         return submissionsService(studentToken)
                 .commentOnSubmission(courseId, assignmentId, CreateSubmissionCommentWrapper(comment))
@@ -100,7 +101,7 @@ object SubmissionsApi {
                         courseId: Long,
                         assignmentId: Long,
                         studentId: Long,
-                        postedGrade: String,
+                        postedGrade: String? = null,
                         excused: Boolean): SubmissionApiModel {
 
         return submissionsService(teacherToken)
@@ -143,7 +144,7 @@ object SubmissionsApi {
     /** Seed one or more submissions for an assignment.  Accepts a SubmissionSeedRequest, returns a
      * list of SubmissionApiModel objects.
      */
-    fun seedAssignmentSubmission(request: SubmissionsApi.SubmissionSeedRequest) : List<SubmissionApiModel> {
+    fun seedAssignmentSubmission(request: SubmissionSeedRequest) : List<SubmissionApiModel> {
         val submissionsList = mutableListOf<SubmissionApiModel>()
         with(request) {
             for (seed in submissionSeedsList) {
@@ -156,7 +157,7 @@ object SubmissionsApi {
                     //
                     // https://github.com/instructure/mobile_qa/blob/7f985a08161f457e9b5d60987bd6278d21e2557e/SoSeedy/lib/so_seedy/canvas_models/account_admin.rb#L357-L359
                     Thread.sleep(1000)
-                    var submission = SubmissionsApi.submitCourseAssignment(
+                    var submission = submitCourseAssignment(
                             submissionType = seed.submissionType,
                             courseId = courseId,
                             assignmentId = assignmentId,
@@ -168,7 +169,7 @@ object SubmissionsApi {
                         val maxAttempts = 6
                         var attempts = 1
                         while (attempts < maxAttempts) {
-                            val submissionResponse = SubmissionsApi.getSubmission (
+                            val submissionResponse = getSubmission (
                                     studentToken = studentToken,
                                     courseId = courseId,
                                     assignmentId = assignmentId,
@@ -184,7 +185,7 @@ object SubmissionsApi {
                     submission = commentSeedsList
                             .map {
                                 // Create comments with any assigned upload file types
-                                val assignment = SubmissionsApi.commentOnSubmission(
+                                val assignment = commentOnSubmission(
                                         studentToken = studentToken,
                                         courseId = courseId,
                                         assignmentId = assignmentId,
@@ -197,7 +198,8 @@ object SubmissionsApi {
                                         url = null,
                                         body = null,
                                         userId = 0,
-                                        grade = null
+                                        grade = null,
+                                        attempt = assignment.attempt!!
 
                                 )
                             }

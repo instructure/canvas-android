@@ -16,13 +16,12 @@
  */
 package com.instructure.student.test.conferences.conference_list
 
-import com.instructure.canvasapi2.managers.ConferenceManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffect
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffectHandler
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
+import com.instructure.student.mobius.conferences.conference_list.ConferenceListRepository
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListView
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -38,8 +37,10 @@ import org.junit.Test
 class ConferenceListEffectHandlerTest : Assert() {
     private val testDispatcher = TestCoroutineDispatcher()
     private val view: ConferenceListView = mockk(relaxed = true)
-    private val effectHandler =
-        ConferenceListEffectHandler().apply { view = this@ConferenceListEffectHandlerTest.view }
+    private val repository: ConferenceListRepository = mockk(relaxed = true)
+    private val effectHandler = ConferenceListEffectHandler(repository).apply {
+        view = this@ConferenceListEffectHandlerTest.view
+    }
     private val eventConsumer: Consumer<ConferenceListEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
@@ -66,28 +67,24 @@ class ConferenceListEffectHandlerTest : Assert() {
         val apiResult = DataResult.Success<List<Conference>>(emptyList())
 
         // Mock API
-        mockkObject(ConferenceManager)
-        every { ConferenceManager.getConferencesForContextAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns apiResult
-        }
+        coEvery { repository.getConferencesForContext(any(), any()) } returns apiResult
 
         connection.accept(ConferenceListEffect.LoadData(canvasContext, refresh))
 
-        verify { ConferenceManager.getConferencesForContextAsync(canvasContext, refresh) }
+        coVerify { repository.getConferencesForContext(canvasContext, refresh) }
         verify { eventConsumer.accept(ConferenceListEvent.DataLoaded(apiResult)) }
 
-        confirmVerified(ConferenceManager)
+        confirmVerified(repository)
         confirmVerified(eventConsumer)
     }
 
     @Test
-    fun `LaunchInBrowser calls API, calls launchUrl, waits 3000ms, and produces LaunchInBrowserFinished`() = test {
+    fun `LaunchInBrowser calls API, calls launchUrl and produces LaunchInBrowserFinished`() = test {
         val url = "url"
         val sessionUrl = "session-url"
 
         // Mock API
-        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
-        coEvery { awaitApi<AuthenticatedSession>(any()) } returns AuthenticatedSession(sessionUrl)
+        coEvery { repository.getAuthenticatedSession(any()) } returns AuthenticatedSession(sessionUrl)
 
         connection.accept(ConferenceListEffect.LaunchInBrowser(url))
 
@@ -95,13 +92,10 @@ class ConferenceListEffectHandlerTest : Assert() {
         verify { view.launchUrl(sessionUrl) }
 
         // Should call API
-        coVerify { awaitApi<AuthenticatedSession>(any()) }
+        coVerify { repository.getAuthenticatedSession(url) }
 
         // Advance the clock to skip delay
-        val timeSkipped = advanceUntilIdle()
-
-        // Time skipped should be 3000ms
-        assertEquals(timeSkipped, 3000)
+        advanceUntilIdle()
 
         // Should produce LaunchInBrowserFinished event
         verify { eventConsumer.accept(ConferenceListEvent.LaunchInBrowserFinished) }

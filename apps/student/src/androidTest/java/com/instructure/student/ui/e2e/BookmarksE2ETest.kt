@@ -21,8 +21,7 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -31,6 +30,7 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,13 +38,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class BookmarksE2ETest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -58,15 +54,7 @@ class BookmarksE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Preparing an assignment which will be saved as a bookmark.")
-        val assignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-            courseId = course.id,
-            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-            gradingType = GradingType.POINTS,
-            teacherToken = teacher.token,
-            pointsPossible = 15.0,
-            dueAt = 1.days.fromNow.iso8601
-        ))
+        val assignment = createAssignment(course, teacher)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -82,19 +70,17 @@ class BookmarksE2ETest : StudentTest() {
         assignmentDetailsPage.addBookmark(bookmarkName)
 
         Log.d(STEP_TAG,"Navigate back to Bookmarks page and assert if the newly created bookmark has displayed.")
-        Espresso.pressBack()
-        Espresso.pressBack()
-        Espresso.pressBack()
-        dashboardPage.gotoBookmarks()
+        ViewUtils.pressBackButton(3)
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
         Log.d(STEP_TAG,"Click on $bookmarkName bookmark and assert if it's navigating to the assignment details page.")
         bookmarkPage.clickBookmark(bookmarkName)
-        assignmentDetailsPage.verifyAssignmentTitle(assignment.name)
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
         Log.d(STEP_TAG,"Navigate back to bookmark page.")
         Espresso.pressBack()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
         val newName = "Assignment Details BM Modified"
@@ -107,17 +93,33 @@ class BookmarksE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Click on the previously renamed bookmark and assert if it's still navigating to the corresponding assignment's details page.")
         bookmarkPage.clickBookmark(newName)
-        assignmentDetailsPage.verifyAssignmentTitle(assignment.name)
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
         Log.d(STEP_TAG,"Navigate back to the bookmark page.")
         Espresso.pressBack()
-        dashboardPage.gotoBookmarks()
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
 
         Log.d(STEP_TAG, "Delete bookmark: $newName.")
         bookmarkPage.deleteBookmark(newName)
 
         Log.d(STEP_TAG,"Assert that empty view is displayed, so the bookmark has been deleted.")
         bookmarkPage.assertEmptyView()
+    }
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ): AssignmentApiModel {
+        return AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacher.token,
+                pointsPossible = 15.0,
+                dueAt = 1.days.fromNow.iso8601
+            )
+        )
     }
 
 }

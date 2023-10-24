@@ -17,7 +17,7 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -37,6 +37,15 @@ android {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testApplicationId System.getProperty("testApplicationId", "com.instructure.pandautils.test")
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -71,6 +80,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
     }
 
     buildFeatures {
@@ -81,15 +91,23 @@ android {
     hilt {
         enableAggregatingTask = false
     }
+
+    sourceSets {
+        debug.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+}
+
+tasks.withType(Test) {
+    android.sourceSets.main.res.srcDirs += 'src/test/res'
 }
 
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-}
 
-androidExtensions {
-    experimental = true
+    all*.resolutionStrategy {
+        force Libs.KOTLIN_STD_LIB
+    }
 }
 
 dependencies {
@@ -151,8 +169,8 @@ dependencies {
     implementation Libs.ANDROIDX_EXIF
     implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
-    implementation Libs.PLAY_CORE_KTX
     implementation Libs.ANDROIDX_WEBKIT
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Work Manager */
     implementation Libs.ANDROIDX_WORK_MANAGER
@@ -175,11 +193,20 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
-    testImplementation Libs.ROOM_TEST
 
     implementation Libs.FLEXBOX_LAYOUT
 
     // We need to add this dependency if we update ExoPlayer to 2.12.0
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905
     implementation 'com.google.guava:guava:29.0-android'
+
+    kaptTest Libs.ANDROIDX_DATABINDING_COMPILER
+
+    androidTestImplementation Libs.KOTLIN_COROUTINES_TEST
+    androidTestImplementation (project(':espresso')) {
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
+    androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
+    androidTestImplementation Libs.ANDROIDX_CORE_TESTING
+    androidTestImplementation Libs.ROOM_TEST
 }

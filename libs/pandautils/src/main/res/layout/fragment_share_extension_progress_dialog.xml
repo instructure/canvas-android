@@ -22,6 +22,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
+
         <variable
             name="viewModel"
             type="com.instructure.pandautils.features.shareextension.progress.ShareExtensionProgressDialogViewModel" />
@@ -72,9 +74,8 @@
                 android:id="@+id/subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
                 android:text="@{viewModel.data.subtitle}"
                 app:layout_constraintTop_toBottomOf="@id/divider"
                 tools:text="Uploading submission for Assignment Name" />
@@ -84,12 +85,12 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="16dp"
                 android:max="100"
                 android:progress="@{viewModel.data.progressInt}"
                 android:progressTint="@color/backgroundInfo"
+                android:visibility="@{viewModel.data.failed ? View.GONE : View.VISIBLE}"
                 app:layout_constraintTop_toBottomOf="@id/subtitle"
                 tools:progress="25" />
 
@@ -101,41 +102,94 @@
                 android:text="@{viewModel.data.percentage}"
                 android:textColor="@color/textDarkest"
                 android:textSize="12sp"
+                android:visibility="@{viewModel.data.failed ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="@id/progressBar"
                 app:layout_constraintTop_toBottomOf="@id/progressBar"
                 tools:text="32.7%" />
 
             <TextView
+                android:id="@+id/size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12sp"
+                android:layout_marginStart="12dp"
                 android:text="@{@string/fileUploadProgress(viewModel.data.currentSize, viewModel.data.maxSize)}"
                 android:textColor="@color/textDark"
                 android:textSize="12sp"
+                android:visibility="@{viewModel.data.failed ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toEndOf="@id/percentage"
                 app:layout_constraintTop_toTopOf="@id/percentage"
                 tools:text="16 MB of 49.3 MB" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/buttonBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="subtitle, size" />
+
+            <TextView
+                android:id="@+id/retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:padding="12dp"
+                android:background="?android:selectableItemBackground"
+                android:onClick="@{() -> viewModel.onRetryClick()}"
+                android:text="@string/retry"
+                android:textAllCaps="true"
+                android:textColor="@{ThemePrefs.INSTANCE.textButtonColor}"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="@{viewModel.data.failed ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/buttonBarrier" />
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:padding="12dp"
+                android:background="?android:selectableItemBackground"
+                android:onClick="@{() -> viewModel.cancelClicked()}"
+                android:text="@string/cancel"
+                android:textAllCaps="true"
+                android:textColor="@{ThemePrefs.INSTANCE.textButtonColor}"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/retry"
+                app:layout_constraintTop_toBottomOf="@id/buttonBarrier" />
 
             <View
                 android:id="@+id/itemsDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="4dp"
                 android:background="@color/backgroundMedium"
-                app:layout_constraintTop_toBottomOf="@id/percentage" />
+                app:layout_constraintTop_toBottomOf="@id/cancel" />
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:itemViewModels="@{viewModel.data.items}"
-                app:layout_constraintTop_toBottomOf="@id/itemsDivider" />
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHeight_default="wrap"
+                app:layout_constraintTop_toBottomOf="@id/itemsDivider">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:itemViewModels="@{viewModel.data.items}" />
+
+            </ScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.instructure.pandautils.views.EmptyView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingVertical="16dp"
             app:emptyViewState="@{viewModel.state}" />
     </FrameLayout>
+
 </layout>

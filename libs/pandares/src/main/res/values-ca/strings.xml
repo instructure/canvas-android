@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Suprimit</string>
 
+    <string name="gradeUpdated">S’ha actualitzat la nota</string>
     <string name="loadingCanvas">S\'està carregant el contingut de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1117,6 +1118,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Podeu obrir Informació de l’entrega des d\'aquí</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nota: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minuts</item>
@@ -1293,9 +1297,17 @@
     <string name="a11y_closeProgress">Tanqueu el quadre de diàleg de progrés</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">S\'està penjant als fitxers</string>
+    <string name="fileUploadFailedSubtitle">No s\'han pogut penjar un o més fitxers. Reviseu la connexió a Internet i torneu a provar de fer l\'entrega.</string>
     <string name="submissionProgressSubtitle">S\'està penjant l\'entrega a \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">S\'està carregant l\'entrega</string>
-    <string name="dashboardNotificationUploadingFilesTitle">S\'estan penjant els fitxers</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">S’ha fet l’entrega correctament</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">S’ha produït un error en fer l\'entrega</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">S\'està penjant el fitxer</item>
+        <item quantity="other">S\'estan penjant els fitxers</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">S’ha penjat el fitxer correctament</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">No s\'ha pogut penjar el fitxer</string>
     <string name="cancelSubmissionDialogTitle">Cancel·la l\'entrega</string>
     <string name="cancelSubmissionDialogMessage">Amb aquesta acció es cancel·larà i se suprimirà l\'entrega.</string>
     <string name="fileUploadError">No s\'ha pogut penjar el fitxer</string>
@@ -1303,7 +1315,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Penja-ho a Els meus fitxers</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Envia la tasca</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Tria una assignatura</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Trieu una assignatura, l’assignatura seleccionada és: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Tria una tasca</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Trieu una activitat, l’activitat seleccionada és: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Voleu cancel·lar la penjada?</string>
     <string name="cancelFileUploadMessage">Amb aquesta acció es cancel·larà la penjada.</string>
@@ -1318,4 +1332,64 @@
     <string name="createdByStudentView">Creat per Vista d\'estudiant</string>
     <string name="discussionErrorToast">S\'ha produït un error. És possible que el tema ja no estigui disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">S’ha denegat permanentment el permís per a la càmera. Aneu a la configuració de l’aplicació per donar-hi permís.</string>
+    <string name="unpublish_assignment_error">No es pot cancel·lar la publicació de l\'activitat si hi ha entregues d’estudiants.</string>
+    <string name="subscribeToCalendar">Subscriviu-vos al canal de continguts del calendari</string>
+    <string name="subscribeToCalendarMessage">Per sincronitzar el calendari del Canvas amb el compte de Google Calendar, podeu fer clic al botó Subscriu-t’hi d’aquest quadre de diàleg. A continuació, haureu d’anar a l’aplicació Google Calendar al vostre dispositiu i activar la sincronització a la configuració del calendari nou.</string>
+    <string name="subscribeButton">Subscriu-t\'hi</string>
+    <string name="switchToLightMode">Canvia al mode clar</string>
+    <string name="switchToDarkMode">Canvia al mode fosc</string>
+    <string name="acceptableUsePolicyDescription">O bé sou un usuari nou o la política d’ús acceptable ha canviat des de la darrera vegada que la vau acceptar. Accepteu la política d’ús acceptable abans de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política d’ús acceptable</string>
+    <string name="acceptableUsePolicyButton">Política d’ús acceptable</string>
+    <string name="acceptableUsePolicyAgree">Accepto la política d’ús acceptable.</string>
+    <string name="acceptableUsePolicySubmit">Entrega</string>
+    <string name="acceptFail">No s’ha pogut enviar l’acceptació de les condicions.</string>
+    <string name="attempt">Intent %d</string>
+    <string name="quizQuestions">Preguntes: %d</string>
+    <string name="quizTimeLimit">Límit de temps: %s</string>
+    <string name="allowedAttempts">Intents permesos: %s</string>
+    <string name="usedAttempts">Intents utilitzats: %d</string>
+    <string name="generalUnexpectedError">S\'ha produït un error inesperat.</string>
+
+    <string name="deleteSelected">Suprimeix</string>
+    <string name="archiveSelected">Arxiva</string>
+    <string name="unarchiveSelected">Anul·la l’arxivament</string>
+    <string name="markAsReadSelected">Marca-ho com a llegit</string>
+    <string name="markAsUnreadSelected">Marca-ho com a no llegit</string>
+    <string name="starSelected">Marca amb una estrella</string>
+    <string name="unstarSelected">Suprimeix l\'estrella</string>
+
+    <string name="inboxOperationFailed">No s\'ha pogut realitzar l’operació</string>
+    <string name="inboxDeletedConfirmation">S\'ha suprimit %s</string>
+    <string name="inboxArchivedConfirmation">S’ha arxivat %s</string>
+    <string name="inboxUnarchivedConfirmation">S’ha anul·lat l’arxivament de %s</string>
+    <string name="inboxMarkAsReadConfirmation">S’ha marcat %s com a llegit</string>
+    <string name="inboxMarkAsUnreadConfirmation">S’ha marcat %s com a no llegit</string>
+    <string name="inboxStarredConfirmation">S’ha marcat %s amb una estrella</string>
+    <string name="inboxUnstarredConfirmation">S’ha suprimit l’estrella de %s</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Aquesta conversa se suprimirà de la safata d’entrada en tots els vostres dispositius. Aquesta acció no es pot desfer.</item>
+        <item quantity="other">Aquestes converses se suprimiran de la safata d’entrada en tots els vostres dispositius. Aquesta acció no es pot desfer.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">No s’ha pogut carregar la pàgina següent. Comproveu la vostra connexió a Internet.</string>
+    <string name="conversationsRefreshFailed">No s\'han pogut actualitzar les converses. Comproveu la vostra connexió a Internet.</string>
+    <string name="inboxScopeInbox">Safata d\'entrada</string>
+    <string name="inboxContextSelectorTitle">Seleccioneu una assignatura o un grup</string>
+    <string name="inboxClearFilter">Suprimeix</string>
+    <string name="a11y_courseFilterContentDescription">Filtre de l’assignatura: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">seleccionada</string>
+    <string name="a11y_itemSelectedSwipeForActions">S’ha seleccionat la conversa. S’ha activat el mode de selecció. Navegueu per cercar accions.</string>
+    <string name="a11y_conversationSelected">S’ha seleccionat la conversa</string>
+    <string name="a11y_conversationDeselected">S’ha anul·lat la selecció de la conversa.</string>
+    <string name="a11y_exitSelectionMode">Surt del mode de selecció</string>
+    <string name="a11y_selectionModeDeactivated">S’ha desactivat el mode de selecció.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfés</string>
+    <string name="aboutAppTitle">Aplicació</string>
+    <string name="aboutDomainTitle">Domini</string>
+    <string name="aboutLoginTitle">ID d\'inici de sessió</string>
+    <string name="aboutEmailTitle">Correu electrònic</string>
+    <string name="aboutVersionTitle">Versió</string>
+    <string name="assignmentRefreshError">Hi ha hagut un problema en tornar a carregar aquesta activitat. Reviseu la connexió i torneu-ho a provar.</string>
 </resources>

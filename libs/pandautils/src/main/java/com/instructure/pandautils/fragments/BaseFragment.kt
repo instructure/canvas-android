@@ -26,10 +26,8 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.NullableParcelableArg
 
 abstract class BaseFragment : Fragment(), NavigationCallbacks {
-    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
     protected lateinit var rootView: View
 
     abstract fun layoutResId(): Int
@@ -52,8 +50,6 @@ abstract class BaseFragment : Fragment(), NavigationCallbacks {
     }
 
     override fun onHandleBackPressed(): Boolean = false
-
-    override fun onHandleClose(): Boolean = false
 
     companion object {
         fun createBundle(canvasContext: CanvasContext?): Bundle {

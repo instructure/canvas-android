@@ -46,7 +46,7 @@ class UserColorsDb {
         columnColor: userColor.color.value,
       };
 
-  static UserColor fromMap(Map<String, dynamic> map) => UserColor((b) => b
+  static UserColor fromMap(Map<dynamic, dynamic> map) => UserColor((b) => b
     ..id = map[columnId]
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
@@ -71,13 +71,13 @@ class UserColorsDb {
     }
   }
 
-  Future<UserColor> getById(int id) async {
+  Future<UserColor?> getById(int id) async {
     List<Map> maps = await db.query(tableName, columns: allColumns, where: '$columnId = ?', whereArgs: [id]);
     if (maps.isNotEmpty) return fromMap(maps.first);
     return null;
   }
 
-  Future<void> insertOrUpdateAll(String domain, String userId, UserColors colors) async {
+  Future<void> insertOrUpdateAll(String? domain, String? userId, UserColors colors) async {
     for (var entry in colors.customColors.entries) {
       await insertOrUpdate(UserColor((b) => b
         ..userDomain = domain
@@ -89,8 +89,8 @@ class UserColorsDb {
 
   static Color parseColor(String hexCode) => Color(int.parse('FF${hexCode.substring(1)}', radix: 16));
 
-  Future<UserColor> insertOrUpdate(UserColor data) async {
-    UserColor existing = await getByContext(data.userDomain, data.userId, data.canvasContext);
+  Future<UserColor?> insertOrUpdate(UserColor data) async {
+    UserColor? existing = await getByContext(data.userDomain, data.userId, data.canvasContext);
     if (existing == null) {
       var id = await db.insert(tableName, toMap(data));
       return getById(id);
@@ -101,7 +101,7 @@ class UserColorsDb {
     }
   }
 
-  Future<UserColor> getByContext(String userDomain, String userId, String canvasContext) async {
+  Future<UserColor?> getByContext(String? userDomain, String? userId, String canvasContext) async {
     List<Map> maps = await db.query(
       tableName,
       columns: allColumns,

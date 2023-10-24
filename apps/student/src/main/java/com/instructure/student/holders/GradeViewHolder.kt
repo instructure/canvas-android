@@ -23,14 +23,21 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
-import com.instructure.student.adapter.GradesListRecyclerAdapter
-import com.instructure.student.util.BinderUtils
+import com.instructure.student.databinding.ViewholderGradeBinding
 import com.instructure.student.dialog.WhatIfDialogStyled
+import com.instructure.student.features.grades.GradesListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import kotlinx.android.synthetic.main.viewholder_grade.view.*
+import com.instructure.student.util.BinderUtils
 
 class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -42,9 +49,8 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         whatIfDialogCallback: WhatIfDialogStyled.WhatIfDialogCallback,
         adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>,
         selectedItemCallback: GradesListRecyclerAdapter.SetSelectedItemCallback
-    ): Unit = with(itemView) {
-
-        setOnClickListener {
+    ): Unit = with(ViewholderGradeBinding.bind(itemView)) {
+        root.setOnClickListener {
             adapterToFragmentCallback.onRowClicked(assignment, adapterPosition, true)
             selectedItemCallback.setSelected(adapterPosition)
         }
@@ -62,12 +68,17 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             points.setGone()
         } else {
             val submission = assignment.submission
+            val course = canvasContext as? Course
+            val restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?: false
+            val gradingScheme = course?.gradingScheme ?: emptyList()
             if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
                 points.setGone()
                 icon.setNestedIcon(R.drawable.ic_complete_solid, canvasContext.backgroundColor)
+            } else if (restrictQuantitativeData && assignment.isGradingTypeQuantitative && submission?.excused != true && gradingScheme.isEmpty()) {
+                points.setGone()
             } else {
                 points.setVisible()
-                val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context)
+                val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context, restrictQuantitativeData, gradingScheme)
                 points.text = grade
                 points.contentDescription = contentDescription
             }

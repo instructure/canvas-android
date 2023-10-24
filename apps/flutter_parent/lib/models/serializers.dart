@@ -16,6 +16,7 @@ library serializers;
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/iso_8601_date_time_serializer.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/account_creation_models/create_account_post_body.dart';
@@ -47,6 +48,7 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
+import 'package:flutter_parent/models/grading_scheme_item.dart';
 import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/models/help_links.dart';
 import 'package:flutter_parent/models/lock_info.dart';
@@ -172,6 +174,7 @@ part 'serializers.g.dart';
   User,
   UserColors,
   UserNameData,
+  GradingSchemeItem,
 ])
 final Serializers _serializers = _$_serializers;
 
@@ -190,25 +193,33 @@ Serializers jsonSerializers = (_serializers.toBuilder()
       ..addBuilderFactory(FullType(BuiltMap, [FullType(String), FullType(String)]), () => MapBuilder<String, String>()))
     .build();
 
-T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(jsonSerializers.serializerForType(T), value);
+T? deserialize<T>(dynamic value) {
+  var serializer = jsonSerializers.serializerForType(T);
+  if (serializer == null || !(serializer is Serializer<T>)) return null;
+  return jsonSerializers.deserializeWith<T>(serializer, value);
+}
 
-dynamic serialize<T>(T value) => jsonSerializers.serializeWith(jsonSerializers.serializerForType(T), value);
+dynamic serialize<T>(T value) {
+  var serializer = jsonSerializers.serializerForType(T);
+  if (serializer == null) return null;
+  return jsonSerializers.serializeWith(serializer, value);
+}
 
 List<T> deserializeList<T>(dynamic value) => List.from(value?.map((value) => deserialize<T>(value))?.toList() ?? []);
 
 /// Plugin that works around an issue where deserialization breaks if a map key is null
 /// Sourced from https://github.com/google/built_value.dart/issues/653#issuecomment-495964030
 class RemoveNullInMapConvertedListPlugin implements SerializerPlugin {
-  Object beforeSerialize(Object object, FullType specifiedType) => object;
+  Object? beforeSerialize(Object? object, FullType specifiedType) => object;
 
-  Object afterSerialize(Object object, FullType specifiedType) => object;
+  Object? afterSerialize(Object? object, FullType specifiedType) => object;
 
-  Object beforeDeserialize(Object object, FullType specifiedType) {
+  Object? beforeDeserialize(Object? object, FullType specifiedType) {
     if (specifiedType.root == BuiltMap && object is List) {
       return object.where((v) => v != null).toList();
     }
     return object;
   }
 
-  Object afterDeserialize(Object object, FullType specifiedType) => object;
+  Object? afterDeserialize(Object? object, FullType specifiedType) => object;
 }

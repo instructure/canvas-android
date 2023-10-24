@@ -26,12 +26,13 @@ import 'package:mockito/mockito.dart';
 
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final l10n = AppLocalizations();
 
   testWidgetsWithAccessibilityChecks('Tapping camera option shows preparing UI', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
     when(interactor.getImageFromCamera()).thenAnswer((_) => Completer<File>().future);
@@ -48,7 +49,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping gallery option shows preparing UI', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
     when(interactor.getImageFromGallery()).thenAnswer((_) => Completer<File>().future);
@@ -65,7 +66,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping file option shows preparing UI', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
     when(interactor.getFileFromDevice()).thenAnswer((_) => Completer<File>().future);
@@ -82,7 +83,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping camera option invokes interactor methods', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -96,7 +97,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping gallery option invokes interactor methods', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -110,7 +111,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping file option invokes interactor methods', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -124,10 +125,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Canceling camera option returns to picker ui', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
-    final completer = Completer<File>();
+    final completer = Completer<File?>();
     when(interactor.getImageFromCamera()).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -154,10 +155,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Canceling gallery option returns to picker ui', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
-    final completer = Completer<File>();
+    final completer = Completer<File?>();
     when(interactor.getImageFromGallery()).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -184,10 +185,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Canceling file option returns to picker ui', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
-    final completer = Completer<File>();
+    final completer = Completer<File?>();
     when(interactor.getFileFromDevice()).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(TestApp(AttachmentPicker()));
@@ -214,17 +215,18 @@ void main() {
   });
 
   testWidgets('Returns non-null result when successful', (tester) async {
-    final interactor = _MockInteractor();
+    final interactor = MockAttachmentPickerInteractor();
     _setupLocator(interactor);
 
     final file = File('/fake/path');
     when(interactor.getFileFromDevice()).thenAnswer((_) => Future.value(file));
 
-    AttachmentHandler result = null;
+    AttachmentHandler? result = null;
 
     await tester.pumpWidget(TestApp(Builder(
       builder: (context) => Container(
-        child: RaisedButton(
+        child: ElevatedButton(
+          child: Container(),
           onPressed: () async {
             result = await CreateConversationInteractor().addAttachment(context);
           },
@@ -233,20 +235,18 @@ void main() {
     )));
     await tester.pump();
 
-    await tester.tap(find.byType(RaisedButton));
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
 
     // Tap file option
     await tester.tap(find.text(l10n.uploadFile));
     await tester.pumpAndSettle();
 
-    expect(find.byType(RaisedButton), findsOneWidget);
+    expect(find.byType(ElevatedButton), findsOneWidget);
 
     expect(result, isNotNull);
   });
 }
 
-_setupLocator(_MockInteractor interactor) =>
+_setupLocator(MockAttachmentPickerInteractor interactor) =>
     setupTestLocator((locator) => locator.registerFactory<AttachmentPickerInteractor>(() => interactor));
-
-class _MockInteractor extends Mock implements AttachmentPickerInteractor {}

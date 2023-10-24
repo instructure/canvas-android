@@ -24,18 +24,21 @@ import androidx.fragment.app.Fragment
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_QUIZ_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentSpeedGraderQuizSubmissionBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.QuizContent
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
-import kotlinx.android.synthetic.main.fragment_speed_grader_quiz_submission.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_QUIZ_SUBMISSION)
 class SpeedGraderQuizSubmissionFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentSpeedGraderQuizSubmissionBinding::bind)
 
     private var mCourseId by LongArg()
     private var mAssignmentId by LongArg()
@@ -53,7 +56,7 @@ class SpeedGraderQuizSubmissionFragment : Fragment() {
         setupViews()
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         ViewStyler.themeButton(gradeQuizButton)
         ViewStyler.themeButton(viewQuizButton)
         gradeQuizButton.onClick { viewQuizSubmission() }
@@ -86,7 +89,7 @@ class SpeedGraderQuizSubmissionFragment : Fragment() {
 
     private fun viewQuizSubmission() {
         val bundle = SpeedGraderQuizWebViewFragment.newInstance(mCourseId, mAssignmentId, mStudentId, mUrl).nonNullArgs
-        RouteMatcher.route(requireContext(), Route(SpeedGraderQuizWebViewFragment::class.java, null, bundle))
+        RouteMatcher.route(requireActivity(), Route(SpeedGraderQuizWebViewFragment::class.java, null, bundle))
     }
 
     companion object {
@@ -98,6 +101,4 @@ class SpeedGraderQuizSubmissionFragment : Fragment() {
             mPendingReview = content.pendingReview
         }
     }
-
 }
-

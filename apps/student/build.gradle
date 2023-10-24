@@ -19,7 +19,6 @@ import com.instructure.android.buildtools.transform.*
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.squareup.sqldelight'
@@ -43,10 +42,6 @@ configurations {
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
 }
 
-androidExtensions {
-    experimental = true
-}
-
 android {
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
@@ -55,8 +50,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 246
-        versionName = '6.21.2'
+        versionCode = 255
+        versionName = '6.26.1'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -143,6 +138,8 @@ android {
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
+                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
+                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
 
             ndk {
@@ -195,6 +192,7 @@ android {
         resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
 
         resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
+        resolutionStrategy.force Libs.KOTLIN_STD_LIB
     }
 
     /*
@@ -221,8 +219,7 @@ android {
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
                     new LocaleTransformer(project),
-                    new FlutterA11yOffsetTransformer(),
-                    new FlutterTextureDisconnectFix()
+                    new FlutterA11yOffsetTransformer()
             )
     )
 
@@ -237,6 +234,7 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 
     hilt {
@@ -275,7 +273,6 @@ dependencies {
     testImplementation Libs.MOCKK
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
-    testImplementation Libs.FIREBASE_CORE
     testImplementation Libs.THREETEN_BP
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
@@ -317,7 +314,7 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
-    implementation Libs.PLAY_CORE
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Database */
     implementation Libs.SQLDELIGHT
@@ -352,7 +349,6 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
-    testImplementation Libs.ROOM_TEST
 }
 
 // Comment out this line if the reporting logic starts going wonky.

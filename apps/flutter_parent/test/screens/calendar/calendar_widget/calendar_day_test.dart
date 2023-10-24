@@ -47,7 +47,7 @@ void main() {
     )));
     await tester.pump();
 
-    expect(find.bySemanticsLabel('Saturday, January 1'), findsOneWidget);
+    expect(find.bySemanticsLabel('Saturday, January 1, 0 events'), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Uses dark text color for week days', (tester) async {
@@ -109,12 +109,12 @@ void main() {
 
     final theme = Theme.of(tester.element(find.byType(CalendarDay)));
     final textStyle = tester.widget<AnimatedDefaultTextStyle>(find.byType(AnimatedDefaultTextStyle).last).style;
-    expect(textStyle.color, theme.accentColor);
+    expect(textStyle.color, theme.colorScheme.secondary);
 
     final container = find.ancestor(of: find.text('2'), matching: find.byType(Container)).first;
     final decoration = tester.widget<Container>(container).decoration as BoxDecoration;
     expect(decoration.borderRadius, BorderRadius.circular(16));
-    expect(decoration.border, Border.all(color: theme.accentColor, width: 2));
+    expect(decoration.border, Border.all(color: theme.colorScheme.secondary, width: 2));
   });
 
   testWidgetsWithAccessibilityChecks('Uses white text color and accent background for today', (tester) async {
@@ -132,11 +132,15 @@ void main() {
 
     final container = find.ancestor(of: find.text(date.day.toString()), matching: find.byType(Container)).first;
     final decoration = tester.widget<Container>(container).decoration;
-    expect(decoration, BoxDecoration(color: theme.accentColor, shape: BoxShape.circle));
+    expect(decoration, BoxDecoration(color: theme.colorScheme.secondary, shape: BoxShape.circle));
   });
 
   testWidgetsWithAccessibilityChecks('Displays activity dots', (tester) async {
-    final fetcher = _FakeFetcher();
+    final fetcher = _FakeFetcher(
+      observeeId: '',
+      userDomain: '',
+      userId: '',
+    );
     fetcher.nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, [
       _createPlannerItem(contextName: 'blank'),
       _createPlannerItem(contextName: 'blank'),
@@ -169,7 +173,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Invokes onDaySelectedCallback', (tester) async {
-    DateTime selection = null;
+    DateTime? selection = null;
     await tester.pumpWidget(_appWithFetcher(CalendarDay(
       date: dayDate,
       selectedDay: selectedDate,
@@ -186,10 +190,14 @@ void main() {
   });
 }
 
-Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
+Widget _appWithFetcher(Widget child, {PlannerFetcher? fetcher}) {
   return TestApp(
     ChangeNotifierProvider<PlannerFetcher>(
-      create: (BuildContext context) => fetcher ?? _FakeFetcher(),
+      create: (BuildContext context) => fetcher ?? _FakeFetcher(
+        observeeId: '',
+        userDomain: '',
+        userId: '',
+      ),
       child: child,
     ),
   );
@@ -197,6 +205,8 @@ Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
 
 class _FakeFetcher extends PlannerFetcher {
   AsyncSnapshot<List<PlannerItem>> nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
+
+  _FakeFetcher({required super.observeeId, required super.userDomain, required super.userId});
 
   @override
   AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) => nextSnapshot;
@@ -206,7 +216,7 @@ Plannable _createPlannable() => Plannable((b) => b
   ..id = ''
   ..title = '');
 
-PlannerItem _createPlannerItem({String contextName}) => PlannerItem((b) => b
+PlannerItem _createPlannerItem({String? contextName}) => PlannerItem((b) => b
   ..courseId = ''
   ..plannable = _createPlannable().toBuilder()
   ..contextType = ''

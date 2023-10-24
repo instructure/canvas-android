@@ -27,23 +27,25 @@ import com.bumptech.glide.request.RequestOptions
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.ViewAttachmentBinding
 import com.instructure.pandautils.utils.onClick
-import kotlinx.android.synthetic.main.view_attachment.view.*
 import java.io.File
 
 class AttachmentView(context: Context) : FrameLayout(context) {
 
     enum class AttachmentAction { PREVIEW, DOWNLOAD, REMOVE }
 
+    private val binding: ViewAttachmentBinding
+
     init {
-        LayoutInflater.from(getContext()).inflate(R.layout.view_attachment, this, true)
+        binding = ViewAttachmentBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun setPendingRemoteFile(
             attachment: RemoteFile,
             removeViewOnAction: Boolean,
             callback: (action: AttachmentAction, attachment: RemoteFile) -> Unit
-    ) {
+    ) = with(binding) {
         attachmentName.text = attachment.displayName
         setColorAndIcon(context, attachment.contentType, attachment.fileName, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
@@ -59,7 +61,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
             attachment: Attachment,
             removeViewOnAction: Boolean,
             callback: (action: AttachmentAction, attachment: Attachment) -> Unit
-    ) {
+    ) = with(binding) {
         attachmentName.text = attachment.displayName
         setColorAndIcon(context, attachment.contentType, attachment.filename, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
@@ -71,7 +73,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
         }
     }
 
-    fun setAttachment(attachment: Attachment, callback: (action: AttachmentAction, attachment: Attachment) -> Unit) {
+    fun setAttachment(attachment: Attachment, callback: (action: AttachmentAction, attachment: Attachment) -> Unit) = with(binding) {
         attachmentName.text = attachment.displayName
         setColorAndIcon(context, attachment.contentType, attachment.filename, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
@@ -80,7 +82,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
         actionButton.setOnClickListener { callback(AttachmentAction.DOWNLOAD, attachment) }
     }
 
-    fun setAttachment(attachment: RemoteFile, callback: (action: AttachmentAction, attachment: RemoteFile) -> Unit) {
+    fun setAttachment(attachment: RemoteFile, callback: (action: AttachmentAction, attachment: RemoteFile) -> Unit) = with(binding) {
         attachmentName.text = attachment.displayName
         setColorAndIcon(context, attachment.contentType, attachment.fileName, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
@@ -89,7 +91,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
         actionButton.setOnClickListener { callback(AttachmentAction.DOWNLOAD, attachment) }
     }
 
-    private fun setThumbnail(path: String?) {
+    private fun setThumbnail(path: String?) = with(binding) {
         if (path.isNullOrBlank()) return
         val file = File(path)
         Glide.with(context)

@@ -22,12 +22,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.student.R
+import com.instructure.student.databinding.ActivityWidgetSetupBinding
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater.updateWidgets
-import kotlinx.android.synthetic.main.activity_widget_setup.*
 
 class WidgetSetupActivity : AppCompatActivity() {
+
+    private val binding by viewBinding(ActivityWidgetSetupBinding::inflate)
+
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +39,11 @@ class WidgetSetupActivity : AppCompatActivity() {
         // Sets the result canceled so if the user decides not to setup the widget it does not get added
         setResult(Activity.RESULT_CANCELED)
 
-        setContentView(R.layout.activity_widget_setup)
+        setContentView(binding.root)
 
-        cardDark.setOnClickListener(cardClickListener)
-        cardLight.setOnClickListener(cardClickListener)
-        check_box.setOnCheckedChangeListener { _, isChecked ->
+        binding.cardDark.setOnClickListener(cardClickListener)
+        binding.cardLight.setOnClickListener(cardClickListener)
+        binding.checkBox.setOnCheckedChangeListener { _, isChecked ->
             StudentPrefs.putBoolean(WIDGET_DETAILS_PREFIX + appWidgetId, isChecked)
         }
 

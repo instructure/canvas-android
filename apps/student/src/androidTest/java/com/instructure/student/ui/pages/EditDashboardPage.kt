@@ -23,7 +23,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeUp
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
@@ -51,8 +57,7 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
     fun unfavoriteCourse(courseName: String) {
         val childMatcher = withContentDescription("Remove from dashboard")
         val itemMatcher = allOf(
-                withContentDescription(containsString(", favorite")),
-                withContentDescription(containsString(courseName)),
+                withContentDescription(containsString("Course $courseName, favorite")),
                 hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
@@ -65,32 +70,48 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
     fun favoriteCourse(courseName: String) {
         val childMatcher = withContentDescription("Add to dashboard")
         val itemMatcher = allOf(
-            withContentDescription(containsString(", not favorite")),
-            withContentDescription(containsString(courseName)),
+            withContentDescription(containsString("Course $courseName, not favorite")),
             hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
 
+    fun favoriteGroup(groupName: String) {
+        val childMatcher = withContentDescription("Add to dashboard")
+        val itemMatcher = allOf(
+            withContentDescription(containsString("Group $groupName, not favorite")),
+            hasDescendant(childMatcher))
+
+        onView(withParent(itemMatcher) + childMatcher).scrollTo().click()
+    }
+
+    fun unfavoriteGroup(groupName: String) {
+        val childMatcher = withContentDescription("Remove from dashboard")
+        val itemMatcher = allOf(
+            withContentDescription(containsString("Group $groupName, favorite")),
+            hasDescendant(childMatcher))
+
+        onView(withParent(itemMatcher) + childMatcher).scrollTo().click()
+    }
+
     fun assertCourseFavorited(course: Course) {
         val childMatcher = withContentDescription("Remove from dashboard")
         val itemMatcher = allOf(
-                withContentDescription(containsString(", favorite")),
-                withContentDescription(containsString(course.name)),
+                withContentDescription(containsString("Course ${course.name}, favorite")),
                 hasDescendant(childMatcher))
         onView(itemMatcher).assertDisplayed()
     }
 
     fun selectAllCourses() {
         val childMatcher = withContentDescription("Add all to dashboard")
-        val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+        val itemMatcher = allOf(hasDescendant(withText(R.string.allCoursesCourseHeader)), hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
 
     fun unselectAllCourses() {
         val childMatcher = withContentDescription("Remove all from dashboard")
-        val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+        val itemMatcher = allOf(hasDescendant(withText(R.string.allCoursesCourseHeader)), hasDescendant(childMatcher))
 
         onView(withParent(itemMatcher) + childMatcher).click()
     }
@@ -99,16 +120,33 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
 
         if (someSelected) {
             val childMatcher = withContentDescription("Remove all from dashboard")
-            val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+            val itemMatcher = allOf(hasDescendant(withText(R.string.allCoursesCourseHeader)), hasDescendant(childMatcher))
 
             onView(withParent(itemMatcher) + childMatcher).assertDisplayed()
         }
         else {
             val childMatcher = withContentDescription("Add all to dashboard")
-            val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+            val itemMatcher = allOf(hasDescendant(withText(R.string.allCoursesCourseHeader)), hasDescendant(childMatcher))
 
             onView(withParent(itemMatcher) + childMatcher).assertDisplayed()
         }
+    }
+
+    fun assertGroupMassSelectButtonIsDisplayed(someSelected: Boolean) {
+        if (someSelected) {
+            val itemMatcher = withContentDescription("Remove all from dashboard")
+            val parentMatcher = allOf(hasDescendant(withText(R.string.allCoursesGroupHeader)), hasDescendant(itemMatcher))
+            onView(withParent(parentMatcher) + itemMatcher).scrollTo().assertDisplayed()
+        }
+        else {
+            val itemMatcher = withContentDescription("Add all to dashboard")
+            val parentMatcher = allOf(hasDescendant(withText(R.string.allCoursesGroupHeader)), hasDescendant(itemMatcher))
+            onView(withParent(parentMatcher) + itemMatcher).scrollTo().assertDisplayed()
+        }
+    }
+
+    fun swipeUp() {
+        onView(withId(R.id.swipeRefreshLayout) + withParent(withId(R.id.editDashboardPage))).swipeUp()
     }
 
 }

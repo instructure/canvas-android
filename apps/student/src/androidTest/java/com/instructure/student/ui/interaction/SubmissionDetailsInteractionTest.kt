@@ -19,19 +19,8 @@ package com.instructure.student.ui.interaction
 import android.os.SystemClock.sleep
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
-import com.instructure.canvas.espresso.mockCanvas.addRubricToAssignment
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.Author
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricCriterionRating
-import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -54,7 +43,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testRubrics_showCriterionDescription() {
-
         val data = getToCourse()
         val assignment = data.addAssignment(
                 courseId = course.id,
@@ -98,13 +86,12 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     // Should be able to add a comment on a submission
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
-    fun testComments_addCommentToSubmission() {
+    fun testComments_addCommentToSingleAttemptSubmission() {
 
         val data = getToCourse()
         val assignment = data.addAssignment(
                 courseId =  course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_URL,
-                userSubmitted = true
+                submissionType = Assignment.SubmissionType.ONLINE_URL
         )
 
         courseBrowserPage.selectAssignments()
@@ -117,6 +104,49 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testComments_addCommentToMultipleAttemptSubmission() {
+
+        val data = getToCourse()
+        val assignment = data.addAssignment(
+            courseId =  course.id,
+            submissionType = Assignment.SubmissionType.ONLINE_URL,
+            userSubmitted = true
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+        sleep(1000) // Allow some time for the submission to propagate
+        assignmentDetailsPage.assertAssignmentSubmitted()
+        assignmentDetailsPage.assertNoAttemptSpinner()
+
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+
+        assignmentDetailsPage.goToSubmissionDetails()
+
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.addAndSendComment("Hey!")
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+
+        submissionDetailsPage.selectAttempt("Attempt 2")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 2")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentNotDisplayed("Hey!", data.users.values.first())
+
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
+
+
     }
 
     // Student can preview an assignment comment attachment
@@ -160,7 +190,8 @@ class SubmissionDetailsInteractionTest : StudentTest() {
                 comment = commentText,
                 createdAt = Date(),
                 attachments = arrayListOf(attachment),
-                author = Author(id = user.id, displayName=user.shortName)
+                author = Author(id = user.id, displayName=user.shortName),
+                attempt = 1
         )
 
         // Create/add a submission for our assignment containing our submissionComment

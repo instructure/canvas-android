@@ -431,6 +431,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Deleted</string>
+    <string name="gradeUpdated">Grade updated</string>
 
     <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
 
@@ -1116,6 +1117,8 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <string name="a11y_gradeCellContentDescriptionHint">You can open Submission details from here</string>
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Grade: %s</string>
 
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1258,7 +1261,7 @@
 
     <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
     <string name="discussionOpenInBrowser">Open in browser</string>
-    
+
     <string name="dashboardSwitchToListView">Switch to list view</string>
     <string name="dashboardSwitchToGridView">Switch to grid view</string>
 
@@ -1300,10 +1303,18 @@
     <string name="a11y_closeProgress">Close progress dialog</string>
     <string name="fileUploadProgress">%1$s of %2$s</string>
     <string name="fileUploadProgressSubtitle">Uploading to Files</string>
+    <string name="fileUploadFailedSubtitle">One or more files failed to upload. Check your internet connection and retry to submit.</string>
     <string name="submissionProgressSubtitle">Uploading submission to \"%s\"</string>
 
     <string name="dashboardNotificationUploadingSubmissionTitle">Uploading Submission</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Uploading Files</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Submission Successful</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Submission Failed</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Uploading File</item>
+        <item quantity="other">Uploading Files</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">File Upload Successful</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">File Upload Failed</string>
     <string name="cancelSubmissionDialogTitle">Cancel Submission</string>
     <string name="cancelSubmissionDialogMessage">This will cancel and delete your submission.</string>
     <string name="fileUploadError">File Upload Failed</string>
@@ -1340,4 +1351,126 @@
     <string name="acceptableUsePolicyAgree">I agree to the Acceptable Use Policy.</string>
     <string name="acceptableUsePolicySubmit">Submit</string>
     <string name="acceptFail">Failed to submit terms acceptance.</string>
+
+    <string name="attempt">Attempt %d</string>
+    <string name="quizQuestions">Questions: %d</string>
+    <string name="quizTimeLimit">Time limit: %s</string>
+    <string name="allowedAttempts">Allowed attempts: %s</string>
+    <string name="usedAttempts">Attempts used: %d</string>
+    <string name="generalUnexpectedError">An unexpected error occurred.</string>
+
+    <string name="deleteSelected">Delete</string>
+    <string name="archiveSelected">Archive</string>
+    <string name="unarchiveSelected">Unarchive</string>
+    <string name="markAsReadSelected">Mark as read</string>
+    <string name="markAsUnreadSelected">Mark as unread</string>
+    <string name="starSelected">Star</string>
+    <string name="unstarSelected">Unstar</string>
+
+    <string name="inboxOperationFailed">Failed to perform operation</string>
+    <string name="inboxDeletedConfirmation">%s deleted</string>
+    <string name="inboxArchivedConfirmation">%s archived</string>
+    <string name="inboxUnarchivedConfirmation">%s unarchived</string>
+    <string name="inboxMarkAsReadConfirmation">%s marked as read</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marked as unread</string>
+    <string name="inboxStarredConfirmation">%s starred</string>
+    <string name="inboxUnstarredConfirmation">%s unstarred</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">This conversation will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+        <item quantity="other">These conversations will be deleted from the Inbox on all your devices. This action cannot be undone.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Failed to load next page. Check your internet connection.</string>
+    <string name="conversationsRefreshFailed">Failed to refresh conversations. Check your internet connection.</string>
+    <string name="inboxScopeInbox">Inbox</string>
+    <string name="inboxContextSelectorTitle">Select Course or Group</string>
+    <string name="inboxClearFilter">Clear</string>
+    <string name="a11y_courseFilterContentDescription">Course filter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">select</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversation selected. Selection mode activated. Navigate for actions.</string>
+    <string name="a11y_conversationSelected">Conversation selected</string>
+    <string name="a11y_conversationDeselected">Conversation deselected</string>
+    <string name="a11y_exitSelectionMode">Exit selection mode</string>
+    <string name="a11y_selectionModeDeactivated">Selection mode deactivated.</string>
+    <string name="a11y_avatarContentDescription">Avatar of %s</string>
+    <string name="inboxUndo">Undo</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domain</string>
+    <string name="aboutLoginTitle">Login ID</string>
+    <string name="aboutEmailTitle">Email</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
+    <string name="instructure_logo">Instructure logo</string>
+    <string name="preferences">Preferences</string>
+    <string name="offlineContent">Offline Content</string>
+    <string name="offlineSyncSettingsTitle">Synchronization</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">Offline Content</string>
+    <string name="course_menu_manage_offline_content">Manage Offline Content</string>
+    <string name="offline_content_storage">Storage</string>
+    <string name="offline_content_storage_info">%s of %s Used</string>
+    <string name="offline_content_other">Other Apps</string>
+    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_remaining">Remaining</string>
+    <string name="offline_content_all_courses">All Courses</string>
+    <string name="offline_content_sync">Sync</string>
+    <string name="offline_content_selected">%d Selected</string>
+    <string name="offline_content_select_all">Select All</string>
+    <string name="offline_content_deselect_all">Deselect All</string>
+    <string name="offline_content_loading_error">An error occurred while loading the content.</string>
+    <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off then no synchronization will happen. The already downloaded content will not be deleted.</string>
+    <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
+    <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
+    <string name="syncSettings_syncFrequencyDescription">Specify the recurrence of the content synchronization. The system will download the selected content based on the frequency specified here.</string>
+    <string name="syncSettings_wifiOnlyTitle">Sync Content Over Wi-Fi Only</string>
+    <string name="syncSettings_wifiOnlyDescription">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
+    <string name="syncSettings_toolbarTitle">Synchronization</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">Sync Frequency</string>
+    <string name="syncSettings_wifiConfirmationTitle">Turn Off Content Sync Over Wi-fi Only?</string>
+    <string name="synySettings_wifiConfirmationMessage">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">Turn Off</string>
+    <string name="syncSettings_manualDescription">Manual</string>
+    <string name="offlineModeSnackbar">Offline Mode</string>
+    <string name="notAvailableOfflineScreenTitle">Not Available Offline</string>
+    <string name="notAvailableOfflineDescription">This content is not available in offline mode.</string>
+    <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
+    <string name="offline">Offline</string>
+    <string name="syncProgress_syncFailed">Sync Failed</string>
+    <string name="syncProgress_downloadProgress">Downloading %1$s of %2$s</string>
+    <string name="syncProgress_syncQueued">Queued</string>
+    <string name="syncProgress_offlineContentSyncCompleted">Offline Content Sync Completed</string>
+    <string name="syncProgress_offlineContentSyncFailed">Offline Content Sync Failed</string>
+    <string name="syncProgress_cancelConfirmationTitle">Cancel Sync?</string>
+    <string name="syncProgress_cancelConfirmationMessage">It will stop offline content sync. You can do it again later.</string>
+    <string name="syncProgress_syncErrorSubtitle">One or more files failed to sync. Check your internet connection and retry to submit.</string>
+    <string name="syncProgress_downloadStarting">Download starting</string>
+    <string name="coursesCannotBeFavoritedOffline">Courses cannot be added to favorites offline.</string>
+    <string name="allCoursesScreenHeader">All Courses</string>
+    <string name="allCoursesCourseHeader">Courses</string>
+    <string name="allCoursesGroupHeader">Groups</string>
+    <string name="dashboardAllCoursesButton">All Courses</string>
+    <string name="allCoursesOfflineNote">Selecting courses for Dashboard can only be done online. You can navigate to offline course details.</string>
+    <string name="allCoursesOfflineNoteTitle">Note</string>
+    <string name="syncProgress_downloadSuccess">Success! Downloaded %1$s of %2$s</string>
+    <string name="syncProgress_syncingOfflineContent">Syncing Offline Content</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">Dismiss notification</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">%d course is syncing.</item>
+        <item quantity="other">%d courses are syncing.</item>
+    </plurals>
+    <string name="syncProgressAdditionalFiles">Course content images</string>
+    <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
+    <string name="editDashboardOfflineMode">You are offline</string>
+    <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">Offline Content Sync Success</string>
+    <string name="offlineContentSyncFailureNotificationTitle">Offline Content Sync Failed</string>
+    <string name="notificationChannelNameSyncUpdates">Offline Sync updates</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">Canvas notifications for offline sync updates.</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="one">%d course has been synced.</item>
+        <item quantity="other">%d courses have been synced.</item>
+    </plurals>
 </resources>

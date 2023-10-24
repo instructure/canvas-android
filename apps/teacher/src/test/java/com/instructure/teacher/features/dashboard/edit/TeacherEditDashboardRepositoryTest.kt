@@ -28,6 +28,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -77,7 +78,7 @@ class TeacherEditDashboardRepositoryTest {
         }
 
         // When
-        val result = repository.getCurses()
+        val result = repository.getCourses()
 
         // Then
         val expected = listOf(listOf(courseActive), listOf(courseCompleted), listOf(courseInvitedOrPending))
@@ -133,6 +134,24 @@ class TeacherEditDashboardRepositoryTest {
 
         // When
         val result = repository.isFavoriteable(course)
+
+        // Then
+        Assert.assertFalse(result)
+    }
+
+    @Test
+    fun `Synced course ids always returns empty set`() = runTest {
+        // When
+        val result = repository.getSyncedCourseIds()
+
+        // Then
+        Assert.assertEquals(emptySet<Long>(), result)
+    }
+
+    @Test
+    fun `Offline enabled always returns false`() = runTest {
+        // When
+        val result = repository.offlineEnabled()
 
         // Then
         Assert.assertFalse(result)

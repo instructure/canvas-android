@@ -17,32 +17,40 @@
 package com.instructure.teacher.fragments
 
 import android.app.Activity
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentLtiLaunchBinding
 import com.instructure.teacher.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_lti_launch.*
 import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
+@PageView
 @ScreenView(SCREEN_VIEW_LTI_LAUNCH)
 class LtiLaunchFragment : BaseFragment() {
+
+    private val binding by viewBinding(FragmentLtiLaunchBinding::bind)
+
+    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private var title: String? by NullableStringArg(key = Const.TITLE)
     private var ltiUrl: String by StringArg(key = LTI_URL)
@@ -55,6 +63,11 @@ class LtiLaunchFragment : BaseFragment() {
     private var customTabLaunched: Boolean = false
 
     private var ltiUrlLaunchJob: Job? = null
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() =
+        ltiTab?.externalUrl ?: ApiPrefs.fullDomain + canvasContext?.toAPIString() + "/external_tools"
 
     override fun layoutResId(): Int = R.layout.fragment_lti_launch
 
@@ -74,8 +87,8 @@ class LtiLaunchFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val color = canvasContext?.backgroundColor ?: ThemePrefs.primaryColor
         ViewStyler.setStatusBarDark(requireActivity(), color)
-        loadingView.setOverrideColor(color)
-        toolName.setTextForVisibility(title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull())
+        binding.loadingView.setOverrideColor(color)
+        binding.toolName.setTextForVisibility(title.validOrNull() ?: ltiTab?.label?.validOrNull() ?: ltiUrl.validOrNull())
     }
 
     override fun onResume() {
@@ -181,9 +194,9 @@ class LtiLaunchFragment : BaseFragment() {
 
         fun newInstance(args: Bundle) = LtiLaunchFragment().apply { arguments = args }
 
-        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
-            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+        fun routeLtiLaunchFragment(activity: FragmentActivity, canvasContext: CanvasContext?, url: String) {
+            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), activity.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(activity, Route(LtiLaunchFragment::class.java, canvasContext, args))
         }
     }
 }

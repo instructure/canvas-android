@@ -29,12 +29,15 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_UNKNOWN_ITEM
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.unknown_item.*
+import com.instructure.student.databinding.UnknownItemBinding
 
 @ScreenView(SCREEN_VIEW_UNKNOWN_ITEM)
 class UnknownItemFragment : ParentFragment() {
+
+    private val binding by viewBinding(UnknownItemBinding::bind)
 
     private var streamItem: StreamItem by ParcelableArg(key = Const.STREAM_ITEM)
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -42,18 +45,21 @@ class UnknownItemFragment : ParentFragment() {
     override fun title(): String = ""
 
     override fun applyTheme() {
-        toolbar.title = streamItem.getTitle(requireContext())?.toString().validOrNull() ?: getString(R.string.message)
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        with (binding) {
+            toolbar.title =
+                streamItem.getTitle(requireContext())?.toString().validOrNull() ?: getString(R.string.message)
+            toolbar.setupAsBackButton(this@UnknownItemFragment)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.unknown_item, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        streamItem.getMessage(requireContext()).let { message.setVisible(it.isValid()).text = it }
-        streamItem.notificationCategory.let { notificationCategory.setVisible(it.isValid()).text = it }
+        streamItem.getMessage(requireContext()).let { binding.message.setVisible(it.isValid()).text = it }
+        streamItem.notificationCategory.let { binding.notificationCategory.setVisible(it.isValid()).text = it }
         streamItem.updatedDate.let {
-            updatedDateTime.setVisible(it != null).text = DateHelper.getDateTimeString(requireContext(), it)
+            binding.updatedDateTime.setVisible(it != null).text = DateHelper.getDateTimeString(requireContext(), it)
         }
     }
 

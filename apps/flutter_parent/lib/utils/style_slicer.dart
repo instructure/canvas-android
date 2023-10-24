@@ -23,8 +23,8 @@ abstract class StyleSlicer {
     this.recognizer,
   });
 
-  final TextStyle style;
-  final GestureRecognizer recognizer;
+  final TextStyle? style;
+  final GestureRecognizer? recognizer;
 
   List<Tuple2> getSlices(String src);
 
@@ -39,7 +39,7 @@ abstract class StyleSlicer {
   /// later in the list of [slicers] will be used.
   ///
   /// A base style for the entire text can be applied by specifying [baseStyle]
-  static TextSpan apply(String source, List<StyleSlicer> slicers, {TextStyle baseStyle = const TextStyle()}) {
+  static TextSpan apply(String? source, List<StyleSlicer>? slicers, {TextStyle? baseStyle = const TextStyle()}) {
     if (source == null || source.isEmpty) return TextSpan(text: '');
     if (slicers == null || slicers.isEmpty) return TextSpan(text: source);
 
@@ -49,21 +49,21 @@ abstract class StyleSlicer {
     Map<int, List<_SlicerOp>> opsMap = {};
 
     slicers.forEach((slicer) {
-      slicer?.getSlices(source)?.forEach((slice) {
+      slicer.getSlices(source).forEach((slice) {
         opsMap.putIfAbsent(slice.item1, () => []).add(_SlicerOp(true, slicer));
         opsMap.putIfAbsent(slice.item2, () => []).add(_SlicerOp(false, slicer));
       });
     });
 
     List<int> slicePoints = opsMap.keys.toList()..sort();
-    List<StyleSlicer> currentSlicers = [];
+    List<StyleSlicer?> currentSlicers = [];
     List<TextSpan> spans = [];
 
     for (int i = 0; i < slicePoints.length - 1; i++) {
       int start = slicePoints[i];
       int end = slicePoints[i + 1];
 
-      opsMap[start].forEach((op) {
+      opsMap[start]?.forEach((op) {
         if (op.isAdd) {
           currentSlicers.add(op.slicer);
         } else {
@@ -73,7 +73,7 @@ abstract class StyleSlicer {
 
       String slice = source.substring(start, end);
       TextStyle style = _mergeStyles(currentSlicers);
-      var recognizer = currentSlicers.lastWhere((it) => it.recognizer != null, orElse: () => null)?.recognizer;
+      var recognizer = currentSlicers.lastWhere((it) => it?.recognizer != null, orElse: () => null)?.recognizer;
 
       spans.add(TextSpan(text: slice, style: style, recognizer: recognizer));
     }
@@ -81,9 +81,9 @@ abstract class StyleSlicer {
     return TextSpan(children: spans);
   }
 
-  static TextStyle _mergeStyles(List<StyleSlicer> currentSlicers) {
+  static TextStyle _mergeStyles(List<StyleSlicer?> currentSlicers) {
     TextStyle style = TextStyle();
-    currentSlicers.forEach((it) => style = style.merge(it.style));
+    currentSlicers.forEach((it) => style = style.merge(it?.style));
     return style;
   }
 }
@@ -102,8 +102,8 @@ class RangeSlice extends StyleSlicer {
   RangeSlice(
     int start,
     int end, {
-    TextStyle style,
-    GestureRecognizer recognizer,
+    TextStyle? style,
+    GestureRecognizer? recognizer,
   })  : range = Tuple2(start, end),
         super(style: style, recognizer: recognizer);
 
@@ -116,20 +116,20 @@ class RangeSlice extends StyleSlicer {
 /// Provides slices that match the given [pattern]. To limit the number of matches, specify a non-negative value
 /// for [maxMatches].
 class PatternSlice extends StyleSlicer {
-  final Pattern pattern;
+  final Pattern? pattern;
   final int maxMatches;
 
   PatternSlice(
     this.pattern, {
     this.maxMatches = -1,
-    TextStyle style,
-    GestureRecognizer recognizer,
+    TextStyle? style,
+    GestureRecognizer? recognizer,
   }) : super(style: style, recognizer: recognizer);
 
   @override
   List<Tuple2> getSlices(String src) {
     if (pattern == null || pattern == '') return [];
-    var matches = pattern.allMatches(src);
+    var matches = pattern!.allMatches(src);
     if (maxMatches > -1) matches = matches.take(maxMatches);
     return matches.map((it) => Tuple2(it.start, it.end)).toList();
   }
@@ -139,9 +139,9 @@ class PatternSlice extends StyleSlicer {
 /// number of matches, specify a non-negative value for [maxMatches].
 class PronounSlice extends PatternSlice {
   PronounSlice(
-    String pronoun, {
+    String? pronoun, {
     int maxMatches = -1,
-    GestureRecognizer recognizer,
+    GestureRecognizer? recognizer,
   }) : super(
           pronoun == null || pronoun.isEmpty ? null : '($pronoun)',
           maxMatches: maxMatches,

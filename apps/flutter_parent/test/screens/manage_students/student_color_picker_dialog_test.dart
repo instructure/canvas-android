@@ -19,17 +19,19 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user_colors.dart';
 import 'package:flutter_parent/screens/manage_students/student_color_picker_dialog.dart';
 import 'package:flutter_parent/screens/manage_students/student_color_picker_interactor.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../pairing/pairing_util_test.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
-  _MockStudentColorPickerInteractor interactor = _MockStudentColorPickerInteractor();
+  MockStudentColorPickerInteractor interactor = MockStudentColorPickerInteractor();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<StudentColorPickerInteractor>(() => interactor);
@@ -62,7 +64,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // 'Plum' color should be selected
-    var predicate = (Widget w) => w is Semantics && w.properties.label == l10n.colorPlum && w.properties.selected;
+    var predicate = (Widget w) => w is Semantics && w.properties.label == l10n.colorPlum && w.properties.selected!;
     expect(find.byWidgetPredicate(predicate), findsOneWidget);
   });
 
@@ -104,7 +106,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap 'Ok' and wait for the result
-    await tester.tap(find.bySemanticsLabel(l10n.ok));
+    await tester.tap(find.text(l10n.ok));
+    await tester.pumpAndSettle();
     var result = await resultFuture;
 
     // Should have returned true
@@ -173,5 +176,3 @@ void main() {
     expect(find.text(l10n.errorSavingColor), findsOneWidget);
   });
 }
-
-class _MockStudentColorPickerInteractor extends Mock implements StudentColorPickerInteractor {}

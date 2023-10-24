@@ -21,14 +21,14 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class EventDetailsInteractor {
-  Future<ScheduleItem> loadEvent(String eventId, bool forceRefresh) {
+  Future<ScheduleItem?> loadEvent(String? eventId, bool forceRefresh) {
     return locator<CalendarEventsApi>().getEvent(eventId, forceRefresh);
   }
 
-  Future<Reminder> loadReminder(String eventId) async {
+  Future<Reminder?> loadReminder(String? eventId) async {
     final reminder = await locator<ReminderDb>().getByItem(
       ApiPrefs.getDomain(),
-      ApiPrefs.getUser().id,
+      ApiPrefs.getUser()?.id,
       Reminder.TYPE_EVENT,
       eventId,
     );
@@ -37,7 +37,7 @@ class EventDetailsInteractor {
        to remove it from the database. Given that we cannot time travel (yet), if the reminder we just retrieved
        has a date set in the past then we will opt to delete it here. */
     if (reminder?.date?.isBefore(DateTime.now()) == true) {
-      await deleteReminder(reminder);
+      await deleteReminder(reminder!);
       return null;
     }
 
@@ -47,14 +47,14 @@ class EventDetailsInteractor {
   Future<void> createReminder(
     AppLocalizations l10n,
     DateTime date,
-    String eventId,
-    String courseId,
-    String title,
+    String? eventId,
+    String? courseId,
+    String? title,
     String body,
   ) async {
     var reminder = Reminder((b) => b
           ..userDomain = ApiPrefs.getDomain()
-          ..userId = ApiPrefs.getUser().id
+          ..userId = ApiPrefs.getUser()?.id
           ..type = Reminder.TYPE_EVENT
           ..itemId = eventId
           ..courseId = courseId
@@ -62,14 +62,16 @@ class EventDetailsInteractor {
         );
 
     // Saving to the database will generate an ID for this reminder
-    reminder = await locator<ReminderDb>().insert(reminder);
-
-    await locator<NotificationUtil>().scheduleReminder(l10n, title, body, reminder);
+    var insertedReminder = await locator<ReminderDb>().insert(reminder);
+    if (insertedReminder != null) {
+      reminder = insertedReminder;
+      await locator<NotificationUtil>().scheduleReminder(l10n, title, body, reminder);
+    }
   }
 
-  Future<void> deleteReminder(Reminder reminder) async {
+  Future<void> deleteReminder(Reminder? reminder) async {
     if (reminder == null) return;
-    await locator<NotificationUtil>().deleteNotification(reminder.id);
-    await locator<ReminderDb>().deleteById(reminder.id);
+    await locator<NotificationUtil>().deleteNotification(reminder.id!);
+    await locator<ReminderDb>().deleteById(reminder.id!);
   }
 }

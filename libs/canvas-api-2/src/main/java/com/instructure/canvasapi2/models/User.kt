@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class User(
@@ -41,7 +41,7 @@ data class User(
         // Helper variable for the "specified" enrollment.
         val enrollmentIndex: Int = 0,
         @SerializedName("last_login")
-        private val lastLogin: String? = null,
+        val lastLogin: String? = null,
         val locale: String? = null,
         @SerializedName("effective_locale")
         val effective_locale: String? = null,

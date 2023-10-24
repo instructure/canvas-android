@@ -25,16 +25,19 @@ import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.replaceFirstAfter
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.databinding.FragmentTextSubmissionBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_text_submission.*
 
 class TextSubmissionViewFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentTextSubmissionBinding::bind)
 
     private var submissionText by StringArg()
 
@@ -42,15 +45,15 @@ class TextSubmissionViewFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_text_submission, container, false)
     }
 
-    override fun onStart() {
+    override fun onStart() = with(binding) {
         super.onStart()
         textSubmissionWebViewWrapper.webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (!isAdded) return
                 if (newProgress >= 100) {
-                    progressBar?.setGone()
-                    textSubmissionWebViewWrapper?.setVisible()
+                    progressBar.setGone()
+                    textSubmissionWebViewWrapper.setVisible()
                 } else {
                     progressBar.announceForAccessibility(getString(R.string.loading))
                 }
@@ -62,10 +65,10 @@ class TextSubmissionViewFragment : Fragment() {
             override fun onPageStartedCallback(webView: WebView, url: String) = Unit
             override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
             override fun canRouteInternallyDelegate(url: String) =
-                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+                RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
 
             override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
             }
         }
 
@@ -89,7 +92,7 @@ class TextSubmissionViewFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        textSubmissionWebViewWrapper.webView.stopLoading()
+        binding.textSubmissionWebViewWrapper.webView.stopLoading()
     }
 
     companion object {

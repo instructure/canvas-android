@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.os.Environment
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -28,6 +29,10 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
@@ -35,7 +40,11 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.utils.*
+import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
+import com.instructure.student.ui.utils.seedData
+import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
@@ -43,13 +52,9 @@ import java.io.FileWriter
 
 @HiltAndroidTest
 class FilesE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -63,13 +68,7 @@ class FilesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = false,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                allowedExtensions = listOf("txt"),
-                teacherToken = teacher.token
-        ))
+        val assignment = createAssignment(course, teacher)
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
@@ -80,13 +79,7 @@ class FilesE2ETest: StudentTest() {
         )
 
         Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
-        SubmissionsApi.submitCourseAssignment(
-                submissionType = SubmissionType.ONLINE_UPLOAD,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(submissionUploadInfo.id),
-                studentToken = student.token
-        )
+        submitAssignment(course, assignment, submissionUploadInfo, student)
 
         Log.d(STEP_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
@@ -95,19 +88,10 @@ class FilesE2ETest: StudentTest() {
                 token = student.token,
                 fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
-
-        SubmissionsApi.commentOnSubmission(
-                studentToken = student.token,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(commentUploadInfo.id)
-        )
+        commentOnSubmission(student, course, assignment, commentUploadInfo)
 
         Log.d(STEP_TAG,"Seed a discussion for ${course.name} course.")
-        val discussionTopic = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = student.token
-        )
+        val discussionTopic = createDiscussion(course, student)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -141,7 +125,7 @@ class FilesE2ETest: StudentTest() {
         }
 
         Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'Submissions' is displayed.")
         fileListPage.assertItemDisplayed("Submissions")
@@ -195,10 +179,20 @@ class FilesE2ETest: StudentTest() {
         ViewUtils.pressBackButton(4)
 
         Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
+
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${discussionAttachmentFile.name}', the file's name to the search input field.")
+        fileListPage.searchable.clickOnSearchButton()
+        fileListPage.searchable.typeToSearchBar(discussionAttachmentFile.name)
+
+        Log.d(STEP_TAG, "Assert that only 1 file matches for the search text, and it is '${discussionAttachmentFile.name}', and no directories has been shown in the result. Press search back button the quit from search result view.")
+        fileListPage.assertSearchResultCount(1)
+        fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
+        fileListPage.assertItemNotDisplayed("unfiled")
+        fileListPage.searchable.pressSearchBackButton()
 
         Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
@@ -216,5 +210,68 @@ class FilesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
         fileListPage.assertViewEmpty()
+
+        Log.d(STEP_TAG, "Navigate back to global File List Page. Assert that the 'unfiled' folder has 0 items because we deleted the only item in it recently.")
+        Espresso.pressBack()
+        fileListPage.assertFolderSize("unfiled", 0)
+
+        val testFolderName = "Krissinho's Test Folder"
+        Log.d(STEP_TAG, "Click on Add ('+') button and then the 'Add Folder' icon, and create a new folder with the following name: '$testFolderName'.")
+        fileListPage.clickAddButton()
+        fileListPage.clickCreateNewFolderButton()
+        fileListPage.createNewFolder(testFolderName)
+
+        Log.d(STEP_TAG,"Assert that there is a folder called '$testFolderName' is displayed.")
+        fileListPage.assertItemDisplayed(testFolderName)
     }
+
+    private fun commentOnSubmission(
+        student: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        commentUploadInfo: AttachmentApiModel
+    ) {
+        SubmissionsApi.commentOnSubmission(
+            studentToken = student.token,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(commentUploadInfo.id)
+        )
+    }
+
+    private fun createAssignment(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel
+    ) = AssignmentsApi.createAssignment(
+        AssignmentsApi.CreateAssignmentRequest(
+            courseId = course.id,
+            withDescription = false,
+            submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+            allowedExtensions = listOf("txt"),
+            teacherToken = teacher.token
+        )
+    )
+
+    private fun submitAssignment(
+        course: CourseApiModel,
+        assignment: AssignmentApiModel,
+        submissionUploadInfo: AttachmentApiModel,
+        student: CanvasUserApiModel
+    ) {
+        SubmissionsApi.submitCourseAssignment(
+            submissionType = SubmissionType.ONLINE_UPLOAD,
+            courseId = course.id,
+            assignmentId = assignment.id,
+            fileIds = mutableListOf(submissionUploadInfo.id),
+            studentToken = student.token
+        )
+    }
+
+    private fun createDiscussion(
+        course: CourseApiModel,
+        student: CanvasUserApiModel
+    ) = DiscussionTopicsApi.createDiscussion(
+        courseId = course.id,
+        token = student.token
+    )
 }

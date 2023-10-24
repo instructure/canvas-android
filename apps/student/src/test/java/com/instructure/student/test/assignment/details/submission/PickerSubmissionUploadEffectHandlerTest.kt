@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.getVideoIntent
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
 import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
@@ -385,12 +384,13 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
             assignmentGroupCategoryId = 3L,
             assignmentName = "AssignmentName",
             allowedExtensions = emptyList(),
-            mode = PickerSubmissionMode.CommentAttachment
+            mode = PickerSubmissionMode.CommentAttachment,
+            attemptId = 1
         )
 
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
+            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any(), any())
         } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
@@ -403,7 +403,8 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
                 model.assignmentName,
                 null,
                 ArrayList(model.files),
-                true
+                true,
+                1
             )
             view.closeSubmissionView()
         }

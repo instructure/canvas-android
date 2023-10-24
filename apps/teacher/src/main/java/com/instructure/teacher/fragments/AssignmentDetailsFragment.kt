@@ -24,17 +24,21 @@ import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPr
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentDeletedEvent
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -49,33 +53,38 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.AssignmentDetailsView
-import kotlinx.android.synthetic.main.fragment_assignment_details.*
-import kotlinx.android.synthetic.main.view_submissions_donut_group.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
+@PageView
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
         AssignmentDetailsView>(), AssignmentDetailsView, Identity {
 
-    private var mAssignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
-    private var mCourse: Course by ParcelableArg(Course())
-    private var mAssignmentId: Long by LongArg(0L, ASSIGNMENT_ID)
+    private val binding by viewBinding(FragmentAssignmentDetailsBinding::bind)
 
-    private var mNeedToForceNetwork = false
+    private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
+    private var course: Course by ParcelableArg(Course())
+    private var assignmentId: Long by LongArg(0L, ASSIGNMENT_ID)
+
+    private var needToForceNetwork = false
 
     private var loadHtmlJob: Job? = null
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
 
     override fun layoutResId() = R.layout.fragment_assignment_details
 
     override fun onRefreshFinished() {}
 
     override fun onRefreshStarted() {
-        toolbar.menu.clear()
+        binding.toolbar.menu.clear()
         clearListeners()
     }
 
@@ -86,41 +95,41 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     override fun onReadySetGo(presenter: AssignmentDetailsPresenter) {
         // if we don't have an assignmentId that means we have an assignment, so we can load the data
-        if(mAssignmentId == 0L) {
-            presenter.loadData(mNeedToForceNetwork)
+        if(assignmentId == 0L) {
+            presenter.loadData(needToForceNetwork)
         } else {
-            presenter.getAssignment(mAssignmentId, mCourse)
+            presenter.getAssignment(assignmentId, course)
         }
     }
 
-    override fun populateAssignmentDetails(assignment: Assignment) {
-        mAssignment = assignment
+    override fun populateAssignmentDetails(assignment: Assignment) = with(binding) {
+        this@AssignmentDetailsFragment.assignment = assignment
         toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(assignment) }
         swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
         setupListeners(assignment)
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(mAssignment)
+    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment)
 
     override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
 
-    private fun setupToolbar() {
-        toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
-            toolbar.updateToolbarExpandCollapseIcon(this)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupBackButtonWithExpandCollapseAndBack(this@AssignmentDetailsFragment) {
+            toolbar.updateToolbarExpandCollapseIcon(this@AssignmentDetailsFragment)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
             (activity as MasterDetailInteractions).toggleExpandCollapse()
         }
 
         toolbar.title = getString(R.string.assignment_details)
         if(!isTablet) {
-            toolbar.subtitle = mCourse.name
+            toolbar.subtitle = course.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    private fun setupViews(assignment: Assignment) {
+    private fun setupViews(assignment: Assignment) = with(binding) {
         swipeRefreshLayout.setOnRefreshListener {
             presenter.loadData(true)
 
@@ -152,19 +161,19 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     // region Configure Assignment
     private fun configurePointsPossible(assignment: Assignment) = with(assignment) {
-        pointsTextView.text = resources.getQuantityString(
+        binding.pointsTextView.text = resources.getQuantityString(
                 R.plurals.quantityPointsAbbreviated,
                 pointsPossible.toInt(),
                 NumberHelper.formatDecimal(pointsPossible, 1, true)
         )
-        pointsTextView.contentDescription = resources.getQuantityString(
+        binding.pointsTextView.contentDescription = resources.getQuantityString(
                 R.plurals.quantityPointsFull,
                 pointsPossible.toInt(),
                 NumberHelper.formatDecimal(pointsPossible, 1, true))
     }
 
-    private fun configurePublishStatus(assignment: Assignment) = with(assignment) {
-        if (published) {
+    private fun configurePublishStatus(assignment: Assignment) = with(binding) {
+        if (assignment.published) {
             publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
             publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.textSuccess))
             publishStatusTextView.setText(R.string.published)
@@ -181,21 +190,22 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         val atSeparator = getString(R.string.at)
 
         if (lockDate?.before(Date()) == true) {
-            availabilityLayout.setVisible()
-            availabilityTextView.setText(R.string.closed)
+            binding.availabilityLayout.setVisible()
+            binding.availabilityTextView.setText(R.string.closed)
         } else {
-            availableFromLayout.setVisible()
-            availableToLayout.setVisible()
-            availableFromTextView.text = if (unlockAt != null)
+            binding.availableFromLayout.setVisible()
+            binding.availableToLayout.setVisible()
+            binding.availableFromTextView.text = if (unlockAt != null)
                 DateHelper.getMonthDayAtTime(requireContext(), unlockDate, atSeparator) else getString(R.string.no_date_filler)
-            availableToTextView.text = if (lockAt!= null)
+            binding.availableToTextView.text = if (lockAt!= null)
                 DateHelper.getMonthDayAtTime(requireContext(), lockDate, atSeparator) else getString(R.string.no_date_filler)
         }
     }
 
-    private fun configureDueDates(assignment: Assignment) = with(assignment) {
+    private fun configureDueDates(assignment: Assignment) = with(binding) {
         val atSeparator = getString(R.string.at)
 
+        val allDates = assignment.allDates
         if (allDates.size > 1) {
             otherDueDateTextView.setVisible()
             otherDueDateTextView.setText(R.string.multiple_due_dates)
@@ -217,32 +227,32 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun configureSubmissionTypes(assignment: Assignment) = with(assignment) {
-        submissionTypesTextView.text = submissionTypesRaw.map {
+    private fun configureSubmissionTypes(assignment: Assignment) = with(binding) {
+        submissionTypesTextView.text = assignment.submissionTypesRaw.map {
             submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(it), requireContext()) }.joinToString("\n")
 
-        if(submissionTypesRaw.contains(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)) {
+        if(assignment.submissionTypesRaw.contains(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)) {
             // External tool
             submissionTypesArrowIcon.setVisible()
             submissionTypesLayout.onClickWithRequireNetwork {
                 // If the user is a designer we don't want to let them look at LTI tools
-                if (mCourse.isDesigner) {
+                if (course.isDesigner) {
                     toast(R.string.errorIsDesigner)
                     return@onClickWithRequireNetwork
                 }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
-                    val args = LtiLaunchFragment.makeBundle(mCourse, ltiUrl, assignment.name!!, true)
-                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
+                    val args = LtiLaunchFragment.makeBundle(course, ltiUrl, assignment.name!!, true)
+                    RouteMatcher.route(requireActivity(), Route(LtiLaunchFragment::class.java, course, args))
                 }
             }
         }
 
-        submissionsLayout.setVisible(!mCourse.isDesigner)
+        submissionsLayout.setVisible(!course.isDesigner)
     }
 
     @Suppress("UsePropertyAccessSyntax")
-    private fun configureDescription(assignment: Assignment): Unit = with(assignment) {
+    private fun configureDescription(assignment: Assignment): Unit = with(binding) {
         noDescriptionTextView.setVisible(assignment.description.isNullOrBlank())
 
         // Show progress bar while loading description
@@ -252,7 +262,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
-                    descriptionProgressBar?.setGone()
+                    descriptionProgressBar.setGone()
                 }
             }
         })
@@ -277,27 +287,27 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
 
         // Load description
-        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
-            descriptionWebViewWrapper.loadHtml(it, name, baseUrl = mAssignment.htmlUrl)
+        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), assignment.description, {
+            descriptionWebViewWrapper.loadHtml(it, assignment.name, baseUrl = assignment.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), mCourse, it)
+            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), course, it)
         }
     }
 
-    private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(assignment) {
+    private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(binding) {
         if(Assignment.getGradingTypeFromString(assignment.gradingType!!, requireContext()) == Assignment.GradingType.NOT_GRADED) {
             // If the grading type is NOT_GRADED we don't want to show anything for the grading dials
             submissionsLayout.setGone()
             submissionsLayoutDivider.setGone()
-        } else if(!isOnlineSubmissionType) {
+        } else if(!assignment.isOnlineSubmissionType) {
             // Only show graded dial if the assignment submission type is not online
-            notSubmittedWrapper.setGone()
-            ungradedWrapper.setGone()
-            assigneesWithoutGradesTextView.setVisible()
+            donutGroup.notSubmittedWrapper.setGone()
+            donutGroup.ungradedWrapper.setGone()
+            donutGroup.assigneesWithoutGradesTextView.setVisible()
         }
     }
 
-    private fun configureViewDiscussionButton(assignment: Assignment) {
+    private fun configureViewDiscussionButton(assignment: Assignment) = with(binding) {
         if (assignment.discussionTopicHeader != null) {
             viewDiscussionButton.setBackgroundColor(ThemePrefs.buttonColor)
             viewDiscussionButton.setTextColor(ThemePrefs.buttonTextColor)
@@ -308,7 +318,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     }
     //endregion
 
-    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) {
+    override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)
@@ -344,45 +354,45 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun clearListeners() {
+    private fun clearListeners() = with(binding) {
         dueLayout.setOnClickListener {}
         submissionsLayout.setOnClickListener {}
-        gradedWrapper.setOnClickListener {}
-        ungradedWrapper.setOnClickListener {}
-        notSubmittedWrapper.setOnClickListener {}
+        donutGroup.gradedWrapper.setOnClickListener {}
+        donutGroup.ungradedWrapper.setOnClickListener {}
+        donutGroup.notSubmittedWrapper.setOnClickListener {}
         noDescriptionTextView.setOnClickListener {}
-        assigneesWithoutGradesTextView.setOnClickListener {}
+        donutGroup.assigneesWithoutGradesTextView.setOnClickListener {}
         viewDiscussionButton.setOnClickListener {}
     }
 
-    private fun setupListeners(assignment: Assignment) {
+    private fun setupListeners(assignment: Assignment) = with(binding) {
         dueLayout.setOnClickListener {
             val args = DueDatesFragment.makeBundle(assignment)
-            RouteMatcher.route(requireContext(), Route(null, DueDatesFragment::class.java, mCourse, args))
+            RouteMatcher.route(requireActivity(), Route(null, DueDatesFragment::class.java, course, args))
         }
 
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
         }
-        viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
-        gradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
+        donutGroup.viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
+        donutGroup.gradedWrapper.setOnClickListener {
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
         }
-        ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
+        donutGroup.ungradedWrapper.setOnClickListener {
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
         }
-        notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
+        donutGroup.notSubmittedWrapper.setOnClickListener {
+            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
         }
         noDescriptionTextView.setOnClickListener { openEditPage(assignment) }
 
-        assigneesWithoutGradesTextView.setOnClickListener {
+        donutGroup.assigneesWithoutGradesTextView.setOnClickListener {
             submissionsLayout.performClick()
         }
 
         assignment.discussionTopicHeader?.let { discussionTopicHeader ->
             viewDiscussionButton.setOnClickListener {
-                RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(mCourse, discussionTopicHeader))
+                RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(course, discussionTopicHeader))
             }
         } ?: viewDiscussionButton.setGone()
 
@@ -391,7 +401,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private fun openEditPage(assignment: Assignment) {
         if(APIHelper.hasNetworkConnection()) {
             val args = EditAssignmentDetailsFragment.makeBundle(assignment, false)
-            RouteMatcher.route(requireContext(), Route(EditAssignmentDetailsFragment::class.java, mCourse, args))
+            RouteMatcher.route(requireActivity(), Route(EditAssignmentDetailsFragment::class.java, course, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
@@ -399,7 +409,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     private fun navigateToSubmissions(course: Course, assignment: Assignment, filter: AssignmentSubmissionListPresenter.SubmissionListFilter) {
         val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
-        RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
+        RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }
 
     override fun onResume() {
@@ -421,7 +431,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentEdited(event: AssignmentUpdatedEvent) {
         event.once(javaClass.simpleName) {
-            if (it == presenter.mAssignment.id) mNeedToForceNetwork = true
+            if (it == presenter.mAssignment.id) needToForceNetwork = true
         }
     }
 
@@ -437,12 +447,12 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
         event.once(javaClass.simpleName) {
-            if(presenter.mAssignment.id == it) mNeedToForceNetwork = true
+            if(presenter.mAssignment.id == it) needToForceNetwork = true
         }
     }
 
     //Because of the presenter lifecycle using the assignment from there will result in random crashes.
-    override val identity: Long? get() = if(mAssignmentId != 0L) mAssignmentId else mAssignment.id
+    override val identity: Long? get() = if(assignmentId != 0L) assignmentId else assignment.id
     override val skipCheck: Boolean get() = false
 
     companion object {
@@ -450,7 +460,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         @JvmStatic val ASSIGNMENT_ID = "assignmentId"
 
         fun newInstance(course: Course, args: Bundle) = AssignmentDetailsFragment().withArgs(args).apply {
-            mCourse = course
+            this.course = course
         }
 
         fun makeBundle(assignment: Assignment): Bundle {

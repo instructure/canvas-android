@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Gelöscht</string>
 
+    <string name="gradeUpdated">Note aktualisiert</string>
     <string name="loadingCanvas">Canvas-Content laden&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1117,6 +1118,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Sie können die Abgabedetails von hier aus öffnen</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Note: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
         <item quantity="other">%s Minuten</item>
@@ -1292,9 +1296,17 @@
     <string name="a11y_closeProgress">Fortschrittsdialog schließen</string>
     <string name="fileUploadProgress">%1$s von %2$s</string>
     <string name="fileUploadProgressSubtitle">Wird nach „Dateien“ hochgeladen</string>
+    <string name="fileUploadFailedSubtitle">Eine oder mehrere Dateien wurden nicht hochgeladen. Überprüfen Sie Ihre Internetverbindung, und versuchen Sie es erneut.</string>
     <string name="submissionProgressSubtitle">Abgabe wird zu \"%s\" hochgeladen</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Abgabe wird hochgeladen</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Dateien hochladen</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Erfolgreich gesendet</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">Abgabe fehlgeschlagen</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Datei wird hochgeladen</item>
+        <item quantity="other">Dateien werden hochgeladen</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Hochladen der Datei erfolgreich</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Hochladen der Datei fehlgeschlagen</string>
     <string name="cancelSubmissionDialogTitle">Abgabe abbrechen</string>
     <string name="cancelSubmissionDialogMessage">Dadurch wird Ihre Abgabe storniert und gelöscht.</string>
     <string name="fileUploadError">Hochladen der Datei fehlgeschlagen</string>
@@ -1302,7 +1314,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Nach „Meine Dateien“ hochladen</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Aufgabe abgeben</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Einen Kurs auswählen</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Wählen Sie einen Kurs, der ausgewählte Kurs ist: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Aufgabe auswählen</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Wählen Sie eine Aufgabe, die ausgewählte Aufgabe ist: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Hochladen abbrechen?</string>
     <string name="cancelFileUploadMessage">Dies bricht das Hochladen ab.</string>
@@ -1317,4 +1331,64 @@
     <string name="createdByStudentView">Erstellt von Studierendenansicht</string>
     <string name="discussionErrorToast">Fehler aufgetreten. Das Thema ist möglicherweise nicht mehr verfügber.</string>
     <string name="cameraPermissionPermanentlyDenied">Die Kameraberechtigung wurde dauerhaft verweigert. Gehen Sie zu den App-Einstellungen, um die Berechtigung zu erteilen.</string>
+    <string name="unpublish_assignment_error">Die Veröffentlichung der Aufgabe kann nicht aufgehoben werden, wenn es Einsendungen von Studierenden gibt.</string>
+    <string name="subscribeToCalendar">Kalender-Feed abonnieren</string>
+    <string name="subscribeToCalendarMessage">Sie können Ihren Canvas-Kalender mit dem Kalender Ihres Google-Kontos synchronisieren, indem Sie in diesem Dialog auf die Schaltfläche „Abonnieren“ klicken. Anschließend müssen Sie die Google-Kalender-App auf Ihrem Gerät aufrufen und die Synchronisierung in den Einstellungen für den neuen Kalender aktivieren.</string>
+    <string name="subscribeButton">Anmelden</string>
+    <string name="switchToLightMode">In den hellen Modus wechseln</string>
+    <string name="switchToDarkMode">In den dunklen Modus wechseln</string>
+    <string name="acceptableUsePolicyDescription">Entweder sind Sie ein(e) neue(r) Benutzer*in oder die Richtlinie zur akzeptablen Nutzung hat sich geändert, seit Sie ihr zuletzt zugestimmt haben. Bitte stimmen Sie der Richtlinie zur akzeptablen Nutzung zu, bevor Sie fortfahren.</string>
+    <string name="acceptableUsePolicyTitle">Richtlinie zur akzeptablen Nutzung</string>
+    <string name="acceptableUsePolicyButton">Richtlinie zur akzeptablen Nutzung</string>
+    <string name="acceptableUsePolicyAgree">Ich stimme der Richtlinie zur akzeptablen Nutzung zu</string>
+    <string name="acceptableUsePolicySubmit">Absenden</string>
+    <string name="acceptFail">Zustimmung zu Richtlinie konnte nicht abgesendet werden</string>
+    <string name="attempt">Versuch %d</string>
+    <string name="quizQuestions">Fragen: %d</string>
+    <string name="quizTimeLimit">Zeitbeschränkung: %s</string>
+    <string name="allowedAttempts">Erlaubte Versuche: %s</string>
+    <string name="usedAttempts">Verwendete Versuche: %d</string>
+    <string name="generalUnexpectedError">Es ist ein unerwarteter Fehler aufgetreten.</string>
+
+    <string name="deleteSelected">Löschen</string>
+    <string name="archiveSelected">Archivieren</string>
+    <string name="unarchiveSelected">Dearchivieren</string>
+    <string name="markAsReadSelected">Als gelesen markieren</string>
+    <string name="markAsUnreadSelected">Als ungelesen markieren</string>
+    <string name="starSelected">Stern</string>
+    <string name="unstarSelected">Stern entfernen</string>
+
+    <string name="inboxOperationFailed">Vorgang konnte nicht ausgeführt werden</string>
+    <string name="inboxDeletedConfirmation">%s gelöscht</string>
+    <string name="inboxArchivedConfirmation">%s archiviert</string>
+    <string name="inboxUnarchivedConfirmation">Archivierung für %s aufgehoben</string>
+    <string name="inboxMarkAsReadConfirmation">%s als gelesen markiert</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s als ungelesen markiert</string>
+    <string name="inboxStarredConfirmation">%s mit Sternchen markiert</string>
+    <string name="inboxUnstarredConfirmation">Markierung mit Sternchen für %s aufgehoben</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Diese Konversation wird auf all Ihren Geräten aus dem Posteingang gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</item>
+        <item quantity="other">Diese Konversationen werden auf all Ihren Geräten aus dem Posteingang gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Nächste Seite konnte nicht geladen werden. Überprüfen Sie Ihre Internetverbindung.</string>
+    <string name="conversationsRefreshFailed">Konversationen konnten nicht aktualisiert werden. Überprüfen Sie Ihre Internetverbindung.</string>
+    <string name="inboxScopeInbox">Posteingang</string>
+    <string name="inboxContextSelectorTitle">Kurs oder Gruppe auswählen</string>
+    <string name="inboxClearFilter">Löschen</string>
+    <string name="a11y_courseFilterContentDescription">Kurs-Filter: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">auswählen</string>
+    <string name="a11y_itemSelectedSwipeForActions">Konversation ausgewählt. Auswahlmodus aktiviert. Für Aktionen navigieren.</string>
+    <string name="a11y_conversationSelected">Gespräch ausgewählt</string>
+    <string name="a11y_conversationDeselected">Gespräch abgewählt</string>
+    <string name="a11y_exitSelectionMode">Auswahlmodus verlassen</string>
+    <string name="a11y_selectionModeDeactivated">Der Auswahlmodus ist deaktiviert.</string>
+    <string name="a11y_avatarContentDescription">Avatar von %s</string>
+    <string name="inboxUndo">Rückgängig machen</string>
+    <string name="aboutAppTitle">App</string>
+    <string name="aboutDomainTitle">Domäne</string>
+    <string name="aboutLoginTitle">Anmelde-ID</string>
+    <string name="aboutEmailTitle">E-Mail</string>
+    <string name="aboutVersionTitle">Version</string>
+    <string name="assignmentRefreshError">Beim erneuten Laden der Aufgabe ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.</string>
 </resources>

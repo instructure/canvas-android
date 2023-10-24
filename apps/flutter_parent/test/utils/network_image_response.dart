@@ -21,6 +21,7 @@ import 'package:mockito/mockito.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'test_helpers/mock_helpers.dart';
+import 'test_helpers/mock_helpers.mocks.dart';
 
 void mockNetworkImageResponse() {
   final TestWidgetsFlutterBinding binding = TestWidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +33,7 @@ void mockNetworkImageResponse() {
 
 class _ImageHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext _) {
+  HttpClient createHttpClient(SecurityContext? _) {
     final client = MockHttpClient();
     final request = MockHttpClientRequest();
     final response = MockHttpClientResponse();

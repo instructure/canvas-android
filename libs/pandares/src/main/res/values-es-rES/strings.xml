@@ -233,7 +233,7 @@
     <string name="closed_discussion">No admite comentarios</string>
     <string name="discussionUploadDialog">Carga de foro de discusión</string>
     <string name="totalScore">Total:</string>
-    <string name="noGradeText">No procede</string>
+    <string name="noGradeText">N/A</string>
     <string name="checkBoxFinalGradeOption">Basarse en actividades evaluadas</string>
     <string name="checkBoxWhatIfGradeOption">Mostrar la puntuación hipotética</string>
     <string name="whatIfDialogText">Puntuación hipotética</string>
@@ -432,6 +432,7 @@
     <!-- Notifications -->
     <string name="deleted">Eliminado</string>
 
+    <string name="gradeUpdated">Nota actualizada</string>
     <string name="loadingCanvas">Cargando el contenido de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1117,6 +1118,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Desde aquí puedes abrir los detalles de la entrega</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nota: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minuto</item>
         <item quantity="other">%s minutos</item>
@@ -1294,9 +1298,17 @@
     <string name="a11y_closeProgress">Cerrar diálogo</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">Cargando a archivos</string>
+    <string name="fileUploadFailedSubtitle">No se han podido cargar uno o más archivos. Comprueba tu conexión a Internet y vuelve a realizar la entrega.</string>
     <string name="submissionProgressSubtitle">Cargando entrega a \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">Cargando entrega</string>
-    <string name="dashboardNotificationUploadingFilesTitle">Cargando archivos</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">Entrega realizada correctamente</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">No se ha podido entregar</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">Cargando archivo</item>
+        <item quantity="other">Cargando archivos</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">Archivo cargado correctamente</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">Ha habido un error al cargar el archivo</string>
     <string name="cancelSubmissionDialogTitle">Cancelar entrega</string>
     <string name="cancelSubmissionDialogMessage">Esta acción cancelará y eliminará tu entrega.</string>
     <string name="fileUploadError">Ha habido un error al cargar el archivo</string>
@@ -1304,7 +1316,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Cargando a archivos</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Entregar actividad</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Selecciona una asignatura</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Elige una asignatura, la asignatura seleccionada es: %s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Elegir una actividad</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Elige una actividad, la actividad seleccionada es: %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">¿Cancelar carga?</string>
     <string name="cancelFileUploadMessage">Esto cancelará tu carga.</string>
@@ -1319,4 +1333,64 @@
     <string name="createdByStudentView">Creado por la vista de estudiante</string>
     <string name="discussionErrorToast">Ha habido un error. El tema podría no estar ya disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">El permiso de la cámara se rechazó para siempre. Pasa por ajustes para activarlo.</string>
+    <string name="unpublish_assignment_error">No se puede cancelar la actividad si hay entregas de estudiantes.</string>
+    <string name="subscribeToCalendar">Suscribirse a la actividad del calendario</string>
+    <string name="subscribeToCalendarMessage">Puedes sincronizar tu calendario de Canvas con tu cuenta Google Calendar haciendo clic en el botón de suscribirse en este cuadro de diálogo. Luego, tendrás que ir a la aplicación de Google Calendar en tu dispositivo y habilitar la sincronización en la configuración para el nuevo calendario.</string>
+    <string name="subscribeButton">Suscribirse</string>
+    <string name="switchToLightMode">Cambiar al Modo Claro</string>
+    <string name="switchToDarkMode">Cambiar al Modo Oscuro</string>
+    <string name="acceptableUsePolicyDescription">Es un usuario nuevo o la Política de uso aceptable ha cambiado desde la última vez que la aceptó. Aceptar la Política de uso aceptable antes de continuar.</string>
+    <string name="acceptableUsePolicyTitle">Política de uso aceptable</string>
+    <string name="acceptableUsePolicyButton">Política de uso aceptable</string>
+    <string name="acceptableUsePolicyAgree">Acepto la política de uso aceptable.</string>
+    <string name="acceptableUsePolicySubmit">Entregar</string>
+    <string name="acceptFail">Ha habido un error al entregar los términos de aceptación.</string>
+    <string name="attempt">Intento %d</string>
+    <string name="quizQuestions">Preguntas: %d</string>
+    <string name="quizTimeLimit">Límite de tiempo: %s</string>
+    <string name="allowedAttempts">Intentos permitidos: %s</string>
+    <string name="usedAttempts">Intentos usados: %d</string>
+    <string name="generalUnexpectedError">Ha habido un error inesperado.</string>
+
+    <string name="deleteSelected">Eliminar</string>
+    <string name="archiveSelected">Archivar</string>
+    <string name="unarchiveSelected">Desarchivar</string>
+    <string name="markAsReadSelected">Marcar como leído</string>
+    <string name="markAsUnreadSelected">Marcar como no leído</string>
+    <string name="starSelected">Destacar</string>
+    <string name="unstarSelected">No destacar</string>
+
+    <string name="inboxOperationFailed">Ha habido un error al realizar la operación</string>
+    <string name="inboxDeletedConfirmation">%s eliminado</string>
+    <string name="inboxArchivedConfirmation">%s archivado</string>
+    <string name="inboxUnarchivedConfirmation">%s no archivado</string>
+    <string name="inboxMarkAsReadConfirmation">%s marcado como leído</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s marcado como no leído</string>
+    <string name="inboxStarredConfirmation">%s destacado</string>
+    <string name="inboxUnstarredConfirmation">%s no destacado</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Esta conversación se borrará de la bandeja de entrada de todos tus dispositivos. Esta acción no se puede deshacer.</item>
+        <item quantity="other">Esta conversación se borrará de la bandeja de entrada de todos tus dispositivos. Esta acción no se puede deshacer.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">Ha habido un error al cargar la siguiente página. Comprueba tu conexión a Internet.</string>
+    <string name="conversationsRefreshFailed">No se han podido actualizar las conversaciones. Comprueba tu conexión a Internet.</string>
+    <string name="inboxScopeInbox">Bandeja de entrada</string>
+    <string name="inboxContextSelectorTitle">Selecciona una asignatura o grupo</string>
+    <string name="inboxClearFilter">Borrar</string>
+    <string name="a11y_courseFilterContentDescription">Filtro de la asignatura: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">seleccionar</string>
+    <string name="a11y_itemSelectedSwipeForActions">Conversación seleccionada. Modo de selección activado. Navegar para acciones.</string>
+    <string name="a11y_conversationSelected">Conversación seleccionada.</string>
+    <string name="a11y_conversationDeselected">Conversación no seleccionada.</string>
+    <string name="a11y_exitSelectionMode">Salir del modo de selección</string>
+    <string name="a11y_selectionModeDeactivated">Modo de selección desactivado.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Deshacer</string>
+    <string name="aboutAppTitle">Aplicación</string>
+    <string name="aboutDomainTitle">Dominio</string>
+    <string name="aboutLoginTitle">Identificación de inicio de sesión</string>
+    <string name="aboutEmailTitle">Correo electrónico</string>
+    <string name="aboutVersionTitle">Versión</string>
+    <string name="assignmentRefreshError">Se ha producido un problema al volver a cargar esta actividad. Comprueba tu conexión y vuelve a intentarlo.</string>
 </resources>

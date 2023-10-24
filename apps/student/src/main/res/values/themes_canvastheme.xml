@@ -33,6 +33,8 @@
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
         <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
@@ -41,6 +43,7 @@
         <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
         <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="android:datePickerStyle">@style/DatePickerStyle</item>
     </style>
 
     <style name="CanvasMaterialTheme_Default.Translucent">
@@ -49,7 +52,8 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
-
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
     </style>

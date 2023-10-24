@@ -33,6 +33,8 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.isElementDisplayed
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.QuizzesApi.createAndPublishQuiz
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
 import com.instructure.panda_annotations.FeatureCategory
@@ -51,13 +53,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class QuizzesE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //We don't want to see accessibility errors on E2E tests
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     // Fairly basic test of webview-based quizzes.  Seeds/takes a quiz with two multiple-choice
     // questions.
@@ -77,48 +75,13 @@ class QuizzesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
-        val quizUnpublished = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
-                courseId = course.id,
-                withDescription = true,
-                published = false,
-                token = teacher.token
-        ))
+        val quizUnpublished = createQuiz(course, teacher, withDescription = true, published = false)
 
         Log.d(PREPARATION_TAG,"Seed another quiz for ${course.name} with some questions.")
-        val quizQuestions = listOf(
-                QuizQuestion(
-                        questionText = "What's your favorite color?",
-                        questionType = "multiple_choice_question",
-                        pointsPossible = 5,
-                        answers = listOf(
-                                QuizAnswer(id=1, weight=0, text="Red"),
-                                QuizAnswer(id=1, weight=1, text="Blue"),
-                                QuizAnswer(id=1, weight=0, text="Yellow")
-                        )
-                ),
-                QuizQuestion(
-                        questionText = "Who let the dogs out?",
-                        questionType = "multiple_choice_question",
-                        pointsPossible = 5,
-                        answers = listOf(
-                                QuizAnswer(id=1, weight=1, text="Who Who Who-Who"),
-                                QuizAnswer(id=1, weight=0, text="Who Who-Who-Who"),
-                                QuizAnswer(id=1, weight=0, text="Who-Who Who-Who")
-                        )
-                )
-
-                // Can't test essay questions yet.  More specifically, can't test answering essay questions.
-//                QuizQuestion(
-//                        questionText = "Why should I give you an A?",
-//                        questionType = "essay_question",
-//                        pointsPossible = 12,
-//                        answers = listOf()
-//                )
-        )
+        val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG,"Publish the previously seeded quiz.")
         val quizPublished = createAndPublishQuiz(course.id, teacher.token, quizQuestions)
-
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -134,9 +97,7 @@ class QuizzesE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Select ${quizPublished.title} quiz. Assert that the ${quizPublished.title} quiz title is displayed.")
         quizListPage.selectQuiz(quizPublished)
-        canvasWebViewPage.runTextChecks(
-                WebViewTextCheck(locatorType = Locator.ID, locatorValue = "quiz_title", textValue = quizPublished.title)
-        )
+        canvasWebViewPage.runTextChecks(WebViewTextCheck(locatorType = Locator.ID, locatorValue = "quiz_title", textValue = quizPublished.title))
 
         // Launch the quiz
         // Pressing the "Take the Quiz" button does not work on an FTL Api 25 device.
@@ -242,4 +203,50 @@ class QuizzesE2ETest: StudentTest() {
         courseGradesPage.assertGradeDisplayed(withText(quizPublished.title), containsTextCaseInsensitive("10"))
 
     }
+
+    private fun createQuiz(
+        course: CourseApiModel,
+        teacher: CanvasUserApiModel,
+        withDescription: Boolean,
+        published: Boolean,
+    ) = QuizzesApi.createQuiz(
+        QuizzesApi.CreateQuizRequest(
+            courseId = course.id,
+            withDescription = withDescription,
+            published = published,
+            token = teacher.token
+        )
+    )
+
+    private fun makeQuizQuestions() = listOf(
+        QuizQuestion(
+            questionText = "What's your favorite color?",
+            questionType = "multiple_choice_question",
+            pointsPossible = 5,
+            answers = listOf(
+                QuizAnswer(id = 1, weight = 0, text = "Red"),
+                QuizAnswer(id = 1, weight = 1, text = "Blue"),
+                QuizAnswer(id = 1, weight = 0, text = "Yellow")
+            )
+        ),
+        QuizQuestion(
+            questionText = "Who let the dogs out?",
+            questionType = "multiple_choice_question",
+            pointsPossible = 5,
+            answers = listOf(
+                QuizAnswer(id = 1, weight = 1, text = "Who Who Who-Who"),
+                QuizAnswer(id = 1, weight = 0, text = "Who Who-Who-Who"),
+                QuizAnswer(id = 1, weight = 0, text = "Who-Who Who-Who")
+            )
+        )
+
+        // Can't test essay questions yet.  More specifically, can't test answering essay questions.
+    //                QuizQuestion(
+    //                        questionText = "Why should I give you an A?",
+    //                        questionType = "essay_question",
+    //                        pointsPossible = 12,
+    //                        answers = listOf()
+    //                )
+    )
+
 }

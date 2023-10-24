@@ -28,10 +28,12 @@ import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.core.text.TextUtilsCompat
 import com.instructure.annotations.CanvasPdfMenuGrouping
+import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PSPDFKIT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.features.shareextension.StudentShareExtensionActivity
@@ -45,9 +47,12 @@ import com.pspdfkit.ui.toolbar.AnnotationCreationToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PSPDFKIT)
+@AndroidEntryPoint
 class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener {
     override fun onDisplayContextualToolbar(p0: ContextualToolbar<*>) {}
     override fun onRemoveContextualToolbar(p0: ContextualToolbar<*>) {}
@@ -55,6 +60,9 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     private var menuItems: List<ContextualToolbarMenuItem>? = null
 
     private val submissionTarget by lazy { intent?.extras?.getParcelable<ShareFileSubmissionTarget>(Const.SUBMISSION_TARGET) }
+
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
 
     override fun onPrepareContextualToolbar(toolbar: ContextualToolbar<*>) {
         if(toolbar is AnnotationCreationToolbar) {
@@ -95,15 +103,19 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
         ViewStyler.setStatusBarDark(this, color)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        super.onPrepareOptionsMenu(menu)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.pspdf_activity_menu, menu)
         if (submissionTarget != null) {
             // If targeted for submission, change the menu item title from "Upload to Canvas" to "Submit Assignment"
-            val item = menu.findItem(R.id.upload_item)
-            item.title = getString(R.string.submitAssignment)
+            val item = menu?.findItem(R.id.upload_item)
+            item?.title = getString(R.string.submitAssignment)
         }
         return true
+    }
+
+    override fun onGetShowAsAction(menuItemId: Int, defaultShowAsAction: Int): Int {
+        return if (menuItemId != R.id.upload_item) MenuItem.SHOW_AS_ACTION_ALWAYS else super.onGetShowAsAction(menuItemId, defaultShowAsAction)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -118,10 +130,14 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
 
     private fun uploadDocumentToCanvas() {
         if (document != null) {
-            DocumentSharingManager.shareDocument(
+            if (networkStateProvider.isOnline()) {
+                DocumentSharingManager.shareDocument(
                     CandroidDocumentSharingController(this, submissionTarget),
                     document!!,
                     SharingOptions(PdfProcessorTask.AnnotationProcessingMode.FLATTEN))
+            } else {
+                NoInternetConnectionDialog.show(supportFragmentManager)
+            }
         }
     }
 

@@ -27,6 +27,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
@@ -42,16 +43,21 @@ import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
+import org.hamcrest.Matchers.`is`
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
-import java.io.*
+import java.io.BufferedOutputStream
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -290,9 +296,14 @@ abstract class CanvasTest : InstructureTestingContract {
         }
     }
 
-    // Does the test device have particularly low screen resolution?
-    fun isLowResDevice() : Boolean {
-        return activityRule.activity.resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
+    fun isTabletDevice(): Boolean {
+
+        val metrics = activityRule.activity.resources.displayMetrics
+        val screenWidth = metrics.widthPixels / metrics.density
+        val screenHeight = metrics.heightPixels / metrics.density
+
+        // Assuming a tablet has a minimum width of 720dp and height of 720dp
+        return screenWidth >= 720 && screenHeight >= 720
     }
 
     // Copying this matcher from the shared espresso lib to here.  In the espresso lib, we had
@@ -344,7 +355,8 @@ abstract class CanvasTest : InstructureTestingContract {
             override fun matches(item: Any?): Boolean {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        var result = item.view?.contentDescription?.contains("More options", ignoreCase = true) ?: false
+                        val contentDescription = item.view?.contentDescription
+                        var result = (contentDescription?.contains("Overflow", ignoreCase = true) ?: false) || (contentDescription?.contains("More options", ignoreCase = true) ?: false)
                         //Log.v("overflowWidth", "isOverflowMenu: contentDescription=${item.view?.contentDescription ?: "unknown"}, result=$result ")
                         return result
                     }
@@ -415,12 +427,6 @@ abstract class CanvasTest : InstructureTestingContract {
         return resourceName
     }
 
-    // Allow tests to know whether they are in landscape mode
-    fun inLandscape() : Boolean {
-        var activity = activityRule.activity
-        return activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    }
-
     // Copy an asset file to the external cache, typically for use in uploading the asset
     // file via mocked intents.
     fun copyAssetFileToExternalCache(context: Context, fileName: String) {
@@ -458,6 +464,23 @@ abstract class CanvasTest : InstructureTestingContract {
 
         private var configChecked = false
 
+        private fun getDeviceOrientation(context: Context): Int {
+            val configuration = context.resources.configuration
+            return configuration.orientation
+        }
+
+        fun isLandscapeDevice(): Boolean {
+            return getDeviceOrientation(ApplicationProvider.getApplicationContext()) == Configuration.ORIENTATION_LANDSCAPE
+        }
+
+        fun isPortraitDevice(): Boolean {
+            return getDeviceOrientation(ApplicationProvider.getApplicationContext()) == Configuration.ORIENTATION_PORTRAIT
+        }
+
+        // Does the test device have particularly low screen resolution?
+        fun isLowResDevice() : Boolean {
+            return ApplicationProvider.getApplicationContext<Context?>().resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
+        }
     }
 
 }

@@ -34,17 +34,17 @@ import 'manage_students_interactor.dart';
 ///
 /// Pull to refresh and updating when a pairing code is used are handled, however.
 class ManageStudentsScreen extends StatefulWidget {
-  final List<User> _students;
+  final List<User>? _students;
 
-  ManageStudentsScreen(this._students, {Key key}) : super(key: key);
+  ManageStudentsScreen(this._students, {super.key});
 
   @override
   State<StatefulWidget> createState() => _ManageStudentsState();
 }
 
 class _ManageStudentsState extends State<ManageStudentsScreen> {
-  Future<List<User>> _studentsFuture;
-  Future<List<User>> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
+  Future<List<User>?>? _studentsFuture;
+  Future<List<User>?> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
 
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
@@ -63,22 +63,22 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         builder: (context) => Scaffold(
           appBar: AppBar(
             title: Text(L10n(context).manageStudents),
-            bottom: ParentTheme.of(context).appBarDivider(),
+            bottom: ParentTheme.of(context)?.appBarDivider(),
           ),
           body: FutureBuilder(
             initialData: widget._students,
             future: _studentsFuture,
-            builder: (context, AsyncSnapshot<List<User>> snapshot) {
+            builder: (context, AsyncSnapshot<List<User>?> snapshot) {
               // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
 
               // Get the view based on the state of the snapshot
               Widget view;
               if (snapshot.hasError) {
                 view = _error(context);
-              } else if (snapshot.data == null || snapshot.data.isEmpty) {
+              } else if (snapshot.data == null || snapshot.data!.isEmpty) {
                 view = _empty(context);
               } else {
-                view = _StudentsList(snapshot.data);
+                view = _StudentsList(snapshot.data!);
               }
 
               return RefreshIndicator(
@@ -108,25 +108,25 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           key: ValueKey('studentTextHero${students[index].id}'),
           child: UserName.fromUserShortName(
             students[index],
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
         onTap: () async {
           var needsRefresh = await locator.get<QuickNav>().push(context, AlertThresholdsScreen(students[index]));
           if (needsRefresh == true) {
-            _refreshKey.currentState.show();
+            _refreshKey.currentState?.show();
             _addedStudentFlag = true;
           }
         },
         trailing: FutureBuilder<StudentColorSet>(
-          future: ParentTheme.of(context).getColorsForStudent(students[index].id),
+          future: ParentTheme.of(context)?.getColorsForStudent(students[index].id),
           builder: (context, snapshot) {
             var color = snapshot.hasData
-                ? ParentTheme.of(context).getColorVariantForCurrentState(snapshot.data)
+                ? ParentTheme.of(context)?.getColorVariantForCurrentState(snapshot.data!) ?? Colors.transparent
                 : Colors.transparent;
             return Semantics(
               container: true,
-              label: L10n(context).changeStudentColorLabel(students[index].shortName),
+              label: L10n(context).changeStudentColorLabel(students[index].shortName ?? ''),
               child: InkResponse(
                 highlightColor: color,
                 onTap: () {
@@ -184,7 +184,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         locator<PairingUtil>().pairNewStudent(
           context,
           () {
-            _refreshKey.currentState.show();
+            _refreshKey.currentState?.show();
             _addedStudentFlag = true;
           },
         );
@@ -197,6 +197,6 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
     setState(() {
       _studentsFuture = _loadStudents();
     });
-    return _studentsFuture.catchError((_) {});
+    return _studentsFuture!.catchError((_) {});
   }
 }

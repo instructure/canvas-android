@@ -18,6 +18,7 @@
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.CourseSettings
 import com.instructure.dataseeding.model.CreateCourse
 import com.instructure.dataseeding.model.CreateCourseWrapper
 import com.instructure.dataseeding.model.FavoriteApiModel
@@ -27,7 +28,9 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 object CoursesApi {
     interface CoursesService {
@@ -43,6 +46,10 @@ object CoursesApi {
 
         @DELETE("courses/{courseId}?event=conclude")
         fun concludeCourse(@Path("courseId") courseId: Long): Call<FavoriteApiModel>
+
+        @PUT("courses/{course_id}/settings")
+        fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>
+
     }
 
     private val adminCoursesService: CoursesService by lazy {
@@ -82,7 +89,8 @@ object CoursesApi {
     fun createCourse(
         enrollmentTermId: Long? = null,
         publish: Boolean = true,
-        coursesService: CoursesService = adminCoursesService
+        coursesService: CoursesService = adminCoursesService,
+        syllabusBody: String? = null
     ): CourseApiModel {
         val randomCourseName = Randomizer.randomCourseName()
         val course = CreateCourseWrapper(
@@ -90,7 +98,8 @@ object CoursesApi {
             course = CreateCourse(
                 name = randomCourseName,
                 courseCode = randomCourseName.substring(0, 2),
-                enrollmentTermId = enrollmentTermId
+                enrollmentTermId = enrollmentTermId,
+                syllabusBody = syllabusBody
             )
         )
         return coursesService
@@ -110,4 +119,12 @@ object CoursesApi {
             .addCourseToFavorites(courseId)
             .execute()
             .body()!!
+
+    fun updateCourseSettings(courseId: Long, params: Map<String, Boolean>
+    ): CourseSettings {
+        return adminCoursesService
+            .updateCourseSettings(courseId, params)
+            .execute()
+            .body()!!
+    }
 }

@@ -17,9 +17,11 @@
 
 package com.instructure.canvasapi2.models
 
+import android.webkit.URLUtil
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
-import kotlinx.android.parcel.Parcelize
+import com.instructure.canvasapi2.utils.isValid
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 import java.util.Locale
 
@@ -108,5 +110,7 @@ data class FileFolder(
             else -> NaturalOrderComparator.compare(file1.displayName?.lowercase(Locale.getDefault()), file2.displayName?.lowercase(Locale.getDefault()))
         }
     }
+
+    val isLocalFile = url.isValid() && !URLUtil.isNetworkUrl(url)
 
 }

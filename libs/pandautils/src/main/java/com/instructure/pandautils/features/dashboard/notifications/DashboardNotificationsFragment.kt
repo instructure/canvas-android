@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,9 +29,7 @@ import androidx.fragment.app.viewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD_NOTIFICATIONS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDashboardNotificationsBinding
-import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.backgroundColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,6 +103,15 @@ class DashboardNotificationsFragment : Fragment() {
             )
             is DashboardNotificationsActions.OpenProgressDialog -> {
                 startActivity(shareExtensionRouter.routeToProgressScreen(requireActivity(), action.uuid))
+            }
+            is DashboardNotificationsActions.NavigateToSubmissionDetails -> {
+                dashboardRouter.routeToSubmissionDetails(action.canvasContext, action.assignmentId, action.attemptId)
+            }
+            is DashboardNotificationsActions.NavigateToMyFiles -> {
+                dashboardRouter.routeToMyFiles(action.canvasContext, action.folderId)
+            }
+            is DashboardNotificationsActions.OpenSyncProgress -> {
+                dashboardRouter.routeToSyncProgress()
             }
         }
     }

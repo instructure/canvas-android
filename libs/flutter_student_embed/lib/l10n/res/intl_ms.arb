@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2022-01-28T12:37:53.041723",
+  "@@last_modified": "2023-03-31T11:03:46.341309",
   "coursesLabel": "Kursus",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
@@ -101,6 +101,19 @@
       "points": {}
     }
   },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}, {eventCount} acara}other{{date}, {eventCount} acara}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
+    }
+  },
   "No Events Today!": "Tiada Acara Hari Ini!",
   "@No Events Today!": {
     "description": "Title displayed when there are no calendar events for the current day",
@@ -122,9 +135,9 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Ketik untuk menggemari kursus yang ingin anda lihat pada Kalendar.",
-  "@Tap to favorite the courses you want to see on the Calendar.": {
-    "description": "Description text on calendar filter screen.",
+  "Select elements to display on the calendar.": "Pilih elemen untuk dipaparkan pada kalendar.",
+  "@Select elements to display on the calendar.": {
+    "description": "Select calendars description",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

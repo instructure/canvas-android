@@ -25,10 +25,14 @@ abstract class Quiz implements Built<Quiz, QuizBuilder> {
   factory Quiz([void Function(QuizBuilder) updates]) = _$Quiz;
 
   String get id;
+
   String get title;
+
   String get description;
+
   @BuiltValueField(wireName: 'due_at')
   DateTime get dueAt;
+
   @BuiltValueField(wireName: 'points_possible')
   double get pointsPossible;
 

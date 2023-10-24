@@ -19,8 +19,8 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.*
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
@@ -73,12 +73,12 @@ data class DiscussionEntry(
             return depth
         }
 
-    fun init(topic: DiscussionTopic, parentEntry: DiscussionEntry) {
+    fun init(topic: DiscussionTopic, parentEntry: DiscussionEntry, isOnline: Boolean = true) {
         parent = parentEntry
         // The server attaches a verifier param on the end of img src urls inside of a discussion, however
         // this happens whenever the server decides to make it happen so we need to make sure that the image
         // contains this param in it's url, or replace it with an authenticated url so we can download it for all to see
-        if (parentEntry.message?.contains("<img") == true && parentEntry.message?.contains("&verifier") != true) {
+        if (isOnline && parentEntry.message?.contains("<img") == true && parentEntry.message?.contains("&verifier") != true) {
             // Entry has an image tag - find all of them and replace any that don't have a verifier param in their src url
             // Note: The following is assumed to be run inside a background thread due to a network call in ModelExtensionsKt.getImageReplacementList
             val replacementList = getImageReplacementList(parentEntry.message!!)

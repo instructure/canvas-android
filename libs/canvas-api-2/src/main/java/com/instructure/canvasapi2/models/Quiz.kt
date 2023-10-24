@@ -21,7 +21,7 @@ import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.canvasapi2.utils.toDate
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 
@@ -33,7 +33,7 @@ data class Quiz(
         val mobileUrl: String? = null,
         @SerializedName("html_url")
         val htmlUrl: String? = null,
-        val description: String? = "",
+        var description: String? = "",
         @SerializedName("quiz_type")
         val quizType: String? = null,
         @SerializedName("assignment_group_id")

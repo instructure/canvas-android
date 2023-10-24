@@ -25,59 +25,78 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
+import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
-import com.instructure.pandautils.utils.AppTheme
-import com.instructure.pandautils.utils.AppThemeSelector
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.setupAsBackButton
-import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
+import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.SettingsActivity
+import com.instructure.student.databinding.FragmentApplicationSettingsBinding
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
-import kotlinx.android.synthetic.main.dialog_about.*
-import kotlinx.android.synthetic.main.fragment_application_settings.*
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_APPLICATION_SETTINGS)
 @PageView(url = "profile/settings")
+@AndroidEntryPoint
 class ApplicationSettingsFragment : ParentFragment() {
+
+    @Inject
+    lateinit var syncSettingsFacade: SyncSettingsFacade
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
+    private val binding by viewBinding(FragmentApplicationSettingsBinding::bind)
 
     override fun title(): String = getString(R.string.settings)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_application_settings, container, false)
+        inflater.inflate(R.layout.fragment_application_settings, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyTheme()
         setupViews()
+
+        networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
+            handleOnlineState(isOnline == true)
+        }
     }
 
-    override fun applyTheme() {
-        toolbar.setupAsBackButton(this)
+    private fun handleOnlineState(online: Boolean) = with(binding) {
+        profileSettings.alpha = if (online) 1f else 0.5f
+        pushNotifications.alpha = if (online) 1f else 0.5f
+        emailNotifications.alpha = if (online) 1f else 0.5f
+        pairObserver.alpha = if (online) 1f else 0.5f
+        legal.alpha = if (online) 1f else 0.5f
+    }
+
+    override fun applyTheme() = with(binding) {
+        toolbar.setupAsBackButton(this@ApplicationSettingsFragment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setupViews() {
-        profileSettings.onClick {
+    private fun setupViews() = with(binding) {
+        profileSettings.onClickWithRequireNetwork {
             val frag = if (ApiPrefs.isStudentView) {
                 // Profile settings not available in Student View
                 NothingToSeeHereFragment.newInstance()
@@ -94,40 +113,29 @@ class ApplicationSettingsFragment : ParentFragment() {
             accountPreferences.onClick { addFragment(AccountPreferencesFragment.newInstance()) }
         }
 
-        legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
+        legal.onClickWithRequireNetwork { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
         if (ApiPrefs.canGeneratePairingCode == true) {
             pairObserver.setVisible()
-            pairObserver.onClick {
-                if (APIHelper.hasNetworkConnection()) {
-                    addFragment(PairObserverFragment.newInstance())
-                } else {
-                    NoInternetConnectionDialog.show(requireFragmentManager())
-                }
+            pairObserver.onClickWithRequireNetwork {
+                addFragment(PairObserverFragment.newInstance())
             }
         }
 
-        pushNotifications.onClick {
+        pushNotifications.onClickWithRequireNetwork {
             addFragment(PushNotificationPreferencesFragment.newInstance())
         }
 
-        emailNotifications.onClick {
+        emailNotifications.onClickWithRequireNetwork {
             addFragment(EmailNotificationPreferencesFragment.newInstance())
         }
 
         about.onClick {
-            AlertDialog.Builder(requireContext())
-                .setTitle(R.string.about)
-                .setView(R.layout.dialog_about)
-                .show()
-                .apply {
-                    domain.text = ApiPrefs.domain
-                    loginId.text = ApiPrefs.user!!.loginId
-                    email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
-                    version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                }
+            AboutFragment.newInstance().show(childFragmentManager, null)
         }
+
+        setUpSyncSettings()
 
         if (ApiPrefs.canvasForElementary) {
             elementaryViewSwitch.isChecked = ApiPrefs.elementaryDashboardEnabledOverride
@@ -165,27 +173,54 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     private fun setUpAppThemeSelector() {
         val initialAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
-        appThemeStatus.setText(initialAppTheme.themeNameRes)
+        binding.appThemeStatus.setText(initialAppTheme.themeNameRes)
 
-        appThemeContainer.onClick {
-            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), appThemeStatus)
+        binding.appThemeContainer.onClick {
+            AppThemeSelector.showAppThemeSelectorDialog(requireContext(), binding.appThemeStatus)
+        }
+    }
+
+    private fun setUpSyncSettings() {
+        lifecycleScope.launch {
+            if (!featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE)) {
+                binding.offlineContentDivider.setGone()
+                binding.offlineContentTitle.setGone()
+                binding.offlineSyncSettingsContainer.setGone()
+            } else {
+                syncSettingsFacade.getSyncSettingsListenable().observe(viewLifecycleOwner) { syncSettings ->
+                    if (syncSettings == null) {
+                        binding.offlineSyncSettingsContainer.setGone()
+                    } else {
+                        binding.offlineSyncSettingsStatus.text = if (syncSettings.autoSyncEnabled) {
+                            getString(syncSettings.syncFrequency.readable)
+                        } else {
+                            getString(R.string.syncSettings_manualDescription)
+                        }
+                    }
+                }
+
+                binding.offlineSyncSettingsContainer.onClick {
+                    addFragment(SyncSettingsFragment.newInstance())
+                }
+            }
         }
     }
 
     private fun setUpSubscribeToCalendarFeed() {
         val calendarFeed = ApiPrefs.user?.calendar?.ics
         if (!calendarFeed.isNullOrEmpty()) {
-            subscribeToCalendar.setVisible()
-            subscribeToCalendar.onClick {
-
-                AlertDialog.Builder(requireContext())
-                    .setMessage(R.string.subscribeToCalendarMessage)
-                    .setPositiveButton(R.string.subscribeButton, { dialog, _ ->
-                        dialog.dismiss()
-                        openCalendarLink(calendarFeed)
-                    })
-                    .setNegativeButton(R.string.cancel, {dialog, _ -> dialog.dismiss()})
-                    .showThemed()
+            binding.subscribeToCalendar.apply {
+                setVisible()
+                onClick {
+                    AlertDialog.Builder(requireContext())
+                        .setMessage(R.string.subscribeToCalendarMessage)
+                        .setPositiveButton(R.string.subscribeButton) { dialog, _ ->
+                            dialog.dismiss()
+                            openCalendarLink(calendarFeed)
+                        }
+                        .setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
+                        .showThemed()
+                }
             }
         }
     }

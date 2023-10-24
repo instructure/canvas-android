@@ -20,6 +20,9 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -29,8 +32,13 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.seedAssignmentSubmission
+import com.instructure.teacher.ui.utils.seedAssignments
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -74,14 +82,7 @@ class PeopleE2ETest: TeacherTest() {
         )
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${assignments[0].name} assignment.")
-        SubmissionsApi.gradeSubmission(
-                teacherToken = teacher.token,
-                courseId = course.id,
-                assignmentId = assignments[0].id,
-                studentId = gradedStudent.id,
-                postedGrade = "10",
-                excused = false
-        )
+        gradeSubmission(teacher, course, assignments, gradedStudent)
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -91,18 +92,21 @@ class PeopleE2ETest: TeacherTest() {
         courseBrowserPage.openPeopleTab()
 
         Log.d(STEP_TAG,"Click on '${teacher.name}', the teacher person and assert the that the teacher course info and the corresponding section name is displayed on Context Page.")
+        peopleListPage.assertPersonRole(teacher.name, PeopleListPage.UserRole.TEACHER)
         peopleListPage.clickPerson(teacher)
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
 
         Log.d(STEP_TAG,"Navigate back and click on '${parent.name}', the parent (observer) person and assert the that the observer course info and the corresponding section name are displayed on Context Page.")
         Espresso.pressBack()
+        peopleListPage.assertPersonRole(parent.name, PeopleListPage.UserRole.OBSERVER)
         peopleListPage.clickPerson(parent)
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.OBSERVER)
 
         Log.d(STEP_TAG,"Navigate back and click on ${notGradedStudent.name} student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
         Espresso.pressBack()
+        peopleListPage.assertPersonRole(notGradedStudent.name, PeopleListPage.UserRole.STUDENT)
         peopleListPage.clickPerson(notGradedStudent)
         studentContextPage.assertDisplaysStudentInfo(notGradedStudent)
         studentContextPage.assertSectionNameView(PersonContextPage.UserRole.STUDENT)
@@ -114,6 +118,7 @@ class PeopleE2ETest: TeacherTest() {
                 "Assert that '${gradedStudent.name}' graded student's info," +
                 "and the '${course.name}' course's info are displayed properly on the Context Page.")
         Espresso.pressBack()
+        peopleListPage.assertPersonRole(gradedStudent.name, PeopleListPage.UserRole.STUDENT)
         peopleListPage.clickPerson(gradedStudent)
         studentContextPage.assertDisplaysStudentInfo(gradedStudent)
         studentContextPage.assertDisplaysCourseInfo(course)
@@ -122,30 +127,28 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.assertStudentSubmission("1")
         studentContextPage.assertAssignmentListed(assignments[0].name)
 
+        Log.d(STEP_TAG, "Click on the '+' (aka. Compose new message) button.")
         studentContextPage.clickOnNewMessageButton()
 
         val subject = "Test Subject"
-        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject.")
-        addMessagePage.addSubject(subject)
-
-        Log.d(STEP_TAG,"Add some message text and click on 'Send' (aka. 'Arrow') button.")
-        addMessagePage.addMessage("This a test message from student context page.")
+        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject. Add some message text and click on 'Send' (aka. 'Arrow') button.")
+        addMessagePage.composeMessageWithSubject(subject, "This a test message from student context page.")
         addMessagePage.clickSendButton()
 
         Log.d(STEP_TAG, "Navigate back to People List Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${gradedStudent.name}', the graded student's name to the search input field.")
-        peopleListPage.clickSearchButton()
-        peopleListPage.typeSearchInput(gradedStudent.name)
+        peopleListPage.searchable.clickOnSearchButton()
+        peopleListPage.searchable.typeToSearchBar(gradedStudent.name)
 
         Log.d(STEP_TAG, "Assert that only 1 person matches for the search text, and it is '${gradedStudent.name}', the graded student.")
         peopleListPage.assertSearchResultCount(1)
         peopleListPage.assertPersonListed(gradedStudent)
 
-        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that the empty view is displayed.")
-        peopleListPage.clickResetSearchText()
-        peopleListPage.assertEmptyViewIsDisplayed()
+        Log.d(STEP_TAG, "Click on 'Reset' search (X) icon and assert that all the poeple are displayed (5).")
+        peopleListPage.searchable.clickOnClearSearchButton()
+        peopleListPage.assertSearchResultCount(5)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Click on the Inbox bottom menu. Assert that the 'All' section is empty.")
         ViewUtils.pressBackButton(4)
@@ -153,9 +156,25 @@ class PeopleE2ETest: TeacherTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
-        inboxPage.filterInbox("Sent")
+        inboxPage.filterMessageScope("Sent")
 
         Log.d(STEP_TAG,"Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()
      }
+
+    private fun gradeSubmission(
+        teacher: CanvasUserApiModel,
+        course: CourseApiModel,
+        assignments: List<AssignmentApiModel>,
+        gradedStudent: CanvasUserApiModel
+    ) {
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = assignments[0].id,
+            studentId = gradedStudent.id,
+            postedGrade = "10",
+            excused = false
+        )
+    }
 }

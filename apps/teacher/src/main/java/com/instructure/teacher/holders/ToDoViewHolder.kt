@@ -18,7 +18,7 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
-import android.view.View
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -30,30 +30,26 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterTodoBinding
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.utils.getAssignmentIcon
-import kotlinx.android.synthetic.main.adapter_todo.view.*
 import java.util.*
 
-class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_todo
-    }
-
+class ToDoViewHolder(private val binding: AdapterTodoBinding) : RecyclerView.ViewHolder(binding.root) {
     init {
-        itemView.ungradedCount.setTextColor(ThemePrefs.brandColor)
-        DrawableCompat.setTint(itemView.ungradedCount.background, ThemePrefs.brandColor)
+        val ungradedCount = itemView.findViewById<TextView>(R.id.ungradedCount)
+        ungradedCount.setTextColor(ThemePrefs.brandColor)
+        DrawableCompat.setTint(ungradedCount.background, ThemePrefs.brandColor)
     }
 
-    fun bind(context: Context, toDo: ToDo, callback: AdapterToFragmentCallback<ToDo>, position: Int) = with(itemView){
+    fun bind(context: Context, toDo: ToDo, callback: AdapterToFragmentCallback<ToDo>, position: Int) = with(binding) {
         toDoLayout.setOnClickListener { callback.onRowClicked(toDo, position) }
         toDoTitle.text = toDo.title
 
-        var textAndIconColor =  ThemePrefs.brandColor
+        var textAndIconColor = ThemePrefs.brandColor
 
         toDo.canvasContext?.let {
-            textAndIconColor =  toDo.canvasContext.textAndIconColor
+            textAndIconColor = toDo.canvasContext.textAndIconColor
             toDoCourse.setVisible()
             toDoCourse.setTextColor(textAndIconColor)
             toDoCourse.text = toDo.canvasContext!!.name
@@ -66,16 +62,19 @@ class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // String to track if the assignment is closed. If it isn't, we'll prepend the due date string with an empty string and it will look the same
         // Otherwise, we want it to say "Closed" and the due date with a dot as a separator
         var closedString = ""
-        if(toDo.assignment!!.lockDate?.before(Date()) == true) {
+        if (toDo.assignment!!.lockDate?.before(Date()) == true) {
             closedString = context.getString(R.string.cmp_closed) + context.getString(R.string.utils_dotWithSpaces)
         }
 
-        if(toDo.assignment!!.allDates.size > 1) {
+        if (toDo.assignment!!.allDates.size > 1) {
             // We have multiple due dates
             dueDate.text = closedString + context.getString(R.string.multiple_due_dates)
         } else {
             if (toDo.assignment!!.dueAt != null) {
-                dueDate.text = closedString + context.getString(R.string.due, DateHelper.getMonthDayAtTime(context, toDo.assignment!!.dueDate, context.getString(R.string.at)))
+                dueDate.text = closedString + context.getString(
+                    R.string.due,
+                    DateHelper.getMonthDayAtTime(context, toDo.assignment!!.dueDate, context.getString(R.string.at))
+                )
             } else {
                 dueDate.text = closedString + context.getString(R.string.no_due_date)
             }
@@ -85,9 +84,10 @@ class ToDoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             ungradedCount.setGone().text = ""
         } else {
             ungradedCount.setVisible().text = context.resources.getQuantityString(
-                    R.plurals.needsGradingCount,
-                    toDo.assignment?.needsGradingCount?.toInt() ?: -1,
-                    NumberHelper.formatInt(toDo.assignment?.needsGradingCount))
+                R.plurals.needsGradingCount,
+                toDo.assignment?.needsGradingCount?.toInt() ?: -1,
+                NumberHelper.formatInt(toDo.assignment?.needsGradingCount)
+            )
             ungradedCount.isAllCaps = true
         }
 

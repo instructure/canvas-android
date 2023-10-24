@@ -37,7 +37,6 @@ allprojects {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -132,6 +131,7 @@ dependencies {
         exclude module: 'support-annotations'
         exclude module: 'support-core-utils'
         exclude module: 'support-compat'
+        exclude module: "protobuf-lite"
     }
     implementation("androidx.test.espresso:espresso-idling-resource:$espressoVersion")
     api("androidx.test.espresso:espresso-intents:$espressoVersion") {

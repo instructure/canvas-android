@@ -24,8 +24,8 @@ import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
+import com.instructure.student.databinding.ViewholderPageBinding
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import kotlinx.android.synthetic.main.viewholder_page.view.*
 
 class PageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -34,7 +34,7 @@ class PageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         page: Page,
         iconColor: Int,
         adapterToFragmentCallback: AdapterToFragmentCallback<Page>
-    ) = with(itemView) {
+    ) = with(ViewholderPageBinding.bind(itemView)) {
         title.text = page.title
 
         if (page.frontPage) {
@@ -48,7 +48,7 @@ class PageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             DateHelper.getFormattedDate(context, page.updatedAt)
         )
 
-        setOnClickListener { adapterToFragmentCallback.onRowClicked(page, adapterPosition, true) }
+        root.setOnClickListener { adapterToFragmentCallback.onRowClicked(page, adapterPosition, true) }
     }
 
     companion object {

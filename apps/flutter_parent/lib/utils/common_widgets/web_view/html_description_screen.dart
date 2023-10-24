@@ -18,16 +18,17 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 
 class HtmlDescriptionScreen extends StatelessWidget {
   /// Html passed to a full screen web view
-  final String html;
+  final String? html;
+  final String appBarTitle;
 
-  const HtmlDescriptionScreen(this.html, {Key key}) : super(key: key);
+  const HtmlDescriptionScreen(this.html, this.appBarTitle, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: ParentTheme.of(context).appBarDivider(),
-        title: Text(L10n(context).descriptionTitle),
+        bottom: ParentTheme.of(context)?.appBarDivider(),
+        title: Text(appBarTitle),
       ),
       body: CanvasWebView(content: html, horizontalPadding: 16),
     );

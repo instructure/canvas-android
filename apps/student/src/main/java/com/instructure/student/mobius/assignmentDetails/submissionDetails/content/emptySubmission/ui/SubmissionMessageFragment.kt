@@ -22,11 +22,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_submission_message.*
+import com.instructure.student.databinding.FragmentSubmissionMessageBinding
 
 class SubmissionMessageFragment : Fragment() {
     private var titleRes by IntArg()
@@ -35,18 +36,20 @@ class SubmissionMessageFragment : Fragment() {
     private var iconRes by IntArg()
     private var iconUri: Uri? by NullableParcelableArg()
 
+    private val binding by viewBinding(FragmentSubmissionMessageBinding::bind)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_submission_message, container, false)
 
     override fun onResume() {
         super.onResume()
-        if (titleRes != -1) titleTextView.setVisible().text = requireContext().getString(titleRes)
-        if (subtitleRes != -1) subtitleTextView.setVisible().text = requireContext().getString(subtitleRes)
-        if (messageRes != -1) messageTextView.setVisible().text = requireContext().getString(messageRes)
+        if (titleRes != -1) binding.titleTextView.setVisible().text = requireContext().getString(titleRes)
+        if (subtitleRes != -1) binding.subtitleTextView.setVisible().text = requireContext().getString(subtitleRes)
+        if (messageRes != -1) binding.messageTextView.setVisible().text = requireContext().getString(messageRes)
         if (iconUri != null) {
-            Glide.with(requireContext()).load(iconUri).into(iconImageView.setVisible())
+            Glide.with(requireContext()).load(iconUri).into(binding.iconImageView.setVisible())
         } else if (iconRes > 0) {
-            iconImageView.setVisible().setImageResource(iconRes)
+            binding.iconImageView.setVisible().setImageResource(iconRes)
         }
     }
 

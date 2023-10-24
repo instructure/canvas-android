@@ -21,6 +21,11 @@
         android:id="@+id/menu_dashboard_cards"
         android:icon="@drawable/ic_list_dashboard"
         android:title="@string/dashboardSwitchToListView"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_dashboard_offline"
+        android:title="@string/course_menu_manage_offline_content"
+        app:showAsAction="never" />
 
 </menu>

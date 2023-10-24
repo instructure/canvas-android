@@ -27,16 +27,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentEditDashboardBinding
 import com.instructure.pandautils.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
 import javax.inject.Inject
 
+@PageView(url = "courses")
 @ScreenView(SCREEN_VIEW_EDIT_DASHBOARD)
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
@@ -46,9 +48,11 @@ class EditDashboardFragment : Fragment() {
     @Inject
     lateinit var editDashboardRouter: EditDashboardRouter
 
+    private lateinit var binding: FragmentEditDashboardBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding = FragmentEditDashboardBinding.inflate(inflater, container, false)
+        binding = FragmentEditDashboardBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -72,12 +76,12 @@ class EditDashboardFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        toolbar.setTitle(R.string.editDashboard)
-        toolbar.setupAsBackButton(this)
-        toolbar.addSearch {
+        binding.toolbar.setTitle(R.string.allCoursesScreenHeader)
+        binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.addSearch {
             viewModel.queryItems(it)
         }
-        ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     override fun onStop() {
@@ -99,6 +103,7 @@ class EditDashboardFragment : Fragment() {
                 Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG).show()
                 view?.announceForAccessibility(requireContext().getString(action.res))
             }
+            else -> {}
         }
     }
 

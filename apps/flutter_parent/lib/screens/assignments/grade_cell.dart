@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/grade_cell_data.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -23,20 +24,21 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 class GradeCell extends StatelessWidget {
   final GradeCellData data;
 
-  const GradeCell(this.data, {Key key}) : super(key: key);
+  const GradeCell(this.data, {super.key});
 
   GradeCell.forSubmission(
     BuildContext context,
-    Assignment assignment,
-    Submission submission, {
-    Key key,
+    Course? course,
+    Assignment? assignment,
+    Submission? submission, {
+    super.key,
   })  : data = GradeCellData.forSubmission(
+          course,
           assignment,
           submission,
           Theme.of(context),
           L10n(context),
-        ),
-        super(key: key);
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,7 @@ class GradeCell extends StatelessWidget {
         children: <Widget>[
           Divider(),
           SizedBox(height: 8),
-          Text(L10n(context).assignmentGradeLabel, style: Theme.of(context).textTheme.overline),
+          Text(L10n(context).assignmentGradeLabel, style: Theme.of(context).textTheme.labelSmall),
           SizedBox(height: 8),
           data.state == GradeCellState.submitted ? _submitted(context, data) : _graded(context, data),
           SizedBox(height: 8),
@@ -65,7 +67,7 @@ class GradeCell extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Text(L10n(context).submissionStatusSuccessTitle,
-              style: Theme.of(context).textTheme.headline5.copyWith(color: ParentTheme.of(context).successColor),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: ParentTheme.of(context)?.successColor),
               key: Key("grade-cell-submit-status")),
           SizedBox(height: 6),
           Text(data.submissionText, textAlign: TextAlign.center),
@@ -75,16 +77,18 @@ class GradeCell extends StatelessWidget {
   }
 
   Widget _graded(BuildContext context, GradeCellData data) {
+    final bool _isGradedRestrictQuantitativeData = data.state == GradeCellState.gradedRestrictQuantitativeData;
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       key: Key('grade-cell-graded-container'),
       children: <Widget>[
         Stack(
           alignment: Alignment.center,
           children: <Widget>[
             CircularPercentIndicator(
-              radius: 128,
+              radius: 64,
               progressColor: data.accentColor,
-              backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+              backgroundColor: ParentTheme.of(context)!.nearSurfaceColor,
               percent: data.graphPercent,
               lineWidth: 3,
               animation: true,
@@ -129,8 +133,8 @@ class GradeCell extends StatelessWidget {
               ),
           ],
         ),
-        SizedBox(width: 16),
-        Expanded(
+        if (!_isGradedRestrictQuantitativeData) SizedBox(width: 16),
+        if (!_isGradedRestrictQuantitativeData) Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +143,7 @@ class GradeCell extends StatelessWidget {
                 Text(
                   data.grade,
                   key: Key('grade-cell-grade'),
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineMedium,
                   semanticsLabel: data.gradeContentDescription,
                 ),
               if (data.outOf.isNotEmpty) Text(data.outOf, key: Key('grade-cell-out-of')),
@@ -155,7 +159,7 @@ class GradeCell extends StatelessWidget {
                   child: Text(
                     data.finalGrade,
                     key: Key('grade-cell-final-grade'),
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
             ],

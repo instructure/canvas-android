@@ -12,11 +12,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
-import 'package:flutter_parent/models/section.dart';
-import 'package:flutter_parent/models/term.dart';
+import 'package:flutter_parent/models/grading_scheme_item.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -39,7 +39,7 @@ void main() {
       final course = _course.rebuild((b) => b..enrollments = ListBuilder([_enrollment]));
 
       final grade = course.getCourseGrade(_studentId);
-      expect(grade, CourseGrade(course, course.enrollments.first, forceAllPeriods: false));
+      expect(grade, CourseGrade(course, course.enrollments!.first, forceAllPeriods: false));
     });
 
     test('returns a course grade with the course and student gradinig period enrollment', () {
@@ -109,6 +109,46 @@ void main() {
       final isValid = course.isValidForCurrentStudent(_studentId);
 
       expect(isValid, isFalse);
+    });
+  });
+
+  group('gradingScheme', () {
+    final gradingSchemeBuilder = ListBuilder<JsonObject>()
+      ..add(JsonObject(["A", 0.9]))
+      ..add(JsonObject(["F", 0.0]));
+
+    final course = _course.rebuild((b) => b..gradingScheme = gradingSchemeBuilder);
+
+    test('returns "F" for 70 percent', () {
+      expect(course.convertScoreToLetterGrade(70, 100), 'F');
+    });
+
+    test('returns "A" for 90 percent', () {
+      expect(course.convertScoreToLetterGrade(90, 100), 'A');
+    });
+
+    test('returns empty if max score is 0', () {
+      expect(course.convertScoreToLetterGrade(10, 0), '');
+    });
+
+    test('returns empty if grading scheme is null or empty', () {
+      final course = _course.rebuild((b) => b..gradingScheme = null);
+      expect(course.convertScoreToLetterGrade(10, 0), '');
+    });
+
+    test('grading scheme mapping filters out incorrect items', () {
+      gradingSchemeBuilder.add(JsonObject(""));
+      gradingSchemeBuilder.add(JsonObject([1, 0.9]));
+      gradingSchemeBuilder.add(JsonObject(["C", "3"]));
+      final course = _course.rebuild((b) => b..gradingScheme = gradingSchemeBuilder);
+      expect(course.gradingSchemeItems, [
+        GradingSchemeItem((b) => b
+          ..grade = "A"
+          ..value = 0.9),
+        GradingSchemeItem((b) => b
+          ..grade = "F"
+          ..value = 0.0),
+      ]);
     });
   });
 }

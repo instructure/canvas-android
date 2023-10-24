@@ -25,14 +25,17 @@ import android.webkit.WebView
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.databinding.FragmentSubmissionRubricDescriptionBinding
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.fragment_submission_rubric_description.*
 
 class SubmissionRubricDescriptionFragment : DialogFragment() {
+
+    private val binding by viewBinding(FragmentSubmissionRubricDescriptionBinding::bind)
 
     var title by StringArg(key = Const.TITLE)
     var description by StringArg(key = Const.BODY)
@@ -46,49 +49,51 @@ class SubmissionRubricDescriptionFragment : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        toolbar.title = title
-        toolbar.setupAsBackButton(this)
-        ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+        with (binding) {
+            toolbar.title = title
+            toolbar.setupAsBackButton(this@SubmissionRubricDescriptionFragment)
+            ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
-        // Show progress bar while loading description
-        progressBar.setVisible()
-        progressBar.announceForAccessibility(getString(R.string.loading))
-        webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
-                if (newProgress >= 100) {
-                    progressBar?.setGone()
-                    webView?.setVisible()
+            // Show progress bar while loading description
+            progressBar.setVisible()
+            progressBar.announceForAccessibility(getString(R.string.loading))
+            webView.webChromeClient = object : WebChromeClient() {
+                override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                    super.onProgressChanged(view, newProgress)
+                    if (newProgress >= 100) {
+                        progressBar?.setGone()
+                        webView?.setVisible()
+                    }
                 }
             }
-        }
 
-        webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String, url: String, filename: String) {}
-            override fun onPageStartedCallback(webView: WebView, url: String) {}
-            override fun onPageFinishedCallback(webView: WebView, url: String) {}
-            override fun canRouteInternallyDelegate(url: String): Boolean {
-                return RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+            webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+                override fun openMediaFromWebView(mime: String, url: String, filename: String) {}
+                override fun onPageStartedCallback(webView: WebView, url: String) {}
+                override fun onPageFinishedCallback(webView: WebView, url: String) {}
+                override fun canRouteInternallyDelegate(url: String): Boolean {
+                    return RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
+                }
+
+                override fun routeInternallyCallback(url: String) {
+                    RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
+                }
             }
 
-            override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
+            webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+                override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(
+                    InternalWebViewActivity.createIntent(requireActivity(), url, "", true)
+                )
+
+                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
             }
+
+            // make the WebView background transparent
+            webView.setBackgroundResource(android.R.color.transparent)
+
+            // Load description
+            webView.loadHtml(description, title)
         }
-
-        webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-            override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(
-                InternalWebViewActivity.createIntent(requireActivity(), url, "", true)
-            )
-
-            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-        }
-
-        // make the WebView background transparent
-        webView.setBackgroundResource(android.R.color.transparent)
-
-        // Load description
-        webView.loadHtml(description, title)
     }
 
     companion object {

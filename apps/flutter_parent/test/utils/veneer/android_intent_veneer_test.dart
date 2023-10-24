@@ -32,7 +32,7 @@ void main() {
     final emailBody = 'multi\r\nline\r\nbody\r\n';
     final completer = Completer();
 
-    await MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
+    MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
       expect(call.method, 'startActivity');
       expect(call.arguments['action'], 'android.intent.action.SENDTO');
       expect(call.arguments['data'], 'mailto:');
@@ -55,7 +55,7 @@ void main() {
     var telUri = 'tel:+123';
     final completer = Completer();
 
-    await MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
+    MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
       expect(call.method, 'startActivity');
       expect(call.arguments['action'], 'android.intent.action.DIAL');
       expect(call.arguments['data'], Uri.parse(telUri).toString());
@@ -73,7 +73,7 @@ void main() {
     var mailto = 'mailto:pandas@instructure.com';
     final completer = Completer();
 
-    await MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
+    MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
       expect(call.method, 'startActivity');
       expect(call.arguments['action'], 'android.intent.action.SENDTO');
       expect(call.arguments['data'], Uri.parse(mailto).toString());

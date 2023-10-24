@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -30,11 +29,13 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.GradeableStudentSubmissionAdapter
+import com.instructure.teacher.databinding.FragmentAssignmentSubmissionListBinding
 import com.instructure.teacher.dialog.FilterSubmissionByPointsDialog
 import com.instructure.teacher.dialog.PeopleListFilterDialog
 import com.instructure.teacher.dialog.RadioButtonDialog
@@ -50,7 +51,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
-import kotlinx.android.synthetic.main.fragment_assignment_submission_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -62,6 +62,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         AssignmentSubmissionListView,
         GradeableStudentSubmissionViewHolder,
         GradeableStudentSubmissionAdapter>(), AssignmentSubmissionListView {
+
+    private val binding by viewBinding(FragmentAssignmentSubmissionListBinding::bind)
 
     private var mAssignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var mCourse: Course by ParcelableArg(Course())
@@ -84,10 +86,10 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     }
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_submission_list
-    override val recyclerView: RecyclerView get() = submissionsRecyclerView
+    override val recyclerView: RecyclerView get() = binding.submissionsRecyclerView
     override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(mAssignment, mFilter)
     override fun onCreateView(view: View) = Unit
-    override fun onPresenterPrepared(presenter: AssignmentSubmissionListPresenter) {
+    override fun onPresenterPrepared(presenter: AssignmentSubmissionListPresenter) = with(binding) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.submissionsRecyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         mRecyclerView.setHeaderVisibilityListener(divider)
@@ -113,7 +115,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         mNeedToForceNetwork = false
 
         updateFilterTitle()
-        clearFilterTextView.setTextColor(ThemePrefs.textButtonColor)
+        binding.clearFilterTextView.setTextColor(ThemePrefs.textButtonColor)
     }
 
     override fun onStart() {
@@ -132,12 +134,12 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
                 val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
                 val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx, mAssignment.anonymousGrading)
-                RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
+                RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
         }
     }
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted() = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.visibility  = View.VISIBLE
@@ -145,7 +147,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         emptyPandaView.setLoading()
     }
 
-    override fun onRefreshFinished() {
+    override fun onRefreshFinished() = with(binding) {
         swipeRefreshLayout.isRefreshing = false
 
         // Theme the toolbar again since visibilities may have changed
@@ -154,7 +156,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         updateStatuses() // Muted is now also set by not being in the new gradebook
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         // We don't want to leave the fab hidden if the list is empty
         if(presenter.isEmpty) {
             addMessage.show()
@@ -162,10 +164,10 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         //setup toolbar icon to access this menu
         assignmentSubmissionListToolbar.setupMenu(R.menu.menu_filter_submissions, menuItemCallback)
-        assignmentSubmissionListToolbar.setupBackButtonAsBackPressedOnly(this)
+        assignmentSubmissionListToolbar.setupBackButtonAsBackPressedOnly(this@AssignmentSubmissionListFragment)
 
         if(isTablet) {
             assignmentSubmissionListToolbar.title = mAssignment.name
@@ -178,7 +180,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         ViewStyler.themeFAB(addMessage)
     }
 
-    private fun setupListeners() {
+    private fun setupListeners() = with(binding) {
         clearFilterTextView.setOnClickListener {
             presenter.setFilter(SubmissionListFilter.ALL)
             presenter.clearFilterList()
@@ -188,16 +190,17 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
         addMessage.setOnClickListener {
             val args = AddMessageFragment.createBundle(presenter.getRecipients(), filterTitle.text.toString() + " " + getString(R.string.on) + " " + mAssignment.name, mCourse.contextId, false)
-            RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+            RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
         }
     }
+
     override fun onResume() {
         super.onResume()
         setupToolbar()
         setupListeners()
     }
 
-    private fun updateFilterTitle() {
+    private fun updateFilterTitle() = with(binding) {
         clearFilterTextView.setVisible()
         when (presenter.getFilter()) {
             SubmissionListFilter.ALL -> {
@@ -225,7 +228,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         filterTitle.text = filterTitle.text.toString().plus(presenter.getSectionFilterText())
     }
 
-    private fun setFilter(filterIndex: Int = -1, canvasContexts: ArrayList<CanvasContext>? = null) {
+    private fun setFilter(filterIndex: Int = -1, canvasContexts: ArrayList<CanvasContext>? = null) = with(binding) {
         canvasContexts?.let {
             mCanvasContextsSelected = ArrayList()
             mCanvasContextsSelected.addAll(canvasContexts)
@@ -288,14 +291,14 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 }.show(requireActivity().supportFragmentManager, PeopleListFilterDialog::class.java.simpleName)
             }
             R.id.menuPostPolicies -> {
-                RouteMatcher.route(requireContext(), PostPolicyFragment.makeRoute(mCourse, mAssignment))
+                RouteMatcher.route(requireActivity(), PostPolicyFragment.makeRoute(mCourse, mAssignment))
             }
         }
     }
 
     private fun updateStatuses() {
         if (presenter.mAssignment.anonymousGrading)
-            anonGradingStatusView.setVisible().text = getString(R.string.anonymousGradingLabel)
+            binding.anonGradingStatusView.setVisible().text = getString(R.string.anonymousGradingLabel)
     }
 
     @Suppress("unused")

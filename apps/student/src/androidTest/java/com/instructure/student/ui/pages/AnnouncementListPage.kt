@@ -16,14 +16,17 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.matchers.WaitForViewMatcher
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 
-class AnnouncementListPage : BasePage(R.id.discussionListPage) {
+class AnnouncementListPage(searchable: Searchable) : DiscussionListPage(searchable) {
 
     fun assertToolbarTitle() {
         WaitForViewMatcher.waitForView(withParent(R.id.discussionListToolbar) + withText(R.string.announcements)).assertDisplayed()

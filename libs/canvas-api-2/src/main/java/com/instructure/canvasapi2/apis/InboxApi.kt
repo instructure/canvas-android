@@ -21,7 +21,9 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -30,10 +32,8 @@ import java.io.IOException
 
 object InboxApi {
 
-    const val CONVERSATION_MARK_UNREAD = "mark_as_unread"
-
     enum class Scope {
-        ALL, UNREAD, ARCHIVED, STARRED, SENT
+        INBOX, UNREAD, ARCHIVED, STARRED, SENT
     }
 
     fun conversationScopeToString(scope: Scope): String = when (scope) {
@@ -44,16 +44,25 @@ object InboxApi {
         else -> ""
     }
 
-    internal interface InboxInterface {
+    interface InboxInterface {
 
         @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
         fun getConversations(@Query("scope") scope: String): Call<List<Conversation>>
 
         @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
+        suspend fun getConversations(@Query("scope") scope: String, @Tag params: RestParams): DataResult<List<Conversation>>
+
+        @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
         fun getConversationsFiltered(@Query("scope") scope: String, @Query("filter") canvasContextFilter: String): Call<List<Conversation>>
+
+        @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
+        suspend fun getConversationsFiltered(@Query("scope") scope: String, @Query("filter") canvasContextFilter: String, @Tag params: RestParams): DataResult<List<Conversation>>
 
         @GET
         fun getNextPage(@Url nextURL: String): Call<List<Conversation>>
+
+        @GET
+        suspend fun getNextPage(@Url nextURL: String, @Tag params: RestParams): DataResult<List<Conversation>>
 
         @FormUrlEncoded
         @POST("conversations?group_conversation=true")
@@ -71,6 +80,9 @@ object InboxApi {
         @PUT("conversations/{conversationId}")
         fun updateConversation(@Path("conversationId") conversationId: Long, @Query("conversation[workflow_state]") workflowState: String, @Query("conversation[starred]") isStarred: Boolean?): Call<Conversation>
 
+        @PUT("conversations/{conversationId}")
+        suspend fun updateConversation(@Path("conversationId") conversationId: Long, @Query("conversation[workflow_state]") workflowState: String?, @Query("conversation[starred]") isStarred: Boolean?, @Tag params: RestParams): DataResult<Conversation>
+
         @DELETE("conversations/{conversationId}")
         fun deleteConversation(@Path("conversationId") conversationId: Long): Call<Conversation>
 
@@ -86,8 +98,11 @@ object InboxApi {
                        @Field("attachment_ids[]") attachmentIds: LongArray,
                        @Field("context_code") contextCode: String?): Call<Conversation>
 
+        @PUT("conversations/{conversationId}?conversation[workflow_state]=unread")
+        fun markConversationAsUnread(@Path("conversationId") conversationId: Long): Call<Void>
+
         @PUT("conversations")
-        fun markConversationAsUnread(@Query("conversation_ids[]") conversationId: Long, @Query("event") conversationEvent: String): Call<Void>
+        suspend fun batchUpdateConversations(@Query("conversation_ids[]") conversationIds: List<Long>, @Query("event") conversationEvent: String): DataResult<Progress>
     }
 
     fun getConversation(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long, markAsRead: Boolean) {
@@ -140,8 +155,8 @@ object InboxApi {
         callback.addCall(adapter.build(InboxInterface::class.java, params).addMessage(conversationId, recipientIds, message, includedMessageIds, attachmentIds, contextCode)).enqueue(callback)
     }
 
-    fun markConversationAsUnread(adapter: RestBuilder, callback: StatusCallback<Void>, params: RestParams, conversationId: Long, conversationEvent: String) {
-        callback.addCall(adapter.build(InboxInterface::class.java, params).markConversationAsUnread(conversationId, conversationEvent)).enqueue(callback)
+    fun markConversationAsUnread(adapter: RestBuilder, callback: StatusCallback<Void>, params: RestParams, conversationId: Long) {
+        callback.addCall(adapter.build(InboxInterface::class.java, params).markConversationAsUnread(conversationId)).enqueue(callback)
     }
 
     @Throws(IOException::class)

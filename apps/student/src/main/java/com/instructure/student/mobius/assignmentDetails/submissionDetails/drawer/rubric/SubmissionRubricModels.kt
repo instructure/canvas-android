@@ -34,5 +34,6 @@ sealed class SubmissionRubricEffect {
 data class SubmissionRubricModel(
     val assignment: Assignment,
     val submission: Submission,
+    val restrictQuantitativeData: Boolean = false,
     val selectedRatingMap: Map<String, String> = emptyMap()
 )

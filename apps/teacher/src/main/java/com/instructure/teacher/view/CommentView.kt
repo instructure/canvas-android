@@ -19,6 +19,7 @@ package com.instructure.teacher.view
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.ColorInt
@@ -26,8 +27,7 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import kotlinx.android.synthetic.main.view_comment.view.*
-
+import com.instructure.teacher.databinding.ViewCommentBinding
 
 enum class CommentDirection { INCOMING, OUTGOING }
 
@@ -35,50 +35,52 @@ class CommentView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    private val binding: ViewCommentBinding
+
     /** The direction (incoming or outgoing) of this comment item */
     var direction = CommentDirection.INCOMING
         set(value) {
             field = value
             val deviceRtl = resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
             layoutDirection = if (deviceRtl xor (value == CommentDirection.OUTGOING)) View.LAYOUT_DIRECTION_RTL else View.LAYOUT_DIRECTION_LTR
-            extrasContainer.layoutDirection = resources.configuration.layoutDirection
+            binding.extrasContainer.layoutDirection = resources.configuration.layoutDirection
         }
 
-    fun setCommentBubbleColor(@ColorInt color: Int) = commentTextView.setBubbleColor(color)
+    fun setCommentBubbleColor(@ColorInt color: Int) = binding.commentTextView.setBubbleColor(color)
 
     fun setAvatar(avatarUrl: String?, userName: String) {
-        ProfileUtils.loadAvatarForUser(avatarView, userName, avatarUrl.orEmpty())
+        ProfileUtils.loadAvatarForUser(binding.avatarView, userName, avatarUrl.orEmpty())
     }
 
     var commentTextColor: Int
-        get() = commentTextView.textColors.defaultColor
-        set(value) = commentTextView.setTextColor(value)
+        get() = binding.commentTextView.textColors.defaultColor
+        set(value) = binding.commentTextView.setTextColor(value)
 
     var commentText: String?
-        get() = commentTextView.text.toString()
+        get() = binding.commentTextView.text.toString()
         set(value) {
-            if (value.isNullOrBlank()) commentTextView.setGone() else commentTextView.setVisible().text = value
+            if (value.isNullOrBlank()) binding.commentTextView.setGone() else binding.commentTextView.setVisible().text = value
         }
 
     var usernameText: CharSequence?
-        get() = userNameTextView.text
+        get() = binding.userNameTextView.text
         set(value) {
-            if (value == null) userNameTextView.setGone() else userNameTextView.setVisible().text = value
+            if (value == null) binding.userNameTextView.setGone() else binding.userNameTextView.setVisible().text = value
         }
 
     var dateText: String?
-        get() = commentDateTextView.text.toString()
+        get() = binding.commentDateTextView.text.toString()
         set(value) {
-            if (value == null) commentDateTextView.setGone() else commentDateTextView.setVisible().text = value
+            if (value == null) binding.commentDateTextView.setGone() else binding.commentDateTextView.setVisible().text = value
         }
 
     fun setExtraView(view: View?) {
-        extrasContainer.removeAllViews()
-        view?.let { extrasContainer.addView(it) }
+        binding.extrasContainer.removeAllViews()
+        view?.let { binding.extrasContainer.addView(it) }
     }
 
     init {
-        inflate(context, R.layout.view_comment, this)
+        binding = ViewCommentBinding.inflate(LayoutInflater.from(context), this, true)
         if (attrs != null) {
             val a = context.obtainStyledAttributes(attrs, R.styleable.CommentView)
             (0 until a.indexCount).map { a.getIndex(it) }.forEach {
@@ -86,7 +88,7 @@ class CommentView @JvmOverloads constructor(
                     R.styleable.CommentView_comment_bubbleColor -> setCommentBubbleColor(a.getColor(it, Color.GRAY))
                     R.styleable.CommentView_comment_direction -> direction = CommentDirection.values()[a.getInt(it, 0)]
                     R.styleable.CommentView_comment_textColor -> commentTextColor = a.getColor(it, Color.WHITE)
-                    R.styleable.CommentView_comment_previewAvatar -> if (isInEditMode) avatarView.setImageResource(a.getResourceId(it, 0))
+                    R.styleable.CommentView_comment_previewAvatar -> if (isInEditMode) binding.avatarView.setImageResource(a.getResourceId(it, 0))
                     R.styleable.CommentView_comment_previewName -> if (isInEditMode) usernameText = a.getString(it)
                     R.styleable.CommentView_comment_previewText -> if (isInEditMode) commentText = a.getString(it)
                 }

@@ -33,6 +33,7 @@ import 'package:mockito/mockito.dart';
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../../../utils/test_utils.dart';
 
 /**
@@ -48,17 +49,17 @@ void main() {
 
   _setupLocator(
       {int recipientCount = 4,
-        AttachmentHandler attachmentHandler,
-        int fetchFailCount: 0,
-        int sendFailCount: 0,
-        bool pronouns: false}) async {
+        AttachmentHandler? attachmentHandler,
+        int fetchFailCount = 0,
+        int sendFailCount = 0,
+        bool pronouns = false}) async {
     await setupTestLocator((locator) {
       locator.registerFactory<CreateConversationInteractor>(
               () => _MockInteractor(recipientCount, attachmentHandler, fetchFailCount, sendFailCount, pronouns));
     });
   }
 
-  Widget _testableWidget({Course course, String subject, String postscript, MockNavigatorObserver observer}) {
+  Widget _testableWidget({Course? course, String? subject, String? postscript, MockNavigatorObserver? observer}) {
     if (course == null) course = _mockCourse('0');
     return TestApp(
       CreateConversationScreen(course.id, studentId, subject ?? course.name, postscript),
@@ -241,7 +242,7 @@ void main() {
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.subjectKey);
-    expect(tester.widget<TextField>(matchedWidget).controller.text, course.name);
+    expect(tester.widget<TextField>(matchedWidget).controller!.text, course.name);
   });
 
   testWidgetsWithAccessibilityChecks('subject can be edited', (tester) async {
@@ -252,10 +253,10 @@ void main() {
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.subjectKey);
-    await tester.enterText(matchedWidget, course.courseCode);
+    await tester.enterText(matchedWidget, course.courseCode!);
     await tester.pump();
 
-    expect(tester.widget<TextField>(matchedWidget).controller.text, course.courseCode);
+    expect(tester.widget<TextField>(matchedWidget).controller!.text, course.courseCode);
   });
 
   testWidgetsWithAccessibilityChecks('prepopulates recipients', (tester) async {
@@ -363,7 +364,7 @@ void main() {
     final course = _mockCourse('0');
 
     // Set up attachment handler in 'uploading' stage
-    var handler = _MockedAttachmentHandler();
+    var handler = MockAttachmentHandler();
     when(handler.stage).thenReturn(AttachmentUploadStage.FINISHED);
     when(handler.attachment).thenReturn(Attachment((b) => b
       ..displayName = 'File'
@@ -535,7 +536,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('deleting an attachment calls AttachmentHandler.deleteAttachment', (tester) async {
     // Set up attachment handler in 'uploading' stage
-    var handler = _MockedAttachmentHandler();
+    var handler = MockAttachmentHandler();
     when(handler.stage).thenReturn(AttachmentUploadStage.FINISHED);
     when(handler.attachment).thenReturn(Attachment((b) => b
       ..displayName = 'File'
@@ -575,6 +576,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
+    await tester.pumpAndSettle();
 
     // Assert attachment widget is displayed
     var attachmentWidget = find.byType(AttachmentWidget);
@@ -582,6 +584,7 @@ void main() {
 
     await tester.longPress(attachmentWidget);
     await tester.pump(Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     expect(find.text('file.txt'), findsOneWidget);
   });
@@ -597,6 +600,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
+    await tester.pumpAndSettle();
 
     // Assert attachment widget is displayed
     var attachmentWidget = find.byType(AttachmentWidget);
@@ -604,6 +608,7 @@ void main() {
 
     await tester.longPress(attachmentWidget);
     await tester.pump(Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     expect(find.text('file.txt'), findsOneWidget);
   });
@@ -621,6 +626,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
+    await tester.pumpAndSettle();
 
     // Assert attachment widget is displayed
     var attachmentWidget = find.byType(AttachmentWidget);
@@ -628,6 +634,7 @@ void main() {
 
     await tester.longPress(attachmentWidget);
     await tester.pump(Duration(milliseconds: 100));
+    await tester.pumpAndSettle();
 
     expect(find.text('upload.txt'), findsNWidgets(2)); // 2 widgets: one is the tooltip and one is the regular label
   });
@@ -807,7 +814,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays enrollment types', (tester) async {
-    var interactor = _MockedInteractor();
+    var interactor = MockCreateConversationInteractor();
     await GetIt.instance.reset();
     GetIt.instance.registerFactory<CreateConversationInteractor>(() => interactor);
 
@@ -885,7 +892,7 @@ void main() {
         }));
     }
 
-    var interactor = _MockedInteractor();
+    var interactor = MockCreateConversationInteractor();
     final data = CreateConversationData(course, [_makeRecipient('123', 'TeacherEnrollment')]);
     when(interactor.loadData(any, any)).thenAnswer((_) async => data);
     await GetIt.instance.reset();
@@ -921,13 +928,11 @@ void main() {
   });
 }
 
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
 /// Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
-Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavigatorObserver observer}) async {
+Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavigatorObserver? observer}) async {
   final app = TestApp(
     Builder(
-      builder: (context) => FlatButton(
+      builder: (context) => TextButton(
         child: Semantics(label: 'test', child: const SizedBox()),
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget)),
       ),
@@ -937,19 +942,17 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
 
   await tester.pumpWidget(app);
   await tester.pumpAndSettle();
-  await tester.tap(find.byType(FlatButton));
+  await tester.tap(find.byType(TextButton));
   await tester.pumpAndSettle();
   if (observer != null) {
     verify(observer.didPush(any, any)).called(2); // Twice, first for the initial page, then for the navigator route
   }
 }
 
-class _MockedInteractor extends Mock implements CreateConversationInteractor {}
-
 class _MockInteractor extends CreateConversationInteractor {
   final _recipientCount;
 
-  final AttachmentHandler mockAttachmentHandler;
+  final AttachmentHandler? mockAttachmentHandler;
 
   int _fetchFailCount;
 
@@ -961,7 +964,7 @@ class _MockInteractor extends CreateConversationInteractor {
       [this._pronouns = false]);
 
   @override
-  Future<CreateConversationData> loadData(String courseId, String studentId) async {
+  Future<CreateConversationData> loadData(String courseId, String? studentId) async {
     if (_fetchFailCount > 0) {
       _fetchFailCount--;
       return Future.error('Error!');
@@ -1004,8 +1007,6 @@ class _MockInteractor extends CreateConversationInteractor {
     return Future.delayed(Duration(milliseconds: 200), () => Conversation((b) => b));
   }
 }
-
-class _MockedAttachmentHandler extends Mock implements AttachmentHandler {}
 
 class _MockAttachmentHandler extends AttachmentHandler {
   _MockAttachmentHandler() : super(null);

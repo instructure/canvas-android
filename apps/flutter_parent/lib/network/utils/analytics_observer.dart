@@ -21,18 +21,18 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class AnalyticsObserver extends NavigatorObserver {
   void _sendScreenView(PageRoute<dynamic> route) {
     if (route.settings.name == null) return; // No name means we can't match it, should be logged by QuickNav.push
-    final match = PandaRouter.router.match(route.settings.name);
-    final String screenName = match.route.route;
+    final match = PandaRouter.router.match(route.settings.name!);
+    final String? screenName = match?.route.route;
     if (screenName != null) {
       final message =
-          'Pushing widget: $screenName ${match.parameters.isNotEmpty ? 'with params: ${match.parameters}' : ''}';
+          'Pushing widget: $screenName ${match!.parameters.isNotEmpty ? 'with params: ${match.parameters}' : ''}';
       locator<Analytics>().logMessage(message); // Log message for crashlytics debugging
       locator<Analytics>().setCurrentScreen(screenName); // Log current screen for analytics
     }
   }
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
     if (route is PageRoute) {
       _sendScreenView(route);
@@ -40,7 +40,7 @@ class AnalyticsObserver extends NavigatorObserver {
   }
 
   @override
-  void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (newRoute is PageRoute) {
       _sendScreenView(newRoute);
@@ -48,7 +48,7 @@ class AnalyticsObserver extends NavigatorObserver {
   }
 
   @override
-  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
     if (previousRoute is PageRoute && route is PageRoute) {
       _sendScreenView(previousRoute);

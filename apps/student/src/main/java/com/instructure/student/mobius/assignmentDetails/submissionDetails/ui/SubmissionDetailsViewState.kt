@@ -37,7 +37,9 @@ sealed class SubmissionDetailsTabData(val tabName: String) {
     data class CommentData(
         val name: String,
         val assignment: Assignment,
-        val submission: Submission
+        val submission: Submission,
+        val attemptId: Long?,
+        val assignmentEnhancementsEnabled: Boolean
     ) : SubmissionDetailsTabData(name)
     data class FileData(
         val name: String,
@@ -48,6 +50,16 @@ sealed class SubmissionDetailsTabData(val tabName: String) {
     data class RubricData(
         val name: String,
         val assignment: Assignment,
-        val submission: Submission
+        val submission: Submission,
+        val restrictQuantitativeData: Boolean = false
     ) : SubmissionDetailsTabData(name)
 }
+
+data class SubmissionTypesVisibilities(
+    var textEntry: Boolean = false,
+    var urlEntry: Boolean = false,
+    var fileUpload: Boolean = false,
+    var mediaRecording: Boolean = false,
+    var studioUpload: Boolean = false,
+    var studentAnnotation: Boolean = false
+)

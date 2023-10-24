@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of serializers;
+part of 'serializers.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
@@ -49,6 +49,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(GradeSubmissionWrapper.serializer)
       ..add(GradingPeriod.serializer)
       ..add(GradingPeriodResponse.serializer)
+      ..add(GradingSchemeItem.serializer)
       ..add(GradingType.serializer)
       ..add(HelpLink.serializer)
       ..add(HelpLinks.serializer)
@@ -115,6 +116,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(Section)]),
           () => new ListBuilder<Section>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(JsonObject)]),
+          () => new ListBuilder<JsonObject>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GradingPeriod)]),
           () => new ListBuilder<GradingPeriod>())
       ..addBuilderFactory(
@@ -170,4 +174,4 @@ Serializers _$_serializers = (new Serializers().toBuilder()
           () => new MapBuilder<String, String>()))
     .build();
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

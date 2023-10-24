@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -33,21 +32,22 @@ import com.bumptech.glide.request.target.Target
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_IMAGE
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
-import com.instructure.pandautils.utils.FileFolderDeletedEvent
-import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.teacher.databinding.FragmentViewImageBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
-import kotlinx.android.synthetic.main.fragment_view_image.*
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_IMAGE)
 class ViewImageFragment : Fragment(), ShareableFile {
+
+    private val binding by viewBinding(FragmentViewImageBinding::bind)
 
     private var mUri by ParcelableArg(Uri.EMPTY)
     private var mContentType by StringArg()
@@ -67,10 +67,10 @@ class ViewImageFragment : Fragment(), ShareableFile {
         if (fileFolderDeletedEvent != null)
             requireActivity().finish()
 
-        if (mShowToolbar) setupToolbar() else toolbar.setGone()
+        if (mShowToolbar) setupToolbar() else binding.toolbar.setGone()
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
 
         mEditableFile?.let {
 
@@ -85,7 +85,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
                 when (menu.itemId) {
                     R.id.edit -> {
                         val args = EditFileFolderFragment.makeBundle(it.file, it.usageRights, it.licenses, it.canvasContext!!.id)
-                        RouteMatcher.route(requireContext(), Route(EditFileFolderFragment::class.java, it.canvasContext, args))
+                        RouteMatcher.route(requireActivity(), Route(EditFileFolderFragment::class.java, it.canvasContext, args))
                     }
                     R.id.copyLink -> {
                         if(it.file.url != null) {
@@ -109,7 +109,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
 
     private val requestListener = object : RequestListener<Bitmap> {
 
-        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<Bitmap>?, p3: Boolean): Boolean {
+        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<Bitmap>?, p3: Boolean): Boolean = with(binding) {
             photoView.setGone()
             progressBar.setGone()
             errorContainer.setVisible()
@@ -119,7 +119,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
         }
 
         override fun onResourceReady(bitmap: Bitmap?, p1: Any?, p2: Target<Bitmap>?, p3: DataSource?, p4: Boolean): Boolean {
-            progressBar.setGone()
+            binding.progressBar.setGone()
 
             // Try to set the background color using palette if we can
             bitmap?.let { colorBackground(it) }
@@ -129,12 +129,12 @@ class ViewImageFragment : Fragment(), ShareableFile {
 
     override fun onStart() {
         super.onStart()
-        progressBar.announceForAccessibility(getString(R.string.loading))
+        binding.progressBar.announceForAccessibility(getString(R.string.loading))
         Glide.with(this)
                 .asBitmap()
                 .load(mUri)
                 .listener(requestListener)
-                .into(photoView)
+                .into(binding.photoView)
     }
 
     override fun viewExternally() {
@@ -144,7 +144,9 @@ class ViewImageFragment : Fragment(), ShareableFile {
     fun colorBackground(bitmap: Bitmap) {
         // Generate palette asynchronously
         Palette.from(bitmap).generate { palette ->
-            palette?.let { viewImageRootView.setBackgroundColor(it.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest))) }
+            if (view != null && palette != null) {
+                binding.viewImageRootView.setBackgroundColor(palette.getDarkMutedColor(requireContext().getColor(R.color.backgroundLightest)))
+            }
         }
     }
 

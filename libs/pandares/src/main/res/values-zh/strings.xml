@@ -426,6 +426,7 @@
     <!-- Notifications -->
     <string name="deleted">已删除</string>
 
+    <string name="gradeUpdated">评分已更新</string>
     <string name="loadingCanvas">正在加载Canvas内容&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -1104,6 +1105,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s，%s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">您可以从此处打开提交详情</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">评分：%s</string>
     <plurals name="minutes">
         <item quantity="other">%s 分钟</item>
     </plurals>
@@ -1276,9 +1280,16 @@
     <string name="a11y_closeProgress">关闭进度对话框</string>
     <string name="fileUploadProgress">%1$s，共%2$s</string>
     <string name="fileUploadProgressSubtitle">上传到文件</string>
+    <string name="fileUploadFailedSubtitle">一份或多个文件上传失败。请检查网络连接，并再次尝试提交。</string>
     <string name="submissionProgressSubtitle">上传提交项到\"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">正在上传提交作业</string>
-    <string name="dashboardNotificationUploadingFilesTitle">上传文件</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提交成功</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">提交文件失败</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="other">正在上传文件</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">文件上传成功</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">文件上传失败</string>
     <string name="cancelSubmissionDialogTitle">取消提交</string>
     <string name="cancelSubmissionDialogMessage">此操作将取消并删除您的提交项。</string>
     <string name="fileUploadError">文件上传失败</string>
@@ -1286,7 +1297,9 @@
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">上传到“我的文件”</string>
     <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">提交作业</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">选择课程</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">选择课程，所选课程为：%s</string>
     <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">选择作业</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">选择作业，所选作业为：%s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s，%2$s</string>
     <string name="cancelFileUploadTitle">是否取消上传？</string>
     <string name="cancelFileUploadMessage">您的上传将取消。</string>
@@ -1301,4 +1314,63 @@
     <string name="createdByStudentView">由学生视图创建</string>
     <string name="discussionErrorToast">发生错误。该主题不再可用。</string>
     <string name="cameraPermissionPermanentlyDenied">相机权限被永久拒绝。请转到应用设置以授予权限。</string>
+    <string name="unpublish_assignment_error">如果有学生提交，则无法取消发布作业。</string>
+    <string name="subscribeToCalendar">订阅日历馈送</string>
+    <string name="subscribeToCalendarMessage">通过单击此对话框中的“订阅”按钮，您可以将 Canvas 日历同步到 Google 日历帐户。然后前往设备上的 Google 日历应用程序，并在新日历的设置中启用同步。</string>
+    <string name="subscribeButton">订阅</string>
+    <string name="switchToLightMode">切换到浅色模式</string>
+    <string name="switchToDarkMode">切换到深色模式</string>
+    <string name="acceptableUsePolicyDescription">您是新用户，或者“可接受的使用政策”自您上次接受后发生了更改。请同意“可接受的使用政策”后再继续。</string>
+    <string name="acceptableUsePolicyTitle">可接受的使用政策</string>
+    <string name="acceptableUsePolicyButton">可接受的使用政策</string>
+    <string name="acceptableUsePolicyAgree">我同意“可接受的使用政策”。</string>
+    <string name="acceptableUsePolicySubmit">提交</string>
+    <string name="acceptFail">无法提交同意条款。</string>
+    <string name="attempt">尝试次数 %d</string>
+    <string name="quizQuestions">问题：%d</string>
+    <string name="quizTimeLimit">次数限制：%s</string>
+    <string name="allowedAttempts">允许的尝试次数%s</string>
+    <string name="usedAttempts">已使用的尝试次数：%d</string>
+    <string name="generalUnexpectedError">发生意外错误。</string>
+
+    <string name="deleteSelected">删除</string>
+    <string name="archiveSelected">归档</string>
+    <string name="unarchiveSelected">取消存档</string>
+    <string name="markAsReadSelected">标记为已读</string>
+    <string name="markAsUnreadSelected">标记为未读</string>
+    <string name="starSelected">星形标记</string>
+    <string name="unstarSelected">取消标记</string>
+
+    <string name="inboxOperationFailed">无法执行操作</string>
+    <string name="inboxDeletedConfirmation">%s 已删除</string>
+    <string name="inboxArchivedConfirmation">%s 已归档</string>
+    <string name="inboxUnarchivedConfirmation">%s 取消归档</string>
+    <string name="inboxMarkAsReadConfirmation">%s 标记为已读</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s 标记为未读</string>
+    <string name="inboxStarredConfirmation">%s 星形标记</string>
+    <string name="inboxUnstarredConfirmation">%s 取消标记</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="other">将从所有设备的收件箱中删除这些会话。无法撤消此操作。</item>
+    </plurals>
+    <string name="failedToLoadNextPage">无法加载下一页。请检查您的网络连接。</string>
+    <string name="conversationsRefreshFailed">无法刷新会话。请检查您的网络连接。</string>
+    <string name="inboxScopeInbox">收件箱</string>
+    <string name="inboxContextSelectorTitle">选择课程或小组</string>
+    <string name="inboxClearFilter">清除</string>
+    <string name="a11y_courseFilterContentDescription">课程过滤器：%s</string>
+    <string name="a11y_inboxEntryLongClickDescription">选择</string>
+    <string name="a11y_itemSelectedSwipeForActions">已选择会话。选择模式已激活。导航操作。</string>
+    <string name="a11y_conversationSelected">已选择会话</string>
+    <string name="a11y_conversationDeselected">已取消选择会话</string>
+    <string name="a11y_exitSelectionMode">退出选择模式</string>
+    <string name="a11y_selectionModeDeactivated">选择模式已被禁用。</string>
+    <string name="a11y_avatarContentDescription">%s头像</string>
+    <string name="inboxUndo">后退</string>
+    <string name="aboutAppTitle">应用程序</string>
+    <string name="aboutDomainTitle">域</string>
+    <string name="aboutLoginTitle">登录 ID</string>
+    <string name="aboutEmailTitle">电子邮件</string>
+    <string name="aboutVersionTitle">版本</string>
+    <string name="assignmentRefreshError">重新加载此作业时出错。请检查连接，然后重试。</string>
 </resources>

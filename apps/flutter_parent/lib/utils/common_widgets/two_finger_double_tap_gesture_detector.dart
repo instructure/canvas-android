@@ -21,15 +21,16 @@ class TwoFingerDoubleTapGestureDetector extends StatelessWidget {
   final bool excludeFromSemantics;
 
   const TwoFingerDoubleTapGestureDetector({
-    Key key,
-    this.child,
-    this.onDoubleTap,
+    required this.child,
+    required this.onDoubleTap,
     this.excludeFromSemantics = false,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return RawGestureDetector(
+      behavior: HitTestBehavior.opaque,
       child: child,
       excludeFromSemantics: excludeFromSemantics,
       gestures: {
@@ -43,11 +44,11 @@ class TwoFingerDoubleTapGestureDetector extends StatelessWidget {
 }
 
 class TwoFingerDoubleTapGestureRecognizer extends MultiTapGestureRecognizer {
-  VoidCallback onDoubleTap;
+  VoidCallback? onDoubleTap;
 
   Map<int, DateTime> _downPointers = {};
   Map<int, DateTime> _upPointers = {};
-  DateTime _lastTwoFingerTap;
+  DateTime? _lastTwoFingerTap;
 
   TwoFingerDoubleTapGestureRecognizer() {
     onTapDown = _trackTapDown;
@@ -61,7 +62,7 @@ class TwoFingerDoubleTapGestureRecognizer extends MultiTapGestureRecognizer {
   }
 
   void _trackTapUp(int pointer, TapUpDetails details) {
-    DateTime downTime = _downPointers.remove(pointer);
+    DateTime? downTime = _downPointers.remove(pointer);
     if (downTime == null) return;
     DateTime upTime = DateTime.now();
     if (upTime.difference(downTime) < kLongPressTimeout) _upPointers[pointer] = upTime;
@@ -77,10 +78,10 @@ class TwoFingerDoubleTapGestureRecognizer extends MultiTapGestureRecognizer {
 
   void _trackTwoFingerTap() {
     DateTime tapTime = DateTime.now();
-    DateTime lastTap = _lastTwoFingerTap;
+    DateTime? lastTap = _lastTwoFingerTap;
     _lastTwoFingerTap = tapTime;
     if (lastTap != null && tapTime.difference(lastTap) < kDoubleTapTimeout) {
-      if (onDoubleTap != null) onDoubleTap();
+      if (onDoubleTap != null) onDoubleTap!();
       _reset();
     }
   }

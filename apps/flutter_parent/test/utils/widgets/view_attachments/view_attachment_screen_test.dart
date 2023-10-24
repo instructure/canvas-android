@@ -29,6 +29,7 @@ import 'package:mockito/mockito.dart';
 import '../../accessibility_utils.dart';
 import '../../network_image_response.dart';
 import '../../test_app.dart';
+import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   mockNetworkImageResponse();
@@ -36,17 +37,17 @@ void main() {
   AppLocalizations l10n = AppLocalizations();
 
   testWidgetsWithAccessibilityChecks('shows attachment display name', (tester) async {
-    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor()));
+    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor()));
     Attachment attachment = Attachment((a) => a..displayName = 'Display Name');
 
     await tester.pumpWidget(TestApp(ViewAttachmentScreen(attachment)));
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(AppBar), matching: find.text(attachment.displayName)), findsOneWidget);
+    expect(find.descendant(of: find.byType(AppBar), matching: find.text(attachment.displayName!)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows overflow menu', (tester) async {
-    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor()));
+    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor()));
     Attachment attachment = Attachment((a) => a..displayName = 'Display Name');
 
     await tester.pumpWidget(TestApp(ViewAttachmentScreen(attachment)));
@@ -63,7 +64,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('download button calls interactor', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockViewAttachmentInteractor();
     setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => interactor));
     Attachment attachment = Attachment((a) => a..displayName = 'Display Name');
 
@@ -79,7 +80,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('open externally button calls interactor', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockViewAttachmentInteractor();
     setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => interactor));
     Attachment attachment = Attachment((a) => a..displayName = 'Display Name');
 
@@ -97,7 +98,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('displays snackbar when open externally fails', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockViewAttachmentInteractor();
     setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => interactor));
     Attachment attachment = Attachment((a) => a..displayName = 'Display Name');
 
@@ -119,7 +120,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows attachment file name if display name is null', (tester) async {
-    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor()));
+    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor()));
     Attachment attachment = Attachment((a) => a
       ..displayName = null
       ..filename = 'File Name');
@@ -127,11 +128,11 @@ void main() {
     await tester.pumpWidget(TestApp(ViewAttachmentScreen(attachment)));
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(AppBar), matching: find.text(attachment.filename)), findsOneWidget);
+    expect(find.descendant(of: find.byType(AppBar), matching: find.text(attachment.filename!)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows correct widget for images', (tester) async {
-    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor()));
+    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor()));
     Attachment attachment = Attachment((a) => a
       ..displayName = 'Display Name'
       ..url = 'fake_url'
@@ -145,7 +146,7 @@ void main() {
   // TODO Fix test
   testWidgetsWithAccessibilityChecks('shows correct widget for videos', (tester) async {
     setupTestLocator((locator) {
-      locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor());
+      locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor());
       locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => AudioVideoAttachmentViewerInteractor());
     });
     Attachment attachment = Attachment((a) => a
@@ -161,7 +162,7 @@ void main() {
   // TODO Fix test
   testWidgetsWithAccessibilityChecks('shows correct widget for audio', (tester) async {
     setupTestLocator((locator) {
-      locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor());
+      locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor());
       locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => AudioVideoAttachmentViewerInteractor());
     });
     Attachment attachment = Attachment((a) => a
@@ -176,7 +177,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('shows correct widget for text', (tester) async {
     setupTestLocator((locator) {
-      locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor());
+      locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor());
       locator.registerFactory<AttachmentFetcherInteractor>(() => AttachmentFetcherInteractor());
     });
     Attachment attachment = Attachment((a) => a
@@ -190,7 +191,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows correct widget for unknown type', (tester) async {
-    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => _MockInteractor()));
+    setupTestLocator((locator) => locator.registerFactory<ViewAttachmentInteractor>(() => MockViewAttachmentInteractor()));
     Attachment attachment = Attachment((a) => a
       ..displayName = 'Display Name'
       ..url = 'fake_url'
@@ -201,5 +202,3 @@ void main() {
     expect(find.byType(UnknownAttachmentTypeViewer), findsOneWidget);
   });
 }
-
-class _MockInteractor extends Mock implements ViewAttachmentInteractor {}

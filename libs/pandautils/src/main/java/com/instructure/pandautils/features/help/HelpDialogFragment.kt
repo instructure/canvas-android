@@ -27,18 +27,17 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_HELP
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.HelpDialogBinding
-import com.instructure.pandautils.features.help.HelpDialogAction
-import com.instructure.pandautils.features.help.HelpDialogViewModel
-import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@PageView(url = "help")
 @ScreenView(SCREEN_VIEW_HELP)
 @AndroidEntryPoint
 class HelpDialogFragment : DialogFragment() {
@@ -47,6 +46,10 @@ class HelpDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var helpDialogFragmentBehavior: HelpDialogFragmentBehavior
+
+    @Suppress("unused")
+    @PageViewUrl
+    private fun makePageViewUrl() = "help.instructure.com"
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

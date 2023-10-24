@@ -24,6 +24,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../platform_config.dart';
 import '../../test_app.dart';
 import '../../test_helpers/mock_helpers.dart';
+import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final oauthApi = MockOAuthApi();
@@ -44,7 +45,7 @@ void main() {
     test('failure returns target_url', () async {
       final target = '$domain/target_url';
       when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => Future<AuthenticatedUrl>.error('Failed to authenticate url').catchError((_) {}));
+          .thenAnswer((_) async => Future<AuthenticatedUrl?>.error('Failed to authenticate url').catchError((_) { return Future.value(null);}));
       final actual = await WebContentInteractor().getAuthUrl(target);
 
       expect(actual, target);
@@ -55,7 +56,10 @@ void main() {
       final target = '$domain/target_url';
       final expected = 'session_url';
       when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = expected));
+          .thenAnswer((_) async => AuthenticatedUrl((b) => {
+            b..sessionUrl = expected,
+            b..requiresTermsAcceptance = false
+          }));
       final actual = await WebContentInteractor().getAuthUrl(target);
 
       expect(actual, expected);
@@ -98,8 +102,11 @@ void main() {
       final content = _makeIframe(src: target);
       final expected = _makeIframe(src: authenticated, target: target, ltiButtonText: buttonText);
 
-      when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
+      when(oauthApi.getAuthenticatedUrl(target)).thenAnswer((_) async =>
+          AuthenticatedUrl((b) => {
+                b..sessionUrl = authenticated,
+                b..requiresTermsAcceptance = false
+              }));
 
       final actual = await WebContentInteractor().authContent(content, buttonText);
 
@@ -114,8 +121,11 @@ void main() {
       final content = _makeIframe(id: id, src: target);
       final expected = _makeIframe(id: id, src: authenticated);
 
-      when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
+      when(oauthApi.getAuthenticatedUrl(target)).thenAnswer((_) async =>
+          AuthenticatedUrl((b) => {
+                b..sessionUrl = authenticated,
+                b..requiresTermsAcceptance = false
+              }));
 
       final actual = await WebContentInteractor().authContent(content, null);
 
@@ -132,8 +142,11 @@ void main() {
       final expected = _makeIframe(src: authenticated, target: target, ltiButtonText: buttonText) +
           _makeIframe(id: id, src: authenticated, target: target);
 
-      when(oauthApi.getAuthenticatedUrl(target))
-          .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
+      when(oauthApi.getAuthenticatedUrl(target)).thenAnswer((_) async =>
+          AuthenticatedUrl((b) => {
+                b..sessionUrl = authenticated,
+                b..requiresTermsAcceptance = false
+              }));
 
       final actual = await WebContentInteractor().authContent(content, buttonText);
 
@@ -143,7 +156,7 @@ void main() {
   });
 }
 
-String _makeIframe({String id, String src, String target, String ltiButtonText}) {
+String _makeIframe({String? id, String? src, String? target, String? ltiButtonText}) {
   String ltiButton = ltiButtonText != null
       ? '</br><p><div class="lti_button" onClick="onLtiToolButtonPressed(\'$target\')">$ltiButtonText</div></p>'
       : '';
