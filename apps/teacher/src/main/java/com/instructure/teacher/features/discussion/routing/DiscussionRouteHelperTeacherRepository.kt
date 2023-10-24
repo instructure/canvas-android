@@ -3,11 +3,11 @@ package com.instructure.teacher.features.discussion.routing
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperNetworkDataSource
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
-import com.instructure.teacher.features.discussion.routing.datasource.DiscussionRouteHelperTeacherNetworkDataSource
 
 class DiscussionRouteHelperTeacherRepository(
-    private val networkDataSource: DiscussionRouteHelperTeacherNetworkDataSource
+    private val networkDataSource: DiscussionRouteHelperNetworkDataSource
 ): DiscussionRouteHelperRepository {
     override suspend fun getEnabledFeaturesForCourse(
         canvasContext: CanvasContext,
