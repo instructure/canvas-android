@@ -27,7 +27,9 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
@@ -82,10 +84,14 @@ class OfflineSyncWorker @AssistedInject constructor(
         dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
 
         val params = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
-        val currentCourses = courseApi.firstPageCoursesByEnrollmentState("active", params).dataOrNull.orEmpty()
-        val pastCourses = courseApi.firstPageCoursesByEnrollmentState("completed", params).dataOrNull.orEmpty()
+        val currentCourses = courseApi.firstPageCoursesByEnrollmentState("active", params)
+            .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrNull.orEmpty()
+        val pastCourses = courseApi.firstPageCoursesByEnrollmentState("completed", params)
+            .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrNull.orEmpty()
         val futureCourses =
-            courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params).dataOrNull.orEmpty()
+            courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params)
+                .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrNull.orEmpty()
+                .filter { it.workflowState != Course.WorkflowState.UNPUBLISHED }
 
         val allCourses = currentCourses.mapIndexed { index, course ->
             EditDashboardItemEntity(
