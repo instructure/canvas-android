@@ -49,7 +49,7 @@ class SubmissionDetailsRepositoryTest {
     @Before
     fun setUp() {
         repository = SubmissionDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
     }
 
     @Test

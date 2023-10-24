@@ -13,8 +13,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/remote_config/remote_config_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/theme_viewer_screen.dart';
@@ -57,6 +57,18 @@ void main() {
 
     var screen = verify(nav.push(context, captureAny)).captured[0];
     expect(screen, isA<RemoteConfigScreen>());
+  });
+
+  test('routeToLegal call through to navigator', () async {
+    var nav = MockQuickNav();
+    await setupTestLocator((locator) {
+      locator.registerLazySingleton<QuickNav>(() => nav);
+    });
+
+    var context = MockBuildContext();
+    SettingsInteractor().routeToLegal(context);
+
+    verify(nav.pushRoute(any, argThat(matches(PandaRouter.legal()))));
   });
 
   testNonWidgetsWithContext('toggle dark mode sets dark mode to true', (tester) async {

@@ -32,7 +32,7 @@ import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
-import 'package:flutter_parent/screens/help/legal_screen.dart';
+import 'package:flutter_parent/screens/settings/legal_screen.dart';
 import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';

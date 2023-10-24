@@ -19,6 +19,7 @@ package com.instructure.student.di.feature
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -51,14 +52,16 @@ class ModuleProgressionModule {
         moduleProgressionNetworkDataSource: ModuleProgressionNetworkDataSource,
         networkStateProvider: NetworkStateProvider,
         featureFlagProvider: FeatureFlagProvider,
-        courseSyncSettingsDao: CourseSyncSettingsDao
+        courseSyncSettingsDao: CourseSyncSettingsDao,
+        localFileDao: LocalFileDao
     ): ModuleProgressionRepository {
         return ModuleProgressionRepository(
             moduleProgressionLocalDataSource,
             moduleProgressionNetworkDataSource,
             networkStateProvider,
             featureFlagProvider,
-            courseSyncSettingsDao
+            courseSyncSettingsDao,
+            localFileDao
         )
     }
 }

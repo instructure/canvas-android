@@ -117,4 +117,20 @@ class LocalFileDaoTest {
 
         assertEquals(listOf(files[1]), result)
     }
+
+    @Test
+    fun testFindByCourseId() = runTest {
+        val files = listOf(
+            LocalFileEntity(3L, 1L, Date(), ""),
+            LocalFileEntity(4L, 2L, Date(), "")
+        )
+
+        files.forEach {
+            localFileDao.insert(it)
+        }
+
+        val result = localFileDao.findByCourseId(1L)
+
+        assertEquals(files.take(1), result)
+    }
 }

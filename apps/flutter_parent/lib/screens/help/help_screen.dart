@@ -15,11 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
@@ -79,11 +77,6 @@ class _HelpScreenState extends State<HelpScreen> {
         title: Text(l10n.helpShareLoveLabel, style: Theme.of(context).textTheme.titleMedium),
         subtitle: Text(l10n.helpShareLoveDescription, style: Theme.of(context).textTheme.bodySmall),
         onTap: _showShareLove,
-      ),
-      ListTile(
-        title: Text(l10n.helpLegalLabel, style: Theme.of(context).textTheme.titleMedium),
-        subtitle: Text(l10n.helpLegalDescription, style: Theme.of(context).textTheme.bodySmall),
-        onTap: () => _showLegal(),
       )
     ]);
 
@@ -152,6 +145,4 @@ class _HelpScreenState extends State<HelpScreen> {
   }
 
   void _showShareLove() => locator<UrlLauncher>().launchAppStore();
-
-  void _showLegal() => locator<QuickNav>().pushRoute(context, PandaRouter.legal());
 }

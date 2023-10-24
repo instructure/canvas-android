@@ -190,7 +190,7 @@ class LoginViewModelTest {
     fun `Set offline login if the user logs in offline and the feature flag is on`() {
         // Given
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
         every { networkStateProvider.isOnline() } returns false
         every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
@@ -213,7 +213,7 @@ class LoginViewModelTest {
     fun `Dont Set offline login if the user logs in offline and the feature flag is off`() {
         // Given
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
         every { networkStateProvider.isOnline() } returns false
         every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
@@ -236,7 +236,7 @@ class LoginViewModelTest {
     fun `Dont Set offline login if the user logs in online`() {
         // Given
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
         every { networkStateProvider.isOnline() } returns true
         every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
