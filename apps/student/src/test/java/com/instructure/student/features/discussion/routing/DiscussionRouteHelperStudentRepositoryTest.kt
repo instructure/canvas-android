@@ -2,11 +2,11 @@ package com.instructure.student.features.discussion.routing
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperLocalDataSource
+import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperNetworkDataSource
 import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.discussion.routing.datasource.DiscussionRouteHelperStudentLocalDataSource
-import com.instructure.student.features.discussion.routing.datasource.DiscussionRouteHelperStudentNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -18,8 +18,8 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class DiscussionRouteHelperStudentRepositoryTest {
 
-    private val networkDataSource: DiscussionRouteHelperStudentNetworkDataSource = mockk(relaxed = true)
-    private val localDataSource: DiscussionRouteHelperStudentLocalDataSource = mockk(relaxed = true)
+    private val networkDataSource: DiscussionRouteHelperNetworkDataSource = mockk(relaxed = true)
+    private val localDataSource: DiscussionRouteHelperLocalDataSource = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 

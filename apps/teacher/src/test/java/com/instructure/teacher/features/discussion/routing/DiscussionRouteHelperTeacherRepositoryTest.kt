@@ -2,7 +2,7 @@ package com.instructure.teacher.features.discussion.routing
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import com.instructure.teacher.features.discussion.routing.datasource.DiscussionRouteHelperTeacherNetworkDataSource
+import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -12,7 +12,7 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class DiscussionRouteHelperTeacherRepositoryTest {
-    private val networkDataSource: DiscussionRouteHelperTeacherNetworkDataSource = mockk(relaxed = true)
+    private val networkDataSource: DiscussionRouteHelperNetworkDataSource = mockk(relaxed = true)
 
     private val repository = DiscussionRouteHelperTeacherRepository(networkDataSource)
 
