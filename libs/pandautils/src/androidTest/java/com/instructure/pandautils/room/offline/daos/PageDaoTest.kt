@@ -86,6 +86,21 @@ class PageDaoTest {
     }
 
     @Test
+    fun testFindByUrl() = runTest {
+        val courseEntity = CourseEntity(Course(id = 1L))
+        courseDao.insert(courseEntity)
+
+        val pageEntity = PageEntity(Page(id = 1, title = "Page1", url = "page-1-url"), courseId = 1L)
+        val pageEntity2 = PageEntity(Page(id = 2, title = "Page2", url = "page-2-url"), courseId = 1L)
+        pageDao.insert(pageEntity)
+        pageDao.insert(pageEntity2)
+
+        val result = pageDao.findByUrl("page-2-url")
+
+        assertEquals(pageEntity2, result)
+    }
+
+    @Test
     fun testFindFrontPage() = runTest {
         val courseEntity = CourseEntity(Course(id = 1L))
         courseDao.insert(courseEntity)
