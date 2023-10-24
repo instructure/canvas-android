@@ -21,6 +21,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.scrollTo
@@ -29,6 +30,7 @@ import com.instructure.espresso.swipeUp
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
+import java.lang.Thread.sleep
 
 class LeftSideNavigationDrawerPage : BasePage() {
 
@@ -63,7 +65,7 @@ class LeftSideNavigationDrawerPage : BasePage() {
     )
 
     private fun clickMenu(menuId: Int) {
-        onView(hamburgerButtonMatcher).click()
+        waitForView(hamburgerButtonMatcher).click()
         waitForViewWithId(menuId).scrollTo().click()
     }
 
@@ -153,11 +155,13 @@ class LeftSideNavigationDrawerPage : BasePage() {
     }
 
     fun assertOfflineIndicatorDisplayed() {
+        sleep(1000) //to avoid listview a11y error (content description is missing)
         hamburgerButton.click()
         offlineIndicator.assertDisplayed()
     }
 
     fun assertOfflineIndicatorNotDisplayed() {
+        sleep(1000) //to avoid listview a11y error (content description is missing)
         hamburgerButton.click()
         offlineIndicator.assertNotDisplayed()
     }

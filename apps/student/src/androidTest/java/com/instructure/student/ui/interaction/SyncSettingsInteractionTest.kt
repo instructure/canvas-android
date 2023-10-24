@@ -102,6 +102,7 @@ class SyncSettingsInteractionTest : StudentTest() {
         val student = data.students.first()
         val token = data.tokenFor(student).orEmpty()
         tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
         leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openOfflineContentPage()
     }
