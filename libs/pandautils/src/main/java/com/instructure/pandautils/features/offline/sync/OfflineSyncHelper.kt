@@ -31,6 +31,7 @@ class OfflineSyncHelper(
 ) {
 
     suspend fun syncCourses(courseIds: List<Long>) {
+        cancelRunningWorkers()
         if (isWorkScheduled() || !syncSettingsFacade.getSyncSettings().autoSyncEnabled) {
             syncOnce(courseIds)
         } else {
@@ -62,9 +63,16 @@ class OfflineSyncHelper(
             .putLongArray(COURSE_IDS, courseIds.toLongArray())
             .build()
         val workRequest = OneTimeWorkRequest.Builder(OfflineSyncWorker::class.java)
+            .addTag(OfflineSyncWorker.TAG)
             .setInputData(inputData)
             .build()
         workManager.enqueue(workRequest)
+    }
+
+    fun cancelRunningWorkers() {
+        workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
+        workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
+        workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
     }
 
     private suspend fun isWorkScheduled(): Boolean {
@@ -82,6 +90,7 @@ class OfflineSyncHelper(
             OfflineSyncWorker::class.java,
             if (syncSettings.syncFrequency == SyncFrequency.DAILY) 1 else 7, TimeUnit.DAYS
         )
+            .addTag(OfflineSyncWorker.TAG)
             .setConstraints(constraints)
 
         id?.let {

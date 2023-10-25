@@ -23,6 +23,7 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -44,7 +45,6 @@ import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
 import com.instructure.pandautils.room.offline.entities.EnrollmentState
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -52,6 +52,7 @@ import java.io.File
 import kotlin.random.Random
 
 const val COURSE_IDS = "course-ids"
+const val LISTENABLE_WORKER_TAG = "listenable-worker"
 
 @HiltWorker
 class OfflineSyncWorker @AssistedInject constructor(
@@ -70,7 +71,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val apiPrefs: ApiPrefs,
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao,
-    private val syncRouter: SyncRouter
+    private val syncRouter: SyncRouter,
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -151,14 +152,15 @@ class OfflineSyncWorker @AssistedInject constructor(
         while (true) {
             kotlinx.coroutines.delay(1000)
 
+            val workInfos = workManager.getWorkInfosByTag(LISTENABLE_WORKER_TAG).get()
             val runningCourseProgresses = courseSyncProgressDao.findAll()
-            val runningFileProgresses = fileSyncProgressDao.findAll()
 
-            if (runningCourseProgresses.all { it.progressState.isFinished() } && runningFileProgresses.all { it.progressState.isFinished() }) {
+            if (workInfos.all { it.state.isFinished }) {
                 val itemCount = runningCourseProgresses.size
-                val isSuccess =
-                    runningCourseProgresses.all { it.progressState == ProgressState.COMPLETED } && runningFileProgresses.all { it.progressState == ProgressState.COMPLETED }
-                showNotification(itemCount, isSuccess)
+
+                if (workInfos.any { it.state == WorkInfo.State.CANCELLED }) break
+
+                showNotification(itemCount, workInfos.all { it.state == WorkInfo.State.SUCCEEDED })
                 break
             }
         }
@@ -220,5 +222,6 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     companion object {
         const val CHANNEL_ID = "syncChannel"
+        const val TAG = "OfflineSyncWorker"
     }
 }

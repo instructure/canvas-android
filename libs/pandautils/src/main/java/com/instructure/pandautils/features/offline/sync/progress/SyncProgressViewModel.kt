@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.offline.sync.AggregateProgressViewDat
 import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
@@ -116,17 +117,12 @@ class SyncProgressViewModel @Inject constructor(
     }
 
     fun cancel() {
-        cancelRunningWorkers()
         viewModelScope.launch {
+            offlineSyncHelper.cancelRunningWorkers()
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
+            _events.postValue(Event(SyncProgressAction.Back))
         }
-        _events.postValue(Event(SyncProgressAction.Back))
-    }
-
-    private fun cancelRunningWorkers() {
-        workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
-        workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
     }
 
     private fun retry() {
