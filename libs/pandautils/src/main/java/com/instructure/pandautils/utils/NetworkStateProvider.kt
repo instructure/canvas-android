@@ -24,6 +24,7 @@ import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
+
 interface NetworkStateProvider {
     val isOnlineLiveData: LiveData<Boolean>
     fun isOnline(): Boolean

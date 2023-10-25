@@ -30,12 +30,17 @@ data class CourseItemViewModel(
     val courseId: Long,
     @get:Bindable override var collapsed: Boolean,
     val onCheckedChanged: (Boolean, CourseItemViewModel) -> Unit
-) : GroupItemViewModel(collapsable = true, items = data.tabs) {
+) : GroupItemViewModel(collapsable = true, items = data.tabs.ifEmpty { listOf(EmptyCourseContentViewModel()) }) {
     override val layoutId = R.layout.item_offline_course
     override val viewType = OfflineItemViewModelType.COURSE.viewType
 
     val onCheckChanged = OnCheckedChangeListener { cb, checked ->
         if (cb.isPressed) onCheckedChanged(checked, this)
+    }
+
+    fun onRowClicked() {
+        data.fullContentSync = !data.fullContentSync
+        onCheckedChanged(data.fullContentSync, this)
     }
 
     override fun areContentsTheSame(other: ItemViewModel): Boolean {

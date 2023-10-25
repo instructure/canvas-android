@@ -28,17 +28,13 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.slot
-import io.mockk.unmockkAll
+import io.mockk.*
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.UUID
+import java.util.*
 
 class FilesTabProgressItemViewModelTest {
 
@@ -95,7 +91,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 1",
                 0,
                 1000,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -103,7 +100,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 2",
                 0,
                 2000,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -111,7 +109,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 3",
                 0,
                 3000,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
         )
 
@@ -151,7 +150,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 1",
                 0,
                 1000,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -159,7 +159,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 2",
                 50,
                 2000,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -167,7 +168,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 3",
                 100,
                 3000,
-                progressState = ProgressState.COMPLETED
+                progressState = ProgressState.COMPLETED,
+                fileId = 1L
             ),
         )
         val courseProgress = CourseSyncProgressEntity(
@@ -195,7 +197,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 1",
                 50,
                 1000,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -203,7 +206,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 2",
                 100,
                 2000,
-                progressState = ProgressState.COMPLETED
+                progressState = ProgressState.COMPLETED,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -211,7 +215,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 3",
                 100,
                 3000,
-                progressState = ProgressState.COMPLETED
+                progressState = ProgressState.COMPLETED,
+                fileId = 1L
             ),
         )
         fileLiveData.postValue(fileSyncData)
@@ -226,7 +231,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 1",
                 100,
                 1000,
-                progressState = ProgressState.COMPLETED
+                progressState = ProgressState.COMPLETED,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -234,7 +240,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 2",
                 100,
                 2000,
-                progressState = ProgressState.COMPLETED
+                progressState = ProgressState.COMPLETED,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 UUID.randomUUID().toString(),
@@ -242,7 +249,8 @@ class FilesTabProgressItemViewModelTest {
                 "File 3",
                 100,
                 3000,
-                progressState = ProgressState.COMPLETED
+                progressState = ProgressState.COMPLETED,
+                fileId = 1L
             ),
         )
         fileLiveData.postValue(fileSyncData)

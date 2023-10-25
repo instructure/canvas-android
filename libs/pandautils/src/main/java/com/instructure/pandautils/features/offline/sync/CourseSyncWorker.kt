@@ -31,12 +31,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
-import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
-import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
-import com.instructure.pandautils.room.offline.entities.FileFolderEntity
-import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
-import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.room.offline.facade.*
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import dagger.assisted.Assisted
@@ -518,7 +513,8 @@ class CourseSyncWorker @AssistedInject constructor(
                         fileName = it.displayName.orEmpty(),
                         progress = 0,
                         fileSize = it.size,
-                        progressState = ProgressState.STARTING
+                        progressState = ProgressState.STARTING,
+                        fileId = it.id
                     )
                 )
             }
@@ -577,7 +573,8 @@ class CourseSyncWorker @AssistedInject constructor(
                     progress = 0,
                     fileSize = it.size,
                     additionalFile = true,
-                    progressState = ProgressState.STARTING
+                    progressState = ProgressState.STARTING,
+                    fileId = it.id
                 )
             )
         }
@@ -602,7 +599,8 @@ class CourseSyncWorker @AssistedInject constructor(
                         progress = 0,
                         fileSize = file.size,
                         additionalFile = true,
-                        progressState = ProgressState.STARTING
+                        progressState = ProgressState.STARTING,
+                        fileId = file.id
                     )
                 )
             }
@@ -627,7 +625,8 @@ class CourseSyncWorker @AssistedInject constructor(
                         progress = 0,
                         fileSize = 0,
                         additionalFile = true,
-                        progressState = ProgressState.STARTING
+                        progressState = ProgressState.STARTING,
+                        fileId = -1
                     )
                 )
             }

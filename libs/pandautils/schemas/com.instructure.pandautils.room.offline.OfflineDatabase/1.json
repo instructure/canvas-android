@@ -5437,7 +5437,7 @@
       },
       {
         "tableName": "FileSyncProgressEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `additionalFile` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `additionalFile` INTEGER NOT NULL, `progressState` TEXT NOT NULL, `fileId` INTEGER NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "workerId",
@@ -5479,6 +5479,12 @@
             "fieldPath": "progressState",
             "columnName": "progressState",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileId",
+            "columnName": "fileId",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],

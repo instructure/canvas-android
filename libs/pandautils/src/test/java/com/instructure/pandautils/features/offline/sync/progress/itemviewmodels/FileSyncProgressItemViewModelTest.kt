@@ -29,7 +29,7 @@ import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
 import org.junit.Test
-import java.util.UUID
+import java.util.*
 
 class FileSyncProgressItemViewModelTest {
 
@@ -91,7 +91,8 @@ class FileSyncProgressItemViewModelTest {
             fileName = "File",
             progress = progress,
             fileSize = 1000,
-            progressState = state
+            progressState = state,
+            fileId = 1L
         )
     }
 }

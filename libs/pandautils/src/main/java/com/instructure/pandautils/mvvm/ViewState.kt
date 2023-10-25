@@ -21,6 +21,11 @@ import androidx.annotation.StringRes
 
 sealed class ViewState {
     object Loading : ViewState()
+    data class LoadingWithImage(
+        @StringRes val titleRes: Int,
+        @StringRes val messageRes: Int,
+        @DrawableRes val imageRes: Int
+    ) : ViewState()
     object Success : ViewState()
     object Refresh : ViewState()
     object LoadingNextPage : ViewState()

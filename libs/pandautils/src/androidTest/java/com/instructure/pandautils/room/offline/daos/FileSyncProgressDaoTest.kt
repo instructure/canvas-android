@@ -77,7 +77,8 @@ class FileSyncProgressDaoTest {
             fileName = "File 1",
             progress = 0,
             fileSize = 1000L,
-            progressState = ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 1L
         )
         fileSyncProgressDao.insert(entity)
 
@@ -93,7 +94,8 @@ class FileSyncProgressDaoTest {
             fileName = "File 1",
             progress = 0,
             fileSize = 1000L,
-            progressState = ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 1L
         )
         fileSyncProgressDao.insertAll(listOf(entity))
 
@@ -111,7 +113,8 @@ class FileSyncProgressDaoTest {
             fileName = "File 1",
             progress = 0,
             fileSize = 1000L,
-            progressState = ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 1L
         )
         fileSyncProgressDao.insert(entity)
     }
@@ -124,7 +127,8 @@ class FileSyncProgressDaoTest {
             fileName = "File 1",
             progress = 0,
             fileSize = 1000L,
-            progressState = ProgressState.IN_PROGRESS
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 1L
         )
         fileSyncProgressDao.insert(entity)
 
@@ -144,7 +148,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 1",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId2",
@@ -152,12 +157,42 @@ class FileSyncProgressDaoTest {
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             )
         )
         fileSyncProgressDao.insertAll(entities)
 
         val result = fileSyncProgressDao.findByWorkerId("workerId")
+
+        assertEquals(entities[0], result)
+    }
+
+    @Test
+    fun testFindByFileId() = runTest {
+        val entities = listOf(
+            FileSyncProgressEntity(
+                workerId = "workerId",
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
+            ),
+            FileSyncProgressEntity(
+                workerId = "workerId2",
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 2L
+            )
+        )
+        fileSyncProgressDao.insertAll(entities)
+
+        val result = fileSyncProgressDao.findByFileId(1L)
 
         assertEquals(entities[0], result)
     }
@@ -171,7 +206,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 1",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId2",
@@ -179,7 +215,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             )
         )
         fileSyncProgressDao.insertAll(entities)
@@ -200,7 +237,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 1",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId2",
@@ -208,7 +246,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId3",
@@ -216,7 +255,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             )
         )
         fileSyncProgressDao.insertAll(entities)
@@ -237,7 +277,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 1",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId2",
@@ -245,7 +286,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId3",
@@ -253,7 +295,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             )
         )
         fileSyncProgressDao.insertAll(entities)
@@ -273,7 +316,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 1",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId2",
@@ -281,7 +325,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             )
         )
 
@@ -304,7 +349,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 1",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId2",
@@ -312,7 +358,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId3",
@@ -321,7 +368,8 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 1000L,
                 additionalFile = true,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId4",
@@ -330,7 +378,8 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 0,
                 additionalFile = true,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             )
         )
 
@@ -351,7 +400,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 1",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId2",
@@ -359,7 +409,8 @@ class FileSyncProgressDaoTest {
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId3",
@@ -368,7 +419,8 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 1000L,
                 additionalFile = true,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             ),
             FileSyncProgressEntity(
                 workerId = "workerId4",
@@ -377,7 +429,8 @@ class FileSyncProgressDaoTest {
                 progress = 0,
                 fileSize = 0,
                 additionalFile = true,
-                progressState = ProgressState.IN_PROGRESS
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
             )
         )
 
@@ -388,5 +441,4 @@ class FileSyncProgressDaoTest {
 
         assertEquals(entities.subList(0, 2), result.value)
     }
-
 }
