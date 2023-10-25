@@ -453,6 +453,7 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchBlock()
             updateTabSuccess(*tabIds)
         } catch (e: Exception) {
+            e.printStackTrace()
             updateTabError(*tabIds)
             firebaseCrashlytics.recordException(e)
         }
@@ -752,8 +753,9 @@ class CourseSyncWorker @AssistedInject constructor(
         progress = progress.copy(
             tabs = progress.tabs.toMutableMap().apply {
                 tabIds.forEach { tabId ->
-                    val newProgress = get(tabId)?.copy(state = ProgressState.COMPLETED) ?: return@apply
-                    put(tabId, newProgress)
+                    get(tabId)?.copy(state = ProgressState.COMPLETED)?.let {
+                        put(tabId, it)
+                    }
                 }
             },
         )
