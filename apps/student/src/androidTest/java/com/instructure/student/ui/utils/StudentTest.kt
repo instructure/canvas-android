@@ -100,6 +100,7 @@ import com.instructure.student.ui.pages.TextSubmissionUploadPage
 import com.instructure.student.ui.pages.TodoPage
 import com.instructure.student.ui.pages.UrlSubmissionUploadPage
 import com.instructure.student.ui.pages.offline.ManageOfflineContentPage
+import com.instructure.student.ui.pages.offline.SyncProgressPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
@@ -203,6 +204,7 @@ abstract class StudentTest : CanvasTest() {
     val shareExtensionStatusPage = ShareExtensionStatusPage()
     val syncSettingsPage = SyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
+    val syncProgressPage = SyncProgressPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
