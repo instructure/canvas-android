@@ -38,7 +38,6 @@ import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
 import io.mockk.*
@@ -60,7 +59,6 @@ class OfflineContentViewModelTest {
     private val offlineContentRepository: OfflineContentRepository = mockk(relaxed = true)
     private val storageUtils: StorageUtils = mockk(relaxed = true)
     private val offlineSyncHelper: OfflineSyncHelper = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -513,8 +511,7 @@ class OfflineContentViewModelTest {
             context,
             offlineContentRepository,
             storageUtils,
-            offlineSyncHelper,
-            networkStateProvider
+            offlineSyncHelper
         )
 
         viewModel.state.observe(lifecycleOwner) {}
