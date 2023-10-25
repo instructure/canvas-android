@@ -29,11 +29,11 @@ class FileListLocalDataSource(
     private val localFileDao: LocalFileDao
 ) : FileListDataSource {
     override suspend fun getFolders(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
-        return DataResult.Success(fileFolderDao.findFoldersByParentId(folderId).map { it.toApiModel() })
+        return DataResult.Success(fileFolderDao.findVisibleFoldersByParentId(folderId).map { it.toApiModel() })
     }
 
     override suspend fun getFiles(folderId: Long, forceNetwork: Boolean): DataResult<List<FileFolder>> {
-        val files = fileFolderDao.findFilesByFolderId(folderId).map { it.toApiModel() }
+        val files = fileFolderDao.findVisibleFilesByFolderId(folderId).map { it.toApiModel() }
         val fileIds = files.map { it.id }
         val localFileMap = localFileDao.findByIds(fileIds).associate { it.id to it.path }
 

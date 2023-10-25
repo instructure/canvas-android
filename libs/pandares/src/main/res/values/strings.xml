@@ -1474,7 +1474,6 @@
         <item quantity="one">%d course is syncing.</item>
         <item quantity="other">%d courses are syncing.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Course content images</string>
     <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
     <string name="editDashboardOfflineMode">You are offline</string>
     <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
@@ -1486,4 +1485,5 @@
         <item quantity="one">%d course has been synced.</item>
         <item quantity="other">%d courses have been synced.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Additional course content</string>
 </resources>

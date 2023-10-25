@@ -157,7 +157,7 @@ class FileFolderDaoTest {
 
         fileFolderDao.insertAll(folders)
 
-        val result = fileFolderDao.findFoldersByParentId(1L)
+        val result = fileFolderDao.findVisibleFoldersByParentId(1L)
 
         assertEquals(folders.subList(2, 4), result)
     }
@@ -179,7 +179,7 @@ class FileFolderDaoTest {
         fileFolderDao.insertAll(folders)
         fileFolderDao.insertAll(files)
 
-        val result = fileFolderDao.findFilesByFolderId(1L)
+        val result = fileFolderDao.findVisibleFilesByFolderId(1L)
 
         assertEquals(files.subList(0, 2), result)
     }
@@ -230,7 +230,7 @@ class FileFolderDaoTest {
 
         fileFolderDao.replaceAll(newFiles, 1L)
 
-        val result = fileFolderDao.findFilesByFolderId(1L)
+        val result = fileFolderDao.findVisibleFilesByFolderId(1L)
 
         assertEquals(newFiles, result)
     }
