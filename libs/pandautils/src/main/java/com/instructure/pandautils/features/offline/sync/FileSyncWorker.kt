@@ -26,6 +26,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
@@ -47,7 +48,8 @@ class FileSyncWorker @AssistedInject constructor(
     @Assisted private val workerParameters: WorkerParameters,
     private val fileDownloadApi: FileDownloadAPI,
     private val localFileDao: LocalFileDao,
-    private val fileSyncProgressDao: FileSyncProgressDao
+    private val fileSyncProgressDao: FileSyncProgressDao,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : CoroutineWorker(context, workerParameters) {
 
     private var fileExists = false
@@ -102,6 +104,7 @@ class FileSyncWorker @AssistedInject constructor(
             downloadedFile.delete()
             progress = progress.copy(progressState = ProgressState.ERROR)
             fileSyncProgressDao.update(progress)
+            firebaseCrashlytics.recordException(e)
         }
 
         return Result.success()

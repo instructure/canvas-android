@@ -21,7 +21,10 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentRepository
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,8 +39,19 @@ class OfflineContentModule {
         coursesApi: CourseAPI.CoursesInterface,
         courseSyncSettingsDao: CourseSyncSettingsDao,
         fileSyncSettingsDao: FileSyncSettingsDao,
-        courseFileSharedRepository: CourseFileSharedRepository
+        courseFileSharedRepository: CourseFileSharedRepository,
+        syncSettingsFacade: SyncSettingsFacade,
+        localFileDao: LocalFileDao,
+        fileSyncProgressDao: FileSyncProgressDao
     ): OfflineContentRepository {
-        return OfflineContentRepository(coursesApi, courseSyncSettingsDao, fileSyncSettingsDao, courseFileSharedRepository)
+        return OfflineContentRepository(
+            coursesApi,
+            courseSyncSettingsDao,
+            fileSyncSettingsDao,
+            courseFileSharedRepository,
+            syncSettingsFacade,
+            localFileDao,
+            fileSyncProgressDao
+        )
     }
 }

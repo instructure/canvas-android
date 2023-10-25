@@ -72,6 +72,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.room.offline.DatabaseProvider
+import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.*
@@ -145,6 +146,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var repository: NavigationRepository
+
+    @Inject
+    lateinit var offlineDatabase: OfflineDatabase
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -266,6 +270,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        RouteMatcher.offlineDb = offlineDatabase
+        RouteMatcher.networkStateProvider = networkStateProvider
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)

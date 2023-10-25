@@ -29,30 +29,24 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.offline.offlinecontent.itemviewmodels.EmptyCourseContentViewModel
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.orDefault
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkAll
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 
 @ExperimentalCoroutinesApi
 class OfflineContentViewModelTest {
@@ -78,7 +72,7 @@ class OfflineContentViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         mockkStatic(Formatter::class)
-        every { Formatter.formatShortFileSize(context, any()) } returns ""
+        every { Formatter.formatShortFileSize(context, any()) } answers { "${arg<Long>(1) / 1000} kb" }
         every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns null
 
         coEvery { offlineContentRepository.findCourseSyncSettings(any()) } answers {
@@ -100,6 +94,29 @@ class OfflineContentViewModelTest {
         Dispatchers.resetMain()
 
         unmockkAll()
+    }
+
+    @Test
+    fun `Post empty state when course list is empty`() {
+        createViewModel()
+
+        Assert.assertEquals(
+            ViewState.Empty(
+                R.string.offline_content_empty_title,
+                R.string.offline_content_empty_message,
+                R.drawable.ic_panda_space
+            ),
+            viewModel.state.value
+        )
+    }
+
+    @Test
+    fun `Add empty course item when course tab list is empty`() {
+        coEvery { offlineContentRepository.getCourses() } returns listOf(Course(1L))
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.items?.first() is EmptyCourseContentViewModel)
     }
 
     @Test
@@ -134,15 +151,59 @@ class OfflineContentViewModelTest {
 
     @Test
     fun `Storage info maps correctly`() {
-        coEvery { offlineContentRepository.getCourses() } returns emptyList()
-        every { storageUtils.getTotalSpace() } returns 100L
-        every { storageUtils.getFreeSpace() } returns 80L
-        every { storageUtils.getAppSize() } returns 10L
-        every { context.getString(R.string.offline_content_storage_info, any(), any()) } returns "Used 20 GB of 100 GB"
+        mockStorageInfoData()
 
-        createViewModel()
+        val expected = StorageInfo(10, 20, "Used 2000 kb of 10000 kb")
 
-        val expected = StorageInfo(10, 20, "Used 20 GB of 100 GB")
+        Assert.assertEquals(expected, viewModel.data.value?.storageInfo)
+    }
+
+    @Test
+    fun `Storage info calculates on toggle selection`() {
+        mockStorageInfoData()
+
+        val expected = StorageInfo(10, 33, "Used 3300 kb of 10000 kb")
+
+        viewModel.toggleSelection()
+
+        Assert.assertEquals(expected, viewModel.data.value?.storageInfo)
+    }
+
+    @Test
+    fun `Storage info calculates on course selection`() {
+        mockStorageInfoData()
+
+        val expected = StorageInfo(10, 29, "Used 2900 kb of 10000 kb")
+
+        viewModel.data.value?.courseItems?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        Assert.assertEquals(expected, viewModel.data.value?.storageInfo)
+    }
+
+    @Test
+    fun `Storage info calculates on tab selection`() {
+        mockStorageInfoData()
+
+        val expected = StorageInfo(10, 21, "Used 2100 kb of 10000 kb")
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        Assert.assertEquals(expected, viewModel.data.value?.storageInfo)
+    }
+
+    @Test
+    fun `Storage info calculates on file selection`() {
+        mockStorageInfoData()
+
+        val expected = StorageInfo(10, 22, "Used 2200 kb of 10000 kb")
+
+        viewModel.data.value?.courseItems?.first()?.data?.tabs?.last()?.data?.files?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
 
         Assert.assertEquals(expected, viewModel.data.value?.storageInfo)
     }
@@ -163,6 +224,7 @@ class OfflineContentViewModelTest {
         Assert.assertEquals(
             arrayListOf("File 1", "File 2"),
             firstCourseTabs?.last()?.data?.files?.map { it.data.title })
+        Assert.assertEquals("~900 kb", viewModel.data.value?.courseItems?.first()?.data?.size)
     }
 
     @Test
@@ -175,7 +237,7 @@ class OfflineContentViewModelTest {
 
         viewModel.toggleSelection()
 
-        Assert.assertEquals(12, viewModel.data.value?.selectedCount)
+        Assert.assertEquals(10, viewModel.data.value?.selectedCount)
     }
 
     @Test
@@ -258,8 +320,8 @@ class OfflineContentViewModelTest {
                 onCheckedChanged.invoke(true, this)
             }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.FILES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -278,23 +340,87 @@ class OfflineContentViewModelTest {
     }
 
     @Test
-    fun `Move back on sync click`() {
+    fun `Should show discard dialog`() {
+        mockkCourseViewModels()
         createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        Assert.assertEquals(false, viewModel.shouldShowDiscardDialog())
+
+        viewModel.data.value?.courseItems?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        Assert.assertEquals(true, viewModel.shouldShowDiscardDialog())
+    }
+
+    @Test
+    fun `Show dialog on sync click`() {
+        every { context.getString(R.string.offline_content_sync_dialog_title) } returns "Title"
+        every { context.getString(R.string.offline_content_sync_dialog_message, any()) } answers { "Message ${secondArg<Array<Any>>().first()}" }
+        every { context.getString(R.string.offline_content_sync_dialog_positive) } returns "Sync"
+
+        mockkCourseViewModels()
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
 
         viewModel.onSyncClicked()
 
-        assert(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Back)
+        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Dialog)
+        val dialog = viewModel.events.value?.peekContent() as OfflineContentAction.Dialog
+        Assert.assertEquals("Title", dialog.title)
+        Assert.assertEquals("Message 900 kb", dialog.message)
+        Assert.assertEquals("Sync", dialog.positive)
+    }
+
+    @Test
+    fun `Show wifi only dialog on sync click`() {
+        every { context.getString(R.string.offline_content_sync_dialog_title) } returns "Title"
+        every {
+            context.getString(
+                R.string.offline_content_sync_dialog_message_wifi_only,
+                any()
+            )
+        } answers { "Wifi only message ${secondArg<Array<Any>>().first()}" }
+        every { context.getString(R.string.offline_content_sync_dialog_positive) } returns "Sync"
+        coEvery { offlineContentRepository.getSyncSettings() } returns SyncSettingsEntity(1L, true, SyncFrequency.DAILY, true)
+
+        mockkCourseViewModels()
+        createViewModel()
+
+        viewModel.data.value?.courseItems?.first()?.apply {
+            onCheckedChanged.invoke(true, this)
+        }
+
+        viewModel.onSyncClicked()
+
+        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Dialog)
+        val dialog = viewModel.events.value?.peekContent() as OfflineContentAction.Dialog
+        Assert.assertEquals("Title", dialog.title)
+        Assert.assertEquals("Wifi only message 900 kb", dialog.message)
+        Assert.assertEquals("Sync", dialog.positive)
+    }
+
+    @Test
+    fun `Move back on sync`() {
+        createViewModel()
+
+        viewModel.onSyncClicked()
+
+        (viewModel.events.value?.getContentIfNotHandled() as OfflineContentAction.Dialog).positiveCallback.invoke()
+
+        Assert.assertTrue(viewModel.events.value?.getContentIfNotHandled() is OfflineContentAction.Back)
     }
 
     @Test
     fun `Start sync`() {
         createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
-
         viewModel.onSyncClicked()
+
+        (viewModel.events.value?.getContentIfNotHandled() as OfflineContentAction.Dialog).positiveCallback.invoke()
 
         coVerify {
             offlineSyncHelper.syncCourses(any())
@@ -318,6 +444,8 @@ class OfflineContentViewModelTest {
 
         viewModel.onSyncClicked()
 
+        (viewModel.events.value?.getContentIfNotHandled() as OfflineContentAction.Dialog).positiveCallback.invoke()
+
         coVerify(exactly = 1) { offlineContentRepository.updateCourseSyncSettings(1L, expected, expectedFiles) }
     }
 
@@ -331,8 +459,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.SYLLABUS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.SYLLABUS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -345,8 +473,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.PAGES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.PAGES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -359,8 +487,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     @Test
@@ -373,8 +501,8 @@ class OfflineContentViewModelTest {
             onCheckedChanged.invoke(true, this)
         }
 
-        assert(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.GRADES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
-        assert(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.tabs?.find { it.tabId == Tab.GRADES_ID }?.data?.checkedState() == MaterialCheckBox.STATE_CHECKED)
+        Assert.assertTrue(viewModel.data.value?.courseItems?.first()?.data?.checkedState() == MaterialCheckBox.STATE_INDETERMINATE)
     }
 
     private fun createViewModel() {
@@ -385,6 +513,9 @@ class OfflineContentViewModelTest {
             storageUtils,
             offlineSyncHelper
         )
+
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
     }
 
@@ -397,9 +528,23 @@ class OfflineContentViewModelTest {
             Tab(tabId = "files", label = "Files"),
         )
         val courses = listOf(Course(id = 1, tabs = tabs), Course(id = 2, tabs = tabs))
-        val files = listOf(FileFolder(id = 1, displayName = "File 1"), FileFolder(id = 2, displayName = "File 2"))
+        val files = listOf(FileFolder(id = 1, displayName = "File 1", size = 200000L), FileFolder(id = 2, displayName = "File 2", size = 300000L))
 
         coEvery { offlineContentRepository.getCourses() } returns courses
-        coEvery { offlineContentRepository.getCourseFiles(any()) } returns files
+        coEvery { offlineContentRepository.getCourseFiles(1) } returns files
+    }
+
+    private fun mockStorageInfoData() {
+        mockkCourseViewModels()
+        every { storageUtils.getTotalSpace() } returns 10000000L
+        every { storageUtils.getFreeSpace() } returns 8000000L
+        every { storageUtils.getAppSize() } returns 1000000L
+        every {
+            context.getString(R.string.offline_content_storage_info, any(), any())
+        } answers {
+            "Used ${secondArg<Array<Any>>().first()} of ${secondArg<Array<Any>>().last()}"
+        }
+
+        createViewModel()
     }
 }

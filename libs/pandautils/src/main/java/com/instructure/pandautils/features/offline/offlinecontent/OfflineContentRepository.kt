@@ -25,16 +25,23 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 
 class OfflineContentRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val fileSyncSettingsDao: FileSyncSettingsDao,
-    private val courseFileSharedRepository: CourseFileSharedRepository
+    private val courseFileSharedRepository: CourseFileSharedRepository,
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val localFileDao: LocalFileDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) {
     suspend fun getCourse(courseId: Long): Course {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -49,7 +56,6 @@ class OfflineContentRepository(
 
         return coursesResult.dataOrThrow.filter { it.isValidTerm() && it.hasActiveEnrollment() }
     }
-
 
     suspend fun getCourseFiles(courseId: Long): List<FileFolder> {
         return courseFileSharedRepository.getCourseFiles(courseId)
@@ -89,5 +95,18 @@ class OfflineContentRepository(
 
     suspend fun deleteFileSettings(fileIds: List<Long>) {
         fileSyncSettingsDao.deleteByIds(fileIds)
+    }
+
+    suspend fun getSyncSettings(): SyncSettingsEntity {
+        return syncSettingsFacade.getSyncSettings()
+    }
+
+    suspend fun isFileSynced(fileId: Long): Boolean {
+        return localFileDao.existsById(fileId)
+    }
+
+    suspend fun getInProgressFileSize(fileId: Long): Long {
+        val file = fileSyncProgressDao.findByFileId(fileId) ?: return 0
+        return (file.fileSize * (file.progress / 100.0)).toLong()
     }
 }

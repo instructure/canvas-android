@@ -39,6 +39,11 @@ data class CourseTabViewModel(
         if (cb.isPressed) onCheckedChanged(checked, this)
     }
 
+    fun onRowClicked() {
+        data.synced = !data.synced
+        onCheckedChanged(data.synced, this)
+    }
+
     override fun areContentsTheSame(other: ItemViewModel): Boolean {
         return other is CourseTabViewModel
                 && other.courseId == this.courseId

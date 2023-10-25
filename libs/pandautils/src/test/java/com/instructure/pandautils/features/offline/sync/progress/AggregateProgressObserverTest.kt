@@ -30,19 +30,13 @@ import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
-import io.mockk.coEvery
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.slot
-import io.mockk.unmockkAll
+import io.mockk.*
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.UUID
+import java.util.*
 
 class AggregateProgressObserverTest {
 
@@ -127,10 +121,8 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.IN_PROGRESS
         )
 
-        var file1 =
-            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, progressState = ProgressState.IN_PROGRESS)
-        var file2 =
-            FileSyncProgressEntity(file2Id.toString(), 2L, "File 1", 0, 2000, progressState = ProgressState.IN_PROGRESS)
+        var file1 = FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, progressState = ProgressState.IN_PROGRESS, fileId = 1L)
+        var file2 = FileSyncProgressEntity(file2Id.toString(), 2L, "File 1", 0, 2000, progressState = ProgressState.IN_PROGRESS, fileId = 1L)
 
         val courseLiveData = MutableLiveData(listOf(course1, course2))
         val fileLiveData = MutableLiveData(listOf(file1, file2))
@@ -198,7 +190,7 @@ class AggregateProgressObserverTest {
         val courseLiveData = MutableLiveData(listOf(course1Progress))
 
         var file1Progress =
-            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, false, ProgressState.IN_PROGRESS)
+            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, false, ProgressState.IN_PROGRESS, fileId = 1L)
         var file2Progress = FileSyncProgressEntity(
             file2Id.toString(),
             1L,
@@ -206,7 +198,8 @@ class AggregateProgressObserverTest {
             0,
             2000,
             true,
-            ProgressState.IN_PROGRESS
+            ProgressState.IN_PROGRESS,
+            fileId = 1L
         )
         var file3Progress = FileSyncProgressEntity(
             file3Id.toString(),
@@ -215,7 +208,8 @@ class AggregateProgressObserverTest {
             0,
             0,
             true,
-            ProgressState.IN_PROGRESS
+            ProgressState.IN_PROGRESS,
+            fileId = 1L
         )
 
         val fileLiveData = MutableLiveData(listOf(file1Progress, file2Progress, file3Progress))
@@ -254,7 +248,8 @@ class AggregateProgressObserverTest {
             0,
             3000,
             true,
-            ProgressState.IN_PROGRESS
+            ProgressState.IN_PROGRESS,
+            fileId = 1L
         )
 
         fileLiveData.postValue(listOf(file1Progress, file2Progress, file3Progress))
@@ -269,7 +264,8 @@ class AggregateProgressObserverTest {
             100,
             3000,
             true,
-            ProgressState.COMPLETED
+            ProgressState.COMPLETED,
+            fileId = 1L
         )
 
         course1Progress = course1Progress.copy(

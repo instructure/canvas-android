@@ -19,7 +19,11 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
@@ -40,8 +44,33 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.MutableSet
+import kotlin.collections.any
+import kotlin.collections.associateBy
+import kotlin.collections.associateWith
+import kotlin.collections.count
+import kotlin.collections.emptyList
+import kotlin.collections.filter
+import kotlin.collections.find
+import kotlin.collections.flatMap
+import kotlin.collections.flatten
+import kotlin.collections.forEach
+import kotlin.collections.listOf
+import kotlin.collections.map
+import kotlin.collections.mapNotNull
+import kotlin.collections.mutableMapOf
+import kotlin.collections.orEmpty
+import kotlin.collections.plus
+import kotlin.collections.putAll
+import kotlin.collections.set
+import kotlin.collections.sumOf
+import kotlin.collections.toList
+import kotlin.collections.toMutableSet
 
 private val ALLOWED_TAB_IDS = CourseSyncSettingsEntity.TABS.plus(Tab.FILES_ID)
+private const val TAB_SIZE = 100000
 
 @HiltViewModel
 class OfflineContentViewModel @Inject constructor(
@@ -67,6 +96,7 @@ class OfflineContentViewModel @Inject constructor(
     private val _events = MutableLiveData<Event<OfflineContentAction>>()
 
     private val syncSettingsMap = mutableMapOf<Long, CourseSyncSettingsWithFiles>()
+    private val originalSyncSettingsMap = mutableMapOf<Long, CourseSyncSettingsWithFiles>()
 
     private val courseMap = mutableMapOf<Long, Course>()
     private val courseFilesMap = mutableMapOf<Long, Map<Long, FileFolder>>()
@@ -77,7 +107,13 @@ class OfflineContentViewModel @Inject constructor(
     }
 
     private fun loadData(isRefresh: Boolean = false) {
-        _state.postValue(ViewState.Loading)
+        _state.postValue(
+            ViewState.LoadingWithImage(
+                R.string.offline_content_sync_loading_title,
+                R.string.offline_content_sync_loading_message,
+                R.drawable.ic_panda_super_stars
+            )
+        )
         if (isRefresh) {
             _data.value = _data.value?.copy(courseItems = emptyList(), selectedCount = 0)
         }
@@ -87,11 +123,22 @@ class OfflineContentViewModel @Inject constructor(
                 courseMap.putAll(getCourses(course?.id).associateBy { it.id })
                 courseFilesMap.putAll(getCourseFiles(courseMap.values.toList()))
                 syncSettingsMap.putAll(getCourseSyncSettings(courseMap.values.toList()))
+                originalSyncSettingsMap.putAll(getCourseSyncSettings(courseMap.values.toList()))
                 courseSelectedFilesMap.putAll(getSelectedFiles(courseMap.values.toList()))
                 val coursesData = createCourseItemViewModels()
-                val data = OfflineContentViewData(storageInfo, coursesData, 0)
+                val data = OfflineContentViewData(storageInfo, coursesData, getSelectedItemCount(coursesData))
                 _data.postValue(data)
-                _state.postValue(ViewState.Success)
+                if (coursesData.isEmpty()) {
+                    _state.postValue(
+                        ViewState.Empty(
+                            R.string.offline_content_empty_title,
+                            R.string.offline_content_empty_message,
+                            R.drawable.ic_panda_space
+                        )
+                    )
+                } else {
+                    _state.postValue(ViewState.Success)
+                }
             } catch (ex: Exception) {
                 _state.postValue(ViewState.Error(context.getString(R.string.offline_content_loading_error)))
             }
@@ -130,13 +177,9 @@ class OfflineContentViewModel @Inject constructor(
 
     private suspend fun getCourseFiles(courses: List<Course>): List<Pair<Long, Map<Long, FileFolder>>> {
         return courses.map { course ->
-            val files =
-                if (course.tabs?.any { it.tabId == Tab.FILES_ID } == true) {
-                    offlineContentRepository.getCourseFiles(
-                        course.id
-
-                    )
-                } else emptyList()
+            val files = if (course.tabs?.any { it.tabId == Tab.FILES_ID } == true) {
+                offlineContentRepository.getCourseFiles(course.id)
+            } else emptyList()
 
             val filesMap = files.associateBy { it.id }
             course.id to filesMap
@@ -158,9 +201,8 @@ class OfflineContentViewModel @Inject constructor(
         val courseSyncSettingsWithFiles = syncSettingsMap[courseId] ?: throw IllegalStateException()
 
         val files = courseFilesMap[course.id]?.values ?: emptyList()
-        val size = Formatter.formatShortFileSize(context, files.sumOf { it.size })
         val tabs = course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }.orEmpty()
-
+        val size = "~${Formatter.formatShortFileSize(context, files.sumOf { it.size } + tabs.filter { it.tabId != Tab.FILES_ID }.size * TAB_SIZE)}"
 
         val collapsed = _data.value?.courseItems?.find { it.courseId == courseId }?.collapsed ?: (this.course == null)
 
@@ -188,13 +230,13 @@ class OfflineContentViewModel @Inject constructor(
         toggleCourse(courseItemViewModel.courseId, checked)
 
         val newCourseViewModel = createCourseItemViewModel(courseItemViewModel.courseId)
-        val newList =
-            _data.value?.courseItems?.map { if (it == courseItemViewModel) newCourseViewModel else it }
-                .orEmpty()
+        val newList = _data.value?.courseItems?.map { if (it == courseItemViewModel) newCourseViewModel else it }.orEmpty()
 
         val selectedCount = getSelectedItemCount(newList)
 
-        _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
+        viewModelScope.launch {
+            _data.value = _data.value?.copy(storageInfo = getStorageInfo(), courseItems = newList, selectedCount = selectedCount)
+        }
     }
 
     private fun createTabViewModel(
@@ -260,7 +302,9 @@ class OfflineContentViewModel @Inject constructor(
 
         val selectedCount = getSelectedItemCount(newList)
 
-        _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
+        viewModelScope.launch {
+            _data.value = _data.value?.copy(storageInfo = getStorageInfo(), courseItems = newList, selectedCount = selectedCount)
+        }
     }
 
     private fun updateTab(courseId: Long, tabId: String, checked: Boolean) {
@@ -291,7 +335,10 @@ class OfflineContentViewModel @Inject constructor(
         val newCourseViewModel = createCourseItemViewModel(item.courseId)
         val newList = _data.value?.courseItems?.map { if (it == courseViewModel) newCourseViewModel else it }.orEmpty()
         val selectedCount = getSelectedItemCount(newList)
-        _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
+
+        viewModelScope.launch {
+            _data.value = _data.value?.copy(storageInfo = getStorageInfo(), courseItems = newList, selectedCount = selectedCount)
+        }
     }
 
     private fun updateFile(checked: Boolean, courseId: Long, fileId: Long) {
@@ -325,7 +372,10 @@ class OfflineContentViewModel @Inject constructor(
 
         val newList = createCourseItemViewModels()
         val selectedCount = getSelectedItemCount(newList)
-        _data.value = _data.value?.copy(courseItems = newList, selectedCount = selectedCount)
+
+        viewModelScope.launch {
+            _data.value = _data.value?.copy(storageInfo = getStorageInfo(), courseItems = newList, selectedCount = selectedCount)
+        }
     }
 
     private fun toggleCourse(courseId: Long, shouldCheck: Boolean) {
@@ -355,6 +405,42 @@ class OfflineContentViewModel @Inject constructor(
 
     fun onSyncClicked() {
         viewModelScope.launch {
+            val wifiOnly = offlineContentRepository.getSyncSettings().wifiOnly
+            _events.postValue(
+                Event(
+                    OfflineContentAction.Dialog(
+                        context.getString(R.string.offline_content_sync_dialog_title),
+                        context.getString(
+                            if (wifiOnly) R.string.offline_content_sync_dialog_message_wifi_only
+                            else R.string.offline_content_sync_dialog_message,
+                            Formatter.formatShortFileSize(context, getSelectedSize())
+                        ),
+                        context.getString(R.string.offline_content_sync_dialog_positive),
+                        ::startSync
+                    )
+                )
+            )
+        }
+    }
+
+    private fun getSelectedSize(): Long {
+        val tabSize = courseMap.values.sumOf { course ->
+            course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS && it.tabId != Tab.FILES_ID }?.count {
+                syncSettingsMap[course.id]?.courseSyncSettings?.isTabSelected(it.tabId).orDefault()
+            }.orDefault() * TAB_SIZE
+        }
+
+        val fileSize = courseSelectedFilesMap.values.flatten().sumOf { selectedId ->
+            courseFilesMap.values.sumOf {
+                it[selectedId]?.size.orDefault()
+            }
+        }
+
+        return tabSize + fileSize
+    }
+
+    private fun startSync() {
+        viewModelScope.launch {
             saveSettings()
             offlineSyncHelper.syncCourses(syncSettingsMap.keys.toList())
             _events.postValue(Event(OfflineContentAction.Back))
@@ -377,14 +463,18 @@ class OfflineContentViewModel @Inject constructor(
         loadData(true)
     }
 
-    private fun getStorageInfo(): StorageInfo {
-        val appSize = storageUtils.getAppSize()
+    fun shouldShowDiscardDialog(): Boolean {
+        return syncSettingsMap != originalSyncSettingsMap
+    }
+
+    private suspend fun getStorageInfo(): StorageInfo {
+        val appSizeModifier = getAppSizeModifier()
+        val appSize = storageUtils.getAppSize() + appSizeModifier
         val totalSpace = storageUtils.getTotalSpace()
-        val usedSpace = totalSpace - storageUtils.getFreeSpace()
+        val usedSpace = totalSpace - (storageUtils.getFreeSpace() - appSizeModifier)
         val otherAppsSpace = usedSpace - appSize
         val otherPercent = if (totalSpace > 0) (otherAppsSpace.toFloat() / totalSpace * 100).toInt() else 0
-        val canvasPercent =
-            if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
+        val canvasPercent = if (totalSpace > 0) (appSize.toFloat() / totalSpace * 100).toInt().coerceAtLeast(1) + otherPercent else 0
         val storageInfoText = context.getString(
             R.string.offline_content_storage_info,
             Formatter.formatShortFileSize(context, usedSpace),
@@ -393,5 +483,43 @@ class OfflineContentViewModel @Inject constructor(
 
         return StorageInfo(otherPercent, canvasPercent, storageInfoText)
     }
-}
 
+    private suspend fun getAppSizeModifier(): Long {
+        var modifier = 0L
+        originalSyncSettingsMap.forEach { syncSetting ->
+            courseMap[syncSetting.key]?.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }?.forEach { tab ->
+                if (tab.tabId != Tab.FILES_ID) {
+                    val original = syncSetting.value.courseSyncSettings.isTabSelected(tab.tabId)
+                    syncSettingsMap[syncSetting.key]?.courseSyncSettings?.isTabSelected(tab.tabId)?.let { actual ->
+                        if (original && !actual) {
+                            modifier -= TAB_SIZE
+                        } else if (!original && actual) {
+                            modifier += TAB_SIZE
+                        }
+                    }
+                }
+            }
+
+            courseFilesMap[syncSetting.key]?.forEach {
+                val original = syncSetting.value.isFileSelected(it.value.id)
+                courseSelectedFilesMap[syncSetting.key]?.contains(it.value.id)?.let { actual ->
+                    if (original && !actual) {
+                        modifier -= getActualLocalFileSize(it.value)
+                    } else if (!original && actual) {
+                        modifier += it.value.size
+                    }
+                }
+            }
+        }
+
+        return modifier
+    }
+
+    private suspend fun getActualLocalFileSize(fileFolder: FileFolder): Long {
+        return if (offlineContentRepository.isFileSynced(fileFolder.id)) {
+            fileFolder.size
+        } else {
+            offlineContentRepository.getInProgressFileSize(fileFolder.id)
+        }
+    }
+}
