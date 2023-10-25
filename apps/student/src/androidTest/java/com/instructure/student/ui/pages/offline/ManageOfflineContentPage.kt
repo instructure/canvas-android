@@ -23,6 +23,8 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.pandautils.R
@@ -31,11 +33,19 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
 
+    //OfflineMethod
     fun selectEntireCourseForSync(courseName: String) {
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(courseName))).click()
     }
 
+    //OfflineMethod
     fun clickOnSyncButton() {
         onView(withId(R.id.syncButton)).click()
+        confirmSync()
+    }
+
+    //OfflineMethod
+    private fun confirmSync() {
+        waitForView(withText("Sync") + withAncestor(R.id.buttonPanel)).click()
     }
 }
