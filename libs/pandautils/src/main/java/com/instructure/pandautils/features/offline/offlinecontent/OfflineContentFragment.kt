@@ -86,7 +86,7 @@ class OfflineContentFragment : Fragment(), FragmentInteractions {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        activity?.onBackPressedDispatcher?.addCallback(backPressedCallback)
+        activity?.onBackPressedDispatcher?.addCallback(this, backPressedCallback)
     }
 
     private fun navigateBack() {
