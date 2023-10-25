@@ -145,12 +145,14 @@ class FileFolderDaoTest {
     }
 
     @Test
-    fun testFindFoldersByParentId() = runTest {
+    fun testVisibleFindFoldersByParentId() = runTest {
         val folders = listOf(
             FileFolderEntity(FileFolder(id = 1L, name = "folder1", parentFolderId = 0)),
             FileFolderEntity(FileFolder(id = 2L, name = "folder2", parentFolderId = 0)),
             FileFolderEntity(FileFolder(id = 3L, name = "folder3", parentFolderId = 1L)),
-            FileFolderEntity(FileFolder(id = 4L, name = "folder4", parentFolderId = 1L)),
+            FileFolderEntity(FileFolder(id = 4L, name = "folder4", parentFolderId = 1L, isHidden = true)),
+            FileFolderEntity(FileFolder(id = 7L, name = "folder7", parentFolderId = 1L)),
+            FileFolderEntity(FileFolder(id = 8L, name = "folder8", parentFolderId = 1L, isHiddenForUser = true)),
             FileFolderEntity(FileFolder(id = 5L, name = "folder5", parentFolderId = 2L)),
             FileFolderEntity(FileFolder(id = 6L, name = "folder6", parentFolderId = 2L))
         )
@@ -159,18 +161,22 @@ class FileFolderDaoTest {
 
         val result = fileFolderDao.findVisibleFoldersByParentId(1L)
 
-        assertEquals(folders.subList(2, 4), result)
+        assertEquals(2, result.size)
+        assertEquals("folder3", result.first().name)
+        assertEquals("folder7", result.last().name)
     }
 
     @Test
-    fun testFindFilesByFolderId() = runTest {
+    fun testFindVisibleFilesByFolderId() = runTest {
         val folders = listOf(
             FileFolderEntity(FileFolder(id = 1L, name = "folder1", parentFolderId = 0)),
             FileFolderEntity(FileFolder(id = 2L, name = "folder2", parentFolderId = 0))
         )
 
         val files = listOf(
-            FileFolderEntity(FileFolder(id = 3L, name = "file1", folderId = 1L)),
+            FileFolderEntity(FileFolder(id = 3L, name = "file1", folderId = 1L, isHidden = true)),
+            FileFolderEntity(FileFolder(id = 7L, name = "file5", folderId = 1L, isHiddenForUser = true)),
+            FileFolderEntity(FileFolder(id = 8L, name = "file6", folderId = 1L)),
             FileFolderEntity(FileFolder(id = 4L, name = "file2", folderId = 1L)),
             FileFolderEntity(FileFolder(id = 5L, name = "file3", folderId = 2L)),
             FileFolderEntity(FileFolder(id = 6L, name = "file4", folderId = 2L))
@@ -181,7 +187,9 @@ class FileFolderDaoTest {
 
         val result = fileFolderDao.findVisibleFilesByFolderId(1L)
 
-        assertEquals(files.subList(0, 2), result)
+        assertEquals(2, result.size)
+        assertEquals("file2", result.first().name)
+        assertEquals("file6", result.last().name)
     }
 
     @Test
