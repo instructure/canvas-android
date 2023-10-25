@@ -40,6 +40,7 @@ import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
+import com.instructure.student.ui.utils.ViewUtils
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
@@ -353,8 +354,29 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
+    //OfflineMethod
     fun clickOnSyncProgressNotification() {
         waitForView(ViewMatchers.withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent)).click()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressDownloadStartedNotificationToDisappear() {
+        ViewUtils.waitForViewToDisappear(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting), 30)
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressDownloadStartedNotification() {
+        waitForView(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressStartingNotification() {
+        waitForView(withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressStartingNotificationToDisappear() {
+        ViewUtils.waitForViewToDisappear(withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent), 30)
     }
 }
 

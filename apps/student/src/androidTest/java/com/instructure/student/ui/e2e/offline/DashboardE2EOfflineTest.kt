@@ -59,12 +59,13 @@ class DashboardE2EOfflineTest : StudentTest() {
         manageOfflineContentPage.clickOnSyncButton()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
-        manageOfflineContentPage.waitForSyncProgressDownloadStartedNotification()
-        manageOfflineContentPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
+        dashboardPage.waitForRender()
+        dashboardPage.waitForSyncProgressDownloadStartedNotification()
+        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
 
         Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
-        manageOfflineContentPage.waitForSyncProgressStartingNotification()
-        manageOfflineContentPage.waitForSyncProgressStartingNotificationToDisappear()
+        dashboardPage.waitForSyncProgressStartingNotification()
+        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         OfflineTestUtils.turnOffConnectionViaADB()

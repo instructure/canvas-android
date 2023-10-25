@@ -61,11 +61,12 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         manageOfflineContentPage.clickOnSyncButton()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
-        manageOfflineContentPage.waitForSyncProgressDownloadStartedNotification()
-        manageOfflineContentPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
+        dashboardPage.waitForRender()
+        dashboardPage.waitForSyncProgressDownloadStartedNotification()
+        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
 
         Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and click on it to enter the Sync Progress Page.")
-        manageOfflineContentPage.waitForSyncProgressStartingNotification()
+        dashboardPage.waitForSyncProgressStartingNotification()
         dashboardPage.clickOnSyncProgressNotification()
 
         Log.d(STEP_TAG, "Assert that the Sync Progress has started.")
