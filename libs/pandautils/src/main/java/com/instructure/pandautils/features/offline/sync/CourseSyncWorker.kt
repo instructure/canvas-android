@@ -110,6 +110,12 @@ class CourseSyncWorker @AssistedInject constructor(
             pageFacade.deleteAllByCourseId(courseId)
         }
 
+        // We need to do this after the pages request because we delete all the previous pages there
+        val isHomeTabAPage = Tab.FRONT_PAGE_ID == course.homePageID
+        if (isHomeTabAPage) {
+            fetchHomePage(courseId)
+        }
+
         if (courseSettings.areAnyTabsSelected(setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID))) {
             fetchAssignments(courseId)
         } else {
@@ -227,6 +233,18 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             pageFacade.insertPages(pages, courseId)
+        }
+    }
+
+    private suspend fun fetchHomePage(courseId: Long) {
+        try {
+            val frontPage = pageApi.getFrontPage(CanvasContext.Type.COURSE.apiString, courseId, RestParams(isForceReadFromNetwork = true)).dataOrNull
+            if (frontPage != null) {
+                frontPage.body = parseHtmlContent(frontPage.body, courseId)
+                pageFacade.insertPage(frontPage, courseId)
+            }
+        } catch (e: Exception) {
+            firebaseCrashlytics.recordException(e)
         }
     }
 
