@@ -44,6 +44,10 @@ abstract class FileFolderDao {
     @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)")
     abstract suspend fun findAllFilesByCourseId(courseId: Long): List<FileFolderEntity>
 
+    @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)" +
+        " AND displayName LIKE '%' || :searchQuery || '%' AND isHidden = 0 AND isHiddenForUser = 0")
+    abstract suspend fun searchCourseFiles(courseId: Long, searchQuery: String): List<FileFolderEntity>
+
     @Query("SELECT * FROM FileFolderEntity WHERE id = :id")
     abstract suspend fun findById(id: Long): FileFolderEntity?
 

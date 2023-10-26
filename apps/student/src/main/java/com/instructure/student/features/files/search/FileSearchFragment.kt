@@ -31,24 +31,31 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_FILE_SEARCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentFileSearchBinding
 import com.instructure.student.fragment.ParentFragment
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import com.instructure.pandautils.utils.ColorUtils as PandaColorUtils
 
 @ScreenView(SCREEN_VIEW_FILE_SEARCH)
+@AndroidEntryPoint
 class FileSearchFragment : ParentFragment(), FileSearchView {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private val binding by viewBinding(FragmentFileSearchBinding::bind)
 
+    @Inject
+    lateinit var fileSearchRepository: FileSearchRepository
+
     private fun makePageViewUrl() =
         if (canvasContext.type == CanvasContext.Type.USER) "${ApiPrefs.fullDomain}/files"
         else "${ApiPrefs.fullDomain}/${canvasContext.contextId.replace("_", "s/")}/files"
 
-    private val searchAdapter by lazy { FileSearchAdapter(requireContext(), canvasContext, this) }
+    private val searchAdapter by lazy { FileSearchAdapter(requireContext(), canvasContext, fileSearchRepository, this) }
 
     override fun title() = ""
     override fun applyTheme() = Unit
