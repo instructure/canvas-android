@@ -740,8 +740,9 @@ class CourseSyncWorker @AssistedInject constructor(
         progress = progress.copy(
             tabs = progress.tabs.toMutableMap().apply {
                 tabIds.forEach { tabId ->
-                    val newProgress = get(tabId)?.copy(state = ProgressState.ERROR) ?: return@apply
-                    put(tabId, newProgress)
+                    get(tabId)?.copy(state = ProgressState.ERROR)?.let {
+                        put(tabId, it)
+                    }
                 }
 
             },
