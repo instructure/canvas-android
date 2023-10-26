@@ -25,6 +25,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -49,6 +50,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
+import java.util.UUID
 import kotlin.random.Random
 
 const val COURSE_IDS = "course-ids"
@@ -152,8 +154,12 @@ class OfflineSyncWorker @AssistedInject constructor(
         while (true) {
             kotlinx.coroutines.delay(1000)
 
-            val workInfos = workManager.getWorkInfosByTag(LISTENABLE_WORKER_TAG).get()
             val runningCourseProgresses = courseSyncProgressDao.findAll()
+            val runningFileProgresses = fileSyncProgressDao.findAll()
+
+            val ids = runningCourseProgresses.map { UUID.fromString(it.workerId) } + runningFileProgresses.map { UUID.fromString(it.workerId) }
+
+            val workInfos = workManager.getWorkInfos(WorkQuery.fromIds(ids)).get()
 
             if (workInfos.all { it.state.isFinished }) {
                 val itemCount = runningCourseProgresses.size
