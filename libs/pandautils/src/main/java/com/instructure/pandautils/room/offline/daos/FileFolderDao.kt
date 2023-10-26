@@ -50,11 +50,11 @@ abstract class FileFolderDao {
     @Query("SELECT * FROM FileFolderEntity WHERE id IN (:ids)")
     abstract suspend fun findByIds(ids: Set<Long>): List<FileFolderEntity>
 
-    @Query("SELECT * FROM FileFolderEntity WHERE parentFolderId = :parentId")
-    abstract suspend fun findFoldersByParentId(parentId: Long): List<FileFolderEntity>
+    @Query("SELECT * FROM FileFolderEntity WHERE parentFolderId = :parentId AND isHidden = 0 AND isHiddenForUser = 0")
+    abstract suspend fun findVisibleFoldersByParentId(parentId: Long): List<FileFolderEntity>
 
-    @Query("SELECT * FROM FileFolderEntity WHERE folderId = :folderId")
-    abstract suspend fun findFilesByFolderId(folderId: Long): List<FileFolderEntity>
+    @Query("SELECT * FROM FileFolderEntity WHERE folderId = :folderId AND isHidden = 0 AND isHiddenForUser = 0")
+    abstract suspend fun findVisibleFilesByFolderId(folderId: Long): List<FileFolderEntity>
 
     @Query("SELECT * FROM FileFolderEntity WHERE contextId = :contextId AND parentFolderId = 0")
     abstract suspend fun findRootFolderForContext(contextId: Long): FileFolderEntity?

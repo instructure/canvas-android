@@ -37,12 +37,20 @@ class HtmlParser(
 ) {
 
     private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
+    private val fileLinkRegex = Regex("<a[^>]*class=\"instructure_file_link[^>]*href=\"([^\"]*)\"[^>]*>")
     private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
 
     suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long): HtmlParsingResult {
         if (html == null) return HtmlParsingResult(null, emptySet(), emptySet())
 
-        var resultHtml: String = html
+        val imageParsingResult = parseAndReplaceImageTags(html, courseId)
+        val filesFromFileLinks = findFileIdsToSync(imageParsingResult.htmlWithLocalFileLinks ?: html)
+
+        return imageParsingResult.copy(internalFileIds = imageParsingResult.internalFileIds + filesFromFileLinks)
+    }
+
+    private suspend fun parseAndReplaceImageTags(originalHtml: String, courseId: Long): HtmlParsingResult {
+        var resultHtml: String = originalHtml
         val internalFileIds = mutableSetOf<Long>()
         val externalFileUrls = mutableSetOf<String>()
 
@@ -101,6 +109,23 @@ class HtmlParser(
 
         val downloadedFile = File(dir, fileName)
         return downloadedFile.absolutePath
+    }
+
+    private suspend fun findFileIdsToSync(html: String): Set<Long> {
+        val internalFileIds = mutableSetOf<Long>()
+
+        val fileMatches = fileLinkRegex.findAll(html)
+        fileMatches.forEach { match ->
+            val fileUrl = match.groupValues[1]
+            val fileId = internalFileRegex.find(fileUrl)?.groupValues?.get(1)?.toLongOrNull()
+            if (fileId != null) {
+                if (fileSyncSettingsDao.findById(fileId) == null) {
+                    internalFileIds.add(fileId)
+                }
+            }
+        }
+
+        return internalFileIds
     }
 }
 
