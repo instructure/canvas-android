@@ -19,11 +19,7 @@ package com.instructure.pandautils.features.offline.offlinecontent
 
 import android.content.Context
 import android.text.format.Formatter
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
@@ -44,30 +40,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableSet
-import kotlin.collections.any
-import kotlin.collections.associateBy
-import kotlin.collections.associateWith
-import kotlin.collections.count
-import kotlin.collections.emptyList
-import kotlin.collections.filter
-import kotlin.collections.find
-import kotlin.collections.flatMap
-import kotlin.collections.flatten
-import kotlin.collections.forEach
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.mapNotNull
-import kotlin.collections.mutableMapOf
-import kotlin.collections.orEmpty
-import kotlin.collections.plus
-import kotlin.collections.putAll
 import kotlin.collections.set
-import kotlin.collections.sumOf
-import kotlin.collections.toList
-import kotlin.collections.toMutableSet
 
 private val ALLOWED_TAB_IDS = CourseSyncSettingsEntity.TABS.plus(Tab.FILES_ID)
 private const val TAB_SIZE = 100000
@@ -108,10 +81,10 @@ class OfflineContentViewModel @Inject constructor(
 
     private fun loadData(isRefresh: Boolean = false) {
         _state.postValue(
-            ViewState.LoadingWithImage(
+            ViewState.LoadingWithAnimation(
                 R.string.offline_content_sync_loading_title,
                 R.string.offline_content_sync_loading_message,
-                R.drawable.ic_panda_super_stars
+                R.raw.snail
             )
         )
         if (isRefresh) {

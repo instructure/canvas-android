@@ -17,14 +17,15 @@
 package com.instructure.pandautils.mvvm
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 
 sealed class ViewState {
     object Loading : ViewState()
-    data class LoadingWithImage(
+    data class LoadingWithAnimation(
         @StringRes val titleRes: Int,
         @StringRes val messageRes: Int,
-        @DrawableRes val imageRes: Int
+        @RawRes val animationRes: Int
     ) : ViewState()
     object Success : ViewState()
     object Refresh : ViewState()
