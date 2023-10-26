@@ -54,7 +54,6 @@ import java.util.UUID
 import kotlin.random.Random
 
 const val COURSE_IDS = "course-ids"
-const val LISTENABLE_WORKER_TAG = "listenable-worker"
 
 @HiltWorker
 class OfflineSyncWorker @AssistedInject constructor(

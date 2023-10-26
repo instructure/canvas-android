@@ -161,7 +161,6 @@ class FileSyncWorker @AssistedInject constructor(
 
             return OneTimeWorkRequest.Builder(FileSyncWorker::class.java)
                 .addTag(TAG)
-                .addTag(LISTENABLE_WORKER_TAG)
                 .setInputData(inputData)
                 .setConstraints(
                     Constraints.Builder()

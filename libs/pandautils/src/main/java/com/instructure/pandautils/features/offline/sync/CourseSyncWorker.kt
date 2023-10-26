@@ -773,7 +773,6 @@ class CourseSyncWorker @AssistedInject constructor(
             val data = workDataOf(COURSE_ID to courseId)
             return OneTimeWorkRequestBuilder<CourseSyncWorker>()
                 .addTag(TAG)
-                .addTag(LISTENABLE_WORKER_TAG)
                 .setInputData(data)
                 .setConstraints(
                     Constraints.Builder()
