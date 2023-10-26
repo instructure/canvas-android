@@ -57,7 +57,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="@dimen/text_right"/>
 
-
     <ImageView
         android:id="@+id/image"
         android:layout_width="0dp"
@@ -72,6 +71,20 @@
         app:layout_constraintEnd_toEndOf="@id/textRight"
         app:layout_constraintTop_toBottomOf="@id/imageTop"
         app:layout_constraintBottom_toBottomOf="@id/imageBottom"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="false"
+        android:importantForAccessibility="no"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/imageBottom"
+        app:layout_constraintEnd_toEndOf="@id/textRight"
+        app:layout_constraintStart_toStartOf="@id/textLeft"
+        app:layout_constraintTop_toBottomOf="@id/imageTop"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 
     <LinearLayout
         android:layout_width="0dp"
