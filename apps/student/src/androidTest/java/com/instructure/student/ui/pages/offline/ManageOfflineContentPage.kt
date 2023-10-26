@@ -19,42 +19,33 @@ package com.instructure.student.ui.pages.offline
 
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.pandautils.R
-import com.instructure.student.ui.utils.ViewUtils
 
 class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
 
+    //OfflineMethod
     fun selectEntireCourseForSync(courseName: String) {
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(courseName))).click()
     }
 
+    //OfflineMethod
     fun clickOnSyncButton() {
         onView(withId(R.id.syncButton)).click()
+        confirmSync()
     }
 
-    fun waitForSyncProgressDownloadStartedNotificationToDisappear() {
-        ViewUtils.waitForViewToDisappear(withText(R.string.syncProgress_downloadStarting), 30)
-    }
-
-    fun waitForSyncProgressDownloadStartedNotification() {
-        waitForView(withText(R.string.syncProgress_downloadStarting)).assertDisplayed()
-    }
-
-    fun waitForSyncProgressStartingNotification() {
-        waitForView(withText(R.string.syncProgress_syncingOfflineContent)).assertDisplayed()
-    }
-
-    fun waitForSyncProgressStartingNotificationToDisappear() {
-        ViewUtils.waitForViewToDisappear(withText(R.string.syncProgress_syncingOfflineContent), 30)
+    //OfflineMethod
+    private fun confirmSync() {
+        waitForView(withText("Sync") + withAncestor(R.id.buttonPanel)).click()
     }
 }
