@@ -28,10 +28,7 @@ import androidx.work.WorkManager
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
 import com.instructure.pandautils.features.offline.sync.AggregateProgressViewData
-import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
-import com.instructure.pandautils.features.offline.sync.FileSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
-import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.AdditionalFilesProgressItemViewModel
 import com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel
