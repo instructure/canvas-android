@@ -243,8 +243,7 @@ class SyncProgressViewModelTest {
         viewModel.cancel()
 
         coVerify {
-            workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
-            workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
+            offlineSyncHelper.cancelRunningWorkers()
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
         }

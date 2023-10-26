@@ -763,8 +763,6 @@ class CourseSyncWorker @AssistedInject constructor(
         updateProgress()
     }
 
-
-
     companion object {
         const val COURSE_ID = "course_id"
         const val TAG = "CourseSyncWorker"

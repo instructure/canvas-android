@@ -74,7 +74,12 @@ class OfflineSyncHelperTest {
     fun `Only one time sync if worker is already scheduled`() = runTest {
         val courseIds = listOf(1L, 2L, 3L)
 
-        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(1L, false, SyncFrequency.DAILY, true)
+        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
+            1L,
+            false,
+            SyncFrequency.DAILY,
+            true
+        )
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(mockk(relaxed = true))
 
         offlineSyncHelper.syncCourses(courseIds)
@@ -100,7 +105,12 @@ class OfflineSyncHelperTest {
     fun `Do not schedule worker if auto sync is disabled`() = runTest {
         val courseIds = listOf(1L, 2L, 3L)
 
-        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(1L, false, SyncFrequency.DAILY, true)
+        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
+            1L,
+            false,
+            SyncFrequency.DAILY,
+            true
+        )
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
 
         offlineSyncHelper.syncCourses(courseIds)
@@ -122,13 +132,23 @@ class OfflineSyncHelperTest {
     fun `One time sync is called with given ids`() = runTest {
         val courseIds = listOf(1L, 2L, 3L)
 
-        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(1L, false, SyncFrequency.DAILY, true)
+        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
+            1L,
+            false,
+            SyncFrequency.DAILY,
+            true
+        )
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
 
         offlineSyncHelper.syncCourses(courseIds)
 
         val captor = slot<OneTimeWorkRequest>()
-        coVerify(exactly = 1) { workManager.enqueue(capture(captor)) }
+        coVerify(exactly = 1) {
+            workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
+            workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
+            workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
+            workManager.enqueue(capture(captor))
+        }
         coVerify(exactly = 0) { workManager.enqueueUniquePeriodicWork(any(), any(), any()) }
 
         val workRequest = captor.captured
@@ -154,7 +174,12 @@ class OfflineSyncHelperTest {
 
     @Test
     fun `Wifi only disabled maps correctly`() = runTest {
-        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(1L, true, SyncFrequency.DAILY, false)
+        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
+            1L,
+            true,
+            SyncFrequency.DAILY,
+            false
+        )
 
         offlineSyncHelper.scheduleWork()
 
@@ -182,7 +207,12 @@ class OfflineSyncHelperTest {
 
     @Test
     fun `Weekly sync maps correctly`() = runTest {
-        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(1L, true, SyncFrequency.WEEKLY, true)
+        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
+            1L,
+            true,
+            SyncFrequency.WEEKLY,
+            true
+        )
 
         offlineSyncHelper.scheduleWork()
 
@@ -204,9 +234,11 @@ class OfflineSyncHelperTest {
         coVerify { workManager.enqueueUniquePeriodicWork(any(), any(), capture(originalCaptor)) }
         val originalRequest = originalCaptor.captured
 
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(listOf(
-            WorkInfo(originalRequest.id, WorkInfo.State.ENQUEUED, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
-        ))
+        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
+            listOf(
+                WorkInfo(originalRequest.id, WorkInfo.State.ENQUEUED, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
+            )
+        )
 
         offlineSyncHelper.updateWork()
 
@@ -215,6 +247,17 @@ class OfflineSyncHelperTest {
         val updatedRequest = updatedCaptor.captured
 
         assertEquals(originalRequest.id, updatedRequest.id)
+    }
+
+    @Test
+    fun `Cancel running workers`() {
+        offlineSyncHelper.cancelRunningWorkers()
+
+        verify {
+            workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
+            workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
+            workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
+        }
     }
 
 }
