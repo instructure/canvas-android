@@ -574,4 +574,33 @@ class FileFolderDaoTest {
 
         assertEquals(listOf(files[2]), result)
     }
+
+    @Test
+    fun testSearchFiles() = runTest {
+        val folders = listOf(
+            FileFolderEntity(
+                FileFolder(
+                    id = 1L,
+                    contextId = 1L,
+                    contextType = "Course",
+                    name = "folder",
+                    parentFolderId = 0
+                )
+            )
+        )
+        val files = listOf(
+            FileFolderEntity(FileFolder(id = 2L, displayName = "file1", folderId = 1L)),
+            FileFolderEntity(FileFolder(id = 3L, displayName = "file2", folderId = 1L)),
+            FileFolderEntity(FileFolder(id = 4L, displayName = "different name", folderId = 1L)),
+            FileFolderEntity(FileFolder(id = 5L, displayName = "file hidden", folderId = 1L, isHidden = true)),
+            FileFolderEntity(FileFolder(id = 6L, displayName = "file hidden for user", folderId = 1L, isHiddenForUser = true)),
+        )
+
+        fileFolderDao.insertAll(folders)
+        fileFolderDao.insertAll(files)
+
+        val result = fileFolderDao.searchCourseFiles(1L, "fil")
+
+        assertEquals(files.subList(0, 2), result)
+    }
 }
