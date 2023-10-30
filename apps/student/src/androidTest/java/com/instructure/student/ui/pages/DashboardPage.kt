@@ -27,6 +27,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -39,6 +40,7 @@ import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
+import com.instructure.student.ui.utils.ViewUtils
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
@@ -343,8 +345,38 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     //OfflineMethod
-    fun assertCourseOfflineSyncIcon(courseName: String, visibility: Visibility) {
-        onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(visibility)))
+    fun assertCourseOfflineSyncIconVisible(courseName: String) {
+        waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    //OfflineMethod
+    fun assertCourseOfflineSyncIconGone(courseName: String) {
+        onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    }
+
+    //OfflineMethod
+    fun clickOnSyncProgressNotification() {
+        waitForView(ViewMatchers.withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent)).click()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressDownloadStartedNotificationToDisappear() {
+        ViewUtils.waitForViewToDisappear(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting), 30)
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressDownloadStartedNotification() {
+        waitForView(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressStartingNotification() {
+        waitForView(withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressStartingNotificationToDisappear() {
+        ViewUtils.waitForViewToDisappear(withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent), 30)
     }
 }
 

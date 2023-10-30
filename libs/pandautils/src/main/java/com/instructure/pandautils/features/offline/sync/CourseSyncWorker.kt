@@ -484,7 +484,6 @@ class CourseSyncWorker @AssistedInject constructor(
         val file = fileFolderApi.getCourseFile(courseId, it.contentId, params).dataOrNull
         if (file?.id != null) {
             additionalFileIdsToSync.add(file.id)
-            fileFolderDao.insert(FileFolderEntity(file))
         }
     }
 
@@ -603,6 +602,7 @@ class CourseSyncWorker @AssistedInject constructor(
         nonPublicFileIds.forEach {
             val file = fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
             if (file != null) {
+                fileFolderDao.insert(FileFolderEntity(file))
                 val worker = FileSyncWorker.createOneTimeWorkRequest(
                     courseId,
                     file.id,

@@ -40,6 +40,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.set
 
 private val ALLOWED_TAB_IDS = CourseSyncSettingsEntity.TABS.plus(Tab.FILES_ID)
 private const val TAB_SIZE = 100000
@@ -80,10 +81,10 @@ class OfflineContentViewModel @Inject constructor(
 
     private fun loadData(isRefresh: Boolean = false) {
         _state.postValue(
-            ViewState.LoadingWithImage(
+            ViewState.LoadingWithAnimation(
                 R.string.offline_content_sync_loading_title,
                 R.string.offline_content_sync_loading_message,
-                R.drawable.ic_panda_super_stars
+                R.raw.snail
             )
         )
         if (isRefresh) {
@@ -98,7 +99,7 @@ class OfflineContentViewModel @Inject constructor(
                 originalSyncSettingsMap.putAll(getCourseSyncSettings(courseMap.values.toList()))
                 courseSelectedFilesMap.putAll(getSelectedFiles(courseMap.values.toList()))
                 val coursesData = createCourseItemViewModels()
-                val data = OfflineContentViewData(storageInfo, coursesData, 0)
+                val data = OfflineContentViewData(storageInfo, coursesData, getSelectedItemCount(coursesData))
                 _data.postValue(data)
                 if (coursesData.isEmpty()) {
                     _state.postValue(

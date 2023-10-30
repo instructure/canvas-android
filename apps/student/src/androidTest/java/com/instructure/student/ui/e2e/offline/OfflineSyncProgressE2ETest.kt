@@ -17,6 +17,7 @@
 package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -31,15 +32,16 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class DashboardE2EOfflineTest : StudentTest() {
+class OfflineSyncProgressE2ETest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    fun testOfflineDashboardE2E() {
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYNC_PROGRESS, TestCategory.E2E)
+    fun testOfflineGlobalCourseSyncProgressE2E() {
+
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
         val student = data.studentsList[0]
@@ -63,20 +65,28 @@ class DashboardE2EOfflineTest : StudentTest() {
         dashboardPage.waitForSyncProgressDownloadStartedNotification()
         dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
 
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
+        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and click on it to enter the Sync Progress Page.")
         dashboardPage.waitForSyncProgressStartingNotification()
-        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
+        dashboardPage.clickOnSyncProgressNotification()
+
+        Log.d(STEP_TAG, "Assert that the Sync Progress has started.")
+        syncProgressPage.waitForDownloadStarting()
+
+        Log.d(STEP_TAG, "Assert that the Sync Progress has been successful (so to have the success title and the course success indicator).")
+        syncProgressPage.assertDownloadProgressSuccessDetails()
+        syncProgressPage.assertCourseSyncedSuccessfully(course1.name)
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page and wait for it to be rendered.")
+        Espresso.pressBack()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         OfflineTestUtils.turnOffConnectionViaADB()
-
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's cours card.")
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
         dashboardPage.assertCourseOfflineSyncIconGone(course2.name)
 
@@ -90,7 +100,7 @@ class DashboardE2EOfflineTest : StudentTest() {
 
     @After
     fun tearDown() {
-        Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
+        Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device via ADB, so it will come back online.")
         OfflineTestUtils.turnOnConnectionViaADB()
     }
 

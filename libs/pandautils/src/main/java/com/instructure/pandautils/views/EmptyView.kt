@@ -25,8 +25,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -62,13 +60,13 @@ class EmptyView @JvmOverloads constructor(
         loading.root.visibility = View.VISIBLE
     }
 
-    override fun setLoadingWithImage(@StringRes titleRes: Int, @StringRes messageRes: Int, @DrawableRes imageRes: Int): Unit = with(binding) {
+    override fun setLoadingWithAnimation(titleRes: Int, messageRes: Int, animationRes: Int): Unit = with(binding) {
         setTitleText(titleRes)
         setMessageText(messageRes)
-        setEmptyViewImage(imageRes)
+        animationView.setAnimation(animationRes)
         title.setVisible()
         message.setVisible()
-        image.setVisible()
+        animationView.setVisible()
     }
 
     override fun setDisplayNoConnection(isNoConnection: Boolean) {

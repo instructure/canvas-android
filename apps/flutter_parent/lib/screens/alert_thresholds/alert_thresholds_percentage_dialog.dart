@@ -77,6 +77,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
       builder: (context) => ArrowAwareFocusScope(
         node: _focusScopeNode,
         child: AlertDialog(
+          scrollable: true,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           title: Text(widget._alertType.getTitle(context)),
           content: TextFormField(

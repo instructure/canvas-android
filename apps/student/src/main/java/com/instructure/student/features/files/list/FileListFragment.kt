@@ -222,13 +222,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                         recordFilePreviewEvent(item)
                         openHtmlUrl(item)
                     }
-                    item.isLocalFile -> {
-                        recordFilePreviewEvent(item)
-                        openLocalMedia(item.contentType, item.url, item.displayName, canvasContext)
-                    }
                     else -> {
                         recordFilePreviewEvent(item)
-                        openMedia(item.contentType, item.url, item.displayName, canvasContext)
+                        openMedia(item.contentType, item.url, item.displayName, canvasContext, localFile = item.isLocalFile)
                     }
                 }
             }
@@ -378,11 +374,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             when (menuItem.itemId) {
                 R.id.openAlternate -> {
                     recordFilePreviewEvent(item)
-                    if (fileListRepository.isOnline()) {
-                        openMedia(item.contentType, item.url, item.displayName, true, canvasContext)
-                    } else {
-                        openLocalMedia(item.contentType, item.url, item.displayName, canvasContext, true)
-                    }
+                    openMedia(item.contentType, item.url, item.displayName, canvasContext, localFile = !fileListRepository.isOnline(), useOutsideApps = true)
                 }
                 R.id.download -> downloadItem(item)
                 R.id.rename -> renameItem(item)

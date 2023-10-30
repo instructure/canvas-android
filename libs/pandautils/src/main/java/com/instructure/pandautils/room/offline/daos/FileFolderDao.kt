@@ -44,17 +44,21 @@ abstract class FileFolderDao {
     @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)")
     abstract suspend fun findAllFilesByCourseId(courseId: Long): List<FileFolderEntity>
 
+    @Query("SELECT * FROM FileFolderEntity WHERE folderId in (SELECT id FROM FileFolderEntity WHERE contextId = :courseId)" +
+        " AND displayName LIKE '%' || :searchQuery || '%' AND isHidden = 0 AND isHiddenForUser = 0")
+    abstract suspend fun searchCourseFiles(courseId: Long, searchQuery: String): List<FileFolderEntity>
+
     @Query("SELECT * FROM FileFolderEntity WHERE id = :id")
     abstract suspend fun findById(id: Long): FileFolderEntity?
 
     @Query("SELECT * FROM FileFolderEntity WHERE id IN (:ids)")
     abstract suspend fun findByIds(ids: Set<Long>): List<FileFolderEntity>
 
-    @Query("SELECT * FROM FileFolderEntity WHERE parentFolderId = :parentId")
-    abstract suspend fun findFoldersByParentId(parentId: Long): List<FileFolderEntity>
+    @Query("SELECT * FROM FileFolderEntity WHERE parentFolderId = :parentId AND isHidden = 0 AND isHiddenForUser = 0")
+    abstract suspend fun findVisibleFoldersByParentId(parentId: Long): List<FileFolderEntity>
 
-    @Query("SELECT * FROM FileFolderEntity WHERE folderId = :folderId")
-    abstract suspend fun findFilesByFolderId(folderId: Long): List<FileFolderEntity>
+    @Query("SELECT * FROM FileFolderEntity WHERE folderId = :folderId AND isHidden = 0 AND isHiddenForUser = 0")
+    abstract suspend fun findVisibleFilesByFolderId(folderId: Long): List<FileFolderEntity>
 
     @Query("SELECT * FROM FileFolderEntity WHERE contextId = :contextId AND parentFolderId = 0")
     abstract suspend fun findRootFolderForContext(contextId: Long): FileFolderEntity?

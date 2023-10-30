@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import com.instructure.pandautils.utils.FilePrefs
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -189,5 +190,23 @@ class HtmlParserTest {
         assertEquals(2, result.externalFileUrls.size)
         assertTrue(result.externalFileUrls.contains("https://live.staticflickr.com/65535/52993992415_0bd9344aba_z.jpg"))
         assertTrue(result.externalFileUrls.contains("https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"))
+    }
+
+    @Test
+    fun `Add internal file ids from file links only when the file is not synced already`() = runTest {
+        val html = "<p>File already synced</p>\n" +
+            "<p><a class=\"instructure_file_link\" href=\"https://tamaskozmer.instructure.com/courses/1L/files/678?wrap=1\" target=\"_blank\" rel=\"noopener\">Group One Final Project -1.key</a></p>\n" +
+            "<p>&nbsp;</p>\n" +
+            "<p>File not synced:</p>\n" +
+            "<p><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" href=\"https://mobiledev.instructure.com/courses/1L/files/1234?wrap=1\" target=\"_blank\" rel=\"noopener\" data-api-endpoint=\"https://mobiledev.instructure.com/api/v1/courses/1L/files/1234\" data-api-returntype=\"File\">file.pdf</a></p>"
+
+        coEvery { fileSyncSettingsDao.findById(1234) } returns FileSyncSettingsEntity(1234, "name", 1L, "")
+        coEvery { fileSyncSettingsDao.findById(678) } returns null
+
+        val result = htmlParser.createHtmlStringWithLocalFiles(html, 1L)
+
+        assertEquals(1, result.internalFileIds.size)
+        assertEquals(678, result.internalFileIds.first())
+        assertEquals(0, result.externalFileUrls.size)
     }
 }
