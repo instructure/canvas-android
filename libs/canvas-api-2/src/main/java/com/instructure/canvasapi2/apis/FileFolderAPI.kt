@@ -89,6 +89,9 @@ object FileFolderAPI {
         @GET("{canvasContext}/files")
         fun searchFiles(@Path(value = "canvasContext", encoded = true) contextPath: String, @Query("search_term") query: String): Call<List<FileFolder>>
 
+        @GET("{canvasContext}/files")
+        suspend fun searchFiles(@Path(value = "canvasContext", encoded = true) contextPath: String, @Query("search_term") query: String, @Tag params: RestParams): DataResult<List<FileFolder>>
+
         @DELETE("files/{fileId}")
         fun deleteFile(@Path("fileId") fileId: Long): Call<FileFolder>
 
