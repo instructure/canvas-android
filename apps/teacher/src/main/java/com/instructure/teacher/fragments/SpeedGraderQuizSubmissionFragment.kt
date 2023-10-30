@@ -89,7 +89,7 @@ class SpeedGraderQuizSubmissionFragment : Fragment() {
 
     private fun viewQuizSubmission() {
         val bundle = SpeedGraderQuizWebViewFragment.newInstance(mCourseId, mAssignmentId, mStudentId, mUrl).nonNullArgs
-        RouteMatcher.route(requireContext(), Route(SpeedGraderQuizWebViewFragment::class.java, null, bundle))
+        RouteMatcher.route(requireActivity(), Route(SpeedGraderQuizWebViewFragment::class.java, null, bundle))
     }
 
     companion object {

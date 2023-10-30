@@ -379,6 +379,14 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         }
     }
 
+    fun openLocalMedia(mime: String?, path: String?, filename: String?, canvasContext: CanvasContext, useOutsideApps: Boolean = false) {
+        val owner = activity ?: return
+        onMainThread {
+            openMediaBundle = OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, path, filename, useOutsideApps)
+            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
+        }
+    }
+
     fun openMedia(canvasContext: CanvasContext, url: String, filename: String?) {
         val owner = activity ?: return
         onMainThread {
@@ -442,9 +450,11 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
     override fun getFragment(): Fragment? = this
 
     fun setEmptyView(emptyView: EmptyView, drawableId: Int, titleId: Int, messageId: Int) {
-        emptyView.setEmptyViewImage(requireContext().getDrawableCompat(drawableId))
-        emptyView.setTitleText(titleId)
-        emptyView.setMessageText(messageId)
-        emptyView.setListEmpty()
+        if (context != null) {
+            emptyView.setEmptyViewImage(requireContext().getDrawableCompat(drawableId))
+            emptyView.setTitleText(titleId)
+            emptyView.setMessageText(messageId)
+            emptyView.setListEmpty()
+        }
     }
 }

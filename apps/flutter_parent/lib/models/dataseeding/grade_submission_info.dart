@@ -27,8 +27,7 @@ abstract class GradeSubmissionInfo implements Built<GradeSubmissionInfo, GradeSu
   @BuiltValueField(wireName: "posted_grade")
   String get postedGrade;
 
-  @nullable
-  bool get excuse;
+  bool? get excuse;
 
   static void _initializeBuilder(GradeSubmissionInfoBuilder b) => b;
 }

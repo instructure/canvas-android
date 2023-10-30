@@ -32,17 +32,16 @@ class AnnouncementDetailScreen extends StatefulWidget {
   final String courseId;
   final AnnouncementType announcementType;
 
-  AnnouncementDetailScreen(this.announcementId, this.announcementType, this.courseId, BuildContext context, {Key key})
-      : super(key: key);
+  AnnouncementDetailScreen(this.announcementId, this.announcementType, this.courseId, BuildContext? context, {super.key});
 
   @override
   State createState() => _AnnouncementDetailScreenState();
 }
 
 class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
-  Future<AnnouncementViewState> _announcementFuture;
+  Future<AnnouncementViewState?>? _announcementFuture;
 
-  Future<AnnouncementViewState> _loadAnnouncement(BuildContext context, {bool forceRefresh = false}) =>
+  Future<AnnouncementViewState?> _loadAnnouncement(BuildContext context, {bool forceRefresh = false}) =>
       _interactor.getAnnouncement(
         widget.announcementId,
         widget.announcementType,
@@ -60,7 +59,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
     }
     return FutureBuilder(
       future: _announcementFuture,
-      builder: (context, AsyncSnapshot<AnnouncementViewState> snapshot) {
+      builder: (context, AsyncSnapshot<AnnouncementViewState?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
         }
@@ -68,7 +67,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         if (snapshot.hasError || snapshot.data == null) {
           return _error();
         } else {
-          return _announcementScaffold(snapshot.data);
+          return _announcementScaffold(snapshot.data!);
         }
       },
     );
@@ -80,11 +79,11 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         title: Text(announcementViewState.toolbarTitle),
       ),
       body: RefreshIndicator(
-          onRefresh: () {
+          onRefresh: () async {
             setState(() {
               _announcementFuture = _loadAnnouncement(context, forceRefresh: true);
             });
-            return _announcementFuture.catchError((_) {});
+            await  _announcementFuture?.catchError((_) { return Future.value(null); });
           },
           child: _announcementBody(announcementViewState)),
     );
@@ -96,12 +95,12 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
       children: <Widget>[
         Text(
           announcementViewState.announcementTitle,
-          style: Theme.of(context).textTheme.headline4,
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
         SizedBox(height: 4),
         Text(
-          announcementViewState.postedAt.l10nFormat(L10n(context).dateAtTime),
-          style: Theme.of(context).textTheme.caption,
+          announcementViewState.postedAt.l10nFormat(L10n(context).dateAtTime) ?? '',
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         SizedBox(height: 16),
         Divider(),
@@ -123,7 +122,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         }));
   }
 
-  Widget _attachmentsWidget(BuildContext context, Attachment attachment) {
+  Widget _attachmentsWidget(BuildContext context, Attachment? attachment) {
     if (attachment == null) return Container();
     return Container(
         height: 108,

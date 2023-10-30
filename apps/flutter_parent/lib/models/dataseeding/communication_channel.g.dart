@@ -20,10 +20,10 @@ class _$CommunicationChannelSerializer
   final String wireName = 'CommunicationChannel';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, CommunicationChannel object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'skip_confirmation',
       serializers.serialize(object.skipConfirmation,
           specifiedType: const FullType(bool)),
@@ -34,20 +34,19 @@ class _$CommunicationChannelSerializer
 
   @override
   CommunicationChannel deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CommunicationChannelBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'skip_confirmation':
           result.skipConfirmation = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -61,14 +60,12 @@ class _$CommunicationChannel extends CommunicationChannel {
   final bool skipConfirmation;
 
   factory _$CommunicationChannel(
-          [void Function(CommunicationChannelBuilder) updates]) =>
-      (new CommunicationChannelBuilder()..update(updates)).build();
+          [void Function(CommunicationChannelBuilder)? updates]) =>
+      (new CommunicationChannelBuilder()..update(updates))._build();
 
-  _$CommunicationChannel._({this.skipConfirmation}) : super._() {
-    if (skipConfirmation == null) {
-      throw new BuiltValueNullFieldError(
-          'CommunicationChannel', 'skipConfirmation');
-    }
+  _$CommunicationChannel._({required this.skipConfirmation}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        skipConfirmation, r'CommunicationChannel', 'skipConfirmation');
   }
 
   @override
@@ -89,12 +86,15 @@ class _$CommunicationChannel extends CommunicationChannel {
 
   @override
   int get hashCode {
-    return $jf($jc(0, skipConfirmation.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, skipConfirmation.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CommunicationChannel')
+    return (newBuiltValueToStringHelper(r'CommunicationChannel')
           ..add('skipConfirmation', skipConfirmation))
         .toString();
   }
@@ -102,11 +102,11 @@ class _$CommunicationChannel extends CommunicationChannel {
 
 class CommunicationChannelBuilder
     implements Builder<CommunicationChannel, CommunicationChannelBuilder> {
-  _$CommunicationChannel _$v;
+  _$CommunicationChannel? _$v;
 
-  bool _skipConfirmation;
-  bool get skipConfirmation => _$this._skipConfirmation;
-  set skipConfirmation(bool skipConfirmation) =>
+  bool? _skipConfirmation;
+  bool? get skipConfirmation => _$this._skipConfirmation;
+  set skipConfirmation(bool? skipConfirmation) =>
       _$this._skipConfirmation = skipConfirmation;
 
   CommunicationChannelBuilder() {
@@ -114,8 +114,9 @@ class CommunicationChannelBuilder
   }
 
   CommunicationChannelBuilder get _$this {
-    if (_$v != null) {
-      _skipConfirmation = _$v.skipConfirmation;
+    final $v = _$v;
+    if ($v != null) {
+      _skipConfirmation = $v.skipConfirmation;
       _$v = null;
     }
     return this;
@@ -123,24 +124,26 @@ class CommunicationChannelBuilder
 
   @override
   void replace(CommunicationChannel other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CommunicationChannel;
   }
 
   @override
-  void update(void Function(CommunicationChannelBuilder) updates) {
+  void update(void Function(CommunicationChannelBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CommunicationChannel build() {
-    final _$result =
-        _$v ?? new _$CommunicationChannel._(skipConfirmation: skipConfirmation);
+  CommunicationChannel build() => _build();
+
+  _$CommunicationChannel _build() {
+    final _$result = _$v ??
+        new _$CommunicationChannel._(
+            skipConfirmation: BuiltValueNullFieldError.checkNotNull(
+                skipConfirmation, r'CommunicationChannel', 'skipConfirmation'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

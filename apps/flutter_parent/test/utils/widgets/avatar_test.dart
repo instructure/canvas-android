@@ -24,7 +24,7 @@ void main() {
 
   test('Question mark when short name is empty or null', () {
     var blank = '';
-    var nullName = null;
+    String? nullName = null;
 
     expect(Avatar.getUserInitials(blank), equals('?'));
     expect(Avatar.getUserInitials(nullName), equals('?'));

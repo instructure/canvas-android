@@ -21,6 +21,7 @@ import 'package:test/test.dart';
 
 import '../test_app.dart';
 import '../test_helpers/mock_helpers.dart';
+import '../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final database = MockDatabase();
@@ -204,7 +205,7 @@ void main() {
     });
 
     test('joinfilters returns empty string for null filter list', () {
-      Set<String> filters = null;
+      Set<String>? filters = null;
       final expected = '';
       final actual = CalendarFilterDb.joinFilters(filters);
       expect(actual, expected);
@@ -234,7 +235,7 @@ void main() {
     });
 
     test('splitFilters returns empty list for null string', () {
-      String input = null;
+      String? input = null;
       List<String> expected = [];
       final actual = CalendarFilterDb.splitFilters(input);
       expect(actual, expected);

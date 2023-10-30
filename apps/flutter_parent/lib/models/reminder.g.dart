@@ -15,9 +15,9 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
   final String wireName = 'Reminder';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Reminder object,
+  Iterable<Object?> serialize(Serializers serializers, Reminder object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'userDomain',
       serializers.serialize(object.userDomain,
           specifiedType: const FullType(String)),
@@ -32,59 +32,61 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
       'courseId',
       serializers.serialize(object.courseId,
           specifiedType: const FullType(String)),
-      'date',
-      serializers.serialize(object.date,
-          specifiedType: const FullType(DateTime)),
     ];
-    result.add('id');
-    if (object.id == null) {
-      result.add(null);
-    } else {
-      result.add(
-          serializers.serialize(object.id, specifiedType: const FullType(int)));
-    }
+    Object? value;
+    value = object.id;
+
+    result
+      ..add('id')
+      ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    value = object.date;
+
+    result
+      ..add('date')
+      ..add(serializers.serialize(value,
+          specifiedType: const FullType(DateTime)));
+
     return result;
   }
 
   @override
-  Reminder deserialize(Serializers serializers, Iterable<Object> serialized,
+  Reminder deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new ReminderBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
         case 'userDomain':
           result.userDomain = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'userId':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'type':
           result.type = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'itemId':
           result.itemId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'courseId':
           result.courseId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'date':
           result.date = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
       }
     }
@@ -95,7 +97,7 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
 
 class _$Reminder extends Reminder {
   @override
-  final int id;
+  final int? id;
   @override
   final String userDomain;
   @override
@@ -107,38 +109,26 @@ class _$Reminder extends Reminder {
   @override
   final String courseId;
   @override
-  final DateTime date;
+  final DateTime? date;
 
-  factory _$Reminder([void Function(ReminderBuilder) updates]) =>
-      (new ReminderBuilder()..update(updates)).build();
+  factory _$Reminder([void Function(ReminderBuilder)? updates]) =>
+      (new ReminderBuilder()..update(updates))._build();
 
   _$Reminder._(
       {this.id,
-      this.userDomain,
-      this.userId,
-      this.type,
-      this.itemId,
-      this.courseId,
+      required this.userDomain,
+      required this.userId,
+      required this.type,
+      required this.itemId,
+      required this.courseId,
       this.date})
       : super._() {
-    if (userDomain == null) {
-      throw new BuiltValueNullFieldError('Reminder', 'userDomain');
-    }
-    if (userId == null) {
-      throw new BuiltValueNullFieldError('Reminder', 'userId');
-    }
-    if (type == null) {
-      throw new BuiltValueNullFieldError('Reminder', 'type');
-    }
-    if (itemId == null) {
-      throw new BuiltValueNullFieldError('Reminder', 'itemId');
-    }
-    if (courseId == null) {
-      throw new BuiltValueNullFieldError('Reminder', 'courseId');
-    }
-    if (date == null) {
-      throw new BuiltValueNullFieldError('Reminder', 'date');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        userDomain, r'Reminder', 'userDomain');
+    BuiltValueNullFieldError.checkNotNull(userId, r'Reminder', 'userId');
+    BuiltValueNullFieldError.checkNotNull(type, r'Reminder', 'type');
+    BuiltValueNullFieldError.checkNotNull(itemId, r'Reminder', 'itemId');
+    BuiltValueNullFieldError.checkNotNull(courseId, r'Reminder', 'courseId');
   }
 
   @override
@@ -163,21 +153,21 @@ class _$Reminder extends Reminder {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc($jc($jc(0, id.hashCode), userDomain.hashCode),
-                        userId.hashCode),
-                    type.hashCode),
-                itemId.hashCode),
-            courseId.hashCode),
-        date.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, userDomain.hashCode);
+    _$hash = $jc(_$hash, userId.hashCode);
+    _$hash = $jc(_$hash, type.hashCode);
+    _$hash = $jc(_$hash, itemId.hashCode);
+    _$hash = $jc(_$hash, courseId.hashCode);
+    _$hash = $jc(_$hash, date.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Reminder')
+    return (newBuiltValueToStringHelper(r'Reminder')
           ..add('id', id)
           ..add('userDomain', userDomain)
           ..add('userId', userId)
@@ -190,49 +180,50 @@ class _$Reminder extends Reminder {
 }
 
 class ReminderBuilder implements Builder<Reminder, ReminderBuilder> {
-  _$Reminder _$v;
+  _$Reminder? _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  int? _id;
+  int? get id => _$this._id;
+  set id(int? id) => _$this._id = id;
 
-  String _userDomain;
-  String get userDomain => _$this._userDomain;
-  set userDomain(String userDomain) => _$this._userDomain = userDomain;
+  String? _userDomain;
+  String? get userDomain => _$this._userDomain;
+  set userDomain(String? userDomain) => _$this._userDomain = userDomain;
 
-  String _userId;
-  String get userId => _$this._userId;
-  set userId(String userId) => _$this._userId = userId;
+  String? _userId;
+  String? get userId => _$this._userId;
+  set userId(String? userId) => _$this._userId = userId;
 
-  String _type;
-  String get type => _$this._type;
-  set type(String type) => _$this._type = type;
+  String? _type;
+  String? get type => _$this._type;
+  set type(String? type) => _$this._type = type;
 
-  String _itemId;
-  String get itemId => _$this._itemId;
-  set itemId(String itemId) => _$this._itemId = itemId;
+  String? _itemId;
+  String? get itemId => _$this._itemId;
+  set itemId(String? itemId) => _$this._itemId = itemId;
 
-  String _courseId;
-  String get courseId => _$this._courseId;
-  set courseId(String courseId) => _$this._courseId = courseId;
+  String? _courseId;
+  String? get courseId => _$this._courseId;
+  set courseId(String? courseId) => _$this._courseId = courseId;
 
-  DateTime _date;
-  DateTime get date => _$this._date;
-  set date(DateTime date) => _$this._date = date;
+  DateTime? _date;
+  DateTime? get date => _$this._date;
+  set date(DateTime? date) => _$this._date = date;
 
   ReminderBuilder() {
     Reminder._initializeBuilder(this);
   }
 
   ReminderBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _userDomain = _$v.userDomain;
-      _userId = _$v.userId;
-      _type = _$v.type;
-      _itemId = _$v.itemId;
-      _courseId = _$v.courseId;
-      _date = _$v.date;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _userDomain = $v.userDomain;
+      _userId = $v.userId;
+      _type = $v.type;
+      _itemId = $v.itemId;
+      _courseId = $v.courseId;
+      _date = $v.date;
       _$v = null;
     }
     return this;
@@ -240,31 +231,36 @@ class ReminderBuilder implements Builder<Reminder, ReminderBuilder> {
 
   @override
   void replace(Reminder other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Reminder;
   }
 
   @override
-  void update(void Function(ReminderBuilder) updates) {
+  void update(void Function(ReminderBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Reminder build() {
+  Reminder build() => _build();
+
+  _$Reminder _build() {
     final _$result = _$v ??
         new _$Reminder._(
             id: id,
-            userDomain: userDomain,
-            userId: userId,
-            type: type,
-            itemId: itemId,
-            courseId: courseId,
+            userDomain: BuiltValueNullFieldError.checkNotNull(
+                userDomain, r'Reminder', 'userDomain'),
+            userId: BuiltValueNullFieldError.checkNotNull(
+                userId, r'Reminder', 'userId'),
+            type: BuiltValueNullFieldError.checkNotNull(
+                type, r'Reminder', 'type'),
+            itemId: BuiltValueNullFieldError.checkNotNull(
+                itemId, r'Reminder', 'itemId'),
+            courseId: BuiltValueNullFieldError.checkNotNull(
+                courseId, r'Reminder', 'courseId'),
             date: date);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

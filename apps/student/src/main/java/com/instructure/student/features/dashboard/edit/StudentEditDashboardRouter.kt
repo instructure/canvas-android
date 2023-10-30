@@ -19,7 +19,7 @@ package com.instructure.student.features.dashboard.edit
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
-import com.instructure.student.fragment.CourseBrowserFragment
+import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentEditDashboardRouter(private val activity: FragmentActivity) : EditDashboardRouter {

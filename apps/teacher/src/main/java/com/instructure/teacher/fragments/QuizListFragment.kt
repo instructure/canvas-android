@@ -120,7 +120,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
                 RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain)
             } else {
                 val args = QuizDetailsFragment.makeBundle(quiz)
-                RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
+                RouteMatcher.route(requireActivity(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))
             }
         }
     }

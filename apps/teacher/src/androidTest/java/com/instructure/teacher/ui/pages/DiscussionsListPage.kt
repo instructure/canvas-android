@@ -160,7 +160,7 @@ class DiscussionsListPage(val searchable: Searchable) : BasePage() {
      */
     fun selectOverFlowMenu(menuText: String) {
         waitForView(withText(menuText) + withParent(R.id.coursePages)).click()
-        onView(withText(R.string.ok) + withAncestor(R.id.buttonPanel)).click()
+        onView(withText(android.R.string.ok) + withAncestor(R.id.buttonPanel)).click()
     }
 
     /**

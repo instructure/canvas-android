@@ -17,9 +17,9 @@ class _$PlannerSubmissionSerializer
   final String wireName = 'PlannerSubmission';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, PlannerSubmission object,
+  Iterable<Object?> serialize(Serializers serializers, PlannerSubmission object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'submitted',
       serializers.serialize(object.submitted,
           specifiedType: const FullType(bool)),
@@ -43,40 +43,39 @@ class _$PlannerSubmissionSerializer
 
   @override
   PlannerSubmission deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PlannerSubmissionBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'submitted':
           result.submitted = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'excused':
           result.excused = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'graded':
           result.graded = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'late':
           result.late = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'missing':
           result.missing = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'needs_grading':
           result.needsGrading = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -100,35 +99,28 @@ class _$PlannerSubmission extends PlannerSubmission {
   final bool needsGrading;
 
   factory _$PlannerSubmission(
-          [void Function(PlannerSubmissionBuilder) updates]) =>
-      (new PlannerSubmissionBuilder()..update(updates)).build();
+          [void Function(PlannerSubmissionBuilder)? updates]) =>
+      (new PlannerSubmissionBuilder()..update(updates))._build();
 
   _$PlannerSubmission._(
-      {this.submitted,
-      this.excused,
-      this.graded,
-      this.late,
-      this.missing,
-      this.needsGrading})
+      {required this.submitted,
+      required this.excused,
+      required this.graded,
+      required this.late,
+      required this.missing,
+      required this.needsGrading})
       : super._() {
-    if (submitted == null) {
-      throw new BuiltValueNullFieldError('PlannerSubmission', 'submitted');
-    }
-    if (excused == null) {
-      throw new BuiltValueNullFieldError('PlannerSubmission', 'excused');
-    }
-    if (graded == null) {
-      throw new BuiltValueNullFieldError('PlannerSubmission', 'graded');
-    }
-    if (late == null) {
-      throw new BuiltValueNullFieldError('PlannerSubmission', 'late');
-    }
-    if (missing == null) {
-      throw new BuiltValueNullFieldError('PlannerSubmission', 'missing');
-    }
-    if (needsGrading == null) {
-      throw new BuiltValueNullFieldError('PlannerSubmission', 'needsGrading');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        submitted, r'PlannerSubmission', 'submitted');
+    BuiltValueNullFieldError.checkNotNull(
+        excused, r'PlannerSubmission', 'excused');
+    BuiltValueNullFieldError.checkNotNull(
+        graded, r'PlannerSubmission', 'graded');
+    BuiltValueNullFieldError.checkNotNull(late, r'PlannerSubmission', 'late');
+    BuiltValueNullFieldError.checkNotNull(
+        missing, r'PlannerSubmission', 'missing');
+    BuiltValueNullFieldError.checkNotNull(
+        needsGrading, r'PlannerSubmission', 'needsGrading');
   }
 
   @override
@@ -153,19 +145,20 @@ class _$PlannerSubmission extends PlannerSubmission {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc($jc($jc(0, submitted.hashCode), excused.hashCode),
-                    graded.hashCode),
-                late.hashCode),
-            missing.hashCode),
-        needsGrading.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, submitted.hashCode);
+    _$hash = $jc(_$hash, excused.hashCode);
+    _$hash = $jc(_$hash, graded.hashCode);
+    _$hash = $jc(_$hash, late.hashCode);
+    _$hash = $jc(_$hash, missing.hashCode);
+    _$hash = $jc(_$hash, needsGrading.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('PlannerSubmission')
+    return (newBuiltValueToStringHelper(r'PlannerSubmission')
           ..add('submitted', submitted)
           ..add('excused', excused)
           ..add('graded', graded)
@@ -178,44 +171,45 @@ class _$PlannerSubmission extends PlannerSubmission {
 
 class PlannerSubmissionBuilder
     implements Builder<PlannerSubmission, PlannerSubmissionBuilder> {
-  _$PlannerSubmission _$v;
+  _$PlannerSubmission? _$v;
 
-  bool _submitted;
-  bool get submitted => _$this._submitted;
-  set submitted(bool submitted) => _$this._submitted = submitted;
+  bool? _submitted;
+  bool? get submitted => _$this._submitted;
+  set submitted(bool? submitted) => _$this._submitted = submitted;
 
-  bool _excused;
-  bool get excused => _$this._excused;
-  set excused(bool excused) => _$this._excused = excused;
+  bool? _excused;
+  bool? get excused => _$this._excused;
+  set excused(bool? excused) => _$this._excused = excused;
 
-  bool _graded;
-  bool get graded => _$this._graded;
-  set graded(bool graded) => _$this._graded = graded;
+  bool? _graded;
+  bool? get graded => _$this._graded;
+  set graded(bool? graded) => _$this._graded = graded;
 
-  bool _late;
-  bool get late => _$this._late;
-  set late(bool late) => _$this._late = late;
+  bool? _late;
+  bool? get late => _$this._late;
+  set late(bool? late) => _$this._late = late;
 
-  bool _missing;
-  bool get missing => _$this._missing;
-  set missing(bool missing) => _$this._missing = missing;
+  bool? _missing;
+  bool? get missing => _$this._missing;
+  set missing(bool? missing) => _$this._missing = missing;
 
-  bool _needsGrading;
-  bool get needsGrading => _$this._needsGrading;
-  set needsGrading(bool needsGrading) => _$this._needsGrading = needsGrading;
+  bool? _needsGrading;
+  bool? get needsGrading => _$this._needsGrading;
+  set needsGrading(bool? needsGrading) => _$this._needsGrading = needsGrading;
 
   PlannerSubmissionBuilder() {
     PlannerSubmission._initializeBuilder(this);
   }
 
   PlannerSubmissionBuilder get _$this {
-    if (_$v != null) {
-      _submitted = _$v.submitted;
-      _excused = _$v.excused;
-      _graded = _$v.graded;
-      _late = _$v.late;
-      _missing = _$v.missing;
-      _needsGrading = _$v.needsGrading;
+    final $v = _$v;
+    if ($v != null) {
+      _submitted = $v.submitted;
+      _excused = $v.excused;
+      _graded = $v.graded;
+      _late = $v.late;
+      _missing = $v.missing;
+      _needsGrading = $v.needsGrading;
       _$v = null;
     }
     return this;
@@ -223,30 +217,36 @@ class PlannerSubmissionBuilder
 
   @override
   void replace(PlannerSubmission other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$PlannerSubmission;
   }
 
   @override
-  void update(void Function(PlannerSubmissionBuilder) updates) {
+  void update(void Function(PlannerSubmissionBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$PlannerSubmission build() {
+  PlannerSubmission build() => _build();
+
+  _$PlannerSubmission _build() {
     final _$result = _$v ??
         new _$PlannerSubmission._(
-            submitted: submitted,
-            excused: excused,
-            graded: graded,
-            late: late,
-            missing: missing,
-            needsGrading: needsGrading);
+            submitted: BuiltValueNullFieldError.checkNotNull(
+                submitted, r'PlannerSubmission', 'submitted'),
+            excused: BuiltValueNullFieldError.checkNotNull(
+                excused, r'PlannerSubmission', 'excused'),
+            graded: BuiltValueNullFieldError.checkNotNull(
+                graded, r'PlannerSubmission', 'graded'),
+            late: BuiltValueNullFieldError.checkNotNull(
+                late, r'PlannerSubmission', 'late'),
+            missing: BuiltValueNullFieldError.checkNotNull(
+                missing, r'PlannerSubmission', 'missing'),
+            needsGrading: BuiltValueNullFieldError.checkNotNull(
+                needsGrading, r'PlannerSubmission', 'needsGrading'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

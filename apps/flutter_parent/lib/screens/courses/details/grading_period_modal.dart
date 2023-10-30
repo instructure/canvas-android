@@ -18,9 +18,9 @@ import 'package:flutter_parent/models/grading_period.dart';
 class GradingPeriodModal extends StatelessWidget {
   final List<GradingPeriod> gradingPeriods;
 
-  const GradingPeriodModal._internal({Key key, this.gradingPeriods}) : super(key: key);
+  const GradingPeriodModal._internal({required this.gradingPeriods, super.key});
 
-  static Future<GradingPeriod> asBottomSheet(BuildContext context, List<GradingPeriod> gradingPeriods) =>
+  static Future<GradingPeriod?> asBottomSheet(BuildContext context, List<GradingPeriod> gradingPeriods) =>
       showModalBottomSheet(
         context: context,
         builder: (context) => GradingPeriodModal._internal(gradingPeriods: gradingPeriods),
@@ -35,12 +35,12 @@ class GradingPeriodModal extends StatelessWidget {
         if (index == 0) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            child: Text(L10n(context).filterBy, style: Theme.of(context).textTheme.caption),
+            child: Text(L10n(context).filterBy, style: Theme.of(context).textTheme.bodySmall),
           );
         }
         final gradingPeriod = gradingPeriods[index - 1];
         return ListTile(
-          title: Text(gradingPeriod.title, style: Theme.of(context).textTheme.subtitle1),
+          title: Text(gradingPeriod.title!, style: Theme.of(context).textTheme.titleMedium),
           onTap: () => Navigator.of(context).pop(gradingPeriod),
         );
       },

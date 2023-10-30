@@ -26,7 +26,7 @@ data class Term(
         override val id: Long = 0,
         val name: String? = null,
         @SerializedName("start_at")
-        private val startAt: String? = null,
+        val startAt: String? = null,
         @SerializedName("end_at")
         val endAt: String? = null,
 

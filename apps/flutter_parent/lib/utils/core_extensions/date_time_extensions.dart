@@ -18,59 +18,59 @@ import 'package:intl/intl.dart';
 /// to the 'en' locale if the current locale is unsupported.
 String get supportedDateLocale => DateFormat.localeExists(Intl.getCurrentLocale()) ? Intl.getCurrentLocale() : 'en';
 
-extension Format on DateTime {
+extension Format on DateTime? {
   /// Formats this [DateTime] for the current locale using the provided localization function
-  String l10nFormat(
-    String Function(String date, String time) localizer, {
-    DateFormat dateFormat,
-    DateFormat timeFormat,
+  String? l10nFormat(
+    String Function(String date, String time)? localizer, {
+    DateFormat? dateFormat,
+    DateFormat? timeFormat,
   }) {
     if (this == null || localizer == null) return null;
-    DateTime local = toLocal();
+    DateTime local = this!.toLocal();
     String date = (dateFormat ?? DateFormat.MMMd(supportedDateLocale)).format(local);
     String time = (timeFormat ?? DateFormat.jm(supportedDateLocale)).format(local);
     return localizer(date, time);
   }
 
-  bool isSameDayAs(DateTime other) {
+  bool isSameDayAs(DateTime? other) {
     if (this == null || other == null) return false;
-    return this.year == other.year && this.month == other.month && this.day == other.day;
+    return this!.year == other.year && this!.month == other.month && this!.day == other.day;
   }
 
-  DateTime withFirstDayOfWeek() {
+  DateTime? withFirstDayOfWeek() {
     if (this == null) return null;
     final firstDay = DateFormat(null, supportedDateLocale).dateSymbols.FIRSTDAYOFWEEK;
-    var offset = (this.weekday - 1 - firstDay) % 7;
-    return DateTime(this.year, this.month, this.day - offset);
+    var offset = (this!.weekday - 1 - firstDay) % 7;
+    return DateTime(this!.year, this!.month, this!.day - offset);
   }
 
-  int get localDayOfWeek {
+  int? get localDayOfWeek {
     if (this == null) return null;
     final firstDay = DateFormat(null, supportedDateLocale).dateSymbols.FIRSTDAYOFWEEK;
-    return (this.weekday - 1 - firstDay) % 7;
+    return (this!.weekday - 1 - firstDay) % 7;
   }
 
   bool isWeekend() {
     if (this == null) return false;
-    return DateFormat(null, supportedDateLocale).dateSymbols.WEEKENDRANGE.contains((this.weekday - 1) % 7);
+    return DateFormat(null, supportedDateLocale).dateSymbols.WEEKENDRANGE.contains((this!.weekday - 1) % 7);
   }
 
-  DateTime withStartOfDay() => this == null ? null : DateTime(year, month, day);
+  DateTime? withStartOfDay() => this == null ? null : DateTime(this!.year, this!.month, this!.day);
 
-  DateTime withEndOfDay() => this == null ? null : DateTime(year, month, day, 23, 59, 59, 999);
+  DateTime? withEndOfDay() => this == null ? null : DateTime(this!.year, this!.month, this!.day, 23, 59, 59, 999);
 
-  DateTime withStartOfMonth() => this == null ? null : DateTime(year, month, 1);
+  DateTime? withStartOfMonth() => this == null ? null : DateTime(this!.year, this!.month, 1);
 
-  DateTime withEndOfMonth() => this == null ? null : DateTime(year, month + 1, 0, 23, 59, 59, 999);
+  DateTime? withEndOfMonth() => this == null ? null : DateTime(this!.year, this!.month + 1, 0, 23, 59, 59, 999);
 
   /// Returns this DateTime rounded to the nearest date at midnight. In other words, if the time is before noon this
   /// will return the same date but with the time set to midnight. If the time is at noon or after noon, this will
   /// return the following day at midnight.
-  DateTime roundToMidnight() {
+  DateTime? roundToMidnight() {
     if (this == null) {
       return null;
-    } else if (hour >= 12) {
-      return DateTime(year, month, day + 1);
+    } else if (this!.hour >= 12) {
+      return DateTime(this!.year, this!.month, this!.day + 1);
     } else {
       return withStartOfDay();
     }

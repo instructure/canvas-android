@@ -39,22 +39,18 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
 
   /// 100 character preview of the last message
   @BuiltValueField(wireName: 'last_message')
-  @nullable
-  String get lastMessage;
+  String? get lastMessage;
 
   /// 100 character preview of the last authored message
   @BuiltValueField(wireName: 'last_authored_message')
-  @nullable
-  String get lastAuthoredMessage;
+  String? get lastAuthoredMessage;
 
   /// Date of the last message sent
   @BuiltValueField(wireName: 'last_message_at')
-  @nullable
-  DateTime get lastMessageAt;
+  DateTime? get lastMessageAt;
 
   @BuiltValueField(wireName: 'last_authored_message_at')
-  @nullable
-  DateTime get lastAuthoredMessageAt;
+  DateTime? get lastAuthoredMessageAt;
 
   // Number of messages in the conversation.
   @BuiltValueField(wireName: 'message_count')
@@ -70,32 +66,26 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
 
   /// The avatar to display. Knows if group, user, etc.
   @BuiltValueField(wireName: 'avatar_url')
-  @nullable
-  String get avatarUrl;
+  String? get avatarUrl;
 
   /// Whether this conversation is visible in the current context. Not 100% what that means
   @BuiltValueField(wireName: 'visible')
   bool get isVisible;
 
   /// The IDs of all people in the conversation. EXCLUDING the current user unless it's a monologue
-  @nullable
-  BuiltList<String> get audience;
+  BuiltList<String>? get audience;
 
   /// The name and IDs of all participants in the conversation
-  @nullable
-  BuiltList<BasicUser> get participants;
+  BuiltList<BasicUser>? get participants;
 
   /// Messages attached to the conversation
-  @nullable
-  BuiltList<Message> get messages;
+  BuiltList<Message>? get messages;
 
   @BuiltValueField(wireName: 'context_name')
-  @nullable
-  String get contextName;
+  String? get contextName;
 
   @BuiltValueField(wireName: 'context_code')
-  @nullable
-  String get contextCode;
+  String? get contextCode;
 
   bool isUnread() => workflowState == ConversationWorkflowState.unread;
 
@@ -111,9 +101,12 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
     ..isStarred = false
     ..isVisible = false;
 
-  String getContextId() {
-    final index = contextCode.indexOf('_');
-    return contextCode.substring(index + 1, contextCode.length);
+  String? getContextId() {
+    if (contextCode == null) {
+      return null;
+    }
+    final index = contextCode!.indexOf('_');
+    return contextCode!.substring(index + 1, contextCode!.length);
   }
 }
 

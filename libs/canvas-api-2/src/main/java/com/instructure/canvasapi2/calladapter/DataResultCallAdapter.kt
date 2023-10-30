@@ -28,6 +28,6 @@ class DataResultCallAdapter<T : Any>(
     override fun responseType(): Type = successType
 
     override fun adapt(call: Call<T>): Call<DataResult<T>> {
-        return DataResultCall(call)
+        return DataResultCall(call, successType)
     }
 }

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2023 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.SyncProgressItemViewModel" />
+
+        <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> itemViewModel.onClick.invoke()}"
+        app:cardBackgroundColor="@{itemViewModel.data.progressState == ProgressState.ERROR ? @color/backgroundDanger : @color/licorice}"
+        app:cardCornerRadius="6dp"
+        app:contentPadding="16dp"
+        tools:cardBackgroundColor="@color/licorice">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/syncProgressTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@{itemViewModel.data.title}"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@id/dismissButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Syncing offline content" />
+
+            <ImageView
+                android:id="@+id/dismissButton"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/a11y_contentDescription_syncDashboardNotificationDismiss"
+                android:src="@drawable/ic_close"
+                android:visibility="@{itemViewModel.data.progressState == ProgressState.ERROR ? View.VISIBLE : View.GONE}"
+                app:accessibleTouchTarget="@{true}"
+                app:layout_constraintBottom_toBottomOf="@id/syncProgressTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/syncProgressTitle"
+                android:onClick="@{() -> itemViewModel.onDismiss.invoke()}"/>
+
+            <TextView
+                android:id="@+id/syncProgressSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{itemViewModel.data.subtitle}"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/syncProgressTitle"
+                tools:text="125 files are syncing." />
+
+            <ProgressBar
+                android:id="@+id/syncProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:indeterminate="@{itemViewModel.data.progressState == ProgressState.STARTING}"
+                android:indeterminateTint="@color/white"
+                android:progress="@{itemViewModel.data.progress}"
+                android:progressBackgroundTint="@color/white"
+                android:progressTint="@color/white"
+                android:visibility="@{itemViewModel.data.progressState == ProgressState.ERROR ? View.GONE : View.VISIBLE}"
+                app:layout_constraintTop_toBottomOf="@id/syncProgressSubtitle"
+                tools:progress="50" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>

@@ -50,4 +50,6 @@ class TeacherLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
             listener(registrationId)
         }
     }
+
+    override fun removeOfflineData(userId: Long?) {}
 }

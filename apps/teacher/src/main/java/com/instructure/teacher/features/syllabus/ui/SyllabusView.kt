@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
@@ -189,17 +190,17 @@ class SyllabusView(
     }
 
     fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
-        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+        RouteMatcher.route(activity as FragmentActivity, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
         val route = Route(null, CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
-        RouteMatcher.route(context, route)
+        RouteMatcher.route(activity as FragmentActivity, route)
     }
 
     fun openEditSyllabus(course: Course, summaryAllowed: Boolean) {
         val fragmentArgs = EditSyllabusFragment.createArgs(course, summaryAllowed)
-        RouteMatcher.route(context, Route(EditSyllabusFragment::class.java, course, fragmentArgs))
+        RouteMatcher.route(activity as FragmentActivity, Route(EditSyllabusFragment::class.java, course, fragmentArgs))
     }
 
     fun registerEventBus() {

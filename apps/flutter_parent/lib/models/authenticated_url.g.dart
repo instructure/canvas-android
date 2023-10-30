@@ -17,9 +17,9 @@ class _$AuthenticatedUrlSerializer
   final String wireName = 'AuthenticatedUrl';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, AuthenticatedUrl object,
+  Iterable<Object?> serialize(Serializers serializers, AuthenticatedUrl object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'session_url',
       serializers.serialize(object.sessionUrl,
           specifiedType: const FullType(String)),
@@ -33,23 +33,23 @@ class _$AuthenticatedUrlSerializer
 
   @override
   AuthenticatedUrl deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AuthenticatedUrlBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'session_url':
           result.sessionUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'requires_terms_acceptance':
           result.requiresTermsAcceptance = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -65,15 +65,16 @@ class _$AuthenticatedUrl extends AuthenticatedUrl {
   final bool requiresTermsAcceptance;
 
   factory _$AuthenticatedUrl(
-          [void Function(AuthenticatedUrlBuilder) updates]) =>
-      (new AuthenticatedUrlBuilder()..update(updates)).build();
+          [void Function(AuthenticatedUrlBuilder)? updates]) =>
+      (new AuthenticatedUrlBuilder()..update(updates))._build();
 
-  _$AuthenticatedUrl._({this.sessionUrl, this.requiresTermsAcceptance})
+  _$AuthenticatedUrl._(
+      {required this.sessionUrl, required this.requiresTermsAcceptance})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        sessionUrl, 'AuthenticatedUrl', 'sessionUrl');
-    BuiltValueNullFieldError.checkNotNull(
-        requiresTermsAcceptance, 'AuthenticatedUrl', 'requiresTermsAcceptance');
+        sessionUrl, r'AuthenticatedUrl', 'sessionUrl');
+    BuiltValueNullFieldError.checkNotNull(requiresTermsAcceptance,
+        r'AuthenticatedUrl', 'requiresTermsAcceptance');
   }
 
   @override
@@ -94,13 +95,16 @@ class _$AuthenticatedUrl extends AuthenticatedUrl {
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc(0, sessionUrl.hashCode), requiresTermsAcceptance.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, sessionUrl.hashCode);
+    _$hash = $jc(_$hash, requiresTermsAcceptance.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('AuthenticatedUrl')
+    return (newBuiltValueToStringHelper(r'AuthenticatedUrl')
           ..add('sessionUrl', sessionUrl)
           ..add('requiresTermsAcceptance', requiresTermsAcceptance))
         .toString();
@@ -109,15 +113,15 @@ class _$AuthenticatedUrl extends AuthenticatedUrl {
 
 class AuthenticatedUrlBuilder
     implements Builder<AuthenticatedUrl, AuthenticatedUrlBuilder> {
-  _$AuthenticatedUrl _$v;
+  _$AuthenticatedUrl? _$v;
 
-  String _sessionUrl;
-  String get sessionUrl => _$this._sessionUrl;
-  set sessionUrl(String sessionUrl) => _$this._sessionUrl = sessionUrl;
+  String? _sessionUrl;
+  String? get sessionUrl => _$this._sessionUrl;
+  set sessionUrl(String? sessionUrl) => _$this._sessionUrl = sessionUrl;
 
-  bool _requiresTermsAcceptance;
-  bool get requiresTermsAcceptance => _$this._requiresTermsAcceptance;
-  set requiresTermsAcceptance(bool requiresTermsAcceptance) =>
+  bool? _requiresTermsAcceptance;
+  bool? get requiresTermsAcceptance => _$this._requiresTermsAcceptance;
+  set requiresTermsAcceptance(bool? requiresTermsAcceptance) =>
       _$this._requiresTermsAcceptance = requiresTermsAcceptance;
 
   AuthenticatedUrlBuilder() {
@@ -141,23 +145,25 @@ class AuthenticatedUrlBuilder
   }
 
   @override
-  void update(void Function(AuthenticatedUrlBuilder) updates) {
+  void update(void Function(AuthenticatedUrlBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$AuthenticatedUrl build() {
+  AuthenticatedUrl build() => _build();
+
+  _$AuthenticatedUrl _build() {
     final _$result = _$v ??
         new _$AuthenticatedUrl._(
             sessionUrl: BuiltValueNullFieldError.checkNotNull(
-                sessionUrl, 'AuthenticatedUrl', 'sessionUrl'),
+                sessionUrl, r'AuthenticatedUrl', 'sessionUrl'),
             requiresTermsAcceptance: BuiltValueNullFieldError.checkNotNull(
                 requiresTermsAcceptance,
-                'AuthenticatedUrl',
+                r'AuthenticatedUrl',
                 'requiresTermsAcceptance'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

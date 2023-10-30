@@ -22,25 +22,34 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.QuizPostBodyWrapper
-import okhttp3.ResponseBody
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 import java.util.*
 
 object QuizAPI {
 
-    internal interface QuizInterface {
+    interface QuizInterface {
         @GET("{contextType}/{contextId}/all_quizzes")
         fun getFirstPageQuizzesList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long): Call<List<Quiz>>
 
+        @GET("{contextType}/{contextId}/all_quizzes")
+        suspend fun getFirstPageQuizzesList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag restParams: RestParams): DataResult<List<Quiz>>
+
         @GET
         fun getNextPageQuizzesList(@Url nextURL: String): Call<List<Quiz>>
+
+        @GET
+        suspend fun getNextPageQuizzesList(@Url nextURL: String, @Tag restParams: RestParams): DataResult<List<Quiz>>
 
         @GET("{contextType}/{contextId}/quizzes/{quizId}")
         fun getDetailedQuiz(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("quizId") quizId: Long): Call<Quiz>
 
         @GET
         fun getDetailedQuizByUrl(@Url quizUrl: String): Call<Quiz>
+
+        @GET
+        suspend fun getDetailedQuizByUrl(@Url quizUrl: String, @Tag params: RestParams): DataResult<Quiz>
 
         @GET("courses/{courseId}/all_quizzes")
         fun getFirstPageQuizzes(@Path("courseId") contextId: Long): Call<List<Quiz>>
@@ -50,6 +59,9 @@ object QuizAPI {
 
         @GET("courses/{courseId}/quizzes/{quizId}")
         fun getQuiz(@Path("courseId") courseId: Long, @Path("quizId") quizId: Long): Call<Quiz>
+
+        @GET("courses/{courseId}/quizzes/{quizId}")
+        suspend fun getQuiz(@Path("courseId") courseId: Long, @Path("quizId") quizId: Long, @Tag restParams: RestParams): DataResult<Quiz>
 
         @PUT("courses/{courseId}/quizzes/{quizId}")
         fun editQuiz(

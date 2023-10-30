@@ -34,6 +34,9 @@ object FeaturesAPI {
         @GET("courses/{courseId}/features/enabled")
         fun getEnabledFeaturesForCourse(@Path("courseId") contextId: Long): Call<List<String>>
 
+        @GET("courses/{courseId}/features/enabled")
+        suspend fun getEnabledFeaturesForCourse(@Path("courseId") contextId: Long, @Tag params: RestParams): DataResult<List<String>>
+
         @GET("features/environment")
         fun getEnvironmentFeatureFlags(): Call<Map<String, Boolean>>
 

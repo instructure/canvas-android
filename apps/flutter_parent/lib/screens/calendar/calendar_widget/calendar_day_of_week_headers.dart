@@ -18,12 +18,12 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:intl/intl.dart';
 
 class DayOfWeekHeaders extends StatelessWidget {
-  static const double headerHeight = 14;
+  static const double headerHeight = 16;
 
   @override
   Widget build(BuildContext context) {
-    final weekendTheme = Theme.of(context).textTheme.subtitle2;
-    final weekdayTheme = weekendTheme.copyWith(color: ParentTheme.of(context).onSurfaceColor);
+    final weekendTheme = Theme.of(context).textTheme.titleSmall;
+    final weekdayTheme = weekendTheme?.copyWith(color: ParentTheme.of(context)?.onSurfaceColor);
 
     final symbols = DateFormat(null, supportedDateLocale).dateSymbols;
     final firstDayOfWeek = symbols.FIRSTDAYOFWEEK;

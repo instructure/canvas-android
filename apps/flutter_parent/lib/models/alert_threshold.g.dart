@@ -17,9 +17,9 @@ class _$AlertThresholdSerializer
   final String wireName = 'AlertThreshold';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, AlertThreshold object,
+  Iterable<Object?> serialize(Serializers serializers, AlertThreshold object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'alert_type',
@@ -32,48 +32,48 @@ class _$AlertThresholdSerializer
       serializers.serialize(object.observerId,
           specifiedType: const FullType(String)),
     ];
-    result.add('threshold');
-    if (object.threshold == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.threshold,
-          specifiedType: const FullType(String)));
-    }
+    Object? value;
+    value = object.threshold;
+
+    result
+      ..add('threshold')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
   AlertThreshold deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AlertThresholdBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'alert_type':
           result.alertType = serializers.deserialize(value,
-              specifiedType: const FullType(AlertType)) as AlertType;
+              specifiedType: const FullType(AlertType))! as AlertType;
           break;
         case 'threshold':
           result.threshold = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'user_id':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'observer_id':
           result.observerId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -88,30 +88,28 @@ class _$AlertThreshold extends AlertThreshold {
   @override
   final AlertType alertType;
   @override
-  final String threshold;
+  final String? threshold;
   @override
   final String userId;
   @override
   final String observerId;
 
-  factory _$AlertThreshold([void Function(AlertThresholdBuilder) updates]) =>
-      (new AlertThresholdBuilder()..update(updates)).build();
+  factory _$AlertThreshold([void Function(AlertThresholdBuilder)? updates]) =>
+      (new AlertThresholdBuilder()..update(updates))._build();
 
   _$AlertThreshold._(
-      {this.id, this.alertType, this.threshold, this.userId, this.observerId})
+      {required this.id,
+      required this.alertType,
+      this.threshold,
+      required this.userId,
+      required this.observerId})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('AlertThreshold', 'id');
-    }
-    if (alertType == null) {
-      throw new BuiltValueNullFieldError('AlertThreshold', 'alertType');
-    }
-    if (userId == null) {
-      throw new BuiltValueNullFieldError('AlertThreshold', 'userId');
-    }
-    if (observerId == null) {
-      throw new BuiltValueNullFieldError('AlertThreshold', 'observerId');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'AlertThreshold', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        alertType, r'AlertThreshold', 'alertType');
+    BuiltValueNullFieldError.checkNotNull(userId, r'AlertThreshold', 'userId');
+    BuiltValueNullFieldError.checkNotNull(
+        observerId, r'AlertThreshold', 'observerId');
   }
 
   @override
@@ -135,17 +133,19 @@ class _$AlertThreshold extends AlertThreshold {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, id.hashCode), alertType.hashCode),
-                threshold.hashCode),
-            userId.hashCode),
-        observerId.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, alertType.hashCode);
+    _$hash = $jc(_$hash, threshold.hashCode);
+    _$hash = $jc(_$hash, userId.hashCode);
+    _$hash = $jc(_$hash, observerId.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('AlertThreshold')
+    return (newBuiltValueToStringHelper(r'AlertThreshold')
           ..add('id', id)
           ..add('alertType', alertType)
           ..add('threshold', threshold)
@@ -157,39 +157,40 @@ class _$AlertThreshold extends AlertThreshold {
 
 class AlertThresholdBuilder
     implements Builder<AlertThreshold, AlertThresholdBuilder> {
-  _$AlertThreshold _$v;
+  _$AlertThreshold? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  AlertType _alertType;
-  AlertType get alertType => _$this._alertType;
-  set alertType(AlertType alertType) => _$this._alertType = alertType;
+  AlertType? _alertType;
+  AlertType? get alertType => _$this._alertType;
+  set alertType(AlertType? alertType) => _$this._alertType = alertType;
 
-  String _threshold;
-  String get threshold => _$this._threshold;
-  set threshold(String threshold) => _$this._threshold = threshold;
+  String? _threshold;
+  String? get threshold => _$this._threshold;
+  set threshold(String? threshold) => _$this._threshold = threshold;
 
-  String _userId;
-  String get userId => _$this._userId;
-  set userId(String userId) => _$this._userId = userId;
+  String? _userId;
+  String? get userId => _$this._userId;
+  set userId(String? userId) => _$this._userId = userId;
 
-  String _observerId;
-  String get observerId => _$this._observerId;
-  set observerId(String observerId) => _$this._observerId = observerId;
+  String? _observerId;
+  String? get observerId => _$this._observerId;
+  set observerId(String? observerId) => _$this._observerId = observerId;
 
   AlertThresholdBuilder() {
     AlertThreshold._initializeBuilder(this);
   }
 
   AlertThresholdBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _alertType = _$v.alertType;
-      _threshold = _$v.threshold;
-      _userId = _$v.userId;
-      _observerId = _$v.observerId;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _alertType = $v.alertType;
+      _threshold = $v.threshold;
+      _userId = $v.userId;
+      _observerId = $v.observerId;
       _$v = null;
     }
     return this;
@@ -197,29 +198,33 @@ class AlertThresholdBuilder
 
   @override
   void replace(AlertThreshold other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$AlertThreshold;
   }
 
   @override
-  void update(void Function(AlertThresholdBuilder) updates) {
+  void update(void Function(AlertThresholdBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$AlertThreshold build() {
+  AlertThreshold build() => _build();
+
+  _$AlertThreshold _build() {
     final _$result = _$v ??
         new _$AlertThreshold._(
-            id: id,
-            alertType: alertType,
+            id: BuiltValueNullFieldError.checkNotNull(
+                id, r'AlertThreshold', 'id'),
+            alertType: BuiltValueNullFieldError.checkNotNull(
+                alertType, r'AlertThreshold', 'alertType'),
             threshold: threshold,
-            userId: userId,
-            observerId: observerId);
+            userId: BuiltValueNullFieldError.checkNotNull(
+                userId, r'AlertThreshold', 'userId'),
+            observerId: BuiltValueNullFieldError.checkNotNull(
+                observerId, r'AlertThreshold', 'observerId'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

@@ -30,6 +30,7 @@ import 'package:mockito/mockito.dart';
 import '../utils/accessibility_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
@@ -46,13 +47,13 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Can return to login', (tester) async {
-    final mockNav = _MockQuickNav();
+    final mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => mockNav);
-      locator.registerLazySingleton<ReminderDb>(() => _MockReminderDb());
-      locator.registerLazySingleton<NotificationUtil>(() => _MockNotificationUtil());
-      locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
-      locator.registerLazySingleton<AuthApi>(() => _MockAuthApi());
+      locator.registerLazySingleton<ReminderDb>(() => MockReminderDb());
+      locator.registerLazySingleton<NotificationUtil>(() => MockNotificationUtil());
+      locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
+      locator.registerLazySingleton<AuthApi>(() => MockAuthApi());
     });
 
     await tester.pumpWidget(TestApp(
@@ -83,7 +84,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Launches intent to open student app in play store', (tester) async {
-    var mockLauncher = _MockUrlLauncher();
+    var mockLauncher = MockUrlLauncher();
     setupTestLocator((locator) => locator.registerLazySingleton<UrlLauncher>(() => mockLauncher));
 
     await tester.pumpWidget(TestApp(NotAParentScreen()));
@@ -102,7 +103,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Launches intent to open teacher app in play store', (tester) async {
-    var mockLauncher = _MockUrlLauncher();
+    var mockLauncher = MockUrlLauncher();
     setupTestLocator((locator) => locator.registerLazySingleton<UrlLauncher>(() => mockLauncher));
 
     await tester.pumpWidget(TestApp(NotAParentScreen()));
@@ -120,15 +121,3 @@ void main() {
     expect(actualUrl, 'market://details?id=com.instructure.teacher');
   });
 }
-
-class _MockUrlLauncher extends Mock implements UrlLauncher {}
-
-class _MockQuickNav extends Mock implements QuickNav {}
-
-class _MockReminderDb extends Mock implements ReminderDb {}
-
-class _MockNotificationUtil extends Mock implements NotificationUtil {}
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
-
-class _MockAuthApi extends Mock implements AuthApi {}

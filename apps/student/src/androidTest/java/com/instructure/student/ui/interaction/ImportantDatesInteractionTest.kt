@@ -196,9 +196,10 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(todayEvent.startDate))
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(twoDaysFromNowEvent.startDate))
+        importantDatesPage.assertItemDisplayed(generateDayString(threeDaysFromNowEvent.startDate))
+        importantDatesPage.assertRecyclerViewItemCount(3)
         importantDatesPage.swipeUp() // Need to do this because on landscape mode the last item cannot be seen on the view by default.
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(threeDaysFromNowEvent.startDate))
-        importantDatesPage.assertRecyclerViewItemCount(3)
     }
 
     private fun goToImportantDatesTab(data: MockCanvas) {

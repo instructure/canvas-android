@@ -19,14 +19,14 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class ErrorReportInteractor {
   Future<void> submitErrorReport(
-      String subject, String description, String email, ErrorReportSeverity severity, String stacktrace) async {
+      String? subject, String description, String? email, ErrorReportSeverity? severity, String? stacktrace) async {
     final user = ApiPrefs.getUser();
     final domain = (ApiPrefs.getDomain()?.isNotEmpty == true) ? ApiPrefs.getDomain() : ErrorReportApi.DEFAULT_DOMAIN;
-    final becomeUser = (user?.id?.isNotEmpty == true) ? '$domain?become_user_id=${user.id}' : '';
+    final becomeUser = (user?.id.isNotEmpty == true) ? '$domain?become_user_id=${user?.id}' : '';
     final userEmail = (email?.isNotEmpty == true) ? email : user?.primaryEmail ?? '';
 
     final enrollments = user == null ? [] : await locator<EnrollmentsApi>().getSelfEnrollments(forceRefresh: true);
-    final userRoles = Set.from(enrollments?.map((enrollment) => enrollment.type) ?? []).toList().join(',');
+    final userRoles = enrollments == null ? '' : Set.from(enrollments.map((enrollment) => enrollment.type)).toList().join(',');
 
     return locator<ErrorReportApi>().submitErrorReport(
       subject: subject,
@@ -41,7 +41,7 @@ class ErrorReportInteractor {
     );
   }
 
-  String _errorReportSeverityTag(ErrorReportSeverity severity) {
+  String _errorReportSeverityTag(ErrorReportSeverity? severity) {
     switch (severity) {
       case ErrorReportSeverity.COMMENT:
         return 'just_a_comment';
@@ -53,9 +53,9 @@ class ErrorReportInteractor {
         return 'blocks_what_i_need_to_do';
       case ErrorReportSeverity.CRITICAL:
         return 'extreme_critical_emergency';
+      default:
+        throw ArgumentError('The provided severity is not supported: ${severity.toString()} not in ${ErrorReportSeverity.values.toString()}');
     }
-    throw ArgumentError(
-        'The provided severity is not supported: ${severity.toString()} not in ${ErrorReportSeverity.values.toString()}');
   }
 }
 

@@ -16,13 +16,12 @@
  */
 package com.instructure.student.test.conferences.conference_details
 
-import com.instructure.canvasapi2.managers.ConferenceManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEffect
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEffectHandler
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEvent
+import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsRepository
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsView
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -38,8 +37,10 @@ import org.junit.Test
 class ConferenceDetailsEffectHandlerTest : Assert() {
     private val testDispatcher = TestCoroutineDispatcher()
     private val view: ConferenceDetailsView = mockk(relaxed = true)
-    private val effectHandler =
-        ConferenceDetailsEffectHandler().apply { view = this@ConferenceDetailsEffectHandlerTest.view }
+    private val repository: ConferenceDetailsRepository = mockk(relaxed = true)
+    private val effectHandler = ConferenceDetailsEffectHandler(repository).apply {
+        view = this@ConferenceDetailsEffectHandlerTest.view
+    }
     private val eventConsumer: Consumer<ConferenceDetailsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
@@ -105,8 +106,7 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
         val authenticate = true
 
         // Mock API
-        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
-        coEvery { awaitApi<AuthenticatedSession>(any()) } returns AuthenticatedSession(sessionUrl)
+        coEvery { repository.getAuthenticatedSession(any()) } returns AuthenticatedSession(sessionUrl)
 
         connection.accept(ConferenceDetailsEffect.JoinConference(url, authenticate))
 
@@ -114,7 +114,7 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
         verify { view.launchUrl(sessionUrl) }
 
         // Should call API
-        coVerify { awaitApi<AuthenticatedSession>(any()) }
+        coVerify { repository.getAuthenticatedSession(url) }
 
         // Advance the clock to skip delay
         advanceUntilIdle()
@@ -133,17 +133,14 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
         val apiResult = DataResult.Success(emptyList<Conference>())
 
         // Mock API
-        mockkObject(ConferenceManager)
-        every { ConferenceManager.getConferencesForContextAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns apiResult
-        }
+        coEvery { repository.getConferencesForContext(any(), any()) } returns apiResult
 
         connection.accept(ConferenceDetailsEffect.RefreshData(canvasContext))
 
-        verify { ConferenceManager.getConferencesForContextAsync(canvasContext, true) }
+        coVerify { repository.getConferencesForContext(canvasContext, true) }
         verify { eventConsumer.accept(ConferenceDetailsEvent.RefreshFinished(apiResult)) }
 
-        confirmVerified(ConferenceManager)
+        confirmVerified(repository)
         confirmVerified(eventConsumer)
     }
 

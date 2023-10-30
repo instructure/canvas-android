@@ -25,10 +25,16 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
-import com.instructure.espresso.*
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.espresso.OnViewWithStringTextIgnoreCase
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.typeText
 import com.instructure.student.R
 
 // This is a little hokey, as the options that appear are somewhat governed by the results of
@@ -48,6 +54,20 @@ class HelpPage : BasePage(R.id.helpDialog) {
         Espresso.closeSoftKeyboard()
         // Let's just make sure that the "Send" button is displayed, rather than actually pressing it
         onView(containsTextCaseInsensitive("Send")).assertDisplayed()
+    }
+
+    fun verifyAskAQuestion(course: CourseApiModel, question: String) {
+        askInstructorLabel.scrollTo().click()
+        waitForView(withText(course.name)).assertDisplayed() // Verify that our course is selected in the spinner
+        onView(withId(R.id.message)).scrollTo().perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
+        Espresso.closeSoftKeyboard()
+        // Let's just make sure that the "Send" button is displayed, rather than actually pressing it
+        onView(containsTextCaseInsensitive("Send")).assertDisplayed()
+    }
+
+    fun sendQuestionToInstructor(course: CourseApiModel, question: String) {
+        verifyAskAQuestion(course, question)
+        onView(containsTextCaseInsensitive("Send")).click()
     }
 
     fun launchGuides() {

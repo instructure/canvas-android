@@ -16,9 +16,9 @@ class _$FeatureFlagsSerializer implements StructuredSerializer<FeatureFlags> {
   final String wireName = 'FeatureFlags';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, FeatureFlags object,
+  Iterable<Object?> serialize(Serializers serializers, FeatureFlags object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'send_usage_metrics',
       serializers.serialize(object.sendUsageMetrics,
           specifiedType: const FullType(bool)),
@@ -28,19 +28,20 @@ class _$FeatureFlagsSerializer implements StructuredSerializer<FeatureFlags> {
   }
 
   @override
-  FeatureFlags deserialize(Serializers serializers, Iterable<Object> serialized,
+  FeatureFlags deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new FeatureFlagsBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'send_usage_metrics':
           result.sendUsageMetrics = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -53,12 +54,12 @@ class _$FeatureFlags extends FeatureFlags {
   @override
   final bool sendUsageMetrics;
 
-  factory _$FeatureFlags([void Function(FeatureFlagsBuilder) updates]) =>
-      (new FeatureFlagsBuilder()..update(updates)).build();
+  factory _$FeatureFlags([void Function(FeatureFlagsBuilder)? updates]) =>
+      (new FeatureFlagsBuilder()..update(updates))._build();
 
-  _$FeatureFlags._({this.sendUsageMetrics}) : super._() {
+  _$FeatureFlags._({required this.sendUsageMetrics}) : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        sendUsageMetrics, 'FeatureFlags', 'sendUsageMetrics');
+        sendUsageMetrics, r'FeatureFlags', 'sendUsageMetrics');
   }
 
   @override
@@ -76,12 +77,15 @@ class _$FeatureFlags extends FeatureFlags {
 
   @override
   int get hashCode {
-    return $jf($jc(0, sendUsageMetrics.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, sendUsageMetrics.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('FeatureFlags')
+    return (newBuiltValueToStringHelper(r'FeatureFlags')
           ..add('sendUsageMetrics', sendUsageMetrics))
         .toString();
   }
@@ -89,11 +93,11 @@ class _$FeatureFlags extends FeatureFlags {
 
 class FeatureFlagsBuilder
     implements Builder<FeatureFlags, FeatureFlagsBuilder> {
-  _$FeatureFlags _$v;
+  _$FeatureFlags? _$v;
 
-  bool _sendUsageMetrics;
-  bool get sendUsageMetrics => _$this._sendUsageMetrics;
-  set sendUsageMetrics(bool sendUsageMetrics) =>
+  bool? _sendUsageMetrics;
+  bool? get sendUsageMetrics => _$this._sendUsageMetrics;
+  set sendUsageMetrics(bool? sendUsageMetrics) =>
       _$this._sendUsageMetrics = sendUsageMetrics;
 
   FeatureFlagsBuilder() {
@@ -116,19 +120,21 @@ class FeatureFlagsBuilder
   }
 
   @override
-  void update(void Function(FeatureFlagsBuilder) updates) {
+  void update(void Function(FeatureFlagsBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$FeatureFlags build() {
+  FeatureFlags build() => _build();
+
+  _$FeatureFlags _build() {
     final _$result = _$v ??
         new _$FeatureFlags._(
             sendUsageMetrics: BuiltValueNullFieldError.checkNotNull(
-                sendUsageMetrics, 'FeatureFlags', 'sendUsageMetrics'));
+                sendUsageMetrics, r'FeatureFlags', 'sendUsageMetrics'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

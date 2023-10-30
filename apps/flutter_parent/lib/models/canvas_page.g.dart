@@ -15,9 +15,9 @@ class _$CanvasPageSerializer implements StructuredSerializer<CanvasPage> {
   final String wireName = 'CanvasPage';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, CanvasPage object,
+  Iterable<Object?> serialize(Serializers serializers, CanvasPage object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'page_id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'hide_from_students',
@@ -33,128 +33,121 @@ class _$CanvasPageSerializer implements StructuredSerializer<CanvasPage> {
       serializers.serialize(object.published,
           specifiedType: const FullType(bool)),
     ];
-    result.add('url');
-    if (object.url == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('title');
-    if (object.title == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.title,
-          specifiedType: const FullType(String)));
-    }
-    result.add('created_at');
-    if (object.createdAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.createdAt,
+    Object? value;
+    value = object.url;
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.title;
+
+    result
+      ..add('title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.createdAt;
+
+    result
+      ..add('created_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('updated_at');
-    if (object.updatedAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.updatedAt,
+    value = object.updatedAt;
+
+    result
+      ..add('updated_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('status');
-    if (object.status == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.status,
-          specifiedType: const FullType(String)));
-    }
-    result.add('body');
-    if (object.body == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.body,
-          specifiedType: const FullType(String)));
-    }
-    result.add('editing_roles');
-    if (object.editingRoles == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.editingRoles,
-          specifiedType: const FullType(String)));
-    }
-    result.add('lock_explanation');
-    if (object.lockExplanation == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.lockExplanation,
-          specifiedType: const FullType(String)));
-    }
+    value = object.status;
+
+    result
+      ..add('status')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.body;
+
+    result
+      ..add('body')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.editingRoles;
+
+    result
+      ..add('editing_roles')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.lockExplanation;
+
+    result
+      ..add('lock_explanation')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
-  CanvasPage deserialize(Serializers serializers, Iterable<Object> serialized,
+  CanvasPage deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CanvasPageBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'page_id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'title':
           result.title = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'created_at':
           result.createdAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'updated_at':
           result.updatedAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'hide_from_students':
           result.hideFromStudents = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'status':
           result.status = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'body':
           result.body = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'front_page':
           result.frontPage = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'lock_info':
           result.lockInfo.replace(serializers.deserialize(value,
-              specifiedType: const FullType(LockInfo)) as LockInfo);
+              specifiedType: const FullType(LockInfo))! as LockInfo);
           break;
         case 'published':
           result.published = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'editing_roles':
           result.editingRoles = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'lock_explanation':
           result.lockExplanation = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -167,19 +160,19 @@ class _$CanvasPage extends CanvasPage {
   @override
   final String id;
   @override
-  final String url;
+  final String? url;
   @override
-  final String title;
+  final String? title;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
   @override
   final bool hideFromStudents;
   @override
-  final String status;
+  final String? status;
   @override
-  final String body;
+  final String? body;
   @override
   final bool frontPage;
   @override
@@ -187,43 +180,36 @@ class _$CanvasPage extends CanvasPage {
   @override
   final bool published;
   @override
-  final String editingRoles;
+  final String? editingRoles;
   @override
-  final String lockExplanation;
+  final String? lockExplanation;
 
-  factory _$CanvasPage([void Function(CanvasPageBuilder) updates]) =>
-      (new CanvasPageBuilder()..update(updates)).build();
+  factory _$CanvasPage([void Function(CanvasPageBuilder)? updates]) =>
+      (new CanvasPageBuilder()..update(updates))._build();
 
   _$CanvasPage._(
-      {this.id,
+      {required this.id,
       this.url,
       this.title,
       this.createdAt,
       this.updatedAt,
-      this.hideFromStudents,
+      required this.hideFromStudents,
       this.status,
       this.body,
-      this.frontPage,
-      this.lockInfo,
-      this.published,
+      required this.frontPage,
+      required this.lockInfo,
+      required this.published,
       this.editingRoles,
       this.lockExplanation})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('CanvasPage', 'id');
-    }
-    if (hideFromStudents == null) {
-      throw new BuiltValueNullFieldError('CanvasPage', 'hideFromStudents');
-    }
-    if (frontPage == null) {
-      throw new BuiltValueNullFieldError('CanvasPage', 'frontPage');
-    }
-    if (lockInfo == null) {
-      throw new BuiltValueNullFieldError('CanvasPage', 'lockInfo');
-    }
-    if (published == null) {
-      throw new BuiltValueNullFieldError('CanvasPage', 'published');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'CanvasPage', 'id');
+    BuiltValueNullFieldError.checkNotNull(
+        hideFromStudents, r'CanvasPage', 'hideFromStudents');
+    BuiltValueNullFieldError.checkNotNull(
+        frontPage, r'CanvasPage', 'frontPage');
+    BuiltValueNullFieldError.checkNotNull(lockInfo, r'CanvasPage', 'lockInfo');
+    BuiltValueNullFieldError.checkNotNull(
+        published, r'CanvasPage', 'published');
   }
 
   @override
@@ -254,35 +240,27 @@ class _$CanvasPage extends CanvasPage {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc($jc(0, id.hashCode),
-                                                    url.hashCode),
-                                                title.hashCode),
-                                            createdAt.hashCode),
-                                        updatedAt.hashCode),
-                                    hideFromStudents.hashCode),
-                                status.hashCode),
-                            body.hashCode),
-                        frontPage.hashCode),
-                    lockInfo.hashCode),
-                published.hashCode),
-            editingRoles.hashCode),
-        lockExplanation.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, title.hashCode);
+    _$hash = $jc(_$hash, createdAt.hashCode);
+    _$hash = $jc(_$hash, updatedAt.hashCode);
+    _$hash = $jc(_$hash, hideFromStudents.hashCode);
+    _$hash = $jc(_$hash, status.hashCode);
+    _$hash = $jc(_$hash, body.hashCode);
+    _$hash = $jc(_$hash, frontPage.hashCode);
+    _$hash = $jc(_$hash, lockInfo.hashCode);
+    _$hash = $jc(_$hash, published.hashCode);
+    _$hash = $jc(_$hash, editingRoles.hashCode);
+    _$hash = $jc(_$hash, lockExplanation.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CanvasPage')
+    return (newBuiltValueToStringHelper(r'CanvasPage')
           ..add('id', id)
           ..add('url', url)
           ..add('title', title)
@@ -301,60 +279,60 @@ class _$CanvasPage extends CanvasPage {
 }
 
 class CanvasPageBuilder implements Builder<CanvasPage, CanvasPageBuilder> {
-  _$CanvasPage _$v;
+  _$CanvasPage? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String? _title;
+  String? get title => _$this._title;
+  set title(String? title) => _$this._title = title;
 
-  DateTime _createdAt;
-  DateTime get createdAt => _$this._createdAt;
-  set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
+  DateTime? _createdAt;
+  DateTime? get createdAt => _$this._createdAt;
+  set createdAt(DateTime? createdAt) => _$this._createdAt = createdAt;
 
-  DateTime _updatedAt;
-  DateTime get updatedAt => _$this._updatedAt;
-  set updatedAt(DateTime updatedAt) => _$this._updatedAt = updatedAt;
+  DateTime? _updatedAt;
+  DateTime? get updatedAt => _$this._updatedAt;
+  set updatedAt(DateTime? updatedAt) => _$this._updatedAt = updatedAt;
 
-  bool _hideFromStudents;
-  bool get hideFromStudents => _$this._hideFromStudents;
-  set hideFromStudents(bool hideFromStudents) =>
+  bool? _hideFromStudents;
+  bool? get hideFromStudents => _$this._hideFromStudents;
+  set hideFromStudents(bool? hideFromStudents) =>
       _$this._hideFromStudents = hideFromStudents;
 
-  String _status;
-  String get status => _$this._status;
-  set status(String status) => _$this._status = status;
+  String? _status;
+  String? get status => _$this._status;
+  set status(String? status) => _$this._status = status;
 
-  String _body;
-  String get body => _$this._body;
-  set body(String body) => _$this._body = body;
+  String? _body;
+  String? get body => _$this._body;
+  set body(String? body) => _$this._body = body;
 
-  bool _frontPage;
-  bool get frontPage => _$this._frontPage;
-  set frontPage(bool frontPage) => _$this._frontPage = frontPage;
+  bool? _frontPage;
+  bool? get frontPage => _$this._frontPage;
+  set frontPage(bool? frontPage) => _$this._frontPage = frontPage;
 
-  LockInfoBuilder _lockInfo;
+  LockInfoBuilder? _lockInfo;
   LockInfoBuilder get lockInfo => _$this._lockInfo ??= new LockInfoBuilder();
-  set lockInfo(LockInfoBuilder lockInfo) => _$this._lockInfo = lockInfo;
+  set lockInfo(LockInfoBuilder? lockInfo) => _$this._lockInfo = lockInfo;
 
-  bool _published;
-  bool get published => _$this._published;
-  set published(bool published) => _$this._published = published;
+  bool? _published;
+  bool? get published => _$this._published;
+  set published(bool? published) => _$this._published = published;
 
-  String _editingRoles;
-  String get editingRoles => _$this._editingRoles;
-  set editingRoles(String editingRoles) => _$this._editingRoles = editingRoles;
+  String? _editingRoles;
+  String? get editingRoles => _$this._editingRoles;
+  set editingRoles(String? editingRoles) => _$this._editingRoles = editingRoles;
 
-  String _lockExplanation;
-  String get lockExplanation => _$this._lockExplanation;
-  set lockExplanation(String lockExplanation) =>
+  String? _lockExplanation;
+  String? get lockExplanation => _$this._lockExplanation;
+  set lockExplanation(String? lockExplanation) =>
       _$this._lockExplanation = lockExplanation;
 
   CanvasPageBuilder() {
@@ -362,20 +340,21 @@ class CanvasPageBuilder implements Builder<CanvasPage, CanvasPageBuilder> {
   }
 
   CanvasPageBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _url = _$v.url;
-      _title = _$v.title;
-      _createdAt = _$v.createdAt;
-      _updatedAt = _$v.updatedAt;
-      _hideFromStudents = _$v.hideFromStudents;
-      _status = _$v.status;
-      _body = _$v.body;
-      _frontPage = _$v.frontPage;
-      _lockInfo = _$v.lockInfo?.toBuilder();
-      _published = _$v.published;
-      _editingRoles = _$v.editingRoles;
-      _lockExplanation = _$v.lockExplanation;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _url = $v.url;
+      _title = $v.title;
+      _createdAt = $v.createdAt;
+      _updatedAt = $v.updatedAt;
+      _hideFromStudents = $v.hideFromStudents;
+      _status = $v.status;
+      _body = $v.body;
+      _frontPage = $v.frontPage;
+      _lockInfo = $v.lockInfo.toBuilder();
+      _published = $v.published;
+      _editingRoles = $v.editingRoles;
+      _lockExplanation = $v.lockExplanation;
       _$v = null;
     }
     return this;
@@ -383,44 +362,48 @@ class CanvasPageBuilder implements Builder<CanvasPage, CanvasPageBuilder> {
 
   @override
   void replace(CanvasPage other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CanvasPage;
   }
 
   @override
-  void update(void Function(CanvasPageBuilder) updates) {
+  void update(void Function(CanvasPageBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CanvasPage build() {
+  CanvasPage build() => _build();
+
+  _$CanvasPage _build() {
     _$CanvasPage _$result;
     try {
       _$result = _$v ??
           new _$CanvasPage._(
-              id: id,
+              id: BuiltValueNullFieldError.checkNotNull(
+                  id, r'CanvasPage', 'id'),
               url: url,
               title: title,
               createdAt: createdAt,
               updatedAt: updatedAt,
-              hideFromStudents: hideFromStudents,
+              hideFromStudents: BuiltValueNullFieldError.checkNotNull(
+                  hideFromStudents, r'CanvasPage', 'hideFromStudents'),
               status: status,
               body: body,
-              frontPage: frontPage,
+              frontPage: BuiltValueNullFieldError.checkNotNull(
+                  frontPage, r'CanvasPage', 'frontPage'),
               lockInfo: lockInfo.build(),
-              published: published,
+              published: BuiltValueNullFieldError.checkNotNull(
+                  published, r'CanvasPage', 'published'),
               editingRoles: editingRoles,
               lockExplanation: lockExplanation);
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'lockInfo';
         lockInfo.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'CanvasPage', _$failedField, e.toString());
+            r'CanvasPage', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -429,4 +412,4 @@ class CanvasPageBuilder implements Builder<CanvasPage, CanvasPageBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

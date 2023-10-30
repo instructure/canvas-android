@@ -115,7 +115,7 @@ data class DiscussionTopicHeader(
         var sections: List<Section>? = null, // Comes back from the server
 
         @SerializedName("anonymous_state")
-        var anonymousState: String? = null
+        var anonymousState: String? = null,
 ) : CanvasModel<DiscussionTopicHeader>() {
     override val comparisonDate: Date?
         get() = if (lastReplyDate != null)

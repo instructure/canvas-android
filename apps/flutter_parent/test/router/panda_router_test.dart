@@ -32,7 +32,7 @@ import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
-import 'package:flutter_parent/screens/help/legal_screen.dart';
+import 'package:flutter_parent/screens/settings/legal_screen.dart';
 import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
@@ -56,6 +56,7 @@ import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 final _analytics = MockAnalytics();
 
@@ -67,9 +68,9 @@ void main() {
     ..accessToken = 'token'
     ..user = user.toBuilder());
 
-  final _mockNav = MockNav();
+  final _mockNav = MockQuickNav();
   final _mockWebContentInteractor = MockWebContentInteractor();
-  final _mockSnackbar = MockSnackbar();
+  final _mockSnackbar = MockFlutterSnackbarVeneer();
   final _mockLauncher = MockUrlLauncher();
 
   setUpAll(() async {
@@ -294,10 +295,10 @@ void main() {
 
       expect(widget, isA<DashboardScreen>());
 
-      DashboardScreen dashboard = widget;
+      DashboardScreen dashboard = widget as DashboardScreen;
       expect(dashboard.startingPage, DashboardContentScreens.Calendar);
-      expect(dashboard.deepLinkParams[CalendarScreen.startDateKey], DateTime(2018, 12, 15));
-      expect(dashboard.deepLinkParams[CalendarScreen.startViewKey], CalendarView.Month);
+      expect(dashboard.deepLinkParams?[CalendarScreen.startDateKey], DateTime(2018, 12, 15));
+      expect(dashboard.deepLinkParams?[CalendarScreen.startViewKey], CalendarView.Month);
     });
 
     test('courses returns Dashboard screen', () {
@@ -340,9 +341,9 @@ void main() {
       final pairingInfo = QRUtils.parsePairingInfo(uri) as QRPairingInfo;
       final widget = _getWidgetFromRoute(PandaRouter.qrPairing(pairingUri: uri));
       expect(widget, isA<QRPairingScreen>());
-      expect((widget as QRPairingScreen).pairingInfo.code, pairingInfo.code);
-      expect((widget as QRPairingScreen).pairingInfo.domain, pairingInfo.domain);
-      expect((widget as QRPairingScreen).pairingInfo.accountId, pairingInfo.accountId);
+      expect((widget as QRPairingScreen).pairingInfo?.code, pairingInfo.code);
+      expect((widget).pairingInfo?.domain, pairingInfo.domain);
+      expect((widget).pairingInfo?.accountId, pairingInfo.accountId);
     });
 
     test('syllabus returns CourseRoutingShellScreen', () {
@@ -358,7 +359,7 @@ void main() {
       final widget = _getWidgetFromRoute(PandaRouter.frontPage(courseId));
       expect(widget, isA<CourseRoutingShellScreen>());
       expect((widget as CourseRoutingShellScreen).courseId, courseId);
-      expect((widget as CourseRoutingShellScreen).type, CourseShellType.frontPage);
+      expect((widget).type, CourseShellType.frontPage);
     });
 
     test('frontPageWiki returns CourseRoutingShellScreen', () {
@@ -366,7 +367,7 @@ void main() {
       final widget = _getWidgetFromRoute(PandaRouter.frontPageWiki(courseId));
       expect(widget, isA<CourseRoutingShellScreen>());
       expect((widget as CourseRoutingShellScreen).courseId, courseId);
-      expect((widget as CourseRoutingShellScreen).type, CourseShellType.frontPage);
+      expect((widget).type, CourseShellType.frontPage);
     });
   });
 
@@ -626,11 +627,11 @@ String _routerErrorRoute(String url) => '/error?url=${Uri.encodeQueryComponent(u
 
 String _simpleWebViewRoute(String url) => '/internal?url=${Uri.encodeQueryComponent(url)}';
 
-Widget _getWidgetFromRoute(String route, {Map<String, List<String>> extraParams}) {
+Widget _getWidgetFromRoute(String route, {Map<String, List<String>>? extraParams}) {
   final match = PandaRouter.router.match(route);
 
-  if (extraParams != null) match.parameters.addAll(extraParams);
-  final widget = (match.route.handler as Handler).handlerFunc(null, match.parameters);
+  if (extraParams != null) match?.parameters.addAll(extraParams);
+  final widget = (match!.route.handler as Handler).handlerFunc(null, match.parameters);
 
-  return widget;
+  return widget!;
 }

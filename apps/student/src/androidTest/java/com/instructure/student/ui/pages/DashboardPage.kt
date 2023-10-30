@@ -29,6 +29,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
@@ -39,6 +40,7 @@ import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
+import com.instructure.student.ui.utils.ViewUtils
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
@@ -60,7 +62,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
         listView.assertDisplayed()
         onViewWithText("Courses").assertDisplayed()
-        onViewWithText("Edit Dashboard").assertDisplayed()
+        onViewWithText("All Courses").assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: CourseApiModel) {
@@ -68,8 +70,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(courseName: String) {
-        val matcher = allOf(withText(courseName), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
-        scrollAndAssertDisplayed(matcher)
+        val matcher = allOf(withText(courseName), withId(R.id.titleTextView), withAncestor(R.id.dashboardPage))
+        waitForView(matcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysCourse(course: Course) {
@@ -78,8 +80,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
             // This is the RIGHT way to do it, but it inexplicably fails most of the time.
             scrollRecyclerView(R.id.listView, matcher)
             onView(matcher).assertDisplayed()
-        }
-        catch(pe: PerformException) {
+        } catch (pe: PerformException) {
             // Revert to this weaker operation if the one above fails.
             scrollAndAssertDisplayed(matcher)
         }
@@ -103,16 +104,16 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
         val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().assertDisplayed()
+        waitForView(groupNameMatcher).scrollTo().assertDisplayed()
         val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView), hasSibling(groupNameMatcher))
-        onView(groupDescriptionMatcher).scrollTo().assertDisplayed()
+        waitForView(groupDescriptionMatcher).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
         emptyView.assertDisplayed()
-        onViewWithText(R.string.welcome).assertDisplayed()
-        onViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
-        onViewWithId(R.id.addCoursesButton).assertDisplayed()
+        waitForViewWithText(R.string.welcome).assertDisplayed()
+        waitForViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
+        waitForViewWithId(R.id.addCoursesButton).assertDisplayed()
     }
 
     fun assertCourseLabelTextColor(expectedTextColor: String) {
@@ -182,7 +183,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        onView(groupNameMatcher).scrollTo().click()
+        waitForView(groupNameMatcher).scrollTo().click()
     }
 
     fun selectCourse(course: CourseApiModel) {
@@ -254,7 +255,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun switchCourseView() {
-        onView(ViewMatchers.withId(R.id.menu_dashboard_cards)).click()
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        onView(withText(containsString("Switch to")))
+            .perform(click());
+    }
+
+    fun openGlobalManageOfflineContentPage() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        onView(withText(containsString("Manage Offline Content")))
+            .perform(click());
     }
 
     fun clickEditDashboard() {
@@ -294,7 +303,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
-        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(withId(R.id.cardView) + withDescendant(withId(R.id.titleTextView) + withText(courseTitle)))
+        val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(
+            withId(R.id.cardView)
+                    + withDescendant(withId(R.id.titleTextView) + withText(courseTitle))
+        )
         onView(courseOverflowMatcher).scrollTo().click()
         waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
@@ -321,6 +333,51 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun clickOnDashboardNotification(subTitle: String) {
         onView(withId(R.id.uploadSubtitle) + withText(subTitle)).click()
     }
+
+    //OfflineMethod
+    fun assertOfflineIndicatorDisplayed() {
+        waitForView(withId(R.id.offlineIndicator)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertOfflineIndicatorNotDisplayed() {
+        onView(withId(R.id.offlineIndicator)).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    }
+
+    //OfflineMethod
+    fun assertCourseOfflineSyncIconVisible(courseName: String) {
+        waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    }
+
+    //OfflineMethod
+    fun assertCourseOfflineSyncIconGone(courseName: String) {
+        onView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    }
+
+    //OfflineMethod
+    fun clickOnSyncProgressNotification() {
+        waitForView(ViewMatchers.withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent)).click()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressDownloadStartedNotificationToDisappear() {
+        ViewUtils.waitForViewToDisappear(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting), 30)
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressDownloadStartedNotification() {
+        waitForView(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressStartingNotification() {
+        waitForView(withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun waitForSyncProgressStartingNotificationToDisappear() {
+        ViewUtils.waitForViewToDisappear(withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent), 30)
+    }
 }
 
 /**
@@ -329,7 +386,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
  */
 class SetSwitchCompat(val position: Boolean) : ViewAction {
     override fun getDescription(): String {
-        val desiredPosition =  if(position) "On" else "Off"
+        val desiredPosition = if (position) "On" else "Off"
         return "Set SwitchCompat to $desiredPosition"
     }
 
@@ -339,7 +396,7 @@ class SetSwitchCompat(val position: Boolean) : ViewAction {
 
     override fun perform(uiController: UiController?, view: View?) {
         val switch = view as SwitchCompat
-        if(switch != null) {
+        if (switch != null) {
             switch.isChecked = position
         }
     }

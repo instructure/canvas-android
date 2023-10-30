@@ -19,8 +19,18 @@ package com.instructure.student.ui.interaction
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -435,7 +445,7 @@ class DiscussionsInteractionTest : StudentTest() {
             course = course1,
             user = user,
             topicTitle = "Hey!  A Discussion!",
-            topicDescription = "Awesome!"
+            topicDescription = "Awesome!",
         )
 
         courseBrowserPage.selectDiscussions()
@@ -466,8 +476,9 @@ class DiscussionsInteractionTest : StudentTest() {
         val attachment = createHtmlAttachment(data, attachmentHtml)
         discussionEntry.attachments = mutableListOf(attachment)
 
-        discussionDetailsPage.refresh()
-        Thread.sleep(3000) //allow some time to the reply to propagate
+        Espresso.pressBack()
+        discussionListPage.selectTopic(topicHeader.title!!)
+
         discussionDetailsPage.assertReplyDisplayed(discussionEntry)
         discussionDetailsPage.assertReplyAttachment(discussionEntry)
         discussionDetailsPage.previewAndCheckReplyAttachment(
@@ -565,8 +576,9 @@ class DiscussionsInteractionTest : StudentTest() {
         val attachment = createHtmlAttachment(data, attachmentHtml)
         replyReplyEntry.attachments = mutableListOf(attachment)
 
-        discussionDetailsPage.refresh() // To pick up updated discussion reply
-        Thread.sleep(3000) //Need this because somehow sometimes refresh does "double-refresh" and assert is failing below.
+        Espresso.pressBack()
+        discussionListPage.selectTopic(topicHeader.title!!)
+
         discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
         discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
         discussionDetailsPage.previewAndCheckReplyAttachment(

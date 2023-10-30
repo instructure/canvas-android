@@ -19,10 +19,12 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.AttachmentApiModel
@@ -42,6 +44,7 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
@@ -657,7 +660,268 @@ class AssignmentsE2ETest: StudentTest() {
         submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
     }
 
-    private fun createAssignment(
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun showOnlyLetterGradeOnDashboardAndAssignmentListPageE2E() {
+        Log.d(PREPARATION_TAG,"Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
+        val pointsTextAssignment = createAssignment(course.id, teacher,  GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(PREPARATION_TAG,"Grade submission: ${pointsTextAssignment.name} with 12 points.")
+        gradeSubmission(teacher, course, pointsTextAssignment.id, student, "12")
+
+        Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is 80%.")
+        dashboardPage.refresh()
+        dashboardPage.assertCourseGrade(course.name, "80%")
+
+        Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
+        var restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
+        restrictQuantitativeDataMap["restrict_quantitative_data"] = true
+        CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
+
+        Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
+        dashboardPage.refresh()
+        dashboardPage.assertCourseGrade(course.name, "B-")
+
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
+        val percentageAssignment = createAssignment(course.id, teacher,  GradingType.PERCENT, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Grade submission: ${percentageAssignment.name} with 66% of the maximum points (aka. 10).")
+        gradeSubmission(teacher, course, percentageAssignment.id, student, "10")
+
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
+        val letterGradeAssignment = createAssignment(course.id, teacher,  GradingType.LETTER_GRADE, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Grade submission: ${letterGradeAssignment.name} with C.")
+        gradeSubmission(teacher, course, letterGradeAssignment.id, student, "C")
+
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
+        val passFailAssignment = createAssignment(course.id, teacher,  GradingType.PASS_FAIL, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Grade submission: ${passFailAssignment.name} with 'Incomplete'.")
+        gradeSubmission(teacher, course, passFailAssignment.id, student, "Incomplete")
+
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
+        val gpaScaleAssignment = createAssignment(course.id, teacher,  GradingType.GPA_SCALE, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Grade submission: ${gpaScaleAssignment.name} with 3.7.")
+        gradeSubmission(teacher, course, gpaScaleAssignment.id, student, "3.7")
+
+        Log.d(STEP_TAG, "Refresh the Dashboard page to let the newly added submissions and their grades propagate.")
+        dashboardPage.refresh()
+
+        Log.d(STEP_TAG,"Select course: ${course.name}.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG,"Navigate to course Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG, "Assert that all the different types of assignments' grades has been converted properly.")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(pointsTextAssignment.name, "B-")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(percentageAssignment.name, "D")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(letterGradeAssignment.name, "C")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(passFailAssignment.name, "Incomplete")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(gpaScaleAssignment.name, "F")
+
+        Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+        assignmentDetailsPage.assertGradeDisplayed("B-")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${percentageAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(percentageAssignment)
+        assignmentDetailsPage.assertGradeDisplayed("D")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${letterGradeAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(letterGradeAssignment)
+        assignmentDetailsPage.assertGradeDisplayed("C")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${passFailAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(passFailAssignment)
+        assignmentDetailsPage.assertGradeDisplayed("Incomplete")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${gpaScaleAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(gpaScaleAssignment)
+        assignmentDetailsPage.assertGradeDisplayed("F")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+        Espresso.pressBack()
+
+        Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Disable restriction for quantitative data.")
+        restrictQuantitativeDataMap["restrict_quantitative_data"] = false
+        CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
+
+        Log.d(STEP_TAG, "Refresh the Assignment List Page. Assert that all the different types of assignments' grades" +
+                "has been shown as their original grade types, since the restriction has been turned off.")
+        assignmentListPage.refresh()
+        assignmentListPage.assertAssignmentDisplayedWithGrade(pointsTextAssignment.name, "12/15")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(percentageAssignment.name, "66.67%")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(letterGradeAssignment.name, "11.4/15 (C)")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(passFailAssignment.name, "Incomplete")
+        assignmentListPage.assertAssignmentDisplayedWithGrade(gpaScaleAssignment.name, "3.7/15 (F)")
+
+        Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+        assignmentDetailsPage.assertScoreDisplayed("12")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${percentageAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(percentageAssignment)
+        assignmentDetailsPage.assertScoreDisplayed("10")
+        assignmentDetailsPage.assertGradeDisplayed("66.67%")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${letterGradeAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(letterGradeAssignment)
+        assignmentDetailsPage.assertScoreDisplayed("11.4")
+        assignmentDetailsPage.assertGradeDisplayed("C")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${passFailAssignment.name}' assignment and assert that the corresponding grade is displayed on it's details page, and no score displayed since it's a pass/fail assignment. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(passFailAssignment)
+        assignmentDetailsPage.assertGradeDisplayed("Incomplete")
+        assignmentDetailsPage.assertScoreNotDisplayed()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '${gpaScaleAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        assignmentListPage.clickAssignment(gpaScaleAssignment)
+        assignmentDetailsPage.assertScoreDisplayed("3.7")
+        assignmentDetailsPage.assertGradeDisplayed("F")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG, "Assert that the course grade is F, as it is converted to letter grade because the disability of the restriction has not propagated yet.")
+        dashboardPage.assertCourseGrade(course.name, "F")
+
+        Log.d(STEP_TAG, "Refresh the Dashboard page (to allow the disabled restriction to propagate). Assert that the course grade is 49.47%, since we can now show percentage and numeric data.")
+        dashboardPage.refresh()
+        dashboardPage.assertCourseGrade(course.name, "49.47%")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
+    fun showOnlyLetterGradeOnGradesPageE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
+        val pointsTextAssignment = createAssignment(course.id, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(PREPARATION_TAG, "Grade submission: ${pointsTextAssignment.name} with 12 points.")
+        gradeSubmission(teacher, course, pointsTextAssignment.id, student, "12")
+
+        Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
+        var restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
+        restrictQuantitativeDataMap["restrict_quantitative_data"] = true
+        CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
+
+        Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
+        dashboardPage.refresh()
+        dashboardPage.assertCourseGrade(course.name, "B-")
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
+        val percentageAssignment = createAssignment(course.id, teacher, GradingType.PERCENT, 15.0, 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG, "Grade submission: ${percentageAssignment.name} with 66% of the maximum points (aka. 10).")
+        gradeSubmission(teacher, course, percentageAssignment.id, student, "10")
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
+        val letterGradeAssignment = createAssignment(
+            course.id,
+            teacher,
+            GradingType.LETTER_GRADE,
+            15.0,
+            1.days.fromNow.iso8601
+        )
+
+        Log.d(PREPARATION_TAG, "Grade submission: ${letterGradeAssignment.name} with C.")
+        gradeSubmission(teacher, course, letterGradeAssignment.id, student, "C")
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
+        val passFailAssignment = createAssignment(
+            course.id,
+            teacher,
+            GradingType.PASS_FAIL,
+            15.0,
+            1.days.fromNow.iso8601
+        )
+
+        Log.d(PREPARATION_TAG, "Grade submission: ${passFailAssignment.name} with 'Incomplete'.")
+        gradeSubmission(teacher, course, passFailAssignment.id, student, "Incomplete")
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
+        val gpaScaleAssignment = createAssignment(
+            course.id,
+            teacher,
+            GradingType.GPA_SCALE,
+            15.0,
+            1.days.fromNow.iso8601
+        )
+
+        Log.d(PREPARATION_TAG, "Grade submission: ${gpaScaleAssignment.name} with 3.7.")
+        gradeSubmission(teacher, course, gpaScaleAssignment.id, student, "3.7")
+
+        Log.d(STEP_TAG, "Refresh the Dashboard page to let the newly added submissions and their grades propagate.")
+        dashboardPage.refresh()
+
+        Log.d(STEP_TAG, "Select course: ${course.name}. Select 'Grades' menu.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectGrades()
+
+        Log.d(STEP_TAG, "Assert that the Total Grade is F and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
+        courseGradesPage.assertTotalGrade(ViewMatchers.withText("F"))
+        courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "B-")
+        courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "D")
+        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "C")
+        courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
+        if(isLowResDevice()) courseGradesPage.swipeUp()
+        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "F")
+
+        Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
+        restrictQuantitativeDataMap["restrict_quantitative_data"] = false
+        CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
+
+        Log.d(STEP_TAG, "Refresh the Course Grade Page.")
+        courseGradesPage.refresh() //First go to the top of the recycler view
+        courseGradesPage.refresh() //Actual refresh
+
+        Log.d(STEP_TAG, "Assert that the Total Grade is 49.47% and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
+        courseGradesPage.assertTotalGrade(ViewMatchers.withText("49.47%"))
+        courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "12/15")
+        courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "66.67%")
+        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "11.4/15 (C)")
+        courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
+        courseGradesPage.swipeUp()
+        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "3.7/15 (F)")
+    }
+
+        private fun createAssignment(
         courseId: Long,
         teacher: CanvasUserApiModel,
         gradingType: GradingType,

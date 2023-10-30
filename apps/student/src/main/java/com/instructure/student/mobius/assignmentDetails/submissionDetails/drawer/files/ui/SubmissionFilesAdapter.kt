@@ -17,11 +17,16 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui
 
 import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.setVisible
@@ -62,7 +67,25 @@ internal class SubmissionFilesHolder(view: View) : RecyclerView.ViewHolder(view)
         // Thumbnail
         Glide.with(root.context).clear(thumbnail)
         thumbnail.setVisible(data.thumbnailUrl.isValid())
-        data.thumbnailUrl.validOrNull()?.let { Glide.with(root.context).load(it).into(thumbnail) }
+        data.thumbnailUrl.validOrNull()?.let {
+            Glide.with(root.context).load(it).listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    fileIcon.setVisible(true)
+                    thumbnail.setVisible(false)
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+            }).into(thumbnail)
+        }
 
         // Title
         fileName.text = data.name

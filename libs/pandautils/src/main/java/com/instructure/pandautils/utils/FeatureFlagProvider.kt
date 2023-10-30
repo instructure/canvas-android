@@ -24,6 +24,7 @@ import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
 
+const val FEATURE_FLAG_OFFLINE = "mobile_offline_mode"
 class FeatureFlagProvider(
     private val userManager: UserManager,
     private val apiPrefs: ApiPrefs,
@@ -42,19 +43,23 @@ class FeatureFlagProvider(
         }
     }
 
-    fun getDiscussionRedesignFeatureFlag(): Boolean {
-        return BuildConfig.IS_DEBUG
+    suspend fun getDiscussionRedesignFeatureFlag(): Boolean {
+        return BuildConfig.IS_DEBUG && checkEnvironmentFeatureFlag("react_discussions_post")
     }
 
     suspend fun fetchEnvironmentFeatureFlags() {
-        val restParams = RestParams(isForceReadFromNetwork = false)
+        val restParams = RestParams(isForceReadFromNetwork = true, shouldIgnoreToken = true)
         val featureFlags = featuresApi.getEnvironmentFeatureFlags(restParams).dataOrNull ?: return
         apiPrefs.user?.id?.let {
             environmentFeatureFlags.insert(EnvironmentFeatureFlags(it, featureFlags))
         }
     }
 
-    suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
+    suspend fun offlineEnabled(): Boolean {
+        return checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) && !apiPrefs.canvasForElementary
+    }
+
+    private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
         return apiPrefs.user?.id?.let { environmentFeatureFlags.findByUserId(it)?.featureFlags?.get(featureFlag) == true } ?: false
     }
 }

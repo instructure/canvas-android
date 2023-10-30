@@ -80,7 +80,7 @@ class ProfileFragment : BaseFragment() {
         when(it.itemId) {
             R.id.menu_edit -> {
                 if(APIHelper.hasNetworkConnection()) {
-                    RouteMatcher.route(requireContext(), Route(ProfileEditFragment::class.java, ApiPrefs.user))
+                    RouteMatcher.route(requireActivity(), Route(ProfileEditFragment::class.java, ApiPrefs.user))
                 } else {
                     NoInternetConnectionDialog.show(requireFragmentManager())
                 }

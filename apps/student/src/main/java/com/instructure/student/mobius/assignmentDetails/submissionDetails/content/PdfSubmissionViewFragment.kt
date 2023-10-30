@@ -28,7 +28,7 @@ class PdfSubmissionViewFragment : Fragment() {
     private var pdfUrl by StringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return PdfStudentSubmissionView(requireContext(), pdfUrl, childFragmentManager)
+        return PdfStudentSubmissionView(requireActivity(), pdfUrl, childFragmentManager)
     }
 
     companion object {

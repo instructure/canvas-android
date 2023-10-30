@@ -19,10 +19,10 @@ import 'package:vector_math/vector_math.dart' as Vector;
 
 class CanvasLoadingIndicator extends StatefulWidget {
   const CanvasLoadingIndicator({
-    Key key,
     this.size = 48,
     this.color = Colors.white,
-  }) : super(key: key);
+    super.key,
+  });
 
   final double size;
   final Color color;
@@ -32,9 +32,9 @@ class CanvasLoadingIndicator extends StatefulWidget {
 }
 
 class _CanvasLoadingIndicatorState extends State<CanvasLoadingIndicator> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _animation;
-  _CanvasLoadingIndicatorPainter _painter;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  late _CanvasLoadingIndicatorPainter _painter;
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _CanvasLoadingIndicatorPainter extends CustomPainter {
   int _iteration = 0;
 
   // Paint used to draw each circle
-  Paint _circlePaint;
+  late Paint _circlePaint;
 
   @override
   void paint(Canvas canvas, Size size) {

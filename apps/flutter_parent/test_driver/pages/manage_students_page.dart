@@ -16,16 +16,16 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
 
 class ManageStudentsPage {
-  static Future<void> addStudent(FlutterDriver driver, String pairingCode) async {
-    await driver.tap(find.byType("FloatingActionButton"));
-    await driver.tap(find.text("Pairing Code")); // Choose between pairing code and qr-code
-    await driver.tap(find.byType("TextFormField"));
-    await driver.enterText(pairingCode);
-    await driver.tap(find.text("OK"));
+  static Future<void> addStudent(FlutterDriver? driver, String pairingCode) async {
+    await driver?.tap(find.byType("FloatingActionButton"));
+    await driver?.tap(find.text("Pairing Code")); // Choose between pairing code and qr-code
+    await driver?.tap(find.byType("TextFormField"));
+    await driver?.enterText(pairingCode);
+    await driver?.tap(find.text("OK"));
   }
 
-  static Future<void> verifyStudentDisplayed(FlutterDriver driver, SeededUser user) async {
-    await driver.waitFor(
+  static Future<void> verifyStudentDisplayed(FlutterDriver? driver, SeededUser user) async {
+    await driver?.waitFor(
         find.descendant(of: find.byValueKey('studentTextHero${user.id}'), matching: find.text(user.shortName)));
   }
 }

@@ -15,9 +15,9 @@ class _$SeedContextSerializer implements StructuredSerializer<SeedContext> {
   final String wireName = 'SeedContext';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, SeedContext object,
+  Iterable<Object?> serialize(Serializers serializers, SeedContext object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'seedingComplete',
       serializers.serialize(object.seedingComplete,
           specifiedType: const FullType(bool)),
@@ -31,25 +31,24 @@ class _$SeedContextSerializer implements StructuredSerializer<SeedContext> {
   }
 
   @override
-  SeedContext deserialize(Serializers serializers, Iterable<Object> serialized,
+  SeedContext deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new SeedContextBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'seedingComplete':
           result.seedingComplete = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'seedObjects':
           result.seedObjects.replace(serializers.deserialize(value,
               specifiedType: const FullType(BuiltMap,
-                  const [const FullType(String), const FullType(String)])));
+                  const [const FullType(String), const FullType(String)]))!);
           break;
       }
     }
@@ -64,16 +63,15 @@ class _$SeedContext extends SeedContext {
   @override
   final BuiltMap<String, String> seedObjects;
 
-  factory _$SeedContext([void Function(SeedContextBuilder) updates]) =>
-      (new SeedContextBuilder()..update(updates)).build();
+  factory _$SeedContext([void Function(SeedContextBuilder)? updates]) =>
+      (new SeedContextBuilder()..update(updates))._build();
 
-  _$SeedContext._({this.seedingComplete, this.seedObjects}) : super._() {
-    if (seedingComplete == null) {
-      throw new BuiltValueNullFieldError('SeedContext', 'seedingComplete');
-    }
-    if (seedObjects == null) {
-      throw new BuiltValueNullFieldError('SeedContext', 'seedObjects');
-    }
+  _$SeedContext._({required this.seedingComplete, required this.seedObjects})
+      : super._() {
+    BuiltValueNullFieldError.checkNotNull(
+        seedingComplete, r'SeedContext', 'seedingComplete');
+    BuiltValueNullFieldError.checkNotNull(
+        seedObjects, r'SeedContext', 'seedObjects');
   }
 
   @override
@@ -93,12 +91,16 @@ class _$SeedContext extends SeedContext {
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, seedingComplete.hashCode), seedObjects.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, seedingComplete.hashCode);
+    _$hash = $jc(_$hash, seedObjects.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('SeedContext')
+    return (newBuiltValueToStringHelper(r'SeedContext')
           ..add('seedingComplete', seedingComplete)
           ..add('seedObjects', seedObjects))
         .toString();
@@ -106,17 +108,17 @@ class _$SeedContext extends SeedContext {
 }
 
 class SeedContextBuilder implements Builder<SeedContext, SeedContextBuilder> {
-  _$SeedContext _$v;
+  _$SeedContext? _$v;
 
-  bool _seedingComplete;
-  bool get seedingComplete => _$this._seedingComplete;
-  set seedingComplete(bool seedingComplete) =>
+  bool? _seedingComplete;
+  bool? get seedingComplete => _$this._seedingComplete;
+  set seedingComplete(bool? seedingComplete) =>
       _$this._seedingComplete = seedingComplete;
 
-  MapBuilder<String, String> _seedObjects;
+  MapBuilder<String, String>? _seedObjects;
   MapBuilder<String, String> get seedObjects =>
       _$this._seedObjects ??= new MapBuilder<String, String>();
-  set seedObjects(MapBuilder<String, String> seedObjects) =>
+  set seedObjects(MapBuilder<String, String>? seedObjects) =>
       _$this._seedObjects = seedObjects;
 
   SeedContextBuilder() {
@@ -124,9 +126,10 @@ class SeedContextBuilder implements Builder<SeedContext, SeedContextBuilder> {
   }
 
   SeedContextBuilder get _$this {
-    if (_$v != null) {
-      _seedingComplete = _$v.seedingComplete;
-      _seedObjects = _$v.seedObjects?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _seedingComplete = $v.seedingComplete;
+      _seedObjects = $v.seedObjects.toBuilder();
       _$v = null;
     }
     return this;
@@ -134,33 +137,34 @@ class SeedContextBuilder implements Builder<SeedContext, SeedContextBuilder> {
 
   @override
   void replace(SeedContext other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$SeedContext;
   }
 
   @override
-  void update(void Function(SeedContextBuilder) updates) {
+  void update(void Function(SeedContextBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$SeedContext build() {
+  SeedContext build() => _build();
+
+  _$SeedContext _build() {
     _$SeedContext _$result;
     try {
       _$result = _$v ??
           new _$SeedContext._(
-              seedingComplete: seedingComplete,
+              seedingComplete: BuiltValueNullFieldError.checkNotNull(
+                  seedingComplete, r'SeedContext', 'seedingComplete'),
               seedObjects: seedObjects.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'seedObjects';
         seedObjects.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'SeedContext', _$failedField, e.toString());
+            r'SeedContext', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -169,4 +173,4 @@ class SeedContextBuilder implements Builder<SeedContext, SeedContextBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

@@ -21,7 +21,6 @@ import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.WaitForViewWithStringText
 import com.instructure.espresso.WaitForViewWithText
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
@@ -35,12 +34,12 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.not
 import java.text.DecimalFormat
-import java.util.*
 
 /**
  * Represents the SpeedGrader grade page.
@@ -66,7 +65,6 @@ class SpeedGraderGradePage : BasePage() {
     //dialog views
     private val gradeEditText by WaitForViewWithId(R.id.gradeEditText)
     private val customizeGradeTitle by WaitForViewWithText(R.string.customize_grade)
-    private val confirmDialogButton by WaitForViewWithStringText(getStringFromResource(android.R.string.ok).uppercase(Locale.getDefault()))
 
 
     /**
@@ -83,7 +81,7 @@ class SpeedGraderGradePage : BasePage() {
      */
     fun enterNewGrade(grade: String) {
         gradeEditText.replaceText(grade)
-        confirmDialogButton.click()
+        onView(withText(android.R.string.ok)).click()
     }
 
     /**

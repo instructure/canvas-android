@@ -28,6 +28,7 @@ import 'package:mockito/mockito.dart';
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/test_app.dart';
 import '../../../utils/test_helpers/mock_helpers.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   group('Render', () {
@@ -161,7 +162,7 @@ void main() {
       expect(find.byWidgetPredicate((widget) {
         if (widget is Checkbox) {
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       }), findsNWidgets(3));
@@ -184,7 +185,7 @@ void main() {
       expect(find.byWidgetPredicate((widget) {
         if (widget is Checkbox) {
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       }), findsNWidgets(1));
@@ -213,7 +214,7 @@ void main() {
         if (widget is Checkbox) {
           // Check for a checkbox widgets that are checked
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       });
@@ -311,7 +312,7 @@ void main() {
         if (widget is Checkbox) {
           // Check for a checkbox widgets that are checked
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       });
@@ -355,7 +356,7 @@ void main() {
         if (widget is Checkbox) {
           // Check for a checkbox widgets that are checked
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       }, skipOffstage: false);
