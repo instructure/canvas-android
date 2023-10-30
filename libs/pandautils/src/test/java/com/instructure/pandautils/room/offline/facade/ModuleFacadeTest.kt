@@ -118,7 +118,7 @@ class ModuleFacadeTest {
     fun `Build and return ModuleObjects for course from related database entities`() = runTest {
         coEvery { moduleObjectDao.findByCourseId(1) } returns listOf(ModuleObjectEntity(ModuleObject(id = 1, name = "Module"), 1))
         coEvery { moduleItemDao.findByModuleId(1) } returns listOf(ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1))
-        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1)
+        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1, 1)
         coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
         coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
             ModuleContentDetails(pointsPossible = "10"), 2
@@ -141,7 +141,7 @@ class ModuleFacadeTest {
     fun `Build and return ModuleObject for id from related database entities`() = runTest {
         coEvery { moduleObjectDao.findById(1) } returns ModuleObjectEntity(ModuleObject(id = 1, name = "Module"), 1)
         coEvery { moduleItemDao.findByModuleId(1) } returns listOf(ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1))
-        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1)
+        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1, 1)
         coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
         coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
             ModuleContentDetails(pointsPossible = "10"), 2
@@ -162,7 +162,7 @@ class ModuleFacadeTest {
     @Test
     fun `Build and return ModuleItems for module from related database entities`() = runTest {
         coEvery { moduleItemDao.findByModuleId(1) } returns listOf(ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1))
-        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1)
+        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1, 1)
         coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
         coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
             ModuleContentDetails(pointsPossible = "10"), 2
@@ -183,7 +183,7 @@ class ModuleFacadeTest {
     @Test
     fun `Build and return ModuleItem for id from related database entities`() = runTest {
         coEvery { moduleItemDao.findById(2) } returns ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1)
-        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1)
+        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1, 1)
         coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
         coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
             ModuleContentDetails(pointsPossible = "10"), 2
@@ -203,7 +203,7 @@ class ModuleFacadeTest {
     @Test
     fun `Build and return ModuleItem for asset id and type from related database entities`() = runTest {
         coEvery { moduleItemDao.findByTypeAndContentId("Assignment", 1) } returns ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1)
-        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1)
+        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1, 1)
         coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
         coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
             ModuleContentDetails(pointsPossible = "10"), 2
@@ -223,7 +223,7 @@ class ModuleFacadeTest {
     @Test
     fun `Build and return ModuleItem for page from related database entities`() = runTest {
         coEvery { moduleItemDao.findByPageUrl("instructure.com") } returns ModuleItemEntity(ModuleItem(id = 2, title = "Item"), 1)
-        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1)
+        coEvery { completionRequirementDao.findById(2) } returns ModuleCompletionRequirementEntity(ModuleCompletionRequirement(minScore = 10.0), 1, 1)
         coEvery { lockInfoFacade.getLockInfoByModuleId(2) } returns LockInfo(unlockAt = "2020-01-01T00:00:00Z")
         coEvery { moduleContentDetailsDao.findById(2) } returns ModuleContentDetailsEntity(
             ModuleContentDetails(pointsPossible = "10"), 2
