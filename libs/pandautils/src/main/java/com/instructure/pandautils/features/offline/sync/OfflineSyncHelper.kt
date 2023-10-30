@@ -72,7 +72,6 @@ class OfflineSyncHelper(
     fun cancelRunningWorkers() {
         workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
         workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
-        workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
     }
 
     private suspend fun isWorkScheduled(): Boolean {

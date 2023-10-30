@@ -153,6 +153,8 @@ class OfflineSyncWorker @AssistedInject constructor(
         while (true) {
             kotlinx.coroutines.delay(1000)
 
+            if (isStopped) break
+
             val runningCourseProgresses = courseSyncProgressDao.findAll()
             val runningFileProgresses = fileSyncProgressDao.findAll()
 

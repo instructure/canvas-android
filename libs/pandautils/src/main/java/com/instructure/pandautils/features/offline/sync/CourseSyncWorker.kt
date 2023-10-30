@@ -449,6 +449,7 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun fetchTab(vararg tabIds: String, fetchBlock: suspend () -> Unit) {
+        if (isStopped) return
         try {
             fetchBlock()
             updateTabSuccess(*tabIds)

@@ -40,6 +40,7 @@ import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.io.File
+import java.lang.IllegalStateException
 import java.util.Date
 
 @HiltWorker
@@ -78,6 +79,7 @@ class FileSyncWorker @AssistedInject constructor(
                 .dataOrThrow
                 .saveFile(downloadedFile)
                 .collect {
+                    if (isStopped) throw IllegalStateException("Worker was stopped")
                     when (it) {
                         is DownloadState.InProgress -> {
                             progress = progress.copy(progress = it.progress, progressState = ProgressState.IN_PROGRESS)
@@ -147,8 +149,6 @@ class FileSyncWorker @AssistedInject constructor(
         const val INPUT_FILE_NAME = "INPUT_FILE_NAME"
         const val INPUT_FILE_URL = "INPUT_FILE_URL"
         const val INPUT_COURSE_ID = "INPUT_COURSE_ID"
-        const val PROGRESS = "fileSyncProgress"
-        const val OUTPUT = "fileSyncOutput"
         const val TAG = "FileSyncWorker"
 
         fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String, wifiOnly: Boolean): OneTimeWorkRequest {
