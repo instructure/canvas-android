@@ -75,7 +75,7 @@ data class TabProgressViewData(
 data class FileSyncProgressViewData(
     val fileName: String,
     val fileSize: String,
-    val workerId: String,
+    val fileId: Long,
     @Bindable var progress: Int,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
 ) : BaseObservable() {

@@ -24,6 +24,7 @@ import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkContinuation
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -32,13 +33,23 @@ import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import java.io.File
 import java.lang.IllegalStateException
 import java.util.Date
@@ -50,7 +61,12 @@ class FileSyncWorker @AssistedInject constructor(
     private val fileDownloadApi: FileDownloadAPI,
     private val localFileDao: LocalFileDao,
     private val fileSyncProgressDao: FileSyncProgressDao,
-    private val firebaseCrashlytics: FirebaseCrashlytics
+    private val firebaseCrashlytics: FirebaseCrashlytics,
+    private val courseFileSharedRepository: CourseFileSharedRepository,
+    private val fileFolderDao: FileFolderDao,
+    private val fileSyncSettingsDao: FileSyncSettingsDao,
+    private val syncSettingsFacade: SyncSettingsFacade,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private var fileExists = false
@@ -58,7 +74,72 @@ class FileSyncWorker @AssistedInject constructor(
     private lateinit var progress: FileSyncProgressEntity
 
     override suspend fun doWork(): Result {
-        val fileId = inputData.getLong(INPUT_FILE_ID, -1)
+
+        val courseId = workerParameters.inputData.getLong(INPUT_COURSE_ID, -1)
+        if (courseId == -1L) return Result.failure()
+
+        fetchFiles(courseId)
+
+        val courseSettingsWithFiles =
+            courseSyncSettingsDao.findWithFilesById(courseId) ?: return Result.failure()
+
+        syncFiles(courseSettingsWithFiles.courseSyncSettings)
+
+        return Result.success()
+    }
+
+    private suspend fun fetchFiles(courseId: Long) {
+        val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
+
+        val entities = fileFolders.map { FileFolderEntity(it) }
+        fileFolderDao.replaceAll(entities, courseId)
+    }
+
+    private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity): WorkContinuation? {
+        val courseId = syncSettings.courseId
+        val allFiles = fileFolderDao.findAllFilesByCourseId(courseId)
+        val allFileIds = allFiles.map { it.id }
+
+        cleanupSyncedFiles(courseId, allFileIds)
+
+        val fileSyncEntities = mutableListOf<FileSyncProgressEntity>()
+        val filesToSync = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
+            .chunked(6)
+
+        if (filesToSync.isEmpty()) {
+            return null
+        }
+
+        coroutineScope {
+            filesToSync.forEach {
+                it.map {
+                    async { downloadFile(it.id, it.displayName.orEmpty(), it.filesUrl.orEmpty(), courseId) }
+                }.awaitAll()
+            }
+        }
+
+        return null
+    }
+
+    private suspend fun cleanupSyncedFiles(courseId: Long, remoteIds: List<Long>) {
+        val syncedIds = fileSyncSettingsDao.findByCourseId(courseId).map { it.id }
+        val localRemovedFiles = localFileDao.findRemovedFiles(courseId, syncedIds)
+        val remoteRemovedFiles = localFileDao.findRemovedFiles(courseId, remoteIds)
+
+        (localRemovedFiles + remoteRemovedFiles).forEach {
+            File(it.path).delete()
+            localFileDao.delete(it)
+        }
+
+        val file = File(context.filesDir, "${ApiPrefs.user?.id.toString()}/external_$courseId")
+        file.listFiles()?.forEach {
+            it.delete()
+        }
+
+        fileSyncSettingsDao.deleteAllExcept(courseId, remoteIds)
+    }
+
+    private suspend fun downloadFile(fileId: Long, fileName: String, fileUrl: String, courseId: Long) {
         val inputFileName = inputData.getString(INPUT_FILE_NAME) ?: ""
         val fileName = when {
             inputFileName.isNotEmpty() && fileId != -1L -> "${fileId}_$inputFileName"
@@ -72,7 +153,6 @@ class FileSyncWorker @AssistedInject constructor(
 
         var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
 
-        progress = fileSyncProgressDao.findByWorkerId(workerParameters.id.toString()) ?: return Result.failure()
 
         try {
             fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
@@ -91,9 +171,20 @@ class FileSyncWorker @AssistedInject constructor(
                                 downloadedFile = rewriteOriginalFile(downloadedFile, fileName, externalFile, courseId)
                             }
                             if (!externalFile) {
-                                localFileDao.insert(LocalFileEntity(fileId, courseId, Date(), downloadedFile.absolutePath))
+                                localFileDao.insert(
+                                    LocalFileEntity(
+                                        fileId,
+                                        courseId,
+                                        Date(),
+                                        downloadedFile.absolutePath
+                                    )
+                                )
                             }
-                        progress = progress.copy(progress = 100, progressState = ProgressState.COMPLETED, fileSize = it.totalBytes)
+                            progress = progress.copy(
+                                progress = 100,
+                                progressState = ProgressState.COMPLETED,
+                                fileSize = it.totalBytes
+                            )
                             fileSyncProgressDao.update(progress)
                         }
 
@@ -108,8 +199,6 @@ class FileSyncWorker @AssistedInject constructor(
             fileSyncProgressDao.update(progress)
             firebaseCrashlytics.recordException(e)
         }
-
-        return Result.success()
     }
 
     private fun getDownloadFile(fileName: String, externalFile: Boolean, courseId: Long): File {
@@ -151,7 +240,13 @@ class FileSyncWorker @AssistedInject constructor(
         const val INPUT_COURSE_ID = "INPUT_COURSE_ID"
         const val TAG = "FileSyncWorker"
 
-        fun createOneTimeWorkRequest(courseId: Long, fileId: Long, fileName: String, fileUrl: String, wifiOnly: Boolean): OneTimeWorkRequest {
+        fun createOneTimeWorkRequest(
+            courseId: Long,
+            fileId: Long,
+            fileName: String,
+            fileUrl: String,
+            wifiOnly: Boolean
+        ): OneTimeWorkRequest {
             val inputData = androidx.work.Data.Builder()
                 .putString(INPUT_FILE_NAME, fileName)
                 .putString(INPUT_FILE_URL, fileUrl)

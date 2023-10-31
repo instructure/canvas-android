@@ -94,18 +94,16 @@ data class FilesTabProgressItemViewModel(
     private fun createFileItems(fileSyncData: List<FileSyncProgressEntity>) {
         val fileItems = mutableListOf<FileSyncProgressItemViewModel>()
         var totalSize = 0L
-        val workerIds = mutableListOf<UUID>()
         fileSyncData.forEach {
             val item = FileSyncProgressItemViewModel(
                 data = FileSyncProgressViewData(
                     fileName = it.fileName,
                     fileSize = NumberHelper.readableFileSize(context, it.fileSize),
                     progress = 0,
-                    workerId = it.workerId,
+                    fileId = it.fileId,
                 ),
                 fileSyncProgressDao = fileSyncProgressDao
             )
-            workerIds.add(UUID.fromString(it.workerId))
             fileItems.add(item)
             totalSize += it.fileSize
         }

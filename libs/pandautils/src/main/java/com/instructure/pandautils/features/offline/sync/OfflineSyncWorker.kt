@@ -150,28 +150,6 @@ class OfflineSyncWorker @AssistedInject constructor(
         workManager.beginWith(courseWorkers)
             .enqueue()
 
-        while (true) {
-            kotlinx.coroutines.delay(1000)
-
-            if (isStopped) break
-
-            val runningCourseProgresses = courseSyncProgressDao.findAll()
-            val runningFileProgresses = fileSyncProgressDao.findAll()
-
-            val ids = runningCourseProgresses.map { UUID.fromString(it.workerId) } + runningFileProgresses.map { UUID.fromString(it.workerId) }
-
-            val workInfos = workManager.getWorkInfos(WorkQuery.fromIds(ids)).get()
-
-            if (workInfos.all { it.state.isFinished }) {
-                val itemCount = runningCourseProgresses.size
-
-                if (workInfos.any { it.state == WorkInfo.State.CANCELLED }) break
-
-                showNotification(itemCount, workInfos.all { it.state == WorkInfo.State.SUCCEEDED })
-                break
-            }
-        }
-
         return Result.success()
     }
 

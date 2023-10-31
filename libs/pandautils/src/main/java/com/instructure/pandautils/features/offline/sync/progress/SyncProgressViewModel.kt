@@ -114,8 +114,8 @@ class SyncProgressViewModel @Inject constructor(
     }
 
     fun cancel() {
+        offlineSyncHelper.cancelRunningWorkers()
         viewModelScope.launch {
-            offlineSyncHelper.cancelRunningWorkers()
             courseSyncProgressDao.deleteAll()
             fileSyncProgressDao.deleteAll()
             _events.postValue(Event(SyncProgressAction.Back))
