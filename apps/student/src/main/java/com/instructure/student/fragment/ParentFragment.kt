@@ -371,18 +371,16 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         return recyclerView
     }
 
-    fun openMedia(mime: String?, url: String?, filename: String?, canvasContext: CanvasContext) {
+    fun openMedia(mime: String?, url: String?, filename: String?, canvasContext: CanvasContext, localFile: Boolean = false, useOutsideApps: Boolean = false) {
         val owner = activity ?: return
-        onMainThread {
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename)
-            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
-        }
-    }
 
-    fun openLocalMedia(mime: String?, path: String?, filename: String?, canvasContext: CanvasContext, useOutsideApps: Boolean = false) {
-        val owner = activity ?: return
+        openMediaBundle = if (localFile) {
+            OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, url, filename, useOutsideApps)
+        } else {
+            OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, useOutsideApps)
+        }
+
         onMainThread {
-            openMediaBundle = OpenMediaAsyncTaskLoader.createLocalBundle(canvasContext, mime, path, filename, useOutsideApps)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
         }
     }
@@ -391,14 +389,6 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         val owner = activity ?: return
         onMainThread {
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, filename, canvasContext)
-            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
-        }
-    }
-
-    fun openMedia(mime: String?, url: String?, filename: String?, useOutsideApps: Boolean, canvasContext: CanvasContext) {
-        val owner = activity ?: return
-        onMainThread {
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, useOutsideApps)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
         }
     }
