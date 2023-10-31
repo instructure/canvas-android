@@ -144,7 +144,6 @@ class OfflineSyncHelperTest {
 
         val captor = slot<OneTimeWorkRequest>()
         coVerify(exactly = 1) {
-            workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
             workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
             workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
             workManager.enqueue(capture(captor))
@@ -254,7 +253,6 @@ class OfflineSyncHelperTest {
         offlineSyncHelper.cancelRunningWorkers()
 
         verify {
-            workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
             workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
             workManager.cancelAllWorkByTag(FileSyncWorker.TAG)
         }
