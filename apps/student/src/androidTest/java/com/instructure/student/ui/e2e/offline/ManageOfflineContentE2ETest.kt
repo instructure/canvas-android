@@ -126,9 +126,6 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on 'SELECT ALL' button.")
         manageOfflineContentPage.clickOnSelectAllButton()
 
-        manageOfflineContentPage.expandCollapseItem(course1.name)
-        manageOfflineContentPage.expandCollapseItem(course1.name)
-
         Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state and became 'Checked'.")
         manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
 

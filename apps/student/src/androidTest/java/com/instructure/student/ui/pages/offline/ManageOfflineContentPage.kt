@@ -22,11 +22,11 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.hasCheckedState
-import com.instructure.canvas.espresso.withRotation
 import com.instructure.espresso.ConstraintLayoutItemCountAssertion
 import com.instructure.espresso.ConstraintLayoutItemCountAssertionWithMatcher
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.actions.ForceClick
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -39,7 +39,6 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.R
-import com.instructure.student.ui.utils.getView
 import org.hamcrest.CoreMatchers.allOf
 
 class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
@@ -54,8 +53,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun expandCollapseItem(itemName: String) {
-        val rotation = onView(withId(R.id.arrow) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).getView().rotation
-        onView(withId(R.id.arrow) + withRotation(180.0f) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().click()
+        onView(withId(R.id.arrow) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().perform(ForceClick())
     }
 
     //OfflineMethod
