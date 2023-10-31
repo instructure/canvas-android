@@ -65,6 +65,7 @@ class LeftSideNavigationDrawerPage : BasePage() {
     )
 
     private fun clickMenu(menuId: Int) {
+        sleep(1000) //to avoid listview a11y error (content description is missing)
         waitForView(hamburgerButtonMatcher).click()
         waitForViewWithId(menuId).scrollTo().click()
     }

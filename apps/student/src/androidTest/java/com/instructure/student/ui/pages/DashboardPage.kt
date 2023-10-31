@@ -260,6 +260,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
             .perform(click());
     }
 
+    //OfflineMethod
     fun openGlobalManageOfflineContentPage() {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
         onView(withText(containsString("Manage Offline Content")))
@@ -307,7 +308,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
             withId(R.id.cardView)
                     + withDescendant(withId(R.id.titleTextView) + withText(courseTitle))
         )
-        onView(courseOverflowMatcher).scrollTo().click()
+        waitForView(courseOverflowMatcher).scrollTo().click()
         waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
 

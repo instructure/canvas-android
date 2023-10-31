@@ -20,6 +20,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.IdRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
@@ -28,6 +29,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import junit.framework.AssertionFailedError
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
 
@@ -94,3 +96,27 @@ class DoesNotExistAssertion(private val timeoutInSeconds: Long, private val poll
         throw AssertionError("View still exists after $timeoutInSeconds seconds.")
     }
 }
+
+class ConstraintLayoutItemCountAssertionWithMatcher(private val matcher: Matcher<View>, private val expectedCount: Int) : ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        if (view !is ConstraintLayout) {
+            throw ClassCastException("View of type ${view.javaClass.simpleName} must be a ConstraintLayout")
+        }
+        val count = (0 until view.childCount)
+            .map { view.getChildAt(it) }.count { matcher.matches(it) }
+        ViewMatchers.assertThat(count, Matchers.`is`(expectedCount))
+    }
+}
+
+class ConstraintLayoutItemCountAssertion(private val expectedCount: Int) : ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        if (view !is ConstraintLayout) {
+            throw ClassCastException("View of type ${view.javaClass.simpleName} must be a ConstraintLayout")
+        }
+        val count = view.childCount
+        ViewMatchers.assertThat(count, Matchers.`is`(expectedCount))
+    }
+}
+
