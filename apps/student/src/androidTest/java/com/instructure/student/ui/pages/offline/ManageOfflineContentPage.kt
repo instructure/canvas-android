@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.hasCheckedState
 import com.instructure.espresso.ConstraintLayoutItemCountAssertion
 import com.instructure.espresso.ConstraintLayoutItemCountAssertionWithMatcher
+import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.actions.ForceClick
@@ -121,6 +122,10 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     fun assertCheckedStateOfItem(itemName: String, state: Int) {
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)).scrollTo().assertDisplayed()
+    }
+
+    fun waitForItemDisappear(itemName: String) {
+        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
     }
 
 }

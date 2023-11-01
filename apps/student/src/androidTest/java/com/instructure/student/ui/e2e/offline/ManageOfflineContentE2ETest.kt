@@ -69,21 +69,6 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that if there is something selected yet, the 'DESELECT ALL' button text will be displayed on the top-left corner of the toolbar.")
         manageOfflineContentPage.assertSelectButtonText(selectAll = false)
 
-        Log.d(STEP_TAG, "Click on the 'Sync' button.")
-        manageOfflineContentPage.clickOnSyncButton()
-
-        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
-        dashboardPage.waitForRender()
-        dashboardPage.waitForSyncProgressDownloadStartedNotification()
-        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
-
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
-        dashboardPage.waitForSyncProgressStartingNotification()
-        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
-
-        Log.d(STEP_TAG, "Open global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
-        dashboardPage.clickCourseOverflowMenu(course1.name, "Manage Offline Content")
-
         Log.d(STEP_TAG, "Assert that the Storage info details are displayed properly.")
         manageOfflineContentPage.assertStorageInfoDetails()
 
@@ -149,9 +134,8 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that the 'SELECT ALL' will be displayed after clicking the 'SELECT ALL' button.")
         manageOfflineContentPage.assertSelectButtonText(selectAll = true)
 
-        Log.d(STEP_TAG, "Navigate back to Dashboard Page and confirm 'Discard Changes' dialog. Open 'Global' Manage Offline Content page.")
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Open 'Global' Manage Offline Content page.")
         Espresso.pressBack()
-        manageOfflineContentPage.confirmDiscardChanges()
         dashboardPage.openGlobalManageOfflineContentPage()
 
         Log.d(STEP_TAG, "Assert that the Storage info details are displayed properly.")
@@ -160,49 +144,69 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that the tool bar texts are displayed properly, so the subtitle is 'All Courses', because we are on the 'Global' Manage Offline Content page.")
         manageOfflineContentPage.assertToolbarTexts("All Courses")
 
-        Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state is still 'Checked' even on the 'Global' Manage Offline Content page. Assert that '${course2.name}' course's checkbox is 'Unchecked' yet.")
-        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
+        Log.d(STEP_TAG, "Assert that the '${course1.name}' and '${course2.name}' courses' checkboxes are 'Unchecked' yet.")
+        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_UNCHECKED)
         manageOfflineContentPage.assertCheckedStateOfItem(course2.name, MaterialCheckBox.STATE_UNCHECKED)
 
         Log.d(STEP_TAG, "Expand '${course1.name}' course.")
         manageOfflineContentPage.expandCollapseItem(course1.name)
 
-        Log.d(STEP_TAG, "Assert that the 'Announcements' and 'Discussions' items are 'checked' (and so all the other tabs of the course) because the course has been selected.")
-        manageOfflineContentPage.assertCheckedStateOfItem("Announcements", MaterialCheckBox.STATE_CHECKED)
-        manageOfflineContentPage.assertCheckedStateOfItem("Discussions", MaterialCheckBox.STATE_CHECKED)
+        Log.d(STEP_TAG, "Assert that the 'Announcements' and 'Discussions' items are 'unchecked' (and so all the other tabs of the course) because the course is NOT selected.")
+        manageOfflineContentPage.assertCheckedStateOfItem("Announcements", MaterialCheckBox.STATE_UNCHECKED)
+        manageOfflineContentPage.assertCheckedStateOfItem("Discussions", MaterialCheckBox.STATE_UNCHECKED)
 
         Log.d(STEP_TAG, "Collapse '${course1.name}' course.")
         manageOfflineContentPage.expandCollapseItem(course1.name)
 
+        manageOfflineContentPage.waitForItemDisappear("Announcements")
+        manageOfflineContentPage.waitForItemDisappear("Discussions")
+
+        Thread.sleep(1000) //need to wait 1 second here because sometimes expand/collapse happens too fast
         Log.d(STEP_TAG, "Expand '${course2.name}' course.")
         manageOfflineContentPage.expandCollapseItem(course2.name)
 
-        Log.d(STEP_TAG, "Assert that the 'Announcements' and 'Discussions' items are 'Unchecked' (and so all the other tabs of the course) because the course has not selected.")
-        manageOfflineContentPage.assertCheckedStateOfItem("Announcements", MaterialCheckBox.STATE_UNCHECKED)
+        Log.d(STEP_TAG, "Assert that the 'Grades' and 'Discussions' items are 'Unchecked' (and so all the other tabs of the course) because the course has not selected.")
         manageOfflineContentPage.assertCheckedStateOfItem("Discussions", MaterialCheckBox.STATE_UNCHECKED)
+        manageOfflineContentPage.assertCheckedStateOfItem("Grades", MaterialCheckBox.STATE_UNCHECKED)
 
         Log.d(STEP_TAG, "Check '${course2.name}' course.")
         manageOfflineContentPage.changeItemSelectionState(course2.name)
 
-        Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state and became 'Checked'.")
-        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
+        Log.d(STEP_TAG, "Assert that the '${course2.name}' course's checkbox state and became 'Checked'.")
+        manageOfflineContentPage.assertCheckedStateOfItem(course2.name, MaterialCheckBox.STATE_CHECKED)
 
-        Log.d(STEP_TAG, "Assert that the '${course2.name}' course's checkbox state and became 'Unchecked'.")
-        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_UNCHECKED)
+        Log.d(STEP_TAG, "Assert that the 'Grades' and 'Discussions' items are 'checked' (and so all the other tabs of the course) because the course has selected.")
+        manageOfflineContentPage.assertCheckedStateOfItem("Discussions", MaterialCheckBox.STATE_CHECKED)
+        manageOfflineContentPage.assertCheckedStateOfItem("Grades", MaterialCheckBox.STATE_CHECKED)
+
+        Log.d(STEP_TAG, "Collapse '${course2.name}' course.")
+        manageOfflineContentPage.expandCollapseItem(course2.name)
 
         Log.d(STEP_TAG, "Assert that both of the seeded courses are displayed as a selectable item in the Manage Offline Content page.")
-        manageOfflineContentPage.assertCourseCount(2)
+        manageOfflineContentPage.assertCourseCountWithMatcher(2)
+
+        Log.d(STEP_TAG, "Click on the 'Sync' button.")
+        manageOfflineContentPage.clickOnSyncButton()
+
+        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
+        dashboardPage.waitForRender()
+        dashboardPage.waitForSyncProgressDownloadStartedNotification()
+        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
+
+        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
+        dashboardPage.waitForSyncProgressStartingNotification()
+        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         OfflineTestUtils.turnOffConnectionViaADB()
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
-        dashboardPage.selectCourse(course1)
-        courseBrowserPage.selectAnnouncements()
+        Log.d(STEP_TAG, "Select '${course2.name}' course and open 'Grades' menu to check if it's really synced and can be seen in offline mode.")
+        dashboardPage.selectCourse(course2)
+        courseBrowserPage.selectGrades()
 
-        Log.d(STEP_TAG,"Assert that the '${testAnnouncement.title}' titled announcement is displayed, so the user is able to see it in offline mode because it was synced.")
-        announcementListPage.assertTopicDisplayed(testAnnouncement.title)
+        Log.d(STEP_TAG,"Assert that the empty view is displayed on the 'Grades' page (just to check that it's available in offline mode.")
+        courseGradesPage.assertEmptyView()
     }
 
     @After
