@@ -56,7 +56,7 @@ class DashboardE2EOfflineTest : StudentTest() {
 
         Log.d(STEP_TAG, "Select the entire '${course1.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState(course1.name)
-        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+        manageOfflineContentPage.clickOnSyncButton()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
         dashboardPage.waitForRender()

@@ -82,6 +82,10 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         gradeValue.check(matches(matcher))
     }
 
+    fun assertEmptyView() {
+        onView(withId(R.id.title) + withText(R.string.noItemsToDisplayShort) + withAncestor(R.id.gradesEmptyView)).assertDisplayed()
+    }
+
     fun assertAssignmentDisplayed(name: String, gradeString: String) {
         val siblingMatcher = withId(R.id.title) + withParent(R.id.textContainer) + withText(name) + withAncestor(R.id.courseGradesPage)
         onView(withId(R.id.points) + hasSibling(siblingMatcher)).scrollTo().assertHasText(gradeString)
