@@ -143,7 +143,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun assertItemDisplayed(title: String) {
-        waitForView(withId(R.id.title) + withText(title)).assertDisplayed()
+        onView(withId(R.id.title) + withText(title)).scrollTo().assertDisplayed()
     }
 
     //OfflineMethod
