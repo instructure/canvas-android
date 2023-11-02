@@ -155,11 +155,11 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
 fun bindHtmlContent(webViewWrapper: CanvasWebViewWrapper, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
     webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty())
     if (onLtiButtonPressed != null) {
-        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "ltiTool")
     }
 
     if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "googleDocs")
     }
 }
 
