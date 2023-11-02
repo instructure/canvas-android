@@ -41,7 +41,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun expandCollapseItem(itemName: String) {
-        onView(withId(R.id.arrow) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().perform(ForceClick())
+        waitForView(withId(R.id.arrow) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().perform(ForceClick())
     }
 
     //OfflineMethod
