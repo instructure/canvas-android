@@ -129,7 +129,7 @@ class HtmlContentFormatter(
     }
 
     private fun iframeWithGoogleDocsButton(srcUrl: String, iframe: String, buttonText: String): String {
-        val button = "</br><p><div class=\"lti_button\" onClick=\"accessor.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
+        val button = "</br><p><div class=\"lti_button\" onClick=\"googleDocs.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
         val htmlButton = String.format(button, srcUrl, buttonText)
         return iframe + htmlButton
     }
