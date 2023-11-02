@@ -70,7 +70,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         manageOfflineContentPage.assertSelectButtonText(selectAll = false)
 
         Log.d(STEP_TAG, "Click on the 'Sync' button.")
-        manageOfflineContentPage.clickOnSyncButton()
+        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
         dashboardPage.waitForRender()

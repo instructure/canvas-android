@@ -22,22 +22,10 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.hasCheckedState
-import com.instructure.espresso.ConstraintLayoutItemCountAssertion
-import com.instructure.espresso.ConstraintLayoutItemCountAssertionWithMatcher
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.WaitForViewWithId
+import com.instructure.canvas.espresso.withRotation
+import com.instructure.espresso.*
 import com.instructure.espresso.actions.ForceClick
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
-import com.instructure.espresso.page.withText
-import com.instructure.espresso.scrollTo
+import com.instructure.espresso.page.*
 import com.instructure.pandautils.R
 import org.hamcrest.CoreMatchers.allOf
 
@@ -47,8 +35,8 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
     private val storageInfoContainer by WaitForViewWithId(R.id.storageInfoContainer)
 
     //OfflineMethod
-    fun changeItemSelectionState(courseName: String) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(courseName))).scrollTo().click()
+    fun changeItemSelectionState(itemName: String) {
+        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().click()
     }
 
     //OfflineMethod
@@ -62,7 +50,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
     }
 
     //OfflineMethod
-    fun clickOnSyncButton() {
+    fun clickOnSyncButtonAndConfirm() {
         syncButton.click()
         confirmSync()
     }
@@ -123,4 +111,47 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)).scrollTo().assertDisplayed()
     }
 
+    //OfflineMethod
+    fun assertDisplaysNoCourses() {
+        onView(withText(R.string.offline_content_empty_message)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertDisplaysEmptyCourse() {
+        onView(withText(R.string.offline_content_empty_course_message)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertDisplaysItemWithExpandedState(title: String, expanded: Boolean) {
+        onView(withId(R.id.arrow)
+                    + withRotation(if (expanded) 180f else 0f)
+                    + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
+                    + hasSibling(withId(R.id.title) + withText(title))
+        ).scrollTo().assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertItemDisplayed(title: String) {
+        onView(withId(R.id.title) + withText(title)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertDiscardDialogDisplayed() {
+        waitForView(withText(R.string.offline_content_discard_dialog_title)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertSyncDialogDisplayed(text: String) {
+        waitForView(withText(text)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun clickOnSyncButton() {
+        syncButton.click()
+    }
+
+    //OfflineMethod
+    fun assertStorageInfoText(storageInfoText: String) {
+        onView(withId(R.id.storageInfo) + withText(storageInfoText)).assertDisplayed()
+    }
 }
