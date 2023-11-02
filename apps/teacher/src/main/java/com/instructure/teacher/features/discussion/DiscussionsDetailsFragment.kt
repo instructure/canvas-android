@@ -271,8 +271,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             discussionRepliesWebViewWrapper.setInvisible()
 
-            repliesLoadHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
-                discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
+            repliesLoadHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {formattedHtml ->
+                discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), formattedHtml, "text/html", "utf-8", null)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
             }
