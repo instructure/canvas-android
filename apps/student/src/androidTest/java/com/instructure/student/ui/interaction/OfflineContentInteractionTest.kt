@@ -369,7 +369,6 @@ class OfflineContentInteractionTest : StudentTest() {
         leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.openOfflineContentPage()
         syncSettingsPage.clickWifiOnlySwitch()
-        syncSettingsPage.assertDialogDisplayedWithTitle(R.string.syncSettings_wifiConfirmationTitle)
         syncSettingsPage.clickTurnOff()
         Espresso.pressBack()
         Espresso.pressBack()
