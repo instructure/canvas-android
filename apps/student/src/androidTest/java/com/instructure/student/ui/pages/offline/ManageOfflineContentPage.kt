@@ -41,7 +41,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun expandCollapseItem(itemName: String) {
-        waitForView(withId(R.id.arrow) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().perform(ForceClick())
+        onView(withId(R.id.arrow) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().perform(ForceClick())
     }
 
     //OfflineMethod
@@ -143,7 +143,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun assertItemDisplayed(title: String) {
-        onView(withId(R.id.title) + withText(title)).assertDisplayed()
+        waitForView(withId(R.id.title) + withText(title)).assertDisplayed()
     }
 
     //OfflineMethod
