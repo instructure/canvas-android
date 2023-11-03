@@ -44,11 +44,14 @@ object CourseListEndpoint : Endpoint(
                         .values
                         .filter { it.userId == user.id }
                         .map {
+                            var course = data.courses[it.courseId]!!
                             if (request.url.queryParameterValues("include[]").contains("tabs")) {
-                                data.courses[it.courseId]!!.copy(tabs = data.courseTabs[it.courseId])
-                            } else {
-                                data.courses[it.courseId]!!
+                                course = course.copy(tabs = data.courseTabs[course.id])
                             }
+                            if (request.url.queryParameterValues("include[]").contains("permissions")) {
+                                course.permissions = data.coursePermissions[course.id]
+                            }
+                            course
                         }
                         .filter {
                             when (enrollmentState) {
@@ -119,10 +122,12 @@ object CourseEndpoint : Endpoint(
         response = {
             GET {
                 val courseId = pathVars.courseId
-                val course = if (request.url.queryParameterValues("include[]").contains("tabs")) {
-                    data.courses[courseId]!!.copy(tabs = data.courseTabs[courseId])
-                } else {
-                    data.courses[courseId]!!
+                var course = data.courses[courseId]!!
+                if (request.url.queryParameterValues("include[]").contains("tabs")) {
+                    course = course.copy(tabs = data.courseTabs[courseId])
+                }
+                if (request.url.queryParameterValues("include[]").contains("permissions")) {
+                    course.permissions = data.coursePermissions[courseId]
                 }
                 val userId = request.user!!.id
                 if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
