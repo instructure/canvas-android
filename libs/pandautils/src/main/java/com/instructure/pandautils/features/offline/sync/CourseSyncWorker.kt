@@ -71,51 +71,61 @@ class CourseSyncWorker @AssistedInject constructor(
     private val courseFeaturesDao: CourseFeaturesDao,
     private val courseFileSharedRepository: CourseFileSharedRepository,
     private val fileFolderDao: FileFolderDao,
-    private val fileSyncSettingsDao: FileSyncSettingsDao,
-    private val localFileDao: LocalFileDao,
-    private val workManager: WorkManager,
     private val discussionTopicFacade: DiscussionTopicFacade,
     private val groupApi: GroupAPI.GroupInterface,
     private val groupFacade: GroupFacade,
-    private val syncSettingsFacade: SyncSettingsFacade,
     private val enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
     private val courseSyncProgressDao: CourseSyncProgressDao,
-    private val fileSyncProgressDao: FileSyncProgressDao,
     private val htmlParser: HtmlParser,
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
     private val pageDao: PageDao,
     private val firebaseCrashlytics: FirebaseCrashlytics,
-    private val fileDownloadApi: FileDownloadAPI
+    fileDownloadApi: FileDownloadAPI,
+    fileSyncSettingsDao: FileSyncSettingsDao,
+    localFileDao: LocalFileDao,
+    fileSyncProgressDao: FileSyncProgressDao,
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var progress: CourseSyncProgressEntity
 
-    private var fileOperation: Operation? = null
-
     private val additionalFileIdsToSync = mutableSetOf<Long>()
     private val externalFilesToSync = mutableSetOf<String>()
+
+    private var courseId = -1L
+
+    private val fileSync = FileSync(
+        context,
+        fileDownloadApi,
+        localFileDao,
+        fileFolderDao,
+        firebaseCrashlytics,
+        fileSyncProgressDao,
+        fileSyncSettingsDao,
+        courseSyncProgressDao,
+        fileFolderApi
+    )
 
     override suspend fun doWork(): Result {
         val courseSettingsWithFiles =
             courseSyncSettingsDao.findWithFilesById(inputData.getLong(COURSE_ID, -1)) ?: return Result.failure()
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
-        val courseId = courseSettings.courseId
+        courseId = courseSettings.courseId
         val course = fetchCourseDetails(courseId)
 
-        progress = initProgress(courseSettings, course)
+        initProgress(courseSettings, course)
 
         if (courseSettings.fullFileSync || courseSettingsWithFiles.files.isNotEmpty()) {
             fetchFiles(courseId)
         }
 
         coroutineScope {
+            val filesDeferred = async { fileSync.syncFiles(courseSettingsWithFiles.courseSyncSettings) }
             val contentDeferred = async { fetchCourseContent(courseSettingsWithFiles, course) }
-            val filesDeferred = async { syncFiles(courseSettingsWithFiles.courseSyncSettings) }
 
             listOf(contentDeferred, filesDeferred).awaitAll()
         }
 
-        syncAdditionalFiles(courseSettings)
+        fileSync.syncAdditionalFiles(courseSettings, additionalFileIdsToSync, externalFilesToSync)
 
         return Result.success()
     }
@@ -180,11 +190,12 @@ class CourseSyncWorker @AssistedInject constructor(
             moduleFacade.deleteAllByCourseId(course.id)
         }
 
-        syncAdditionalFiles(courseSettings)
-
-        progress =
-            progress.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
-        courseSyncProgressDao.update(progress)
+        val progress = courseSyncProgressDao.findByCourseId(courseId)
+        progress
+            ?.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
+            ?.let {
+                courseSyncProgressDao.update(it)
+            }
     }
 
     private suspend fun fetchSyllabus(courseId: Long) {
@@ -533,143 +544,6 @@ class CourseSyncWorker @AssistedInject constructor(
         return htmlParsingResult.htmlWithLocalFileLinks
     }
 
-    private suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity) {
-        val courseId = syncSettings.courseId
-        val allFiles = getAllFiles(courseId)
-        val allFileIds = allFiles.map { it.id }
-
-        cleanupSyncedFiles(courseId, allFileIds)
-
-        val filesToSync = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
-            .chunked(6)
-
-        coroutineScope {
-            filesToSync.forEach {
-                if (isStopped) return@coroutineScope
-                it.map {
-                    async { downloadFile(it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId) }
-                }.awaitAll()
-            }
-        }
-    }
-
-    private suspend fun downloadFile(fileId: Long, inputFileName: String, fileUrl: String, courseId: Long) {
-        val fileName = when {
-            inputFileName.isNotEmpty() && fileId != -1L -> "${fileId}_$inputFileName"
-            inputFileName.isNotEmpty() -> inputFileName
-            else -> fileId.toString()
-        }
-
-        val externalFile = fileId == -1L
-
-        var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
-
-        try {
-            fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
-                .dataOrThrow
-                .saveFile(downloadedFile)
-                .collect {
-                    if (isStopped) throw IllegalStateException("Worker was stopped")
-                    when (it) {
-                        is DownloadState.InProgress -> {
-                            //TODO update file progress
-                        }
-
-                        is DownloadState.Success -> {
-                            if (downloadedFile.name.startsWith("temp_")) {
-                                downloadedFile = rewriteOriginalFile(downloadedFile, fileName, externalFile, courseId)
-                            }
-                            if (!externalFile) {
-                                localFileDao.insert(
-                                    LocalFileEntity(
-                                        fileId,
-                                        courseId,
-                                        Date(),
-                                        downloadedFile.absolutePath
-                                    )
-                                )
-                            }
-                            //TODO update file progress
-                        }
-
-                        is DownloadState.Failure -> {
-                            throw it.throwable
-                        }
-                    }
-                }
-        } catch (e: Exception) {
-            downloadedFile.delete()
-            //TODO update file progress error
-            firebaseCrashlytics.recordException(e)
-        }
-    }
-
-    private fun getDownloadFile(fileName: String, externalFile: Boolean, courseId: Long): File {
-        var dir = File(context.filesDir, ApiPrefs.user?.id.toString())
-        if (!dir.exists()) {
-            dir.mkdir()
-        }
-
-        if (externalFile) {
-            dir = File(dir, "external_$courseId")
-            if (!dir.exists()) {
-                dir.mkdir()
-            }
-        }
-
-        var downloadFile = File(dir, fileName)
-        if (downloadFile.exists()) {
-            downloadFile = File(dir, "temp_${fileName}")
-        }
-        return downloadFile
-    }
-
-    private fun rewriteOriginalFile(newFile: File, fileName: String, externalFile: Boolean, courseId: Long): File {
-        var dir = File(context.filesDir, ApiPrefs.user?.id.toString())
-        if (externalFile) {
-            dir = File(dir, "external_$courseId")
-        }
-        val originalFile = File(dir, fileName)
-        originalFile.delete()
-        newFile.renameTo(originalFile)
-        return originalFile
-    }
-
-    private suspend fun syncAdditionalFiles(
-        syncSettings: CourseSyncSettingsEntity,
-    ) {
-        val courseId = syncSettings.courseId
-
-        val additionalPublicFilesToSync = fileFolderDao.findByIds(additionalFileIdsToSync).map { it.toApiModel() }
-
-        val nonPublicFileIds = additionalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
-        val nonPublicFiles = nonPublicFileIds.map {
-            fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
-        }.filterNotNull()
-
-        val chunks = (additionalPublicFilesToSync + nonPublicFiles).chunked(6)
-
-        chunks.forEach {
-            coroutineScope {
-                it.map {
-                    async { downloadFile(it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId) }
-                }.awaitAll()
-            }
-        }
-
-        externalFilesToSync.chunked(6).forEach {
-            coroutineScope {
-                it.map {
-                    async { downloadFile(-1, Uri.parse(it).lastPathSegment.orEmpty(), it, courseId) }
-                }.awaitAll()
-            }
-        }
-
-        progress = progress.copy(additionalFilesStarted = true)
-        updateProgress()
-
-    }
-
     private suspend fun fetchFiles(courseId: Long) {
         val fileFolders = courseFileSharedRepository.getCourseFoldersAndFiles(courseId)
 
@@ -677,36 +551,10 @@ class CourseSyncWorker @AssistedInject constructor(
         fileFolderDao.replaceAll(entities, courseId)
     }
 
-    private suspend fun cleanupSyncedFiles(courseId: Long, remoteIds: List<Long>) {
-        val syncedIds = fileSyncSettingsDao.findByCourseId(courseId).map { it.id }
-        val localRemovedFiles = localFileDao.findRemovedFiles(courseId, syncedIds)
-        val remoteRemovedFiles = localFileDao.findRemovedFiles(courseId, remoteIds)
-
-        (localRemovedFiles + remoteRemovedFiles).forEach {
-            File(it.path).delete()
-            localFileDao.delete(it)
-        }
-
-        val file = File(context.filesDir, "${ApiPrefs.user?.id.toString()}/external_$courseId")
-        file.listFiles()?.forEach {
-            it.delete()
-        }
-
-        fileSyncSettingsDao.deleteAllExcept(courseId, remoteIds)
-    }
-
-    private suspend fun getAllFiles(courseId: Long): List<FileFolderEntity> {
-        return fileFolderDao.findAllFilesByCourseId(courseId)
-    }
-
-    private suspend fun updateProgress() {
-        courseSyncProgressDao.update(progress)
-    }
-
     private suspend fun initProgress(
         courseSettings: CourseSyncSettingsEntity,
         course: Course
-    ): CourseSyncProgressEntity {
+    ) {
         val availableTabs = course.tabs?.map { it.tabId } ?: emptyList()
         val selectedTabs = courseSettings.tabs.filter { availableTabs.contains(it.key) && it.value == true }.keys
         val progress = (courseSyncProgressDao.findByCourseId(course.id) ?: createNewProgress(courseSettings))
@@ -720,7 +568,6 @@ class CourseSyncWorker @AssistedInject constructor(
             )
 
         courseSyncProgressDao.update(progress)
-        return progress
     }
 
     private suspend fun createNewProgress(courseSettings: CourseSyncSettingsEntity): CourseSyncProgressEntity {
@@ -735,7 +582,8 @@ class CourseSyncWorker @AssistedInject constructor(
     }
 
     private suspend fun updateTabError(vararg tabIds: String) {
-        progress = progress.copy(
+        val progress = courseSyncProgressDao.findByCourseId(courseId)
+        progress?.copy(
             tabs = progress.tabs.toMutableMap().apply {
                 tabIds.forEach { tabId ->
                     get(tabId)?.copy(state = ProgressState.ERROR)?.let {
@@ -744,12 +592,14 @@ class CourseSyncWorker @AssistedInject constructor(
                 }
 
             },
-        )
-        updateProgress()
+        )?.let {
+            courseSyncProgressDao.update(it)
+        }
     }
 
     private suspend fun updateTabSuccess(vararg tabIds: String) {
-        progress = progress.copy(
+        val progress = courseSyncProgressDao.findByCourseId(courseId)
+        progress?.copy(
             tabs = progress.tabs.toMutableMap().apply {
                 tabIds.forEach { tabId ->
                     get(tabId)?.copy(state = ProgressState.COMPLETED)?.let {
@@ -757,8 +607,9 @@ class CourseSyncWorker @AssistedInject constructor(
                     }
                 }
             },
-        )
-        updateProgress()
+        )?.let {
+            courseSyncProgressDao.update(it)
+        }
     }
 
     companion object {
