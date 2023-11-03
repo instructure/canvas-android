@@ -186,7 +186,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         manageOfflineContentPage.assertCourseCountWithMatcher(2)
 
         Log.d(STEP_TAG, "Click on the 'Sync' button.")
-        manageOfflineContentPage.clickOnSyncButton()
+        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
         dashboardPage.waitForRender()

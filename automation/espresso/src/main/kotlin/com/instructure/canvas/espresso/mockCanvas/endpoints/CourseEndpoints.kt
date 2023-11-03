@@ -43,7 +43,16 @@ object CourseListEndpoint : Endpoint(
                 val courses = data.enrollments
                         .values
                         .filter { it.userId == user.id }
-                        .map { data.courses[it.courseId]!! }
+                        .map {
+                            var course = data.courses[it.courseId]!!
+                            if (request.url.queryParameterValues("include[]").contains("tabs")) {
+                                course = course.copy(tabs = data.courseTabs[course.id])
+                            }
+                            if (request.url.queryParameterValues("include[]").contains("permissions")) {
+                                course.permissions = data.coursePermissions[course.id]
+                            }
+                            course
+                        }
                         .filter {
                             when (enrollmentState) {
                                 "active" -> it.isCurrentEnrolment()
@@ -112,7 +121,14 @@ object CourseEndpoint : Endpoint(
 
         response = {
             GET {
-                val course = data.courses[pathVars.courseId]!!
+                val courseId = pathVars.courseId
+                var course = data.courses[courseId]!!
+                if (request.url.queryParameterValues("include[]").contains("tabs")) {
+                    course = course.copy(tabs = data.courseTabs[courseId])
+                }
+                if (request.url.queryParameterValues("include[]").contains("permissions")) {
+                    course.permissions = data.coursePermissions[courseId]
+                }
                 val userId = request.user!!.id
                 if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
                     request.successResponse(course)
