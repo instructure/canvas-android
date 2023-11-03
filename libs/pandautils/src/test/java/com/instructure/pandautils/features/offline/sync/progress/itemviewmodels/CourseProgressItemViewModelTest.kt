@@ -122,31 +122,28 @@ class CourseProgressItemViewModelTest {
 
         var fileProgresses = listOf(
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 1",
-                0,
-                1000,
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
                 progressState = ProgressState.IN_PROGRESS,
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 2",
-                0,
-                2000,
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 2000,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 3",
-                0,
-                3000,
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 3000,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 3L
             ),
         )
 
@@ -157,31 +154,28 @@ class CourseProgressItemViewModelTest {
 
         fileProgresses = listOf(
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 1",
-                0,
-                1000,
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
                 progressState = ProgressState.IN_PROGRESS,
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 2",
-                50,
-                2000,
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 50,
+                fileSize = 2000,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 3",
-                100,
-                3000,
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 100,
+                fileSize = 3000,
                 progressState = ProgressState.COMPLETED,
-                fileId = 1L
+                fileId = 3L
             ),
         )
         fileLiveData.postValue(fileProgresses)
@@ -191,31 +185,28 @@ class CourseProgressItemViewModelTest {
 
         fileProgresses = listOf(
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 1",
-                0,
-                1000,
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
                 progressState = ProgressState.IN_PROGRESS,
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 2",
-                50,
-                2000,
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 50,
+                fileSize = 2000,
                 progressState = ProgressState.ERROR,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 3",
-                100,
-                3000,
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 100,
+                fileSize = 3000,
                 progressState = ProgressState.COMPLETED,
-                fileId = 1L
+                fileId = 3L
             ),
         )
         fileLiveData.postValue(fileProgresses)
@@ -236,31 +227,28 @@ class CourseProgressItemViewModelTest {
         )
         val fileProgresses = listOf(
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 1",
-                100,
-                1000,
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 100,
+                fileSize = 1000,
                 progressState = ProgressState.COMPLETED,
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 2",
-                100,
-                2000,
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 100,
+                fileSize = 2000,
                 progressState = ProgressState.COMPLETED,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 3",
-                100,
-                3000,
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 100,
+                fileSize = 3000,
                 progressState = ProgressState.COMPLETED,
-                fileId = 1L
+                fileId = 3L
             ),
         )
 
@@ -293,42 +281,38 @@ class CourseProgressItemViewModelTest {
 
         val files = listOf(
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 1",
-                0,
-                1000,
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
                 progressState = ProgressState.IN_PROGRESS,
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 2",
-                50,
-                2000,
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 50,
+                fileSize = 2000,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 3",
-                100,
-                3000,
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 100,
+                fileSize = 3000,
                 additionalFile = true,
                 progressState = ProgressState.COMPLETED,
-                fileId = 1L
+                fileId = 3L
             ),
             FileSyncProgressEntity(
-                UUID.randomUUID().toString(),
-                1L,
-                "File 4",
-                0,
-                0,
+                courseId = 1L,
+                fileName = "File 4",
+                progress = 0,
+                fileSize = 0,
                 additionalFile = true,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 4L
             ),
         )
 

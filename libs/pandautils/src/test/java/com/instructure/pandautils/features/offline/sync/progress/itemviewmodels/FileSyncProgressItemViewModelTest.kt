@@ -42,36 +42,35 @@ class FileSyncProgressItemViewModelTest {
 
     @Test
     fun `Progress update`() {
-        val uuid = UUID.randomUUID()
-        var fileProgress = createFileProgress(uuid.toString(), 1L, 0, ProgressState.IN_PROGRESS)
+        var fileProgress = createFileProgress(1L, 1L, 0, ProgressState.IN_PROGRESS)
         val fileLiveData = MutableLiveData(fileProgress)
 
-        every { fileSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns fileLiveData
+        every { fileSyncProgressDao.findByFileIdLiveData(1L) } returns fileLiveData
 
-        fileSyncProgressItemViewModel = createItemViewModel(uuid)
+        fileSyncProgressItemViewModel = createItemViewModel(1L)
 
         assertEquals(0, fileSyncProgressItemViewModel.data.progress)
         assertEquals(ProgressState.IN_PROGRESS, fileSyncProgressItemViewModel.data.state)
 
-        fileProgress = createFileProgress(uuid.toString(), 1L, 50, ProgressState.IN_PROGRESS)
+        fileProgress = createFileProgress(1L, 1L, 50, ProgressState.IN_PROGRESS)
         fileLiveData.postValue(fileProgress)
 
         assertEquals(50, fileSyncProgressItemViewModel.data.progress)
         assertEquals(ProgressState.IN_PROGRESS, fileSyncProgressItemViewModel.data.state)
 
-        fileProgress = createFileProgress(uuid.toString(), 1L, 100, ProgressState.COMPLETED)
+        fileProgress = createFileProgress(1L, 1L, 100, ProgressState.COMPLETED)
         fileLiveData.postValue(fileProgress)
 
         assertEquals(100, fileSyncProgressItemViewModel.data.progress)
         assertEquals(ProgressState.COMPLETED, fileSyncProgressItemViewModel.data.state)
     }
 
-    private fun createItemViewModel(uuid: UUID): FileSyncProgressItemViewModel {
+    private fun createItemViewModel(id: Long): FileSyncProgressItemViewModel {
         return FileSyncProgressItemViewModel(
             FileSyncProgressViewData(
                 fileName = "File",
                 fileSize = "1.0 MB",
-                workerId = uuid.toString(),
+                fileId = id,
                 progress = 0,
                 state = ProgressState.IN_PROGRESS
             ),
@@ -80,19 +79,18 @@ class FileSyncProgressItemViewModelTest {
     }
 
     private fun createFileProgress(
-        workerId: String,
+        fileId: Long,
         courseId: Long,
         progress: Int,
         state: ProgressState
     ): FileSyncProgressEntity {
         return FileSyncProgressEntity(
-            workerId = workerId,
             courseId = courseId,
             fileName = "File",
             progress = progress,
             fileSize = 1000,
             progressState = state,
-            fileId = 1L
+            fileId = fileId
         )
     }
 }
