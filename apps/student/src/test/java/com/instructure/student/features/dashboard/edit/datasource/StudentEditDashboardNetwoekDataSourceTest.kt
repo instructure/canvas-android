@@ -55,6 +55,25 @@ class StudentEditDashboardNetworkDataSourceTest {
         assertEquals("Course 3", result.flatten()[2].name)
     }
 
+    @Test
+    fun `Do not show unpublished future courses`() = runTest {
+        coEvery { courseApi.firstPageCoursesByEnrollmentState("active", any()) } returns
+            DataResult.Success(listOf(Course(1, name = "Course 1")))
+
+        coEvery { courseApi.firstPageCoursesByEnrollmentState("completed", any()) } returns
+            DataResult.Success(listOf(Course(2, name = "Course 2")))
+
+        coEvery { courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", any()) } returns
+            DataResult.Success(listOf(Course(3, name = "Course 3"), Course(4, name = "Course 4", workflowState = Course.WorkflowState.UNPUBLISHED)))
+
+        val result = dataSource.getCourses()
+
+        assertEquals(3, result.flatten().size)
+        assertEquals("Course 1", result.flatten().first().name)
+        assertEquals("Course 2", result.flatten()[1].name)
+        assertEquals("Course 3", result.flatten()[2].name)
+    }
+
     @Test(expected = IllegalStateException::class)
     fun `Throw exception when at least one request fails`() = runTest {
         coEvery { courseApi.firstPageCoursesByEnrollmentState("active", any()) } returns

@@ -19,7 +19,6 @@
 package com.instructure.pandautils.room.offline.daos
 
 import android.content.Context
-import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.instructure.canvasapi2.models.Course
@@ -27,7 +26,6 @@ import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.CourseEntity
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -132,5 +130,16 @@ class LocalFileDaoTest {
         val result = localFileDao.findByCourseId(1L)
 
         assertEquals(files.take(1), result)
+    }
+
+    @Test
+    fun testExistsById() = runTest {
+        localFileDao.insert(LocalFileEntity(1L, 1L, Date(), ""))
+
+        val existsResult = localFileDao.existsById(1L)
+        val notExistsResult = localFileDao.existsById(2L)
+
+        assertEquals(true, existsResult)
+        assertEquals(false, notExistsResult)
     }
 }

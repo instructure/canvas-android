@@ -21,6 +21,7 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.instructure.pandautils.features.offline.sync.ProgressState
+
 @Entity(
     foreignKeys = [
         androidx.room.ForeignKey(
@@ -39,5 +40,6 @@ data class FileSyncProgressEntity(
     val progress: Int,
     val fileSize: Long,
     val additionalFile: Boolean = false,
-    val progressState: ProgressState
+    val progressState: ProgressState,
+    val fileId: Long
 )

@@ -44,6 +44,9 @@ interface LocalFileDao {
     @Query("SELECT * FROM LocalFileEntity WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): List<LocalFileEntity>
 
+    @Query("SELECT EXISTS(SELECT * FROM LocalFileEntity WHERE id = :id)")
+    suspend fun existsById(id: Long): Boolean
+
     @Query("SELECT * FROM LocalFileEntity WHERE id IN (:ids)")
     suspend fun findByIds(ids: List<Long>): List<LocalFileEntity>
 

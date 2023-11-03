@@ -31,7 +31,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
@@ -72,12 +71,12 @@ class FileListLocalDataSourceTest {
             FileFolder(id = 2, name = "Folder 2", parentFolderId = 0),
             FileFolder(id = 3, name = "Folder 3", parentFolderId = 0)
         )
-        coEvery { fileFolderDao.findFoldersByParentId(any()) } returns expected.map { FileFolderEntity(it) }
+        coEvery { fileFolderDao.findVisibleFoldersByParentId(any()) } returns expected.map { FileFolderEntity(it) }
 
         val result = fileListLocalDataSource.getFolders(0, true)
 
         coVerify {
-            fileFolderDao.findFoldersByParentId(0)
+            fileFolderDao.findVisibleFoldersByParentId(0)
         }
 
         assertEquals(DataResult.Success(expected), result)
@@ -98,14 +97,14 @@ class FileListLocalDataSourceTest {
         )
 
         coEvery { localFileDao.findByIds(any()) } returns localFiles
-        coEvery { fileFolderDao.findFilesByFolderId(any()) } returns files.map { FileFolderEntity(it) }
+        coEvery { fileFolderDao.findVisibleFilesByFolderId(any()) } returns files.map { FileFolderEntity(it) }
 
         val expected = files.map { it.copy(url = "path_${it.id}", thumbnailUrl = null) }
         val result = fileListLocalDataSource.getFiles(0, true)
 
         coVerify {
             localFileDao.findByIds(listOf(1, 2, 3))
-            fileFolderDao.findFilesByFolderId(0)
+            fileFolderDao.findVisibleFilesByFolderId(0)
         }
 
         assertEquals(DataResult.Success(expected), result)

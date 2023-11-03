@@ -60,6 +60,15 @@ class EmptyView @JvmOverloads constructor(
         loading.root.visibility = View.VISIBLE
     }
 
+    override fun setLoadingWithAnimation(titleRes: Int, messageRes: Int, animationRes: Int): Unit = with(binding) {
+        setTitleText(titleRes)
+        setMessageText(messageRes)
+        animationView.setAnimation(animationRes)
+        title.setVisible()
+        message.setVisible()
+        animationView.setVisible()
+    }
+
     override fun setDisplayNoConnection(isNoConnection: Boolean) {
         isDisplayNoConnection = isNoConnection
     }

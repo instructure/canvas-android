@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.e2e.offline.utils
 
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -25,6 +24,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.plus
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
@@ -33,18 +33,12 @@ object OfflineTestUtils {
 
     fun turnOffConnectionViaADB() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-        device.pressHome()
-
         device.executeShellCommand("svc wifi disable")
         device.executeShellCommand("svc data disable")
     }
 
     fun turnOnConnectionViaADB() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-        device.pressHome()
-
         device.executeShellCommand("svc wifi enable")
         device.executeShellCommand("svc data enable")
     }
@@ -78,7 +72,7 @@ object OfflineTestUtils {
     }
 
     fun assertOfflineIndicator() {
-        onView(
+        waitForView(
             withId(R.id.offlineIndicator) + allOf(
                 withChild(withId(R.id.divider)),
                 withChild(withId(R.id.offlineIndicatorIcon)),

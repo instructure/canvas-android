@@ -37,6 +37,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textfield.TextInputLayout
 import com.instructure.espresso.ActivityHelper
 import junit.framework.AssertionFailedError
@@ -199,6 +200,30 @@ fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
 
         public override fun matchesSafely(view: View): Boolean {
             return matcher.matches(view) && currentIndex++ == index
+        }
+    }
+}
+
+fun withRotation(rotation: Float): Matcher<View> {
+    return object : TypeSafeMatcher<View>() {
+        override fun matchesSafely(item: View): Boolean {
+            return item.rotation == rotation
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("with rotation: $rotation")
+        }
+    }
+}
+
+fun hasCheckedState(checkedState: Int) : Matcher<View> {
+    return object : TypeSafeMatcher<View>() {
+        override fun matchesSafely(item: View): Boolean {
+            return item is MaterialCheckBox && item.checkedState == checkedState
+        }
+
+        override fun describeTo(description: Description?) {
+            description?.appendText("has the proper checked state.")
         }
     }
 }

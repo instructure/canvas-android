@@ -270,7 +270,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
             // Threshold was either deleted or left at 'never'
             if (idx != null && idx != -1) {
               // Threshold exists but was deleted
-              _thresholds?[idx] = null;
+              _thresholds?.removeAt(idx);
             }
           }
         });

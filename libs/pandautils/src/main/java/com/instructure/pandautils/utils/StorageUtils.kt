@@ -37,12 +37,8 @@ class StorageUtils(private val context: Context) {
         val appInfo = context.applicationInfo
         val appSize = File(appInfo.publicSourceDir).length()
         val dataDirSize = getDirSize(File(appInfo.dataDir))
-        val cacheDirSize = getDirSize(context.cacheDir)
-        val externalCacheDirSize = getDirSize(context.externalCacheDir)
-        val filesDirSize = getDirSize(context.filesDir)
-        val externalFilesDirSize = getDirSize(context.getExternalFilesDir(null))
 
-        return appSize + dataDirSize + cacheDirSize + externalCacheDirSize + filesDirSize + externalFilesDirSize
+        return appSize + dataDirSize
     }
 
     private fun getDirSize(directory: File?): Long {

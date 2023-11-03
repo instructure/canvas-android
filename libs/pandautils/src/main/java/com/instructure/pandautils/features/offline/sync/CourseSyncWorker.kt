@@ -31,12 +31,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
-import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
-import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
-import com.instructure.pandautils.room.offline.entities.FileFolderEntity
-import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
-import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.pandautils.room.offline.entities.*
 import com.instructure.pandautils.room.offline.facade.*
 import com.instructure.pandautils.room.offline.model.CourseSyncSettingsWithFiles
 import dagger.assisted.Assisted
@@ -113,6 +108,12 @@ class CourseSyncWorker @AssistedInject constructor(
             fetchPages(courseId)
         } else {
             pageFacade.deleteAllByCourseId(courseId)
+        }
+
+        // We need to do this after the pages request because we delete all the previous pages there
+        val isHomeTabAPage = Tab.FRONT_PAGE_ID == course.homePageID
+        if (isHomeTabAPage) {
+            fetchHomePage(courseId)
         }
 
         if (courseSettings.areAnyTabsSelected(setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID))) {
@@ -232,6 +233,18 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             pageFacade.insertPages(pages, courseId)
+        }
+    }
+
+    private suspend fun fetchHomePage(courseId: Long) {
+        try {
+            val frontPage = pageApi.getFrontPage(CanvasContext.Type.COURSE.apiString, courseId, RestParams(isForceReadFromNetwork = true)).dataOrNull
+            if (frontPage != null) {
+                frontPage.body = parseHtmlContent(frontPage.body, courseId)
+                pageFacade.insertPage(frontPage, courseId)
+            }
+        } catch (e: Exception) {
+            firebaseCrashlytics.recordException(e)
         }
     }
 
@@ -469,7 +482,6 @@ class CourseSyncWorker @AssistedInject constructor(
         val file = fileFolderApi.getCourseFile(courseId, it.contentId, params).dataOrNull
         if (file?.id != null) {
             additionalFileIdsToSync.add(file.id)
-            fileFolderDao.insert(FileFolderEntity(file))
         }
     }
 
@@ -518,7 +530,8 @@ class CourseSyncWorker @AssistedInject constructor(
                         fileName = it.displayName.orEmpty(),
                         progress = 0,
                         fileSize = it.size,
-                        progressState = ProgressState.STARTING
+                        progressState = ProgressState.STARTING,
+                        fileId = it.id
                     )
                 )
             }
@@ -577,7 +590,8 @@ class CourseSyncWorker @AssistedInject constructor(
                     progress = 0,
                     fileSize = it.size,
                     additionalFile = true,
-                    progressState = ProgressState.STARTING
+                    progressState = ProgressState.STARTING,
+                    fileId = it.id
                 )
             )
         }
@@ -586,6 +600,7 @@ class CourseSyncWorker @AssistedInject constructor(
         nonPublicFileIds.forEach {
             val file = fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
             if (file != null) {
+                fileFolderDao.insert(FileFolderEntity(file))
                 val worker = FileSyncWorker.createOneTimeWorkRequest(
                     courseId,
                     file.id,
@@ -602,7 +617,8 @@ class CourseSyncWorker @AssistedInject constructor(
                         progress = 0,
                         fileSize = file.size,
                         additionalFile = true,
-                        progressState = ProgressState.STARTING
+                        progressState = ProgressState.STARTING,
+                        fileId = file.id
                     )
                 )
             }
@@ -627,7 +643,8 @@ class CourseSyncWorker @AssistedInject constructor(
                         progress = 0,
                         fileSize = 0,
                         additionalFile = true,
-                        progressState = ProgressState.STARTING
+                        progressState = ProgressState.STARTING,
+                        fileId = -1
                     )
                 )
             }
