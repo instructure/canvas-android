@@ -33,7 +33,7 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class ManageOfflineContentE2ETest : StudentTest() {
+class ManageOfflineContentE2ETests : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -131,7 +131,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         manageOfflineContentPage.assertCheckedStateOfItem("Announcements", MaterialCheckBox.STATE_UNCHECKED)
         manageOfflineContentPage.assertCheckedStateOfItem("Discussions", MaterialCheckBox.STATE_UNCHECKED)
 
-        Log.d(STEP_TAG, "Assert that the 'SELECT ALL' will be displayed after clicking the 'SELECT ALL' button.")
+        Log.d(STEP_TAG, "Assert that the 'SELECT ALL' will be displayed after clicking the 'DESELECT ALL' button.")
         manageOfflineContentPage.assertSelectButtonText(selectAll = true)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Open 'Global' Manage Offline Content page.")

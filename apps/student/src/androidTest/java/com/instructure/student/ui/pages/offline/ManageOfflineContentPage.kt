@@ -120,10 +120,12 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
         onView(withText(R.string.offline_content_toolbar_title) + withParent(R.id.toolbar) + withAncestor(R.id.manageOfflineContentPage)).assertDisplayed()
     }
 
+    //OfflineMethod
     fun assertCheckedStateOfItem(itemName: String, state: Int) {
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)).scrollTo().assertDisplayed()
     }
 
+    //OfflineMethod
     fun waitForItemDisappear(itemName: String) {
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
     }
