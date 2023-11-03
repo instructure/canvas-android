@@ -64,6 +64,7 @@ import com.instructure.student.features.modules.progression.CourseModuleProgress
 import com.instructure.student.fragment.DiscussionsReplyFragment
 import com.instructure.student.fragment.DiscussionsUpdateFragment
 import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
@@ -743,7 +744,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
             if (view != null) loadHTMLTopic(it, discussionTopicHeader.title)
-        })
+        }, onLtiButtonPressed = { LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it) })
 
         attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())
         attachmentIcon.onClick {
@@ -762,9 +763,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         setupRepliesWebView()
 
-        discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
-            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
-        })
+        discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, { formattedHtml ->
+            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), formattedHtml, "text/html", "UTF-8", null)
+        }, onLtiButtonPressed = { LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it) })
 
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)
