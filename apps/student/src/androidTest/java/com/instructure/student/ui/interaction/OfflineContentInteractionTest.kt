@@ -99,6 +99,7 @@ class OfflineContentInteractionTest : StudentTest() {
         manageOfflineContentPage.expandCollapseItem(course.name)
         manageOfflineContentPage.assertDisplaysItemWithExpandedState(course.name, true)
         manageOfflineContentPage.assertItemDisplayed(data.courseTabs[course.id]!!.first().label!!)
+        getCourseItemNames(data, course).forEach { manageOfflineContentPage.assertItemDisplayed(it) }
     }
 
     @Test
