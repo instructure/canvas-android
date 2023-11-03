@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
@@ -56,8 +55,6 @@ class FileSync(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
 ) {
 
-    private val progresses = mutableMapOf<Long, FileSyncProgressEntity>()
-
     var isStopped = false
 
     suspend fun syncFiles(syncSettings: CourseSyncSettingsEntity) {
@@ -68,24 +65,25 @@ class FileSync(
         cleanupSyncedFiles(courseId, allFileIds)
 
         val fileFolders = mutableListOf<FileFolder>()
-        fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync).forEach {
-            val progress = FileSyncProgressEntity(it.id, courseId, it.displayName.orEmpty(), 0, it.size, false, ProgressState.IN_PROGRESS)
-            fileSyncProgressDao.insert(progress)
-            progresses[it.id] = progress
-            fileFolders.add(it.toApiModel())
-        }
+        fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
+            .map { it.toApiModel() }
+            .forEach {
+                createProgress(it, courseId, false)
+                fileFolders.add(it)
+            }
 
         courseSyncProgressDao.findByCourseId(courseId)?.copy(progressState = ProgressState.IN_PROGRESS)?.let {
             courseSyncProgressDao.update(it)
         }
 
-        val chunks = fileFolders.chunked(6)
+        val chunks =
+            fileFolders.map { FileSyncData(it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId) }.chunked(6)
 
         coroutineScope {
             chunks.forEach {
                 if (isStopped) return@coroutineScope
                 it.map {
-                    async { downloadFile(it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId) }
+                    async { downloadFile(it) }
                 }.awaitAll()
             }
         }
@@ -105,70 +103,85 @@ class FileSync(
             fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
         }.filterNotNull()
 
-        val chunks = (additionalPublicFilesToSync + nonPublicFiles).chunked(6)
+        val additionalFiles = additionalPublicFilesToSync + nonPublicFiles
+        additionalFiles.forEach { createProgress(it, courseId, true) }
+
+        val syncData = mutableListOf<FileSyncData>()
+
+        additionalFiles.map {
+            FileSyncData(
+                it.id,
+                it.displayName.orEmpty(),
+                it.url.orEmpty(),
+                courseId,
+                true
+            )
+        }.let { syncData.addAll(it) }
+
+        externalFilesToSync.forEach {
+            val id = createExternalProgress(it, courseId)
+            syncData.add(FileSyncData(id, Uri.parse(it).lastPathSegment.orEmpty(), it, courseId, true))
+        }
+
+        courseSyncProgressDao.findByCourseId(courseId)?.copy(additionalFilesStarted = true)
+            ?.let {
+                courseSyncProgressDao.update(it)
+            }
+
+        val chunks = syncData.chunked(6)
 
         chunks.forEach {
             coroutineScope {
                 it.map {
-                    async { downloadFile(it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId) }
-                }.awaitAll()
-            }
-        }
-
-        externalFilesToSync.chunked(6).forEach {
-            coroutineScope {
-                it.map {
-                    async { downloadFile(-1, Uri.parse(it).lastPathSegment.orEmpty(), it, courseId) }
+                    async { downloadFile(it) }
                 }.awaitAll()
             }
         }
     }
 
-    private suspend fun downloadFile(fileId: Long, inputFileName: String, fileUrl: String, courseId: Long) {
+    private suspend fun downloadFile(fileSyncData: FileSyncData) {
         val fileName = when {
-            inputFileName.isNotEmpty() && fileId != -1L -> "${fileId}_$inputFileName"
-            inputFileName.isNotEmpty() -> inputFileName
-            else -> fileId.toString()
+            fileSyncData.inputFileName.isNotEmpty() && !fileSyncData.externalFile -> "${fileSyncData.fileId}_${fileSyncData.inputFileName}"
+            fileSyncData.inputFileName.isNotEmpty() -> fileSyncData.inputFileName
+            else -> fileSyncData.fileId.toString()
         }
 
-        val externalFile = fileId == -1L
-
-        var downloadedFile = getDownloadFile(fileName, externalFile, courseId)
+        var downloadedFile = getDownloadFile(fileName, fileSyncData.externalFile, fileSyncData.courseId)
 
         try {
-            fileDownloadApi.downloadFile(fileUrl, RestParams(shouldIgnoreToken = externalFile))
+            fileDownloadApi.downloadFile(
+                fileSyncData.fileUrl,
+                RestParams(shouldIgnoreToken = fileSyncData.externalFile)
+            )
                 .dataOrThrow
                 .saveFile(downloadedFile)
                 .collect {
                     if (isStopped) throw IllegalStateException("Worker was stopped")
                     when (it) {
                         is DownloadState.InProgress -> {
-                            val newProgress = progresses.get(fileId)?.copy(progress = it.progress)
-                            newProgress?.let {
-                                fileSyncProgressDao.update(it)
-                                progresses[fileId] = it
-                            }
+                            updateProgress(fileSyncData.fileId, it.progress, ProgressState.IN_PROGRESS)
                         }
 
                         is DownloadState.Success -> {
                             if (downloadedFile.name.startsWith("temp_")) {
-                                downloadedFile = rewriteOriginalFile(downloadedFile, fileName, externalFile, courseId)
+                                downloadedFile = rewriteOriginalFile(
+                                    downloadedFile,
+                                    fileName,
+                                    fileSyncData.externalFile,
+                                    fileSyncData.courseId
+                                )
                             }
-                            if (!externalFile) {
+                            if (!fileSyncData.externalFile) {
                                 localFileDao.insert(
                                     LocalFileEntity(
-                                        fileId,
-                                        courseId,
+                                        fileSyncData.fileId,
+                                        fileSyncData.courseId,
                                         Date(),
                                         downloadedFile.absolutePath
                                     )
                                 )
                             }
-                            val newProgress = progresses.get(fileId)?.copy(progress = 100, progressState = ProgressState.COMPLETED)
-                            newProgress?.let {
-                                fileSyncProgressDao.update(it)
-                                progresses[fileId] = it
-                            }
+                            updateProgress(fileSyncData.fileId, 100, ProgressState.COMPLETED)
                         }
 
                         is DownloadState.Failure -> {
@@ -178,11 +191,7 @@ class FileSync(
                 }
         } catch (e: Exception) {
             downloadedFile.delete()
-            val newProgress = progresses.get(fileId)?.copy(progress = 0, progressState = ProgressState.ERROR)
-            newProgress?.let {
-                fileSyncProgressDao.update(it)
-                progresses[fileId] = it
-            }
+            updateProgress(fileSyncData.fileId, 0, ProgressState.ERROR)
             firebaseCrashlytics.recordException(e)
         }
     }
@@ -240,15 +249,43 @@ class FileSync(
         return fileFolderDao.findAllFilesByCourseId(courseId)
     }
 
-    private fun createProgress(fileFolder: FileFolder, courseId: Long): FileSyncProgressEntity {
-        return FileSyncProgressEntity(
+    private suspend fun createProgress(fileFolder: FileFolder, courseId: Long, additionalFile: Boolean) {
+        val progress = FileSyncProgressEntity(
             fileFolder.id,
             courseId,
             fileFolder.displayName.orEmpty(),
             0,
             fileFolder.size,
-            false,
+            additionalFile,
             ProgressState.IN_PROGRESS
         )
+        fileSyncProgressDao.insert(progress)
+    }
+
+    private suspend fun createExternalProgress(url: String, courseId: Long): Long {
+        val progress = FileSyncProgressEntity(
+            0,
+            courseId,
+            Uri.parse(url).lastPathSegment.orEmpty(),
+            0,
+            0,
+            true,
+            ProgressState.IN_PROGRESS
+        )
+        val rowId = fileSyncProgressDao.insert(progress)
+        return fileSyncProgressDao.findByRowId(rowId)?.fileId ?: -1L
+    }
+
+    private suspend fun updateProgress(fileId: Long, progress: Int, progressState: ProgressState) {
+        fileSyncProgressDao.findByFileId(fileId)?.copy(progress = progress, progressState = progressState)
+            ?.let { fileSyncProgressDao.update(it) }
     }
 }
+
+data class FileSyncData(
+    val fileId: Long,
+    val inputFileName: String,
+    val fileUrl: String,
+    val courseId: Long,
+    val externalFile: Boolean = false
+)

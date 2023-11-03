@@ -29,7 +29,7 @@ import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 interface FileSyncProgressDao {
 
     @Insert
-    suspend fun insert(fileSyncProgressEntity: FileSyncProgressEntity)
+    suspend fun insert(fileSyncProgressEntity: FileSyncProgressEntity): Long
 
     @Insert
     suspend fun insertAll(fileSyncProgressEntities: List<FileSyncProgressEntity>)
@@ -63,4 +63,7 @@ interface FileSyncProgressDao {
 
     @Query("DELETE FROM FileSyncProgressEntity")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM FileSyncProgressEntity WHERE ROWID = :rowId")
+    suspend fun findByRowId(rowId: Long): FileSyncProgressEntity?
 }

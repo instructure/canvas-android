@@ -127,6 +127,13 @@ class CourseSyncWorker @AssistedInject constructor(
 
         fileSync.syncAdditionalFiles(courseSettings, additionalFileIdsToSync, externalFilesToSync)
 
+        val progress = courseSyncProgressDao.findByCourseId(courseId)
+        progress
+            ?.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
+            ?.let {
+                courseSyncProgressDao.update(it)
+            }
+
         return Result.success()
     }
 
@@ -189,13 +196,6 @@ class CourseSyncWorker @AssistedInject constructor(
         } else {
             moduleFacade.deleteAllByCourseId(course.id)
         }
-
-        val progress = courseSyncProgressDao.findByCourseId(courseId)
-        progress
-            ?.copy(progressState = if (progress.tabs.any { it.value.state == ProgressState.ERROR }) ProgressState.ERROR else ProgressState.COMPLETED)
-            ?.let {
-                courseSyncProgressDao.update(it)
-            }
     }
 
     private suspend fun fetchSyllabus(courseId: Long) {
