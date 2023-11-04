@@ -17,18 +17,14 @@
 
 package com.instructure.student.ui.pages.offline
 
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.hasCheckedState
 import com.instructure.canvas.espresso.withRotation
-import com.instructure.espresso.*
-import com.instructure.espresso.actions.ForceClick
-import com.instructure.espresso.page.*
-import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.hasCheckedState
 import com.instructure.espresso.ConstraintLayoutItemCountAssertion
 import com.instructure.espresso.ConstraintLayoutItemCountAssertionWithMatcher
 import com.instructure.espresso.DoesNotExistAssertion
@@ -37,6 +33,7 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.actions.ForceClick
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
@@ -51,13 +48,6 @@ import org.hamcrest.CoreMatchers.allOf
 
 class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
-    private val syncButton by OnViewWithId(R.id.syncButton)
-    private val storageInfoContainer by WaitForViewWithId(R.id.storageInfoContainer)
-
-    //OfflineMethod
-    fun changeItemSelectionState(courseName: String) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(courseName))).scrollTo().click()
-    }
     private val syncButton by OnViewWithId(R.id.syncButton)
     private val storageInfoContainer by WaitForViewWithId(R.id.storageInfoContainer)
 
@@ -149,87 +139,51 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
     }
 
-}
-
-    //OfflineMethod
-    fun assertSelectButtonText(selectAll: Boolean) {
-        if(selectAll) waitForView(withId(R.id.menu_select_all) + withText(R.string.offline_content_select_all)).assertDisplayed()
-        else waitForView(withId(R.id.menu_select_all) + withText(R.string.offline_content_deselect_all)).assertDisplayed()
-    }
-
-    //OfflineMethod
-    fun clickOnSelectAllButton() {
-        waitForView(withId(R.id.menu_select_all) + withText(R.string.offline_content_select_all)).click()
-    }
-
-    //OfflineMethod
-    fun clickOnDeselectAllButton() {
-        waitForView(withId(R.id.menu_select_all) + withText(R.string.offline_content_deselect_all)).click()
-    }
-
-    //OfflineMethod
-    fun assertCourseCountWithMatcher(expectedCount: Int) {
-        ConstraintLayoutItemCountAssertionWithMatcher((allOf(withId(R.id.arrow), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))), expectedCount)
-    }
-
-    //OfflineMethod
-    fun assertCourseCount(expectedCount: Int) {
-        onView((allOf(withId(R.id.arrow), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(ConstraintLayoutItemCountAssertion(expectedCount))
-    }
-
-    //OfflineMethod
-    fun assertToolbarTexts(courseName: String) {
-        onView(withText(courseName) + withParent(R.id.toolbar) + withAncestor(R.id.manageOfflineContentPage)).assertDisplayed()
-        onView(withText(R.string.offline_content_toolbar_title) + withParent(R.id.toolbar) + withAncestor(R.id.manageOfflineContentPage)).assertDisplayed()
-    }
-
-    //OfflineMethod
-    fun assertCheckedStateOfItem(itemName: String, state: Int) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)).scrollTo().assertDisplayed()
-    }
-
-    //OfflineMethod
-    fun waitForItemDisappear(itemName: String) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
-    }
-
     //OfflineMethod
     fun assertDisplaysNoCourses() {
-        onView(withText(R.string.offline_content_empty_message)).assertDisplayed()
+        Espresso.onView(ViewMatchers.withText(R.string.offline_content_empty_message)).assertDisplayed()
     }
 
     //OfflineMethod
     fun assertDisplaysEmptyCourse() {
-        onView(withText(R.string.offline_content_empty_course_message)).assertDisplayed()
+        Espresso.onView(ViewMatchers.withText(R.string.offline_content_empty_course_message)).assertDisplayed()
     }
 
     //OfflineMethod
     fun assertDisplaysItemWithExpandedState(title: String, expanded: Boolean) {
-        onView(withId(R.id.arrow)
+        Espresso.onView(
+            ViewMatchers.withId(R.id.arrow)
                     + withRotation(if (expanded) 180f else 0f)
-                    + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
-                    + hasSibling(withId(R.id.title) + withText(title))
+                    + withEffectiveVisibility(Visibility.VISIBLE)
+                    + hasSibling(ViewMatchers.withId(R.id.title) + ViewMatchers.withText(title))
         ).scrollTo().assertDisplayed()
     }
 
     //OfflineMethod
     fun assertItemDisplayed(title: String) {
-        onView(withId(R.id.title) + withText(title)).scrollTo().assertDisplayed()
+        Espresso.onView(ViewMatchers.withId(R.id.title) + ViewMatchers.withText(title)).scrollTo().assertDisplayed()
     }
 
     //OfflineMethod
     fun assertDiscardDialogDisplayed() {
-        waitForView(withText(R.string.offline_content_discard_dialog_title)).assertDisplayed()
+        WaitForViewMatcher.waitForView(ViewMatchers.withText(R.string.offline_content_discard_dialog_title))
+            .assertDisplayed()
     }
 
     //OfflineMethod
     fun assertSyncDialogDisplayed(text: String) {
-        waitForView(withText(text)).assertDisplayed()
+        WaitForViewMatcher.waitForView(ViewMatchers.withText(text)).assertDisplayed()
     }
 
     //OfflineMethod
     fun assertStorageInfoText(storageInfoText: String) {
-        onView(withId(R.id.storageInfo) + withText(storageInfoText)).assertDisplayed()
+        Espresso.onView(
+            ViewMatchers.withId(R.id.storageInfo) + ViewMatchers.withText(
+                storageInfoText
+            )
+        ).assertDisplayed()
     }
 }
+
+
 

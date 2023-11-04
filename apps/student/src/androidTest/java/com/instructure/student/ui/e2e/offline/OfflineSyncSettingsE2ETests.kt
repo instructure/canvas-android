@@ -41,7 +41,7 @@ class OfflineSyncSettingsE2ETests : StudentTest() {
     @OfflineE2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.OFFLINE_CONTENT, TestCategory.E2E)
-    fun testManageOfflineContentE2ETest() {
+    fun offlineSyncSettingsE2ETest() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
