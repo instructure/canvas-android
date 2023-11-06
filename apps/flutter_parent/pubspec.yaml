@@ -85,7 +85,7 @@ dependencies:
   device_info_plus: ^9.0.2
   encrypted_shared_preferences: # Used by ApiPrefs to securely store data
     path: ./plugins/encrypted_shared_preferences
-  flutter_local_notifications: ^15.1.0+1
+  flutter_local_notifications: ^16.1.0
   package_info_plus: ^4.0.2
   permission_handler: ^10.4.3
   shared_preferences: ^2.2.0 # Used to cache remote config properties

@@ -140,7 +140,7 @@ import 'package:video_player/video_player.dart';
   MockSpec<OAuthApi>(),
   MockSpec<PairingInteractor>(),
   MockSpec<PageApi>(),
-  MockSpec<FlutterLocalNotificationsPlugin>(),
+  MockSpec<AndroidFlutterLocalNotificationsPlugin>(),
   MockSpec<PairingUtil>(),
   MockSpec<QuickNav>(),
   MockSpec<ReminderDb>(),

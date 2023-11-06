@@ -33,20 +33,18 @@ class NotificationUtil {
   static const notificationChannelReminders =
       'com.instructure.parentapp/reminders';
 
-  static FlutterLocalNotificationsPlugin? _plugin;
+  static AndroidFlutterLocalNotificationsPlugin? _plugin;
 
   @visibleForTesting
-  static initForTest(FlutterLocalNotificationsPlugin plugin) {
+  static initForTest(AndroidFlutterLocalNotificationsPlugin plugin) {
     _plugin = plugin;
   }
 
   static Future<void> init(Completer<void>? appCompleter) async {
-    var initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings('ic_notification_canvas_logo')
-    );
+    var initializationSettings = AndroidInitializationSettings('ic_notification_canvas_logo');
 
     if (_plugin == null) {
-      _plugin = FlutterLocalNotificationsPlugin();
+      _plugin = AndroidFlutterLocalNotificationsPlugin();
     }
 
     await _plugin!.initialize(
@@ -104,12 +102,10 @@ class NotificationUtil {
       ..type = NotificationPayloadType.reminder
       ..data = json.encode(serialize(reminder)));
 
-    final notificationDetails = NotificationDetails(
-      android: AndroidNotificationDetails(
+    final notificationDetails = AndroidNotificationDetails(
         notificationChannelReminders,
         l10n.remindersNotificationChannelName,
         channelDescription: l10n.remindersNotificationChannelDescription
-      )
     );
 
     if (reminder.type == Reminder.TYPE_ASSIGNMENT) {
@@ -130,8 +126,8 @@ class NotificationUtil {
       body,
       date,
       notificationDetails,
-      payload: json.encode(serialize(payload)),
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: json.encode(serialize(payload))
     );
   }
 
@@ -139,5 +135,9 @@ class NotificationUtil {
 
   Future<void> deleteNotifications(List<int> ids) async {
     for (int id in ids) await _plugin!.cancel(id);
+  }
+
+  Future<bool?> requestScheduleExactAlarmPermission() async {
+    return await _plugin?.requestExactAlarmsPermission();
   }
 }
