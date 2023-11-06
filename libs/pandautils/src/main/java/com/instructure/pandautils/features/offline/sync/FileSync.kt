@@ -100,6 +100,8 @@ class FileSync(
             fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
         }.filterNotNull()
 
+        fileFolderDao.insertAll(nonPublicFiles.map { FileFolderEntity(it) })
+
         val additionalFiles = additionalPublicFilesToSync + nonPublicFiles
         fileSyncProgressDao.insertAll(additionalFiles.map { createProgress(it, courseId, true) })
 
