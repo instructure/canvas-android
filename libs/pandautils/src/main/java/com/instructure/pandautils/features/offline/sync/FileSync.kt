@@ -111,7 +111,7 @@ class FileSync(
                 it.displayName.orEmpty(),
                 it.url.orEmpty(),
                 courseId,
-                true
+                false
             )
         }.let { syncData.addAll(it) }
 
