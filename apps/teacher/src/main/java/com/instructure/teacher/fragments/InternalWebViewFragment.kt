@@ -260,6 +260,8 @@ open class InternalWebViewFragment : BaseFragment() {
             title = args.getString(TITLE)!!
             html = args.getString(HTML) ?: ""
             darkToolbar = args.getBoolean(DARK_TOOLBAR)
+            shouldAuthenticate = args.getBoolean(AUTHENTICATE)
+            shouldRouteInternally = args.getBoolean(SHOULD_ROUTE_INTERNALLY)
         }
 
         @JvmOverloads
