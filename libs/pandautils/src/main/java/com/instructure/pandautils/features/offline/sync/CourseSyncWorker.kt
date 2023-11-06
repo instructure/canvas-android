@@ -80,28 +80,13 @@ class CourseSyncWorker @AssistedInject constructor(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
     private val pageDao: PageDao,
     private val firebaseCrashlytics: FirebaseCrashlytics,
-    fileDownloadApi: FileDownloadAPI,
-    fileSyncSettingsDao: FileSyncSettingsDao,
-    localFileDao: LocalFileDao,
-    fileSyncProgressDao: FileSyncProgressDao,
+    private val fileSync: FileSync
 ) : CoroutineWorker(context, workerParameters) {
 
     private val additionalFileIdsToSync = mutableSetOf<Long>()
     private val externalFilesToSync = mutableSetOf<String>()
 
     private var courseId = -1L
-
-    private val fileSync = FileSync(
-        context,
-        fileDownloadApi,
-        localFileDao,
-        fileFolderDao,
-        firebaseCrashlytics,
-        fileSyncProgressDao,
-        fileSyncSettingsDao,
-        courseSyncProgressDao,
-        fileFolderApi
-    )
 
     override suspend fun doWork(): Result {
         val courseSettingsWithFiles =

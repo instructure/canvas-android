@@ -163,7 +163,7 @@ class FileSyncProgressDaoTest {
     }
 
     @Test
-    fun testFindByWorkerIdLiveData() = runTest {
+    fun testFindByFileIdLiveData() = runTest {
         val entities = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
@@ -387,5 +387,44 @@ class FileSyncProgressDaoTest {
         result.observeForever { }
 
         assertEquals(entities.subList(0, 2), result.value)
+    }
+
+    @Test
+    fun testFindByRowId() = runTest {
+        val entities = listOf(
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 2L
+            )
+        )
+
+        fileSyncProgressDao.insertAll(entities)
+
+        val entity = FileSyncProgressEntity(
+            courseId = 1L,
+            fileName = "File 3",
+            progress = 0,
+            fileSize = 1000L,
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 3L
+        )
+
+        val rowId = fileSyncProgressDao.insert(entity)
+
+        val result = fileSyncProgressDao.findByRowId(rowId)
+
+        assertEquals(entity, result)
     }
 }
