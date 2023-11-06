@@ -80,7 +80,7 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val notificationId = Random.nextInt()
 
     override suspend fun doWork(): Result {
-        if (!featureFlagProvider.offlineEnabled()) return Result.success()
+        if (!featureFlagProvider.offlineEnabled() && apiPrefs.user == null) return Result.success()
 
         val dashboardCards =
             courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()

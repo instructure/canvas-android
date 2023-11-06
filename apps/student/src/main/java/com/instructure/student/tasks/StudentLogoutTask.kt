@@ -19,11 +19,14 @@ package com.instructure.student.tasks
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
+import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.activity.LoginActivity
@@ -70,6 +73,14 @@ class StudentLogoutTask(
             val dir = File(ContextKeeper.appContext.filesDir, it.toString())
             dir.deleteRecursively()
             databaseProvider?.clearDatabase(it)
+        }
+    }
+
+    override fun stopOfflineSync() {
+        val workManager = WorkManager.getInstance(ContextKeeper.appContext)
+        workManager.apply {
+            cancelAllWorkByTag(CourseSyncWorker.TAG)
+            cancelAllWorkByTag(OfflineSyncWorker.TAG)
         }
     }
 }

@@ -21,7 +21,13 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import androidx.work.impl.OperationImpl
 import com.google.common.util.concurrent.Futures
 import com.instructure.canvasapi2.models.User
@@ -29,7 +35,12 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.entities.SyncSettingsEntity
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -254,6 +265,34 @@ class OfflineSyncHelperTest {
         verify {
             workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
         }
+    }
+
+    @Test
+    fun `scheduleWorkAfterLogin should schedule work when auto sync is enabled and no work is already scheduled`() = runTest {
+        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
+        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(autoSyncEnabled = true, syncFrequency = SyncFrequency.DAILY, wifiOnly = true)
+
+        offlineSyncHelper.scheduleWorkAfterLogin()
+
+        coVerify { workManager.enqueueUniquePeriodicWork(any(), any(), any()) }
+    }
+
+    @Test
+    fun `scheduleWorkAfterLogin should not schedule work when auto sync is disabled`() = runTest {
+        coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(autoSyncEnabled = false, syncFrequency = SyncFrequency.DAILY, wifiOnly = true)
+
+        offlineSyncHelper.scheduleWorkAfterLogin()
+
+        coVerify(exactly = 0) { workManager.enqueueUniquePeriodicWork(any(), any(), any()) }
+    }
+
+    @Test
+    fun `scheduleWorkAfterLogin should not schedule work when work is already scheduled`() = runTest {
+        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(mockk(relaxed = true))
+
+        offlineSyncHelper.scheduleWorkAfterLogin()
+
+        coVerify(exactly = 0) { workManager.enqueueUniquePeriodicWork(any(), any(), any()) }
     }
 
 }

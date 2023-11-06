@@ -17,7 +17,9 @@
 
 package com.instructure.pandautils.di
 
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.*
@@ -522,4 +524,12 @@ class OfflineModule {
         return GroupFacade(groupUserDao, groupDao, userDao)
     }
 
+    @Provides
+    fun provideOfflineSyncHelper(
+        workManager: WorkManager,
+        syncSettingsFacade: SyncSettingsFacade,
+        apiPrefs: ApiPrefs
+    ): OfflineSyncHelper {
+        return OfflineSyncHelper(workManager, syncSettingsFacade, apiPrefs)
+    }
 }

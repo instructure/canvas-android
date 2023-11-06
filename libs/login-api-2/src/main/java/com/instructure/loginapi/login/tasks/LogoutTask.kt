@@ -54,6 +54,8 @@ abstract class LogoutTask(
     protected abstract fun getFcmToken(listener: (registrationId: String?) -> Unit)
     protected abstract fun removeOfflineData(userId: Long?)
 
+    protected open fun stopOfflineSync() = Unit
+
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun execute() {
         try {
@@ -77,6 +79,8 @@ abstract class LogoutTask(
                     CommunicationChannelsManager.deletePushCommunicationChannelSynchronous(registrationId)
                 }
                 PushNotification.clearPushHistory()
+
+                stopOfflineSync()
 
                 when (type) {
                     Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> {

@@ -36,15 +36,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 class OfflineSyncModule {
 
     @Provides
-    fun provideOfflineSyncHelper(
-        workManager: WorkManager,
-        syncSettingsFacade: SyncSettingsFacade,
-        apiPrefs: ApiPrefs
-    ): OfflineSyncHelper {
-        return OfflineSyncHelper(workManager, syncSettingsFacade, apiPrefs)
-    }
-
-    @Provides
     fun provideAggregateProgressObserver(
         @ApplicationContext context: Context,
         courseSyncProgressDao: CourseSyncProgressDao,

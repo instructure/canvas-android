@@ -74,7 +74,9 @@ class OfflineSyncHelper(
     }
 
     private suspend fun isWorkScheduled(): Boolean {
-        return workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await().isNotEmpty()
+        return workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await()
+            .filter { it.state != WorkInfo.State.CANCELLED }
+            .isNotEmpty()
     }
 
     private suspend fun createWorkRequest(id: UUID? = null): PeriodicWorkRequest {
@@ -96,5 +98,11 @@ class OfflineSyncHelper(
         }
 
         return workRequestBuilder.build()
+    }
+
+    suspend fun scheduleWorkAfterLogin() {
+        if (syncSettingsFacade.getSyncSettings().autoSyncEnabled && !isWorkScheduled()) {
+            scheduleWork()
+        }
     }
 }
