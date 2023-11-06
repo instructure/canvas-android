@@ -86,8 +86,6 @@ class CourseSyncWorker @AssistedInject constructor(
     fileSyncProgressDao: FileSyncProgressDao,
 ) : CoroutineWorker(context, workerParameters) {
 
-    private lateinit var progress: CourseSyncProgressEntity
-
     private val additionalFileIdsToSync = mutableSetOf<Long>()
     private val externalFilesToSync = mutableSetOf<String>()
 

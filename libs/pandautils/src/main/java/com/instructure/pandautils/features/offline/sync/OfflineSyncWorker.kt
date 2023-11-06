@@ -49,6 +49,7 @@ import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import java.io.File
 import java.util.UUID
 import kotlin.random.Random
@@ -149,6 +150,22 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         workManager.beginWith(courseWorkers)
             .enqueue()
+
+        val workerIds = courseWorkers.map { it.id }
+
+        while (true) {
+            delay(1000)
+            val infos = workManager.getWorkInfos(WorkQuery.fromIds(workerIds)).get()
+
+            if (infos.isEmpty()) break
+
+            if (infos.any { it.state == WorkInfo.State.CANCELLED }) break
+
+            if (infos.all { it.state.isFinished }) {
+                showNotification(infos.size, infos.all { it.state == WorkInfo.State.SUCCEEDED })
+                break
+            }
+        }
 
         return Result.success()
     }

@@ -64,13 +64,10 @@ class FileSync(
 
         cleanupSyncedFiles(courseId, allFileIds)
 
-        val fileFolders = mutableListOf<FileFolder>()
-        fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
+        val fileFolders = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
             .map { it.toApiModel() }
-            .forEach {
-                createProgress(it, courseId, false)
-                fileFolders.add(it)
-            }
+
+        fileSyncProgressDao.insertAll(fileFolders.map { createProgress(it, courseId, false) })
 
         courseSyncProgressDao.findByCourseId(courseId)?.copy(progressState = ProgressState.IN_PROGRESS)?.let {
             courseSyncProgressDao.update(it)
@@ -104,7 +101,7 @@ class FileSync(
         }.filterNotNull()
 
         val additionalFiles = additionalPublicFilesToSync + nonPublicFiles
-        additionalFiles.forEach { createProgress(it, courseId, true) }
+        fileSyncProgressDao.insertAll(additionalFiles.map { createProgress(it, courseId, true) })
 
         val syncData = mutableListOf<FileSyncData>()
 
@@ -249,8 +246,8 @@ class FileSync(
         return fileFolderDao.findAllFilesByCourseId(courseId)
     }
 
-    private suspend fun createProgress(fileFolder: FileFolder, courseId: Long, additionalFile: Boolean) {
-        val progress = FileSyncProgressEntity(
+    private fun createProgress(fileFolder: FileFolder, courseId: Long, additionalFile: Boolean): FileSyncProgressEntity {
+        return FileSyncProgressEntity(
             fileFolder.id,
             courseId,
             fileFolder.displayName.orEmpty(),
@@ -259,7 +256,6 @@ class FileSync(
             additionalFile,
             ProgressState.IN_PROGRESS
         )
-        fileSyncProgressDao.insert(progress)
     }
 
     private suspend fun createExternalProgress(url: String, courseId: Long): Long {
