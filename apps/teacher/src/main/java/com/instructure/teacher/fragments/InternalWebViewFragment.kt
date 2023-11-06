@@ -51,8 +51,8 @@ open class InternalWebViewFragment : BaseFragment() {
     var title: String by StringArg()
     var darkToolbar: Boolean by BooleanArg()
     private var shouldAuthenticate: Boolean by BooleanArg(key = AUTHENTICATE)
+    var shouldRouteInternally: Boolean by BooleanArg(key = SHOULD_ROUTE_INTERNALLY, default = true)
 
-    private var shouldRouteInternally = true
     private var shouldLoadUrl = true
     private var mSessionAuthJob: Job? = null
     private var shouldCloseFragment = false
@@ -61,10 +61,6 @@ open class InternalWebViewFragment : BaseFragment() {
 
     // Used for external urls that reject the candroid user agent string
     var originalUserAgentString: String = ""
-
-    protected fun setShouldRouteInternally(shouldRouteInternally: Boolean) {
-        this.shouldRouteInternally = shouldRouteInternally
-    }
 
     override fun onPause() {
         super.onPause()
@@ -242,6 +238,7 @@ open class InternalWebViewFragment : BaseFragment() {
         const val HTML = "html"
         const val DARK_TOOLBAR = "darkToolbar"
         const val AUTHENTICATE = "authenticate"
+        private const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
 
         fun newInstance(url: String) = InternalWebViewFragment().apply {
             this.url = url
@@ -275,13 +272,14 @@ open class InternalWebViewFragment : BaseFragment() {
             return args
         }
 
-        fun makeBundle(url: String, title: String, darkToolbar: Boolean = false, html: String = "", shouldAuthenticate: Boolean): Bundle {
+        fun makeBundle(url: String, title: String, darkToolbar: Boolean = false, html: String = "", shouldRouteInternally: Boolean = true, shouldAuthenticate: Boolean): Bundle {
             val args = Bundle()
             args.putString(URL, url)
             args.putString(TITLE, title)
             args.putString(HTML, html)
             args.putBoolean(DARK_TOOLBAR, darkToolbar)
             args.putBoolean(AUTHENTICATE, shouldAuthenticate)
+            args.putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
             return args
         }
     }
