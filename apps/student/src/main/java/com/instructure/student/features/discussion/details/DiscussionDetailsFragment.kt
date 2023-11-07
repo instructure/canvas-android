@@ -61,11 +61,7 @@ import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
-import com.instructure.student.fragment.DiscussionsReplyFragment
-import com.instructure.student.fragment.DiscussionsUpdateFragment
-import com.instructure.student.fragment.InternalWebviewFragment
-import com.instructure.student.fragment.LtiLaunchFragment
-import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.fragment.*
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import dagger.hilt.android.AndroidEntryPoint
@@ -273,10 +269,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         if (repository.isOnline()) {
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.utils_discussionsDeleteWarning)
-            builder.setPositiveButton(android.R.string.yes) { _, _ ->
+            builder.setPositiveButton(android.R.string.ok) { _, _ ->
                 deleteDiscussionEntry(discussionEntryId)
             }
-            builder.setNegativeButton(android.R.string.no) { _, _ -> }
+            builder.setNegativeButton(android.R.string.cancel) { _, _ -> }
             val dialog = builder.create()
             dialog.setOnShowListener {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)

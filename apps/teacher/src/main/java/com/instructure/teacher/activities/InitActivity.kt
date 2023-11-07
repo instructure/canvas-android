@@ -322,8 +322,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@InitActivity)
                         .setTitle(R.string.logout_warning)
-                        .setPositiveButton(android.R.string.yes) { _, _ -> TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute() }
-                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.ok) { _, _ -> TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+                        .setNegativeButton(android.R.string.cancel, null)
                         .create()
                         .show()
                 }
