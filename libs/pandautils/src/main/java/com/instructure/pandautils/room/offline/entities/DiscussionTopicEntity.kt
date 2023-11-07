@@ -14,7 +14,7 @@ data class DiscussionTopicEntity(
     val participantIds: List<Long>,
     val viewIds: List<Long>,
 ) {
-    constructor(discussionTopic: DiscussionTopic, participantIds: List<Long>, viewIds: List<Long>, topicId: Long): this(
+    constructor(discussionTopic: DiscussionTopic, participantIds: List<Long>, viewIds: List<Long>, topicId: Long) : this(
         id = topicId,
         unreadEntries = discussionTopic.unreadEntries,
         participantIds = participantIds,
@@ -27,7 +27,7 @@ data class DiscussionTopicEntity(
             participants = participants,
             unreadEntriesMap = hashMapOf(),
             entryRatings = hashMapOf(),
-            views = views?.toMutableList().orEmpty().toMutableList()
+            views = views.toMutableList().toMutableList()
         )
     }
 }

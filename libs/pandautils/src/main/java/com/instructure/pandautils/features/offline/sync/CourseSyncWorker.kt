@@ -382,6 +382,8 @@ class CourseSyncWorker @AssistedInject constructor(
             }
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)
+
+            fetchDiscussionDetails(announcements, courseId)
         }
     }
 

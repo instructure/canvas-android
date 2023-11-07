@@ -13,36 +13,48 @@ import com.instructure.pandautils.room.offline.entities.DiscussionTopicEntity
 class DiscussionTopicFacade(
     private val discussionTopicDao: DiscussionTopicDao,
     private val discussionParticipantDao: DiscussionParticipantDao,
-    private val discussionEntryDao: DiscussionEntryDao,
-
+    private val discussionEntryDao: DiscussionEntryDao
 ) {
     suspend fun insertDiscussionTopic(topicId: Long, discussionTopic: DiscussionTopic) {
-        val participantIds = discussionParticipantDao.upsertAll(discussionTopic.participants?.map { DiscussionParticipantEntity(it) }.orEmpty())
+        discussionParticipantDao.upsertAll(discussionTopic.participants?.map { DiscussionParticipantEntity(it) }.orEmpty())
         val discussionEntryIds = insertDiscussionEntries(discussionTopic.views)
-        discussionTopicDao.insert(DiscussionTopicEntity(discussionTopic, discussionTopic.participants?.map{ it.id }.orEmpty(), discussionEntryIds, topicId))
+        discussionTopicDao.insert(
+            DiscussionTopicEntity(
+                discussionTopic,
+                discussionTopic.participants?.map { it.id }.orEmpty(),
+                discussionEntryIds,
+                topicId
+            )
+        )
     }
 
     private suspend fun insertDiscussionEntries(entries: List<DiscussionEntry>): List<Long> {
-        val authorIds = discussionParticipantDao.upsertAll(entries.mapNotNull { it.author?.let { DiscussionParticipantEntity(it) } })
+        discussionParticipantDao.upsertAll(entries.mapNotNull { discussionEntry ->
+            discussionEntry.author?.let {
+                DiscussionParticipantEntity(it)
+            }
+        })
         val replyIds = mutableListOf<List<Long>>()
         entries.forEach { entry ->
             entry.replies?.let { replyIds.add(insertDiscussionEntries(it)) }
         }
-        return discussionEntryDao.insertAll(entries.mapIndexed { index, discussionEntry -> DiscussionEntryEntity(discussionEntry, replyIds[index]) })
+        return discussionEntryDao.insertAll(entries.mapIndexed { index, discussionEntry ->
+            DiscussionEntryEntity(discussionEntry, replyIds[index])
+        })
     }
 
     suspend fun getDiscussionTopic(topicId: Long): DiscussionTopic? {
         val topicEntity = discussionTopicDao.findById(topicId)
 
         val participants = mutableListOf<DiscussionParticipant>()
-        topicEntity?.participantIds?.forEach {
-            val participant = discussionParticipantDao.findById(it)
+        topicEntity?.participantIds?.forEach { participantId ->
+            val participant = discussionParticipantDao.findById(participantId)
             participant?.let { participants.add(it.toApiModel()) }
         }
 
         val views = mutableListOf<DiscussionEntry>()
-        topicEntity?.viewIds?.forEach {
-            val entry = getDiscussionEntries(it)
+        topicEntity?.viewIds?.forEach { viewId ->
+            val entry = getDiscussionEntries(viewId)
             entry?.let { views.add(it) }
         }
 
