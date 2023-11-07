@@ -44,7 +44,7 @@ class FeatureFlagProvider(
     }
 
     suspend fun getDiscussionRedesignFeatureFlag(): Boolean {
-        return BuildConfig.IS_DEBUG && checkEnvironmentFeatureFlag("react_discussions_post")
+        return checkEnvironmentFeatureFlag("react_discussions_post")
     }
 
     suspend fun fetchEnvironmentFeatureFlags() {
