@@ -35,7 +35,7 @@ class SimpleWebViewFragment : InternalWebViewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setShouldLoadUrl(false)
         setShouldAuthenticateUponLoad(true)
-        setShouldRouteInternally(false)
+        shouldRouteInternally = false
         binding.canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
         binding.canvasWebView.enableAlgorithmicDarkening()
