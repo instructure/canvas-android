@@ -181,7 +181,7 @@
         <item name="android:layout_marginStart">7dp</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:importantForAccessibility">no</item>
-        <item name="android:tint">@color/backgroundMedium</item>
+        <item name="android:tint">@color/textDarkest</item>
         <item name="android:src">@drawable/ic_canvas_wordmark</item>
     </style>
 
