@@ -25,9 +25,9 @@ import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = ModuleObjectEntity::class,
+            entity = CourseEntity::class,
             parentColumns = ["id"],
-            childColumns = ["moduleId"],
+            childColumns = ["courseId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -39,16 +39,18 @@ data class ModuleCompletionRequirementEntity(
     val minScore: Double,
     val maxScore: Double,
     val completed: Boolean?,
-    val moduleId: Long
+    val moduleId: Long,
+    val courseId: Long
 ) {
-    constructor(moduleCompletionRequirement: ModuleCompletionRequirement, moduleId: Long, moduleItemId: Long? = null) : this(
+    constructor(moduleCompletionRequirement: ModuleCompletionRequirement, moduleId: Long, courseId: Long, moduleItemId: Long? = null) : this(
         // In some api calls we don't receive the id of this entity, but it corresponds to the id of the module item so in that case we can use that
         id = if (moduleCompletionRequirement.id == 0L) moduleItemId ?: 0 else moduleCompletionRequirement.id,
         type = moduleCompletionRequirement.type,
         minScore = moduleCompletionRequirement.minScore,
         maxScore = moduleCompletionRequirement.maxScore,
         completed = moduleCompletionRequirement.completed,
-        moduleId = moduleId
+        moduleId = moduleId,
+        courseId = courseId
     )
 
     fun toApiModel() = ModuleCompletionRequirement(

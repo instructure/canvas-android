@@ -50,7 +50,7 @@ class ModuleFacade(
                     moduleItemDao.insert(moduleItemEntity)
 
                     moduleItem.completionRequirement?.let {
-                        completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, moduleItemEntity.moduleId, moduleItemEntity.id))
+                        completionRequirementDao.insert(ModuleCompletionRequirementEntity(it, moduleItemEntity.moduleId, courseId, moduleItemEntity.id))
                     }
 
                     moduleItem.moduleDetails?.let { moduleDetails ->

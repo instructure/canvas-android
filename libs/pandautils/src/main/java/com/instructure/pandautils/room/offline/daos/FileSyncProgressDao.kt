@@ -29,19 +29,13 @@ import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 interface FileSyncProgressDao {
 
     @Insert
-    suspend fun insert(fileSyncProgressEntity: FileSyncProgressEntity)
+    suspend fun insert(fileSyncProgressEntity: FileSyncProgressEntity): Long
 
     @Insert
     suspend fun insertAll(fileSyncProgressEntities: List<FileSyncProgressEntity>)
 
     @Update
     suspend fun update(fileSyncProgressEntity: FileSyncProgressEntity)
-
-    @Query("SELECT * FROM FileSyncProgressEntity WHERE workerId = :workerId")
-    suspend fun findByWorkerId(workerId: String): FileSyncProgressEntity?
-
-    @Query("SELECT * FROM FileSyncProgressEntity WHERE workerId = :workerId")
-    fun findByWorkerIdLiveData(workerId: String): LiveData<FileSyncProgressEntity?>
 
     @Query("SELECT * FROM FileSyncProgressEntity WHERE courseId = :courseId")
     fun findByCourseIdLiveData(courseId: Long): LiveData<List<FileSyncProgressEntity>>
@@ -51,6 +45,9 @@ interface FileSyncProgressDao {
 
     @Query("SELECT * FROM FileSyncProgressEntity WHERE fileId = :fileId")
     suspend fun findByFileId(fileId: Long): FileSyncProgressEntity?
+
+    @Query("SELECT * FROM FileSyncProgressEntity WHERE fileId = :fileId")
+    fun findByFileIdLiveData(fileId: Long): LiveData<FileSyncProgressEntity?>
 
     @Query("SELECT * FROM FileSyncProgressEntity WHERE additionalFile = 1 AND courseId = :courseId")
     fun findAdditionalFilesByCourseIdLiveData(courseId: Long): LiveData<List<FileSyncProgressEntity>>
@@ -66,4 +63,7 @@ interface FileSyncProgressDao {
 
     @Query("DELETE FROM FileSyncProgressEntity")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM FileSyncProgressEntity WHERE ROWID = :rowId")
+    suspend fun findByRowId(rowId: Long): FileSyncProgressEntity?
 }

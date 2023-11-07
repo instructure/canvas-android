@@ -222,8 +222,8 @@ class OfflineContentRepositoryTest {
     @Test
     fun `Get in progress file size returns correctly`() = runTest {
         coEvery { fileSyncProgressDao.findByFileId(1L) } returns FileSyncProgressEntity(
-            "workerId", 1L, "File name", 50,
-            1000, false, ProgressState.IN_PROGRESS, 1L
+            1L, 1L, "File name", 50,
+            1000, false, ProgressState.IN_PROGRESS
         )
 
         val result = repository.getInProgressFileSize(1L)

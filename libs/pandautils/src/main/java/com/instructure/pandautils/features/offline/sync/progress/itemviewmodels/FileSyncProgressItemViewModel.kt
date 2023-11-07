@@ -42,7 +42,7 @@ data class FileSyncProgressItemViewModel(
     }
 
     init {
-        fileSyncProgressLiveData = fileSyncProgressDao.findByWorkerIdLiveData(data.workerId)
+        fileSyncProgressLiveData = fileSyncProgressDao.findByFileIdLiveData(data.fileId)
         fileSyncProgressLiveData?.observeForever(fileSyncProgressObserver)
     }
 

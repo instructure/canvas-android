@@ -48,6 +48,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
@@ -67,6 +68,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
@@ -149,6 +151,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var offlineDatabase: OfflineDatabase
+
+    @Inject
+    lateinit var offlineSyncHelper: OfflineSyncHelper
+
+    @Inject
+    lateinit var firebaseCrashlytics: FirebaseCrashlytics
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -315,6 +323,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
             setOfflineState(!isOnline)
             handleTokenCheck(isOnline)
+        }
+
+        lifecycleScope.tryLaunch {
+            offlineSyncHelper.scheduleWorkAfterLogin()
+        } catch {
+            firebaseCrashlytics.recordException(it)
         }
     }
 

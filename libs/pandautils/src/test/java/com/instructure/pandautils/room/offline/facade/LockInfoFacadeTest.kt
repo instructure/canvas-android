@@ -54,7 +54,7 @@ class LockInfoFacadeTest {
         val assignmentId = 1L
         val prerequisites = listOf(ModuleName("Module name 1"))
         val completionRequirements = listOf(ModuleCompletionRequirement(id = 1L))
-        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
+        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements, contextId = 1)
         val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
 
         coEvery { completionRequirementDao.findById(any()) } returns null
@@ -64,7 +64,7 @@ class LockInfoFacadeTest {
         coVerify { lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId)) }
         coVerify { lockedModuleDao.insert(LockedModuleEntity(lockedModule)) }
         coVerify { moduleNameDao.insertAll(prerequisites.map { ModuleNameEntity(it, 1L) }) }
-        coVerify { completionRequirementDao.insert(ModuleCompletionRequirementEntity(completionRequirements.first(), 1L)) }
+        coVerify { completionRequirementDao.insert(ModuleCompletionRequirementEntity(completionRequirements.first(), 1L, 1L)) }
     }
 
     @Test
@@ -72,7 +72,7 @@ class LockInfoFacadeTest {
         val moduleId = 1L
         val prerequisites = listOf(ModuleName("Module name 1"))
         val completionRequirements = listOf(ModuleCompletionRequirement(id = 1L))
-        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
+        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements, contextId = 1)
         val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
 
         coEvery { completionRequirementDao.findById(any()) } returns null
@@ -82,7 +82,7 @@ class LockInfoFacadeTest {
         coVerify { lockInfoDao.insert(LockInfoEntity(lockInfo, moduleId = moduleId)) }
         coVerify { lockedModuleDao.insert(LockedModuleEntity(lockedModule)) }
         coVerify { moduleNameDao.insertAll(prerequisites.map { ModuleNameEntity(it, 1L) }) }
-        coVerify { completionRequirementDao.insert(ModuleCompletionRequirementEntity(completionRequirements.first(), 1L)) }
+        coVerify { completionRequirementDao.insert(ModuleCompletionRequirementEntity(completionRequirements.first(), 1L, 1L)) }
     }
 
     @Test
@@ -90,14 +90,14 @@ class LockInfoFacadeTest {
         val assignmentId = 1L
         val prerequisites = listOf(ModuleName("Module name 1"))
         val completionRequirements = listOf(ModuleCompletionRequirement(id = 1L))
-        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
+        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements, contextId = 1)
         val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
 
         coEvery { lockInfoDao.findByAssignmentId(assignmentId) } returns LockInfoEntity(lockInfo, assignmentId)
         coEvery { lockedModuleDao.findById(any()) } returns LockedModuleEntity(lockedModule)
         coEvery { moduleNameDao.findByLockModuleId(any()) } returns prerequisites.map { ModuleNameEntity(it, 1L) }
         coEvery { completionRequirementDao.findByModuleId(any()) } returns completionRequirements.map {
-            ModuleCompletionRequirementEntity(it, 1L)
+            ModuleCompletionRequirementEntity(it, 1L, 1L)
         }
 
         val result = facade.getLockInfoByAssignmentId(assignmentId)
@@ -111,14 +111,14 @@ class LockInfoFacadeTest {
         val moduleId = 1L
         val prerequisites = listOf(ModuleName("Module name 1"))
         val completionRequirements = listOf(ModuleCompletionRequirement(id = 1L))
-        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements)
+        val lockedModule = LockedModule(id = 1L, prerequisites = prerequisites, completionRequirements = completionRequirements, contextId = 1)
         val lockInfo = LockInfo(modulePrerequisiteNames = arrayListOf("1", "2"), contextModule = lockedModule, unlockAt = Date().toApiString())
 
         coEvery { lockInfoDao.findByModuleId(moduleId) } returns LockInfoEntity(lockInfo, moduleId = moduleId)
         coEvery { lockedModuleDao.findById(any()) } returns LockedModuleEntity(lockedModule)
         coEvery { moduleNameDao.findByLockModuleId(any()) } returns prerequisites.map { ModuleNameEntity(it, 1L) }
         coEvery { completionRequirementDao.findByModuleId(any()) } returns completionRequirements.map {
-            ModuleCompletionRequirementEntity(it, 1L)
+            ModuleCompletionRequirementEntity(it, 1L, 1L)
         }
 
         val result = facade.getLockInfoByModuleId(moduleId)
