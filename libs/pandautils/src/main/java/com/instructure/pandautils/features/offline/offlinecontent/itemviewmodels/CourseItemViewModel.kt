@@ -28,6 +28,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 data class CourseItemViewModel(
     val data: CourseItemViewData,
     val courseId: Long,
+    @get:Bindable override var collapsed: Boolean,
     val onCheckedChanged: (Boolean, CourseItemViewModel) -> Unit
 ) : GroupItemViewModel(collapsable = true, items = data.tabs.ifEmpty { listOf(EmptyCourseContentViewModel()) }) {
     override val layoutId = R.layout.item_offline_course

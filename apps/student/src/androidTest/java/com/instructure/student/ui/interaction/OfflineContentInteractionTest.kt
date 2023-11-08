@@ -73,10 +73,10 @@ class OfflineContentInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
-    fun displaysCourseExpandedIfCourseOfflineContent() {
+    fun displaysCourseCollapsedIfCourseOfflineContent() {
         val data = createMockCanvas()
         goToOfflineContentByCourse(data)
-        manageOfflineContentPage.assertDisplaysItemWithExpandedState(data.courses.values.first().name, true)
+        manageOfflineContentPage.assertDisplaysItemWithExpandedState(data.courses.values.first().name, false)
     }
 
     @Test

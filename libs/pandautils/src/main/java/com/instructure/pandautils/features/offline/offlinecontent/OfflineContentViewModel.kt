@@ -177,6 +177,8 @@ class OfflineContentViewModel @Inject constructor(
         val tabs = course.tabs?.filter { it.tabId in ALLOWED_TAB_IDS }.orEmpty()
         val size = "~${Formatter.formatShortFileSize(context, files.sumOf { it.size } + tabs.filter { it.tabId != Tab.FILES_ID }.size * TAB_SIZE)}"
 
+        val collapsed = _data.value?.courseItems?.find { it.courseId == courseId }?.collapsed ?: true
+
         return CourseItemViewModel(
             data = CourseItemViewData(
                 fullContentSync = courseSyncSettingsWithFiles.courseSyncSettings.fullContentSync,
@@ -190,6 +192,7 @@ class OfflineContentViewModel @Inject constructor(
                 }
             ),
             courseId = course.id,
+            collapsed = collapsed,
             onCheckedChanged = this::onCourseCheckedChanged
         )
     }
