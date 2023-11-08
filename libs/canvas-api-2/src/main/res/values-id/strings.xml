@@ -1,0 +1,80 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Anda pertama-tama harus menyelesaikan:</string>
+    <string name="unlockedAt">Ini akan terbuka pada:</string>
+    <string name="goToModules">Pergi Ke Modul</string>
+
+    <!--Events-->
+    <string name="Starts">Memulai</string>
+    <string name="Ends">Mengakhiri</string>
+    <string name="allDayEvent">Acara Satu Hari Penuh</string>
+    <string name="at">di</string>
+    <string name="to">kepada</string>
+
+    <!--StreamItems-->
+    <string name="Message">Pesan</string>
+    <string name="Loading">Memuat&#8230;</string>
+    <string name="Deleted">Dihapus</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Online</string>
+    <string name="canvasAPI_onPaper">Di Atas Kertas</string>
+    <string name="canvasAPI_discussion">Diskusi</string>
+    <string name="canvasAPI_quiz">Kuis</string>
+    <string name="canvasAPI_externalTool">Alat Eksternal</string>
+    <string name="canvasAPI_none">Tidak Ada Penyerahan</string>
+
+    <string name="canvasAPI_passFail">Lulus Gagal</string>
+    <string name="canvasAPI_percent">Persen</string>
+    <string name="canvasAPI_letterGrade">Nilai Dalam Huruf</string>
+    <string name="canvasAPI_points">Poin</string>
+    <string name="canvasAPI_gpaScale">Skala IPK</string>
+    <string name="canvasAPI_notGraded">Tidak Dinilai</string>
+
+    <string name="canvasAPI_onlineQuiz">Kuis</string>
+    <string name="canvasAPI_discussionTopic">Topik Diskusi</string>
+    <string name="canvasAPI_onlineUpload">Unggahan File</string>
+    <string name="canvasAPI_onlineTextEntry">Entri Teks</string>
+    <string name="canvasAPI_onlineURL">URL Situs Web</string>
+    <string name="canvasAPI_mediaRecording">Rekaman Media</string>
+    <string name="canvasAPI_attendance">Kehadiran</string>
+    <string name="canvasAPI_studentAnnotation">Anotasi Siswa</string>
+    <string name="quiz_scoring_policy_highest">Tertinggi</string>
+    <string name="quiz_scoring_policy_average">Rata-Rata</string>
+    <string name="quiz_scoring_policy_latest">Terbaru</string>
+    <string name="no">Tidak</string>
+    <string name="always">Selalu</string>
+    <string name="graded_quiz">Kuis Dinilai</string>
+    <string name="practice_quiz">Kuis Latihan</string>
+    <string name="graded_survey">Survei Dinilai</string>
+    <string name="ungraded_survey">Survei Tidak Dinilai</string>
+    <string name="andMore">\u0020dan %d lainnya</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Siswa</string>
+    <string name="enrollmentTypeTeacher">Guru</string>
+    <string name="enrollmentTypeObserver">Pengamat</string>
+    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeDesigner">Desainer</string>
+    <string name="enrollmentTypeUnknown">Tidak dikenal</string>
+
+</resources>

@@ -110,8 +110,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Loại Bỏ Người Dùng Trước</string>
     <string name="accountDomainFooter">Không tìm được trường của bạn? Hãy thử nhập URL đầy đủ của trường</string>
-    <string name="accountDomainFooterLink">Nhấn vào đây để được trợ giúp.</string>
-
+    <string name="accountDomainFooterLoginHelp">Nhấn vào đây để được trợ giúp đăng nhập.</string>
     <string name="login_noInternetConnectionTitle">Không Có Kết Nối Internet</string>
     <string name="login_noInternetConnectionMessage">Thao tác này bắt buộc phải có kết nối internet.</string>
     <string name="empty_feedback">Bắt buộc phải có tiêu đề và mô tả thì mới có thể nộp ý kiến phản hồi.</string>

@@ -109,8 +109,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Tynnu defnyddiwr blaenorol?</string>
     <string name="accountDomainFooter">Methu dod o hyd i’ch ysgol? Ceisiwch deipio URL llawn yr ysgol.</string>
-    <string name="accountDomainFooterLink">Tapiwch yma i gael help.</string>
-
+    <string name="accountDomainFooterLoginHelp">Tapiwch yma i gael help gyda mewngofnodi.</string>
     <string name="login_noInternetConnectionTitle">Dim cysylltiad â\'r rhyngrwyd</string>
     <string name="login_noInternetConnectionMessage">Mae angen cysylltiad â\'r rhyngrwyd i wneud hyn.</string>
     <string name="empty_feedback">Mae’n rhaid rhoi pwnc a disgrifiad er mwyn cyflwyno adborth.</string>
