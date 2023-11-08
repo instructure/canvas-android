@@ -230,7 +230,9 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
     if (_content != widgetContent) {
       _height = widget.initialHeight;
       _content = widgetContent!;
-      _controller?.loadHtml(_content, horizontalPadding: widget.horizontalPadding);
+      _controller?.loadHtml(_content,
+          horizontalPadding: widget.horizontalPadding,
+          darkMode: ParentTheme.of(context)?.isWebViewDarkMode ?? false);
     }
 
     Widget child = WebView(
@@ -260,7 +262,10 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   }
 
   void _handleWebViewCreated(WebViewController webViewController) async {
-    webViewController.loadHtml(_content, baseUrl: ApiPrefs.getDomain(), horizontalPadding: widget.horizontalPadding);
+    webViewController.loadHtml(_content,
+        baseUrl: ApiPrefs.getDomain(),
+        horizontalPadding: widget.horizontalPadding,
+        darkMode: ParentTheme.of(context)?.isWebViewDarkMode ?? false);
     _controller = webViewController;
   }
 
