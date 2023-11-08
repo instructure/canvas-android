@@ -134,7 +134,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             navigationDelegate: (request) =>
                 _navigate(context, request, verifyResult),
             javascriptMode: JavascriptMode.unrestricted,
-            darkMode: ParentTheme.of(context)?.isWebViewDarkMode,
+            // darkMode: ParentTheme.of(context)?.isWebViewDarkMode,
             userAgent: ApiPrefs.getUserAgent(),
             onPageFinished: (url) => _pageFinished(url, verifyResult),
             onPageStarted: (url) => _pageStarted(url),
@@ -243,16 +243,15 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   /// Load the authenticated url with any necessary cookies
   void _loadAuthUrl() async {
     _showLoadingState();
-    CookieManager().clearCookies();
+    final cookieManager = CookieManager();
+    cookieManager.clearCookies();
 
     if (widget.loginFlow == LoginFlow.siteAdmin) {
-      await _controller?.setAcceptThirdPartyCookies(true);
       if (_domain.contains('.instructure.com')) {
-        String cookie = 'canvas_sa_delegated=1;domain=.instructure.com;path=/;';
-        await _controller?.setCookie(_domain, cookie);
-        await _controller?.setCookie('.instructure.com', cookie);
+        cookieManager.setCookie(WebViewCookie(name: 'canvas_sa_delegated', value: '1', domain: _domain));
+        cookieManager.setCookie(WebViewCookie(name: 'canvas_sa_delegated', value: '1', domain: '.instructure.com'));
       } else {
-        await _controller?.setCookie(_domain, 'canvas_sa_delegated=1');
+        cookieManager.setCookie(WebViewCookie(name: 'canvas_sa_delegated', value: '1', domain: _domain));
       }
     }
 

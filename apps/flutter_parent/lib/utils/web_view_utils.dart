@@ -38,7 +38,7 @@ extension WebViewUtils on WebViewController {
       html = _checkForMathTags(html);
       html = fileText.replaceAll('{CANVAS_CONTENT}', html);
       html = html.replaceAll('{PADDING}', horizontalPadding.toString());
-      this.loadData(baseUrl, html, 'text/html', 'utf-8');
+      this.loadHtmlString(html, baseUrl: baseUrl);
     }
 
   /**
