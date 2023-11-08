@@ -69,7 +69,7 @@ class CourseGrade {
   /// If the course contains no valid current grade or score, this flag will be true. This is usually represented in the
   /// UI with "N/A".
   bool noCurrentGrade() =>
-      _getCurrentScore() == null && (currentGrade() == null || currentGrade()!.contains('N/A') || currentGrade()!.isEmpty);
+      currentScore() == null && (currentGrade() == null || currentGrade()!.contains('N/A') || currentGrade()!.isEmpty);
 
   bool _hasActiveGradingPeriod() =>
       !_forceAllPeriods &&
