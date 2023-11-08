@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Masukkan Teks</string>
+    <string name="cancel">Batal</string>
+    <string name="comment">Komentar</string>
+    <string name="skip">Lewati</string>
+    <string name="comments">Komentar</string>
+    <string name="error_loading_submission">Ada masalah saat memuat penyerahan ini.</string>
+    <string name="retry">Coba lagi</string>
+    <string name="annotationErrorOccurred">Kesalahan tak terduga terjadi saat memuat anotasi.</string>
+    <string name="annotationError">Kesalahan Anotasi</string>
+    <string name="annotationDialogMessage">Anotasi telah dihapus dari sumber lain.</string>
+    <string name="errorSendingMessage">Pesan ini tidak dapat dikirim. Ketuk untuk mencoba lagi.</string>
+    <string name="addAnnotationComment">Tambah Komentar</string>
+    <string name="editComment">Edit Komentar</string>
+    <string name="deleteComment">Hapus Komentar</string>
+    <string name="deleteAnnotation">Hapus Anotasi</string>
+    <string name="deleteCommentConfirmation">Anda yakin mau menghapus komentar ini?</string>
+    <string name="deleteHeadCommentConfirmation">Menghapus komentar ini akan menghapus semua komentar yang berkaitan dengan anotasi ini. Anda yakin mau melakukan ini?</string>
+    <string name="sendingSimple">Sedang mengirim</string>
+    <string name="pspdf__annotation_type_stamp">Catat Warna</string>
+    <string name="removedComment">Menghapus %1$s oleh %2$s</string>
+    <string name="pspdf__stamp_standard_section"></string>
+
+</resources>

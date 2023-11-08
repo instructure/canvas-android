@@ -571,7 +571,7 @@
     <string name="collaborations">Col·laboracions</string>
     <string name="conferences">Conferències</string>
     <string name="chat">Xat</string>
-    <string name="outcomes">Resultats</string>
+    <string name="outcomes">Competències</string>
 
     <!-- Submission View Strings -->
     <string name="visitPage">Ves a la pàgina:</string>
@@ -1392,4 +1392,77 @@
     <string name="aboutEmailTitle">Correu electrònic</string>
     <string name="aboutVersionTitle">Versió</string>
     <string name="assignmentRefreshError">Hi ha hagut un problema en tornar a carregar aquesta activitat. Reviseu la connexió i torneu-ho a provar.</string>
+    <string name="instructure_logo">Logotip de l’Instructure</string>
+    <string name="preferences">Preferències</string>
+    <string name="offlineContent">Contingut sense connexió</string>
+    <string name="offlineSyncSettingsTitle">Sincronització</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">Contingut sense connexió</string>
+    <string name="course_menu_manage_offline_content">Gestiona el contingut sense connexió</string>
+    <string name="offline_content_storage">Emmagatzematge</string>
+    <string name="offline_content_storage_info">S’han utilitzat %s de %s</string>
+    <string name="offline_content_other">Altres aplicacions</string>
+    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_remaining">Restant</string>
+    <string name="offline_content_all_courses">Totes les assignatures</string>
+    <string name="offline_content_sync">Sincronitza</string>
+    <string name="offline_content_selected">S’ha seleccionat %d</string>
+    <string name="offline_content_select_all">Selecciona-ho tot</string>
+    <string name="offline_content_deselect_all">Anul·la la selecció de tot</string>
+    <string name="offline_content_loading_error">S\'ha produït un error en carregar el contingut.</string>
+    <string name="syncSettings_autoContentSyncDescription">En activar la sincronització automàtica del contingut es baixarà el contingut seleccionat segons les opcions de configuració indicades a continuació. Se sincronitzarà el contingut encara que l’aplicació no s’estigui executant. Si el paràmetre està desactivat no es durà a terme la sincronització. No se suprimirà el contingut que ja s’hagi baixat.</string>
+    <string name="syncSettings_syncFrequencyTitle">Freqüència de sincronització</string>
+    <string name="syncSettings_autoContentSyncTitle">Sincronització automàtica del contingut</string>
+    <string name="syncSettings_syncFrequencyDescription">Especifiqueu la recurrència de la sincronització del contingut. El sistema baixarà el contingut seleccionat segons la freqüència especificada en aquest apartat.</string>
+    <string name="syncSettings_wifiOnlyTitle">Sincronitzeu el contingut només a través de Wi-Fi</string>
+    <string name="syncSettings_wifiOnlyDescription">Si aquest paràmetre està activat, només se sincronitzarà el contingut si el dispositiu es connecta a una xarxa Wi-Fi; en cas contrari, l’acció es posposarà fins que hi hagi una xarxa Wi-Fi disponible.</string>
+    <string name="syncSettings_toolbarTitle">Sincronització</string>
+    <string name="daily">Diari</string>
+    <string name="weekly">Setmanal</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">Freqüència de sincronització</string>
+    <string name="syncSettings_wifiConfirmationTitle">Voleu desactivar la sincronització del contingut a través de Wi-Fi?</string>
+    <string name="synySettings_wifiConfirmationMessage">Si aquest paràmetre està activat, només se sincronitzarà el contingut si el dispositiu es connecta a una xarxa Wi-Fi; en cas contrari, l’acció es posposarà fins que hi hagi una xarxa Wi-Fi disponible.</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">Desactiva</string>
+    <string name="syncSettings_manualDescription">Manual</string>
+    <string name="offlineModeSnackbar">Mode sense connexió</string>
+    <string name="notAvailableOfflineScreenTitle">No està disponible sense connexió</string>
+    <string name="notAvailableOfflineDescription">Aquest contingut no està disponible en mode sense connexió.</string>
+    <string name="notAvailableOfflineDescriptionForTabs">Aquest contingut no està disponible en mode sense connexió. Si voleu canviar la configuració, obriu la pantalla Contingut sense connexió des del panell de control quan la xarxa estigui disponible.</string>
+    <string name="offline">Sense connexió</string>
+    <string name="syncProgress_syncFailed">No s’ha pogut dur a terme la sincronització</string>
+    <string name="syncProgress_downloadProgress">S\'estan baixant %1$s de %2$s</string>
+    <string name="syncProgress_syncQueued">En cua</string>
+    <string name="syncProgress_offlineContentSyncCompleted">S’ha completat la sincronització del contingut sense connexió</string>
+    <string name="syncProgress_offlineContentSyncFailed">No s’ha pogut sincronitzar el contingut sense connexió</string>
+    <string name="syncProgress_cancelConfirmationTitle">Voleu cancel·lar la sincronització?</string>
+    <string name="syncProgress_cancelConfirmationMessage">Amb aquesta acció s’aturarà la sincronització del contingut sense connexió. Podeu tornar-ho a fer més endavant.</string>
+    <string name="syncProgress_syncErrorSubtitle">No s\'han pogut sincronitzar un o més fitxers. Reviseu la connexió a Internet i torneu a provar de fer l\'entrega.</string>
+    <string name="syncProgress_downloadStarting">S’està iniciant la baixada</string>
+    <string name="coursesCannotBeFavoritedOffline">No es poden afegir les assignatures a Preferits sense connexió.</string>
+    <string name="allCoursesScreenHeader">Totes les assignatures</string>
+    <string name="allCoursesCourseHeader">Assignatures</string>
+    <string name="allCoursesGroupHeader">Grups</string>
+    <string name="dashboardAllCoursesButton">Totes les assignatures</string>
+    <string name="allCoursesOfflineNote">Seleccionar assignatures per al panell de control només es pot fer sense connexió. Podeu navegar a la informació de l’assignatura sense connexió.</string>
+    <string name="allCoursesOfflineNoteTitle">Nota</string>
+    <string name="syncProgress_downloadSuccess">Operació correcta! S’han baixat %1$s de %2$s</string>
+    <string name="syncProgress_syncingOfflineContent">S’està sincronitzant el contingut sense connexió</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">Rebutgeu la notificació</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">S’està sincronitzant %d assignatura.</item>
+        <item quantity="other">S’estan sincronitzant %d assignatures.</item>
+    </plurals>
+    <string name="syncProgressAdditionalFiles">Imatges del contingut de l\'assignatura</string>
+    <string name="assignmentNoLongerAvailable">Aquesta activitat ja no està disponible.</string>
+    <string name="editDashboardOfflineMode">Esteu sense connexió</string>
+    <string name="editDashboardOfflineModeMessage">Actualment, no teniu cap assignatura que estigui disponible sense connexió.</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">S’ha sincronitzat correctament el contingut sense connexió</string>
+    <string name="offlineContentSyncFailureNotificationTitle">No s’ha pogut sincronitzar el contingut sense connexió</string>
+    <string name="notificationChannelNameSyncUpdates">Actualitzacions de la sincronització sense connexió</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">Notificacions del Canvas d’actualitzacions de sincronització sense connexió.</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="one">S’ha sincronitzat %d assignatura.</item>
+        <item quantity="other">S’han sincronitzat %d assignatures.</item>
+    </plurals>
 </resources>
