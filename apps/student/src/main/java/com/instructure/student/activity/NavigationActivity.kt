@@ -213,14 +213,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
-                            .setPositiveButton(android.R.string.yes) { _, _ ->
+                            .setPositiveButton(android.R.string.ok) { _, _ ->
                                 StudentLogoutTask(
                                     LogoutTask.Type.LOGOUT,
                                     typefaceBehavior = typefaceBehavior,
                                     databaseProvider = databaseProvider
                                 ).execute()
                             }
-                            .setNegativeButton(android.R.string.no, null)
+                            .setNegativeButton(android.R.string.cancel, null)
                             .create()
                             .show()
                 }
