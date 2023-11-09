@@ -144,9 +144,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     lateinit var databaseProvider: DatabaseProvider
 
     @Inject
-    lateinit var featureFlagProvider: FeatureFlagProvider
-
-    @Inject
     lateinit var repository: NavigationRepository
 
     @Inject
@@ -305,8 +302,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupNavDrawerItems()
 
-        loadFeatureFlags()
-
         checkAppUpdates()
 
         val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
@@ -342,12 +337,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
                 }
             }
-        }
-    }
-
-    private fun loadFeatureFlags() {
-        lifecycleScope.launch {
-            featureFlagProvider.fetchEnvironmentFeatureFlags()
         }
     }
 
