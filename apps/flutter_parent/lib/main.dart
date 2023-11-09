@@ -33,7 +33,6 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
