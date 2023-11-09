@@ -134,7 +134,6 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             navigationDelegate: (request) =>
                 _navigate(context, request, verifyResult),
             javascriptMode: JavascriptMode.unrestricted,
-            // darkMode: ParentTheme.of(context)?.isWebViewDarkMode,
             userAgent: ApiPrefs.getUserAgent(),
             onPageFinished: (url) => _pageFinished(url, verifyResult),
             onPageStarted: (url) => _pageStarted(url),
