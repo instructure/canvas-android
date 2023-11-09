@@ -17,9 +17,8 @@
 
 package com.instructure.student.ui.pages.offline
 
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.hasCheckedState
 import com.instructure.canvas.espresso.withRotation
@@ -27,6 +26,7 @@ import com.instructure.espresso.*
 import com.instructure.espresso.actions.ForceClick
 import com.instructure.espresso.page.*
 import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.BindableViewHolder
 import org.hamcrest.CoreMatchers.allOf
 
 class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
@@ -36,12 +36,14 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun changeItemSelectionState(itemName: String) {
+        onView(withId(R.id.offlineContentRecyclerView))
+            .perform(RecyclerViewActions.scrollTo<BindableViewHolder>(hasDescendant(withText(itemName))))
         onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().click()
     }
 
     //OfflineMethod
     fun expandCollapseItem(itemName: String) {
-        onView(withId(R.id.arrow) + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().perform(ForceClick())
+        onView(withId(R.id.arrow) + withEffectiveVisibility(Visibility.VISIBLE) + hasSibling(withId(R.id.title) + withText(itemName))).scrollTo().perform(ForceClick())
     }
 
     //OfflineMethod
@@ -82,7 +84,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun assertSelectButtonText(selectAll: Boolean) {
-        if(selectAll) waitForView(withId(R.id.menu_select_all) + withText(R.string.offline_content_select_all)).assertDisplayed()
+        if (selectAll) waitForView(withId(R.id.menu_select_all) + withText(R.string.offline_content_select_all)).assertDisplayed()
         else waitForView(withId(R.id.menu_select_all) + withText(R.string.offline_content_deselect_all)).assertDisplayed()
     }
 
@@ -98,12 +100,12 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun assertCourseCountWithMatcher(expectedCount: Int) {
-        ConstraintLayoutItemCountAssertionWithMatcher((allOf(withId(R.id.arrow), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))), expectedCount)
+        ConstraintLayoutItemCountAssertionWithMatcher((allOf(withId(R.id.arrow), withEffectiveVisibility(Visibility.VISIBLE))), expectedCount)
     }
 
     //OfflineMethod
     fun assertCourseCount(expectedCount: Int) {
-        onView((allOf(withId(R.id.arrow), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))).check(ConstraintLayoutItemCountAssertion(expectedCount))
+        onView((allOf(withId(R.id.arrow), withEffectiveVisibility(Visibility.VISIBLE)))).check(ConstraintLayoutItemCountAssertion(expectedCount))
     }
 
     //OfflineMethod
@@ -114,7 +116,10 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun assertCheckedStateOfItem(itemName: String, state: Int) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)).scrollTo().assertDisplayed()
+        val matcher = withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)
+        onView(withId(R.id.offlineContentRecyclerView))
+            .perform(RecyclerViewActions.scrollTo<BindableViewHolder>(hasDescendant(withText(itemName))))
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     //OfflineMethod
@@ -129,21 +134,24 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
 
     //OfflineMethod
     fun assertDisplaysEmptyCourse() {
-        onView(withText(R.string.offline_content_empty_course_message)).assertDisplayed()
+        onView(withText(R.string.offline_content_empty_course_message)).scrollTo().assertDisplayed()
     }
 
     //OfflineMethod
     fun assertDisplaysItemWithExpandedState(title: String, expanded: Boolean) {
         onView(withId(R.id.arrow)
                     + withRotation(if (expanded) 180f else 0f)
-                    + withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
+                    + withEffectiveVisibility(Visibility.VISIBLE)
                     + hasSibling(withId(R.id.title) + withText(title))
         ).scrollTo().assertDisplayed()
     }
 
     //OfflineMethod
     fun assertItemDisplayed(title: String) {
-        onView(withId(R.id.title) + withText(title)).scrollTo().assertDisplayed()
+        val matcher = withId(R.id.title) + withText(title)
+        onView(withId(R.id.offlineContentRecyclerView))
+            .perform(RecyclerViewActions.scrollTo<BindableViewHolder>(hasDescendant(matcher)))
+        onView(matcher).scrollTo().assertDisplayed()
     }
 
     //OfflineMethod

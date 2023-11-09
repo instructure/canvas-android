@@ -98,7 +98,6 @@ class OfflineContentInteractionTest : StudentTest() {
         manageOfflineContentPage.assertDisplaysItemWithExpandedState(course.name, false)
         manageOfflineContentPage.expandCollapseItem(course.name)
         manageOfflineContentPage.assertDisplaysItemWithExpandedState(course.name, true)
-        manageOfflineContentPage.assertItemDisplayed(data.courseTabs[course.id]!!.first().label!!)
         getCourseItemNames(data, course).forEach { manageOfflineContentPage.assertItemDisplayed(it) }
     }
 
@@ -353,7 +352,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     private fun getCourseItemNames(data: MockCanvas, course: Course): List<String> {
-        return data.courseTabs[course.id]!!.map { it.label!! } + course.name +
+        return listOf(course.name) + data.courseTabs[course.id]!!.map { it.label!! } +
                 data.folderFiles[data.courseRootFolders[course.id]!!.id]!!.map { it.displayName!! }
     }
 
