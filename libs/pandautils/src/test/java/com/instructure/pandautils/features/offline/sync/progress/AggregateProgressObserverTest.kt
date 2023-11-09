@@ -121,8 +121,18 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.IN_PROGRESS
         )
 
-        var file1 = FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, progressState = ProgressState.IN_PROGRESS, fileId = 1L)
-        var file2 = FileSyncProgressEntity(file2Id.toString(), 2L, "File 1", 0, 2000, progressState = ProgressState.IN_PROGRESS, fileId = 1L)
+        var file1 = FileSyncProgressEntity(
+            courseId = 1L,
+            fileName = "File 1",
+            progress = 0,
+            fileSize = 1000, progressState = ProgressState.IN_PROGRESS, fileId = 1L
+        )
+        var file2 = FileSyncProgressEntity(
+            courseId = 2L,
+            fileName = "File 1",
+            progress = 0,
+            fileSize = 2000, progressState = ProgressState.IN_PROGRESS, fileId = 2L
+        )
 
         val courseLiveData = MutableLiveData(listOf(course1, course2))
         val fileLiveData = MutableLiveData(listOf(file1, file2))
@@ -190,26 +200,31 @@ class AggregateProgressObserverTest {
         val courseLiveData = MutableLiveData(listOf(course1Progress))
 
         var file1Progress =
-            FileSyncProgressEntity(file1Id.toString(), 1L, "File 1", 0, 1000, false, ProgressState.IN_PROGRESS, fileId = 1L)
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
+                additionalFile = false,
+                progressState = ProgressState.IN_PROGRESS, fileId = 1L
+            )
         var file2Progress = FileSyncProgressEntity(
-            file2Id.toString(),
-            1L,
-            "Additional internal file",
-            0,
-            2000,
-            true,
-            ProgressState.IN_PROGRESS,
-            fileId = 1L
+            courseId = 1L,
+            fileName = "Additional internal file",
+            progress = 0,
+            fileSize = 2000,
+            additionalFile = true,
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 2L
         )
         var file3Progress = FileSyncProgressEntity(
-            file3Id.toString(),
-            1L,
-            "Additional external file",
-            0,
-            0,
-            true,
-            ProgressState.IN_PROGRESS,
-            fileId = 1L
+            courseId = 1L,
+            fileName = "Additional external file",
+            progress = 0,
+            fileSize = 0,
+            additionalFile = true,
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 3L
         )
 
         val fileLiveData = MutableLiveData(listOf(file1Progress, file2Progress, file3Progress))
@@ -242,14 +257,13 @@ class AggregateProgressObserverTest {
         file2Progress = file2Progress.copy(progress = 100, progressState = ProgressState.COMPLETED)
 
         file3Progress = FileSyncProgressEntity(
-            file3Id.toString(),
-            1L,
-            "Additional external file",
-            0,
-            3000,
-            true,
-            ProgressState.IN_PROGRESS,
-            fileId = 1L
+            courseId = 1L,
+            fileName = "Additional external file",
+            progress = 0,
+            fileSize = 3000,
+            additionalFile = true,
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 3L
         )
 
         fileLiveData.postValue(listOf(file1Progress, file2Progress, file3Progress))
@@ -258,14 +272,13 @@ class AggregateProgressObserverTest {
         assertEquals("${1000000 + 1000 + 2000 + 3000} bytes", aggregateProgressObserver.progressData.value?.totalSize)
 
         file3Progress = FileSyncProgressEntity(
-            file3Id.toString(),
-            1L,
-            "Additional external file",
-            100,
-            3000,
-            true,
-            ProgressState.COMPLETED,
-            fileId = 1L
+            courseId = 1L,
+            fileName = "Additional external file",
+            progress = 100,
+            fileSize = 3000,
+            additionalFile = true,
+            progressState = ProgressState.COMPLETED,
+            fileId = 3L
         )
 
         course1Progress = course1Progress.copy(

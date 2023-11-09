@@ -72,7 +72,6 @@ class FileSyncProgressDaoTest {
     @Test(expected = SQLiteConstraintException::class)
     fun testInsertError() = runTest {
         val entity = FileSyncProgressEntity(
-            workerId = "workerId",
             courseId = 1L,
             fileName = "File 1",
             progress = 0,
@@ -89,7 +88,6 @@ class FileSyncProgressDaoTest {
     @Test(expected = SQLiteConstraintException::class)
     fun testInsertAllError() = runTest {
         val entity = FileSyncProgressEntity(
-            workerId = "workerId",
             courseId = 1L,
             fileName = "File 1",
             progress = 0,
@@ -108,7 +106,6 @@ class FileSyncProgressDaoTest {
         courseSyncProgressDao.deleteAll()
 
         val entity = FileSyncProgressEntity(
-            workerId = "workerId",
             courseId = 1L,
             fileName = "File 1",
             progress = 0,
@@ -122,7 +119,6 @@ class FileSyncProgressDaoTest {
     @Test
     fun testForeignKeyDelete() = runTest {
         val entity = FileSyncProgressEntity(
-            workerId = "workerId",
             courseId = 1L,
             fileName = "File 1",
             progress = 0,
@@ -140,39 +136,9 @@ class FileSyncProgressDaoTest {
     }
 
     @Test
-    fun testFindByWorkerId() = runTest {
-        val entities = listOf(
-            FileSyncProgressEntity(
-                workerId = "workerId",
-                courseId = 1L,
-                fileName = "File 1",
-                progress = 0,
-                fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
-            ),
-            FileSyncProgressEntity(
-                workerId = "workerId2",
-                courseId = 1L,
-                fileName = "File 2",
-                progress = 0,
-                fileSize = 1000L,
-                progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
-            )
-        )
-        fileSyncProgressDao.insertAll(entities)
-
-        val result = fileSyncProgressDao.findByWorkerId("workerId")
-
-        assertEquals(entities[0], result)
-    }
-
-    @Test
     fun testFindByFileId() = runTest {
         val entities = listOf(
             FileSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 fileName = "File 1",
                 progress = 0,
@@ -181,7 +147,6 @@ class FileSyncProgressDaoTest {
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId2",
                 courseId = 1L,
                 fileName = "File 2",
                 progress = 0,
@@ -198,10 +163,9 @@ class FileSyncProgressDaoTest {
     }
 
     @Test
-    fun testFindByWorkerIdLiveData() = runTest {
+    fun testFindByFileIdLiveData() = runTest {
         val entities = listOf(
             FileSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 fileName = "File 1",
                 progress = 0,
@@ -210,18 +174,17 @@ class FileSyncProgressDaoTest {
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId2",
                 courseId = 1L,
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             )
         )
         fileSyncProgressDao.insertAll(entities)
 
-        val result = fileSyncProgressDao.findByWorkerIdLiveData("workerId")
+        val result = fileSyncProgressDao.findByFileIdLiveData(1L)
         result.observeForever { }
 
         assertEquals(entities[0], result.value)
@@ -232,7 +195,6 @@ class FileSyncProgressDaoTest {
         courseSyncProgressDao.insert(CourseSyncProgressEntity(2L, "workerId2", "Course 2"))
         val entities = listOf(
             FileSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 fileName = "File 1",
                 progress = 0,
@@ -241,22 +203,20 @@ class FileSyncProgressDaoTest {
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId2",
                 courseId = 1L,
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId3",
                 courseId = 2L,
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 3L
             )
         )
         fileSyncProgressDao.insertAll(entities)
@@ -272,7 +232,6 @@ class FileSyncProgressDaoTest {
         courseSyncProgressDao.insert(CourseSyncProgressEntity(2L, "workerId2", "Course 2"))
         val entities = listOf(
             FileSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 fileName = "File 1",
                 progress = 0,
@@ -281,22 +240,20 @@ class FileSyncProgressDaoTest {
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId2",
                 courseId = 1L,
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId3",
                 courseId = 2L,
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 3L
             )
         )
         fileSyncProgressDao.insertAll(entities)
@@ -311,7 +268,6 @@ class FileSyncProgressDaoTest {
     fun testDeleteAll() = runTest {
         val entities = listOf(
             FileSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 fileName = "File 1",
                 progress = 0,
@@ -320,13 +276,12 @@ class FileSyncProgressDaoTest {
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId2",
                 courseId = 1L,
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             )
         )
 
@@ -344,7 +299,6 @@ class FileSyncProgressDaoTest {
     fun testFindAdditionalFilesByCourseIdLiveDataTest() = runTest {
         val entities = listOf(
             FileSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 fileName = "File 1",
                 progress = 0,
@@ -353,33 +307,30 @@ class FileSyncProgressDaoTest {
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId2",
                 courseId = 1L,
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId3",
                 courseId = 1L,
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 1000L,
                 additionalFile = true,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 3L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId4",
                 courseId = 1L,
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 0,
                 additionalFile = true,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 4L
             )
         )
 
@@ -395,7 +346,6 @@ class FileSyncProgressDaoTest {
     fun testFindCourseFilesByCourseIdLiveData() = runTest {
         val entities = listOf(
             FileSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 fileName = "File 1",
                 progress = 0,
@@ -404,33 +354,30 @@ class FileSyncProgressDaoTest {
                 fileId = 1L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId2",
                 courseId = 1L,
                 fileName = "File 2",
                 progress = 0,
                 fileSize = 1000L,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 2L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId3",
                 courseId = 1L,
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 1000L,
                 additionalFile = true,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 3L
             ),
             FileSyncProgressEntity(
-                workerId = "workerId4",
                 courseId = 1L,
                 fileName = "File 3",
                 progress = 0,
                 fileSize = 0,
                 additionalFile = true,
                 progressState = ProgressState.IN_PROGRESS,
-                fileId = 1L
+                fileId = 4L
             )
         )
 
@@ -440,5 +387,44 @@ class FileSyncProgressDaoTest {
         result.observeForever { }
 
         assertEquals(entities.subList(0, 2), result.value)
+    }
+
+    @Test
+    fun testFindByRowId() = runTest {
+        val entities = listOf(
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 2L
+            )
+        )
+
+        fileSyncProgressDao.insertAll(entities)
+
+        val entity = FileSyncProgressEntity(
+            courseId = 1L,
+            fileName = "File 3",
+            progress = 0,
+            fileSize = 1000L,
+            progressState = ProgressState.IN_PROGRESS,
+            fileId = 3L
+        )
+
+        val rowId = fileSyncProgressDao.insert(entity)
+
+        val result = fileSyncProgressDao.findByRowId(rowId)
+
+        assertEquals(entity, result)
     }
 }

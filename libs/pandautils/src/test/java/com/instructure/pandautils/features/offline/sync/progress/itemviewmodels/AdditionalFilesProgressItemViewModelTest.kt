@@ -82,13 +82,35 @@ class AdditionalFilesProgressItemViewModelTest {
     fun `Add internal files sizes to total size when progress is starting`() {
         val courseUUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 1", 0, 1000, true, ProgressState.IN_PROGRESS, fileId = 1L),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 2", 0, 2000, true, ProgressState.IN_PROGRESS, fileId = 1L),
-            FileSyncProgressEntity(UUID.randomUUID().toString(), 1L, "File 3", 0, 0, true, ProgressState.IN_PROGRESS, fileId = 1L)
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS, fileId = 1L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 2000,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS, fileId = 2L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 0,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS, fileId = 3L
+            )
         )
         val fileLiveData = MutableLiveData(additionalFileSyncData)
 
-        val courseProgress = CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), additionalFilesStarted = true)
+        val courseProgress =
+            CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), additionalFilesStarted = true)
         val courseLiveData = MutableLiveData(courseProgress)
 
         every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
@@ -107,9 +129,33 @@ class AdditionalFilesProgressItemViewModelTest {
         val file2UUID = UUID.randomUUID()
         val file3UUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
-            FileSyncProgressEntity(file1UUID.toString(), 1L, "File 1", 0, 1000, true, ProgressState.IN_PROGRESS, fileId = 1L),
-            FileSyncProgressEntity(file2UUID.toString(), 1L, "File 2", 0, 2000, true, ProgressState.IN_PROGRESS, fileId = 1L),
-            FileSyncProgressEntity(file3UUID.toString(), 1L, "File 3", 0, 0, true, ProgressState.IN_PROGRESS, fileId = 1L),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 2000,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 2L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 0,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 3L
+            ),
         )
 
         val fileLiveData = MutableLiveData(additionalFileSyncData)
@@ -147,13 +193,33 @@ class AdditionalFilesProgressItemViewModelTest {
     @Test
     fun `Error state`() {
         val courseUUID = UUID.randomUUID()
-        val file1UUID = UUID.randomUUID()
-        val file2UUID = UUID.randomUUID()
-        val file3UUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
-            FileSyncProgressEntity(file1UUID.toString(), 1L, "File 1", 0, 1000, true, ProgressState.IN_PROGRESS, fileId = 1L),
-            FileSyncProgressEntity(file2UUID.toString(), 1L, "File 2", 0, 2000, true, ProgressState.IN_PROGRESS, fileId = 1L),
-            FileSyncProgressEntity(file3UUID.toString(), 1L, "File 3", 0, 0, true, ProgressState.ERROR, fileId = 1L),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 2000,
+                additionalFile = true,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 2L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 0,
+                additionalFile = true,
+                progressState = ProgressState.ERROR, fileId = 3L
+            ),
         )
 
         val fileLiveData = MutableLiveData(additionalFileSyncData)

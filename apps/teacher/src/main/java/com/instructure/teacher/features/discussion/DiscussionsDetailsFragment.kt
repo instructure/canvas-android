@@ -57,17 +57,7 @@ import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.events.DiscussionEntryEvent
 import com.instructure.teacher.factory.DiscussionsDetailsPresenterFactory
-import com.instructure.teacher.fragments.AssignmentSubmissionListFragment
-import com.instructure.teacher.fragments.CreateDiscussionFragment
-import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
-import com.instructure.teacher.fragments.DiscussionBottomSheetChoice
-import com.instructure.teacher.fragments.DiscussionBottomSheetMenuFragment
-import com.instructure.teacher.fragments.DiscussionsReplyFragment
-import com.instructure.teacher.fragments.DiscussionsUpdateFragment
-import com.instructure.teacher.fragments.DueDatesFragment
-import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
-import com.instructure.teacher.fragments.InternalWebViewFragment
-import com.instructure.teacher.fragments.LtiLaunchFragment
+import com.instructure.teacher.fragments.*
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -271,8 +261,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             discussionRepliesWebViewWrapper.setInvisible()
 
-            repliesLoadHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {
-                discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
+            repliesLoadHtmlJob = discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, {formattedHtml ->
+                discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), formattedHtml, "text/html", "utf-8", null)
             }) {
                 LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
             }
@@ -690,10 +680,10 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         if (APIHelper.hasNetworkConnection()) {
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.discussions_delete_warning)
-            builder.setPositiveButton(android.R.string.yes) { _, _ ->
+            builder.setPositiveButton(android.R.string.ok) { _, _ ->
                 presenter.deleteDiscussionEntry(id)
             }
-            builder.setNegativeButton(android.R.string.no) { _, _ -> }
+            builder.setNegativeButton(android.R.string.cancel) { _, _ -> }
             val dialog = builder.create()
             dialog.setOnShowListener {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)

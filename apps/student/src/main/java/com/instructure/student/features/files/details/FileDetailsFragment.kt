@@ -119,17 +119,7 @@ class FileDetailsFragment : ParentFragment() {
     private fun setupClickListeners() {
         binding.openButton.setOnClickListener {
             file?.let { fileFolder ->
-                when {
-                    fileFolder.isLocalFile -> {
-                        openLocalMedia(
-                            fileFolder.contentType,
-                            fileFolder.url,
-                            fileFolder.displayName,
-                            canvasContext
-                        )
-                    }
-                    else -> openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, canvasContext)
-                }
+                openMedia(fileFolder.contentType, fileFolder.url, fileFolder.displayName, canvasContext, fileFolder.isLocalFile)
                 markAsRead()
             }
         }

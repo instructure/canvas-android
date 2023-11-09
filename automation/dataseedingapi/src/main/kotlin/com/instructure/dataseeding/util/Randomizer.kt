@@ -122,6 +122,8 @@ object Randomizer {
 
     fun randomTextFileContents() = faker.lorem().paragraph(20)
 
+    fun randomLargeTextFileContents() = faker.lorem().paragraph(100000)
+
     /** Creates a random page title with a UUID to avoid Canvas URL collisions */
     fun randomPageTitle(): String = faker.gameOfThrones().house() + " " + randomUUID()
 

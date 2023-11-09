@@ -56,7 +56,7 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
         (requireContext() as Activity).requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
         setShouldAuthenticateUponLoad(true)
-        setShouldRouteInternally(false)
+        shouldRouteInternally = false
         setShouldLoadUrl(false)
         canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)

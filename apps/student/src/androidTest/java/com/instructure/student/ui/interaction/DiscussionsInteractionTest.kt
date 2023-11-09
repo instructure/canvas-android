@@ -19,18 +19,8 @@ package com.instructure.student.ui.interaction
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
-import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
-import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.canvasapi2.models.CourseSettings
-import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.canvasapi2.models.RemoteFile
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -761,7 +751,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
         if (enableDiscussionTopicCreation) {
             data.courses.values.forEach { course ->
-                course.permissions = CanvasContextPermission(canCreateDiscussionTopic = true)
+                data.addCoursePermissions(course.id, CanvasContextPermission(canCreateDiscussionTopic = true))
             }
         }
         val course1 = data.courses.values.first()

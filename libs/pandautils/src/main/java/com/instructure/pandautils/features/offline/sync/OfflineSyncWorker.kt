@@ -23,7 +23,9 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -44,11 +46,12 @@ import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
 import com.instructure.pandautils.room.offline.entities.EnrollmentState
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import java.io.File
+import java.util.UUID
 import kotlin.random.Random
 
 const val COURSE_IDS = "course-ids"
@@ -70,14 +73,14 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val apiPrefs: ApiPrefs,
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao,
-    private val syncRouter: SyncRouter
+    private val syncRouter: SyncRouter,
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val notificationId = Random.nextInt()
 
     override suspend fun doWork(): Result {
-        if (!featureFlagProvider.offlineEnabled()) return Result.success()
+        if (!featureFlagProvider.offlineEnabled() && apiPrefs.user == null) return Result.success()
 
         val dashboardCards =
             courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
@@ -148,17 +151,18 @@ class OfflineSyncWorker @AssistedInject constructor(
         workManager.beginWith(courseWorkers)
             .enqueue()
 
+        val workerIds = courseWorkers.map { it.id }
+
         while (true) {
-            kotlinx.coroutines.delay(1000)
+            delay(1000)
+            val infos = workManager.getWorkInfos(WorkQuery.fromIds(workerIds)).get()
 
-            val runningCourseProgresses = courseSyncProgressDao.findAll()
-            val runningFileProgresses = fileSyncProgressDao.findAll()
+            if (infos.isEmpty()) break
 
-            if (runningCourseProgresses.all { it.progressState.isFinished() } && runningFileProgresses.all { it.progressState.isFinished() }) {
-                val itemCount = runningCourseProgresses.size
-                val isSuccess =
-                    runningCourseProgresses.all { it.progressState == ProgressState.COMPLETED } && runningFileProgresses.all { it.progressState == ProgressState.COMPLETED }
-                showNotification(itemCount, isSuccess)
+            if (infos.any { it.state == WorkInfo.State.CANCELLED }) break
+
+            if (infos.all { it.state.isFinished }) {
+                showNotification(infos.size, infos.all { it.state == WorkInfo.State.SUCCEEDED })
                 break
             }
         }
@@ -220,5 +224,6 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     companion object {
         const val CHANNEL_ID = "syncChannel"
+        const val TAG = "OfflineSyncWorker"
     }
 }

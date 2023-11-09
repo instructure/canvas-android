@@ -68,13 +68,13 @@ class ModuleCompletionRequirementDaoTest {
 
         moduleCompletionRequirementDao.insert(
             ModuleCompletionRequirementEntity(
-                ModuleCompletionRequirement(id = 1, minScore = 10.0), 1
+                ModuleCompletionRequirement(id = 1, minScore = 10.0), 1, 1
             )
         )
 
         moduleCompletionRequirementDao.insert(
             ModuleCompletionRequirementEntity(
-                ModuleCompletionRequirement(id = 2, minScore = 20.0), 2
+                ModuleCompletionRequirement(id = 2, minScore = 20.0), 2, 1
             )
         )
 
@@ -92,13 +92,13 @@ class ModuleCompletionRequirementDaoTest {
 
         moduleCompletionRequirementDao.insert(
             ModuleCompletionRequirementEntity(
-                ModuleCompletionRequirement(id = 1, minScore = 10.0), 1
+                ModuleCompletionRequirement(id = 1, minScore = 10.0), 1, 1
             )
         )
 
         moduleCompletionRequirementDao.insert(
             ModuleCompletionRequirementEntity(
-                ModuleCompletionRequirement(id = 2, minScore = 20.0), 1
+                ModuleCompletionRequirement(id = 2, minScore = 20.0), 1, 1
             )
         )
 
@@ -109,19 +109,19 @@ class ModuleCompletionRequirementDaoTest {
     }
 
     @Test(expected = SQLiteConstraintException::class)
-    fun testModuleItemForeignKey() = runTest {
+    fun testCourseForeignKey() = runTest {
         moduleCompletionRequirementDao.insert(
-            ModuleCompletionRequirementEntity(ModuleCompletionRequirement(id = 1, minScore = 10.0), 2)
+            ModuleCompletionRequirementEntity(ModuleCompletionRequirement(id = 1, minScore = 10.0), 2, 2)
         )
     }
 
     @Test
     fun testModuleItemCascade() = runTest {
         moduleCompletionRequirementDao.insert(
-            ModuleCompletionRequirementEntity(ModuleCompletionRequirement(id = 1, minScore = 10.0), 1)
+            ModuleCompletionRequirementEntity(ModuleCompletionRequirement(id = 1, minScore = 10.0), 1, 1)
         )
 
-        moduleObjectDao.delete(ModuleObjectEntity(ModuleObject(id = 1), 1))
+        courseDao.deleteByIds(listOf(1))
 
         val result = moduleCompletionRequirementDao.findByModuleId(1)
 

@@ -19,30 +19,29 @@ package com.instructure.pandautils.di
 
 import android.content.Context
 import androidx.work.WorkManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.FileDownloadAPI
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
+import com.instructure.pandautils.features.offline.sync.FileSync
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 class OfflineSyncModule {
-
-    @Provides
-    fun provideOfflineSyncHelper(
-        workManager: WorkManager,
-        syncSettingsFacade: SyncSettingsFacade,
-        apiPrefs: ApiPrefs
-    ): OfflineSyncHelper {
-        return OfflineSyncHelper(workManager, syncSettingsFacade, apiPrefs)
-    }
 
     @Provides
     fun provideAggregateProgressObserver(
@@ -51,5 +50,30 @@ class OfflineSyncModule {
         fileSyncProgressDao: FileSyncProgressDao
     ): AggregateProgressObserver {
         return AggregateProgressObserver(context, courseSyncProgressDao, fileSyncProgressDao)
+    }
+
+    @Provides
+    fun provideFileSync(
+        @ApplicationContext context: Context,
+        fileDownloadApi: FileDownloadAPI,
+        localFileDao: LocalFileDao,
+        fileFolderDao: FileFolderDao,
+        firebaseCrashlytics: FirebaseCrashlytics,
+        fileSyncProgressDao: FileSyncProgressDao,
+        fileSyncSettingsDao: FileSyncSettingsDao,
+        courseSyncProgressDao: CourseSyncProgressDao,
+        fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    ): FileSync {
+        return FileSync(
+            context,
+            fileDownloadApi,
+            localFileDao,
+            fileFolderDao,
+            firebaseCrashlytics,
+            fileSyncProgressDao,
+            fileSyncSettingsDao,
+            courseSyncProgressDao,
+            fileFolderApi
+        )
     }
 }

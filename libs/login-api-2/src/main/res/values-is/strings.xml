@@ -111,8 +111,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Fjarlægja fyrri notanda</string>
     <string name="accountDomainFooter">Finnurðu ekki skólann þinn? Prufaðu að slá inn alla vefslóð skólans.</string>
-    <string name="accountDomainFooterLink">Smelltu hér til að fá hjálp.</string>
-
+    <string name="accountDomainFooterLoginHelp">Smelltu hér fyrir hjálp við innskráningu.</string>
     <string name="login_noInternetConnectionTitle">Engin nettenging</string>
     <string name="login_noInternetConnectionMessage">Þessi aðgerð krefst nettengingar.</string>
     <string name="empty_feedback">Efni og lýsingar er krafist til að senda inn endurgjöf.</string>
