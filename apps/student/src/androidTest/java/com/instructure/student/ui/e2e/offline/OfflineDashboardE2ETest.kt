@@ -31,7 +31,7 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class OfflineDashboardE2ETests : StudentTest() {
+class OfflineDashboardE2ETest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit

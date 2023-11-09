@@ -44,90 +44,73 @@ class OfflineSyncSettingsPage : BasePage(R.id.syncSettingsPage) {
     private val syncFrequencyLabel by OnViewWithId(R.id.syncFrequencyLabel)
     private val wifiOnlySwitch by OnViewWithId(R.id.wifiOnlySwitch)
 
-    //OfflineMethod
     fun clickAutoSyncSwitch() {
         autoSyncSwitch.click()
     }
 
-    //OfflineMethod
     fun openSyncFrequencySettingsDialog() {
         syncFrequencyLabel.click()
     }
 
-    //OfflineMethod
     fun clickSyncFrequencyDialogOption(stringResId: Int) {
         onView(withText(stringResId) + withParent(R.id.select_dialog_listview)).click()
     }
 
-    //OfflineMethod
     fun clickWifiOnlySwitch() {
         wifiOnlySwitch.click()
     }
 
-    //OfflineMethod
     fun clickTurnOff() {
         onViewWithText(R.string.syncSettings_wifiConfirmationPositiveButton).click()
     }
 
-    //OfflineMethod
     fun assertTurnOffWifiOnlyDialogTexts() {
         waitForView(withId(R.id.alertTitle) + withText(R.string.syncSettings_wifiConfirmationTitle)).assertDisplayed()
         waitForView(withText(R.string.syncSettings_wifiConfirmationPositiveButton) + withAncestor(R.id.buttonPanel)).assertDisplayed()
         onView(withText(R.string.synySettings_wifiConfirmationMessage)).assertDisplayed()
     }
 
-    //OfflineMethod
     fun assertFurtherSettingsIsDisplayed() {
         furtherSettings.assertDisplayed()
     }
 
-    //OfflineMethod
     fun assertFurtherSettingsNotDisplayed() {
         furtherSettings.assertNotDisplayed()
     }
 
-    //OfflineMethod
     fun assertSyncFrequencyLabelText(expected: Int) {
         syncFrequencyLabel.assertHasText(expected)
     }
 
-    //OfflineMethod
     fun assertSyncFrequencyTitleText() {
         onView(withText(R.string.syncSettings_syncFrequencyTitle) + withParent(R.id.syncFrequencyContainer)).assertDisplayed()
     }
 
-    //OfflineMethod
     fun assertWifiOnlySwitchIsChecked() {
         wifiOnlySwitch.check(matches(isChecked()))
     }
 
-    //OfflineMethod
     fun assertWifiOnlySwitchIsNotChecked() {
         wifiOnlySwitch.check(matches(isNotChecked()))
     }
 
-    //OfflineMethod
     fun assertAutoSyncSwitchIsChecked() {
         autoSyncSwitch.check(matches(isChecked()))
     }
 
-    //OfflineMethod
     fun assertAutoSyncSwitchIsNotChecked() {
         autoSyncSwitch.check(matches(isNotChecked()))
     }
 
-    //OfflineMethod
     fun assertDialogDisplayedWithTitle(title: String) {
         onViewWithText(title).assertDisplayed()
     }
 
-    //OfflineMethod
     fun assertSyncSettingsToolbarTitle() {
         onView(withText(com.instructure.student.R.string.syncSettings_toolbarTitle) + withParent(withId(
             com.instructure.student.R.id.toolbar) + withAncestor(com.instructure.student.R.id.syncSettingsPage))).assertDisplayed()
     }
 
-    //OfflineMethod
     fun assertSyncSettingsPageDescriptions() {
         onView(withText(R.string.syncSettings_autoContentSyncDescription)).assertDisplayed()
         onView(withText(R.string.syncSettings_syncFrequencyDescription)).assertDisplayed()
