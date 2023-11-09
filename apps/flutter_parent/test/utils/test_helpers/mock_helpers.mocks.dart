@@ -20,6 +20,7 @@ import 'package:firebase_remote_config_platform_interface/firebase_remote_config
     as _i14;
 import 'package:fluro/fluro.dart' as _i84;
 import 'package:flutter/foundation.dart' as _i11;
+import 'package:flutter/gestures.dart' as _i142;
 import 'package:flutter/material.dart' as _i17;
 import 'package:flutter/services.dart' as _i15;
 import 'package:flutter_downloader/flutter_downloader.dart' as _i133;
@@ -9195,4 +9196,320 @@ class MockRemoteConfigInteractor extends _i1.Mock
         ),
         returnValueForMissingStub: null,
       );
+}
+
+/// A class which mocks [WebViewPlatformController].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWebViewPlatformController extends _i1.Mock
+    implements _i16.WebViewPlatformController {
+  @override
+  _i8.Future<void> loadFile(String? absoluteFilePath) => (super.noSuchMethod(
+        Invocation.method(
+          #loadFile,
+          [absoluteFilePath],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> loadFlutterAsset(String? key) => (super.noSuchMethod(
+        Invocation.method(
+          #loadFlutterAsset,
+          [key],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> loadHtmlString(
+    String? html, {
+    String? baseUrl,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #loadHtmlString,
+          [html],
+          {#baseUrl: baseUrl},
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> loadUrl(
+    String? url,
+    Map<String, String>? headers,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #loadUrl,
+          [
+            url,
+            headers,
+          ],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> loadRequest(_i16.WebViewRequest? request) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #loadRequest,
+          [request],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> updateSettings(_i16.WebSettings? setting) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateSettings,
+          [setting],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<String?> currentUrl() => (super.noSuchMethod(
+        Invocation.method(
+          #currentUrl,
+          [],
+        ),
+        returnValue: _i8.Future<String?>.value(),
+        returnValueForMissingStub: _i8.Future<String?>.value(),
+      ) as _i8.Future<String?>);
+  @override
+  _i8.Future<bool> canGoBack() => (super.noSuchMethod(
+        Invocation.method(
+          #canGoBack,
+          [],
+        ),
+        returnValue: _i8.Future<bool>.value(false),
+        returnValueForMissingStub: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
+  @override
+  _i8.Future<bool> canGoForward() => (super.noSuchMethod(
+        Invocation.method(
+          #canGoForward,
+          [],
+        ),
+        returnValue: _i8.Future<bool>.value(false),
+        returnValueForMissingStub: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
+  @override
+  _i8.Future<void> goBack() => (super.noSuchMethod(
+        Invocation.method(
+          #goBack,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> goForward() => (super.noSuchMethod(
+        Invocation.method(
+          #goForward,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> reload() => (super.noSuchMethod(
+        Invocation.method(
+          #reload,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> clearCache() => (super.noSuchMethod(
+        Invocation.method(
+          #clearCache,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<String> evaluateJavascript(String? javascript) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #evaluateJavascript,
+          [javascript],
+        ),
+        returnValue: _i8.Future<String>.value(''),
+        returnValueForMissingStub: _i8.Future<String>.value(''),
+      ) as _i8.Future<String>);
+  @override
+  _i8.Future<void> runJavascript(String? javascript) => (super.noSuchMethod(
+        Invocation.method(
+          #runJavascript,
+          [javascript],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<String> runJavascriptReturningResult(String? javascript) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #runJavascriptReturningResult,
+          [javascript],
+        ),
+        returnValue: _i8.Future<String>.value(''),
+        returnValueForMissingStub: _i8.Future<String>.value(''),
+      ) as _i8.Future<String>);
+  @override
+  _i8.Future<void> addJavascriptChannels(Set<String>? javascriptChannelNames) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addJavascriptChannels,
+          [javascriptChannelNames],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> removeJavascriptChannels(
+          Set<String>? javascriptChannelNames) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #removeJavascriptChannels,
+          [javascriptChannelNames],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<String?> getTitle() => (super.noSuchMethod(
+        Invocation.method(
+          #getTitle,
+          [],
+        ),
+        returnValue: _i8.Future<String?>.value(),
+        returnValueForMissingStub: _i8.Future<String?>.value(),
+      ) as _i8.Future<String?>);
+  @override
+  _i8.Future<void> scrollTo(
+    int? x,
+    int? y,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #scrollTo,
+          [
+            x,
+            y,
+          ],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<void> scrollBy(
+    int? x,
+    int? y,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #scrollBy,
+          [
+            x,
+            y,
+          ],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+  @override
+  _i8.Future<int> getScrollX() => (super.noSuchMethod(
+        Invocation.method(
+          #getScrollX,
+          [],
+        ),
+        returnValue: _i8.Future<int>.value(0),
+        returnValueForMissingStub: _i8.Future<int>.value(0),
+      ) as _i8.Future<int>);
+  @override
+  _i8.Future<int> getScrollY() => (super.noSuchMethod(
+        Invocation.method(
+          #getScrollY,
+          [],
+        ),
+        returnValue: _i8.Future<int>.value(0),
+        returnValueForMissingStub: _i8.Future<int>.value(0),
+      ) as _i8.Future<int>);
+}
+
+/// A class which mocks [WebViewPlatform].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWebViewPlatform extends _i1.Mock implements _i16.WebViewPlatform {
+  @override
+  _i17.Widget build({
+    required _i17.BuildContext? context,
+    required _i16.CreationParams? creationParams,
+    required _i16.WebViewPlatformCallbacksHandler?
+        webViewPlatformCallbacksHandler,
+    required _i16.JavascriptChannelRegistry? javascriptChannelRegistry,
+    _i16.WebViewPlatformCreatedCallback? onWebViewPlatformCreated,
+    Set<_i11.Factory<_i142.OneSequenceGestureRecognizer>>? gestureRecognizers,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #build,
+          [],
+          {
+            #context: context,
+            #creationParams: creationParams,
+            #webViewPlatformCallbacksHandler: webViewPlatformCallbacksHandler,
+            #javascriptChannelRegistry: javascriptChannelRegistry,
+            #onWebViewPlatformCreated: onWebViewPlatformCreated,
+            #gestureRecognizers: gestureRecognizers,
+          },
+        ),
+        returnValue: _FakeWidget_30(
+          this,
+          Invocation.method(
+            #build,
+            [],
+            {
+              #context: context,
+              #creationParams: creationParams,
+              #webViewPlatformCallbacksHandler: webViewPlatformCallbacksHandler,
+              #javascriptChannelRegistry: javascriptChannelRegistry,
+              #onWebViewPlatformCreated: onWebViewPlatformCreated,
+              #gestureRecognizers: gestureRecognizers,
+            },
+          ),
+        ),
+        returnValueForMissingStub: _FakeWidget_30(
+          this,
+          Invocation.method(
+            #build,
+            [],
+            {
+              #context: context,
+              #creationParams: creationParams,
+              #webViewPlatformCallbacksHandler: webViewPlatformCallbacksHandler,
+              #javascriptChannelRegistry: javascriptChannelRegistry,
+              #onWebViewPlatformCreated: onWebViewPlatformCreated,
+              #gestureRecognizers: gestureRecognizers,
+            },
+          ),
+        ),
+      ) as _i17.Widget);
+  @override
+  _i8.Future<bool> clearCookies() => (super.noSuchMethod(
+        Invocation.method(
+          #clearCookies,
+          [],
+        ),
+        returnValue: _i8.Future<bool>.value(false),
+        returnValueForMissingStub: _i8.Future<bool>.value(false),
+      ) as _i8.Future<bool>);
 }

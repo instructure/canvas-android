@@ -19,9 +19,7 @@
 // settings will correspond the specified values.
 import 'dart:io';
 
-import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +43,6 @@ import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
-import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
@@ -60,7 +57,6 @@ import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shel
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
-import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/help/help_screen_interactor.dart';
@@ -102,6 +98,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:video_player/video_player.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 @GenerateNiceMocks([
   MockSpec<AccountsApi>(),
@@ -189,6 +186,8 @@ import 'package:video_player/video_player.dart';
   MockSpec<OldAppMigration>(),
   MockSpec<HelpLinksApi>(),
   MockSpec<RemoteConfigInteractor>(),
+  MockSpec<WebViewPlatformController>(),
+  MockSpec<WebViewPlatform>()
 ])
 import 'mock_helpers.mocks.dart';
 
