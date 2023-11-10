@@ -131,7 +131,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         manageOfflineContentPage.assertCheckedStateOfItem("Announcements", MaterialCheckBox.STATE_UNCHECKED)
         manageOfflineContentPage.assertCheckedStateOfItem("Discussions", MaterialCheckBox.STATE_UNCHECKED)
 
-        Log.d(STEP_TAG, "Assert that the 'SELECT ALL' will be displayed after clicking the 'SELECT ALL' button.")
+        Log.d(STEP_TAG, "Assert that the 'SELECT ALL' will be displayed after clicking the 'DESELECT ALL' button.")
         manageOfflineContentPage.assertSelectButtonText(selectAll = true)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Open 'Global' Manage Offline Content page.")
@@ -186,7 +186,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         manageOfflineContentPage.assertCourseCountWithMatcher(2)
 
         Log.d(STEP_TAG, "Click on the 'Sync' button.")
-        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+        manageOfflineContentPage.clickOnSyncButton()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
         dashboardPage.waitForRender()

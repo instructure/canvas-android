@@ -16,12 +16,22 @@
  */
 package com.instructure.student.ui.pages
 
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.TextViewColorAssertion
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 
 class SettingsPage : BasePage(R.id.settingsFragment) {
-    private val toolbar by OnViewWithId(R.id.toolbar)
     private val profileSettingLabel by OnViewWithId(R.id.profileSettings)
     private val accountPreferencesLabel by OnViewWithId(R.id.accountPreferences)
     private val pushNotificationsLabel by OnViewWithId(R.id.pushNotifications)
@@ -81,15 +91,30 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
         appThemeStatus.check(TextViewColorAssertion(expectedTextColor))
     }
 
-    fun openOfflineContentPage() {
+    //OfflineMethod
+    fun openOfflineSyncSettingsPage() {
         offlineContent.scrollTo().click()
     }
 
+    //OfflineMethod
     fun assertOfflineContentDisplayed() {
         offlineContent.scrollTo().assertDisplayed()
     }
 
+    //OfflineMethod
     fun assertOfflineContentNotDisplayed() {
         offlineContent.assertNotDisplayed()
     }
+
+    //OfflineMethod
+    fun assertOfflineContentTitle() {
+        onView(withId(R.id.offlineContentTitle) + withText(R.string.offlineContent)).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertOfflineSyncSettingsStatus(expectedStatus: Int) {
+        onView(withId(R.id.offlineSyncSettingsStatus) + withText(expectedStatus) + withParent(R.id.offlineSyncSettingsContainer) +
+                hasSibling(withId(R.id.offlineSyncSettingsTitle) + withText(R.string.offlineSyncSettingsTitle))).assertDisplayed()
+    }
+
 }
