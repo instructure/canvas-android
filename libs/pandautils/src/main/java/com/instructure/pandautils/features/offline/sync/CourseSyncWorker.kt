@@ -19,7 +19,6 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import android.net.Uri
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -39,9 +38,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import java.io.File
-import java.lang.IllegalStateException
-import java.util.Date
 
 @HiltWorker
 class CourseSyncWorker @AssistedInject constructor(
@@ -488,7 +484,7 @@ class CourseSyncWorker @AssistedInject constructor(
         it: ModuleItem,
         params: RestParams
     ) {
-        if (it.pageUrl != null && pageDao.findByUrl(it.pageUrl!!) == null) {
+        if (it.pageUrl != null && pageDao.findByUrlAndCourse(it.pageUrl!!, courseId) == null) {
             val page = pageApi.getDetailedPage(courseId, it.pageUrl!!, params).dataOrNull
             page?.body = parseHtmlContent(page?.body, courseId)
             page?.let { pageFacade.insertPage(it, courseId) }
