@@ -307,11 +307,7 @@ class DashboardFragment : ParentFragment() {
         recyclerBinding.listView.clipToPadding = false
 
         emptyCoursesView.onClickAddCourses {
-            if (!APIHelper.hasNetworkConnection()) {
-                toast(R.string.notAvailableOffline)
-            } else {
-                RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
-            }
+            RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
         }
     }
 
