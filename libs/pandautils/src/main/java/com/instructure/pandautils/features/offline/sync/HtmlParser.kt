@@ -63,8 +63,9 @@ class HtmlParser(
                 resultHtml = newHtml
                 if (shouldSyncFile) internalFileIds.add(fileId)
             } else {
-                val fileName = Uri.parse(imageUrl).lastPathSegment
-                if (fileName != null) {
+                val fileUri = Uri.parse(imageUrl)
+                val fileName = fileUri.lastPathSegment
+                if (fileName != null && fileUri.scheme == "https") { // We don't allow cleartext traffic in the app.
                     resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePathForExternalFile(fileName, courseId)}")
                     externalFileUrls.add(imageUrl)
                 }
