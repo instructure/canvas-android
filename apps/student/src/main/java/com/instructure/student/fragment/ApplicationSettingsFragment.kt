@@ -28,7 +28,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
-import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
@@ -182,11 +181,8 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     private fun setUpSyncSettings() {
         lifecycleScope.launch {
-            if (!featureFlagProvider.offlineEnabled()) {
-                binding.offlineContentDivider.setGone()
-                binding.offlineContentTitle.setGone()
-                binding.offlineSyncSettingsContainer.setGone()
-            } else {
+            val offlineEnabled = (activity as? SettingsActivity)?.offlineEnabled ?: false
+            if (offlineEnabled) {
                 syncSettingsFacade.getSyncSettingsListenable().observe(viewLifecycleOwner) { syncSettings ->
                     if (syncSettings == null) {
                         binding.offlineSyncSettingsContainer.setGone()
@@ -202,6 +198,10 @@ class ApplicationSettingsFragment : ParentFragment() {
                 binding.offlineSyncSettingsContainer.onClick {
                     addFragment(SyncSettingsFragment.newInstance())
                 }
+            } else {
+                binding.offlineContentDivider.setGone()
+                binding.offlineContentTitle.setGone()
+                binding.offlineSyncSettingsContainer.setGone()
             }
         }
     }
