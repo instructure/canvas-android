@@ -300,6 +300,7 @@ class LoginE2ETest : StudentTest() {
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
 
+        Thread.sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
         if(lastSchoolSaved) {
             Log.d(STEP_TAG,"Click 'Find Another School' button.")
             loginLandingPage.clickFindAnotherSchoolButton()
