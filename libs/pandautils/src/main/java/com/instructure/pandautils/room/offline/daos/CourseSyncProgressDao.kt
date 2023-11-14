@@ -46,8 +46,8 @@ interface CourseSyncProgressDao {
     @Query("SELECT * FROM CourseSyncProgressEntity WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): CourseSyncProgressEntity?
 
-    @Query("SELECT * FROM CourseSyncProgressEntity WHERE workerId = :workerId")
-    fun findByWorkerIdLiveData(workerId: String): LiveData<CourseSyncProgressEntity?>
+    @Query("SELECT * FROM CourseSyncProgressEntity WHERE courseId = :courseId")
+    fun findByCourseIdLiveData(courseId: Long): LiveData<CourseSyncProgressEntity?>
 
     @Query("DELETE FROM CourseSyncProgressEntity")
     suspend fun deleteAll()

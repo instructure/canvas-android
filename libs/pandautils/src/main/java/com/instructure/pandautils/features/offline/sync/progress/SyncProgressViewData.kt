@@ -34,7 +34,6 @@ data class SyncProgressViewData(val items: List<CourseProgressItemViewModel>)
 data class CourseProgressViewData(
     val courseName: String,
     val courseId: Long,
-    val workerId: String,
     val files: FilesTabProgressItemViewModel?,
     val additionalFiles: AdditionalFilesProgressItemViewModel,
     @Bindable var tabs: List<TabProgressItemViewModel>? = null,
@@ -62,7 +61,7 @@ data class CourseProgressViewData(
 data class TabProgressViewData(
     val tabId: String,
     val tabName: String,
-    val workerId: String,
+    val courseId: Long,
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
 ) : BaseObservable() {
 
@@ -92,7 +91,7 @@ data class FileSyncProgressViewData(
 }
 
 data class FileTabProgressViewData(
-    val courseWorkerId: String,
+    val courseId: Long,
     var items: List<FileSyncProgressItemViewModel>,
     @Bindable var totalSize: String = "",
     @Bindable var progress: Int = 0,
@@ -112,7 +111,7 @@ data class FileTabProgressViewData(
 }
 
 data class AdditionalFilesProgressViewData(
-    val courseWorkerId: String,
+    val courseId: Long,
     @Bindable var totalSize: String = "",
     @Bindable var state: ProgressState = ProgressState.IN_PROGRESS
 ) : BaseObservable() {

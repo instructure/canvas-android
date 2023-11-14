@@ -68,27 +68,27 @@ data class CourseProgressItemViewModel(
         courseSyncProgressEntity = courseProgress
 
         if (data.tabs == null && courseProgress.tabs.isNotEmpty()) {
-            createTabs(courseProgress.tabs, courseProgress.workerId)
+            createTabs(courseProgress.tabs, courseProgress.courseId)
         }
 
         updateProgress()
     }
 
     init {
-        courseProgressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.workerId)
+        courseProgressLiveData = courseSyncProgressDao.findByCourseIdLiveData(data.courseId)
         courseProgressLiveData?.observeForever(progressObserver)
 
         fileProgressLiveData = fileSyncProgressDao.findByCourseIdLiveData(data.courseId)
         fileProgressLiveData?.observeForever(fileProgressObserver)
     }
 
-    private fun createTabs(tabs: Map<String, TabSyncData>, courseWorkerId: String) {
+    private fun createTabs(tabs: Map<String, TabSyncData>, courseId: Long) {
         val tabViewModels = tabs.map { tabEntry ->
             TabProgressItemViewModel(
                 TabProgressViewData(
                     tabEntry.key,
                     tabEntry.value.tabName,
-                    courseWorkerId,
+                    courseId,
                     tabEntry.value.state
                 ),
                 courseSyncProgressDao

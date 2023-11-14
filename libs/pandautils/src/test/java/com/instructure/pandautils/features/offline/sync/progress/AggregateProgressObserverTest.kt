@@ -30,13 +30,16 @@ import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.slot
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
 
 class AggregateProgressObserverTest {
 
@@ -65,10 +68,8 @@ class AggregateProgressObserverTest {
 
     @Test
     fun `Course update aggregate progress`() {
-        val course1UUID = UUID.randomUUID().toString()
         var courseProgress = CourseSyncProgressEntity(
             1L,
-            course1UUID,
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
             progressState = ProgressState.IN_PROGRESS
@@ -100,22 +101,14 @@ class AggregateProgressObserverTest {
 
     @Test
     fun `Aggregate progress updates`() {
-        val course1Id = UUID.randomUUID()
-        val course2Id = UUID.randomUUID()
-
-        val file1Id = UUID.randomUUID()
-        val file2Id = UUID.randomUUID()
-
         var course1 = CourseSyncProgressEntity(
             1L,
-            course1Id.toString(),
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
             progressState = ProgressState.IN_PROGRESS
         )
         var course2 = CourseSyncProgressEntity(
             2L,
-            course2Id.toString(),
             "Course 2",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
             progressState = ProgressState.IN_PROGRESS
@@ -182,15 +175,8 @@ class AggregateProgressObserverTest {
 
     @Test
     fun `Update total size and progress with additional files`() {
-        val course1Id = UUID.randomUUID()
-
-        val file1Id = UUID.randomUUID()
-        val file2Id = UUID.randomUUID()
-        val file3Id = UUID.randomUUID()
-
         var course1Progress = CourseSyncProgressEntity(
             1L,
-            course1Id.toString(),
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
             additionalFilesStarted = true,
@@ -298,11 +284,8 @@ class AggregateProgressObserverTest {
 
     @Test
     fun `Error state`() {
-        val course1UUID = UUID.randomUUID().toString()
-
         var course1 = CourseSyncProgressEntity(
             1L,
-            course1UUID,
             "Course 1",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
             progressState = ProgressState.IN_PROGRESS
