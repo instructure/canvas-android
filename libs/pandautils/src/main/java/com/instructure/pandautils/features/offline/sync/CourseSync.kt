@@ -113,6 +113,7 @@ class CourseSync(
 
     private val additionalFileIdsToSync = mutableMapOf<Long, Set<Long>>()
     private val externalFilesToSync = mutableMapOf<Long, Set<String>>()
+    private val failedTabsPerCourse = mutableMapOf<Long, Set<String>>()
 
     private var isStopped = false
         set(value) = synchronized(this) {
@@ -128,13 +129,13 @@ class CourseSync(
     }
 
     private suspend fun syncCourse(courseId: Long) {
+        additionalFileIdsToSync[courseId] = emptySet()
+        externalFilesToSync[courseId] = emptySet()
+
         val courseSettingsWithFiles =
             courseSyncSettingsDao.findWithFilesById(courseId) ?: return
         val courseSettings = courseSettingsWithFiles.courseSyncSettings
         val course = fetchCourseDetails(courseId)
-
-        additionalFileIdsToSync[courseId] = emptySet()
-        externalFilesToSync[courseId] = emptySet()
 
         initProgress(courseSettings, course)
 
@@ -519,6 +520,7 @@ class CourseSync(
             e.printStackTrace()
             updateTabError(courseId, *tabIds)
             firebaseCrashlytics.recordException(e)
+            failedTabsPerCourse[courseId] = failedTabsPerCourse[courseId].orEmpty() + tabIds
         }
     }
 
@@ -527,7 +529,9 @@ class CourseSync(
         it: ModuleItem,
         params: RestParams
     ) {
-        if (it.pageUrl != null && pageDao.findByUrlAndCourse(it.pageUrl!!, courseId) == null) {
+        // If the pages failed we might already have the page, but we need to get it again to make sure it's up to date
+        // and download the files inside because those are always deleted
+        if (it.pageUrl != null && (pageDao.findByUrlAndCourse(it.pageUrl!!, courseId) == null || failedTabsPerCourse[courseId]?.contains(Tab.PAGES_ID) == true)) {
             val page = pageApi.getDetailedPage(courseId, it.pageUrl!!, params).dataOrNull
             page?.body = parseHtmlContent(page?.body, courseId)
             page?.let { pageFacade.insertPage(it, courseId) }
@@ -556,7 +560,9 @@ class CourseSync(
         it: ModuleItem,
         params: RestParams
     ) {
-        if (quizDao.findById(it.contentId) == null) {
+        // If the pages failed we might already have the page, but we need to get it again to make sure it's up to date
+        // and download the files inside because those are always deleted
+        if (quizDao.findById(it.contentId) == null || failedTabsPerCourse[courseId]?.contains(Tab.QUIZZES_ID) == true) {
             val quiz = quizApi.getQuiz(courseId, it.contentId, params).dataOrNull
             quiz?.description = parseHtmlContent(quiz?.description, courseId)
             quiz?.let { quizDao.insert(QuizEntity(it, courseId)) }
