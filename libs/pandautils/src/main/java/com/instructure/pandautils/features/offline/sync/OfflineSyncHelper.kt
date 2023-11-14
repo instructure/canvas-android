@@ -75,13 +75,19 @@ class OfflineSyncHelper(
         )
     }
 
-    fun syncOnce(courseIds: List<Long>) {
+    suspend fun syncOnce(courseIds: List<Long>) {
+        val syncSettings = syncSettingsFacade.getSyncSettings()
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(if (syncSettings.wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
         val inputData = Data.Builder()
             .putLongArray(COURSE_IDS, courseIds.toLongArray())
             .build()
         val workRequest = OneTimeWorkRequest.Builder(OfflineSyncWorker::class.java)
             .addTag(OfflineSyncWorker.ONE_TIME_TAG)
             .setInputData(inputData)
+            .setConstraints(constraints)
             .build()
         workManager.enqueue(workRequest)
     }

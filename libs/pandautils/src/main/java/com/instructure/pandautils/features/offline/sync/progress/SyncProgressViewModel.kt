@@ -121,7 +121,7 @@ class SyncProgressViewModel @Inject constructor(
         }
     }
 
-    private fun retry() {
+    private suspend fun retry() {
         offlineSyncHelper.syncOnce(courseIds)
     }
 
@@ -131,9 +131,9 @@ class SyncProgressViewModel @Inject constructor(
                 viewModelScope.launch {
                     courseSyncProgressDao.deleteAll()
                     fileSyncProgressDao.deleteAll()
+                    retry()
+                    _events.postValue(Event(SyncProgressAction.Back))
                 }
-                retry()
-                _events.postValue(Event(SyncProgressAction.Back))
             }
 
             ProgressState.IN_PROGRESS -> _events.postValue(Event(SyncProgressAction.CancelConfirmation))
