@@ -46,7 +46,7 @@ data class FilesTabProgressItemViewModel(
     override val viewType = ViewType.COURSE_FILE_TAB_PROGRESS.viewType
 
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
-    private val courseProgressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.courseWorkerId)
+    private val courseProgressLiveData = courseSyncProgressDao.findByCourseIdLiveData(data.courseId)
 
     private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> { progresses ->
         if (progresses.isEmpty()) {

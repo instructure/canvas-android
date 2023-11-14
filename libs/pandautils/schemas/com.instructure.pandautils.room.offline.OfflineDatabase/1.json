@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8fa86dcf6c28df2a7e77dee7a0e3c7c6",
+    "identityHash": "a5fc40aae4d227313a98d9a89f41cfdd",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -5393,18 +5393,12 @@
       },
       {
         "tableName": "CourseSyncProgressEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `workerId` TEXT NOT NULL, `courseName` TEXT NOT NULL, `tabs` TEXT NOT NULL, `additionalFilesStarted` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`courseId` INTEGER NOT NULL, `courseName` TEXT NOT NULL, `tabs` TEXT NOT NULL, `additionalFilesStarted` INTEGER NOT NULL, `progressState` TEXT NOT NULL, PRIMARY KEY(`courseId`))",
         "fields": [
           {
             "fieldPath": "courseId",
             "columnName": "courseId",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "workerId",
-            "columnName": "workerId",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -5513,7 +5507,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8fa86dcf6c28df2a7e77dee7a0e3c7c6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a5fc40aae4d227313a98d9a89f41cfdd')"
     ]
   }
 }

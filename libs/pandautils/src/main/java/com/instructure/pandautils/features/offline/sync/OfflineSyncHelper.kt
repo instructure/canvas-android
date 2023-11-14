@@ -31,7 +31,6 @@ class OfflineSyncHelper(
 ) {
 
     suspend fun syncCourses(courseIds: List<Long>) {
-        cancelRunningWorkers()
         if (isWorkScheduled() || !syncSettingsFacade.getSyncSettings().autoSyncEnabled) {
             syncOnce(courseIds)
         } else {
@@ -70,7 +69,7 @@ class OfflineSyncHelper(
     }
 
     fun cancelRunningWorkers() {
-        workManager.cancelAllWorkByTag(CourseSyncWorker.TAG)
+        workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
     }
 
     private suspend fun isWorkScheduled(): Boolean {

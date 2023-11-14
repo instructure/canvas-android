@@ -89,11 +89,10 @@ class SyncProgressViewModel @Inject constructor(
         val data = CourseProgressViewData(
             courseName = courseSyncProgressEntity.courseName,
             courseId = courseSyncProgressEntity.courseId,
-            workerId = courseSyncProgressEntity.workerId,
             size = context.getString(R.string.syncProgress_syncQueued),
             files = if (courseSyncSettings?.files?.isNotEmpty() == true || courseSyncSettings?.courseSyncSettings?.fullFileSync == true) {
                     FilesTabProgressItemViewModel(
-                        data = FileTabProgressViewData(courseWorkerId = courseSyncProgressEntity.workerId, items = emptyList()),
+                        data = FileTabProgressViewData(courseId = courseSyncProgressEntity.courseId, items = emptyList()),
                         context = context,
                         courseSyncProgressDao = courseSyncProgressDao,
                         fileSyncProgressDao = fileSyncProgressDao
@@ -103,7 +102,7 @@ class SyncProgressViewModel @Inject constructor(
             },
             additionalFiles =
                 AdditionalFilesProgressItemViewModel(
-                    data = AdditionalFilesProgressViewData(courseWorkerId = courseSyncProgressEntity.workerId),
+                    data = AdditionalFilesProgressViewData(courseId = courseSyncProgressEntity.courseId),
                     fileSyncProgressDao = fileSyncProgressDao,
                     courseSyncProgressDao = courseSyncProgressDao,
                     context = context
