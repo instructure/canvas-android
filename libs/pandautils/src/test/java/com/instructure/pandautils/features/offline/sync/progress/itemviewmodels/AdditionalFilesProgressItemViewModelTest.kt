@@ -59,10 +59,8 @@ class AdditionalFilesProgressItemViewModelTest {
 
     @Test
     fun `Success if no files`() {
-        val courseUUID = UUID.randomUUID()
         val courseProgress = CourseSyncProgressEntity(
             1L,
-            courseUUID.toString(),
             "Course",
             emptyMap(),
             progressState = ProgressState.COMPLETED,
@@ -70,17 +68,16 @@ class AdditionalFilesProgressItemViewModelTest {
         )
         val courseLiveData = MutableLiveData(courseProgress)
 
-        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
         every { fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
 
-        itemViewModel = createItemViewModel(courseUUID)
+        itemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.COMPLETED, itemViewModel.data.state)
     }
 
     @Test
     fun `Add internal files sizes to total size when progress is starting`() {
-        val courseUUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
@@ -110,13 +107,13 @@ class AdditionalFilesProgressItemViewModelTest {
         val fileLiveData = MutableLiveData(additionalFileSyncData)
 
         val courseProgress =
-            CourseSyncProgressEntity(1L, courseUUID.toString(), "Course", emptyMap(), additionalFilesStarted = true)
+            CourseSyncProgressEntity(1L, "Course", emptyMap(), additionalFilesStarted = true)
         val courseLiveData = MutableLiveData(courseProgress)
 
-        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
         every { fileSyncProgressDao.findAdditionalFilesByCourseIdLiveData(1L) } returns fileLiveData
 
-        itemViewModel = createItemViewModel(courseUUID)
+        itemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.IN_PROGRESS, itemViewModel.data.state)
         assertEquals("3000 bytes", itemViewModel.data.totalSize)
@@ -124,10 +121,6 @@ class AdditionalFilesProgressItemViewModelTest {
 
     @Test
     fun `Update total file size for external files and progress`() {
-        val courseUUID = UUID.randomUUID()
-        val file1UUID = UUID.randomUUID()
-        val file2UUID = UUID.randomUUID()
-        val file3UUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
@@ -163,16 +156,15 @@ class AdditionalFilesProgressItemViewModelTest {
 
         val courseProgress = CourseSyncProgressEntity(
             1L,
-            courseUUID.toString(),
             "Course",
             emptyMap(),
             additionalFilesStarted = true,
             progressState = ProgressState.IN_PROGRESS
         )
         val courseLiveData = MutableLiveData(courseProgress)
-        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
 
-        itemViewModel = createItemViewModel(courseUUID)
+        itemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.IN_PROGRESS, itemViewModel.data.state)
         assertEquals("3000 bytes", itemViewModel.data.totalSize)
@@ -192,7 +184,6 @@ class AdditionalFilesProgressItemViewModelTest {
 
     @Test
     fun `Error state`() {
-        val courseUUID = UUID.randomUUID()
         val additionalFileSyncData = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
@@ -227,23 +218,22 @@ class AdditionalFilesProgressItemViewModelTest {
 
         val courseProgress = CourseSyncProgressEntity(
             1L,
-            courseUUID.toString(),
             "Course",
             emptyMap(),
             additionalFilesStarted = true,
             progressState = ProgressState.IN_PROGRESS
         )
         val courseLiveData = MutableLiveData(courseProgress)
-        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
 
-        itemViewModel = createItemViewModel(courseUUID)
+        itemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.ERROR, itemViewModel.data.state)
     }
 
-    private fun createItemViewModel(uuid: UUID): AdditionalFilesProgressItemViewModel {
+    private fun createItemViewModel(courseId: Long): AdditionalFilesProgressItemViewModel {
         return AdditionalFilesProgressItemViewModel(
-            data = AdditionalFilesProgressViewData(courseWorkerId = uuid.toString()),
+            data = AdditionalFilesProgressViewData(courseId = courseId),
             context = context,
             fileSyncProgressDao = fileSyncProgressDao,
             courseSyncProgressDao = courseSyncProgressDao

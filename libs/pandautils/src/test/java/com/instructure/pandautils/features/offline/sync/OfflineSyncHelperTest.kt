@@ -155,7 +155,6 @@ class OfflineSyncHelperTest {
 
         val captor = slot<OneTimeWorkRequest>()
         coVerify(exactly = 1) {
-            workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
             workManager.enqueue(capture(captor))
         }
         coVerify(exactly = 0) { workManager.enqueueUniquePeriodicWork(any(), any(), any()) }
