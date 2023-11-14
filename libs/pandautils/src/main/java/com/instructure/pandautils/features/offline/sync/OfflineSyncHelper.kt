@@ -17,11 +17,18 @@
 
 package com.instructure.pandautils.features.offline.sync
 
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.await
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class OfflineSyncHelper(
