@@ -34,7 +34,7 @@ data class TabProgressItemViewModel(
 
     override val viewType = ViewType.COURSE_TAB_PROGRESS.viewType
 
-    private val progressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.workerId)
+    private val progressLiveData = courseSyncProgressDao.findByCourseIdLiveData(data.courseId)
 
     private val progressObserver = Observer<CourseSyncProgressEntity?> { progress ->
         progress?.tabs?.get(data.tabId)?.let { tabProgress ->

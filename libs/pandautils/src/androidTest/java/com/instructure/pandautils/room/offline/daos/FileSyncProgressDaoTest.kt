@@ -57,7 +57,6 @@ class FileSyncProgressDaoTest {
 
         courseSyncProgressDao.insert(
             CourseSyncProgressEntity(
-                workerId = "workerId",
                 courseId = 1L,
                 courseName = "Course 1"
             )
@@ -192,7 +191,7 @@ class FileSyncProgressDaoTest {
 
     @Test
     fun testFindByCourseIdLiveData() = runTest {
-        courseSyncProgressDao.insert(CourseSyncProgressEntity(2L, "workerId2", "Course 2"))
+        courseSyncProgressDao.insert(CourseSyncProgressEntity(2L, "Course 2"))
         val entities = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
@@ -229,7 +228,7 @@ class FileSyncProgressDaoTest {
 
     @Test
     fun testFindAllLiveData() = runTest {
-        courseSyncProgressDao.insert(CourseSyncProgressEntity(2L, "workerId2", "Course 2"))
+        courseSyncProgressDao.insert(CourseSyncProgressEntity(2L, "Course 2"))
         val entities = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
