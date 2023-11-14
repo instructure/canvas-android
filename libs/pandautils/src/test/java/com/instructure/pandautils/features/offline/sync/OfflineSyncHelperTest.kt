@@ -258,11 +258,11 @@ class OfflineSyncHelperTest {
     }
 
     @Test
-    fun `Cancel running workers`() {
+    fun `Cancel running workers`() = runTest {
         offlineSyncHelper.cancelRunningWorkers()
 
         verify {
-            workManager.cancelAllWorkByTag(OfflineSyncWorker.TAG)
+            workManager.cancelAllWorkByTag(OfflineSyncWorker.ONE_TIME_TAG)
         }
     }
 

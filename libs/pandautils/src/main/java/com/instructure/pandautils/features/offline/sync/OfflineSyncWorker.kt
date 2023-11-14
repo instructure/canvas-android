@@ -137,10 +137,12 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseProgresses = courseSyncProgressDao.findAll()
         val fileProgresses = fileSyncProgressDao.findAll()
 
-        showNotification(
-            courseProgresses.size,
-            courseProgresses.all { it.progressState == ProgressState.COMPLETED }
-                    && fileProgresses.all { it.progressState == ProgressState.COMPLETED })
+        if (courseProgresses.isNotEmpty() && fileProgresses.isNotEmpty()) {
+            showNotification(
+                courseProgresses.size,
+                courseProgresses.all { it.progressState == ProgressState.COMPLETED }
+                        && fileProgresses.all { it.progressState == ProgressState.COMPLETED })
+        }
 
         return Result.success()
     }
@@ -199,6 +201,7 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     companion object {
         const val CHANNEL_ID = "syncChannel"
-        const val TAG = "OfflineSyncWorker"
+        const val PERIODIC_TAG = "OfflineSyncWorkerPeriodic"
+        const val ONE_TIME_TAG = "OfflineSyncWorkerOneTime"
     }
 }

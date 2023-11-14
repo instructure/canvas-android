@@ -78,7 +78,8 @@ class StudentLogoutTask(
     override fun stopOfflineSync() {
         val workManager = WorkManager.getInstance(ContextKeeper.appContext)
         workManager.apply {
-            cancelAllWorkByTag(OfflineSyncWorker.TAG)
+            cancelAllWorkByTag(OfflineSyncWorker.PERIODIC_TAG)
+            cancelAllWorkByTag(OfflineSyncWorker.ONE_TIME_TAG)
         }
     }
 }
