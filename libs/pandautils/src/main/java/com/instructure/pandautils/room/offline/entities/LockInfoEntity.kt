@@ -47,8 +47,7 @@ import com.instructure.canvasapi2.models.LockedModule
             onDelete = ForeignKey.CASCADE,
             deferred = true
         )
-    ],
-    indices = [Index("lockedModuleId", unique = true)]
+    ]
 )
 data class LockInfoEntity(
     @PrimaryKey(autoGenerate = true)

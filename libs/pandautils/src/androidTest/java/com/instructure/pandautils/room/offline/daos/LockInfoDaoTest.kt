@@ -165,4 +165,15 @@ class LockInfoDaoTest {
 
         Assert.assertNull(result)
     }
+
+    @Test
+    fun testFindByRowId() = runTest {
+        val expected = LockInfoEntity(LockInfo(unlockAt = "1"), assignmentId = 1)
+
+        val rowId = lockInfoDao.insert(expected)
+
+        val result = lockInfoDao.findByRowId(rowId)
+
+        Assert.assertEquals(expected.assignmentId, result?.assignmentId)
+    }
 }
