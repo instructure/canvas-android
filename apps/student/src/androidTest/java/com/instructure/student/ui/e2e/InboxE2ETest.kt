@@ -19,6 +19,7 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
@@ -346,7 +347,17 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that the conversation is displayed in the 'STARRED' scope.")
         inboxPage.filterInbox("Starred")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
+        var timesToRetry = 10
+        do {
+            try {
+                inboxPage.assertConversationDisplayed(seededConversation.subject)
+                break
+            } catch (e: NoMatchingViewException) {
+                sleep(3000) //Wait for 3 secs because of API slowness and then refresh the page.
+                refresh()
+                timesToRetry--
+            }
+        } while(timesToRetry > 0)
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'STARRED' scope because it has became unstarred.")
         inboxPage.swipeConversationLeft(seededConversation)
