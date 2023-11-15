@@ -32,10 +32,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkInfo.State
+import androidx.work.WorkManager
+import androidx.work.WorkQuery
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -47,6 +49,8 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
+import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
+import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
@@ -86,6 +90,12 @@ class DashboardFragment : ParentFragment() {
     @Inject
     lateinit var networkStateProvider: NetworkStateProvider
 
+    @Inject
+    lateinit var aggregateProgressObserver: AggregateProgressObserver
+
+    @Inject
+    lateinit var workManager: WorkManager
+
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
 
@@ -95,6 +105,8 @@ class DashboardFragment : ParentFragment() {
 
     private var courseColumns: Int = LIST_SPAN_COUNT
     private var groupColumns: Int = LIST_SPAN_COUNT
+
+    private val runningWorkers = mutableSetOf<String>()
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -119,6 +131,24 @@ class DashboardFragment : ParentFragment() {
         networkStateProvider.isOnlineLiveData.observe(this) { online ->
             recyclerAdapter?.refresh()
             if (online) recyclerBinding.swipeRefreshLayout.isRefreshing = true
+        }
+
+        subscribeToOfflineSyncUpdates()
+    }
+
+    private fun subscribeToOfflineSyncUpdates() {
+        val workQuery = WorkQuery.Builder.fromTags(listOf(OfflineSyncWorker.PERIODIC_TAG, OfflineSyncWorker.ONE_TIME_TAG)).build()
+        workManager.getWorkInfosLiveData(workQuery).observe(this) { workInfos ->
+            workInfos.forEach { workInfo ->
+                if (workInfo.state == State.RUNNING) {
+                    runningWorkers.add(workInfo.id.toString())
+                }
+            }
+
+            if (workInfos?.any { (it.state == State.SUCCEEDED || it.state == State.FAILED) && runningWorkers.contains(it.id.toString()) } == true) {
+                recyclerAdapter?.silentRefresh()
+                runningWorkers.clear()
+            }
         }
     }
 
