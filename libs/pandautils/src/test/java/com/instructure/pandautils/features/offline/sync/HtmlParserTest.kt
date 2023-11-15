@@ -67,7 +67,10 @@ class HtmlParserTest {
         mockkStatic(Uri::class)
         every { Uri.parse(any()) } answers {
             val url = it.invocation.args.first() as String
-            mockk<Uri>() { every { lastPathSegment } returns url.split("/").last() }
+            mockk<Uri>() {
+                every { lastPathSegment } returns url.split("/").last()
+                every { scheme } returns "https"
+            }
         }
     }
 
