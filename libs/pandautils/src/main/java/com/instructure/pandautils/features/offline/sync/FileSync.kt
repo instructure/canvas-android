@@ -102,7 +102,7 @@ class FileSync(
 
         fileFolderDao.insertAll(nonPublicFiles.map { FileFolderEntity(it) })
 
-        val additionalFiles = additionalPublicFilesToSync + nonPublicFiles
+        val additionalFiles = (additionalPublicFilesToSync + nonPublicFiles).filter { !it.url.isNullOrEmpty() }
         fileSyncProgressDao.insertAll(additionalFiles.map { createProgress(it, courseId, true) })
 
         val syncData = mutableListOf<FileSyncData>()
