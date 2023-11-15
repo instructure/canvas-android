@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
@@ -148,17 +149,26 @@ class FileSync(
         var downloadedFile = getDownloadFile(fileName, fileSyncData.externalFile, fileSyncData.courseId)
 
         try {
-            fileDownloadApi.downloadFile(
+            val downloadResult = fileDownloadApi.downloadFile(
                 fileSyncData.fileUrl,
                 RestParams(shouldIgnoreToken = fileSyncData.externalFile)
             )
+
+            // External images can fail for various reasons (for example the file is no longer available),
+            // so we just mark them as completed in this case. The user wouldn't see those in online mode anyway.
+            if (fileSyncData.externalFile && downloadResult is DataResult.Fail) {
+                updateProgress(fileSyncData.fileId, 100, ProgressState.COMPLETED, fileSyncData.externalFile)
+                return
+            }
+
+            downloadResult
                 .dataOrThrow
                 .saveFile(downloadedFile)
                 .collect {
                     if (isStopped) throw IllegalStateException("Worker was stopped")
                     when (it) {
                         is DownloadState.InProgress -> {
-                            updateProgress(fileSyncData.fileId, it.progress, ProgressState.IN_PROGRESS)
+                            updateProgress(fileSyncData.fileId, it.progress, ProgressState.IN_PROGRESS, fileSyncData.externalFile, it.totalBytes)
                         }
 
                         is DownloadState.Success -> {
@@ -180,7 +190,7 @@ class FileSync(
                                     )
                                 )
                             }
-                            updateProgress(fileSyncData.fileId, 100, ProgressState.COMPLETED)
+                            updateProgress(fileSyncData.fileId, 100, ProgressState.COMPLETED, fileSyncData.externalFile, it.totalBytes)
                         }
 
                         is DownloadState.Failure -> {
@@ -190,7 +200,7 @@ class FileSync(
                 }
         } catch (e: Exception) {
             downloadedFile.delete()
-            updateProgress(fileSyncData.fileId, 0, ProgressState.ERROR)
+            updateProgress(fileSyncData.fileId, 0, ProgressState.ERROR, fileSyncData.externalFile)
             firebaseCrashlytics.recordException(e)
         }
     }
@@ -274,9 +284,13 @@ class FileSync(
         return fileSyncProgressDao.findByRowId(rowId)?.fileId ?: -1L
     }
 
-    private suspend fun updateProgress(fileId: Long, progress: Int, progressState: ProgressState) {
-        fileSyncProgressDao.findByFileId(fileId)?.copy(progress = progress, progressState = progressState)
-            ?.let { fileSyncProgressDao.update(it) }
+    private suspend fun updateProgress(fileId: Long, progress: Int, progressState: ProgressState, externalFile: Boolean, size: Long? = null) {
+        var newProgress = fileSyncProgressDao.findByFileId(fileId)?.copy(progress = progress, progressState = progressState)
+        if (externalFile && size != null) {
+            newProgress = newProgress?.copy(fileSize = size)
+        }
+
+        newProgress?.let { fileSyncProgressDao.update(it) }
     }
 }
 
