@@ -133,7 +133,11 @@ class DashboardFragment : ParentFragment() {
             if (online) recyclerBinding.swipeRefreshLayout.isRefreshing = true
         }
 
-        subscribeToOfflineSyncUpdates()
+        lifecycleScope.launch {
+            if (featureFlagProvider.offlineEnabled()) {
+                subscribeToOfflineSyncUpdates()
+            }
+        }
     }
 
     private fun subscribeToOfflineSyncUpdates() {
