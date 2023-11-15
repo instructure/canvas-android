@@ -20,7 +20,6 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
