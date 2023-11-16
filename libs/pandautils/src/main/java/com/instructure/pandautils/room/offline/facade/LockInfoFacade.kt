@@ -47,9 +47,10 @@ class LockInfoFacade(
     }
 
     private suspend fun insertLockInfo(lockInfo: LockInfo, assignmentId: Long? = null, moduleId: Long? = null, pageId: Long? = null) {
-        lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId, moduleId, pageId))
+        val rowId = lockInfoDao.insert(LockInfoEntity(lockInfo, assignmentId, moduleId, pageId))
+        val lockInfoEntity = lockInfoDao.findByRowId(rowId)
         lockInfo.contextModule?.let { lockedModule ->
-            lockedModuleDao.insert(LockedModuleEntity(lockedModule))
+            lockedModuleDao.insert(LockedModuleEntity(lockedModule, lockInfoEntity?.id))
             moduleNameDao.insertAll(lockedModule.prerequisites?.map { ModuleNameEntity(it, lockedModule.id) }.orEmpty())
             lockedModule.completionRequirements.forEach {
                 val oldEntity = completionRequirementDao.findById(it.id)

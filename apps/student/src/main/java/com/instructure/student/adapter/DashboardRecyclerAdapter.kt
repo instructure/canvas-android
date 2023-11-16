@@ -135,6 +135,8 @@ class DashboardRecyclerAdapter(
             val dashboardCards = repository.getDashboardCourses(isRefresh)
             val syncedCourseIds = repository.getSyncedCourseIds()
 
+            resetData()
+
             mCourseMap = courses.associateBy { it.id }
 
             // Map not null is needed because the dashboard api can return unpublished courses

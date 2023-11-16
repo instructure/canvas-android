@@ -31,6 +31,8 @@ import com.instructure.student.databinding.ActivitySettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+private const val OFFLINE_ENABLED = "offlineEnabled"
+
 @ScreenView(SCREEN_VIEW_SETTINGS)
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(){
@@ -40,10 +42,12 @@ class SettingsActivity : AppCompatActivity(){
 
     private val binding by viewBinding(ActivitySettingsBinding::inflate)
 
+    var offlineEnabled: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        offlineEnabled = intent.getBooleanExtra(OFFLINE_ENABLED, false)
         setContentView(binding.root)
-
         networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
             binding.offlineIndicator.root.setVisible(!isOnline)
         }
@@ -60,8 +64,10 @@ class SettingsActivity : AppCompatActivity(){
     }
 
     companion object {
-         fun createIntent(context: Context): Intent {
-            return Intent(context, SettingsActivity::class.java)
+         fun createIntent(context: Context, offlineEnabled: Boolean): Intent {
+            return Intent(context, SettingsActivity::class.java).apply {
+                putExtra(OFFLINE_ENABLED, offlineEnabled)
+            }
         }
     }
 }

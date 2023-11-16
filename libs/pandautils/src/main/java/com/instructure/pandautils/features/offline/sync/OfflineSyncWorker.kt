@@ -78,8 +78,11 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         if (!featureFlagProvider.offlineEnabled() || apiPrefs.user == null) return Result.success()
 
-        val dashboardCards =
+        var dashboardCards =
             courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
+        if (dashboardCards.all { it.position == Int.MAX_VALUE }) {
+            dashboardCards = dashboardCards.mapIndexed { index, dashboardCard -> dashboardCard.copy(position = index) }
+        }
         dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
 
         val params = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
