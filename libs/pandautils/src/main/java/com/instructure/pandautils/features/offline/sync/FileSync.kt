@@ -68,14 +68,18 @@ class FileSync(
         val fileFolders = fileFolderDao.findFilesToSync(courseId, syncSettings.fullFileSync)
             .map { it.toApiModel() }
 
-        fileSyncProgressDao.insertAll(fileFolders.map { createProgress(it, courseId, false) })
+        val syncData = mutableListOf<FileSyncData>()
+
+        fileFolders.forEach {
+            val progressId = createAndInsertProgress(it, courseId, false)
+            syncData.add(FileSyncData(progressId, it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId, false))
+        }
 
         courseSyncProgressDao.findByCourseId(courseId)?.copy(progressState = ProgressState.IN_PROGRESS)?.let {
             courseSyncProgressDao.update(it)
         }
 
-        val chunks =
-            fileFolders.map { FileSyncData(it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId) }.chunked(6)
+        val chunks = syncData.chunked(6)
 
         coroutineScope {
             chunks.forEach {
@@ -94,9 +98,12 @@ class FileSync(
     ) {
         val courseId = syncSettings.courseId
 
-        val additionalPublicFilesToSync = fileFolderDao.findByIds(additionalFileIdsToSync).map { it.toApiModel() }
+        val localIds = localFileDao.findByCourseId(courseId).map { it.id }.toSet()
+        val internalFileIdsToSync = additionalFileIdsToSync.filterNot { localIds.contains(it) }.toSet()
 
-        val nonPublicFileIds = additionalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
+        val additionalPublicFilesToSync = fileFolderDao.findByIds(internalFileIdsToSync).map { it.toApiModel() }
+
+        val nonPublicFileIds = internalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
         val nonPublicFiles = nonPublicFileIds.map {
             fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
         }.filterNotNull()
@@ -104,23 +111,17 @@ class FileSync(
         fileFolderDao.insertAll(nonPublicFiles.map { FileFolderEntity(it) })
 
         val additionalFiles = (additionalPublicFilesToSync + nonPublicFiles).filter { !it.url.isNullOrEmpty() }
-        fileSyncProgressDao.insertAll(additionalFiles.map { createProgress(it, courseId, true) })
 
         val syncData = mutableListOf<FileSyncData>()
 
-        additionalFiles.map {
-            FileSyncData(
-                it.id,
-                it.displayName.orEmpty(),
-                it.url.orEmpty(),
-                courseId,
-                false
-            )
-        }.let { syncData.addAll(it) }
+        additionalFiles.forEach {
+            val progressId = createAndInsertProgress(it, courseId, true)
+            syncData.add(FileSyncData(progressId, it.id, it.displayName.orEmpty(), it.url.orEmpty(), courseId, false))
+        }
 
         externalFilesToSync.forEach {
-            val id = createExternalProgress(it, courseId)
-            syncData.add(FileSyncData(id, Uri.parse(it).lastPathSegment.orEmpty(), it, courseId, true))
+            val progressId = createAndInsertExternalProgress(it, courseId)
+            syncData.add(FileSyncData(progressId, -1, Uri.parse(it).lastPathSegment.orEmpty(), it, courseId, true))
         }
 
         courseSyncProgressDao.findByCourseId(courseId)?.copy(additionalFilesStarted = true)
@@ -157,7 +158,7 @@ class FileSync(
             // External images can fail for various reasons (for example the file is no longer available),
             // so we just mark them as completed in this case. The user wouldn't see those in online mode anyway.
             if (fileSyncData.externalFile && downloadResult is DataResult.Fail) {
-                updateProgress(fileSyncData.fileId, 100, ProgressState.COMPLETED, fileSyncData.externalFile)
+                updateProgress(fileSyncData.progressId, 100, ProgressState.COMPLETED, fileSyncData.externalFile)
                 return
             }
 
@@ -168,7 +169,7 @@ class FileSync(
                     if (isStopped) throw IllegalStateException("Worker was stopped")
                     when (it) {
                         is DownloadState.InProgress -> {
-                            updateProgress(fileSyncData.fileId, it.progress, ProgressState.IN_PROGRESS, fileSyncData.externalFile, it.totalBytes)
+                            updateProgress(fileSyncData.progressId, it.progress, ProgressState.IN_PROGRESS, fileSyncData.externalFile, it.totalBytes)
                         }
 
                         is DownloadState.Success -> {
@@ -190,7 +191,7 @@ class FileSync(
                                     )
                                 )
                             }
-                            updateProgress(fileSyncData.fileId, 100, ProgressState.COMPLETED, fileSyncData.externalFile, it.totalBytes)
+                            updateProgress(fileSyncData.progressId, 100, ProgressState.COMPLETED, fileSyncData.externalFile, it.totalBytes)
                         }
 
                         is DownloadState.Failure -> {
@@ -200,7 +201,7 @@ class FileSync(
                 }
         } catch (e: Exception) {
             downloadedFile.delete()
-            updateProgress(fileSyncData.fileId, 0, ProgressState.ERROR, fileSyncData.externalFile)
+            updateProgress(fileSyncData.progressId, 0, ProgressState.ERROR, fileSyncData.externalFile)
             firebaseCrashlytics.recordException(e)
         }
     }
@@ -258,8 +259,8 @@ class FileSync(
         return fileFolderDao.findAllFilesByCourseId(courseId)
     }
 
-    private fun createProgress(fileFolder: FileFolder, courseId: Long, additionalFile: Boolean): FileSyncProgressEntity {
-        return FileSyncProgressEntity(
+    private suspend fun createAndInsertProgress(fileFolder: FileFolder, courseId: Long, additionalFile: Boolean): Long {
+        val progress = FileSyncProgressEntity(
             fileFolder.id,
             courseId,
             fileFolder.displayName.orEmpty(),
@@ -268,9 +269,12 @@ class FileSync(
             additionalFile,
             ProgressState.IN_PROGRESS
         )
+
+        val rowId = fileSyncProgressDao.insert(progress)
+        return fileSyncProgressDao.findByRowId(rowId)?.id ?: -1L
     }
 
-    private suspend fun createExternalProgress(url: String, courseId: Long): Long {
+    private suspend fun createAndInsertExternalProgress(url: String, courseId: Long): Long {
         val progress = FileSyncProgressEntity(
             0,
             courseId,
@@ -281,11 +285,11 @@ class FileSync(
             ProgressState.IN_PROGRESS
         )
         val rowId = fileSyncProgressDao.insert(progress)
-        return fileSyncProgressDao.findByRowId(rowId)?.fileId ?: -1L
+        return fileSyncProgressDao.findByRowId(rowId)?.id ?: -1L
     }
 
-    private suspend fun updateProgress(fileId: Long, progress: Int, progressState: ProgressState, externalFile: Boolean, size: Long? = null) {
-        var newProgress = fileSyncProgressDao.findByFileId(fileId)?.copy(progress = progress, progressState = progressState)
+    private suspend fun updateProgress(progressId: Long, progress: Int, progressState: ProgressState, externalFile: Boolean, size: Long? = null) {
+        var newProgress = fileSyncProgressDao.findById(progressId)?.copy(progress = progress, progressState = progressState)
         if (externalFile && size != null) {
             newProgress = newProgress?.copy(fileSize = size)
         }
@@ -295,6 +299,7 @@ class FileSync(
 }
 
 data class FileSyncData(
+    val progressId: Long,
     val fileId: Long,
     val inputFileName: String,
     val fileUrl: String,
