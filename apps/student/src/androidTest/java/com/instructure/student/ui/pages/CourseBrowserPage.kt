@@ -34,6 +34,7 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
 import com.instructure.student.R
@@ -172,6 +173,11 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
     private fun recyclerViewScrollTo(matcher: Matcher<View>) {
         minimizeToolbar()
         scrollRecyclerView(R.id.courseBrowserRecyclerView, matcher)
+    }
+
+    //OfflineMethod
+    fun assertMenuDisabled(menuLabel: String) {
+        onView(withText(menuLabel) + withId(R.id.label))
     }
 }
 
