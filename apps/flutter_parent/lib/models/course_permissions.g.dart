@@ -17,33 +17,35 @@ class _$CoursePermissionsSerializer
   final String wireName = 'CoursePermissions';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, CoursePermissions object,
+  Iterable<Object?> serialize(Serializers serializers, CoursePermissions object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
-    if (object.sendMessages != null) {
+    final result = <Object?>[];
+    Object? value;
+    value = object.sendMessages;
+    if (value != null) {
       result
         ..add('send_messages')
-        ..add(serializers.serialize(object.sendMessages,
-            specifiedType: const FullType(bool)));
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
     }
     return result;
   }
 
   @override
   CoursePermissions deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CoursePermissionsBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'send_messages':
           result.sendMessages = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
       }
     }
@@ -54,11 +56,11 @@ class _$CoursePermissionsSerializer
 
 class _$CoursePermissions extends CoursePermissions {
   @override
-  final bool sendMessages;
+  final bool? sendMessages;
 
   factory _$CoursePermissions(
-          [void Function(CoursePermissionsBuilder) updates]) =>
-      (new CoursePermissionsBuilder()..update(updates)).build();
+          [void Function(CoursePermissionsBuilder)? updates]) =>
+      (new CoursePermissionsBuilder()..update(updates))._build();
 
   _$CoursePermissions._({this.sendMessages}) : super._();
 
@@ -78,12 +80,15 @@ class _$CoursePermissions extends CoursePermissions {
 
   @override
   int get hashCode {
-    return $jf($jc(0, sendMessages.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, sendMessages.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CoursePermissions')
+    return (newBuiltValueToStringHelper(r'CoursePermissions')
           ..add('sendMessages', sendMessages))
         .toString();
   }
@@ -91,17 +96,18 @@ class _$CoursePermissions extends CoursePermissions {
 
 class CoursePermissionsBuilder
     implements Builder<CoursePermissions, CoursePermissionsBuilder> {
-  _$CoursePermissions _$v;
+  _$CoursePermissions? _$v;
 
-  bool _sendMessages;
-  bool get sendMessages => _$this._sendMessages;
-  set sendMessages(bool sendMessages) => _$this._sendMessages = sendMessages;
+  bool? _sendMessages;
+  bool? get sendMessages => _$this._sendMessages;
+  set sendMessages(bool? sendMessages) => _$this._sendMessages = sendMessages;
 
   CoursePermissionsBuilder();
 
   CoursePermissionsBuilder get _$this {
-    if (_$v != null) {
-      _sendMessages = _$v.sendMessages;
+    final $v = _$v;
+    if ($v != null) {
+      _sendMessages = $v.sendMessages;
       _$v = null;
     }
     return this;
@@ -109,19 +115,19 @@ class CoursePermissionsBuilder
 
   @override
   void replace(CoursePermissions other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CoursePermissions;
   }
 
   @override
-  void update(void Function(CoursePermissionsBuilder) updates) {
+  void update(void Function(CoursePermissionsBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CoursePermissions build() {
+  CoursePermissions build() => _build();
+
+  _$CoursePermissions _build() {
     final _$result =
         _$v ?? new _$CoursePermissions._(sendMessages: sendMessages);
     replace(_$result);
@@ -129,4 +135,4 @@ class CoursePermissionsBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

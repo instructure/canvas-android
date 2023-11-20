@@ -32,6 +32,7 @@ import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.pandautils.utils.isTablet
@@ -234,7 +235,7 @@ class DefensiveURLSpan(private val url: String) : URLSpan(url) {
 
     override fun onClick(widget: View) {
         if(RouteMatcher.getInternalRoute(url, ApiPrefs.domain) != null) {
-            RouteMatcher.routeUrl(widget.context, url, ApiPrefs.domain)
+            RouteMatcher.routeUrl(widget.context as FragmentActivity, url, ApiPrefs.domain)
         } else {
             val intent = InternalWebViewActivity.createIntent(widget.context, url, "", false)
             widget.context.startActivity(intent)

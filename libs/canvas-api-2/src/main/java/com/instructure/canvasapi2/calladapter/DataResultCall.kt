@@ -25,10 +25,11 @@ import okio.Timeout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.reflect.Type
 
-class DataResultCall<T : Any>(private val delegate: Call<T>): Call<DataResult<T>> {
+class DataResultCall<T : Any>(private val delegate: Call<T>, private val successType: Type): Call<DataResult<T>> {
 
-    override fun clone(): Call<DataResult<T>> = DataResultCall(delegate.clone())
+    override fun clone(): Call<DataResult<T>> = DataResultCall(delegate.clone(), successType)
 
     override fun execute(): Response<DataResult<T>> {
         throw UnsupportedOperationException("DataResultCall doesn't support execute")
@@ -44,12 +45,12 @@ class DataResultCall<T : Any>(private val delegate: Call<T>): Call<DataResult<T>
                     callback.onResponse(this@DataResultCall, Response.success(createSuccessResult(response)))
                 } else {
                     if (error != null) {
-                        val failure = if (code == 401) {
+                        val failure = if (code == 401 || code == 403) {
                             Failure.Authorization(response.message())
                         } else {
-                            Failure.Network(response.message())
+                            Failure.Network(response.message(), code)
                         }
-                        callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail(failure)))
+                        callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail(failure, response.raw())))
                     } else {
                         callback.onResponse(this@DataResultCall, Response.success(DataResult.Fail()))
                     }
@@ -64,13 +65,25 @@ class DataResultCall<T : Any>(private val delegate: Call<T>): Call<DataResult<T>
 
     private fun createSuccessResult(response: Response<T>): DataResult<T> {
         val body = response.body()
-        return if (body != null) {
+        val unitResponse = successType.typeName == Unit.javaClass.name
+
+        return if (body != null || unitResponse) {
             val linkHeaders = APIHelper.parseLinkHeaderResponse(response.headers())
             val isCachedResponse = APIHelper.isCachedResponse(response.raw())
             val apiType = if (isCachedResponse) ApiType.CACHE else ApiType.API
-            DataResult.Success(body, linkHeaders, apiType)
+
+            if (body == null) {
+                try {
+                    // This should always be Unit, but we can catch the exception and return a Failure if it's not. (In cases where the API interface is misconfigured)
+                    DataResult.Success(Unit as T, linkHeaders, apiType)
+                } catch (e: ClassCastException) {
+                    return DataResult.Fail(Failure.ParsingError)
+                }
+            } else {
+                DataResult.Success(body, linkHeaders, apiType)
+            }
         } else {
-            DataResult.Fail()
+            DataResult.Fail(Failure.ParsingError)
         }
     }
 

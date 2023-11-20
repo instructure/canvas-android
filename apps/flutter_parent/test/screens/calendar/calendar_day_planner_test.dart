@@ -36,6 +36,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../courses/course_summary_screen_test.dart';
 
 void main() {
@@ -53,8 +54,8 @@ void main() {
         ..enrollmentState = 'active')
     ]).toBuilder());
 
-  final CalendarEventsApi api = MockCalendarApi();
-  final CoursesInteractor interactor = MockCoursesInteractor();
+  final MockCalendarEventsApi api = MockCalendarEventsApi();
+  final MockCoursesInteractor interactor = MockCoursesInteractor();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<CalendarEventsApi>(() => api);
@@ -103,7 +104,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows error panda view when we fail to retrieve events', (tester) async {
-      Completer completer = Completer<List<ScheduleItem>>();
+      Completer<List<ScheduleItem>> completer = Completer<List<ScheduleItem>>();
       when(api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeAssignment,
               contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => completer.future);
@@ -179,7 +180,7 @@ void main() {
   });
 }
 
-ScheduleItem _createScheduleItem({String contextName, String type = ScheduleItem.apiTypeAssignment}) =>
+ScheduleItem _createScheduleItem({String? contextName, String type = ScheduleItem.apiTypeAssignment}) =>
     ScheduleItem((b) => b
       ..id = ''
       ..title = ''

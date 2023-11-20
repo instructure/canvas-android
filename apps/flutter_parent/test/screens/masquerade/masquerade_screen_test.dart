@@ -24,9 +24,10 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  _MockInteractor interactor = _MockInteractor();
+  MockMasqueradeScreenInteractor interactor = MockMasqueradeScreenInteractor();
   String siteAdminDomain = 'https://siteadmin.instructure.com';
   String normalDomain = 'https://example.instructure.com';
 
@@ -101,7 +102,7 @@ void main() {
 
       TextField input = tester.widget(find.byKey(domainKey));
       expect(input.enabled, isFalse);
-      expect(input.controller.text, normalDomain);
+      expect(input.controller!.text, normalDomain);
     },
     a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
   );
@@ -115,7 +116,7 @@ void main() {
 
       TextField input = tester.widget(find.byKey(domainKey));
       expect(input.enabled, isTrue);
-      expect(input.controller.text, isEmpty);
+      expect(input.controller!.text, isEmpty);
     },
     a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
   );
@@ -128,12 +129,12 @@ void main() {
       await tester.pump();
 
       // Tap the 'Act As User' button - domain input should be empty
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
       // Error message should show
       TextField input = tester.widget(find.byKey(domainKey));
-      expect(input.decoration.errorText, l10n.domainInputError);
+      expect(input.decoration?.errorText, l10n.domainInputError);
       expect(find.text(l10n.domainInputError), findsOneWidget);
 
       // Input a valid domain
@@ -142,16 +143,16 @@ void main() {
 
       // Entering text should have cleared the error
       input = tester.widget(find.byKey(domainKey));
-      expect(input.decoration.errorText, isNull);
+      expect(input.decoration?.errorText, isNull);
       expect(find.text(l10n.domainInputError), findsNothing);
 
       // Tap the 'Act As User' button again
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
       // The error should not be displayed
       input = tester.widget(find.byKey(domainKey));
-      expect(input.decoration.errorText, isNull);
+      expect(input.decoration?.errorText, isNull);
       expect(find.text(l10n.domainInputError), findsNothing);
     },
     a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
@@ -165,12 +166,12 @@ void main() {
       await tester.pump();
 
       // Tap the 'Act As User' button - user id input should be empty
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
       // Error message should show
       TextField input = tester.widget(find.byKey(userIdKey));
-      expect(input.decoration.errorText, l10n.userIdInputError);
+      expect(input.decoration?.errorText, l10n.userIdInputError);
       expect(find.text(l10n.userIdInputError), findsOneWidget);
 
       // Input a valid user id
@@ -179,16 +180,16 @@ void main() {
 
       // Entering text should have cleared the error
       input = tester.widget(find.byKey(userIdKey));
-      expect(input.decoration.errorText, isNull);
+      expect(input.decoration?.errorText, isNull);
       expect(find.text(l10n.userIdInputError), findsNothing);
 
       // Tap the 'Act As User' button again
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
       // The error should not be displayed
       input = tester.widget(find.byKey(userIdKey));
-      expect(input.decoration.errorText, isNull);
+      expect(input.decoration?.errorText, isNull);
       expect(find.text(l10n.userIdInputError), findsNothing);
     },
     a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
@@ -205,10 +206,10 @@ void main() {
 
       // Enter a user id and press the button
       await tester.enterText(find.byKey(userIdKey), '123');
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
-      expect(find.byType(RaisedButton), findsNothing);
+      expect(find.byType(ElevatedButton), findsNothing);
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     },
     a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
@@ -225,11 +226,11 @@ void main() {
 
       // Enter a user id and press the button
       await tester.enterText(find.byKey(userIdKey), '123');
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pump();
 
       // Should show loading state
-      expect(find.byType(RaisedButton), findsNothing);
+      expect(find.byType(ElevatedButton), findsNothing);
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
       completer.complete(false);
@@ -237,7 +238,7 @@ void main() {
 
       // Should show error message and no loading state
       expect(find.text(l10n.actAsUserError), findsOneWidget);
-      expect(find.byType(RaisedButton), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsNothing);
     },
     a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
@@ -255,18 +256,16 @@ void main() {
       // Enter data and tap the button
       await tester.enterText(find.byKey(domainKey), normalDomain);
       await tester.enterText(find.byKey(userIdKey), '123');
-      await tester.tap(find.byType(RaisedButton));
+      await tester.tap(find.byType(ElevatedButton));
       await tester.pumpAndSettle();
 
       // Respawn should have created a new screen with empty fields
       TextField domainInput = tester.widget(find.byKey(domainKey));
-      expect(domainInput.controller.text, isEmpty);
+      expect(domainInput.controller?.text, isEmpty);
 
       TextField userIdInput = tester.widget(find.byKey(userIdKey));
-      expect(userIdInput.controller.text, isEmpty);
+      expect(userIdInput.controller?.text, isEmpty);
     },
     a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
   );
 }
-
-class _MockInteractor extends Mock implements MasqueradeScreenInteractor {}

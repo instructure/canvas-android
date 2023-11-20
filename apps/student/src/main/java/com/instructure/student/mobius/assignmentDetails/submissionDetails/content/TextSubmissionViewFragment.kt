@@ -65,10 +65,10 @@ class TextSubmissionViewFragment : Fragment() {
             override fun onPageStartedCallback(webView: WebView, url: String) = Unit
             override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
             override fun canRouteInternallyDelegate(url: String) =
-                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+                RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
 
             override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
             }
         }
 

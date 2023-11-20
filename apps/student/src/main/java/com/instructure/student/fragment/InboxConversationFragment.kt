@@ -355,7 +355,7 @@ class InboxConversationFragment : ParentFragment() {
                 users.map { Recipient.from(it) },
                 longArrayOf(),
                 null)
-        RouteMatcher.route(requireContext(), route)
+        RouteMatcher.route(requireActivity(), route)
     }
 
     // Same as reply all but scoped to a message
@@ -366,7 +366,7 @@ class InboxConversationFragment : ParentFragment() {
                 getMessageRecipientsForReplyAll(message).map { Recipient.from(it) },
                 longArrayOf(),
                 message)
-        RouteMatcher.route(requireContext(), route)
+        RouteMatcher.route(requireActivity(), route)
     }
 
     private fun addMessage(message: Message, isReply: Boolean) {
@@ -376,7 +376,7 @@ class InboxConversationFragment : ParentFragment() {
                 getMessageRecipientsForReply(message).map { Recipient.from(it) },
                 adapter.getMessageChainIdsForMessage(message),
                 message)
-        RouteMatcher.route(requireContext(), route)
+        RouteMatcher.route(requireActivity(), route)
     }
 
     private fun getMessageRecipientsForReplyAll(message: Message): List<BasicUser> {

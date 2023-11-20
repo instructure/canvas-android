@@ -15,9 +15,9 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
   final String wireName = 'Message';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Message object,
+  Iterable<Object?> serialize(Serializers serializers, Message object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'author_id',
@@ -27,107 +27,102 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
       serializers.serialize(object.isGenerated,
           specifiedType: const FullType(bool)),
     ];
-    result.add('created_at');
-    if (object.createdAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.createdAt,
+    Object? value;
+    value = object.createdAt;
+
+    result
+      ..add('created_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('body');
-    if (object.body == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.body,
-          specifiedType: const FullType(String)));
-    }
-    result.add('attachments');
-    if (object.attachments == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.attachments,
+    value = object.body;
+
+    result
+      ..add('body')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.attachments;
+
+    result
+      ..add('attachments')
+      ..add(serializers.serialize(value,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Attachment)])));
-    }
-    result.add('media_comment');
-    if (object.mediaComment == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.mediaComment,
+    value = object.mediaComment;
+
+    result
+      ..add('media_comment')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(MediaComment)));
-    }
-    result.add('forwarded_messages');
-    if (object.forwardedMessages == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.forwardedMessages,
+    value = object.forwardedMessages;
+
+    result
+      ..add('forwarded_messages')
+      ..add(serializers.serialize(value,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Message)])));
-    }
-    result.add('participating_user_ids');
-    if (object.participatingUserIds == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.participatingUserIds,
+    value = object.participatingUserIds;
+
+    result
+      ..add('participating_user_ids')
+      ..add(serializers.serialize(value,
           specifiedType:
               const FullType(BuiltList, const [const FullType(String)])));
-    }
+
     return result;
   }
 
   @override
-  Message deserialize(Serializers serializers, Iterable<Object> serialized,
+  Message deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new MessageBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'created_at':
           result.createdAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'body':
           result.body = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'author_id':
           result.authorId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'generated':
           result.isGenerated = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'attachments':
           result.attachments.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(Attachment)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(Attachment)]))!
+              as BuiltList<Object?>);
           break;
         case 'media_comment':
           result.mediaComment.replace(serializers.deserialize(value,
-              specifiedType: const FullType(MediaComment)) as MediaComment);
+              specifiedType: const FullType(MediaComment))! as MediaComment);
           break;
         case 'forwarded_messages':
           result.forwardedMessages.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(Message)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(Message)]))!
+              as BuiltList<Object?>);
           break;
         case 'participating_user_ids':
           result.participatingUserIds.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltList, const [const FullType(String)]))
-              as BuiltList<Object>);
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(String)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -140,45 +135,40 @@ class _$Message extends Message {
   @override
   final String id;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
-  final String body;
+  final String? body;
   @override
   final String authorId;
   @override
   final bool isGenerated;
   @override
-  final BuiltList<Attachment> attachments;
+  final BuiltList<Attachment>? attachments;
   @override
-  final MediaComment mediaComment;
+  final MediaComment? mediaComment;
   @override
-  final BuiltList<Message> forwardedMessages;
+  final BuiltList<Message>? forwardedMessages;
   @override
-  final BuiltList<String> participatingUserIds;
+  final BuiltList<String>? participatingUserIds;
 
-  factory _$Message([void Function(MessageBuilder) updates]) =>
-      (new MessageBuilder()..update(updates)).build();
+  factory _$Message([void Function(MessageBuilder)? updates]) =>
+      (new MessageBuilder()..update(updates))._build();
 
   _$Message._(
-      {this.id,
+      {required this.id,
       this.createdAt,
       this.body,
-      this.authorId,
-      this.isGenerated,
+      required this.authorId,
+      required this.isGenerated,
       this.attachments,
       this.mediaComment,
       this.forwardedMessages,
       this.participatingUserIds})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Message', 'id');
-    }
-    if (authorId == null) {
-      throw new BuiltValueNullFieldError('Message', 'authorId');
-    }
-    if (isGenerated == null) {
-      throw new BuiltValueNullFieldError('Message', 'isGenerated');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'Message', 'id');
+    BuiltValueNullFieldError.checkNotNull(authorId, r'Message', 'authorId');
+    BuiltValueNullFieldError.checkNotNull(
+        isGenerated, r'Message', 'isGenerated');
   }
 
   @override
@@ -205,25 +195,23 @@ class _$Message extends Message {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc($jc($jc(0, id.hashCode), createdAt.hashCode),
-                                body.hashCode),
-                            authorId.hashCode),
-                        isGenerated.hashCode),
-                    attachments.hashCode),
-                mediaComment.hashCode),
-            forwardedMessages.hashCode),
-        participatingUserIds.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, createdAt.hashCode);
+    _$hash = $jc(_$hash, body.hashCode);
+    _$hash = $jc(_$hash, authorId.hashCode);
+    _$hash = $jc(_$hash, isGenerated.hashCode);
+    _$hash = $jc(_$hash, attachments.hashCode);
+    _$hash = $jc(_$hash, mediaComment.hashCode);
+    _$hash = $jc(_$hash, forwardedMessages.hashCode);
+    _$hash = $jc(_$hash, participatingUserIds.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Message')
+    return (newBuiltValueToStringHelper(r'Message')
           ..add('id', id)
           ..add('createdAt', createdAt)
           ..add('body', body)
@@ -238,50 +226,50 @@ class _$Message extends Message {
 }
 
 class MessageBuilder implements Builder<Message, MessageBuilder> {
-  _$Message _$v;
+  _$Message? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  DateTime _createdAt;
-  DateTime get createdAt => _$this._createdAt;
-  set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
+  DateTime? _createdAt;
+  DateTime? get createdAt => _$this._createdAt;
+  set createdAt(DateTime? createdAt) => _$this._createdAt = createdAt;
 
-  String _body;
-  String get body => _$this._body;
-  set body(String body) => _$this._body = body;
+  String? _body;
+  String? get body => _$this._body;
+  set body(String? body) => _$this._body = body;
 
-  String _authorId;
-  String get authorId => _$this._authorId;
-  set authorId(String authorId) => _$this._authorId = authorId;
+  String? _authorId;
+  String? get authorId => _$this._authorId;
+  set authorId(String? authorId) => _$this._authorId = authorId;
 
-  bool _isGenerated;
-  bool get isGenerated => _$this._isGenerated;
-  set isGenerated(bool isGenerated) => _$this._isGenerated = isGenerated;
+  bool? _isGenerated;
+  bool? get isGenerated => _$this._isGenerated;
+  set isGenerated(bool? isGenerated) => _$this._isGenerated = isGenerated;
 
-  ListBuilder<Attachment> _attachments;
+  ListBuilder<Attachment>? _attachments;
   ListBuilder<Attachment> get attachments =>
       _$this._attachments ??= new ListBuilder<Attachment>();
-  set attachments(ListBuilder<Attachment> attachments) =>
+  set attachments(ListBuilder<Attachment>? attachments) =>
       _$this._attachments = attachments;
 
-  MediaCommentBuilder _mediaComment;
+  MediaCommentBuilder? _mediaComment;
   MediaCommentBuilder get mediaComment =>
       _$this._mediaComment ??= new MediaCommentBuilder();
-  set mediaComment(MediaCommentBuilder mediaComment) =>
+  set mediaComment(MediaCommentBuilder? mediaComment) =>
       _$this._mediaComment = mediaComment;
 
-  ListBuilder<Message> _forwardedMessages;
+  ListBuilder<Message>? _forwardedMessages;
   ListBuilder<Message> get forwardedMessages =>
       _$this._forwardedMessages ??= new ListBuilder<Message>();
-  set forwardedMessages(ListBuilder<Message> forwardedMessages) =>
+  set forwardedMessages(ListBuilder<Message>? forwardedMessages) =>
       _$this._forwardedMessages = forwardedMessages;
 
-  ListBuilder<String> _participatingUserIds;
+  ListBuilder<String>? _participatingUserIds;
   ListBuilder<String> get participatingUserIds =>
       _$this._participatingUserIds ??= new ListBuilder<String>();
-  set participatingUserIds(ListBuilder<String> participatingUserIds) =>
+  set participatingUserIds(ListBuilder<String>? participatingUserIds) =>
       _$this._participatingUserIds = participatingUserIds;
 
   MessageBuilder() {
@@ -289,16 +277,17 @@ class MessageBuilder implements Builder<Message, MessageBuilder> {
   }
 
   MessageBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _createdAt = _$v.createdAt;
-      _body = _$v.body;
-      _authorId = _$v.authorId;
-      _isGenerated = _$v.isGenerated;
-      _attachments = _$v.attachments?.toBuilder();
-      _mediaComment = _$v.mediaComment?.toBuilder();
-      _forwardedMessages = _$v.forwardedMessages?.toBuilder();
-      _participatingUserIds = _$v.participatingUserIds?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _createdAt = $v.createdAt;
+      _body = $v.body;
+      _authorId = $v.authorId;
+      _isGenerated = $v.isGenerated;
+      _attachments = $v.attachments?.toBuilder();
+      _mediaComment = $v.mediaComment?.toBuilder();
+      _forwardedMessages = $v.forwardedMessages?.toBuilder();
+      _participatingUserIds = $v.participatingUserIds?.toBuilder();
       _$v = null;
     }
     return this;
@@ -306,34 +295,36 @@ class MessageBuilder implements Builder<Message, MessageBuilder> {
 
   @override
   void replace(Message other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Message;
   }
 
   @override
-  void update(void Function(MessageBuilder) updates) {
+  void update(void Function(MessageBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Message build() {
+  Message build() => _build();
+
+  _$Message _build() {
     _$Message _$result;
     try {
       _$result = _$v ??
           new _$Message._(
-              id: id,
+              id: BuiltValueNullFieldError.checkNotNull(id, r'Message', 'id'),
               createdAt: createdAt,
               body: body,
-              authorId: authorId,
-              isGenerated: isGenerated,
+              authorId: BuiltValueNullFieldError.checkNotNull(
+                  authorId, r'Message', 'authorId'),
+              isGenerated: BuiltValueNullFieldError.checkNotNull(
+                  isGenerated, r'Message', 'isGenerated'),
               attachments: _attachments?.build(),
               mediaComment: _mediaComment?.build(),
               forwardedMessages: _forwardedMessages?.build(),
               participatingUserIds: _participatingUserIds?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'attachments';
         _attachments?.build();
@@ -345,7 +336,7 @@ class MessageBuilder implements Builder<Message, MessageBuilder> {
         _participatingUserIds?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Message', _$failedField, e.toString());
+            r'Message', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -354,4 +345,4 @@ class MessageBuilder implements Builder<Message, MessageBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

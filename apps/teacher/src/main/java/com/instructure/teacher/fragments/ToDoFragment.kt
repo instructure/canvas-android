@@ -154,7 +154,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
         }
         val anonymousGrading = assignment.anonymousGrading || assignment.anonymousSubmissions
         val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, submissions, 0, anonymousGrading)
-        RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
+        RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
     }
 
     override fun onRouteFailed() {

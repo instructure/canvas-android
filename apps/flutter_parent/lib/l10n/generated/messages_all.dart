@@ -51,7 +51,7 @@ import 'messages_sv_instk12.dart' as messages_sv_instk12;
 import 'messages_zh.dart' as messages_zh;
 import 'messages_zh_HK.dart' as messages_zh_hk;
 
-typedef Future<dynamic> LibraryLoader();
+typedef Future<dynamic>? LibraryLoader();
 Map<String, LibraryLoader> _deferredLibraries = {
   'ar': () => new Future.value(null),
   'ca': () => new Future.value(null),
@@ -90,7 +90,7 @@ Map<String, LibraryLoader> _deferredLibraries = {
   'zh_HK': () => new Future.value(null),
 };
 
-MessageLookupByLibrary _findExact(String localeName) {
+MessageLookupByLibrary? _findExact(String localeName) {
   switch (localeName) {
     case 'ar':
       return messages_ar.messages;
@@ -191,7 +191,7 @@ bool _messagesExistFor(String locale) {
   }
 }
 
-MessageLookupByLibrary _findGeneratedMessagesFor(String locale) {
+MessageLookupByLibrary? _findGeneratedMessagesFor(String locale) {
   var actualLocale = Intl.verifiedLocale(locale, _messagesExistFor,
       onFailure: (_) => null);
   if (actualLocale == null) return null;

@@ -174,7 +174,7 @@ void main() {
       final result = item.getPlannerSubmission();
 
       expect(result, isNotNull);
-      expect(result.submitted, isFalse);
+      expect(result!.submitted, isFalse);
     });
 
     test('returns valid PlannerSubmission for valid submission', () {
@@ -212,9 +212,9 @@ void main() {
       final plannable = Plannable((b) => b
         ..id = item.id
         ..title = item.title
-        ..pointsPossible = newAssignment?.pointsPossible
-        ..dueAt = newAssignment?.dueAt
-        ..assignmentId = newAssignment?.id);
+        ..pointsPossible = newAssignment.pointsPossible
+        ..dueAt = newAssignment.dueAt
+        ..assignmentId = newAssignment.id);
       final expectedResult = PlannerItem((b) => b
         ..courseId = contextId
         ..contextType = contextType

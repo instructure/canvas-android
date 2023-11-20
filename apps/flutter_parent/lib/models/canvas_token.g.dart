@@ -15,64 +15,60 @@ class _$CanvasTokenSerializer implements StructuredSerializer<CanvasToken> {
   final String wireName = 'CanvasToken';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, CanvasToken object,
+  Iterable<Object?> serialize(Serializers serializers, CanvasToken object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'access_token',
       serializers.serialize(object.accessToken,
           specifiedType: const FullType(String)),
     ];
-    result.add('refresh_token');
-    if (object.refreshToken == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.refreshToken,
-          specifiedType: const FullType(String)));
-    }
-    result.add('user');
-    if (object.user == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.user,
-          specifiedType: const FullType(User)));
-    }
-    result.add('real_user');
-    if (object.realUser == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.realUser,
-          specifiedType: const FullType(User)));
-    }
+    Object? value;
+    value = object.refreshToken;
+
+    result
+      ..add('refresh_token')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.user;
+
+    result
+      ..add('user')
+      ..add(serializers.serialize(value, specifiedType: const FullType(User)));
+    value = object.realUser;
+
+    result
+      ..add('real_user')
+      ..add(serializers.serialize(value, specifiedType: const FullType(User)));
+
     return result;
   }
 
   @override
-  CanvasToken deserialize(Serializers serializers, Iterable<Object> serialized,
+  CanvasToken deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CanvasTokenBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'access_token':
           result.accessToken = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'refresh_token':
           result.refreshToken = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'user':
           result.user.replace(serializers.deserialize(value,
-              specifiedType: const FullType(User)) as User);
+              specifiedType: const FullType(User))! as User);
           break;
         case 'real_user':
           result.realUser.replace(serializers.deserialize(value,
-              specifiedType: const FullType(User)) as User);
+              specifiedType: const FullType(User))! as User);
           break;
       }
     }
@@ -85,21 +81,20 @@ class _$CanvasToken extends CanvasToken {
   @override
   final String accessToken;
   @override
-  final String refreshToken;
+  final String? refreshToken;
   @override
-  final User user;
+  final User? user;
   @override
-  final User realUser;
+  final User? realUser;
 
-  factory _$CanvasToken([void Function(CanvasTokenBuilder) updates]) =>
-      (new CanvasTokenBuilder()..update(updates)).build();
+  factory _$CanvasToken([void Function(CanvasTokenBuilder)? updates]) =>
+      (new CanvasTokenBuilder()..update(updates))._build();
 
   _$CanvasToken._(
-      {this.accessToken, this.refreshToken, this.user, this.realUser})
+      {required this.accessToken, this.refreshToken, this.user, this.realUser})
       : super._() {
-    if (accessToken == null) {
-      throw new BuiltValueNullFieldError('CanvasToken', 'accessToken');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        accessToken, r'CanvasToken', 'accessToken');
   }
 
   @override
@@ -121,15 +116,18 @@ class _$CanvasToken extends CanvasToken {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, accessToken.hashCode), refreshToken.hashCode),
-            user.hashCode),
-        realUser.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, accessToken.hashCode);
+    _$hash = $jc(_$hash, refreshToken.hashCode);
+    _$hash = $jc(_$hash, user.hashCode);
+    _$hash = $jc(_$hash, realUser.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CanvasToken')
+    return (newBuiltValueToStringHelper(r'CanvasToken')
           ..add('accessToken', accessToken)
           ..add('refreshToken', refreshToken)
           ..add('user', user)
@@ -139,32 +137,33 @@ class _$CanvasToken extends CanvasToken {
 }
 
 class CanvasTokenBuilder implements Builder<CanvasToken, CanvasTokenBuilder> {
-  _$CanvasToken _$v;
+  _$CanvasToken? _$v;
 
-  String _accessToken;
-  String get accessToken => _$this._accessToken;
-  set accessToken(String accessToken) => _$this._accessToken = accessToken;
+  String? _accessToken;
+  String? get accessToken => _$this._accessToken;
+  set accessToken(String? accessToken) => _$this._accessToken = accessToken;
 
-  String _refreshToken;
-  String get refreshToken => _$this._refreshToken;
-  set refreshToken(String refreshToken) => _$this._refreshToken = refreshToken;
+  String? _refreshToken;
+  String? get refreshToken => _$this._refreshToken;
+  set refreshToken(String? refreshToken) => _$this._refreshToken = refreshToken;
 
-  UserBuilder _user;
+  UserBuilder? _user;
   UserBuilder get user => _$this._user ??= new UserBuilder();
-  set user(UserBuilder user) => _$this._user = user;
+  set user(UserBuilder? user) => _$this._user = user;
 
-  UserBuilder _realUser;
+  UserBuilder? _realUser;
   UserBuilder get realUser => _$this._realUser ??= new UserBuilder();
-  set realUser(UserBuilder realUser) => _$this._realUser = realUser;
+  set realUser(UserBuilder? realUser) => _$this._realUser = realUser;
 
   CanvasTokenBuilder();
 
   CanvasTokenBuilder get _$this {
-    if (_$v != null) {
-      _accessToken = _$v.accessToken;
-      _refreshToken = _$v.refreshToken;
-      _user = _$v.user?.toBuilder();
-      _realUser = _$v.realUser?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _accessToken = $v.accessToken;
+      _refreshToken = $v.refreshToken;
+      _user = $v.user?.toBuilder();
+      _realUser = $v.realUser?.toBuilder();
       _$v = null;
     }
     return this;
@@ -172,29 +171,30 @@ class CanvasTokenBuilder implements Builder<CanvasToken, CanvasTokenBuilder> {
 
   @override
   void replace(CanvasToken other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CanvasToken;
   }
 
   @override
-  void update(void Function(CanvasTokenBuilder) updates) {
+  void update(void Function(CanvasTokenBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CanvasToken build() {
+  CanvasToken build() => _build();
+
+  _$CanvasToken _build() {
     _$CanvasToken _$result;
     try {
       _$result = _$v ??
           new _$CanvasToken._(
-              accessToken: accessToken,
+              accessToken: BuiltValueNullFieldError.checkNotNull(
+                  accessToken, r'CanvasToken', 'accessToken'),
               refreshToken: refreshToken,
               user: _user?.build(),
               realUser: _realUser?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'user';
         _user?.build();
@@ -202,7 +202,7 @@ class CanvasTokenBuilder implements Builder<CanvasToken, CanvasTokenBuilder> {
         _realUser?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'CanvasToken', _$failedField, e.toString());
+            r'CanvasToken', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -211,4 +211,4 @@ class CanvasTokenBuilder implements Builder<CanvasToken, CanvasTokenBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

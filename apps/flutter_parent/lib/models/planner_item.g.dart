@@ -15,9 +15,9 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
   final String wireName = 'PlannerItem';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, PlannerItem object,
+  Iterable<Object?> serialize(Serializers serializers, PlannerItem object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'plannable_type',
       serializers.serialize(object.plannableType,
           specifiedType: const FullType(String)),
@@ -25,105 +25,99 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
       serializers.serialize(object.plannable,
           specifiedType: const FullType(Plannable)),
     ];
-    result.add('course_id');
-    if (object.courseId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.courseId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('context_type');
-    if (object.contextType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.contextType,
-          specifiedType: const FullType(String)));
-    }
-    result.add('context_name');
-    if (object.contextName == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.contextName,
-          specifiedType: const FullType(String)));
-    }
-    result.add('plannable_date');
-    if (object.plannableDate == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.plannableDate,
+    Object? value;
+    value = object.courseId;
+
+    result
+      ..add('course_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.contextType;
+
+    result
+      ..add('context_type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.contextName;
+
+    result
+      ..add('context_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.plannableDate;
+
+    result
+      ..add('plannable_date')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('submissions');
-    if (object.submissionStatusRaw == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.submissionStatusRaw,
+    value = object.submissionStatusRaw;
+
+    result
+      ..add('submissions')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(JsonObject)));
-    }
-    result.add('html_url');
-    if (object.htmlUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.htmlUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('submissionStatus');
-    if (object.submissionStatus == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.submissionStatus,
+    value = object.htmlUrl;
+
+    result
+      ..add('html_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.submissionStatus;
+
+    result
+      ..add('submissionStatus')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(PlannerSubmission)));
-    }
+
     return result;
   }
 
   @override
-  PlannerItem deserialize(Serializers serializers, Iterable<Object> serialized,
+  PlannerItem deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PlannerItemBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'course_id':
           result.courseId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'context_type':
           result.contextType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'context_name':
           result.contextName = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'plannable_type':
           result.plannableType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'plannable':
           result.plannable.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Plannable)) as Plannable);
+              specifiedType: const FullType(Plannable))! as Plannable);
           break;
         case 'plannable_date':
           result.plannableDate = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'submissions':
           result.submissionStatusRaw = serializers.deserialize(value,
-              specifiedType: const FullType(JsonObject)) as JsonObject;
+              specifiedType: const FullType(JsonObject)) as JsonObject?;
           break;
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'submissionStatus':
           result.submissionStatus.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(PlannerSubmission))
+                  specifiedType: const FullType(PlannerSubmission))!
               as PlannerSubmission);
           break;
       }
@@ -135,44 +129,42 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
 
 class _$PlannerItem extends PlannerItem {
   @override
-  final String courseId;
+  final String? courseId;
   @override
-  final String contextType;
+  final String? contextType;
   @override
-  final String contextName;
+  final String? contextName;
   @override
   final String plannableType;
   @override
   final Plannable plannable;
   @override
-  final DateTime plannableDate;
+  final DateTime? plannableDate;
   @override
-  final JsonObject submissionStatusRaw;
+  final JsonObject? submissionStatusRaw;
   @override
-  final String htmlUrl;
+  final String? htmlUrl;
   @override
-  final PlannerSubmission submissionStatus;
+  final PlannerSubmission? submissionStatus;
 
-  factory _$PlannerItem([void Function(PlannerItemBuilder) updates]) =>
-      (new PlannerItemBuilder()..update(updates)).build();
+  factory _$PlannerItem([void Function(PlannerItemBuilder)? updates]) =>
+      (new PlannerItemBuilder()..update(updates))._build();
 
   _$PlannerItem._(
       {this.courseId,
       this.contextType,
       this.contextName,
-      this.plannableType,
-      this.plannable,
+      required this.plannableType,
+      required this.plannable,
       this.plannableDate,
       this.submissionStatusRaw,
       this.htmlUrl,
       this.submissionStatus})
       : super._() {
-    if (plannableType == null) {
-      throw new BuiltValueNullFieldError('PlannerItem', 'plannableType');
-    }
-    if (plannable == null) {
-      throw new BuiltValueNullFieldError('PlannerItem', 'plannable');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        plannableType, r'PlannerItem', 'plannableType');
+    BuiltValueNullFieldError.checkNotNull(
+        plannable, r'PlannerItem', 'plannable');
   }
 
   @override
@@ -199,27 +191,23 @@ class _$PlannerItem extends PlannerItem {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc($jc(0, courseId.hashCode),
-                                    contextType.hashCode),
-                                contextName.hashCode),
-                            plannableType.hashCode),
-                        plannable.hashCode),
-                    plannableDate.hashCode),
-                submissionStatusRaw.hashCode),
-            htmlUrl.hashCode),
-        submissionStatus.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, courseId.hashCode);
+    _$hash = $jc(_$hash, contextType.hashCode);
+    _$hash = $jc(_$hash, contextName.hashCode);
+    _$hash = $jc(_$hash, plannableType.hashCode);
+    _$hash = $jc(_$hash, plannable.hashCode);
+    _$hash = $jc(_$hash, plannableDate.hashCode);
+    _$hash = $jc(_$hash, submissionStatusRaw.hashCode);
+    _$hash = $jc(_$hash, htmlUrl.hashCode);
+    _$hash = $jc(_$hash, submissionStatus.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('PlannerItem')
+    return (newBuiltValueToStringHelper(r'PlannerItem')
           ..add('courseId', courseId)
           ..add('contextType', contextType)
           ..add('contextName', contextName)
@@ -234,63 +222,64 @@ class _$PlannerItem extends PlannerItem {
 }
 
 class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
-  _$PlannerItem _$v;
+  _$PlannerItem? _$v;
 
-  String _courseId;
-  String get courseId => _$this._courseId;
-  set courseId(String courseId) => _$this._courseId = courseId;
+  String? _courseId;
+  String? get courseId => _$this._courseId;
+  set courseId(String? courseId) => _$this._courseId = courseId;
 
-  String _contextType;
-  String get contextType => _$this._contextType;
-  set contextType(String contextType) => _$this._contextType = contextType;
+  String? _contextType;
+  String? get contextType => _$this._contextType;
+  set contextType(String? contextType) => _$this._contextType = contextType;
 
-  String _contextName;
-  String get contextName => _$this._contextName;
-  set contextName(String contextName) => _$this._contextName = contextName;
+  String? _contextName;
+  String? get contextName => _$this._contextName;
+  set contextName(String? contextName) => _$this._contextName = contextName;
 
-  String _plannableType;
-  String get plannableType => _$this._plannableType;
-  set plannableType(String plannableType) =>
+  String? _plannableType;
+  String? get plannableType => _$this._plannableType;
+  set plannableType(String? plannableType) =>
       _$this._plannableType = plannableType;
 
-  PlannableBuilder _plannable;
+  PlannableBuilder? _plannable;
   PlannableBuilder get plannable =>
       _$this._plannable ??= new PlannableBuilder();
-  set plannable(PlannableBuilder plannable) => _$this._plannable = plannable;
+  set plannable(PlannableBuilder? plannable) => _$this._plannable = plannable;
 
-  DateTime _plannableDate;
-  DateTime get plannableDate => _$this._plannableDate;
-  set plannableDate(DateTime plannableDate) =>
+  DateTime? _plannableDate;
+  DateTime? get plannableDate => _$this._plannableDate;
+  set plannableDate(DateTime? plannableDate) =>
       _$this._plannableDate = plannableDate;
 
-  JsonObject _submissionStatusRaw;
-  JsonObject get submissionStatusRaw => _$this._submissionStatusRaw;
-  set submissionStatusRaw(JsonObject submissionStatusRaw) =>
+  JsonObject? _submissionStatusRaw;
+  JsonObject? get submissionStatusRaw => _$this._submissionStatusRaw;
+  set submissionStatusRaw(JsonObject? submissionStatusRaw) =>
       _$this._submissionStatusRaw = submissionStatusRaw;
 
-  String _htmlUrl;
-  String get htmlUrl => _$this._htmlUrl;
-  set htmlUrl(String htmlUrl) => _$this._htmlUrl = htmlUrl;
+  String? _htmlUrl;
+  String? get htmlUrl => _$this._htmlUrl;
+  set htmlUrl(String? htmlUrl) => _$this._htmlUrl = htmlUrl;
 
-  PlannerSubmissionBuilder _submissionStatus;
+  PlannerSubmissionBuilder? _submissionStatus;
   PlannerSubmissionBuilder get submissionStatus =>
       _$this._submissionStatus ??= new PlannerSubmissionBuilder();
-  set submissionStatus(PlannerSubmissionBuilder submissionStatus) =>
+  set submissionStatus(PlannerSubmissionBuilder? submissionStatus) =>
       _$this._submissionStatus = submissionStatus;
 
   PlannerItemBuilder();
 
   PlannerItemBuilder get _$this {
-    if (_$v != null) {
-      _courseId = _$v.courseId;
-      _contextType = _$v.contextType;
-      _contextName = _$v.contextName;
-      _plannableType = _$v.plannableType;
-      _plannable = _$v.plannable?.toBuilder();
-      _plannableDate = _$v.plannableDate;
-      _submissionStatusRaw = _$v.submissionStatusRaw;
-      _htmlUrl = _$v.htmlUrl;
-      _submissionStatus = _$v.submissionStatus?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _courseId = $v.courseId;
+      _contextType = $v.contextType;
+      _contextName = $v.contextName;
+      _plannableType = $v.plannableType;
+      _plannable = $v.plannable.toBuilder();
+      _plannableDate = $v.plannableDate;
+      _submissionStatusRaw = $v.submissionStatusRaw;
+      _htmlUrl = $v.htmlUrl;
+      _submissionStatus = $v.submissionStatus?.toBuilder();
       _$v = null;
     }
     return this;
@@ -298,19 +287,19 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
 
   @override
   void replace(PlannerItem other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$PlannerItem;
   }
 
   @override
-  void update(void Function(PlannerItemBuilder) updates) {
+  void update(void Function(PlannerItemBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$PlannerItem build() {
+  PlannerItem build() => _build();
+
+  _$PlannerItem _build() {
     _$PlannerItem _$result;
     try {
       _$result = _$v ??
@@ -318,14 +307,15 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
               courseId: courseId,
               contextType: contextType,
               contextName: contextName,
-              plannableType: plannableType,
+              plannableType: BuiltValueNullFieldError.checkNotNull(
+                  plannableType, r'PlannerItem', 'plannableType'),
               plannable: plannable.build(),
               plannableDate: plannableDate,
               submissionStatusRaw: submissionStatusRaw,
               htmlUrl: htmlUrl,
               submissionStatus: _submissionStatus?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'plannable';
         plannable.build();
@@ -334,7 +324,7 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
         _submissionStatus?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'PlannerItem', _$failedField, e.toString());
+            r'PlannerItem', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -343,4 +333,4 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

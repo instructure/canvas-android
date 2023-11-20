@@ -17,13 +17,13 @@
 package com.instructure.teacher.fragments
 
 import android.app.Activity
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
@@ -194,9 +194,9 @@ class LtiLaunchFragment : BaseFragment() {
 
         fun newInstance(args: Bundle) = LtiLaunchFragment().apply { arguments = args }
 
-        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
-            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+        fun routeLtiLaunchFragment(activity: FragmentActivity, canvasContext: CanvasContext?, url: String) {
+            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), activity.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(activity, Route(LtiLaunchFragment::class.java, canvasContext, args))
         }
     }
 }

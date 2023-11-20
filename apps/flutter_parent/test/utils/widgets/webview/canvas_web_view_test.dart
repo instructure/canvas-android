@@ -23,6 +23,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../accessibility_utils.dart';
 import '../../platform_config.dart';
 import '../../test_app.dart';
+import '../../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final interactor = _MockWebViewInteractor();
@@ -31,24 +32,6 @@ void main() {
 
   setUp(() async {
     reset(interactor);
-  });
-
-  group('constructor', () {
-    test('throws assertion error when initialHeight is null', () {
-      expect(() => CanvasWebView(content: null, initialHeight: null), throwsAssertionError);
-    });
-
-    test('throws assertion error when horizontalPadding is null', () {
-      expect(() => CanvasWebView(content: null, horizontalPadding: null), throwsAssertionError);
-    });
-
-    test('throws assertion error when authContentIfNecessary is null', () {
-      expect(() => CanvasWebView(content: null, authContentIfNecessary: null), throwsAssertionError);
-    });
-
-    test('throws assertion error when fullScreen is null', () {
-      expect(() => CanvasWebView(content: null, fullScreen: null), throwsAssertionError);
-    });
   });
 
   group('completely empty', () {
@@ -155,9 +138,9 @@ void main() {
   });
 }
 
-class _MockWebViewInteractor extends Mock implements WebContentInteractor {
+class _MockWebViewInteractor extends Mock implements MockWebContentInteractor {
   @override
   JavascriptChannel ltiToolPressedChannel(handler) {
-    return WebContentInteractor().ltiToolPressedChannel(handler);
+    return WebContentInteractor().ltiToolPressedChannel(handler!);
   }
 }

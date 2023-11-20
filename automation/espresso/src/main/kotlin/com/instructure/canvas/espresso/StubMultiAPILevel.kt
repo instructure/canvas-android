@@ -19,4 +19,4 @@ package com.instructure.canvas.espresso
 // Apply on a test method which is failing on Firebase Test Lab (FTL) on some API levels. Write the failing API Levels into the parameter.
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class StubMultiAPILevel(val failedApiLevels: String = "")
+annotation class StubMultiAPILevel(val failedApiLevels: String = "", val explanation: String = "")

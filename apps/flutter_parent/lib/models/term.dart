@@ -27,16 +27,13 @@ abstract class Term implements Built<Term, TermBuilder> {
 
   String get id;
 
-  @nullable
-  String get name;
+  String? get name;
 
   @BuiltValueField(wireName: 'start_at')
-  @nullable
-  DateTime get startAt;
+  DateTime? get startAt;
 
   @BuiltValueField(wireName: 'end_at')
-  @nullable
-  DateTime get endAt;
+  DateTime? get endAt;
 
   Term._();
   factory Term([void Function(TermBuilder) updates]) = _$Term;

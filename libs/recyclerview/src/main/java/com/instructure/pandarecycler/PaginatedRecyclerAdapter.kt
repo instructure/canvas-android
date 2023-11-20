@@ -146,6 +146,13 @@ abstract class PaginatedRecyclerAdapter<VIEW_HOLDER : RecyclerView.ViewHolder>(c
         loadData()
     }
 
+    fun silentRefresh() {
+        nextUrl = null
+        resetBooleans()
+        isRefresh = false // We don't care about fresh data here, just want to update the offline state
+        loadData()
+    }
+
     override fun resetData() {
         clear()
         nextUrl = null

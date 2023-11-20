@@ -38,7 +38,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListTodoBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 
@@ -51,11 +51,11 @@ class ToDoListFragment : ParentFragment() {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: TodoListRecyclerAdapter
+    private var recyclerAdapter: TodoListRecyclerAdapter? = null
 
     private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<ToDo> = object : NotificationAdapterToFragmentCallback<ToDo> {
         override fun onRowClicked(todo: ToDo, position: Int, isOpenDetail: Boolean) {
-            recyclerAdapter.setSelectedPosition(position)
+            recyclerAdapter?.setSelectedPosition(position)
             onRowClick(todo)
         }
 
@@ -63,7 +63,7 @@ class ToDoListFragment : ParentFragment() {
             if (!isAdded) return
             setRefreshing(false)
             binding.editOptions.setGone()
-            if (recyclerAdapter.size() == 0) {
+            if (recyclerAdapter?.size() == 0) {
                 setEmptyView(recyclerViewBinding.emptyView, R.drawable.ic_panda_sleeping, R.string.noTodos, R.string.noTodosSubtext)
             }
         }
@@ -91,26 +91,28 @@ class ToDoListFragment : ParentFragment() {
             }
         }
         recyclerAdapter = TodoListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
-        configureRecyclerView(
-            view,
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView
-        )
+        recyclerAdapter?.let {
+            configureRecyclerView(
+                view,
+                requireContext(),
+                it,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView
+            )
+        }
 
         recyclerViewBinding.listView.isSelectionEnabled = false
 
         binding.confirmButton.text = getString(R.string.markAsDone)
-        binding.confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
+        binding.confirmButton.setOnClickListener { recyclerAdapter?.confirmButtonClicked() }
         binding.cancelButton.setText(R.string.cancel)
-        binding.cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
+        binding.cancelButton.setOnClickListener { recyclerAdapter?.cancelButtonClicked() }
 
-        updateFilterTitle(recyclerAdapter.getFilterMode())
+        updateFilterTitle(recyclerAdapter?.getFilterMode() ?: NoFilter)
         binding.clearFilterTextView.setOnClickListener {
-            recyclerAdapter.loadDataWithFilter(NoFilter)
-            updateFilterTitle(recyclerAdapter.getFilterMode())
+            recyclerAdapter?.loadDataWithFilter(NoFilter)
+            updateFilterTitle(recyclerAdapter?.getFilterMode() ?: NoFilter)
         }
     }
 
@@ -132,16 +134,18 @@ class ToDoListFragment : ParentFragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        configureRecyclerView(
-            requireView(),
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView,
+        recyclerAdapter?.let {
+            configureRecyclerView(
+                requireView(),
+                requireContext(),
+                it,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView,
                 R.string.noTodos
-        )
-        if (recyclerAdapter.size() == 0) {
+            )
+        }
+        if (recyclerAdapter?.size() == 0) {
             recyclerViewBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
@@ -166,33 +170,33 @@ class ToDoListFragment : ParentFragment() {
                 if (toDo.assignment!!.discussionTopicHeader != null) {
                     val groupTopic = toDo.assignment!!.discussionTopicHeader!!.groupTopicChildren.firstOrNull()
                     if (groupTopic == null) { // Launch discussion details fragment
-                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
+                        RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
                     } else { // Launch discussion details fragment with the group
-                        RouteMatcher.route(requireContext(), DiscussionRouterFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
+                        RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
                     }
                 } else {
                     // Launch assignment details fragment.
-                    RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
+                    RouteMatcher.route(requireActivity(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
                 }
             }
             toDo?.scheduleItem != null -> // It's a Calendar event from the Upcoming API.
-                RouteMatcher.route(requireContext(), CalendarEventFragment.makeRoute(toDo.canvasContext!!, toDo.scheduleItem!!))
+                RouteMatcher.route(requireActivity(), CalendarEventFragment.makeRoute(toDo.canvasContext!!, toDo.scheduleItem!!))
             toDo?.quiz != null -> // It's a Quiz let's launch the quiz details fragment
-                RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(toDo.canvasContext!!, toDo.quiz!!, toDo.quiz!!.url!!))
+                RouteMatcher.route(requireActivity(), BasicQuizViewFragment.makeRoute(toDo.canvasContext!!, toDo.quiz!!, toDo.quiz!!.url!!))
         }
     }
 
     private fun showCourseFilterDialog() {
         val choices = arrayOf(getString(R.string.favoritedCoursesLabel))
-        var checkedItem = choices.indexOf(getString(recyclerAdapter.getFilterMode().titleId))
+        var checkedItem = choices.indexOf(getString(recyclerAdapter?.getFilterMode()?.titleId ?: NoFilter.titleId))
 
         val dialog = AlertDialog.Builder(requireContext())
                 .setTitle(R.string.filterByEllipsis)
                 .setSingleChoiceItems(choices, checkedItem) { _, index ->
                     checkedItem = index
                 }.setPositiveButton(android.R.string.ok) { _, _ ->
-                    if (checkedItem >= 0) recyclerAdapter.loadDataWithFilter(convertFilterChoiceToMode(choices[checkedItem]))
-                    updateFilterTitle(recyclerAdapter.getFilterMode())
+                    if (checkedItem >= 0) recyclerAdapter?.loadDataWithFilter(convertFilterChoiceToMode(choices[checkedItem]))
+                    updateFilterTitle(recyclerAdapter?.getFilterMode() ?: NoFilter)
                 }.setNegativeButton(android.R.string.cancel, null)
                 .create()
 
@@ -216,7 +220,7 @@ class ToDoListFragment : ParentFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recyclerAdapter.cancel()
+        recyclerAdapter?.cancel()
     }
 
     companion object {

@@ -27,6 +27,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class PairingUtil {
   pairNewStudent(BuildContext context, Function() onSuccess) {
     showModalBottomSheet(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: context,
       isScrollControlled: true,
       builder: (context) {
@@ -34,7 +35,7 @@ class PairingUtil {
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           shrinkWrap: true,
           children: <Widget>[
-            Text(L10n(context).addStudentWith, style: Theme.of(context).textTheme.caption),
+            Text(L10n(context).addStudentWith, style: Theme.of(context).textTheme.bodyMedium),
             SizedBox(height: 12),
             _pairingCode(context, onSuccess),
             if (_hasCameras()) _qrCode(context, onSuccess),
@@ -46,10 +47,10 @@ class PairingUtil {
 
   Widget _qrCode(BuildContext context, Function() onSuccess) {
     return ListTile(
-      title: Text(L10n(context).qrCode),
+      title: Text(L10n(context).qrCode, style: Theme.of(context).textTheme.titleMedium),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 4),
-        child: Text(L10n(context).qrCodeDescription),
+        child: Text(L10n(context).qrCodeDescription, style: Theme.of(context).textTheme.bodyMedium),
       ),
       leading: SvgPicture.asset('assets/svg/qr-code.svg', color: ParentColors.ash, width: 25, height: 25),
       contentPadding: EdgeInsets.symmetric(vertical: 10),
@@ -64,17 +65,17 @@ class PairingUtil {
 
   Widget _pairingCode(BuildContext context, Function() onSuccess) {
     return ListTile(
-      title: Text(L10n(context).pairingCode),
+      title: Text(L10n(context).pairingCode, style: Theme.of(context).textTheme.titleMedium),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 4),
-        child: Text(L10n(context).pairingCodeDescription),
+        child: Text(L10n(context).pairingCodeDescription, style: Theme.of(context).textTheme.bodyMedium),
       ),
       leading: Icon(CanvasIcons.keyboard_shortcuts, color: ParentColors.ash),
       contentPadding: EdgeInsets.symmetric(vertical: 10),
       onTap: () async {
         Navigator.of(context).pop();
         locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
-        bool studentPaired = await locator<QuickNav>().showDialog<bool>(
+        bool? studentPaired = await locator<QuickNav>().showDialog<bool>(
           context: context,
           barrierDismissible: true,
           builder: (BuildContext context) => PairingCodeDialog(null),

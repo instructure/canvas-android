@@ -22,8 +22,11 @@ import android.view.View
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.student.adapter.FileFolderCallback
-import com.instructure.student.adapter.FileListRecyclerAdapter
+import com.instructure.student.features.files.list.FileFolderCallback
+import com.instructure.student.features.files.list.FileListRecyclerAdapter
+import com.instructure.student.features.files.list.FileListRepository
+import io.mockk.mockk
+import io.mockk.mockkClass
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
@@ -37,11 +40,12 @@ class FileListRecyclerAdapterTest : TestCase() {
     private lateinit var fileFolder: FileFolder
     private lateinit var fileFolder2: FileFolder
 
-    class FileListRecyclerAdapterWrapper(context: Context) : FileListRecyclerAdapter(context, CanvasContext.emptyCourseContext(), emptyList(), FileFolder(), object : FileFolderCallback {
+    class FileListRecyclerAdapterWrapper(context: Context) : FileListRecyclerAdapter(context, CanvasContext.emptyCourseContext(), emptyList(), FileFolder(), object :
+        FileFolderCallback {
         override fun onItemClicked(item: FileFolder) {}
         override fun onOpenItemMenu(item: FileFolder, anchorView: View) {}
         override fun onRefreshFinished() {}
-    }, true)
+    }, fileListRepository = mockk(relaxed = true))
 
     @Before
     fun setup() {

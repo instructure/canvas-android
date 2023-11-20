@@ -55,8 +55,8 @@ class SpeedGraderLtiSubmissionFragment : Fragment() {
     private fun setupViews() {
         ViewStyler.themeButton(binding.viewLtiButton)
         binding.viewLtiButton.onClick {
-            val args = InternalWebViewFragment.makeBundle(mUrl, getString(R.string.canvasAPI_externalTool))
-            RouteMatcher.route(requireContext(), Route(InternalWebViewFragment::class.java, mCanvasContext, args))
+            val args = InternalWebViewFragment.makeBundle(mUrl, getString(R.string.canvasAPI_externalTool), shouldAuthenticate = true, shouldRouteInternally = false)
+            RouteMatcher.route(requireActivity(), Route(InternalWebViewFragment::class.java, mCanvasContext, args))
         }
     }
 

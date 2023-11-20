@@ -22,11 +22,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.annotation.IntegerRes
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 

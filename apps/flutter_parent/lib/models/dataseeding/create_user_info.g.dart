@@ -17,9 +17,9 @@ class _$CreateUserInfoSerializer
   final String wireName = 'CreateUserInfo';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, CreateUserInfo object,
+  Iterable<Object?> serialize(Serializers serializers, CreateUserInfo object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'user',
       serializers.serialize(object.user,
           specifiedType: const FullType(UserNameData)),
@@ -36,28 +36,27 @@ class _$CreateUserInfoSerializer
 
   @override
   CreateUserInfo deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CreateUserInfoBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'user':
           result.user.replace(serializers.deserialize(value,
-              specifiedType: const FullType(UserNameData)) as UserNameData);
+              specifiedType: const FullType(UserNameData))! as UserNameData);
           break;
         case 'pseudonym':
           result.pseudonym.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Pseudonym)) as Pseudonym);
+              specifiedType: const FullType(Pseudonym))! as Pseudonym);
           break;
         case 'communication_channel':
           result.communicationChannel.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(CommunicationChannel))
+                  specifiedType: const FullType(CommunicationChannel))!
               as CommunicationChannel);
           break;
       }
@@ -75,21 +74,19 @@ class _$CreateUserInfo extends CreateUserInfo {
   @override
   final CommunicationChannel communicationChannel;
 
-  factory _$CreateUserInfo([void Function(CreateUserInfoBuilder) updates]) =>
-      (new CreateUserInfoBuilder()..update(updates)).build();
+  factory _$CreateUserInfo([void Function(CreateUserInfoBuilder)? updates]) =>
+      (new CreateUserInfoBuilder()..update(updates))._build();
 
-  _$CreateUserInfo._({this.user, this.pseudonym, this.communicationChannel})
+  _$CreateUserInfo._(
+      {required this.user,
+      required this.pseudonym,
+      required this.communicationChannel})
       : super._() {
-    if (user == null) {
-      throw new BuiltValueNullFieldError('CreateUserInfo', 'user');
-    }
-    if (pseudonym == null) {
-      throw new BuiltValueNullFieldError('CreateUserInfo', 'pseudonym');
-    }
-    if (communicationChannel == null) {
-      throw new BuiltValueNullFieldError(
-          'CreateUserInfo', 'communicationChannel');
-    }
+    BuiltValueNullFieldError.checkNotNull(user, r'CreateUserInfo', 'user');
+    BuiltValueNullFieldError.checkNotNull(
+        pseudonym, r'CreateUserInfo', 'pseudonym');
+    BuiltValueNullFieldError.checkNotNull(
+        communicationChannel, r'CreateUserInfo', 'communicationChannel');
   }
 
   @override
@@ -111,13 +108,17 @@ class _$CreateUserInfo extends CreateUserInfo {
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, user.hashCode), pseudonym.hashCode),
-        communicationChannel.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, user.hashCode);
+    _$hash = $jc(_$hash, pseudonym.hashCode);
+    _$hash = $jc(_$hash, communicationChannel.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CreateUserInfo')
+    return (newBuiltValueToStringHelper(r'CreateUserInfo')
           ..add('user', user)
           ..add('pseudonym', pseudonym)
           ..add('communicationChannel', communicationChannel))
@@ -127,21 +128,21 @@ class _$CreateUserInfo extends CreateUserInfo {
 
 class CreateUserInfoBuilder
     implements Builder<CreateUserInfo, CreateUserInfoBuilder> {
-  _$CreateUserInfo _$v;
+  _$CreateUserInfo? _$v;
 
-  UserNameDataBuilder _user;
+  UserNameDataBuilder? _user;
   UserNameDataBuilder get user => _$this._user ??= new UserNameDataBuilder();
-  set user(UserNameDataBuilder user) => _$this._user = user;
+  set user(UserNameDataBuilder? user) => _$this._user = user;
 
-  PseudonymBuilder _pseudonym;
+  PseudonymBuilder? _pseudonym;
   PseudonymBuilder get pseudonym =>
       _$this._pseudonym ??= new PseudonymBuilder();
-  set pseudonym(PseudonymBuilder pseudonym) => _$this._pseudonym = pseudonym;
+  set pseudonym(PseudonymBuilder? pseudonym) => _$this._pseudonym = pseudonym;
 
-  CommunicationChannelBuilder _communicationChannel;
+  CommunicationChannelBuilder? _communicationChannel;
   CommunicationChannelBuilder get communicationChannel =>
       _$this._communicationChannel ??= new CommunicationChannelBuilder();
-  set communicationChannel(CommunicationChannelBuilder communicationChannel) =>
+  set communicationChannel(CommunicationChannelBuilder? communicationChannel) =>
       _$this._communicationChannel = communicationChannel;
 
   CreateUserInfoBuilder() {
@@ -149,10 +150,11 @@ class CreateUserInfoBuilder
   }
 
   CreateUserInfoBuilder get _$this {
-    if (_$v != null) {
-      _user = _$v.user?.toBuilder();
-      _pseudonym = _$v.pseudonym?.toBuilder();
-      _communicationChannel = _$v.communicationChannel?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _user = $v.user.toBuilder();
+      _pseudonym = $v.pseudonym.toBuilder();
+      _communicationChannel = $v.communicationChannel.toBuilder();
       _$v = null;
     }
     return this;
@@ -160,19 +162,19 @@ class CreateUserInfoBuilder
 
   @override
   void replace(CreateUserInfo other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CreateUserInfo;
   }
 
   @override
-  void update(void Function(CreateUserInfoBuilder) updates) {
+  void update(void Function(CreateUserInfoBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CreateUserInfo build() {
+  CreateUserInfo build() => _build();
+
+  _$CreateUserInfo _build() {
     _$CreateUserInfo _$result;
     try {
       _$result = _$v ??
@@ -181,7 +183,7 @@ class CreateUserInfoBuilder
               pseudonym: pseudonym.build(),
               communicationChannel: communicationChannel.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'user';
         user.build();
@@ -191,7 +193,7 @@ class CreateUserInfoBuilder
         communicationChannel.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'CreateUserInfo', _$failedField, e.toString());
+            r'CreateUserInfo', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -200,4 +202,4 @@ class CreateUserInfoBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

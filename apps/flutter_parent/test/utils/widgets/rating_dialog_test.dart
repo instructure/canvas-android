@@ -24,6 +24,7 @@ import 'package:mockito/mockito.dart';
 import '../accessibility_utils.dart';
 import '../test_app.dart';
 import '../test_helpers/mock_helpers.dart';
+import '../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final analytics = MockAnalytics();
@@ -42,7 +43,7 @@ void main() {
     reset(launcher);
   });
 
-  Future<void> _showDialog(tester, {DateTime nextShowDate, bool dontShowAgain}) async {
+  Future<void> _showDialog(tester, {DateTime? nextShowDate, bool? dontShowAgain}) async {
     return TestApp.showWidgetFromTap(tester, (context) => RatingDialog.showDialogIfPossible(context, false),
         configBlock: () async {
       await ApiPrefs.setRatingNextShowDate(nextShowDate);
@@ -108,8 +109,8 @@ void main() {
       verify(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW)).called(1);
 
       // Set four weeks from "now" ("now" is a little later when set in api prefs by rating dialog)
-      expect(ApiPrefs.getRatingNextShowDate().isAfter(date.add(Duration(days: RatingDialog.FOUR_WEEKS))), isTrue);
-      expect(ApiPrefs.getRatingNextShowDate().isBefore(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
+      expect(ApiPrefs.getRatingNextShowDate()?.isAfter(date.add(Duration(days: RatingDialog.FOUR_WEEKS))), isTrue);
+      expect(ApiPrefs.getRatingNextShowDate()?.isBefore(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
       expect(find.byType(RatingDialog), findsOneWidget);
       expect(find.text(AppLocalizations().ratingDialogTitle), findsOneWidget);
       expect(find.text(AppLocalizations().ratingDialogDontShowAgain.toUpperCase()), findsOneWidget);
@@ -166,8 +167,8 @@ void main() {
       expect(find.byType(RatingDialog), findsNothing);
       expect(ApiPrefs.getRatingDontShowAgain(), isNot(true)); // Shouldn't set this if we are sending feedback
       // Four weeks when without a comment ("now" is a little later when set in api prefs by rating dialog)
-      expect(ApiPrefs.getRatingNextShowDate().isAfter(date.add(Duration(days: RatingDialog.FOUR_WEEKS))), isTrue);
-      expect(ApiPrefs.getRatingNextShowDate().isBefore(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
+      expect(ApiPrefs.getRatingNextShowDate()?.isAfter(date.add(Duration(days: RatingDialog.FOUR_WEEKS))), isTrue);
+      expect(ApiPrefs.getRatingNextShowDate()?.isBefore(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
       verify(analytics.logEvent(
         AnalyticsEventConstants.RATING_DIALOG,
         extras: {AnalyticsParamConstants.STAR_RATING: 1}, // First was clicked, should send a 1
@@ -268,7 +269,7 @@ void main() {
       expect(find.byType(RatingDialog), findsNothing);
       expect(ApiPrefs.getRatingDontShowAgain(), isNull); // Shouldn't set this if we are sending feedback
       // Six weeks when given a comment
-      expect(ApiPrefs.getRatingNextShowDate().isAfter(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
+      expect(ApiPrefs.getRatingNextShowDate()?.isAfter(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
       verify(intentVeneer.launchEmailWithBody(AppLocalizations().ratingDialogEmailSubject('1.0.0'), emailBody));
       verify(analytics.logEvent(
         AnalyticsEventConstants.RATING_DIALOG,

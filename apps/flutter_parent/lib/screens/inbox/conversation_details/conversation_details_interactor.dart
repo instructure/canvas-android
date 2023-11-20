@@ -25,8 +25,8 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ConversationDetailsInteractor {
-  Future<Conversation> getConversation(String id) async {
-    Conversation conversation = await locator<InboxApi>().getConversation(id, refresh: true);
+  Future<Conversation?> getConversation(String id) async {
+    Conversation? conversation = await locator<InboxApi>().getConversation(id, refresh: true);
 
     // Fetching a conversation automatically marks it as read, so we'll want to update the inbox count badge
     locator<InboxCountNotifier>().update();
@@ -34,13 +34,14 @@ class ConversationDetailsInteractor {
     return conversation;
   }
 
-  Future<Conversation> addReply(BuildContext context, Conversation conversation, Message message, bool replyAll) async {
-    return locator<QuickNav>().push(context, ConversationReplyScreen(conversation, message, replyAll));
+  Future<Conversation?> addReply(BuildContext context, Conversation? conversation, Message? message, bool replyAll) async {
+    Conversation? r = await locator<QuickNav>().push(context, ConversationReplyScreen(conversation, message, replyAll));
+    return r;
   }
 
-  String getCurrentUserId() => ApiPrefs.getUser().id;
+  String? getCurrentUserId() => ApiPrefs.getUser()?.id;
 
-  void viewAttachment(BuildContext context, Attachment attachment) {
+  Future<void> viewAttachment(BuildContext context, Attachment attachment) async {
     locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
   }
 }

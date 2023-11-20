@@ -41,7 +41,7 @@ data class User(
         // Helper variable for the "specified" enrollment.
         val enrollmentIndex: Int = 0,
         @SerializedName("last_login")
-        private val lastLogin: String? = null,
+        val lastLogin: String? = null,
         val locale: String? = null,
         @SerializedName("effective_locale")
         val effective_locale: String? = null,

@@ -23,8 +23,8 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class SubmissionSeedApi {
-  static Future<Submission> createSubmission(String courseId, Assignment assignment, String asUserId) {
-    SubmissionTypes submissionType = assignment.submissionTypes.first;
+  static Future<Submission?> createSubmission(String courseId, Assignment? assignment, String asUserId) async {
+    SubmissionTypes? submissionType = assignment?.submissionTypes?.first;
     String submissionTypeString = "";
     switch (submissionType) {
       case SubmissionTypes.onlineTextEntry:
@@ -37,8 +37,8 @@ class SubmissionSeedApi {
         "unknown";
         break;
     }
-    String url = (submissionType == SubmissionTypes.onlineUrl) ? faker.internet.httpsUrl() : null;
-    String textBody = (submissionType == SubmissionTypes.onlineTextEntry) ? faker.lorem.sentence() : null;
+    String? url = (submissionType == SubmissionTypes.onlineUrl) ? faker.internet.httpsUrl() : null;
+    String? textBody = (submissionType == SubmissionTypes.onlineTextEntry) ? faker.lorem.sentence() : null;
     final submissionWrapper = CreateSubmissionWrapper((b) => b
       ..submission.body = textBody
       ..submission.url = url
@@ -49,16 +49,16 @@ class SubmissionSeedApi {
     final dio = seedingDio();
 
     print("submission postBody =  $postBody");
-    return fetch(dio.post("courses/$courseId/assignments/${assignment.id}/submissions", data: postBody));
+    return fetch(dio.post("courses/$courseId/assignments/${assignment?.id}/submissions", data: postBody));
   }
 
-  static Future<Submission> gradeSubmission(String courseId, Assignment assignment, String studentId, String grade) {
+  static Future<Submission?> gradeSubmission(String courseId, Assignment? assignment, String studentId, String grade) async {
     final gradeWrapper = GradeSubmissionWrapper((b) => b..submission.postedGrade = grade);
 
     final postBody = json.encode(serialize(gradeWrapper));
     final dio = seedingDio();
 
     print("Grade submission postBody: $postBody");
-    return fetch(dio.put("courses/$courseId/assignments/${assignment.id}/submissions/$studentId", data: postBody));
+    return fetch(dio.put("courses/$courseId/assignments/${assignment?.id}/submissions/$studentId", data: postBody));
   }
 }

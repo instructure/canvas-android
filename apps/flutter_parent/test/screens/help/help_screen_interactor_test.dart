@@ -21,10 +21,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   test('getObserverCustomHelpLinks calls to HelpLinksApi', () async {
-    var api = _MockHelpLinksApi();
+    var api = MockHelpLinksApi();
     await setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
     when(api.getHelpLinks(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => Future.value(createHelpLinks()));
 
@@ -34,7 +35,7 @@ void main() {
   });
 
   test('getObserverCustomHelpLinks only returns links for observers', () async {
-    var api = _MockHelpLinksApi();
+    var api = MockHelpLinksApi();
     var customLinks = [
       createHelpLink(availableTo: [AvailableTo.observer]),
       createHelpLink(availableTo: [AvailableTo.user]),
@@ -96,7 +97,7 @@ void main() {
   });
 
   test('custom list is returned if there are any custom lists', () async {
-    var api = _MockHelpLinksApi();
+    var api = MockHelpLinksApi();
     var customLinks = [
       createHelpLink(availableTo: [AvailableTo.observer]),
       createHelpLink(availableTo: [AvailableTo.user]),
@@ -118,7 +119,7 @@ void main() {
   });
 
   test('default list is returned if there are no custom lists', () async {
-    var api = _MockHelpLinksApi();
+    var api = MockHelpLinksApi();
     var defaultLinks = [
       createHelpLink(availableTo: [AvailableTo.user]),
       createHelpLink(availableTo: [AvailableTo.observer]),
@@ -132,16 +133,14 @@ void main() {
   });
 }
 
-HelpLinks createHelpLinks({List<HelpLink> customLinks, List<HelpLink> defaultLinks}) => HelpLinks((b) => b
+HelpLinks createHelpLinks({List<HelpLink>? customLinks, List<HelpLink>? defaultLinks}) => HelpLinks((b) => b
   ..customHelpLinks = ListBuilder(customLinks != null ? customLinks : [createHelpLink()])
   ..defaultHelpLinks = ListBuilder(defaultLinks != null ? defaultLinks : [createHelpLink()]));
 
-HelpLink createHelpLink({String id, String text, String url, List<AvailableTo> availableTo}) => HelpLink((b) => b
+HelpLink createHelpLink({String? id, String? text, String? url, List<AvailableTo>? availableTo}) => HelpLink((b) => b
   ..id = id ?? ''
   ..type = ''
   ..availableTo = ListBuilder(availableTo != null ? availableTo : <AvailableTo>[])
   ..url = url ?? 'https://www.instructure.com'
   ..text = text ?? 'text'
   ..subtext = 'subtext');
-
-class _MockHelpLinksApi extends Mock implements HelpLinksApi {}

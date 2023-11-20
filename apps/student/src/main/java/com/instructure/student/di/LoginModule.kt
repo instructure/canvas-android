@@ -19,6 +19,7 @@ package com.instructure.student.di
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.student.features.login.StudentAcceptableUsePolicyRouter
 import com.instructure.student.features.login.StudentLoginNavigation
 import dagger.Module
@@ -31,12 +32,12 @@ import dagger.hilt.android.components.ActivityComponent
 class LoginModule {
 
     @Provides
-    fun provideAcceptabelUsePolicyRouter(activity: FragmentActivity): AcceptableUsePolicyRouter {
-        return StudentAcceptableUsePolicyRouter(activity)
+    fun provideAcceptabelUsePolicyRouter(activity: FragmentActivity, databaseProvider: DatabaseProvider): AcceptableUsePolicyRouter {
+        return StudentAcceptableUsePolicyRouter(activity, databaseProvider)
     }
 
     @Provides
-    fun provideLoginNavigation(activity: FragmentActivity): LoginNavigation {
-        return StudentLoginNavigation(activity)
+    fun provideLoginNavigation(activity: FragmentActivity, databaseProvider: DatabaseProvider): LoginNavigation {
+        return StudentLoginNavigation(activity, databaseProvider)
     }
 }

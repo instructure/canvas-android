@@ -26,13 +26,16 @@ abstract class CreateEnrollmentInfo implements Built<CreateEnrollmentInfo, Creat
 
   @BuiltValueField(wireName: "user_id")
   String get userId;
+
   String get type;
+
   String get role;
+
   @BuiltValueField(wireName: "enrollment_state")
   String get enrollmentState;
-  @nullable
+
   @BuiltValueField(wireName: "associated_user_id")
-  String get associatedUserId;
+  String? get associatedUserId;
 
   static void _initializeBuilder(CreateEnrollmentInfoBuilder b) => b..role = "";
 }

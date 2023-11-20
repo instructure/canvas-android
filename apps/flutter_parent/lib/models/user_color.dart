@@ -22,8 +22,7 @@ part 'user_color.g.dart';
 /// To have this built_value be generated, run this command from the project root:
 /// flutter pub run build_runner build --delete-conflicting-outputs
 abstract class UserColor implements Built<UserColor, UserColorBuilder> {
-  @nullable
-  int get id;
+  int? get id;
 
   String get userDomain;
 

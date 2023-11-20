@@ -29,18 +29,14 @@ abstract class Grade implements Built<Grade, GradeBuilder> {
   String get htmlUrl;
 
   @BuiltValueField(wireName: 'current_score')
-  @nullable
-  double get currentScore;
+  double? get currentScore;
 
   @BuiltValueField(wireName: 'final_score')
-  @nullable
-  double get finalScore;
+  double? get finalScore;
 
   @BuiltValueField(wireName: 'current_grade')
-  @nullable
-  String get currentGrade;
+  String? get currentGrade;
 
   @BuiltValueField(wireName: 'final_grade')
-  @nullable
-  String get finalGrade;
+  String? get finalGrade;
 }

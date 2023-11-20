@@ -63,7 +63,6 @@ import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
-import com.instructure.pandautils.binding.setTint
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import java.util.*
@@ -127,7 +126,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         if(loginWithQRCodeEnabled()) {
             qrLogin.setVisible()
             qrDivider.setVisible()
-            qrLogin.onClick {
+            qrLogin.onClickWithRequireNetwork {
                 Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_CLICKED)
                 startActivity(loginWithQRIntent())
             }
@@ -177,7 +176,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                     }
 
                     override fun onRemovePreviousUserClick(user: SignedInUser) {
-                        PreviousUsersUtils.remove(this@BaseLoginLandingPageActivity, user)
+                        removePreviousUser(user)
                     }
 
                     override fun onNowEmpty() {
@@ -196,6 +195,10 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                 })
         previousLoginWrapper.visibility = if (previousUsers.size > 0) View.VISIBLE else View.GONE
 
+    }
+
+    open fun removePreviousUser(user: SignedInUser) {
+        PreviousUsersUtils.remove(this@BaseLoginLandingPageActivity, user)
     }
 
     private fun resizePreviousUsersRecyclerView(previousUsers: ArrayList<SignedInUser>) = with(binding) {
@@ -222,7 +225,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         ColorUtils.colorIt(color, canvasLogo)
 
         // App Name/Type. Will not be present in all layout versions
-        canvasWordmark.imageTintList = ColorStateList.valueOf(color)
         appDescriptionType.setText(appTypeName())
 
         ViewStyler.themeStatusBar(this@BaseLoginLandingPageActivity)

@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:collection/collection.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
@@ -29,7 +30,7 @@ import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 
@@ -48,9 +49,9 @@ class ApiPrefs {
   static const String KEY_LAST_ACCOUNT = 'last_account';
   static const String KEY_LAST_ACCOUNT_LOGIN_FLOW = 'last_account_login_flow';
 
-  static EncryptedSharedPreferences _prefs;
-  static PackageInfo _packageInfo;
-  static Login _currentLogin;
+  static EncryptedSharedPreferences? _prefs;
+  static PackageInfo? _packageInfo;
+  static Login? _currentLogin;
 
   static Future<void> init() async {
     if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
@@ -58,33 +59,33 @@ class ApiPrefs {
     await _migrateToEncryptedPrefs();
   }
 
-  static void _migrateToEncryptedPrefs() async {
-    if (_prefs.getBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
+  static Future<void> _migrateToEncryptedPrefs() async {
+    if (_prefs?.getBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
       return;
     }
 
     // Set the bool flag so we don't migrate multiple times
-    await _prefs.setBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
+    await _prefs?.setBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
 
     final oldPrefs = await SharedPreferences.getInstance();
 
-    await _prefs.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
+    await _prefs?.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
     await oldPrefs.remove(KEY_LOGINS);
 
-    await _prefs.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
+    await _prefs?.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
     await oldPrefs.remove(KEY_HAS_MIGRATED);
 
-    await _prefs.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
+    await _prefs?.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
     await oldPrefs.remove(KEY_HAS_CHECKED_OLD_REMINDERS);
 
-    await _prefs.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
+    await _prefs?.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
     await oldPrefs.remove(KEY_CURRENT_LOGIN_UUID);
 
-    await _prefs.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
+    await _prefs?.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
     await oldPrefs.remove(KEY_CURRENT_STUDENT);
   }
 
-  static void clean() {
+  static Future<void> clean() async {
     _prefs?.clear();
     _prefs = null;
     _packageInfo = null;
@@ -104,11 +105,11 @@ class ApiPrefs {
     return token.isNotEmpty && domain.isNotEmpty;
   }
 
-  static Login getCurrentLogin() {
+  static Login? getCurrentLogin() {
     _checkInit();
     if (_currentLogin == null) {
       final currentLoginUuid = getCurrentLoginUuid();
-      _currentLogin = getLogins().firstWhere((it) => it.uuid == currentLoginUuid, orElse: () => null);
+      _currentLogin = getLogins().firstWhereOrNull((it) => it.uuid == currentLoginUuid);
     }
     return _currentLogin;
   }
@@ -116,7 +117,7 @@ class ApiPrefs {
   static Future<void> switchLogins(Login login) async {
     _checkInit();
     _currentLogin = login;
-    await _prefs.setString(KEY_CURRENT_LOGIN_UUID, login.uuid);
+    await _prefs?.setString(KEY_CURRENT_LOGIN_UUID, login.uuid);
   }
 
   static bool isMasquerading() {
@@ -135,20 +136,20 @@ class ApiPrefs {
     if (!switchingLogins) {
       // Remove reminders
       ReminderDb reminderDb = locator<ReminderDb>();
-      final reminders = await reminderDb.getAllForUser(getDomain(), getUser().id);
-      final reminderIds = reminders?.map((it) => it.id)?.toList();
+      final reminders = await reminderDb.getAllForUser(getDomain(), getUser()?.id);
+      final reminderIds = reminders?.map((it) => it.id).toList().nonNulls.toList() ?? [];
       await locator<NotificationUtil>().deleteNotifications(reminderIds);
-      await reminderDb.deleteAllForUser(getDomain(), getUser().id);
+      await reminderDb.deleteAllForUser(getDomain(), getUser()?.id);
 
       // Remove calendar filters
-      locator<CalendarFilterDb>().deleteAllForUser(getDomain(), getUser().id);
+      locator<CalendarFilterDb>().deleteAllForUser(getDomain(), getUser()?.id);
 
       // Remove saved Login data
       await removeLoginByUuid(getCurrentLoginUuid());
     }
 
     // Clear current Login
-    await _prefs.remove(KEY_CURRENT_LOGIN_UUID);
+    await _prefs!.remove(KEY_CURRENT_LOGIN_UUID);
     _currentLogin = null;
     app?.rebuild(effectiveLocale());
   }
@@ -156,7 +157,7 @@ class ApiPrefs {
   static Future<void> saveLogins(List<Login> logins) async {
     _checkInit();
     List<String> jsonList = logins.map((it) => json.encode(serialize(it))).toList();
-    await _prefs.setStringList(KEY_LOGINS, jsonList);
+    await _prefs!.setStringList(KEY_LOGINS, jsonList);
   }
 
   static Future<void> addLogin(Login login) async {
@@ -169,35 +170,38 @@ class ApiPrefs {
 
   static List<Login> getLogins() {
     _checkInit();
-    return _prefs.getStringList(KEY_LOGINS)?.map((it) => deserialize<Login>(json.decode(it)))?.toList() ?? [];
+    var list = _prefs!.getStringList(KEY_LOGINS);
+    return list.map((it) => deserialize<Login>(json.decode(it))).nonNulls.toList();
   }
 
   static setLastAccount(SchoolDomain lastAccount, LoginFlow loginFlow) {
     _checkInit();
     final lastAccountJson = json.encode(serialize(lastAccount));
-    _prefs.setString(KEY_LAST_ACCOUNT, lastAccountJson);
-    _prefs.setInt(KEY_LAST_ACCOUNT_LOGIN_FLOW, loginFlow.index);
+    _prefs!.setString(KEY_LAST_ACCOUNT, lastAccountJson);
+    _prefs!.setInt(KEY_LAST_ACCOUNT_LOGIN_FLOW, loginFlow.index);
   }
 
-  static Tuple2<SchoolDomain, LoginFlow> getLastAccount() {
+  static Tuple2<SchoolDomain, LoginFlow>? getLastAccount() {
     _checkInit();
-    if (!_prefs.containsKey(KEY_LAST_ACCOUNT)) return null;
+    if (!_prefs!.containsKey(KEY_LAST_ACCOUNT)) return null;
 
-    final accountJson = _prefs.getString(KEY_LAST_ACCOUNT);
-    if (accountJson == null || accountJson.isEmpty) return null;
+    final accountJson = _prefs!.getString(KEY_LAST_ACCOUNT);
+    if (accountJson == null || accountJson.isEmpty == true) return null;
 
     final lastAccount = deserialize<SchoolDomain>(json.decode(accountJson));
-    final loginFlow = _prefs.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[_prefs.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW)] : LoginFlow.normal;
+    int? lastLogin = _prefs!.getInt(KEY_LAST_ACCOUNT_LOGIN_FLOW);
+    if (lastLogin == null) return null;
+    final loginFlow = _prefs!.containsKey(KEY_LAST_ACCOUNT_LOGIN_FLOW) ? LoginFlow.values[lastLogin] : LoginFlow.normal;
 
-    return Tuple2(lastAccount, loginFlow);
+    return Tuple2(lastAccount!, loginFlow);
   }
 
   static Future<void> removeLogin(Login login) => removeLoginByUuid(login.uuid);
 
-  static Future<void> removeLoginByUuid(String uuid) async {
+  static Future<void> removeLoginByUuid(String? uuid) async {
     _checkInit();
     var logins = getLogins();
-    Login login = logins.firstWhere((it) => it.uuid == uuid, orElse: () => null);
+    Login? login = logins.firstWhereOrNull((it) => it.uuid == uuid);
     if (login != null) {
       // Delete token (fire and forget - no need to await)
       locator<AuthApi>().deleteToken(login.domain, login.accessToken);
@@ -241,9 +245,9 @@ class ApiPrefs {
     }
   }
 
-  static Locale effectiveLocale() {
+  static Locale? effectiveLocale() {
     _checkInit();
-    User user = getUser();
+    User? user = getUser();
     List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split('-x-');
 
     if (userLocale[0].isEmpty) {
@@ -269,88 +273,97 @@ class ApiPrefs {
 
   /// Prefs
 
-  static String getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
+  static String? getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
 
-  static User getUser() => getCurrentLogin()?.currentUser;
+  static User? getUser() => getCurrentLogin()?.currentUser;
 
-  static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
+  static String getUserAgent() => 'androidParent/${_packageInfo?.version} (${_packageInfo?.buildNumber})';
 
   static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
-  static String getDomain() => getCurrentLogin()?.currentDomain;
+  static String? getDomain() => getCurrentLogin()?.currentDomain;
 
-  static String getAuthToken() => getCurrentLogin()?.accessToken;
+  static String? getAuthToken() => getCurrentLogin()?.accessToken;
 
-  static String getRefreshToken() => getCurrentLogin()?.refreshToken;
+  static String? getRefreshToken() => getCurrentLogin()?.refreshToken;
 
-  static String getClientId() => getCurrentLogin()?.clientId;
+  static String? getClientId() => getCurrentLogin()?.clientId;
 
-  static String getClientSecret() => getCurrentLogin()?.clientSecret;
+  static String? getClientSecret() => getCurrentLogin()?.clientSecret;
 
-  static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED);
+  static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED) ?? false;
 
-  static Future<void> setHasMigrated(bool hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
+  static Future<void> setHasMigrated(bool? hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
 
-  static bool getHasCheckedOldReminders() => _getPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS);
+  static bool getHasCheckedOldReminders() => _getPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS) ?? false;
 
   static Future<void> setHasCheckedOldReminders(bool checked) => _setPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS, checked);
 
-  static int getCameraCount() => _getPrefInt(KEY_CAMERA_COUNT);
+  static int? getCameraCount() => _getPrefInt(KEY_CAMERA_COUNT);
 
-  static Future<void> setCameraCount(int count) => _setPrefInt(KEY_CAMERA_COUNT, count);
+  static Future<void> setCameraCount(int? count) => _setPrefInt(KEY_CAMERA_COUNT, count);
 
-  static DateTime getRatingNextShowDate() {
+  static DateTime? getRatingNextShowDate() {
     final nextShow = _getPrefString(KEY_RATING_NEXT_SHOW_DATE);
     if (nextShow == null) return null;
     return DateTime.parse(nextShow);
   }
 
-  static Future<void> setRatingNextShowDate(DateTime nextShowDate) =>
+  static Future<void> setRatingNextShowDate(DateTime? nextShowDate) =>
       _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate?.toIso8601String());
 
-  static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN);
+  static bool? getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN);
 
-  static Future<void> setRatingDontShowAgain(bool dontShowAgain) =>
+  static Future<void> setRatingDontShowAgain(bool? dontShowAgain) =>
       _setPrefBool(KEY_RATING_DONT_SHOW_AGAIN, dontShowAgain);
 
   /// Pref helpers
 
-  static Future<void> _setPrefBool(String key, bool value) async {
+  static Future<bool> _setPrefBool(String key, bool? value) async {
     _checkInit();
-    await _prefs.setBool(key, value);
+    if (value == null) return _prefs!.remove(key);
+    return _prefs!.setBool(key, value);
   }
 
-  static bool _getPrefBool(String key) {
+  static bool? _getPrefBool(String key) {
     _checkInit();
-    return _prefs.getBool(key);
+    return _prefs?.getBool(key);
   }
 
-  static Future<void> _setPrefString(String key, String value) async {
+  static Future<bool> _setPrefString(String key, String? value) async {
     _checkInit();
-    await _prefs.setString(key, value);
+    if (value == null) return _prefs!.remove(key);
+
+    return _prefs!.setString(key, value);
   }
 
-  static String _getPrefString(String key) {
+  static String? _getPrefString(String key) {
     _checkInit();
-    return _prefs.getString(key);
+    return _prefs?.getString(key);
   }
 
-  static int _getPrefInt(String key) {
+  static int? _getPrefInt(String key) {
     _checkInit();
-    return _prefs.getInt(key);
+    return _prefs?.getInt(key);
   }
 
-  static Future<void> _setPrefInt(String key, int value) async {
+  static Future<bool> _setPrefInt(String key, int? value) async {
     _checkInit();
-    return _prefs.setInt(key, value);
+    if (value == null) return _prefs!.remove(key);
+    return _prefs!.setInt(key, value);
+  }
+
+  static Future<bool> _removeKey(String key) async {
+    _checkInit();
+    return _prefs!.remove(key);
   }
 
   /// Utility functions
 
   static Map<String, String> getHeaderMap({
     bool forceDeviceLanguage = false,
-    String token = null,
-    Map<String, String> extraHeaders = null,
+    String? token = null,
+    Map<String, String>? extraHeaders = null,
   }) {
     if (token == null) {
       token = getAuthToken();
@@ -358,9 +371,7 @@ class ApiPrefs {
 
     var headers = {
       'Authorization': 'Bearer $token',
-      'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
-          .replaceAll('-', ',')
-          .replaceAll('_', '-'),
+      'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())?.replaceAll('-', ',').replaceAll('_', '-') ?? '',
       'User-Agent': getUserAgent(),
     };
 
@@ -371,18 +382,18 @@ class ApiPrefs {
     return headers;
   }
 
-  static setCurrentStudent(User currentStudent) {
+  static setCurrentStudent(User? currentStudent) {
     _checkInit();
     if (currentStudent == null) {
-      _prefs.remove(KEY_CURRENT_STUDENT);
+      _prefs!.remove(KEY_CURRENT_STUDENT);
     } else {
-      _prefs.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
+      _prefs!.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
     }
   }
 
-  static User getCurrentStudent() {
+  static User? getCurrentStudent() {
     _checkInit();
-    final studentJson = _prefs.getString(KEY_CURRENT_STUDENT);
+    final studentJson = _prefs?.getString(KEY_CURRENT_STUDENT);
     if (studentJson == null || studentJson.isEmpty) return null;
     return deserialize<User>(json.decode(studentJson));
   }

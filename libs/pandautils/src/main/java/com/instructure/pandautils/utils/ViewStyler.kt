@@ -198,12 +198,15 @@ object ViewStyler {
         imageView.setImageDrawable(drawable)
     }
 
-    fun makeColorStateList(defaultColor: Int, brand: Int) = generateColorStateList(
-            intArrayOf(-android.R.attr.state_enabled) to defaultColor,
+    @JvmOverloads
+    fun makeColorStateList(defaultColor: Int, brand: Int, disabledColor: Int = defaultColor) = generateColorStateList(
+            intArrayOf(-android.R.attr.state_enabled) to disabledColor,
             intArrayOf(android.R.attr.state_focused, -android.R.attr.state_pressed) to brand,
             intArrayOf(android.R.attr.state_focused, android.R.attr.state_pressed) to brand,
             intArrayOf(-android.R.attr.state_focused, android.R.attr.state_pressed) to brand,
             intArrayOf(android.R.attr.state_checked) to brand,
+            intArrayOf(com.google.android.material.R.attr.state_indeterminate) to brand,
+
             intArrayOf() to defaultColor
     )
 
@@ -261,7 +264,8 @@ fun AlertDialog.Builder.showThemed() {
 }
 
 fun BottomNavigationView.applyTheme(@ColorInt selectedColor: Int = ThemePrefs.brandColor, @ColorInt unselectedColor: Int) {
-    val colorStateList = ViewStyler.makeColorStateList(unselectedColor, selectedColor)
+    val disabledColor = ThemePrefs.increaseAlpha(unselectedColor, 128)
+    val colorStateList = ViewStyler.makeColorStateList(unselectedColor, selectedColor, disabledColor)
     this.itemIconTintList = colorStateList
     this.itemTextColor = colorStateList
 }

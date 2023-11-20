@@ -24,9 +24,9 @@ import 'package:flutter_parent/utils/design/theme_transition/theme_transition_ov
 /// Note that this this widget is intended to be used with a full-screen [child] (e.g. a settings screen) and will not
 /// work correctly with smaller nested widgets within a screen.
 class ThemeTransitionTarget extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
 
-  const ThemeTransitionTarget({Key key, this.child}) : super(key: key);
+  const ThemeTransitionTarget({this.child, super.key});
 
   @override
   _ThemeTransitionTargetState createState() => _ThemeTransitionTargetState();
@@ -34,11 +34,11 @@ class ThemeTransitionTarget extends StatefulWidget {
   /// Toggles dark mode and initiates an animated circular reveal transition to the new theme. [context] must be
   /// a [BuildContext] that contains a [ThemeTransitionTarget], and [anchorKey] must be a [GlobalKey] assigned
   /// to a widget from which the animation transition will originate.
-  static void toggleDarkMode(BuildContext context, GlobalKey anchorKey) {
-    _toggleMode(context, anchorKey, () => ParentTheme.of(context).toggleDarkMode());
+  static void toggleDarkMode(BuildContext context, GlobalKey? anchorKey) {
+    _toggleMode(context, anchorKey, () => ParentTheme.of(context)?.toggleDarkMode());
   }
 
-  static void _toggleMode(BuildContext context, GlobalKey anchorKey, Function() toggle) {
+  static void _toggleMode(BuildContext context, GlobalKey? anchorKey, Function() toggle) {
     // If testing, just toggle without doing the theme transition overlay
     if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) {
       toggle();
@@ -52,7 +52,7 @@ class ThemeTransitionTarget extends StatefulWidget {
     });
   }
 
-  static _ThemeTransitionTargetState of(BuildContext context) {
+  static _ThemeTransitionTargetState? of(BuildContext context) {
     return context.findAncestorStateOfType<_ThemeTransitionTargetState>();
   }
 }

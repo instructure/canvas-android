@@ -26,14 +26,17 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.adapter.BaseListRecyclerAdapter
-import com.instructure.student.adapter.FileFolderCallback
+import com.instructure.student.features.files.list.FileFolderCallback
 import com.instructure.student.holders.FileViewHolder
 
 class FileSearchAdapter(
     context: Context,
     private val canvasContext: CanvasContext,
+    private val fileSearchRepository: FileSearchRepository,
     private val viewCallback: FileSearchView
 ) : BaseListRecyclerAdapter<FileFolder, FileViewHolder>(context, FileFolder::class.java) {
 
@@ -83,9 +86,7 @@ class FileSearchAdapter(
     private fun performSearch() {
         apiCall = tryWeave {
             viewCallback.onRefreshStarted()
-            val files = awaitApi<List<FileFolder>> {
-                FileFolderManager.searchFiles(searchQuery, canvasContext, true, it)
-            }
+            val files = fileSearchRepository.searchFiles(canvasContext, searchQuery)
             clear()
             addAll(files)
             viewCallback.onRefreshFinished()

@@ -24,29 +24,19 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.MenuPopupWindow
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withHint
-import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.explicitClick
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
-import com.instructure.canvas.espresso.withCustomConstraints
+import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.*
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithHint
 import com.instructure.espresso.page.waitForViewWithText
@@ -59,7 +49,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Description
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 
@@ -83,20 +72,19 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun markUnread() {
-        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
+        onView(allOf(withContentDescription(stringContainsTextCaseInsensitive("More options")), isDisplayed())).click()
         onView(withText("Mark as Unread")).click()
     }
 
     fun archive() {
-        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
+        onView(allOf(withContentDescription(stringContainsTextCaseInsensitive("More options")), isDisplayed())).click()
         onView(withText("Archive")).click()
     }
 
     fun deleteConversation() {
-        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
+        onView(allOf(withContentDescription(stringContainsTextCaseInsensitive("More options")), isDisplayed())).click()
         onView(withText("Delete")).click()
-        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
-                .click() // Confirmation click
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE"))).click() // Confirmation click
     }
 
     fun deleteMessage(messageBody: String) {
@@ -135,6 +123,10 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     fun assertAttachmentDisplayed(displayName: String) {
         scrollRecyclerView(R.id.listView, withText(displayName))
         onViewWithText(displayName).check(matches(isDisplayingAtLeast(5)))
+    }
+
+    fun assertNoSubjectDisplayed() {
+        onView(withId(R.id.subjectView) + withText(R.string.noSubject)).assertDisplayed()
     }
 
     fun refresh() {

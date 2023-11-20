@@ -111,8 +111,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Rimuovi utente precedente</string>
     <string name="accountDomainFooter">Non riesci a trova la tua scuola? Prova a digitare l’URL della scuola per intero.</string>
-    <string name="accountDomainFooterLink">Tocca qui per assistenza.</string>
-
+    <string name="accountDomainFooterLoginHelp">Tocca qui per la guida all’accesso.</string>
     <string name="login_noInternetConnectionTitle">Nessuna connessione a Internet</string>
     <string name="login_noInternetConnectionMessage">Questa azione richiede una connessione a Internet.</string>
     <string name="empty_feedback">Per inviare un feedback sono necessari argomento e descrizione.</string>

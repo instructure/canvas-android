@@ -15,75 +15,73 @@ class _$RecipientSerializer implements StructuredSerializer<Recipient> {
   final String wireName = 'Recipient';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Recipient object,
+  Iterable<Object?> serialize(Serializers serializers, Recipient object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
-    result.add('pronouns');
-    if (object.pronouns == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.pronouns,
-          specifiedType: const FullType(String)));
-    }
-    result.add('avatar_url');
-    if (object.avatarUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.avatarUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('common_courses');
-    if (object.commonCourses == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.commonCourses,
+    Object? value;
+    value = object.pronouns;
+
+    result
+      ..add('pronouns')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.avatarUrl;
+
+    result
+      ..add('avatar_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.commonCourses;
+
+    result
+      ..add('common_courses')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(BuiltMap, const [
             const FullType(String),
             const FullType(BuiltList, const [const FullType(String)])
           ])));
-    }
+
     return result;
   }
 
   @override
-  Recipient deserialize(Serializers serializers, Iterable<Object> serialized,
+  Recipient deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new RecipientBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'pronouns':
           result.pronouns = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'avatar_url':
           result.avatarUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'common_courses':
           result.commonCourses.replace(serializers.deserialize(value,
               specifiedType: const FullType(BuiltMap, const [
                 const FullType(String),
                 const FullType(BuiltList, const [const FullType(String)])
-              ])));
+              ]))!);
           break;
       }
     }
@@ -98,24 +96,24 @@ class _$Recipient extends Recipient {
   @override
   final String name;
   @override
-  final String pronouns;
+  final String? pronouns;
   @override
-  final String avatarUrl;
+  final String? avatarUrl;
   @override
-  final BuiltMap<String, BuiltList<String>> commonCourses;
+  final BuiltMap<String, BuiltList<String>>? commonCourses;
 
-  factory _$Recipient([void Function(RecipientBuilder) updates]) =>
-      (new RecipientBuilder()..update(updates)).build();
+  factory _$Recipient([void Function(RecipientBuilder)? updates]) =>
+      (new RecipientBuilder()..update(updates))._build();
 
   _$Recipient._(
-      {this.id, this.name, this.pronouns, this.avatarUrl, this.commonCourses})
+      {required this.id,
+      required this.name,
+      this.pronouns,
+      this.avatarUrl,
+      this.commonCourses})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Recipient', 'id');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('Recipient', 'name');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'Recipient', 'id');
+    BuiltValueNullFieldError.checkNotNull(name, r'Recipient', 'name');
   }
 
   @override
@@ -138,15 +136,19 @@ class _$Recipient extends Recipient {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc($jc(0, id.hashCode), name.hashCode), pronouns.hashCode),
-            avatarUrl.hashCode),
-        commonCourses.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, pronouns.hashCode);
+    _$hash = $jc(_$hash, avatarUrl.hashCode);
+    _$hash = $jc(_$hash, commonCourses.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Recipient')
+    return (newBuiltValueToStringHelper(r'Recipient')
           ..add('id', id)
           ..add('name', name)
           ..add('pronouns', pronouns)
@@ -157,39 +159,40 @@ class _$Recipient extends Recipient {
 }
 
 class RecipientBuilder implements Builder<Recipient, RecipientBuilder> {
-  _$Recipient _$v;
+  _$Recipient? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _pronouns;
-  String get pronouns => _$this._pronouns;
-  set pronouns(String pronouns) => _$this._pronouns = pronouns;
+  String? _pronouns;
+  String? get pronouns => _$this._pronouns;
+  set pronouns(String? pronouns) => _$this._pronouns = pronouns;
 
-  String _avatarUrl;
-  String get avatarUrl => _$this._avatarUrl;
-  set avatarUrl(String avatarUrl) => _$this._avatarUrl = avatarUrl;
+  String? _avatarUrl;
+  String? get avatarUrl => _$this._avatarUrl;
+  set avatarUrl(String? avatarUrl) => _$this._avatarUrl = avatarUrl;
 
-  MapBuilder<String, BuiltList<String>> _commonCourses;
+  MapBuilder<String, BuiltList<String>>? _commonCourses;
   MapBuilder<String, BuiltList<String>> get commonCourses =>
       _$this._commonCourses ??= new MapBuilder<String, BuiltList<String>>();
-  set commonCourses(MapBuilder<String, BuiltList<String>> commonCourses) =>
+  set commonCourses(MapBuilder<String, BuiltList<String>>? commonCourses) =>
       _$this._commonCourses = commonCourses;
 
   RecipientBuilder();
 
   RecipientBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _name = _$v.name;
-      _pronouns = _$v.pronouns;
-      _avatarUrl = _$v.avatarUrl;
-      _commonCourses = _$v.commonCourses?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _name = $v.name;
+      _pronouns = $v.pronouns;
+      _avatarUrl = $v.avatarUrl;
+      _commonCourses = $v.commonCourses?.toBuilder();
       _$v = null;
     }
     return this;
@@ -197,36 +200,37 @@ class RecipientBuilder implements Builder<Recipient, RecipientBuilder> {
 
   @override
   void replace(Recipient other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Recipient;
   }
 
   @override
-  void update(void Function(RecipientBuilder) updates) {
+  void update(void Function(RecipientBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Recipient build() {
+  Recipient build() => _build();
+
+  _$Recipient _build() {
     _$Recipient _$result;
     try {
       _$result = _$v ??
           new _$Recipient._(
-              id: id,
-              name: name,
+              id: BuiltValueNullFieldError.checkNotNull(id, r'Recipient', 'id'),
+              name: BuiltValueNullFieldError.checkNotNull(
+                  name, r'Recipient', 'name'),
               pronouns: pronouns,
               avatarUrl: avatarUrl,
               commonCourses: _commonCourses?.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'commonCourses';
         _commonCourses?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Recipient', _$failedField, e.toString());
+            r'Recipient', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -235,4 +239,4 @@ class RecipientBuilder implements Builder<Recipient, RecipientBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

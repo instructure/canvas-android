@@ -37,7 +37,7 @@ import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
@@ -244,7 +244,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 }
 
             RouteMatcher.route(
-                requireContext(),
+                requireActivity(),
                 Route(
                     ChooseRecipientsFragment::class.java,
                     canvasContext,

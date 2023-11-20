@@ -17,13 +17,13 @@
 
 package com.instructure.student.fragment
 
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.StreamItem.Type.*
@@ -43,9 +43,9 @@ import com.instructure.student.activity.ParentActivity
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListNotificationBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
-import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.router.RouteMatcher
 
 @ScreenView(SCREEN_VIEW_NOTIFICATION_LIST)
@@ -65,19 +65,19 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: NotificationListRecyclerAdapter
+    private var recyclerAdapter: NotificationListRecyclerAdapter? = null
 
     private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<StreamItem> =
         object : NotificationAdapterToFragmentCallback<StreamItem> {
             override fun onRowClicked(streamItem: StreamItem, position: Int, isOpenDetail: Boolean) {
-                recyclerAdapter.setSelectedPosition(position)
+                recyclerAdapter?.setSelectedPosition(position)
                 onRowClick(streamItem)
             }
 
             override fun onRefreshFinished() {
                 setRefreshing(false)
                 binding.editOptions.setGone()
-                if (recyclerAdapter.size() == 0) {
+                if (recyclerAdapter?.size() == 0) {
                     setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
                     if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                         recyclerBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
@@ -112,21 +112,23 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
-        configureRecyclerView(
-            view,
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView
-        )
+        recyclerAdapter?.let {
+            configureRecyclerView(
+                view,
+                requireContext(),
+                it,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView
+            )
+        }
 
         recyclerBinding.listView.isSelectionEnabled = false
 
         binding.confirmButton.text = getString(R.string.delete)
-        binding.confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
+        binding.confirmButton.setOnClickListener { recyclerAdapter?.confirmButtonClicked() }
         binding.cancelButton.text = getString(R.string.cancel)
-        binding.cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
+        binding.cancelButton.setOnClickListener { recyclerAdapter?.cancelButtonClicked() }
 
         applyTheme()
 
@@ -139,14 +141,14 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
         if (activity?.supportFragmentManager?.fragments?.lastOrNull()?.javaClass == this.javaClass) {
             if (shouldRefreshOnResume) {
                 recyclerBinding.swipeRefreshLayout.isRefreshing = true
-                recyclerAdapter.refresh()
+                recyclerAdapter?.refresh()
                 shouldRefreshOnResume = false
             }
         }
     }
 
     override fun onDestroyView() {
-        recyclerAdapter.cancel()
+        recyclerAdapter?.cancel()
         activity?.supportFragmentManager?.removeOnBackStackChangedListener(this)
         super.onDestroyView()
     }
@@ -170,16 +172,18 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        configureRecyclerView(
-            requireView(),
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView,
+        recyclerAdapter?.let {
+            configureRecyclerView(
+                requireView(),
+                requireContext(),
+                it,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView,
                 R.string.noNotifications
-        )
-        if (recyclerAdapter.size() == 0) {
+            )
+        }
+        if (recyclerAdapter?.size() == 0) {
             recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
@@ -221,9 +225,10 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
     }
 
     companion object {
-        fun addFragmentForStreamItem(streamItem: StreamItem, context: Context, fromWidget: Boolean) {
+        fun addFragmentForStreamItem(streamItem: StreamItem, activity: FragmentActivity, fromWidget: Boolean) {
             if (fromWidget) {
-                RouteMatcher.routeUrl(context, streamItem.url ?: streamItem.htmlUrl) // If we get null URLs, we can't route, so the behavior will just launch the app to whatever screen they were on last
+                RouteMatcher.routeUrl(activity, streamItem.url ?: streamItem.htmlUrl)
+                // If we get null URLs, we can't route, so the behavior will just launch the app to whatever screen they were on last
                 return
             }
 
@@ -232,9 +237,9 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 if (conversation != null) {
                     // Check to see if the conversation has been deleted.
                     if (conversation.isDeleted) {
-                        Toast.makeText(context, R.string.deleteConversation, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(activity, R.string.deleteConversation, Toast.LENGTH_SHORT).show()
                     } else {
-                        RouteMatcher.route(context, InboxConversationFragment.makeRoute(conversation, null))
+                        RouteMatcher.route(activity, InboxConversationFragment.makeRoute(conversation, null))
                     }
                 }
                 return
@@ -247,17 +252,17 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                     if (canvasContext !is Course) return
 
                     if (streamItem.assignment == null) {
-                        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId))
+                        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId))
                     } else {
                         // Add an empty submission with the grade to the assignment so that we can see the score.
                         streamItem.assignment?.submission = Submission(grade = streamItem.grade)
-                        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignment!!.id))
+                        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignment!!.id))
                     }
                     null
                 }
                 ANNOUNCEMENT, DISCUSSION_TOPIC -> {
                     val route = DiscussionRouterFragment.makeRoute(canvasContext, streamItem.discussionTopicId)
-                    RouteMatcher.route(context, route)
+                    RouteMatcher.route(activity, route)
                     null
                 }
                 MESSAGE -> {
@@ -268,11 +273,11 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                     }
                 }
                 COLLABORATION -> UnsupportedTabFragment.makeRoute(canvasContext, Tab.COLLABORATIONS_ID)
-                CONFERENCE -> ConferenceListFragment.makeRoute(canvasContext)
+                CONFERENCE -> ConferenceListRepositoryFragment.makeRoute(canvasContext)
                 else -> UnsupportedFeatureFragment.makeRoute(canvasContext, featureName = streamItem.type, url = streamItem.url ?: streamItem.htmlUrl)
             }
 
-            if (route != null) RouteMatcher.route(context, route)
+            if (route != null) RouteMatcher.route(activity, route)
         }
 
         fun makeRoute(canvasContext: CanvasContext): Route = Route(NotificationListFragment::class.java, canvasContext, Bundle())

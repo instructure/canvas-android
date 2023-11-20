@@ -23,7 +23,7 @@ import 'package:photo_view/photo_view.dart';
 class ImageAttachmentViewer extends StatelessWidget {
   final Attachment attachment;
 
-  const ImageAttachmentViewer(this.attachment, {Key key}) : super(key: key);
+  const ImageAttachmentViewer(this.attachment, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class ImageAttachmentViewer extends StatelessWidget {
       return PhotoView.customChild(
         backgroundDecoration: backgroundDecoration,
         child: SvgPicture.network(
-          attachment.url,
+          attachment.url ?? '',
           placeholderBuilder: (context) => LoadingIndicator(),
         ),
         minScale: minScale,
@@ -43,7 +43,7 @@ class ImageAttachmentViewer extends StatelessWidget {
 
     return PhotoView(
       backgroundDecoration: backgroundDecoration,
-      imageProvider: NetworkImage(attachment.url),
+      imageProvider: NetworkImage(attachment.url ?? ''),
       minScale: minScale,
       loadingBuilder: (context, imageChunkEvent) => LoadingIndicator(),
       errorBuilder: (context, error, stackTrace) => EmptyPandaWidget(

@@ -14,10 +14,11 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter_parent/models/serializers.dart';
+import 'package:collection/collection.dart';
 
 /// A helper class to communicate back to api callers what the data and next url is for paged lists.
 class PagedList<T> {
-  String nextUrl;
+  String? nextUrl;
   List<T> data;
 
   PagedList(Response<dynamic> response)
@@ -31,12 +32,12 @@ class PagedList<T> {
     nextUrl = pagedList.nextUrl;
   }
 
-  static String _parseNextUrl(Headers headers) {
+  static String? _parseNextUrl(Headers? headers) {
     if (headers == null) return null;
 
-    final links = headers['link']?.first?.split(',');
-    final next = links?.firstWhere((link) => link.contains('rel="next"'), orElse: () => null);
+    final links = headers['link']?.first.split(',');
+    final next = links?.firstWhereOrNull((link) => link.contains('rel="next"'));
 
-    return next?.substring(1, next?.lastIndexOf('>'));
+    return next?.substring(1, next.lastIndexOf('>'));
   }
 }

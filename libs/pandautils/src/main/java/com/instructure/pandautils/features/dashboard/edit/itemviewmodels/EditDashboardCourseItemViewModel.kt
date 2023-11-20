@@ -24,18 +24,24 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardItemViewT
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 class EditDashboardCourseItemViewModel(
-        val id: Long,
-        val name: String?,
-        @get:Bindable var isFavorite: Boolean,
-        val favoriteable: Boolean,
-        val openable: Boolean,
-        val termTitle: String?,
-        private val actionHandler: (EditDashboardItemAction) -> Unit
+    val id: Long,
+    val name: String?,
+    @get:Bindable var isFavorite: Boolean,
+    val favoritableOnline: Boolean,
+    val openable: Boolean,
+    val termTitle: String,
+    val online: Boolean,
+    val availableOffline: Boolean,
+    val enabled: Boolean,
+    private val actionHandler: (EditDashboardItemAction) -> Unit
 ) : ItemViewModel, BaseObservable() {
 
     override val layoutId: Int = R.layout.viewholder_edit_dashboard_course
 
     override val viewType: Int = EditDashboardItemViewType.COURSE.viewType
+
+    val favoritable: Boolean
+        get() = favoritableOnline && online
 
     fun onClick() {
         if (!openable) {
@@ -47,15 +53,11 @@ class EditDashboardCourseItemViewModel(
     }
 
     fun onFavoriteClick() {
-        if (!favoriteable) {
-            actionHandler(EditDashboardItemAction.ShowSnackBar(R.string.inactive_courses_cant_be_added_to_dashboard))
-            return
-        }
-
-        if (isFavorite) {
-            actionHandler(EditDashboardItemAction.UnfavoriteCourse(this))
-        } else {
-            actionHandler(EditDashboardItemAction.FavoriteCourse(this))
+        when {
+            !online -> actionHandler(EditDashboardItemAction.ShowSnackBar(R.string.coursesCannotBeFavoritedOffline))
+            !favoritableOnline -> actionHandler(EditDashboardItemAction.ShowSnackBar(R.string.inactive_courses_cant_be_added_to_dashboard))
+            isFavorite -> actionHandler(EditDashboardItemAction.UnfavoriteCourse(this))
+            else -> actionHandler(EditDashboardItemAction.FavoriteCourse(this))
         }
     }
 }

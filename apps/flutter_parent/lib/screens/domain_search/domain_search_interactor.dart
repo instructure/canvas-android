@@ -18,7 +18,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 
 class DomainSearchInteractor {
-  Future<List<SchoolDomain>> performSearch(String query) {
+  Future<List<SchoolDomain>?> performSearch(String query) {
     return locator<AccountsApi>().searchDomains(query);
   }
 

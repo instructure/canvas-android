@@ -25,10 +25,11 @@ import 'package:flutter_test/flutter_test.dart';
 import '../utils/accessibility_utils.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
+import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   setupTestLocator((locator) {
-    locator.registerLazySingleton<FirebaseCrashlytics>(() => MockFirebase());
+    locator.registerLazySingleton<FirebaseCrashlytics>(() => MockFirebaseCrashlytics());
   });
 
   setUp(() {
@@ -102,13 +103,13 @@ void main() {
     expect(find.text(l10n.crashScreenMessage), findsOneWidget);
 
     // 'Contact support' button
-    expect(find.widgetWithText(FlatButton, l10n.crashScreenContact), findsOneWidget);
+    expect(find.widgetWithText(TextButton, l10n.crashScreenContact), findsOneWidget);
 
     // 'View error details' button
-    expect(find.widgetWithText(FlatButton, l10n.crashScreenViewDetails), findsOneWidget);
+    expect(find.widgetWithText(TextButton, l10n.crashScreenViewDetails), findsOneWidget);
 
     // 'Restart app' button
-    expect(find.widgetWithText(FlatButton, l10n.crashScreenRestart), findsOneWidget);
+    expect(find.widgetWithText(TextButton, l10n.crashScreenRestart), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Displays report error dialog', (tester) async {
@@ -116,8 +117,8 @@ void main() {
     await tester.pumpAndSettle();
 
     // 'Contact support' button
-    expect(find.widgetWithText(FlatButton, l10n.crashScreenContact), findsOneWidget);
-    await tester.tap(find.widgetWithText(FlatButton, l10n.crashScreenContact));
+    expect(find.widgetWithText(TextButton, l10n.crashScreenContact), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, l10n.crashScreenContact));
     await tester.pumpAndSettle();
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
@@ -198,12 +199,12 @@ class __CrashTestWidgetState extends State<_CrashTestWidget> {
             'Count: $_counter',
             key: _CrashTestWidget.counterKey,
           ),
-          FlatButton(
+          TextButton(
             key: _CrashTestWidget.incrementKey,
             child: Text('Tap to increment'),
             onPressed: () => setState(() => _counter++),
           ),
-          FlatButton(
+          TextButton(
             key: _CrashTestWidget.crashKey,
             child: Text('Tap to crash'),
             onPressed: () {

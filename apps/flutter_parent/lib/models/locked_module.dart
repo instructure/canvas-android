@@ -31,24 +31,14 @@ abstract class LockedModule implements Built<LockedModule, LockedModuleBuilder> 
   @BuiltValueField(wireName: 'context_id')
   String get contextId;
 
-  @nullable
   @BuiltValueField(wireName: 'context_type')
-  String get contextType;
+  String? get contextType;
 
-  @nullable
-  String get name;
+  String? get name;
 
-  @nullable
   @BuiltValueField(wireName: 'unlock_at')
-  DateTime get unlockAt;
+  DateTime? get unlockAt;
 
-  @nullable
   @BuiltValueField(wireName: 'require_sequential_progress')
-  bool get isRequireSequentialProgress;
-
-//  val prerequisites: List<ModuleName>? = arrayListOf(),
-
-//  @BuiltValueField(wireName: 'completion_requirements')
-//  List<ModuleCompletionRequirement> get completionRequirements;
-
+  bool? get isRequireSequentialProgress;
 }

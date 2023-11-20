@@ -41,7 +41,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.room.common.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
@@ -216,7 +216,7 @@ class InboxComposeMessageFragment : ParentFragment(), FileUploadDialogParent {
             } else {
                 val canvasContext =
                     selectedContext ?: CanvasContext.fromContextCode(conversation?.contextCode) ?: return@onClick
-                RouteMatcher.route(requireContext(), InboxRecipientsFragment.makeRoute(canvasContext, chips.recipients))
+                RouteMatcher.route(requireActivity(), InboxRecipientsFragment.makeRoute(canvasContext, chips.recipients))
             }
         }
 

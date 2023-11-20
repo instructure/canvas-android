@@ -73,6 +73,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).scrollTo().assertDisplayed()
     }
 
+    fun assertConversationWithRecipientsDisplayed(recipients: String) {
+        val matcher = withId(R.id.userName) + withAncestor(R.id.inboxRecyclerView) + withText(recipients)
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
     fun assertConversationNotDisplayed(conversation: ConversationApiModel) {
         assertConversationNotDisplayed(conversation.subject)
     }
@@ -93,6 +98,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
         val matcher = withText(subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).click()
+    }
+
+    fun openConversationWithRecipients(recipients: String) {
+        val matcher = withId(R.id.userName) + withAncestor(R.id.inboxRecyclerView) + withText(recipients)
+        onView(matcher).scrollTo().click()
     }
 
     fun openConversation(conversation: ConversationApiModel) {
@@ -141,12 +151,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun assertConversationNotStarred(subject: String) {
         val matcher = allOf(
             withId(R.id.star),
-            withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
             hasSibling(withId(R.id.userName)),
             hasSibling(withId(R.id.date)),
             hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
-        onView(matcher).check(doesNotExist())
+        onView(matcher).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
 
     }
 

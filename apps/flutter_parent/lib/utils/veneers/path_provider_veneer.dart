@@ -26,11 +26,11 @@ class PathProviderVeneer {
 
   Future<Directory> getApplicationDocumentsDirectory() => PathProvider.getApplicationDocumentsDirectory();
 
-  Future<Directory> getExternalStorageDirectory() => PathProvider.getExternalStorageDirectory();
+  Future<Directory?> getExternalStorageDirectory() => PathProvider.getExternalStorageDirectory();
 
-  Future<List<Directory>> getExternalCacheDirectories() => PathProvider.getExternalCacheDirectories();
+  Future<List<Directory>?> getExternalCacheDirectories() => PathProvider.getExternalCacheDirectories();
 
-  Future<List<Directory>> getExternalStorageDirectories({PathProvider.StorageDirectory type}) {
+  Future<List<Directory>?> getExternalStorageDirectories({PathProvider.StorageDirectory? type}) {
     return PathProvider.getExternalStorageDirectories(type: type);
   }
 }

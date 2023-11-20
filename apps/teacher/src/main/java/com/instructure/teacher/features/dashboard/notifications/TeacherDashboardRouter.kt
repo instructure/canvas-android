@@ -40,4 +40,6 @@ class TeacherDashboardRouter(private val activity: FragmentActivity) : Dashboard
             Route(FileListFragment::class.java, canvasContext, args)
         )
     }
+
+    override fun routeToSyncProgress() = Unit
 }

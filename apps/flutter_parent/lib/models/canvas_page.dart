@@ -30,28 +30,22 @@ abstract class CanvasPage implements Built<CanvasPage, CanvasPageBuilder> {
   @BuiltValueField(wireName: 'page_id')
   String get id;
 
-  @nullable
-  String get url;
+  String? get url;
 
-  @nullable
-  String get title;
+  String? get title;
 
-  @nullable
   @BuiltValueField(wireName: 'created_at')
-  DateTime get createdAt;
+  DateTime? get createdAt;
 
-  @nullable
   @BuiltValueField(wireName: 'updated_at')
-  DateTime get updatedAt;
+  DateTime? get updatedAt;
 
   @BuiltValueField(wireName: 'hide_from_students')
   bool get hideFromStudents;
 
-  @nullable
-  String get status;
+  String? get status;
 
-  @nullable
-  String get body;
+  String? get body;
 
   @BuiltValueField(wireName: 'front_page')
   bool get frontPage;
@@ -62,13 +56,11 @@ abstract class CanvasPage implements Built<CanvasPage, CanvasPageBuilder> {
   @BuiltValueField(wireName: 'published')
   bool get published;
 
-  @nullable
   @BuiltValueField(wireName: 'editing_roles')
-  String get editingRoles;
+  String? get editingRoles;
 
-  @nullable
   @BuiltValueField(wireName: 'lock_explanation')
-  String get lockExplanation;
+  String? get lockExplanation;
 
   static void _initializeBuilder(CanvasPageBuilder b) => b
     ..hideFromStudents = false

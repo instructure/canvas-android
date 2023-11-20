@@ -19,7 +19,14 @@ package com.instructure.pandautils.discussions
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.Rect
 import android.net.Uri
 import android.util.Base64
 import android.view.View
@@ -32,17 +39,21 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isGroup
 import com.instructure.pandautils.views.CanvasWebView
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
-import java.net.URLEncoder
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 import java.util.regex.Pattern
 
 object DiscussionUtils {
@@ -231,7 +242,7 @@ object DiscussionUtils {
     /**
      * This function should only be called from a background thread as it can be very expensive to execute
      */
-    fun createDiscussionTopicHtml(
+    suspend fun createDiscussionTopicHtml(
             context: Context,
             isTablet: Boolean,
             canvasContext: CanvasContext,

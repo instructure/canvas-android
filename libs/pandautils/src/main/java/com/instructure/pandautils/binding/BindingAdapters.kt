@@ -76,6 +76,10 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
             emptyView.setVisible()
             emptyView.setLoading()
         }
+        is ViewState.LoadingWithAnimation -> {
+            emptyView.setVisible()
+            emptyView.setLoadingWithAnimation(state.titleRes, state.messageRes, state.animationRes)
+        }
         is ViewState.Refresh -> emptyView.setGone()
         is ViewState.Empty -> {
             emptyView.setVisible()
@@ -151,11 +155,11 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
 fun bindHtmlContent(webViewWrapper: CanvasWebViewWrapper, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
     webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty())
     if (onLtiButtonPressed != null) {
-        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "ltiTool")
     }
 
     if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "googleDocs")
     }
 }
 
@@ -176,7 +180,7 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
 fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, @ColorInt overlayColor: Int?) {
     if (overlayColor != null) {
         imageView.post {
-            imageView.setCourseImage(imageUrl, overlayColor, true)
+            imageView.setCourseImage(imageUrl, overlayColor, imageUrl.isNullOrEmpty())
         }
     } else {
         Glide.with(imageView)

@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.utils
 
 
 enum class ApiType {
-    API, CACHE, UNKNOWN;
+    API, CACHE, DB, UNKNOWN;
 
     val isAPI: Boolean get() = this == API
     val isCache: Boolean get() = this == CACHE

@@ -50,7 +50,7 @@ class FileSearchFragment : BaseSyncFragment<
     private val searchAdapter by lazy {
         FileSearchAdapter(requireContext(), canvasContext.textAndIconColor, presenter) {
             val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, canvasContext.backgroundColor, presenter.canvasContext, R.drawable.ic_document)
-            viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
+            viewMedia(requireActivity(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, canvasContext.backgroundColor, editableFile)
         }
     }
 

@@ -44,7 +44,7 @@ void main() {
     return state;
   }
 
-  Widget calendarTestApp(Widget child, {Locale locale}) {
+  Widget calendarTestApp(Widget child, {Locale? locale}) {
     return TestApp(ChangeNotifierProvider(create: (_) => CalendarTodayNotifier(), child: child), locale: locale);
   }
 
@@ -83,7 +83,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Switches to specified starting date', (tester) async {
     DateTime startingDate = DateTime(2000, 1, 1);
-    DateTime dateForDayBuilder = null;
+    DateTime? dateForDayBuilder = null;
     await tester.pumpWidget(
       calendarTestApp(
         CalendarWidget(
@@ -115,7 +115,7 @@ void main() {
     var pressed = false;
 
     final calendar = CalendarWidget(
-      dayBuilder: (_, __) => FlatButton(
+      dayBuilder: (_, __) => TextButton(
         onPressed: () => pressed = true,
         child: Text('Press me!'),
       ),
@@ -137,7 +137,7 @@ void main() {
     expect(find.byType(CalendarMonth), findsOneWidget);
 
     // Tap on the 'event'
-    await tester.tap(find.byType(FlatButton));
+    await tester.tap(find.byType(TextButton));
     await tester.pumpAndSettle();
 
     // Should have our pressed value true
@@ -148,7 +148,7 @@ void main() {
     var pressed = false;
 
     final calendar = CalendarWidget(
-      dayBuilder: (_, __) => FlatButton(
+      dayBuilder: (_, __) => TextButton(
         onPressed: () => pressed = true,
         child: Text('Press me!'),
       ),
@@ -167,7 +167,7 @@ void main() {
     expect(find.byType(CalendarWeek), findsOneWidget);
 
     // Tap on the 'event'
-    await tester.tap(find.byType(FlatButton));
+    await tester.tap(find.byType(TextButton));
     await tester.pumpAndSettle();
 
     // Should have our pressed value true
@@ -294,7 +294,7 @@ void main() {
 
   group('Set day/week/month', () {
     testWidgetsWithAccessibilityChecks('Jumps to selected date', (tester) async {
-      DateTime dateForDayBuilder = null;
+      DateTime? dateForDayBuilder = null;
       await tester.pumpWidget(
         calendarTestApp(
           CalendarWidget(
@@ -325,7 +325,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Animates to selected date', (tester) async {
-      DateTime dateForDayBuilder = null;
+      DateTime? dateForDayBuilder = null;
       await tester.pumpWidget(
         calendarTestApp(
           CalendarWidget(
@@ -687,7 +687,7 @@ void main() {
 
   group('Date Selection', () {
     testWidgetsWithAccessibilityChecks('Selects date from week view', (tester) async {
-      DateTime dateForDayBuilder = null;
+      DateTime? dateForDayBuilder = null;
       await tester.pumpWidget(
         calendarTestApp(
           CalendarWidget(
@@ -720,7 +720,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Selects date from month view', (tester) async {
-      DateTime dateForDayBuilder = null;
+      DateTime? dateForDayBuilder = null;
       await tester.pumpWidget(
         calendarTestApp(
           CalendarWidget(
@@ -756,7 +756,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Swipes to select adjacent day', (tester) async {
-      DateTime dateForDayBuilder = null;
+      DateTime? dateForDayBuilder = null;
       final dayContentKey = Key('day-content');
 
       await tester.pumpWidget(
@@ -855,13 +855,13 @@ void main() {
       // there will be at least one build pass where the month layout overflows its parent. This is acceptable while the
       // month view is animating its collapse into the week view. However, because such overflows will fail the test,
       // we must intercept and ignore those specific errors
-      FlutterExceptionHandler onError = FlutterError.onError;
+      FlutterExceptionHandler? onError = FlutterError.onError;
       FlutterError.onError = (details) {
         var exception = details.exception;
-        if (exception is FlutterError && exception?.message?.startsWith('A RenderFlex overflowed') == true) {
+        if (exception is FlutterError && exception.message.startsWith('A RenderFlex overflowed')) {
           // Intentionally left blank
         } else {
-          onError(details);
+          onError!(details);
         }
       };
 
@@ -874,7 +874,7 @@ void main() {
           fetcher: _FakeFetcher(),
         );
 
-        StateSetter stateSetter;
+        late StateSetter stateSetter;
 
         await tester.pumpWidget(
           calendarTestApp(
@@ -1064,7 +1064,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Swipes to select adjacent day in RTL', (tester) async {
-      DateTime dateForDayBuilder = null;
+      DateTime? dateForDayBuilder = null;
       final dayContentKey = Key('day-content');
 
       await tester.pumpWidget(
@@ -1104,6 +1104,8 @@ void main() {
 
 class _FakeFetcher extends PlannerFetcher {
   AsyncSnapshot<List<PlannerItem>> nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
+
+  _FakeFetcher({super.observeeId = '', super.userDomain = '', super.userId = ''});
 
   @override
   AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) => nextSnapshot;
