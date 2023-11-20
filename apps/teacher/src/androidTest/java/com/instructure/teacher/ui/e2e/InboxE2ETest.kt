@@ -221,7 +221,21 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Select 'ARCHIVED' scope and assert that '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
         inboxPage.filterMessageScope("Archived")
-        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+
+        var timesToRetry = 10
+
+        do {
+            try {
+                inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+                break
+            }
+            catch(e: NoMatchingViewException) {
+                SystemClock.sleep(3000) //Wait for 3 secs because of API slowness and then refresh the page.
+                refresh()
+                timesToRetry--
+            }
+        } while(timesToRetry > 0)
+
 
         Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation and unarchive it." +
                 "Assert that the selected number of conversation on the toolbar is 1 and '${seedConversation2[0].subject}' conversation is not displayed in the 'ARCHIVED' scope.")

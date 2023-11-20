@@ -155,7 +155,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
             hasSibling(withId(R.id.date)),
             hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
-        onView(matcher).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
+        waitForView(matcher).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
 
     }
 
