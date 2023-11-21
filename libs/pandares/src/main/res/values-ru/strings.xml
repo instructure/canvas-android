@@ -1446,6 +1446,21 @@
     <string name="offline_content_select_all">Выбрать все</string>
     <string name="offline_content_deselect_all">Отменить выбор для всех</string>
     <string name="offline_content_loading_error">Произошла ошибка при загрузке контента.</string>
+    <string name="offline_content_empty_title">Курсы отсутствуют</string>
+    <string name="offline_content_empty_message">Ваши курсы будут перечислены здесь, а затем вы сможете сделать их доступными для использования в режиме офлайн.</string>
+    <string name="offline_content_empty_course_title">Нет контента курса</string>
+    <string name="offline_content_empty_course_message">Содержание курсов будет перечислено здесь, а затем вы сможете сделать их доступными для использования в режиме офлайн.</string>
+    <string name="offline_content_discard_dialog_title">Отменить изменения?</string>
+    <string name="offline_content_discard_dialog_message">Если выбрать отмену, изменения не будут сохранены.</string>
+    <string name="offline_content_discard_dialog_positive">Удалить</string>
+    <string name="offline_content_sync_dialog_title">Синхронизировать офлайн-контент?</string>
+    <string name="offline_content_sync_dialog_message">Будет выполнена синхронизация содержимого ~%s. Это может привести к дополнительным расходам со стороны поставщика данных, если вы не подключены к сети Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">При этом синхронизация контента ~%s будет осуществляться только при подключении к сети Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Синхронизировать</string>
+    <string name="offline_content_sync_loading_title">Выполняется загрузка...</string>
+    <string name="offline_content_sync_loading_message">Спокойно, мы готовим все для вас.</string>
+    <string name="content_description_expand_content">Развернуть содержание</string>
+    <string name="content_description_collapse_content">Свернуть содержание</string>
     <string name="syncSettings_autoContentSyncDescription">При включении функции автоматической синхронизации содержимого будет выполнена загрузка выбранного содержимого на основе приведенных ниже настроек. Синхронизация содержимого будет происходить, даже если приложение не запущено. Если этот параметр выключен, синхронизация не будет выполняться. Уже загруженное содержимое не будет удаляться.</string>
     <string name="syncSettings_syncFrequencyTitle">Синхронизация частоты</string>
     <string name="syncSettings_autoContentSyncTitle">Автоматическая синхронизация контента</string>
@@ -1490,7 +1505,6 @@
         <item quantity="many">%d курса(-ов) синхронизируются.</item>
         <item quantity="other">%d курса(-ов) синхронизируются.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Изображения содержимого курса</string>
     <string name="assignmentNoLongerAvailable">Это задание более недоступно.</string>
     <string name="editDashboardOfflineMode">Вы находитесь в автономном режиме</string>
     <string name="editDashboardOfflineModeMessage">В настоящее время у вас нет никаких курсов, доступных в автономном режиме.</string>
@@ -1504,4 +1518,5 @@
         <item quantity="many">%d курса(-ов) были синхронизированы.</item>
         <item quantity="other">%d курса(-ов) были синхронизированы.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Дополнительный контент курса</string>
 </resources>

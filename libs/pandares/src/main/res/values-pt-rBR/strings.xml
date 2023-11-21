@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Selecionar tudo</string>
     <string name="offline_content_deselect_all">Cancelar seleção de todos</string>
     <string name="offline_content_loading_error">Ocorreu um erro ao carregar o conteúdo.</string>
+    <string name="offline_content_empty_title">Sem Cursos</string>
+    <string name="offline_content_empty_message">Seus cursos serão listados aqui e você poderá disponibilizá-los para uso offline.</string>
+    <string name="offline_content_empty_course_title">Nenhum conteúdo do curso</string>
+    <string name="offline_content_empty_course_message">O conteúdo do curso será listado aqui e você poderá disponibilizá-lo para uso offline.</string>
+    <string name="offline_content_discard_dialog_title">Descartar alterações?</string>
+    <string name="offline_content_discard_dialog_message">Se você optar por descartar, as alterações não serão salvas.</string>
+    <string name="offline_content_discard_dialog_positive">Descartar</string>
+    <string name="offline_content_sync_dialog_title">Sincronizar conteúdo off-line?</string>
+    <string name="offline_content_sync_dialog_message">Isso sincronizará o conteúdo ~%s. Isso pode resultar em cobranças adicionais do seu provedor de dados, se você não estiver conectado a uma rede Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Isso sincronizará o conteúdo ~%s apenas enquanto você estiver conectado a uma rede Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Sincronizar</string>
+    <string name="offline_content_sync_loading_title">Carregando...</string>
+    <string name="offline_content_sync_loading_message">Aguarde, estamos preparando tudo para você.</string>
+    <string name="content_description_expand_content">Expandir conteúdo</string>
+    <string name="content_description_collapse_content">Recolher conteúdo</string>
     <string name="syncSettings_autoContentSyncDescription">A ativação da sincronização automática de conteúdo cuidará do download do conteúdo selecionado com base nas configurações abaixo. A sincronização de conteúdo acontecerá mesmo se o aplicativo não estiver em execução. Se a configuração estiver desativada, nenhuma sincronização ocorrerá. O conteúdo já baixado não será excluído.</string>
     <string name="syncSettings_syncFrequencyTitle">Frequência de sincronização</string>
     <string name="syncSettings_autoContentSyncTitle">Sincronização automática de conteúdo</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d curso está sendo sincronizado.</item>
         <item quantity="other">%d cursos estão sendo sincronizados.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Imagens do conteúdo do curso</string>
     <string name="assignmentNoLongerAvailable">Essa tarefa não está mais disponível.</string>
     <string name="editDashboardOfflineMode">Você está off-line</string>
     <string name="editDashboardOfflineModeMessage">No momento, você não tem nenhum curso disponível off-line.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d curso foi sincronizado.</item>
         <item quantity="other">%d cursos foram sincronizados.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Conteúdo adicional do curso</string>
 </resources>
