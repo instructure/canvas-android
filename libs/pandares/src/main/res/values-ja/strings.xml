@@ -1392,6 +1392,21 @@
     <string name="offline_content_select_all">すべて選択</string>
     <string name="offline_content_deselect_all">すべての選択を取り消し</string>
     <string name="offline_content_loading_error">コンテンツ読み込み中にエラーが起こりました。</string>
+    <string name="offline_content_empty_title">コースはありません</string>
+    <string name="offline_content_empty_message">コースがここに表示され、オフラインで利用できるようにすることができます。</string>
+    <string name="offline_content_empty_course_title">コースコンテンツなし</string>
+    <string name="offline_content_empty_course_message">コースコンテンツはここに表示され、オフラインで利用できるようになります。</string>
+    <string name="offline_content_discard_dialog_title">変更を破棄しますか？</string>
+    <string name="offline_content_discard_dialog_message">破棄を選択した場合、変更は保存されません。</string>
+    <string name="offline_content_discard_dialog_positive">破棄する</string>
+    <string name="offline_content_sync_dialog_title">オフラインのコンテンツを同期化する</string>
+    <string name="offline_content_sync_dialog_message">これで、~%sのコンテンツが同期されます。Wi-Fiネットワークに接続していない、場合、データプロバイダから追加料金が請求される可能性があります。</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">これで、Wi-Fiネットワークに接続している間のみ、~%sのコンテンツが同期されます</string>
+    <string name="offline_content_sync_dialog_positive">同期化</string>
+    <string name="offline_content_sync_loading_title">読み込み中・・・</string>
+    <string name="offline_content_sync_loading_message">少々お待ちください。今、準備をしています。</string>
+    <string name="content_description_expand_content">コンテンツを拡大</string>
+    <string name="content_description_collapse_content">コンテンツを折りたたむ</string>
     <string name="syncSettings_autoContentSyncDescription">コンテンツの自動同期を有効にすると、選択したコンテンツのダウンロードが以下の設定に基づいて行われます。コンテンツの同期は、アプリケーションが起動していなくても行われます。この設定をオフにすると、同期は行われません。すでにダウンロードされているコンテンツは削除されません。</string>
     <string name="syncSettings_syncFrequencyTitle">同期の頻度</string>
     <string name="syncSettings_autoContentSyncTitle">コンテンツ自動同期</string>
@@ -1433,7 +1448,6 @@
     <plurals name="syncProgress_itemCount">
         <item quantity="other">%dコースは同期中です。</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">コースコンテンツ画像</string>
     <string name="assignmentNoLongerAvailable">この機能はもう利用できません。</string>
     <string name="editDashboardOfflineMode">現在オフラインです</string>
     <string name="editDashboardOfflineModeMessage">現在、オフラインで利用可能なコースはありません。</string>
@@ -1444,4 +1458,5 @@
     <plurals name="offlineContentSyncSuccessNotificationBody">
         <item quantity="other">%dコースが同期されました。</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">追加のコースコンテンツ</string>
 </resources>

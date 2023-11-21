@@ -1411,6 +1411,21 @@
     <string name="offline_content_select_all">Selecciona-ho tot</string>
     <string name="offline_content_deselect_all">Anul·la la selecció de tot</string>
     <string name="offline_content_loading_error">S\'ha produït un error en carregar el contingut.</string>
+    <string name="offline_content_empty_title">No hi ha cap assignatura</string>
+    <string name="offline_content_empty_message">Les vostres assignatures s’enumeraran aquí; posteriorment, podeu fer que estiguin disponibles per utilitzar-se sense connexió.</string>
+    <string name="offline_content_empty_course_title">No hi ha cap contingut de l’assignatura</string>
+    <string name="offline_content_empty_course_message">El contingut de l’assignatura s’enumerarà aquí; posteriorment, podeu fer que estigui disponible per utilitzar-se sense connexió.</string>
+    <string name="offline_content_discard_dialog_title">Voleu rebutjar els canvis?</string>
+    <string name="offline_content_discard_dialog_message">Si trieu rebutjar-los, no es desaran els canvis.</string>
+    <string name="offline_content_discard_dialog_positive">Rebutja</string>
+    <string name="offline_content_sync_dialog_title">Voleu sincronitzar el contingut sense connexió?</string>
+    <string name="offline_content_sync_dialog_message">Amb aquesta operació se sincronitzarà el contingut de ~%s. Si no us heu connectat a cap xarxa Wi-Fi, és possible que el proveïdor de dades us cobri algun import addicional.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Amb aquesta operació se sincronitzarà el contingut de ~%s només mentre tingueu connexió a una xarxa Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Sincronitza</string>
+    <string name="offline_content_sync_loading_title">S\'està carregant&#8230;</string>
+    <string name="offline_content_sync_loading_message">Un moment, us ho estem preparant.</string>
+    <string name="content_description_expand_content">Desplega el contingut</string>
+    <string name="content_description_collapse_content">Contrau el contingut</string>
     <string name="syncSettings_autoContentSyncDescription">En activar la sincronització automàtica del contingut es baixarà el contingut seleccionat segons les opcions de configuració indicades a continuació. Se sincronitzarà el contingut encara que l’aplicació no s’estigui executant. Si el paràmetre està desactivat no es durà a terme la sincronització. No se suprimirà el contingut que ja s’hagi baixat.</string>
     <string name="syncSettings_syncFrequencyTitle">Freqüència de sincronització</string>
     <string name="syncSettings_autoContentSyncTitle">Sincronització automàtica del contingut</string>
@@ -1453,7 +1468,6 @@
         <item quantity="one">S’està sincronitzant %d assignatura.</item>
         <item quantity="other">S’estan sincronitzant %d assignatures.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Imatges del contingut de l\'assignatura</string>
     <string name="assignmentNoLongerAvailable">Aquesta activitat ja no està disponible.</string>
     <string name="editDashboardOfflineMode">Esteu sense connexió</string>
     <string name="editDashboardOfflineModeMessage">Actualment, no teniu cap assignatura que estigui disponible sense connexió.</string>
@@ -1465,4 +1479,5 @@
         <item quantity="one">S’ha sincronitzat %d assignatura.</item>
         <item quantity="other">S’han sincronitzat %d assignatures.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Contingut de l’assignatura addicional</string>
 </resources>

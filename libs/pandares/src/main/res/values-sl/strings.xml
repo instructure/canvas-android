@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Izberi vse</string>
     <string name="offline_content_deselect_all">Razveljavi izbor vseh</string>
     <string name="offline_content_loading_error">Pri nalaganju vsebine je prišlo do napake.</string>
+    <string name="offline_content_empty_title">Ni predmetov</string>
+    <string name="offline_content_empty_message">Vaši predmeti bodo navedeni tukaj, nato pa lahko zanje omogočite uporabo brez povezave.</string>
+    <string name="offline_content_empty_course_title">Ni vsebine predmeta</string>
+    <string name="offline_content_empty_course_message">Vsebina predmeta bo navedena tukaj, nato pa lahko zanjo omogočite uporabo brez povezave.</string>
+    <string name="offline_content_discard_dialog_title">Želite zavreči spremembe?</string>
+    <string name="offline_content_discard_dialog_message">Če jih boste zavrgli, spremembe ne bodo shranjene.</string>
+    <string name="offline_content_discard_dialog_positive">Zavrzi</string>
+    <string name="offline_content_sync_dialog_title">Želite sinhronizirati vsebino brez povezave?</string>
+    <string name="offline_content_sync_dialog_message">S tem boste sinhronizirali vsebino ~%s Ponudnik podatkov vam lahko zaračuna dodatne stroške, če niste povezani v omrežje Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">S tem boste sinhronizirali vsebino ~%s le, ko ste povezani v omrežje Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Sinhronizacija</string>
+    <string name="offline_content_sync_loading_title">Nalaganje ...</string>
+    <string name="offline_content_sync_loading_message">Počakajte, za vas pripravljamo stvari.</string>
+    <string name="content_description_expand_content">Razširi vsebino</string>
+    <string name="content_description_collapse_content">Strni vsebino</string>
     <string name="syncSettings_autoContentSyncDescription">Če omogočite samodejno sinhronizacijo vsebine, boste omogočili prenos izbrane vsebine na podlagi spodnjih nastavitev. Sinhronizacija vsebine bo izvedena tudi, če aplikacija ni zagnana. Če je nastavitev izklopljena, sinhronizacija ne bo izvedena. Že prenesena vsebina ne bo odstranjena.</string>
     <string name="syncSettings_syncFrequencyTitle">Pogostost sinhronizacije</string>
     <string name="syncSettings_autoContentSyncTitle">Samodejna sinhronizacija vsebine</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d predmet se sinhronizira.</item>
         <item quantity="other">%d predmetov se sinhronizira.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Slike vsebine predmeta</string>
     <string name="assignmentNoLongerAvailable">Ta naloga ni več na voljo.</string>
     <string name="editDashboardOfflineMode">Nimate povezave</string>
     <string name="editDashboardOfflineModeMessage">Trenutno nimate nobenega predmeta, ki bi bil na voljo brez povezave.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d predmet je bil sinhroniziran.</item>
         <item quantity="other">%d predmetov je bilo sinhroniziranih.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Dodatna vsebina predmeta</string>
 </resources>
