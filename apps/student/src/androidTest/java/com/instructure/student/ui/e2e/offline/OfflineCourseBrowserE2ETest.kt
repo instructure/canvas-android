@@ -17,6 +17,7 @@
 package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -74,7 +75,36 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course1)
-        courseBrowserPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the 'Google Drive' Tab is disabled in offline mode as it is an LTI tool, but 'People' tab for example is enabled because it's synced.")
+        courseBrowserPage.assertTabDisabled("Google Drive")
+        courseBrowserPage.assertTabEnabled("People")
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Open global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
+        Espresso.pressBack()
+        dashboardPage.openGlobalManageOfflineContentPage()
+
+        Log.d(STEP_TAG, "Select the entire '${course1.name}' course for sync. Click on the 'Sync' button.")
+        manageOfflineContentPage.changeItemSelectionState(course1.name)
+        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+
+        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
+        dashboardPage.waitForRender()
+        dashboardPage.waitForSyncProgressDownloadStartedNotification()
+        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
+
+        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
+        dashboardPage.waitForSyncProgressStartingNotification()
+        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
+
+        Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
+        OfflineTestUtils.turnOffConnectionViaADB()
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
+        dashboardPage.selectCourse(course1)
 
     }
 
