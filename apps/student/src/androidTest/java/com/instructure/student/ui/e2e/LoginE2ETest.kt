@@ -63,7 +63,7 @@ class LoginE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
-        loginWithUser(student2, true)
+        loginWithUser(student2, true, shouldWait = true)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(student2)
@@ -75,7 +75,7 @@ class LoginE2ETest : StudentTest() {
         loginLandingPage.assertDisplaysPreviousLogins()
 
         Log.d(STEP_TAG, "Login with user: ${student1.name}, login id: ${student1.loginId}.")
-        loginWithUser(student1, true)
+        loginWithUser(student1, true, shouldWait = true)
 
         Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(student1)
@@ -172,7 +172,7 @@ class LoginE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
-        loginWithUser(teacher, true)
+        loginWithUser(teacher, true, shouldWait = true)
 
         Log.d(STEP_TAG,"Validate ${teacher.name} user's role as a Teacher.")
         validateUserAndRole(teacher, course, "Teacher")
@@ -184,7 +184,7 @@ class LoginE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${ta.name}, login id: ${ta.loginId}.")
-        loginWithUser(ta, true)
+        loginWithUser(ta, true, shouldWait = true)
 
         Log.d(STEP_TAG,"Validate ${ta.name} user's role as a TA.")
         validateUserAndRole(ta, course, "TA")
@@ -196,7 +196,7 @@ class LoginE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
-        loginWithUser(parent, true)
+        loginWithUser(parent, true, shouldWait = true)
 
         Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertDashboardPageDisplayed(parent)
@@ -298,9 +298,10 @@ class LoginE2ETest : StudentTest() {
         )
     }
 
-    private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
+    private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false, shouldWait: Boolean = false) {
 
-        Thread.sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
+        if(shouldWait) Thread.sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
+
         if(lastSchoolSaved) {
             Log.d(STEP_TAG,"Click 'Find Another School' button.")
             loginLandingPage.clickFindAnotherSchoolButton()
