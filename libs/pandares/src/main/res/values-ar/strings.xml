@@ -1481,6 +1481,21 @@
     <string name="offline_content_select_all">تحديد الكل</string>
     <string name="offline_content_deselect_all">إلغاء تحديد الكل</string>
     <string name="offline_content_loading_error">حدث خطأ أثناء تحميل المحتوى.</string>
+    <string name="offline_content_empty_title">لا يوجد أي مساق</string>
+    <string name="offline_content_empty_message">سيتم إدراج مساقاتك هنا، ثم يمكنك إتاحته للاستخدام دون اتصال.</string>
+    <string name="offline_content_empty_course_title">لا يوجد محتوى مساق</string>
+    <string name="offline_content_empty_course_message">سيتم إدراج محتوى المساق هنا، ثم يمكنك إتاحته للاستخدام دون اتصال.</string>
+    <string name="offline_content_discard_dialog_title">هل تريد تجاهل التغييرات؟</string>
+    <string name="offline_content_discard_dialog_message">إذا اخترت التجاهل، لن يتم حفظ التغييرات.</string>
+    <string name="offline_content_discard_dialog_positive">تجاهل</string>
+    <string name="offline_content_sync_dialog_title">هل تريد مزامنة المحتوى دون اتصال؟</string>
+    <string name="offline_content_sync_dialog_message">سيؤدي هذا إلى مزامنة ~%s من المحتوى. وقد يؤدي هذا إلى رسوم إضافية من موفر الخدمة إذا لم تكن متصلاً بشبكة Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">سيؤدي هذا إلى مزامنة ~%s من المحتوى فقط أثناء اتصالك بشبكة Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">مزامنة</string>
+    <string name="offline_content_sync_loading_title">جارٍ التحميل...</string>
+    <string name="offline_content_sync_loading_message">مهلاً، نحن نجهز لك الأشياء.</string>
+    <string name="content_description_expand_content">توسيع المحتوى</string>
+    <string name="content_description_collapse_content">طي المحتوى</string>
     <string name="syncSettings_autoContentSyncDescription">سيؤدي تمكين مزامنة المحتوى التلقائية إلى تنزيل المحتوى المحدد بناءً على الإعدادات أدناه. ستحدث مزامنة المحتوى حتى لو لم يكن يعمل التطبيق. إذا تم إيقاف تشغيل الإعداد، فلن تحدث المزامنة. لن يتم حذف المحتوى الذي تم تنزيله بالفعل.</string>
     <string name="syncSettings_syncFrequencyTitle">تكرار المزامنة</string>
     <string name="syncSettings_autoContentSyncTitle">مزامنة المحتوى التلقائية</string>
@@ -1527,7 +1542,6 @@
         <item quantity="many">%d من المساقات قيد المزامنة.</item>
         <item quantity="other">%d من المساقات قيد المزامنة.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">صور محتوى المساق</string>
     <string name="assignmentNoLongerAvailable">هذه المهمة لم تعد متوفرة.</string>
     <string name="editDashboardOfflineMode">أنت غير متصل بالإنترنت</string>
     <string name="editDashboardOfflineModeMessage">ليس لديك حاليًا أي مساقات غير متوفرة عبر الإنترنت.</string>
@@ -1543,4 +1557,5 @@
         <item quantity="many">تمت مزامنة %d من المساقات.</item>
         <item quantity="other">تمت مزامنة %d من المساقات.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">محتوى مساق إضافي</string>
 </resources>

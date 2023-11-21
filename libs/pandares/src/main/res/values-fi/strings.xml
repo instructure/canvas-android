@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Valitse kaikki</string>
     <string name="offline_content_deselect_all">Poista kaikkien valinta</string>
     <string name="offline_content_loading_error">Kurssin sisältöä ladattaessa ilmeni virhe.</string>
+    <string name="offline_content_empty_title">Ei kursseja</string>
+    <string name="offline_content_empty_message">Kurssisi näkyvät täällä, ja voit sitten asettaa sen saataville verkon ulkopuoliseen käyttöön.</string>
+    <string name="offline_content_empty_course_title">Ei kurssisisältöä</string>
+    <string name="offline_content_empty_course_message">Kurssisältö näkyy täällä, ja voit sitten asettaa sen saataville verkon ulkopuoliseen käyttöön.</string>
+    <string name="offline_content_discard_dialog_title">Ohitetaanko muutokset?</string>
+    <string name="offline_content_discard_dialog_message">Jos valitset ohittavasi, muutoksia ei tallenneta.</string>
+    <string name="offline_content_discard_dialog_positive">Ohita</string>
+    <string name="offline_content_sync_dialog_title">Synkronoidaanko verkon ulkopuolinen sisältö</string>
+    <string name="offline_content_sync_dialog_message">Tämä synkronisoi ~%s sisällön. Tästä saattaa aiheutua ylimääräisiä veloituksia datan toimittajilta, jos et ole yhteydessä Wi-Fi-verkkoon.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Tämä synkronisoi ~%s sisällön ainoastaan silloin, kn yhteys Wi-Fi -verkkoon on saatavilla.</string>
+    <string name="offline_content_sync_dialog_positive">Synkronointi</string>
+    <string name="offline_content_sync_loading_title">Ladataan...</string>
+    <string name="offline_content_sync_loading_message">Pysyttele täällä, valmistamme täällä kaikkea sinulle. </string>
+    <string name="content_description_expand_content">Laajenna sisältöä.</string>
+    <string name="content_description_collapse_content">Kutista sisältöä.</string>
     <string name="syncSettings_autoContentSyncDescription">Automaattisen sisällön synkronisoinnin ottamisellal käyttöön huolehditaan valitun sisällön latauksesta alla olevien asetusten perusteella. Sisällön synkronisointi tapahtuu myös silloin, kun sovellus ei ole käynnissä jos asetukset on kytketty pois päältä, synkronisointia ei tapahdu. Jo ladattua sisältöä ei poisteta.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkronoinnin tiheys</string>
     <string name="syncSettings_autoContentSyncTitle">Automaattinen sisällön synkronisointi</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d kurssia synkronoidaan.</item>
         <item quantity="other">%d kurssia synkronoidaan.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Kurssin sisällön kuvakkeet.</string>
     <string name="assignmentNoLongerAvailable">Tämä tehtävä ei enää ole käytettävissä.</string>
     <string name="editDashboardOfflineMode">Olet verkon ulkopuolella</string>
     <string name="editDashboardOfflineModeMessage">Sinulla ei parhaillaan ole kursseja, jotka ovat saatavilla verkon ulkopuolella.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d kurssi on synkronoitu.</item>
         <item quantity="other">%d kurssia on synkronoitu.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">LIsäkurssin sisältö.</string>
 </resources>

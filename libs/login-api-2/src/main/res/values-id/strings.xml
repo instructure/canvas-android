@@ -110,8 +110,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Hapus Pengguna Sebelumnya</string>
     <string name="accountDomainFooter">Tidak dapat menemukan sekolah Anda? Coba ketikkan URL sekolah lengkap.</string>
-    <string name="accountDomainFooterLink">Ketuk di sini untuk bantuan.</string>
-
+    <string name="accountDomainFooterLoginHelp">Ketuk di sini untuk bantuan login.</string>
     <string name="login_noInternetConnectionTitle">Tidak Ada Sambungan Internet</string>
     <string name="login_noInternetConnectionMessage">Tindakan ini membutuhkan sambungan internet.</string>
     <string name="empty_feedback">Subjek dan deskripsi harus ada untuk menyerahkan umpan balik.</string>
