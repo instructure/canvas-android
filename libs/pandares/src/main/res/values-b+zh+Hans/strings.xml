@@ -1392,6 +1392,21 @@
     <string name="offline_content_select_all">全选</string>
     <string name="offline_content_deselect_all">取消全选</string>
     <string name="offline_content_loading_error">加载内容时出错。</string>
+    <string name="offline_content_empty_title">没有课程</string>
+    <string name="offline_content_empty_message">此处将列出您的课程，然后您可以使内容离线可用。</string>
+    <string name="offline_content_empty_course_title">无课程内容</string>
+    <string name="offline_content_empty_course_message">此处将列出课程内容，然后您可以使内容离线可用。</string>
+    <string name="offline_content_discard_dialog_title">放弃更改？</string>
+    <string name="offline_content_discard_dialog_message">如果您选择放弃，更改将不会保存。</string>
+    <string name="offline_content_discard_dialog_positive">放弃</string>
+    <string name="offline_content_sync_dialog_title">同步离线内容？</string>
+    <string name="offline_content_sync_dialog_message">大约会有 %s 项内容同步。如果未连接到无线网络，您的数据流量提供商可能会额外收费。</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">仅当连接到无线网络时，大约会有 %s 项内容同步。</string>
+    <string name="offline_content_sync_dialog_positive">同步</string>
+    <string name="offline_content_sync_loading_title">加载中...</string>
+    <string name="offline_content_sync_loading_message">正在准备中，请稍等。</string>
+    <string name="content_description_expand_content">扩展内容</string>
+    <string name="content_description_collapse_content">折叠内容</string>
     <string name="syncSettings_autoContentSyncDescription">如果启用“自动同步内容”，将根据以下设置下载所选内容。即使应用程序没有运行，内容也会同步。如果关闭该设置，将不会同步。已下载的内容不会被删除。</string>
     <string name="syncSettings_syncFrequencyTitle">同步周期</string>
     <string name="syncSettings_autoContentSyncTitle">自动同步内容</string>
@@ -1433,7 +1448,6 @@
     <plurals name="syncProgress_itemCount">
         <item quantity="other">%d 门课程正在同步。</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">课程内容图像</string>
     <string name="assignmentNoLongerAvailable">此作业不再可用。</string>
     <string name="editDashboardOfflineMode">您已离线</string>
     <string name="editDashboardOfflineModeMessage">您目前没有任何可离线使用的课程。</string>
@@ -1444,4 +1458,5 @@
     <plurals name="offlineContentSyncSuccessNotificationBody">
         <item quantity="other">%d 门课程已同步。</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">更多课程内容</string>
 </resources>

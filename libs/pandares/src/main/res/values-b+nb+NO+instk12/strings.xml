@@ -1411,6 +1411,21 @@
     <string name="offline_content_select_all">Velg alle</string>
     <string name="offline_content_deselect_all">Fjern all merking</string>
     <string name="offline_content_loading_error">Det oppsto en feil ved lasting av innholdet.</string>
+    <string name="offline_content_empty_title">Ingen fag</string>
+    <string name="offline_content_empty_message">Fagene dine vil vises her, og du kan deretter gjøre det tilgjengelig for frakoblet bruk.</string>
+    <string name="offline_content_empty_course_title">Intet faginnhold</string>
+    <string name="offline_content_empty_course_message">Faginnholdet vises her, og du kan deretter gjøre det tilgjengelig for frakoblet bruk.</string>
+    <string name="offline_content_discard_dialog_title">Forkaste endringer?</string>
+    <string name="offline_content_discard_dialog_message">Hvis du velger å forkaste, blir ikke endringene lagret.</string>
+    <string name="offline_content_discard_dialog_positive">Forkast</string>
+    <string name="offline_content_sync_dialog_title">Synkronisere frakoblet innhold?</string>
+    <string name="offline_content_sync_dialog_message">Dette vil synkronisere ~%s-innhold. Dette kan føre til ekstra kostnader fra din datatilbyder hvis du ikke er koblet til et Wi-Fi-nettverk.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Dette vil synkronisere ~%s-innhold bare når du er tilkoblet et Wi-Fi-nettverk.</string>
+    <string name="offline_content_sync_dialog_positive">Synkroniser</string>
+    <string name="offline_content_sync_loading_title">Laster&#8230;</string>
+    <string name="offline_content_sync_loading_message">Vent litt, vi gjør alt klart for deg.</string>
+    <string name="content_description_expand_content">Utvid innhold</string>
+    <string name="content_description_collapse_content">Skjul innhold</string>
     <string name="syncSettings_autoContentSyncDescription">Aktivering av Automatisk synkronisering av innhold vil ta seg av nedlasting av det valgte innholdet basert på følgende innstillinger. Synkronisering av innhold vil skje selv om applikasjonen ikke kjører. Hvis innstillingen er slått av, vil det ikke skje noen synkronisering. Det allerede nedlastede innholdet vil ikke bli slettet.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkroniseringsfrekvens</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisk synkronisering av innhold</string>
@@ -1453,7 +1468,6 @@
         <item quantity="one">%d fag synkroniseres.</item>
         <item quantity="other">%d fag synkroniseres.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Faginnhold-bilder</string>
     <string name="assignmentNoLongerAvailable">Denne oppgaven er ikke lenger tilgjengelig.</string>
     <string name="editDashboardOfflineMode">Du er frakoblet</string>
     <string name="editDashboardOfflineModeMessage">Du har ingen fag som er tilgjengelig i frakoblet modus.</string>
@@ -1465,4 +1479,5 @@
         <item quantity="one">%d fag er synkronisert.</item>
         <item quantity="other">%d fag er synkronisert.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Ytterligere faginnhold</string>
 </resources>

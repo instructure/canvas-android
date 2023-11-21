@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Seleksyone Tout</string>
     <string name="offline_content_deselect_all">Deseleksyone Tout</string>
     <string name="offline_content_loading_error">Yon erè fèt pandan chajman kontni an.</string>
+    <string name="offline_content_empty_title">Pa gen Kou</string>
+    <string name="offline_content_empty_message">Kou ou yo ap afiche isit la, apre sa ou ka mete yo disponib pou itilize san koneksyon.</string>
+    <string name="offline_content_empty_course_title">Pa gen Kontni Kou</string>
+    <string name="offline_content_empty_course_message">Kontni kou a ap afiche isit la, apre sa ou ka mete yo disponib pou itilize san koneksyon.</string>
+    <string name="offline_content_discard_dialog_title">Rejte Chanjman?</string>
+    <string name="offline_content_discard_dialog_message">si w chwazi rejte yo, chanjman yo pa p sovgade.</string>
+    <string name="offline_content_discard_dialog_positive">Abandone</string>
+    <string name="offline_content_sync_dialog_title">Senkwonize Kontni San Koneksyon?</string>
+    <string name="offline_content_sync_dialog_message">Sa ap senkwonize ~%s kontni. Li ka lakoz founisè sèvis entènèt ou a touche anplis si w pa konekte sou yon rezo wi-fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Sa ap senkwonize ~%s kontni sèlman lè w konekte sou yon rezo wi-fi.</string>
+    <string name="offline_content_sync_dialog_positive">Sync</string>
+    <string name="offline_content_sync_loading_title">Chajman...</string>
+    <string name="offline_content_sync_loading_message">Talè, n\ ap prepare bagay yo pou ou.</string>
+    <string name="content_description_expand_content">Elaji kontni</string>
+    <string name="content_description_collapse_content">Ratresi kontni</string>
     <string name="syncSettings_autoContentSyncDescription">Aktivasyon senkwonizasyon Kontni Otomatik la ap gen pou telechaje kontni ki seleksyone a an fonksyon de paramèt ki anba yo. Senkwonizasyon kontni an ap fèt menm si aplikasyon an pa ekzekite. Si reglaj la dezaktive, pa gen senkwonizasyon k ap fèt. Kontni ki deja telechaje a pa p efase.</string>
     <string name="syncSettings_syncFrequencyTitle">Frekans Senkwonizasyon</string>
     <string name="syncSettings_autoContentSyncTitle">Senkwonizasyon Kontni Otomatik</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d kou an senkwonizasyon</item>
         <item quantity="other">%d kou yo ap senkwonize.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Imaj kontni kou</string>
     <string name="assignmentNoLongerAvailable">Travay sa pa diponib ankò.</string>
     <string name="editDashboardOfflineMode">Ou pa konekte</string>
     <string name="editDashboardOfflineModeMessage">Kounye a ou pa gen okenn kou ki disponib san koneksyon.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d kou a enkwonize.</item>
         <item quantity="other">%d kou yo senkwonize.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Plis kontni kou</string>
 </resources>

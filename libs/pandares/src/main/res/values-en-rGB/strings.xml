@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Select all</string>
     <string name="offline_content_deselect_all">Un-select All</string>
     <string name="offline_content_loading_error">An error occurred while loading the content.</string>
+    <string name="offline_content_empty_title">No Courses</string>
+    <string name="offline_content_empty_message">Your courses will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_empty_course_title">No Course Content</string>
+    <string name="offline_content_empty_course_message">The course content will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_discard_dialog_title">Discard Changes?</string>
+    <string name="offline_content_discard_dialog_message">If you choose to discard, the changes will not be saved.</string>
+    <string name="offline_content_discard_dialog_positive">Discard</string>
+    <string name="offline_content_sync_dialog_title">Sync Offline Content?</string>
+    <string name="offline_content_sync_dialog_message">This will sync ~%s content. It may result in additional charges from your data provider, if you are not connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">This will sync ~%s content only while you are connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_positive">Sync</string>
+    <string name="offline_content_sync_loading_title">Loading...</string>
+    <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
+    <string name="content_description_expand_content">Expand content</string>
+    <string name="content_description_collapse_content">Collapse content</string>
     <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off, then no synchronization will happen. The already downloaded content will not be deleted.</string>
     <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
     <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d course is syncing.</item>
         <item quantity="other">%d courses are syncing.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Course content images</string>
     <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
     <string name="editDashboardOfflineMode">You are offline</string>
     <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d course has been synced.</item>
         <item quantity="other">%d courses have been synced.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Additional course content</string>
 </resources>
