@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Sélectionner tout</string>
     <string name="offline_content_deselect_all">Désélectionner tout</string>
     <string name="offline_content_loading_error">Une erreur s’est produite lors du chargement du contenu.</string>
+    <string name="offline_content_empty_title">Aucun cours</string>
+    <string name="offline_content_empty_message">Vos cours seront répertoriés ici, puis vous pourrez les rendre disponibles pour une utilisation hors ligne.</string>
+    <string name="offline_content_empty_course_title">Pas de contenu de cours</string>
+    <string name="offline_content_empty_course_message">Le contenu du cours sera répertorié ici, puis vous pourrez le rendre disponible pour une utilisation hors ligne.</string>
+    <string name="offline_content_discard_dialog_title">Abandonner les modifications?</string>
+    <string name="offline_content_discard_dialog_message">Si vous choisissez d’annuler, les modifications ne seront pas enregistrées.</string>
+    <string name="offline_content_discard_dialog_positive">Abandonner</string>
+    <string name="offline_content_sync_dialog_title">Synchronisation du contenu hors connexion?</string>
+    <string name="offline_content_sync_dialog_message">Cela synchronisera le contenu de ~%s. Cela peut entraîner des frais supplémentaires de la part de votre fournisseur de données, si vous n’êtes pas connecté à un réseau Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Cela synchronisera le contenu de ~%s uniquement lorsque vous êtes connecté à un réseau Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Synchronisation</string>
+    <string name="offline_content_sync_loading_title">En cours de chargement...</string>
+    <string name="offline_content_sync_loading_message">Tenez bon, on prépare les choses pour vous.</string>
+    <string name="content_description_expand_content">Développer le contenu</string>
+    <string name="content_description_collapse_content">Réduire le contenu</string>
     <string name="syncSettings_autoContentSyncDescription">L’activation de la synchronisation automatique du contenu se chargera de télécharger le contenu sélectionné en fonction des paramètres ci-dessous. La synchronisation du contenu se produit même si l’application n’est pas en cours d’exécution. Si le paramètre est désactivé, aucune synchronisation ne se produira. Le contenu déjà téléchargé ne sera pas supprimé.</string>
     <string name="syncSettings_syncFrequencyTitle">Fréquence de synchronisation</string>
     <string name="syncSettings_autoContentSyncTitle">Synchronisation automatique du contenu</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">Synchronisation de %d cours.</item>
         <item quantity="other">Synchronisation de %d cours.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Images du contenu du cours</string>
     <string name="assignmentNoLongerAvailable">Cette tâche n’est plus disponible.</string>
     <string name="editDashboardOfflineMode">Vous êtes hors ligne</string>
     <string name="editDashboardOfflineModeMessage">Vous n’avez actuellement aucun cours disponible hors ligne.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d cours a été synchronisé.</item>
         <item quantity="other">%d cours ont été synchronisés.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Contenu supplémentaire de cours</string>
 </resources>

@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Tīpako katoa</string>
     <string name="offline_content_deselect_all">Whakakorehia te katoa</string>
     <string name="offline_content_loading_error">I puta he hapa i te wa e uta ana te ihirangi.</string>
+    <string name="offline_content_empty_title">Kāore he Akoranga</string>
+    <string name="offline_content_empty_message">Ka whakarārangihia ō akoranga ki reira ka taea e koe te whakawātea mō te whakamahi tuimotu.</string>
+    <string name="offline_content_empty_course_title">Karekau he ihirangi akoranga</string>
+    <string name="offline_content_empty_course_message">Kua whakarārangitia te ihirangi akoranga ki konei katahi ka taea e koe te waatea mo te whakamahi tuimotu.</string>
+    <string name="offline_content_discard_dialog_title">Tūraki ngā Huringa?</string>
+    <string name="offline_content_discard_dialog_message">Mena ka whiriwhiri koe ki te whakakore, ka kore nga huringa e tiakina.</string>
+    <string name="offline_content_discard_dialog_positive">Tūraki</string>
+    <string name="offline_content_sync_dialog_title">Tukutahi ihirangi tuimotu?</string>
+    <string name="offline_content_sync_dialog_message">Tenei ka tukutahi ~%s ihirangi. Ka hua pea he utu taapiri mai i to kaiwhakarato raraunga, mena kaore koe e hono ki te whatunga Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Ma tenei ka tukutahi ~%s ihirangi anake i te wa e hono ana koe ki te whatunga Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Tukutahi</string>
+    <string name="offline_content_sync_loading_title">E uta ana ....</string>
+    <string name="offline_content_sync_loading_message">Kia mau, tatou kei te whakarite mea mo koe.</string>
+    <string name="content_description_expand_content">Roha ihirangi</string>
+    <string name="content_description_collapse_content">Tiango ihirangi</string>
     <string name="syncSettings_autoContentSyncDescription">Ina whakahohea te waahanga Tukutahi Ihirangi Aunoa, ko nga ihirangi kua tikiakehia ka whakawhirinaki ki nga tautuhinga kua whakarārangihia i raro nei. Ahakoa kaore i tuwhera te tono, ka mau tonu te tukutahitanga ihirangi. Karekau he tukutahitanga mena kua weto te tautuhinga. Ko nga mea kua oti te tango ake ka kore e tangohia.</string>
     <string name="syncSettings_syncFrequencyTitle">Auautanga Tukutahi</string>
     <string name="syncSettings_autoContentSyncTitle">Tukutahi Ihirangi Aunoa</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d Kei te tukutahi te akoranga.</item>
         <item quantity="other">%d kei te tukutahi nga akoranga.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Whakaahua ihirangi akoranga</string>
     <string name="assignmentNoLongerAvailable">Kaore tēnei whakataunga i te wātea.</string>
     <string name="editDashboardOfflineMode">Kei te tuimotu koe</string>
     <string name="editDashboardOfflineModeMessage">I tenei wa karekau he akoranga kei te waatea tuimotu.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d kua tukutahia te akoranga.</item>
         <item quantity="other">%d kua tukutahia nga akoranga.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Ihirangi akoranga taapiri</string>
 </resources>

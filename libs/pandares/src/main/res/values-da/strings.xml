@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Vælg alle</string>
     <string name="offline_content_deselect_all">Fravælg alle</string>
     <string name="offline_content_loading_error">Der opstod en fejl under indlæsning af indholdet.</string>
+    <string name="offline_content_empty_title">Ingen kurser</string>
+    <string name="offline_content_empty_message">Dine fag vil blive vist her, og derefter kan du gøre dem tilgængelige til offline brug.</string>
+    <string name="offline_content_empty_course_title">Intet fagindhold</string>
+    <string name="offline_content_empty_course_message">Fagindholdet vil blive vist her, og derefter kan du gøre det tilgængeligt til offline brug.</string>
+    <string name="offline_content_discard_dialog_title">Annuller ændringer?</string>
+    <string name="offline_content_discard_dialog_message">Hvis du vælger at kassere, vil ændringerne ikke blive gemt.</string>
+    <string name="offline_content_discard_dialog_positive">Kasser</string>
+    <string name="offline_content_sync_dialog_title">Vil du synkronisere offline indhold?</string>
+    <string name="offline_content_sync_dialog_message">Dette vil synkronisere ~%s indhold. Det kan medføre yderligere gebyrer fra din dataudbyder, hvis du ikke er forbundet til et wi-fi-netværk.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Dette vil kun synkronisere ~%s indhold, mens du er tilsluttet et wi-fi-netværk.</string>
+    <string name="offline_content_sync_dialog_positive">Synkroniser</string>
+    <string name="offline_content_sync_loading_title">Indlæser ...</string>
+    <string name="offline_content_sync_loading_message">Vent venligst, mens vi gør tingene klar til dig.</string>
+    <string name="content_description_expand_content">Udvid indhold</string>
+    <string name="content_description_collapse_content">Skjul indholdet</string>
     <string name="syncSettings_autoContentSyncDescription">Aktivering af automatisk indholdssynkronisering sørger for at downloade det valgte indhold baseret på nedenstående indstillinger. Indholdssynkroniseringen gennemføres, selvom applikationen ikke kører. Hvis indstillingen er deaktiveret, sker der ingen synkronisering. Det allerede downloadede indhold vil ikke blive slettet.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkroniseringsfrekvens</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisk indholdssynkronisering</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d faget synkroniseres.</item>
         <item quantity="other">%d fag synkroniseres.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Fagindhold billeder</string>
     <string name="assignmentNoLongerAvailable">Denne opgave er ikke længere tilgængelig.</string>
     <string name="editDashboardOfflineMode">Du er offline</string>
     <string name="editDashboardOfflineModeMessage">Du har i øjeblikket ingen fag, der er tilgængelige offline.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d faget er blevet synkroniseret.</item>
         <item quantity="other">%d fagene er blevet synkroniseret.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Yderligere fagindhold</string>
 </resources>
