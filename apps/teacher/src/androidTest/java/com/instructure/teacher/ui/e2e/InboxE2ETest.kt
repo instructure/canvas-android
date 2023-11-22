@@ -1,9 +1,7 @@
 package com.instructure.teacher.ui.e2e
 
-import android.os.SystemClock
 import android.util.Log
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
@@ -11,6 +9,7 @@ import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.espresso.retry
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -222,20 +221,10 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Select 'ARCHIVED' scope and assert that '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
         inboxPage.filterMessageScope("Archived")
 
-        var timesToRetry = 10
-
-        do {
-            try {
-                inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
-                break
-            }
-            catch(e: NoMatchingViewException) {
-                SystemClock.sleep(3000) //Wait for 3 secs because of API slowness and then refresh the page.
-                refresh()
-                timesToRetry--
-            }
-        } while(timesToRetry > 0)
-
+        retry(times = 10, delay = 3000) {
+            refresh()
+            inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        }
 
         Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation and unarchive it." +
                 "Assert that the selected number of conversation on the toolbar is 1 and '${seedConversation2[0].subject}' conversation is not displayed in the 'ARCHIVED' scope.")
@@ -387,42 +376,25 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.filterMessageScope("Inbox")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
-        var timesToRetry = 10
+        retry(times = 10, delay = 3000) {
+            Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
+            inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
+            inboxPage.clickMarkAsRead()
 
-        do {
-            try {
-                Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
-                inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
-                inboxPage.clickMarkAsRead()
-
-                Log.d(STEP_TAG, "Assert that '${seedConversation3[0].subject}' conversation is read.")
-                inboxPage.assertUnreadMarkerVisibility(seedConversation3[0].subject, ViewMatchers.Visibility.GONE)
-                break
-            }
-            catch(e: NoMatchingViewException) {
-                SystemClock.sleep(3000) //Wait for 3 secs because of API slowness and then refresh the page.
-                refresh()
-                timesToRetry--
-            }
-        } while(timesToRetry > 0)
+            Log.d(STEP_TAG, "Assert that '${seedConversation3[0].subject}' conversation is read.")
+            inboxPage.assertUnreadMarkerVisibility(seedConversation3[0].subject, ViewMatchers.Visibility.GONE)
+        }
 
         Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
         inboxPage.clickStar()
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that both of the conversation are displayed in the 'STARRED' scope.")
         inboxPage.filterMessageScope("Starred")
-        timesToRetry = 10
-        do {
-            try {
-                inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
-                inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
-                break
-            } catch (e: NoMatchingViewException) {
-                SystemClock.sleep(3000) //Wait for 3 secs because of API slowness and then refresh the page.
-                refresh()
-                timesToRetry--
-            }
-        } while(timesToRetry > 0)
+
+        retry(times = 10, delay = 3000) {
+            inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+            inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
+        }
 
         Log.d(STEP_TAG, "Swipe '${seedConversation2[0].subject}' left and assert it is removed from the 'STARRED' scope because it has became unstarred.")
         inboxPage.swipeConversationLeft(seedConversation2[0])

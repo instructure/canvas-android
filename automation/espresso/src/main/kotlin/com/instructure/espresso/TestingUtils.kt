@@ -50,3 +50,20 @@ fun getCurrentDateInCanvasFormat(): String {
     val yearString = expectedDate.year
     return "$monthString $dayString, $yearString"
 }
+
+fun retry(
+    times: Int = 3,
+    delay: Long = 1000,
+    block: () -> Unit
+) {
+    repeat(times - 1) {
+        try {
+            block()
+            return
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+        Thread.sleep(3000)
+    }
+    block()
+}

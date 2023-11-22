@@ -19,13 +19,13 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.espresso.retry
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -114,6 +114,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.selectConversation(seededConversation)
         inboxPage.assertSelectedConversationNumber("1")
         inboxPage.clickUnArchive()
+
         inboxPage.assertInboxEmpty()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
@@ -123,12 +124,14 @@ class InboxE2ETest: StudentTest() {
         inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
-        Log.d(STEP_TAG, "Select the conversations (${seededConversation.subject} and star it." +
-                "Assert that the selected number of conversations on the toolbar is 1 and the conversation is starred.")
-        inboxPage.selectConversations(listOf(seededConversation.subject))
-        inboxPage.assertSelectedConversationNumber("1")
-        inboxPage.clickUnstar()
-        inboxPage.assertConversationNotStarred(seededConversation.subject)
+        retry(times = 10, delay = 3000) {
+            Log.d(STEP_TAG, "Select the conversations (${seededConversation.subject} and star it." +
+                    "Assert that the selected number of conversations on the toolbar is 1 and the conversation is starred.")
+            inboxPage.selectConversations(listOf(seededConversation.subject))
+            inboxPage.assertSelectedConversationNumber("1")
+            inboxPage.clickUnstar()
+            inboxPage.assertConversationNotStarred(seededConversation.subject)
+        }
 
         Log.d(STEP_TAG, "Select the conversations (${seededConversation.subject} and archive it. Assert that it has not displayed in the 'INBOX' scope.")
         inboxPage.selectConversations(listOf(seededConversation.subject))
@@ -159,10 +162,12 @@ class InboxE2ETest: StudentTest() {
         inboxPage.clickStar()
         inboxPage.assertConversationStarred(seededConversation.subject)
 
-        Log.d(STEP_TAG, "Select the conversation. Unarchive it, and assert that it has not displayed in the 'ARCHIVED' scope.")
-        inboxPage.selectConversations(listOf(seededConversation.subject))
-        inboxPage.clickUnArchive()
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        retry(times = 10, delay = 3000) {
+            Log.d(STEP_TAG, "Select the conversation. Unarchive it, and assert that it has not displayed in the 'ARCHIVED' scope.")
+            inboxPage.selectConversations(listOf(seededConversation.subject))
+            inboxPage.clickUnArchive()
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope and assert that the conversations is displayed there.")
         inboxPage.filterInbox("Starred")
@@ -347,17 +352,10 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that the conversation is displayed in the 'STARRED' scope.")
         inboxPage.filterInbox("Starred")
-        var timesToRetry = 10
-        do {
-            try {
-                inboxPage.assertConversationDisplayed(seededConversation.subject)
-                break
-            } catch (e: NoMatchingViewException) {
-                sleep(3000) //Wait for 3 secs because of API slowness and then refresh the page.
-                refresh()
-                timesToRetry--
-            }
-        } while(timesToRetry > 0)
+
+        retry(times = 10, delay = 3000) {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'STARRED' scope because it has became unstarred.")
         inboxPage.swipeConversationLeft(seededConversation)
