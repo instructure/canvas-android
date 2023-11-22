@@ -17,15 +17,17 @@
 package com.instructure.teacher.fragments
 
 import android.app.Activity
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -108,16 +110,28 @@ class LtiLaunchFragment : BaseFragment() {
                     var url = ltiUrl // Replace deep link scheme
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
-                    if (sessionLessLaunch) {
-                        if (url.contains("api/v1/")) {
-                            getSessionlessLtiUrl(url)
-                        } else {
-                            // This is specific for Studio and Gauge
-                            url = "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+
+                    when {
+                        sessionLessLaunch -> {
+                            val id = url.substringAfterLast("/external_tools/").substringBefore("?")
+                            url = when {
+                                (id.toIntOrNull() != null) -> when (canvasContext) {
+                                    is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${(canvasContext as Course).id}/external_tools/sessionless_launch?id=$id"
+                                    is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${(canvasContext as Group).id}/external_tools/sessionless_launch?id=$id"
+                                    else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?id=$id"
+                                }
+
+                                else -> {
+                                    when (canvasContext) {
+                                        is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${(canvasContext as Course).id}/external_tools/sessionless_launch?url=$url"
+                                        is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${(canvasContext as Group).id}/external_tools/sessionless_launch?url=$url"
+                                        else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                                    }
+                                }
+                            }
                             getSessionlessLtiUrl(url)
                         }
-                    } else {
-                        launchCustomTab(url)
+                        else -> launchCustomTab(url)
                     }
                 }
                 else -> displayError()
@@ -194,9 +208,9 @@ class LtiLaunchFragment : BaseFragment() {
 
         fun newInstance(args: Bundle) = LtiLaunchFragment().apply { arguments = args }
 
-        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
-            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+        fun routeLtiLaunchFragment(activity: FragmentActivity, canvasContext: CanvasContext?, url: String) {
+            val args = makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), activity.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(activity, Route(LtiLaunchFragment::class.java, canvasContext, args))
         }
     }
 }

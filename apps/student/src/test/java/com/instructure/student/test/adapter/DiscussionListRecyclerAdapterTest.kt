@@ -21,7 +21,9 @@ import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.student.adapter.DiscussionListRecyclerAdapter
+import com.instructure.student.features.discussion.list.DiscussionListRepository
+import com.instructure.student.features.discussion.list.adapter.DiscussionListRecyclerAdapter
+import io.mockk.mockk
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
@@ -36,10 +38,8 @@ class DiscussionListRecyclerAdapterTest : TestCase() {
     private lateinit var topicHeader: DiscussionTopicHeader
     private lateinit var topicHeader2: DiscussionTopicHeader
 
-
-    class DiscussionListRecyclerAdapterWrapper(context: Context) : DiscussionListRecyclerAdapter(context, CanvasContext.emptyCourseContext(), true, object : DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback {
-        override fun discussionOverflow(group: String?, discussionTopicHeader: DiscussionTopicHeader) {}
-        override fun askToDeleteDiscussion(discussionTopicHeader: DiscussionTopicHeader) {}
+    class DiscussionListRecyclerAdapterWrapper(context: Context) : DiscussionListRecyclerAdapter(context, CanvasContext.emptyCourseContext(), true, mockk(relaxed = true), mockk(relaxed = true),
+        object : DiscussionListRecyclerAdapter.AdapterToDiscussionsCallback {
         override fun onRefreshStarted() {}
         override fun onRowClicked(discussionTopicHeader: DiscussionTopicHeader, position: Int, isOpenDetail: Boolean) {}
         override fun onRefreshFinished() {}

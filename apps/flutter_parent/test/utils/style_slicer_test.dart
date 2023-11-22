@@ -20,7 +20,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('returns basic span if slicer list is null', () {
     final String source = 'User Name';
-    final List<StyleSlicer> slicers = null;
+    final List<StyleSlicer>? slicers = null;
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
@@ -50,7 +50,7 @@ void main() {
 
   test('ignores null slicers', () {
     final String source = 'User Name';
-    final List<StyleSlicer> slicers = [null];
+    final List<StyleSlicer> slicers = [];
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
@@ -69,7 +69,7 @@ void main() {
   });
 
   test('returns empty span if source is null', () {
-    final String source = null;
+    final String? source = null;
     final List<StyleSlicer> slicers = [];
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
@@ -94,13 +94,13 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 3);
+    expect(actual.children?.length, 3);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'user ');
-    expect(spans[1].text, '(pro/noun)');
-    expect(spans[1].style.fontStyle, FontStyle.italic);
-    expect(spans[2].text, ' name');
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'user ');
+    expect(spans?[1].text, '(pro/noun)');
+    expect(spans?[1].style?.fontStyle, FontStyle.italic);
+    expect(spans?[2].text, ' name');
   });
 
   test('returns correct span for single beginning match', () {
@@ -109,12 +109,12 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 2);
+    expect(actual.children?.length, 2);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, '(pro/noun)');
-    expect(spans[0].style.fontStyle, FontStyle.italic);
-    expect(spans[1].text, ' user name');
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, '(pro/noun)');
+    expect(spans?[0].style?.fontStyle, FontStyle.italic);
+    expect(spans?[1].text, ' user name');
   });
 
   test('returns correct span for single end match', () {
@@ -123,12 +123,12 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 2);
+    expect(actual.children?.length, 2);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'user name ');
-    expect(spans[1].text, '(pro/noun)');
-    expect(spans[1].style.fontStyle, FontStyle.italic);
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'user name ');
+    expect(spans?[1].text, '(pro/noun)');
+    expect(spans?[1].style?.fontStyle, FontStyle.italic);
   });
 
   test('returns correct span for multiple middle match', () {
@@ -137,16 +137,16 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 5);
+    expect(actual.children?.length, 5);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'user ');
-    expect(spans[1].text, '(pro/noun)');
-    expect(spans[1].style.fontStyle, FontStyle.italic);
-    expect(spans[2].text, ' middle ');
-    expect(spans[3].text, '(pro/noun)');
-    expect(spans[3].style.fontStyle, FontStyle.italic);
-    expect(spans[4].text, ' name');
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'user ');
+    expect(spans?[1].text, '(pro/noun)');
+    expect(spans?[1].style?.fontStyle, FontStyle.italic);
+    expect(spans?[2].text, ' middle ');
+    expect(spans?[3].text, '(pro/noun)');
+    expect(spans?[3].style?.fontStyle, FontStyle.italic);
+    expect(spans?[4].text, ' name');
   });
 
   test('returns correct span for duplicate pronouns', () {
@@ -155,16 +155,16 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 5);
+    expect(actual.children?.length, 5);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'user ');
-    expect(spans[1].text, '(pro/noun)');
-    expect(spans[1].style.fontStyle, FontStyle.italic);
-    expect(spans[2].text, ' middle ');
-    expect(spans[3].text, '(pro/noun)');
-    expect(spans[3].style.fontStyle, FontStyle.italic);
-    expect(spans[4].text, ' name');
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'user ');
+    expect(spans?[1].text, '(pro/noun)');
+    expect(spans?[1].style?.fontStyle, FontStyle.italic);
+    expect(spans?[2].text, ' middle ');
+    expect(spans?[3].text, '(pro/noun)');
+    expect(spans?[3].style?.fontStyle, FontStyle.italic);
+    expect(spans?[4].text, ' name');
   });
 
   test('returns correct span for multiple beginning match', () {
@@ -173,15 +173,15 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 4);
+    expect(actual.children?.length, 4);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, '(pro/noun)');
-    expect(spans[0].style.fontStyle, FontStyle.italic);
-    expect(spans[1].text, ' user middle ');
-    expect(spans[2].text, '(pro/noun)');
-    expect(spans[2].style.fontStyle, FontStyle.italic);
-    expect(spans[3].text, ' name');
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, '(pro/noun)');
+    expect(spans?[0].style?.fontStyle, FontStyle.italic);
+    expect(spans?[1].text, ' user middle ');
+    expect(spans?[2].text, '(pro/noun)');
+    expect(spans?[2].style?.fontStyle, FontStyle.italic);
+    expect(spans?[3].text, ' name');
   });
 
   test('returns correct span for multiple end match', () {
@@ -190,15 +190,15 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 4);
+    expect(actual.children?.length, 4);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'user ');
-    expect(spans[1].text, '(pro/noun)');
-    expect(spans[1].style.fontStyle, FontStyle.italic);
-    expect(spans[2].text, ' middle name ');
-    expect(spans[3].text, '(pro/noun)');
-    expect(spans[3].style.fontStyle, FontStyle.italic);
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'user ');
+    expect(spans?[1].text, '(pro/noun)');
+    expect(spans?[1].style?.fontStyle, FontStyle.italic);
+    expect(spans?[2].text, ' middle name ');
+    expect(spans?[3].text, '(pro/noun)');
+    expect(spans?[3].style?.fontStyle, FontStyle.italic);
   });
 
   test('returns correct span for multiple pronouns', () {
@@ -207,16 +207,16 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 5);
+    expect(actual.children?.length, 5);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'user ');
-    expect(spans[1].text, '(pro/noun)');
-    expect(spans[1].style.fontStyle, FontStyle.italic);
-    expect(spans[2].text, ' middle ');
-    expect(spans[3].text, '(noun/pro)');
-    expect(spans[3].style.fontStyle, FontStyle.italic);
-    expect(spans[4].text, ' name');
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'user ');
+    expect(spans?[1].text, '(pro/noun)');
+    expect(spans?[1].style?.fontStyle, FontStyle.italic);
+    expect(spans?[2].text, ' middle ');
+    expect(spans?[3].text, '(noun/pro)');
+    expect(spans?[3].style?.fontStyle, FontStyle.italic);
+    expect(spans?[4].text, ' name');
   });
 
   test('returns correct span for adjacent pronouns', () {
@@ -225,15 +225,15 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 4);
+    expect(actual.children?.length, 4);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'user ');
-    expect(spans[1].text, '(pro/noun)');
-    expect(spans[1].style.fontStyle, FontStyle.italic);
-    expect(spans[2].text, '(noun/pro)');
-    expect(spans[2].style.fontStyle, FontStyle.italic);
-    expect(spans[3].text, ' name');
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'user ');
+    expect(spans?[1].text, '(pro/noun)');
+    expect(spans?[1].style?.fontStyle, FontStyle.italic);
+    expect(spans?[2].text, '(noun/pro)');
+    expect(spans?[2].style?.fontStyle, FontStyle.italic);
+    expect(spans?[3].text, ' name');
   });
 
   test('returns correct span for overlapping styles', () {
@@ -245,23 +245,23 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 5);
+    expect(actual.children?.length, 5);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'Normal ');
-    expect(spans[0].style, TextStyle());
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'Normal ');
+    expect(spans?[0].style, TextStyle());
 
-    expect(spans[1].text, 'Bold ');
-    expect(spans[1].style, TextStyle(fontWeight: FontWeight.bold));
+    expect(spans?[1].text, 'Bold ');
+    expect(spans?[1].style, TextStyle(fontWeight: FontWeight.bold));
 
-    expect(spans[2].text, 'Bold-Small');
-    expect(spans[2].style, TextStyle(fontWeight: FontWeight.bold, fontSize: 8));
+    expect(spans?[2].text, 'Bold-Small');
+    expect(spans?[2].style, TextStyle(fontWeight: FontWeight.bold, fontSize: 8));
 
-    expect(spans[3].text, ' Small');
-    expect(spans[3].style, TextStyle(fontSize: 8));
+    expect(spans?[3].text, ' Small');
+    expect(spans?[3].style, TextStyle(fontSize: 8));
 
-    expect(spans[4].text, ' Normal');
-    expect(spans[4].style, TextStyle());
+    expect(spans?[4].text, ' Normal');
+    expect(spans?[4].style, TextStyle());
   });
 
   test('uses last-declared gesture recognizer', () {
@@ -276,23 +276,23 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 5);
+    expect(actual.children?.length, 5);
 
-    var spans = actual.children.map((it) => it as TextSpan).toList();
-    expect(spans[0].text, 'Click ');
-    expect(spans[0].recognizer, isNull);
+    var spans = actual.children?.map((it) => it as TextSpan).toList();
+    expect(spans?[0].text, 'Click ');
+    expect(spans?[0].recognizer, isNull);
 
-    expect(spans[1].text, 'here ');
-    expect(spans[1].recognizer, recognizer1);
+    expect(spans?[1].text, 'here ');
+    expect(spans?[1].recognizer, recognizer1);
 
-    expect(spans[2].text, 'or here');
-    expect(spans[2].recognizer, recognizer2);
+    expect(spans?[2].text, 'or here');
+    expect(spans?[2].recognizer, recognizer2);
 
-    expect(spans[3].text, ' to');
-    expect(spans[3].recognizer, recognizer1);
+    expect(spans?[3].text, ' to');
+    expect(spans?[3].recognizer, recognizer1);
 
-    expect(spans[4].text, ' proceed');
-    expect(spans[4].recognizer, null);
+    expect(spans?[4].text, ' proceed');
+    expect(spans?[4].recognizer, null);
   });
 
   test('PatternSlice finds all matches by default', () {
@@ -301,7 +301,7 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 100);
+    expect(actual.children?.length, 100);
   });
 
   test('PatternSlice limits matches if maxMatches is specified', () {
@@ -310,6 +310,6 @@ void main() {
 
     TextSpan actual = StyleSlicer.apply(source, slicers);
 
-    expect(actual.children.length, 2);
+    expect(actual.children?.length, 2);
   });
 }

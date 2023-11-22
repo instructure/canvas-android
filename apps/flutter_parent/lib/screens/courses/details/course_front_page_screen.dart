@@ -11,7 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/canvas_page.dart';
@@ -24,25 +24,23 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class CourseFrontPageScreen extends StatefulWidget {
   final String courseId;
 
-  CourseFrontPageScreen({Key key, this.courseId})
-      : assert(courseId != null),
-        super(key: key);
+  CourseFrontPageScreen({required this.courseId, super.key});
 
   @override
   _CourseFrontPageScreenState createState() => _CourseFrontPageScreenState();
 }
 
 class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with AutomaticKeepAliveClientMixin {
-  Future<CanvasPage> _pageFuture;
+  Future<CanvasPage?>? _pageFuture;
 
   @override
   bool get wantKeepAlive => true;
 
-  Future<CanvasPage> _refreshPage() {
+  Future<CanvasPage?>? _refreshPage() {
     setState(() {
       _pageFuture = _interactor.loadFrontPage(widget.courseId, forceRefresh: true);
     });
-    return _pageFuture?.catchError((_) {});
+    return _pageFuture?.catchError((_) { return Future.value(null); });
   }
 
   CourseDetailsInteractor get _interactor => locator<CourseDetailsInteractor>();
@@ -58,15 +56,15 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
     super.build(context); // Required super call for AutomaticKeepAliveClientMixin
     return FutureBuilder(
       future: _pageFuture,
-      builder: (context, AsyncSnapshot<CanvasPage> snapshot) {
+      builder: (context, AsyncSnapshot<CanvasPage?> snapshot) {
         if (snapshot.hasError) {
           return ErrorPandaWidget(L10n(context).unexpectedError, () => _refreshPage());
         } else if (!snapshot.hasData) {
           return LoadingIndicator();
         } else {
           return CanvasWebView(
-            content: snapshot.data.body,
-            emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound,
+            content: snapshot.data!.body!,
+            emptyDescription: snapshot.data!.lockExplanation ?? L10n(context).noPageFound,
             horizontalPadding: 16,
           );
         }

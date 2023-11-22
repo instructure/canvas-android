@@ -19,11 +19,11 @@ import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AcceptableUsePolicyInteractor {
-  Future<TermsOfService> getTermsOfService() {
+  Future<TermsOfService?> getTermsOfService() {
     return locator<AccountsApi>().getTermsOfService();
   }
 
-  Future<User> acceptTermsOfUse() {
+  Future<User?> acceptTermsOfUse() {
     return locator<UserApi>().acceptUserTermsOfUse();
   }
 }

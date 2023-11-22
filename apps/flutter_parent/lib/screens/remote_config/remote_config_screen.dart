@@ -25,7 +25,7 @@ class RemoteConfigScreen extends StatefulWidget {
 class _RemoteConfigScreenState extends State<RemoteConfigScreen> {
   RemoteConfigInteractor _interactor = locator<RemoteConfigInteractor>();
 
-  Map<RemoteConfigParams, String> _remoteConfig;
+  late Map<RemoteConfigParams, String> _remoteConfig;
 
   @override
   void initState() {

@@ -1261,7 +1261,7 @@
 
     <string name="anonymousDiscussionNotSupported">Anonymous discussions are currently not supported on mobile. Open in browser to view discussion.</string>
     <string name="discussionOpenInBrowser">Open in browser</string>
-    
+
     <string name="dashboardSwitchToListView">Switch to list view</string>
     <string name="dashboardSwitchToGridView">Switch to grid view</string>
 
@@ -1401,4 +1401,91 @@
     <string name="aboutVersionTitle">Version</string>
     <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
     <string name="instructure_logo">Instructure logo</string>
+    <string name="preferences">Preferences</string>
+    <string name="offlineContent">Offline Content</string>
+    <string name="offlineSyncSettingsTitle">Synchronization</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">Offline Content</string>
+    <string name="course_menu_manage_offline_content">Manage Offline Content</string>
+    <string name="offline_content_storage">Storage</string>
+    <string name="offline_content_storage_info">%s of %s Used</string>
+    <string name="offline_content_other">Other Apps</string>
+    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_remaining">Remaining</string>
+    <string name="offline_content_all_courses">All Courses</string>
+    <string name="offline_content_sync">Sync</string>
+    <string name="offline_content_selected">%d Selected</string>
+    <string name="offline_content_select_all">Select All</string>
+    <string name="offline_content_deselect_all">Deselect All</string>
+    <string name="offline_content_loading_error">An error occurred while loading the content.</string>
+    <string name="offline_content_empty_title">No Courses</string>
+    <string name="offline_content_empty_message">Your courses will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_empty_course_title">No Course Content</string>
+    <string name="offline_content_empty_course_message">The course content will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_discard_dialog_title">Discard Changes?</string>
+    <string name="offline_content_discard_dialog_message">If you choose to discard, the changes will not be saved.</string>
+    <string name="offline_content_discard_dialog_positive">Discard</string>
+    <string name="offline_content_sync_dialog_title">Sync Offline Content?</string>
+    <string name="offline_content_sync_dialog_message">This will sync ~%s content. It may result in additional charges from your data provider, if you are not connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">This will sync ~%s content only while you are connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_positive">Sync</string>
+    <string name="offline_content_sync_loading_title">Loading...</string>
+    <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
+    <string name="content_description_expand_content">Expand content</string>
+    <string name="content_description_collapse_content">Collapse content</string>
+    <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronization will happen even if the application is not running. If the setting is switched off then no synchronization will happen. The already downloaded content will not be deleted.</string>
+    <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
+    <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
+    <string name="syncSettings_syncFrequencyDescription">Specify the recurrence of the content synchronization. The system will download the selected content based on the frequency specified here.</string>
+    <string name="syncSettings_wifiOnlyTitle">Sync Content Over Wi-Fi Only</string>
+    <string name="syncSettings_wifiOnlyDescription">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
+    <string name="syncSettings_toolbarTitle">Synchronization</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">Sync Frequency</string>
+    <string name="syncSettings_wifiConfirmationTitle">Turn Off Content Sync Over Wi-fi Only?</string>
+    <string name="synySettings_wifiConfirmationMessage">If this setting is enabled the content synchronization will only happen if the device connects to a Wi-Fi network, otherwise it will be postponed until a Wi-Fi network is available.</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">Turn Off</string>
+    <string name="syncSettings_manualDescription">Manual</string>
+    <string name="offlineModeSnackbar">Offline Mode</string>
+    <string name="notAvailableOfflineScreenTitle">Not Available Offline</string>
+    <string name="notAvailableOfflineDescription">This content is not available in offline mode.</string>
+    <string name="notAvailableOfflineDescriptionForTabs">This content is not available in offline mode. If you want to change your settings open the Offline Content screen from the dashboard when network is available.</string>
+    <string name="offline">Offline</string>
+    <string name="syncProgress_syncFailed">Sync Failed</string>
+    <string name="syncProgress_downloadProgress">Downloading %1$s of %2$s</string>
+    <string name="syncProgress_syncQueued">Queued</string>
+    <string name="syncProgress_offlineContentSyncCompleted">Offline Content Sync Completed</string>
+    <string name="syncProgress_offlineContentSyncFailed">Offline Content Sync Failed</string>
+    <string name="syncProgress_cancelConfirmationTitle">Cancel Sync?</string>
+    <string name="syncProgress_cancelConfirmationMessage">It will stop offline content sync. You can do it again later.</string>
+    <string name="syncProgress_syncErrorSubtitle">One or more files failed to sync. Check your internet connection and retry to submit.</string>
+    <string name="syncProgress_downloadStarting">Download starting</string>
+    <string name="coursesCannotBeFavoritedOffline">Courses cannot be added to favorites offline.</string>
+    <string name="allCoursesScreenHeader">All Courses</string>
+    <string name="allCoursesCourseHeader">Courses</string>
+    <string name="allCoursesGroupHeader">Groups</string>
+    <string name="dashboardAllCoursesButton">All Courses</string>
+    <string name="allCoursesOfflineNote">Selecting courses for Dashboard can only be done online. You can navigate to offline course details.</string>
+    <string name="allCoursesOfflineNoteTitle">Note</string>
+    <string name="syncProgress_downloadSuccess">Success! Downloaded %1$s of %2$s</string>
+    <string name="syncProgress_syncingOfflineContent">Syncing Offline Content</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">Dismiss notification</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">%d course is syncing.</item>
+        <item quantity="other">%d courses are syncing.</item>
+    </plurals>
+    <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
+    <string name="editDashboardOfflineMode">You are offline</string>
+    <string name="editDashboardOfflineModeMessage">You currently don\'t have any courses that are available offline.</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">Offline Content Sync Success</string>
+    <string name="offlineContentSyncFailureNotificationTitle">Offline Content Sync Failed</string>
+    <string name="notificationChannelNameSyncUpdates">Offline Sync updates</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">Canvas notifications for offline sync updates.</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="one">%d course has been synced.</item>
+        <item quantity="other">%d courses have been synced.</item>
+    </plurals>
+    <string name="syncProgressAdditionalCourseContent">Additional course content</string>
 </resources>

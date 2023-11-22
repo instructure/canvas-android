@@ -26,8 +26,18 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.AccountNotificationManager
+import com.instructure.canvasapi2.managers.ConferenceManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.BR
@@ -35,8 +45,12 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.AnnouncementItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.ConferenceItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.InvitationItemViewModel
+import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.SyncProgressItemViewModel
 import com.instructure.pandautils.features.dashboard.notifications.itemviewmodels.UploadItemViewModel
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
+import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
+import com.instructure.pandautils.features.offline.sync.AggregateProgressViewData
+import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
@@ -44,12 +58,15 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,7 +83,10 @@ class DashboardNotificationsViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val dashboardFileUploadDao: DashboardFileUploadDao,
     private val fileUploadInputDao: FileUploadInputDao,
-    private val fileUploadUtilsHelper: FileUploadUtilsHelper
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper,
+    private val aggregateProgressObserver: AggregateProgressObserver,
+    private val courseSyncProgressDao: CourseSyncProgressDao,
+    private val fileSyncProgressDao: FileSyncProgressDao
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -92,14 +112,38 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
+    private val syncProgressObserver = Observer<AggregateProgressViewData?> { aggregateProgressViewData ->
+        if (aggregateProgressViewData == null) {
+            _data.value?.syncProgressItems = null
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            return@Observer
+        }
+
+        if (_data.value?.syncProgressItems == null) {
+            _data.value?.syncProgressItems = createSyncProgressViewModel(aggregateProgressViewData)
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+            return@Observer
+        }
+
+        if (aggregateProgressObserver.progressData.value?.progressState == ProgressState.COMPLETED) {
+            _data.value?.syncProgressItems = null
+            _data.value?.notifyPropertyChanged(BR.concatenatedItems)
+        } else {
+            _data.value?.syncProgressItems?.update(aggregateProgressViewData)
+        }
+    }
+
     private val fileUploads = dashboardFileUploadDao.getAllForUser(apiPrefs.user?.id.orDefault())
 
     init {
         fileUploads.observeForever(runningWorkersObserver)
+        aggregateProgressObserver.progressData.observeForever(syncProgressObserver)
     }
 
     override fun onCleared() {
         _data.value?.uploadItems?.forEach { it.clear() }
+        aggregateProgressObserver.progressData.removeObserver(syncProgressObserver)
+        aggregateProgressObserver.onCleared()
         fileUploads.removeObserver(runningWorkersObserver)
         super.onCleared()
     }
@@ -127,8 +171,21 @@ class DashboardNotificationsViewModel @Inject constructor(
 
             val uploadViewModels = getUploads(fileUploads.value)
 
-            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels))
+            val syncProgress = aggregateProgressObserver.progressData.value?.let {
+                createSyncProgressViewModel(it)
+            }
+
+            _data.postValue(DashboardNotificationsViewData(items, uploadViewModels, syncProgress))
         }
+    }
+
+    private fun getSyncProgress(aggregateProgressViewData: AggregateProgressViewData): SyncProgressItemViewModel {
+        return SyncProgressItemViewModel(
+            data = SyncProgressViewData(),
+            onClick = this::openSyncProgress,
+            onDismiss = this::dismissSyncProgress,
+            resources = resources
+        ).apply { update(aggregateProgressViewData) }
     }
 
     private suspend fun getAccountNotifications(forceNetwork: Boolean): List<ItemViewModel> {
@@ -150,6 +207,7 @@ class DashboardNotificationsViewModel @Inject constructor(
             val icon = when (it.icon) {
                 AccountNotification.ACCOUNT_NOTIFICATION_ERROR,
                 AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.drawable.ic_warning
+
                 AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR -> R.drawable.ic_calendar
                 AccountNotification.ACCOUNT_NOTIFICATION_QUESTION -> R.drawable.ic_question_mark
                 else -> R.drawable.ic_info
@@ -229,40 +287,43 @@ class DashboardNotificationsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUploads(fileUploadEntities: List<DashboardFileUploadEntity>?) = fileUploadEntities?.mapNotNull { fileUploadEntity ->
-        val workerId = UUID.fromString(fileUploadEntity.workerId)
-        workManager.getWorkInfoById(workerId).await()?.let { workInfo ->
-            val icon: Int
-            val background: Int
-            when (workInfo.state) {
-                WorkInfo.State.FAILED -> {
-                    icon = R.drawable.ic_exclamation_mark
-                    background = R.color.backgroundDanger
+    private suspend fun getUploads(fileUploadEntities: List<DashboardFileUploadEntity>?) =
+        fileUploadEntities?.mapNotNull { fileUploadEntity ->
+            val workerId = UUID.fromString(fileUploadEntity.workerId)
+            workManager.getWorkInfoById(workerId).await()?.let { workInfo ->
+                val icon: Int
+                val background: Int
+                when (workInfo.state) {
+                    WorkInfo.State.FAILED -> {
+                        icon = R.drawable.ic_exclamation_mark
+                        background = R.color.backgroundDanger
+                    }
+
+                    WorkInfo.State.SUCCEEDED -> {
+                        icon = R.drawable.ic_check_white_24dp
+                        background = R.color.backgroundSuccess
+                    }
+
+                    else -> {
+                        icon = R.drawable.ic_upload
+                        background = R.color.backgroundInfo
+                    }
                 }
-                WorkInfo.State.SUCCEEDED -> {
-                    icon = R.drawable.ic_check_white_24dp
-                    background = R.color.backgroundSuccess
-                }
-                else -> {
-                    icon = R.drawable.ic_upload
-                    background = R.color.backgroundInfo
-                }
+
+                val uploadViewData = UploadViewData(
+                    fileUploadEntity.title.orEmpty(), fileUploadEntity.subtitle.orEmpty(),
+                    icon, background, workInfo.state == WorkInfo.State.RUNNING
+                )
+
+                UploadItemViewModel(
+                    workerId = workerId,
+                    workManager = workManager,
+                    data = uploadViewData,
+                    open = { uuid -> openUploadNotification(workInfo.state, uuid, fileUploadEntity) },
+                    remove = { removeUploadNotification(fileUploadEntity, workerId) }
+                )
             }
-
-            val uploadViewData = UploadViewData(
-                fileUploadEntity.title.orEmpty(), fileUploadEntity.subtitle.orEmpty(),
-                icon, background, workInfo.state == WorkInfo.State.RUNNING
-            )
-
-            UploadItemViewModel(
-                workerId = workerId,
-                workManager = workManager,
-                data = uploadViewData,
-                open = { uuid -> openUploadNotification(workInfo.state, uuid, fileUploadEntity) },
-                remove = { removeUploadNotification(fileUploadEntity, workerId) }
-            )
-        }
-    }.orEmpty()
+        }.orEmpty()
 
     private fun hasValidCourseForEnrollment(enrollment: Enrollment): Boolean {
         return coursesMap[enrollment.courseId]?.let { course ->
@@ -304,7 +365,14 @@ class DashboardNotificationsViewModel @Inject constructor(
                 } else if (fileUploadEntity.folderId != null) {
                     dashboardFileUploadDao.delete(fileUploadEntity)
                     apiPrefs.user?.let {
-                        _events.postValue(Event(DashboardNotificationsActions.NavigateToMyFiles(it, fileUploadEntity.folderId)))
+                        _events.postValue(
+                            Event(
+                                DashboardNotificationsActions.NavigateToMyFiles(
+                                    it,
+                                    fileUploadEntity.folderId
+                                )
+                            )
+                        )
                     }
                 } else {
                     dashboardFileUploadDao.delete(fileUploadEntity)
@@ -403,5 +471,24 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private fun openAnnouncement(subject: String, message: String) {
         _events.postValue(Event(DashboardNotificationsActions.OpenAnnouncement(subject, message)))
+    }
+
+    private fun openSyncProgress() {
+        _events.postValue(Event(DashboardNotificationsActions.OpenSyncProgress))
+    }
+
+    private fun dismissSyncProgress() {
+        viewModelScope.launch {
+            fileSyncProgressDao.deleteAll()
+            courseSyncProgressDao.deleteAll()
+        }
+    }
+
+    private fun createSyncProgressViewModel(aggregateProgressViewData: AggregateProgressViewData): SyncProgressItemViewModel? {
+        return if (aggregateProgressViewData.progressState != ProgressState.COMPLETED) {
+            getSyncProgress(aggregateProgressViewData)
+        } else {
+            null
+        }
     }
 }

@@ -20,7 +20,7 @@ import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
-import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.R
 import com.instructure.pandautils.discussions.DiscussionHtmlTemplates
 import com.instructure.pandautils.views.CanvasWebView
@@ -113,7 +113,12 @@ class HtmlContentFormatter(
     }
 
     private suspend fun authenticateLTIUrl(ltiUrl: String): String {
-        return awaitApi<AuthenticatedSession> { oAuthManager.getAuthenticatedSession(ltiUrl, it) }.sessionUrl
+        val ltiResult = apiAsync<AuthenticatedSession> { oAuthManager.getAuthenticatedSession(ltiUrl, it) }.await()
+        return if (ltiResult.isSuccess) {
+            return ltiResult.dataOrNull?.sessionUrl ?: ltiUrl
+        } else {
+            ltiUrl
+        }
     }
 
     private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {
@@ -124,7 +129,7 @@ class HtmlContentFormatter(
     }
 
     private fun iframeWithGoogleDocsButton(srcUrl: String, iframe: String, buttonText: String): String {
-        val button = "</br><p><div class=\"lti_button\" onClick=\"accessor.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
+        val button = "</br><p><div class=\"lti_button\" onClick=\"googleDocs.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
         val htmlButton = String.format(button, srcUrl, buttonText)
         return iframe + htmlButton
     }

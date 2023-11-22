@@ -26,45 +26,173 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/announcement_api.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
+import 'package:flutter_parent/network/api/features_api.dart';
+import 'package:flutter_parent/network/api/file_api.dart';
+import 'package:flutter_parent/network/api/help_links_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
+import 'package:flutter_parent/network/api/planner_api.dart';
+import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
+import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
+import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
+import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
+import 'package:flutter_parent/screens/aup/acceptable_use_policy_interactor.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
+import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
+import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
+import 'package:flutter_parent/screens/help/help_screen_interactor.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_picker_interactor.dart';
+import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_interactor.dart';
+import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
+import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
+import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
+import 'package:flutter_parent/screens/manage_students/student_color_picker_interactor.dart';
+import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
+import 'package:flutter_parent/screens/remote_config/remote_config_interactor.dart';
+import 'package:flutter_parent/screens/settings/settings_interactor.dart';
+import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/fetcher/attachment_fetcher_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/old_app_migration.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
+import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
+import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:video_player/video_player.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null}) {
-  final mockRemoteConfig = MockRemoteConfig();
+@GenerateNiceMocks([
+  MockSpec<AccountsApi>(),
+  MockSpec<AccountCreationInteractor>(),
+  MockSpec<Analytics>(),
+  MockSpec<AndroidIntentVeneer>(),
+  MockSpec<AlertsApi>(),
+  MockSpec<AlertCountNotifier>(),
+  MockSpec<AssignmentApi>(),
+  MockSpec<AssignmentDetailsInteractor>(),
+  MockSpec<AuthApi>(),
+  MockSpec<BarcodeScanVeneer>(),
+  MockSpec<CalendarEventsApi>(),
+  MockSpec<CalendarFilterDb>(),
+  MockSpec<CalendarFilterListInteractor>(),
+  MockSpec<CourseApi>(),
+  MockSpec<CourseDetailsInteractor>(),
+  MockSpec<CoursesInteractor>(),
+  MockSpec<CourseDetailsModel>(),
+  MockSpec<CourseRoutingShellInteractor>(),
+  MockSpec<CreateConversationInteractor>(),
+  MockSpec<Database>(),
+  MockSpec<Dio>(),
+  MockSpec<EnrollmentsApi>(),
+  MockSpec<ErrorReportApi>(),
+  MockSpec<ErrorReportInteractor>(),
+  MockSpec<EventDetailsInteractor>(),
+  MockSpec<FirebaseCrashlytics>(),
+  MockSpec<HttpClient>(),
+  MockSpec<HttpClientRequest>(),
+  MockSpec<HttpClientResponse>(),
+  MockSpec<HttpHeaders>(),
+  MockSpec<InboxApi>(),
+  MockSpec<NavigatorObserver>(),
+  MockSpec<NotificationUtil>(),
+  MockSpec<OAuthApi>(),
+  MockSpec<PairingInteractor>(),
+  MockSpec<PageApi>(),
+  MockSpec<AndroidFlutterLocalNotificationsPlugin>(),
+  MockSpec<PairingUtil>(),
+  MockSpec<QuickNav>(),
+  MockSpec<ReminderDb>(),
+  MockSpec<FirebaseRemoteConfig>(),
+  MockSpec<FlutterSnackbarVeneer>(),
+  MockSpec<StudentAddedNotifier>(),
+  MockSpec<UrlLauncher>(),
+  MockSpec<UserColorsDb>(),
+  MockSpec<WebLoginInteractor>(),
+  MockSpec<WebContentInteractor>(),
+  MockSpec<AlertThresholdsInteractor>(),
+  MockSpec<AlertsInteractor>(),
+  MockSpec<AnnouncementDetailsInteractor>(),
+  MockSpec<AnnouncementApi>(),
+  MockSpec<AcceptableUsePolicyInteractor>(),
+  MockSpec<PlannerApi>(),
+  MockSpec<HelpScreenInteractor>(),
+  MockSpec<FileApi>(),
+  MockSpec<PathProviderVeneer>(),
+  MockSpec<InboxCountNotifier>(),
+  MockSpec<BuildContext>(),
+  MockSpec<ConversationDetailsInteractor>(),
+  MockSpec<ConversationListInteractor>(),
+  MockSpec<ConversationReplyInteractor>(),
+  MockSpec<DomainSearchInteractor>(),
+  MockSpec<DashboardInteractor>(),
+  MockSpec<QRLoginTutorialScreenInteractor>(),
+  MockSpec<ManageStudentsInteractor>(),
+  MockSpec<StudentColorPickerInteractor>(),
+  MockSpec<UserApi>(),
+  MockSpec<MasqueradeScreenInteractor>(),
+  MockSpec<SettingsInteractor>(),
+  MockSpec<FeaturesApi>(),
+  MockSpec<SplashScreenInteractor>(),
+  MockSpec<AttachmentFetcherInteractor>(),
+  MockSpec<CancelToken>(),
+  MockSpec<AudioVideoAttachmentViewerInteractor>(),
+  MockSpec<VideoPlayerController>(),
+  MockSpec<PermissionHandler>(),
+  MockSpec<FlutterDownloaderVeneer>(),
+  MockSpec<ViewAttachmentInteractor>(),
+  MockSpec<AuthenticationInterceptor>(),
+  MockSpec<ErrorInterceptorHandler>(),
+  MockSpec<AttachmentPickerInteractor>(),
+  MockSpec<AttachmentHandler>(),
+  MockSpec<OldAppMigration>(),
+  MockSpec<HelpLinksApi>(),
+  MockSpec<RemoteConfigInteractor>(),
+  MockSpec<WebViewPlatformController>(),
+  MockSpec<WebViewPlatform>()
+])
+import 'mock_helpers.mocks.dart';
+
+MockFirebaseRemoteConfig setupMockRemoteConfig({Map<String, String>? valueSettings = null}) {
+  final mockRemoteConfig = MockFirebaseRemoteConfig();
   when(mockRemoteConfig.fetch()).thenAnswer((_) => Future.value());
   when(mockRemoteConfig.activate())
       .thenAnswer((_) => Future.value(valueSettings != null));
@@ -80,99 +208,3 @@ MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null
 
   return mockRemoteConfig;
 }
-
-class MockAccountsApi extends Mock implements AccountsApi {}
-
-class MockAccountCreationInteractor extends Mock implements AccountCreationInteractor {}
-
-class MockAnalytics extends Mock implements Analytics {}
-
-class MockAndroidIntentVeneer extends Mock implements AndroidIntentVeneer {}
-
-class MockAlertsApi extends Mock implements AlertsApi {}
-
-class MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
-
-class MockAssignmentApi extends Mock implements AssignmentApi {}
-
-class MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
-
-class MockAuthApi extends Mock implements AuthApi {}
-
-class MockBarcodeScanner extends Mock implements BarcodeScanVeneer {}
-
-class MockCalendarApi extends Mock implements CalendarEventsApi {}
-
-class MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
-
-class MockCalendarFilterListInteractor extends Mock implements CalendarFilterListInteractor {}
-
-class MockCourseApi extends Mock implements CourseApi {}
-
-class MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}
-
-class MockCoursesInteractor extends Mock implements CoursesInteractor {}
-
-class MockCourseModel extends Mock implements CourseDetailsModel {}
-
-class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
-
-class MockCreateConversationInteractor extends Mock implements CreateConversationInteractor {}
-
-class MockDatabase extends Mock implements Database {}
-
-class MockDio extends Mock implements Dio {}
-
-class MockEnrollmentsApi extends Mock implements EnrollmentsApi {}
-
-class MockErrorReportApi extends Mock implements ErrorReportApi {}
-
-class MockErrorReportInteractor extends Mock implements ErrorReportInteractor {}
-
-class MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
-
-class MockFirebase extends Mock implements FirebaseCrashlytics {}
-
-class MockHttpClient extends Mock implements HttpClient {}
-
-class MockHttpClientRequest extends Mock implements HttpClientRequest {}
-
-class MockHttpClientResponse extends Mock implements HttpClientResponse {}
-
-class MockHttpHeaders extends Mock implements HttpHeaders {}
-
-class MockInboxApi extends Mock implements InboxApi {}
-
-class MockNav extends Mock implements QuickNav {}
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
-class MockNotificationUtil extends Mock implements NotificationUtil {}
-
-class MockOAuthApi extends Mock implements OAuthApi {}
-
-class MockPairingInteractor extends Mock implements PairingInteractor {}
-
-class MockPageApi extends Mock implements PageApi {}
-
-class MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
-
-class MockPairingUtil extends Mock implements PairingUtil {}
-
-class MockQuickNav extends Mock implements QuickNav {}
-
-class MockReminderDb extends Mock implements ReminderDb {}
-
-class MockRemoteConfig extends Mock implements RemoteConfig {}
-
-class MockSnackbar extends Mock implements FlutterSnackbarVeneer {}
-
-class MockStudentAddedNotifier extends Mock implements StudentAddedNotifier {}
-
-class MockUrlLauncher extends Mock implements UrlLauncher {}
-
-class MockUserColorsDb extends Mock implements UserColorsDb {}
-
-class MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
-
-class MockWebContentInteractor extends Mock implements WebContentInteractor {}

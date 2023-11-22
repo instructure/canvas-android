@@ -35,7 +35,7 @@ abstract class SeedContext implements Built<SeedContext, SeedContextBuilder> {
   static void _initializeBuilder(SeedContextBuilder b) => b..seedingComplete = false;
 
   // Convenience method for extracting seed objects
-  T getNamedObject<T>(String objectName) {
-    return deserialize<T>(json.decode(seedObjects[objectName]));
+  T? getNamedObject<T>(String objectName) {
+    return deserialize<T>(json.decode(seedObjects[objectName] ?? ''));
   }
 }

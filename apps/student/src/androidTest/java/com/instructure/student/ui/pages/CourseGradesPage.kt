@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import android.os.SystemClock.sleep
 import android.view.View
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions
@@ -36,10 +37,10 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
@@ -49,7 +50,7 @@ import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -81,18 +82,27 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         gradeValue.check(matches(matcher))
     }
 
+    fun assertEmptyView() {
+        onView(withId(R.id.title) + withText(R.string.noItemsToDisplayShort) + withAncestor(R.id.gradesEmptyView)).assertDisplayed()
+    }
+
     fun assertAssignmentDisplayed(name: String, gradeString: String) {
-        onView(withId(R.id.title) + withParent(R.id.textContainer)).assertHasText(name)
-        val siblingMatcher = withId(R.id.title) + withText(name)
-        onView(withId(R.id.points) + hasSibling(siblingMatcher)).assertHasText(gradeString)
+        val siblingMatcher = withId(R.id.title) + withParent(R.id.textContainer) + withText(name) + withAncestor(R.id.courseGradesPage)
+        onView(withId(R.id.points) + hasSibling(siblingMatcher)).scrollTo().assertHasText(gradeString)
     }
 
     // Hopefully this will be sufficient.  We may need to add some logic to scroll
     // to the top of the list first.  We have to use the custom constraints because the
     // swipeRefreshLayout may extend below the screen, and therefore may not be 90% visible.
     fun refresh() {
-        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
+        onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.courseGradesPage), isDisplayed()))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
+        sleep(1000) // Allow some time to react to the update.
+    }
+
+    fun swipeUp() {
+        onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.courseGradesPage), isDisplayed()))
+            .perform(withCustomConstraints(ViewActions.swipeUp(), isDisplayingAtLeast(5)))
         sleep(1000) // Allow some time to react to the update.
     }
 

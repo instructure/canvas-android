@@ -43,10 +43,11 @@ class AppSeedUtils {
     ..build());
 
   // The listener/handler to pass to enableFlutterDriverExtension()
-  static DataHandler seedContextListener = (String message) async {
+  static DataHandler seedContextListener = (String? message) async {
     if (message == "GetSeedContext") {
       return json.encode(serialize(_seedContext));
     }
+    return '';
   };
 
   // Lets the test driver know that data seeding has completed.
@@ -67,24 +68,24 @@ class AppSeedUtils {
 
     // Create nParents parents
     for (int i = 0; i < nParents; i++) {
-      result.parents.add(await UserSeedApi.createUser());
+      result.parents.add((await UserSeedApi.createUser())!);
     }
 
     // Create a single teacher
-    result.teachers.add(await UserSeedApi.createUser());
+    result.teachers.add((await UserSeedApi.createUser())!);
 
     // Create nStudents students
     for (int i = 0; i < nStudents; i++) {
       var newStudent = await UserSeedApi.createUser();
-      result.students.add(newStudent);
+      result.students.add(newStudent!);
     }
 
     // Enroll all students and teachers in all courses.
     for (int i = 0; i < nCourses; i++) {
-      var newCourse = await CourseSeedApi.createCourse();
+      var newCourse = (await CourseSeedApi.createCourse())!;
       result.courses.add(newCourse);
 
-      await EnrollmentSeedApi.createEnrollment(result.teachers.first.id, newCourse.id, "TeacherEnrollment", "");
+      await EnrollmentSeedApi.createEnrollment(result.teachers.first!.id, newCourse.id, "TeacherEnrollment", "");
       for (int i = 0; i < result.students.length; i++) {
         await EnrollmentSeedApi.createEnrollment(
             result.students.elementAt(i).id, newCourse.id, "StudentEnrollment", "");
@@ -106,8 +107,8 @@ class AppSeedUtils {
   /// Allows you a little more flexibility in setting up a course / enrollment than is allowed by
   /// seed() above.
   static Future<Course> seedCourseAndEnrollments(
-      {SeededUser parent = null, SeededUser student = null, SeededUser teacher = null}) async {
-    var newCourse = await CourseSeedApi.createCourse();
+      {SeededUser? parent = null, SeededUser? student = null, SeededUser? teacher = null}) async {
+    var newCourse = (await CourseSeedApi.createCourse())!;
 
     if (parent != null && student != null) {
       await EnrollmentSeedApi.createEnrollment(parent.id, newCourse.id, "ObserverEnrollment", student.id);
@@ -127,7 +128,7 @@ class AppSeedUtils {
   /// Pair a parent and a student.  Will only work if student is enrolled as a student.
   static Future<bool> seedPairing(SeededUser parent, SeededUser student) async {
     var pairingCodeStructure = await UserSeedApi.createObserverPairingCode(student.id);
-    var pairingCode = pairingCodeStructure.code;
+    var pairingCode = pairingCodeStructure?.code;
     var pairingResult = await UserSeedApi.addObservee(parent, student, pairingCode);
     return pairingResult;
   }

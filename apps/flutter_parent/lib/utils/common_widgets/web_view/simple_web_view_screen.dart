@@ -22,16 +22,16 @@ import 'package:webview_flutter/webview_flutter.dart';
 class SimpleWebViewScreen extends StatefulWidget {
   final String _url;
   final String _title;
-  final String _infoText;
+  final String? _infoText;
 
-  SimpleWebViewScreen(this._url, this._title, {String infoText}) : _infoText = infoText;
+  SimpleWebViewScreen(this._url, this._title, {String? infoText}) : _infoText = infoText;
 
   @override
   State<StatefulWidget> createState() => _SimpleWebViewScreenState();
 }
 
 class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
-  WebViewController _controller;
+  WebViewController? _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +42,12 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
           elevation: 0,
           backgroundColor: Colors.transparent,
           iconTheme: Theme.of(context).iconTheme,
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
-          title: Text(widget._title, style: Theme.of(context).textTheme.headline6),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
+          title: Text(widget._title, style: Theme.of(context).textTheme.titleLarge),
         ),
         body: WebView(
           javascriptMode: JavascriptMode.unrestricted,
           userAgent: ApiPrefs.getUserAgent(),
-          darkMode: ParentTheme.of(context).isWebViewDarkMode,
           gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
           navigationDelegate: _handleNavigation,
           onWebViewCreated: (controller) {
@@ -68,7 +67,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
 
   void _handlePageLoaded(String url) async {
     // If there's no info to show, just return
-    if (widget._infoText == null || widget._infoText.isEmpty) return;
+    if (widget._infoText == null || widget._infoText!.isEmpty) return;
 
     // Run javascript to show the info alert
     await _controller?.evaluateJavascript(_showAlertJavascript);

@@ -44,45 +44,45 @@ class _$NotificationPayloadSerializer
   final String wireName = 'NotificationPayload';
 
   @override
-  Iterable<Object> serialize(
+  Iterable<Object?> serialize(
       Serializers serializers, NotificationPayload object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'type',
       serializers.serialize(object.type,
           specifiedType: const FullType(NotificationPayloadType)),
     ];
-    result.add('data');
-    if (object.data == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.data,
-          specifiedType: const FullType(String)));
-    }
+    Object? value;
+    value = object.data;
+
+    result
+      ..add('data')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
   NotificationPayload deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new NotificationPayloadBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'type':
           result.type = serializers.deserialize(value,
-                  specifiedType: const FullType(NotificationPayloadType))
+                  specifiedType: const FullType(NotificationPayloadType))!
               as NotificationPayloadType;
           break;
         case 'data':
           result.data = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -115,23 +115,21 @@ class _$NotificationPayloadTypeSerializer
           Serializers serializers, Object serialized,
           {FullType specifiedType = FullType.unspecified}) =>
       NotificationPayloadType.valueOf(
-          _fromWire[serialized] ?? serialized as String);
+          _fromWire[serialized] ?? (serialized is String ? serialized : ''));
 }
 
 class _$NotificationPayload extends NotificationPayload {
   @override
   final NotificationPayloadType type;
   @override
-  final String data;
+  final String? data;
 
   factory _$NotificationPayload(
-          [void Function(NotificationPayloadBuilder) updates]) =>
-      (new NotificationPayloadBuilder()..update(updates)).build();
+          [void Function(NotificationPayloadBuilder)? updates]) =>
+      (new NotificationPayloadBuilder()..update(updates))._build();
 
-  _$NotificationPayload._({this.type, this.data}) : super._() {
-    if (type == null) {
-      throw new BuiltValueNullFieldError('NotificationPayload', 'type');
-    }
+  _$NotificationPayload._({required this.type, this.data}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(type, r'NotificationPayload', 'type');
   }
 
   @override
@@ -153,12 +151,16 @@ class _$NotificationPayload extends NotificationPayload {
 
   @override
   int get hashCode {
-    return $jf($jc($jc(0, type.hashCode), data.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, type.hashCode);
+    _$hash = $jc(_$hash, data.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('NotificationPayload')
+    return (newBuiltValueToStringHelper(r'NotificationPayload')
           ..add('type', type)
           ..add('data', data))
         .toString();
@@ -167,22 +169,23 @@ class _$NotificationPayload extends NotificationPayload {
 
 class NotificationPayloadBuilder
     implements Builder<NotificationPayload, NotificationPayloadBuilder> {
-  _$NotificationPayload _$v;
+  _$NotificationPayload? _$v;
 
-  NotificationPayloadType _type;
-  NotificationPayloadType get type => _$this._type;
-  set type(NotificationPayloadType type) => _$this._type = type;
+  NotificationPayloadType? _type;
+  NotificationPayloadType? get type => _$this._type;
+  set type(NotificationPayloadType? type) => _$this._type = type;
 
-  String _data;
-  String get data => _$this._data;
-  set data(String data) => _$this._data = data;
+  String? _data;
+  String? get data => _$this._data;
+  set data(String? data) => _$this._data = data;
 
   NotificationPayloadBuilder();
 
   NotificationPayloadBuilder get _$this {
-    if (_$v != null) {
-      _type = _$v.type;
-      _data = _$v.data;
+    final $v = _$v;
+    if ($v != null) {
+      _type = $v.type;
+      _data = $v.data;
       _$v = null;
     }
     return this;
@@ -190,23 +193,27 @@ class NotificationPayloadBuilder
 
   @override
   void replace(NotificationPayload other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$NotificationPayload;
   }
 
   @override
-  void update(void Function(NotificationPayloadBuilder) updates) {
+  void update(void Function(NotificationPayloadBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$NotificationPayload build() {
-    final _$result = _$v ?? new _$NotificationPayload._(type: type, data: data);
+  NotificationPayload build() => _build();
+
+  _$NotificationPayload _build() {
+    final _$result = _$v ??
+        new _$NotificationPayload._(
+            type: BuiltValueNullFieldError.checkNotNull(
+                type, r'NotificationPayload', 'type'),
+            data: data);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

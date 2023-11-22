@@ -135,7 +135,7 @@ void main() {
   });
 }
 
-_testLocaleResolution(Locale fallback, Locale resolving, Locale expected, {bool matchCountry = true}) {
+_testLocaleResolution(Locale? fallback, Locale resolving, Locale expected, {bool matchCountry = true}) {
   final callback = AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: matchCountry);
   final actual = callback(resolving, AppLocalizations.delegate.supportedLocales);
 

@@ -16,79 +16,75 @@ class _$GradingPeriodSerializer implements StructuredSerializer<GradingPeriod> {
   final String wireName = 'GradingPeriod';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, GradingPeriod object,
+  Iterable<Object?> serialize(Serializers serializers, GradingPeriod object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
-    result.add('id');
-    if (object.id == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.id,
-          specifiedType: const FullType(String)));
-    }
-    result.add('title');
-    if (object.title == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.title,
-          specifiedType: const FullType(String)));
-    }
-    result.add('start_date');
-    if (object.startDate == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.startDate,
+    final result = <Object?>[];
+    Object? value;
+    value = object.id;
+
+    result
+      ..add('id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.title;
+
+    result
+      ..add('title')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.startDate;
+
+    result
+      ..add('start_date')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('end_date');
-    if (object.endDate == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.endDate,
+    value = object.endDate;
+
+    result
+      ..add('end_date')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
-    result.add('weight');
-    if (object.weight == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.weight,
-          specifiedType: const FullType(double)));
-    }
+    value = object.weight;
+
+    result
+      ..add('weight')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(double)));
+
     return result;
   }
 
   @override
   GradingPeriod deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new GradingPeriodBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'title':
           result.title = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'start_date':
           result.startDate = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'end_date':
           result.endDate = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'weight':
           result.weight = serializers.deserialize(value,
-              specifiedType: const FullType(double)) as double;
+              specifiedType: const FullType(double)) as double?;
           break;
       }
     }
@@ -99,18 +95,18 @@ class _$GradingPeriodSerializer implements StructuredSerializer<GradingPeriod> {
 
 class _$GradingPeriod extends GradingPeriod {
   @override
-  final String id;
+  final String? id;
   @override
-  final String title;
+  final String? title;
   @override
-  final DateTime startDate;
+  final DateTime? startDate;
   @override
-  final DateTime endDate;
+  final DateTime? endDate;
   @override
-  final double weight;
+  final double? weight;
 
-  factory _$GradingPeriod([void Function(GradingPeriodBuilder) updates]) =>
-      (new GradingPeriodBuilder()..update(updates)).build();
+  factory _$GradingPeriod([void Function(GradingPeriodBuilder)? updates]) =>
+      (new GradingPeriodBuilder()..update(updates))._build();
 
   _$GradingPeriod._(
       {this.id, this.title, this.startDate, this.endDate, this.weight})
@@ -136,15 +132,19 @@ class _$GradingPeriod extends GradingPeriod {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc($jc(0, id.hashCode), title.hashCode), startDate.hashCode),
-            endDate.hashCode),
-        weight.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, title.hashCode);
+    _$hash = $jc(_$hash, startDate.hashCode);
+    _$hash = $jc(_$hash, endDate.hashCode);
+    _$hash = $jc(_$hash, weight.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('GradingPeriod')
+    return (newBuiltValueToStringHelper(r'GradingPeriod')
           ..add('id', id)
           ..add('title', title)
           ..add('startDate', startDate)
@@ -156,37 +156,38 @@ class _$GradingPeriod extends GradingPeriod {
 
 class GradingPeriodBuilder
     implements Builder<GradingPeriod, GradingPeriodBuilder> {
-  _$GradingPeriod _$v;
+  _$GradingPeriod? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _title;
-  String get title => _$this._title;
-  set title(String title) => _$this._title = title;
+  String? _title;
+  String? get title => _$this._title;
+  set title(String? title) => _$this._title = title;
 
-  DateTime _startDate;
-  DateTime get startDate => _$this._startDate;
-  set startDate(DateTime startDate) => _$this._startDate = startDate;
+  DateTime? _startDate;
+  DateTime? get startDate => _$this._startDate;
+  set startDate(DateTime? startDate) => _$this._startDate = startDate;
 
-  DateTime _endDate;
-  DateTime get endDate => _$this._endDate;
-  set endDate(DateTime endDate) => _$this._endDate = endDate;
+  DateTime? _endDate;
+  DateTime? get endDate => _$this._endDate;
+  set endDate(DateTime? endDate) => _$this._endDate = endDate;
 
-  double _weight;
-  double get weight => _$this._weight;
-  set weight(double weight) => _$this._weight = weight;
+  double? _weight;
+  double? get weight => _$this._weight;
+  set weight(double? weight) => _$this._weight = weight;
 
   GradingPeriodBuilder();
 
   GradingPeriodBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _title = _$v.title;
-      _startDate = _$v.startDate;
-      _endDate = _$v.endDate;
-      _weight = _$v.weight;
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _title = $v.title;
+      _startDate = $v.startDate;
+      _endDate = $v.endDate;
+      _weight = $v.weight;
       _$v = null;
     }
     return this;
@@ -194,19 +195,19 @@ class GradingPeriodBuilder
 
   @override
   void replace(GradingPeriod other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GradingPeriod;
   }
 
   @override
-  void update(void Function(GradingPeriodBuilder) updates) {
+  void update(void Function(GradingPeriodBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$GradingPeriod build() {
+  GradingPeriod build() => _build();
+
+  _$GradingPeriod _build() {
     final _$result = _$v ??
         new _$GradingPeriod._(
             id: id,
@@ -219,4 +220,4 @@ class GradingPeriodBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

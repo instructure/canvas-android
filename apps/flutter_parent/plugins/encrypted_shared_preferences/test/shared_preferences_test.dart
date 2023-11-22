@@ -11,7 +11,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('SharedPreferences', () {
-    const Map<String, dynamic> kTestValues = <String, dynamic>{
+    const Map<String, Object> kTestValues = <String, Object>{
       'flutter.String': 'hello world',
       'flutter.bool': true,
       'flutter.int': 42,
@@ -19,7 +19,7 @@ void main() {
       'flutter.List': <String>['foo', 'bar'],
     };
 
-    const Map<String, dynamic> kTestValues2 = <String, dynamic>{
+    const Map<String, Object> kTestValues2 = <String, Object>{
       'flutter.String': 'goodbye world',
       'flutter.bool': false,
       'flutter.int': 1337,
@@ -27,8 +27,8 @@ void main() {
       'flutter.List': <String>['baz', 'quox'],
     };
 
-    FakeSharedPreferencesStore store;
-    EncryptedSharedPreferences preferences;
+    late FakeSharedPreferencesStore store;
+    late EncryptedSharedPreferences preferences;
 
     setUp(() async {
       store = FakeSharedPreferencesStore(kTestValues);
@@ -57,11 +57,11 @@ void main() {
 
     test('writing', () async {
       await Future.wait(<Future<bool>>[
-        preferences.setString('String', kTestValues2['flutter.String']),
-        preferences.setBool('bool', kTestValues2['flutter.bool']),
-        preferences.setInt('int', kTestValues2['flutter.int']),
-        preferences.setDouble('double', kTestValues2['flutter.double']),
-        preferences.setStringList('List', kTestValues2['flutter.List'])
+        preferences.setString('String', kTestValues2['flutter.String'] as String),
+        preferences.setBool('bool', kTestValues2['flutter.bool'] as bool),
+        preferences.setInt('int', kTestValues2['flutter.int'] as int),
+        preferences.setDouble('double', kTestValues2['flutter.double'] as double),
+        preferences.setStringList('List', kTestValues2['flutter.List'] as List<String>)
       ]);
       expect(
         store.log,
@@ -143,7 +143,7 @@ void main() {
     });
 
     test('reloading', () async {
-      await preferences.setString('String', kTestValues['flutter.String']);
+      await preferences.setString('String', kTestValues['flutter.String'] as String);
       expect(preferences.getString('String'), kTestValues['flutter.String']);
 
       EncryptedSharedPreferences.setMockInitialValues(kTestValues2);
@@ -164,16 +164,16 @@ void main() {
       const String _prefixedKey = 'flutter.' + _key;
 
       test('test 1', () async {
-        EncryptedSharedPreferences.setMockInitialValues(<String, dynamic>{_prefixedKey: 'my string'});
+        EncryptedSharedPreferences.setMockInitialValues(<String, Object>{_prefixedKey: 'my string'});
         final EncryptedSharedPreferences prefs = await EncryptedSharedPreferences.getInstance();
-        final String value = prefs.getString(_key);
+        final String? value = prefs.getString(_key);
         expect(value, 'my string');
       });
 
       test('test 2', () async {
-        EncryptedSharedPreferences.setMockInitialValues(<String, dynamic>{_prefixedKey: 'my other string'});
+        EncryptedSharedPreferences.setMockInitialValues(<String, Object>{_prefixedKey: 'my other string'});
         final EncryptedSharedPreferences prefs = await EncryptedSharedPreferences.getInstance();
-        final String value = prefs.getString(_key);
+        final String? value = prefs.getString(_key);
         expect(value, 'my other string');
       });
     });
@@ -197,7 +197,7 @@ void main() {
       'test': 'foo',
     });
     final EncryptedSharedPreferences prefs = await EncryptedSharedPreferences.getInstance();
-    final String value = prefs.getString('test');
+    final String? value = prefs.getString('test');
     expect(value, 'foo');
   });
 }

@@ -18,10 +18,10 @@
 package com.instructure.student.util
 
 import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.tasks.StudentLogoutTask
 import dagger.hilt.android.HiltAndroidApp
@@ -36,13 +36,18 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
+    @Inject
+    lateinit var databaseProvider: DatabaseProvider
+
     override fun onCreate() {
         super.onCreate()
-        MasqueradeHelper.masqueradeLogoutTask = Runnable { StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute() }
+        MasqueradeHelper.masqueradeLogoutTask = Runnable {
+            StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
+        }
     }
 
     override fun performLogoutOnAuthError() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
+        StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
     }
 
     override fun getWorkManagerFactory(): WorkerFactory = workerFactory

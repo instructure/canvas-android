@@ -25,60 +25,60 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import '../attachment_utils/attachment_picker.dart';
 
 class ConversationReplyInteractor {
-  Future<Conversation> createReply(
-    Conversation conversation,
-    Message message,
+  Future<Conversation?> createReply(
+    Conversation? conversation,
+    Message? message,
     String body,
     List<String> attachmentIds,
     bool replyAll,
   ) async {
-    Message replyMessage = message ?? conversation.messages[0];
+    Message replyMessage = message ?? conversation!.messages![0];
     List<String> includedMessageIds = [if (message != null || !replyAll) replyMessage.id];
     List<String> recipientIds = [];
 
     if (!replyAll) {
       if (replyMessage.authorId == getCurrentUserId()) {
-        recipientIds = replyMessage.participatingUserIds.toList();
+        recipientIds = replyMessage.participatingUserIds!.toList();
       } else {
         recipientIds = [replyMessage.authorId];
       }
     } else {
       // We need to make sure the recipients list doesn't contain any off limit users, such as non-observed students.
-      final courseId = conversation.getContextId();
-      final userId = ApiPrefs.getUser().id;
+      final courseId = conversation?.getContextId();
+      final userId = ApiPrefs.getUser()?.id;
       final enrollments = await locator<EnrollmentsApi>().getObserveeEnrollments();
       final observeeIds = enrollments
-          .map((enrollment) => enrollment.observedUser)
+          ?.map((enrollment) => enrollment.observedUser)
           .where((student) => student != null)
           .toSet()
-          .map<String>((student) => student.id);
-      final permissions = await locator<CourseApi>().getCoursePermissions(courseId);
+          .map<String>((student) => student!.id);
+      final permissions = await locator<CourseApi>().getCoursePermissions(courseId!);
       final recipients = await locator<InboxApi>().getRecipients(courseId);
-      recipients.retainWhere((recipient) {
+      recipients?.retainWhere((recipient) {
         // Allow self and any observed students as recipients if the sendMessages permission is granted
-        if (permissions.sendMessages == true && (observeeIds.contains(recipient.id) || recipient.id == userId))
+        if (permissions?.sendMessages == true && (observeeIds?.contains(recipient.id) == true || recipient.id == userId))
           return true;
 
         // Always allow instructors (teachers and TAs) as recipients
-        var enrollments = recipient.commonCourses[courseId];
+        var enrollments = recipient.commonCourses![courseId];
         if (enrollments == null) return false;
         return enrollments.contains('TeacherEnrollment') || enrollments.contains('TaEnrollment');
       });
 
-      final filteredRecipientIds = recipients.map<String>((recipient) => recipient.id);
+      final filteredRecipientIds = recipients?.map<String>((recipient) => recipient.id);
 
-      recipientIds = replyMessage.participatingUserIds
+      recipientIds = replyMessage.participatingUserIds!
           .toList()
-          .where((participantId) => filteredRecipientIds.contains(participantId))
+          .where((participantId) => filteredRecipientIds?.contains(participantId) == true)
           .toList();
     }
 
-    return locator<InboxApi>().addMessage(conversation.id, body, recipientIds, attachmentIds, includedMessageIds);
+    return locator<InboxApi>().addMessage(conversation?.id, body, recipientIds, attachmentIds, includedMessageIds);
   }
 
-  Future<AttachmentHandler> addAttachment(BuildContext context) async {
+  Future<AttachmentHandler?> addAttachment(BuildContext context) async {
     return AttachmentPicker.asBottomSheet(context);
   }
 
-  String getCurrentUserId() => ApiPrefs.getUser().id;
+  String getCurrentUserId() => ApiPrefs.getUser()!.id;
 }

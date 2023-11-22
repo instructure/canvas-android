@@ -17,14 +17,12 @@
 package com.instructure.loginapi.login.tasks
 
 import android.app.Activity
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.weave
@@ -39,8 +37,9 @@ import java.io.File
 abstract class LogoutTask(
     val type: Type,
     val uri: Uri? = null,
-    val canvasForElementaryFeatureFlag: Boolean = false,
-    private val typefaceBehavior: TypefaceBehavior? = null) {
+    private val canvasForElementaryFeatureFlag: Boolean = false,
+    private val typefaceBehavior: TypefaceBehavior? = null
+) {
 
     enum class Type {
         SWITCH_USERS,
@@ -53,6 +52,9 @@ abstract class LogoutTask(
     protected abstract fun createLoginIntent(context: Context): Intent
     protected abstract fun createQRLoginIntent(context: Context, uri: Uri): Intent?
     protected abstract fun getFcmToken(listener: (registrationId: String?) -> Unit)
+    protected abstract fun removeOfflineData(userId: Long?)
+
+    protected open fun stopOfflineSync() = Unit
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun execute() {
@@ -78,8 +80,14 @@ abstract class LogoutTask(
                 }
                 PushNotification.clearPushHistory()
 
+                stopOfflineSync()
+
                 when (type) {
-                    Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> removeUser()
+                    Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> {
+                        removeOfflineData(ApiPrefs.user?.id)
+                        removeUser()
+                    }
+
                     Type.SWITCH_USERS, Type.QR_CODE_SWITCH -> updateUser()
                 }
 

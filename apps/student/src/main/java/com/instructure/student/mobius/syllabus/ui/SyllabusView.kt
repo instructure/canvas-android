@@ -19,6 +19,7 @@ package com.instructure.student.mobius.syllabus.ui
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -29,7 +30,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSyllabusBinding
 import com.instructure.student.databinding.FragmentSyllabusEventsBinding
 import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
-import com.instructure.student.features.assignmentdetails.AssignmentDetailsFragment
+import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
@@ -58,11 +59,11 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     init {
-        binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.setupAsBackButton { activity.onBackPressed() }
         binding.toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
         binding.toolbar.subtitle = canvasContext.name
 
-        adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
+        adapter = SyllabusTabAdapter(activity, canvasContext, getTabTitles())
 
         binding.syllabusPager.adapter = adapter
         binding.syllabusTabLayout.setupWithViewPager(binding.syllabusPager, true)
@@ -142,11 +143,11 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
-        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+        RouteMatcher.route(activity as FragmentActivity, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
-        RouteMatcher.route(context, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
+        RouteMatcher.route(activity as FragmentActivity, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
     }
 
     private fun getTabTitles(): List<String> = listOf(

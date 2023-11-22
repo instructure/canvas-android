@@ -39,15 +39,14 @@ void main() async {
 
   // Seed an assignment
   // Graded
-  var assignment =
-      await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 3)).toUtc());
+  var assignment = (await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 3)).toUtc()))!;
 
   // Sign in the parent
   await AppSeedUtils.signIn(parent);
 
   // Seed a conversation
   await Future.delayed(const Duration(seconds: 5));
-  var newConversation = await InboxApi().createConversation(course.id, [teacher.id], "sUp?", "Let's talk", null);
+  var newConversation = (await InboxApi().createConversation(course.id, [teacher.id], "sUp?", "Let's talk", null))!;
   newConversation = newConversation.rebuild((b) => b..contextName = course.name); // Do this manually
 
   // Let the test driver know that seeding has completed

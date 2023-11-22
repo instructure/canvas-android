@@ -435,7 +435,7 @@ class DiscussionsInteractionTest : StudentTest() {
             course = course1,
             user = user,
             topicTitle = "Hey!  A Discussion!",
-            topicDescription = "Awesome!"
+            topicDescription = "Awesome!",
         )
 
         courseBrowserPage.selectDiscussions()
@@ -466,8 +466,9 @@ class DiscussionsInteractionTest : StudentTest() {
         val attachment = createHtmlAttachment(data, attachmentHtml)
         discussionEntry.attachments = mutableListOf(attachment)
 
-        discussionDetailsPage.refresh()
-        Thread.sleep(3000) //allow some time to the reply to propagate
+        Espresso.pressBack()
+        discussionListPage.selectTopic(topicHeader.title!!)
+
         discussionDetailsPage.assertReplyDisplayed(discussionEntry)
         discussionDetailsPage.assertReplyAttachment(discussionEntry)
         discussionDetailsPage.previewAndCheckReplyAttachment(
@@ -565,8 +566,9 @@ class DiscussionsInteractionTest : StudentTest() {
         val attachment = createHtmlAttachment(data, attachmentHtml)
         replyReplyEntry.attachments = mutableListOf(attachment)
 
-        discussionDetailsPage.refresh() // To pick up updated discussion reply
-        Thread.sleep(3000) //Need this because somehow sometimes refresh does "double-refresh" and assert is failing below.
+        Espresso.pressBack()
+        discussionListPage.selectTopic(topicHeader.title!!)
+
         discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
         discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
         discussionDetailsPage.previewAndCheckReplyAttachment(
@@ -749,7 +751,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
         if (enableDiscussionTopicCreation) {
             data.courses.values.forEach { course ->
-                course.permissions = CanvasContextPermission(canCreateDiscussionTopic = true)
+                data.addCoursePermissions(course.id, CanvasContextPermission(canCreateDiscussionTopic = true))
             }
         }
         val course1 = data.courses.values.first()

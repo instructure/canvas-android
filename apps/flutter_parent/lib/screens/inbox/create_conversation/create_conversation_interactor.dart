@@ -25,21 +25,21 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import '../attachment_utils/attachment_picker.dart';
 
 class CreateConversationInteractor {
-  Future<CreateConversationData> loadData(String courseId, String studentId) async {
+  Future<CreateConversationData> loadData(String courseId, String? studentId) async {
     final courseFuture = locator<CourseApi>().getCourse(courseId);
     final recipientFuture = locator<InboxApi>().getRecipients(courseId);
     final permissionsFuture = locator<CourseApi>().getCoursePermissions(courseId);
 
     final permissions = await permissionsFuture;
     final recipients = await recipientFuture;
-    final userId = ApiPrefs.getUser().id;
+    final userId = ApiPrefs.getUser()?.id;
 
-    recipients.retainWhere((recipient) {
+    recipients?.retainWhere((recipient) {
       // Allow self and specified student as recipients if the sendMessages permission is granted
-      if (permissions.sendMessages == true && (recipient.id == studentId || recipient.id == userId)) return true;
+      if (permissions?.sendMessages == true && (recipient.id == studentId || recipient.id == userId)) return true;
 
       // Always allow instructors (teachers and TAs) as recipients
-      var enrollments = recipient.commonCourses[courseId];
+      var enrollments = recipient.commonCourses?[courseId];
       if (enrollments == null) return false;
       return enrollments.contains('TeacherEnrollment') || enrollments.contains('TaEnrollment');
     });
@@ -47,7 +47,7 @@ class CreateConversationInteractor {
     return CreateConversationData(await courseFuture, recipients);
   }
 
-  Future<Conversation> createConversation(
+  Future<Conversation?> createConversation(
     String courseId,
     List<String> recipientIds,
     String subject,
@@ -57,14 +57,14 @@ class CreateConversationInteractor {
     return locator<InboxApi>().createConversation(courseId, recipientIds, subject, body, attachmentIds);
   }
 
-  Future<AttachmentHandler> addAttachment(BuildContext context) async {
+  Future<AttachmentHandler?>addAttachment(BuildContext context) async {
     return AttachmentPicker.asBottomSheet(context);
   }
 }
 
 class CreateConversationData {
-  final Course course;
-  final List<Recipient> recipients;
+  final Course? course;
+  final List<Recipient>? recipients;
 
   CreateConversationData(this.course, this.recipients);
 }

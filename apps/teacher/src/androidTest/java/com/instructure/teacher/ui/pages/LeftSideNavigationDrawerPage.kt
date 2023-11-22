@@ -9,15 +9,11 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.OnViewWithContentDescription
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
@@ -61,7 +57,7 @@ class LeftSideNavigationDrawerPage: BasePage() {
     fun logout() {
         onView(hamburgerButtonMatcher).click()
         logoutButton.scrollTo().click()
-        onViewWithText(android.R.string.yes).click()
+        onViewWithText(android.R.string.ok).click()
         // It can potentially take a long time for the sign-out to take effect, especially on
         // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(matches(

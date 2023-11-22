@@ -26,20 +26,15 @@ abstract class GradingPeriod implements Built<GradingPeriod, GradingPeriodBuilde
 
   factory GradingPeriod([void Function(GradingPeriodBuilder) updates]) = _$GradingPeriod;
 
-  @nullable
-  String get id;
+  String? get id;
 
-  @nullable
-  String get title;
+  String? get title;
 
-  @nullable
   @BuiltValueField(wireName: 'start_date')
-  DateTime get startDate;
+  DateTime? get startDate;
 
-  @nullable
   @BuiltValueField(wireName: 'end_date')
-  DateTime get endDate;
+  DateTime? get endDate;
 
-  @nullable
-  double get weight;
+  double? get weight;
 }

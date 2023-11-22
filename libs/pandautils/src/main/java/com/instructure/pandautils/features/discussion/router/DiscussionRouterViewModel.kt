@@ -36,12 +36,12 @@ class DiscussionRouterViewModel @Inject constructor(
                 val header = discussionTopicHeader ?: discussionRouteHelper.getDiscussionHeader(
                     canvasContext,
                     discussionTopicHeaderId
-                )
+                )!!
 
                 if (header.groupTopicChildren.isNotEmpty()) {
                     val discussionGroup = discussionRouteHelper.getDiscussionGroup(header)
                     discussionGroup?.let {
-                        val groupDiscussionHeader = discussionRouteHelper.getDiscussionHeader(it.first, it.second)
+                        val groupDiscussionHeader = discussionRouteHelper.getDiscussionHeader(it.first, it.second)!!
                         routeToDiscussionGroup(
                             it.first,
                             it.second,

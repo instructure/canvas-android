@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2023 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.instructure.pandautils.features.offline.sync.settings.SyncSettingsViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/syncSettingsPage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".features.offline.sync.settings.SyncSettingsFragment">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/textDarkest"
+            android:elevation="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ToolBarPopupStyle"
+            app:theme="@style/ToolBarStyle"
+            app:title="@string/syncSettings_toolbarTitle" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/autoSyncSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="@{viewModel.data.autoSyncEnabled}"
+            android:minHeight="48dp"
+            android:onCheckedChanged="@{(view, checked) -> view.isPressed() ? viewModel.onAutoSyncChanged(checked) : null}"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:text="@string/syncSettings_autoContentSyncTitle"
+            android:textColor="@color/textDarkest"
+            android:textSize="16sp"
+            android:theme="@style/SwitchTheme" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:text="@string/syncSettings_autoContentSyncDescription"
+            android:textColor="@color/textDark"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:id="@+id/furtherSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.data.autoSyncEnabled ? View.VISIBLE : View.GONE}">
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/syncFrequencyContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:clickable="@{viewModel.data.autoSyncEnabled}"
+                android:onClick="@{() -> viewModel.showFrequencySelector()}"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/syncSettings_syncFrequencyTitle"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/syncFrequencyLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.data.syncFrequency}"
+                    android:textColor="@color/textDark"
+                    android:textSize="14sp"
+                    tools:text="Daily" />
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                android:text="@string/syncSettings_syncFrequencyDescription"
+                android:textColor="@color/textDark"
+                android:textSize="14sp" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/wifiOnlySwitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.wifiOnly}"
+                android:enabled="@{viewModel.data.autoSyncEnabled}"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, checked) -> view.isPressed() ? viewModel.onWifiOnlyChanged(checked) : null}"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                android:text="@string/syncSettings_wifiOnlyTitle"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                android:theme="@style/SwitchTheme" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                android:paddingBottom="16dp"
+                android:text="@string/syncSettings_wifiOnlyDescription"
+                android:textColor="@color/textDark"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

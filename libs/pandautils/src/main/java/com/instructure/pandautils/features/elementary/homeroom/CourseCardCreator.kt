@@ -62,11 +62,11 @@ class CourseCardCreator(
             .mapIndexed { index, course ->
                 val viewData = CourseCardViewData(
                     course.name,
-                    assignmentsDueTexts[course.id] ?: "",
-                    assignmentsMissingTexts[course.id] ?: "",
-                    announcements[index]?.title ?: "",
+                    assignmentsDueTexts[course.id].orEmpty(),
+                    assignmentsMissingTexts[course.id].orEmpty(),
+                    announcements[index]?.title.orEmpty(),
                     ColorKeeper.getOrGenerateColor(course),
-                    course.imageUrl ?: "")
+                    course.imageUrl.orEmpty())
 
                 CourseCardItemViewModel(
                     viewData,

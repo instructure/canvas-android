@@ -109,8 +109,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Vorherige/n Benutzer*in entfernen</string>
     <string name="accountDomainFooter">Finden Sie Ihre Schule nicht? Geben Sie den vollständigen URL der Schule ein.</string>
-    <string name="accountDomainFooterLink">Tippen Sie hier, um Hilfe zu erhalten.</string>
-
+    <string name="accountDomainFooterLoginHelp">Für Hilfe beim Login hier tippen.</string>
     <string name="login_noInternetConnectionTitle">Keine Internetverbindung</string>
     <string name="login_noInternetConnectionMessage">Diese Aktion erfordert eine Internetverbindung.</string>
     <string name="empty_feedback">Ein Betreff und eine Beschreibung sind erforderlich, um ein Feedback zu geben.</string>

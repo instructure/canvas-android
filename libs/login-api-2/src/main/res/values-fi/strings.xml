@@ -111,8 +111,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Poista edellinen käyttäjä</string>
     <string name="accountDomainFooter">Etkö löydä kouluasi? Yritä kirjoittaa koko koulun URL</string>
-    <string name="accountDomainFooterLink">Avaa ohje napauttamalla tässä.</string>
-
+    <string name="accountDomainFooterLoginHelp">Avaa sisäänkirjautumisen ohje napauttamalla tässä.</string>
     <string name="login_noInternetConnectionTitle">Ei Internet-yhteyttä</string>
     <string name="login_noInternetConnectionMessage">Tähän toimintoon vaaditaan Internet-yhteys.</string>
     <string name="empty_feedback">Aihe ja kuvaus vaaditaan palautteen lähettämiseen.</string>

@@ -17,6 +17,8 @@ import 'dart:convert';
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_parent/main.dart' as app;
+import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 
@@ -36,12 +38,9 @@ void main() async {
   var student = data.students[0];
   var course1 = data.courses[0];
   var course2 = data.courses[1];
-  var assignment1 =
-      await AssignmentSeedApi.createAssignment(course1.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc());
-  var assignment2 =
-      await AssignmentSeedApi.createAssignment(course2.id, dueAt: DateTime.now().subtract(Duration(days: 1)).toUtc());
-  var event2 = await CalendarSeedApi.createCalendarEvent(course2.id, "Calendar Event", DateTime.now().toUtc(),
-      allDay: true, locationName: "Location Name", locationAddress: "Location Address");
+  Assignment assignment1 = (await AssignmentSeedApi.createAssignment(course1.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc()))!;
+  Assignment assignment2 = (await AssignmentSeedApi.createAssignment(course2.id, dueAt: DateTime.now().subtract(Duration(days: 1)).toUtc()))!;
+  ScheduleItem event2 = (await CalendarSeedApi.createCalendarEvent(course2.id, "Calendar Event", DateTime.now().toUtc(), allDay: true, locationName: "Location Name", locationAddress: "Location Address"))!;
   // TODO: Add graded quiz
 
   // Sign in the parent

@@ -47,7 +47,8 @@ class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val enrollmentIndex = item.enrollmentIndex
         if (enrollmentIndex >= 0 && enrollmentIndex < item.enrollments.size) {
-            role.text = item.enrollments[item.enrollmentIndex].displayType
+            val roleText = item.enrollments.map { it.displayType }.distinct().joinToString(", ")
+            role.text = roleText
             role.setVisible()
         } else {
             role.text = ""

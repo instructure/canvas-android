@@ -19,14 +19,13 @@ import 'package:flutter/material.dart';
 /// A widget that renders a dropdown arrow which can animate between its 'collapsed' and 'expanded' states.
 class DropdownArrow extends StatelessWidget {
   const DropdownArrow({
-    Key key,
     this.size = 4,
-    double strokeWidth,
+    double? strokeWidth,
     this.color = Colors.white,
     this.rotate = false,
     this.specificProgress = null,
-  })  : this.strokeWidth = strokeWidth ?? size / 2,
-        super(key: key);
+    super.key,
+  })  : this.strokeWidth = strokeWidth ?? size / 2;
 
   /// Specifies the height of the dropdown arrow. The width will always be twice this value.
   final double size;
@@ -48,13 +47,13 @@ class DropdownArrow extends StatelessWidget {
   /// This is useful for cases where the expand/collapse progress is manually tracked for elements associated with
   /// this dropdown arrow, e.g. the calendar widget where the user can swipe vertically to expand/collapse
   /// between a month view and a week view.
-  final double specificProgress;
+  final double? specificProgress;
 
   @override
   Widget build(BuildContext context) {
     if (specificProgress != null) {
       return Transform.rotate(
-        angle: specificProgress * -pi,
+        angle: specificProgress! * -pi,
         child: CustomPaint(
           child: SizedBox(width: size * 2, height: size),
           painter: _DropdownArrowPainter(color, strokeWidth),
@@ -85,7 +84,7 @@ class _DropdownArrowPainter extends CustomPainter {
       ..color = color;
   }
 
-  Paint _arrowPaint;
+  late Paint _arrowPaint;
 
   @override
   void paint(Canvas canvas, Size size) {

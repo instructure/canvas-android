@@ -192,7 +192,7 @@ class PageDetailsFragment : BasePresenterFragment<
         loadHtmlJob = binding.canvasWebViewWraper.webView.loadHtmlWithIframes(requireContext(), page.body, {
             if (view != null) binding.canvasWebViewWraper.loadHtml(it, page.title, baseUrl = this.page.htmlUrl)
         }) {
-            LtiLaunchFragment.routeLtiLaunchFragment(requireContext(), canvasContext, it)
+            LtiLaunchFragment.routeLtiLaunchFragment(requireActivity(), canvasContext, it)
         }
         setupToolbar()
     }
@@ -220,7 +220,7 @@ class PageDetailsFragment : BasePresenterFragment<
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
             val args = CreateOrEditPageDetailsFragment.newInstanceEdit(canvasContext, page).nonNullArgs
-            RouteMatcher.route(requireContext(), Route(CreateOrEditPageDetailsFragment::class.java, canvasContext, args))
+            RouteMatcher.route(requireActivity(), Route(CreateOrEditPageDetailsFragment::class.java, canvasContext, args))
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }

@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.DiscussionEntryPostBody
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -38,7 +39,7 @@ import java.io.File
 
 object DiscussionAPI {
 
-    internal interface DiscussionInterface {
+    interface DiscussionInterface {
 
         @Multipart
         @POST("{contextType}/{contextId}/discussion_topics")
@@ -78,20 +79,35 @@ object DiscussionAPI {
         @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=sections")
         fun getFirstPageDiscussionTopicHeaders(@Path("contextType") contextType: String, @Path("contextId") contextId: Long): Call<List<DiscussionTopicHeader>>
 
+        @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=sections")
+        suspend fun getFirstPageDiscussionTopicHeaders(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
+
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}?include[]=sections")
         fun getDetailedDiscussion(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
+
+        @GET("{contextType}/{contextId}/discussion_topics/{topicId}?include[]=sections")
+        suspend fun getDetailedDiscussion(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Tag params: RestParams): DataResult<DiscussionTopicHeader>
 
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}/view")
         fun getFullDiscussionTopic(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Query("include_new_entries") includeNewEntries: Int): Call<DiscussionTopic>
 
+        @GET("{contextType}/{contextId}/discussion_topics/{topicId}/view")
+        suspend fun getFullDiscussionTopic(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Query("include_new_entries") includeNewEntries: Int, @Tag params: RestParams): DataResult<DiscussionTopic>
+
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/rating")
         fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int): Call<Void>
+
+        @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/rating")
+        suspend fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int, @Tag params: RestParams): DataResult<Unit>
 
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/read")
         fun markDiscussionTopicRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<Void>
 
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
         fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
+
+        @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
+        suspend fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Unit>
 
         @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
         fun markDiscussionTopicEntryUnread(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
@@ -107,6 +123,9 @@ object DiscussionAPI {
 
         @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}")
         fun deleteDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
+
+        @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}")
+        suspend fun deleteDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Unit>
 
         @Multipart
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/replies")
@@ -130,6 +149,9 @@ object DiscussionAPI {
         @GET
         fun getNextPage(@Url nextUrl: String): Call<List<DiscussionTopicHeader>>
 
+        @GET
+        suspend fun getNextPage(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
+
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}")
         fun updateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Body entry: DiscussionEntryPostBody): Call<DiscussionEntry>
 
@@ -142,6 +164,9 @@ object DiscussionAPI {
 
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}")
         fun getDiscussionTopicHeader(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
+
+        @GET("{contextType}/{contextId}/discussion_topics/{topicId}")
+        suspend fun getDiscussionTopicHeader(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Tag params: RestParams): DataResult<DiscussionTopicHeader>
     }
 
     fun createDiscussion(adapter: RestBuilder,

@@ -29,11 +29,12 @@ import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  CalendarEventsApi api = MockCalendarApi();
-  CalendarFilterDb filterDb = MockCalendarFilterDb();
-  CoursesInteractor interactor = MockCoursesInteractor();
+  MockCalendarEventsApi api = MockCalendarEventsApi();
+  MockCalendarFilterDb filterDb = MockCalendarFilterDb();
+  MockCoursesInteractor interactor = MockCoursesInteractor();
 
   final String userDomain = 'user_domain';
   final String userId = 'user_123';
@@ -130,8 +131,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfMonth(),
-        date.withEndOfMonth(),
+        date.withStartOfMonth()!,
+        date.withEndOfMonth()!,
         ScheduleItem.apiTypeAssignment,
         contexts: contexts,
         forceRefresh: false,
@@ -141,8 +142,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfMonth(),
-        date.withEndOfMonth(),
+        date.withStartOfMonth()!,
+        date.withEndOfMonth()!,
         ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: false,
@@ -195,8 +196,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfDay(),
-        date.withEndOfDay(),
+        date.withStartOfDay()!,
+        date.withEndOfDay()!,
         ScheduleItem.apiTypeAssignment,
         contexts: contexts,
         forceRefresh: true,
@@ -206,8 +207,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfDay(),
-        date.withEndOfDay(),
+        date.withStartOfDay()!,
+        date.withEndOfDay()!,
         ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: true,
@@ -238,8 +239,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfDay(),
-        date.withEndOfDay(),
+        date.withStartOfDay()!,
+        date.withEndOfDay()!,
         ScheduleItem.apiTypeAssignment,
         contexts: contexts,
         forceRefresh: true,
@@ -249,8 +250,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfDay(),
-        date.withEndOfDay(),
+        date.withStartOfDay()!,
+        date.withEndOfDay()!,
         ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: true,
@@ -281,8 +282,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfMonth(),
-        date.withEndOfMonth(),
+        date.withStartOfMonth()!,
+        date.withEndOfMonth()!,
         ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: true,
@@ -292,8 +293,8 @@ void main() {
     verify(
       api.getUserCalendarItems(
         observeeId,
-        date.withStartOfMonth(),
-        date.withEndOfMonth(),
+        date.withStartOfMonth()!,
+        date.withEndOfMonth()!,
         ScheduleItem.apiTypeAssignment,
         contexts: contexts,
         forceRefresh: true,
@@ -391,7 +392,7 @@ void main() {
   });
 
   test('getContexts fetches courses and sets courseNameMap', () async {
-    when(filterDb.getByObserveeId(any, any, any)).thenAnswer((_) => null);
+    when(filterDb.getByObserveeId(any, any, any)).thenAnswer((_) => Future.value(null));
 
     final fetcher = PlannerFetcher(userId: userId, userDomain: userDomain, observeeId: observeeId);
 
@@ -403,7 +404,7 @@ void main() {
 
     expect(newContexts, contexts);
     expect(fetcher.courseNameMap[observeeId], isNotNull);
-    expect(fetcher.courseNameMap[observeeId][course.id], course.name);
+    expect(fetcher.courseNameMap[observeeId]?[course.id], course.name);
   });
 
   test('fetchPlannerItems excludes hidden items', () async {
@@ -414,7 +415,7 @@ void main() {
 
     var fetcher = PlannerFetcher(userId: "", userDomain: "", observeeId: observeeId);
     fetcher.courseNameMap[observeeId] = {};
-    fetcher.courseNameMap[observeeId][courseId] = courseName;
+    fetcher.courseNameMap[observeeId]?[courseId] = courseName;
 
     var item = ScheduleItem((b) => b
       ..title = "Item"

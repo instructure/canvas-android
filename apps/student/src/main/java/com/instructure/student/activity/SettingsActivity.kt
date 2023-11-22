@@ -18,24 +18,51 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.instructure.interactions.FragmentInteractions
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
+import com.instructure.student.databinding.ActivitySettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_SETTINGS)
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(){
 
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
+
+    private val binding by viewBinding(ActivitySettingsBinding::inflate)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(binding.root)
+
+        networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
+            binding.offlineIndicator.root.setVisible(!isOnline)
+        }
     }
 
     private val currentFragment: Fragment? get() = supportFragmentManager.fragments.last()
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        applyThemeForAllFragments()
+    }
+
+    private fun applyThemeForAllFragments() {
+        supportFragmentManager.fragments.forEach {
+            (it as? FragmentInteractions)?.applyTheme()
+        }
+    }
 
     fun addFragment(fragment: Fragment) {
         val ft = supportFragmentManager.beginTransaction()

@@ -18,7 +18,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 // for some operations.
 extension AutoRefresh on FlutterDriver {
   Future<String> getTextWithRefreshes(SerializableFinder finder,
-      {int refreshes = 3, String expectedText = null}) async {
+      {int refreshes = 3, String? expectedText = null}) async {
     for (int i = 0; i < refreshes; i++) {
       try {
         var result = await this.getText(finder, timeout: Duration(seconds: 1));

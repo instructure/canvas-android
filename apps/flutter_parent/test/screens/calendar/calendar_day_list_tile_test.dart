@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/planner_submission.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
@@ -31,11 +32,13 @@ import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final studentId = '1337';
@@ -121,8 +124,8 @@ void main() {
       expect(find.byWidgetPredicate((widget) {
         if (widget is Text) {
           final Text textWidget = widget;
-          if (textWidget.data != null) return textWidget.data.contains('pts');
-          return textWidget.textSpan.toPlainText().contains('pts');
+          if (textWidget.data != null) return textWidget.data!.contains('pts');
+          return textWidget.textSpan!.toPlainText().contains('pts');
         }
         return false;
       }), findsNothing);
@@ -391,20 +394,20 @@ void main() {
   });
 }
 
-Plannable _createPlannable({String title, DateTime dueAt, double pointsPossible, String assignmentId}) =>
+Plannable _createPlannable({String? title, DateTime? dueAt, double? pointsPossible, String? assignmentId}) =>
     Plannable((b) => b
       ..id = ''
       ..title = title ?? ''
       ..pointsPossible = pointsPossible
       ..dueAt = dueAt
-      ..assignmentId = assignmentId);
+      ..assignmentId = assignmentId ?? '');
 
 PlannerItem _createPlannerItem(
-        {String contextName,
-        Plannable plannable,
-        String plannableType,
-        PlannerSubmission submission,
-        String htmlUrl}) =>
+        {String? contextName,
+        Plannable? plannable,
+        String? plannableType,
+        PlannerSubmission? submission,
+        String? htmlUrl}) =>
     PlannerItem((b) => b
       ..courseId = ''
       ..plannable = plannable != null ? plannable.toBuilder() : _createPlannable().toBuilder()

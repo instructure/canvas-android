@@ -26,7 +26,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentLtiSubmissionViewBinding
 import com.instructure.student.fragment.LtiLaunchFragment
@@ -46,9 +46,9 @@ class LtiSubmissionViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         ViewStyler.themeButton(binding.viewLtiButton)
-        binding.viewLtiButton.onClick {
+        binding.viewLtiButton.onClickWithRequireNetwork {
             val route = LtiLaunchFragment.makeRoute(canvasContext = canvasContext, url = url)
-            RouteMatcher.route(requireContext(), route)
+            RouteMatcher.route(requireActivity(), route)
         }
     }
 

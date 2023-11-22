@@ -22,6 +22,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -73,7 +74,7 @@ class GradeableStudentSubmissionViewHolder(private val binding: AdapterGradeable
                 studentAvatar.setupAvatarA11y(assignee.name)
                 studentAvatar.onClick {
                     val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
-                    RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                    RouteMatcher.route(context as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
                 }
             }
             assignee is GroupAssignee -> {

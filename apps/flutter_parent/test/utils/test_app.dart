@@ -12,8 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'dart:ui';
-
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -30,12 +28,14 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_test/src/deprecated.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 import 'platform_config.dart';
-import 'test_helpers/mock_helpers.dart';
+import 'test_helpers/mock_helpers.mocks.dart';
 
 class TestApp extends StatefulWidget {
   TestApp(
@@ -54,7 +54,7 @@ class TestApp extends StatefulWidget {
   final List<NavigatorObserver> navigatorObservers;
   final bool darkMode;
   final bool highContrast;
-  final Locale locale;
+  final Locale? locale;
 
   @override
   _TestAppState createState() => _TestAppState();
@@ -83,14 +83,14 @@ class TestApp extends StatefulWidget {
   static showWidgetFromTap(
     WidgetTester tester,
     Future tapCallback(BuildContext context), {
-    Locale locale,
+    Locale? locale,
     PlatformConfig config = const PlatformConfig(),
-    Future configBlock(),
+    Future configBlock()?,
   }) async {
     await tester.pumpWidget(TestApp(
       Builder(builder: (context) {
-        return RaisedButton(
-          color: Colors.black,
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
           child: Text('tap me', style: TextStyle(color: Colors.white)),
           onPressed: () => tapCallback(context),
         );
@@ -104,13 +104,13 @@ class TestApp extends StatefulWidget {
     if (configBlock != null) await configBlock();
 
     // Tap the button to trigger the onPressed
-    await tester.tap(find.byType(RaisedButton));
+    await tester.tap(find.byType(ElevatedButton));
     await tester.pumpAndSettle();
   }
 }
 
 class _TestAppState extends State<TestApp> {
-  Locale _locale;
+  Locale? _locale;
 
   rebuild(locale) {
     setState(() => _locale = locale);
@@ -132,7 +132,9 @@ class _TestAppState extends State<TestApp> {
         builder: (context, themeData) => MaterialApp(
           title: 'Canvas Parent',
           locale: _locale,
-          builder: (context, child) => MasqueradeUI(navKey: TestApp.navigatorKey, child: child),
+          builder: (context, child) =>
+              MasqueradeUI(navKey: TestApp.navigatorKey,
+                  child: child ?? Container()),
           navigatorKey: TestApp.navigatorKey,
           navigatorObservers: widget.navigatorObservers,
           localizationsDelegates: const [
@@ -140,6 +142,7 @@ class _TestAppState extends State<TestApp> {
             // Material components use these delegate to provide default localization
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.delegate.supportedLocales,
           localeResolutionCallback: _localeCallback(),
@@ -154,7 +157,7 @@ class _TestAppState extends State<TestApp> {
   // Get notified when there's a new system locale so we can rebuild the app with the new language
   LocaleResolutionCallback _localeCallback() => (locale, supportedLocales) {
         const fallback = Locale('en', '');
-        Locale resolvedLocale =
+        Locale? resolvedLocale =
             AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(locale, supportedLocales);
 
         // Update the state if the locale changed
@@ -168,7 +171,7 @@ class _TestAppState extends State<TestApp> {
       };
 }
 
-void setupTestLocator(config(GetIt locator)) async {
+Future<void> setupTestLocator(config(GetIt locator)) async {
   final locator = GetIt.instance;
   await locator.reset();
   locator.allowReassignment = true; // Allows reassignment by the config block
@@ -223,20 +226,22 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 
   if (config.initDeviceInfo) _initPlatformDeviceInfo();
 
-  Future<void> apiPrefsInitFuture;
+  if (config.initPathProvider) _initPathProvider();
+
+  Future<void>? apiPrefsInitFuture;
   if (config.mockApiPrefs != null) {
     ApiPrefs.clean();
     EncryptedSharedPreferences.setMockInitialValues(
-        config.mockApiPrefs..putIfAbsent(ApiPrefs.KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, () => true));
+        config.mockApiPrefs!..putIfAbsent(ApiPrefs.KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, () => true));
     apiPrefsInitFuture = ApiPrefs.init();
   }
 
-  Future<void> remoteConfigInitFuture;
+  Future<void>? remoteConfigInitFuture;
   if (config.initRemoteConfig != null || config.mockPrefs != null) {
     SharedPreferences.setMockInitialValues(config.mockPrefs ?? {});
     if (config.initRemoteConfig != null) {
       RemoteConfigUtils.clean();
-      remoteConfigInitFuture = RemoteConfigUtils.initializeExplicit(config.initRemoteConfig);
+      remoteConfigInitFuture = RemoteConfigUtils.initializeExplicit(config.initRemoteConfig!);
     }
   }
 
@@ -248,38 +253,43 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   ]);
 
   if (config.initLoggedInUser != null) {
-    ApiPrefs.addLogin(config.initLoggedInUser);
-    ApiPrefs.switchLogins(config.initLoggedInUser);
+    ApiPrefs.addLogin(config.initLoggedInUser!);
+    ApiPrefs.switchLogins(config.initLoggedInUser!);
   }
 }
 
-/// WebView helpers. These are needed as web views tie into platform views. These are special though as the channel
-/// name depends on the platform view's ID. This makes mocking these generically difficult as each id has a different
-/// platform channel to register.
+/// WebView helpers. These are needed as web views tie into platform views.
 ///
 /// Inspired solution is a slimmed down version of the WebView test:
-/// https://github.com/flutter/plugins/blob/3b71d6e9a4456505f0b079074fcbc9ba9f8e0e15/packages/webview_flutter/test/webview_flutter_test.dart
+/// https://github.com/flutter/plugins/blob/webview_flutter-v3.0.4/packages/webview_flutter/webview_flutter/test/webview_flutter_test.dart
 void _initPlatformWebView() {
-  const MethodChannel('plugins.flutter.io/cookie_manager', const StandardMethodCodec())
-      .setMockMethodCallHandler((_) => Future<bool>.sync(() => null));
-
-  // Intercept when a web view is getting created so we can set up the platform channel
-  SystemChannels.platform_views.setMockMethodCallHandler((call) {
-    switch (call.method) {
-      case 'create':
-        final id = call.arguments['id'];
-        MethodChannel('plugins.flutter.io/webview_$id', const StandardMethodCodec())
-            .setMockMethodCallHandler((_) => Future<void>.sync(() {}));
-        return Future<int>.sync(() => 1);
-      default:
-        return Future<void>.sync(() {});
-    }
+  final mockWebViewPlatformController = MockWebViewPlatformController();
+  final mockWebViewPlatform = MockWebViewPlatform();
+  when(mockWebViewPlatform.build(
+    context: anyNamed('context'),
+    creationParams: anyNamed('creationParams'),
+    webViewPlatformCallbacksHandler:
+    anyNamed('webViewPlatformCallbacksHandler'),
+    javascriptChannelRegistry: anyNamed('javascriptChannelRegistry'),
+    onWebViewPlatformCreated: anyNamed('onWebViewPlatformCreated'),
+    gestureRecognizers: anyNamed('gestureRecognizers'),
+  )).thenAnswer((Invocation invocation) {
+    final WebViewPlatformCreatedCallback onWebViewPlatformCreated =
+    invocation.namedArguments[const Symbol('onWebViewPlatformCreated')]
+    as WebViewPlatformCreatedCallback;
+    return TestPlatformWebView(
+      mockWebViewPlatformController: mockWebViewPlatformController,
+      onWebViewPlatformCreated: onWebViewPlatformCreated,
+    );
   });
+
+  WebView.platform = mockWebViewPlatform;
+  WebViewCookieManagerPlatform.instance = FakeWebViewCookieManager();
 }
 
 /// Mocks the platform channel used by the package_info plugin
 void _initPackageInfo() {
-  const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
+  const MethodChannel('dev.fluttercommunity.plus/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
     if (methodCall.method == 'getAll') {
       return <String, dynamic>{
         'appName': 'Canvas',
@@ -294,7 +304,7 @@ void _initPackageInfo() {
 
 /// Mocks the platform channel used by the device_info plugin
 void _initPlatformDeviceInfo() {
-  const MethodChannel('plugins.flutter.io/device_info').setMockMethodCallHandler((MethodCall methodCall) async {
+  const MethodChannel('dev.fluttercommunity.plus/device_info').setMockMethodCallHandler((MethodCall methodCall) async {
     if (methodCall.method == 'getAndroidDeviceInfo') {
       return <String, dynamic>{
         'version': <String, dynamic>{
@@ -325,8 +335,107 @@ void _initPlatformDeviceInfo() {
         'type': 'take-types',
         'isPhysicalDevice': false,
         'androidId': 'fake-androidId',
+        'displayMetrics': <String, dynamic> {
+          'widthPx': 100.0,
+          'heightPx': 100.0,
+          'xDpi': 100.0,
+          'yDpi': 100.0,
+        },
+        'serialNumber': 'fake-serialNumber',
+      };
+    }
+    if (methodCall.method == 'getDeviceInfo') {
+      return <String, dynamic>{
+        'version': <String, dynamic>{
+          'baseOS': 'fake-baseOD',
+          'codename': 'fake-codename',
+          'incremental': 'fake-incremental',
+          'previewSdkInt': 9001,
+          'release': 'FakeOS 9000',
+          'sdkInt': 9000,
+          'securityPatch': 'fake-securityPatch',
+        },
+        'board': 'fake-board',
+        'bootloader': 'fake-bootloader',
+        'brand': 'Canvas',
+        'device': 'fake-device',
+        'display': 'fake-display',
+        'fingerprint': 'fake-fingerprint',
+        'hardware': 'fake-hardware',
+        'host': 'fake-host',
+        'id': 'fake-id',
+        'manufacturer': 'Instructure',
+        'model': 'Canvas Phone',
+        'product': 'fake-product',
+        'supported32BitAbis': [],
+        'supported64BitAbis': [],
+        'supportedAbis': [],
+        'tags': 'fake-tags',
+        'type': 'take-types',
+        'isPhysicalDevice': false,
+        'androidId': 'fake-androidId',
+        'displayMetrics': <String, dynamic> {
+          'widthPx': 100.0,
+          'heightPx': 100.0,
+          'xDpi': 100.0,
+          'yDpi': 100.0,
+        },
+        'serialNumber': 'fake-serialNumber',
       };
     }
     return null;
   });
+}
+
+/// Mocks the platform channel used by the path_provider plugin
+void _initPathProvider() {
+  const MethodChannel('plugins.flutter.io/path_provider').setMockMethodCallHandler((MethodCall methodCall) async {
+    if (methodCall.method == 'getApplicationCacheDirectory') {
+      return "fake-path";
+    }
+    return null;
+  });
+}
+
+class TestPlatformWebView extends StatefulWidget {
+  const TestPlatformWebView({
+    Key? key,
+    required this.mockWebViewPlatformController,
+    this.onWebViewPlatformCreated,
+  }) : super(key: key);
+
+  final MockWebViewPlatformController mockWebViewPlatformController;
+  final WebViewPlatformCreatedCallback? onWebViewPlatformCreated;
+
+  @override
+  State<StatefulWidget> createState() => TestPlatformWebViewState();
+}
+
+class TestPlatformWebViewState extends State<TestPlatformWebView> {
+  @override
+  void initState() {
+    super.initState();
+    final WebViewPlatformCreatedCallback? onWebViewPlatformCreated =
+        widget.onWebViewPlatformCreated;
+    if (onWebViewPlatformCreated != null) {
+      onWebViewPlatformCreated(widget.mockWebViewPlatformController);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class FakeWebViewCookieManager extends WebViewCookieManagerPlatform {
+  @override
+  Future<bool> clearCookies() {
+    return Future.value(false);
+  }
+
+  @override
+  Future<void> setCookie(WebViewCookie cookie) {
+    return Future.value(null);
+  }
 }

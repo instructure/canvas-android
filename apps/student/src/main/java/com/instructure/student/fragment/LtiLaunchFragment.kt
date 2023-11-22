@@ -17,7 +17,6 @@
 
 package com.instructure.student.fragment
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
@@ -230,9 +230,9 @@ class LtiLaunchFragment : ParentFragment() {
             return LtiLaunchFragment().withArgs(route.argsWithContext)
         }
 
-        fun routeLtiLaunchFragment(context: Context, canvasContext: CanvasContext?, url: String) {
-            val args = makeLTIBundle(URLDecoder.decode(url, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
+        fun routeLtiLaunchFragment(activity: FragmentActivity, canvasContext: CanvasContext?, url: String) {
+            val args = makeLTIBundle(URLDecoder.decode(url, "utf-8"), activity.getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(activity, Route(LtiLaunchFragment::class.java, canvasContext, args))
         }
     }
 }

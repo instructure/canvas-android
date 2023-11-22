@@ -23,10 +23,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.webkit.CookieManager
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.apis.AttendanceAPI
@@ -165,7 +162,7 @@ class AttendanceListFragment : BaseSyncFragment<
             override fun onAvatarClicked(model: Attendance?, position: Int) {
                 if(model != null && mCanvasContext.id != 0L) {
                     val bundle = StudentContextFragment.makeBundle(model.studentId, mCanvasContext.id, true)
-                    RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
+                    RouteMatcher.route(requireActivity(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
                 }
             }
         })
@@ -206,8 +203,11 @@ class AttendanceListFragment : BaseSyncFragment<
         // Tried this headless without adding to the root view but it ended up loading faster when the view exists in the view group.
         CookieManager.getInstance().acceptCookie()
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
-        webView.settings.javaScriptEnabled = true
-        webView.settings.useWideViewPort = true
+        webView.settings.apply {
+            javaScriptEnabled = true
+            useWideViewPort = true
+            domStorageEnabled = true
+        }
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object: WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {

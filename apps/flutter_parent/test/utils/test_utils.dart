@@ -54,19 +54,15 @@ double _getScreenHeightOffset(WidgetTester tester, ScreenVerticalLocation locati
 Future<void> ensureVisibleByScrolling(
   Finder finder,
   WidgetTester widgetTester, {
-  ScreenVerticalLocation scrollFrom,
+  required ScreenVerticalLocation scrollFrom,
   Offset scrollBy = const Offset(0, -50),
   int maxScrolls = 100,
 }) async {
-  assert(finder != null);
-  assert(scrollFrom != null);
-  assert(scrollBy != null);
-  assert(maxScrolls != null);
 
   final scrollFromY = _getScreenHeightOffset(widgetTester, scrollFrom);
   final gesture = await widgetTester.startGesture(Offset(0, scrollFromY));
 
-  Widget foundWidget;
+  Widget? foundWidget;
 
   for (var i = 0; i < maxScrolls; ++i) {
     await gesture.moveBy(scrollBy);

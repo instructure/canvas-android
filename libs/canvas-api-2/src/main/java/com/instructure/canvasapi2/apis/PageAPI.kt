@@ -24,29 +24,66 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.postmodels.PagePostBodyWrapper
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
 object PageAPI {
 
-    internal interface PagesInterface {
+    interface PagesInterface {
         @GET("{contextId}/pages?sort=title&order=asc")
         fun getFirstPagePages(
                 @Path("contextId") contextId: Long): Call<List<Page>>
 
+        @GET("{contextType}/{contextId}/pages?sort=title&order=asc")
+        suspend fun getFirstPagePages(
+            @Path("contextId") contextId: Long, @Path("contextType") contextType: String, @Tag params: RestParams
+        ): DataResult<List<Page>>
+
+        @GET("{contextType}/{contextId}/pages?sort=title&order=asc&include[]=body")
+        suspend fun getFirstPagePagesWithBody(
+            @Path("contextId") contextId: Long, @Path("contextType") contextType: String, @Tag params: RestParams
+        ): DataResult<List<Page>>
+
         @GET
         fun getNextPagePagesList(
-                @Url nextURL: String): Call<List<Page>>
+            @Url nextURL: String
+        ): Call<List<Page>>
+
+        @GET
+        suspend fun getNextPagePagesList(
+            @Url nextURL: String, @Tag params: RestParams
+        ): DataResult<List<Page>>
 
         @GET("{contextId}/pages/{pageId}")
         fun getDetailedPage(
                 @Path("contextId") contextId: Long,
                 @Path("pageId") pageId: String): Call<Page>
 
+        @GET("courses/{contextId}/pages/{pageId}")
+        suspend fun getDetailedPage(@Path("contextId") contextId: Long,
+                                           @Path("pageId") pageId: String,
+                                           @Tag params: RestParams): DataResult<Page>
+
+        @GET("{contextType}/{contextId}/pages/{pageId}")
+        suspend fun getDetailedPage(
+            @Path("contextType") contextType: String,
+            @Path("contextId") contextId: Long,
+            @Path("pageId") pageId: String,
+            @Tag params: RestParams
+        ): DataResult<Page>
+
         @GET("{contextId}/front_page")
         fun getFrontPage(
                 @Path("contextId") contextId: Long): Call<Page>
+
+        @GET("{contextType}/{contextId}/front_page")
+        suspend fun getFrontPage(
+            @Path("contextType") contextType: String,
+            @Path("contextId") contextId: Long,
+            @Tag params: RestParams
+        ): DataResult<Page>
 
         @PUT("{contextId}/pages/{pageUrl}")
         fun editPage(

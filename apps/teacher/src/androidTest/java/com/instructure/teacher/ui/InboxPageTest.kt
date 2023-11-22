@@ -83,6 +83,7 @@ class InboxPageTest: TeacherTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun archiveMultipleConversations() {
         val data = createInitialData()
+        val isTablet = isTabletDevice()
 
         val conversation1 = data.addConversation(
             senderId = data.students.first().id,
@@ -103,6 +104,7 @@ class InboxPageTest: TeacherTest() {
         inboxPage.assertConversationNotDisplayed(conversation2.subject!!)
         inboxPage.assertEditToolbarIs(ViewMatchers.Visibility.GONE)
 
+        if(!isTablet) inboxPage.refresh()
         inboxPage.filterMessageScope("Archived")
         inboxPage.assertConversationDisplayed(conversation1.subject!!)
         inboxPage.assertConversationDisplayed(conversation2.subject!!)
