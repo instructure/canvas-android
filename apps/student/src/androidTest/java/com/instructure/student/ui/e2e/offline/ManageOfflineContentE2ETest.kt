@@ -48,7 +48,6 @@ class ManageOfflineContentE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
-        val testAnnouncement = data.announcementsList[0]
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -185,8 +184,8 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that both of the seeded courses are displayed as a selectable item in the Manage Offline Content page.")
         manageOfflineContentPage.assertCourseCountWithMatcher(2)
 
-        Log.d(STEP_TAG, "Click on the 'Sync' button.")
-        manageOfflineContentPage.clickOnSyncButton()
+        Log.d(STEP_TAG, "Click on the 'Sync' button and confirm sync.")
+        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
         dashboardPage.waitForRender()
