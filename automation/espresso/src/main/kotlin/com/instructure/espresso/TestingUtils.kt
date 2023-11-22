@@ -62,8 +62,8 @@ fun retry(
             return
         } catch (e: Throwable) {
             e.printStackTrace()
+            Thread.sleep(delay)
         }
-        Thread.sleep(delay)
     }
     block()
 }
@@ -82,9 +82,9 @@ fun retryWithIncreasingDelay(
             return
         } catch (e: Throwable) {
             e.printStackTrace()
+            Thread.sleep(currentDelay)
+            currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
         }
-        Thread.sleep(currentDelay)
-        currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
     }
     block()
 }
