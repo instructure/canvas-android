@@ -63,7 +63,28 @@ fun retry(
         } catch (e: Throwable) {
             e.printStackTrace()
         }
-        Thread.sleep(3000)
+        Thread.sleep(delay)
+    }
+    block()
+}
+
+fun retryWithIncreasingDelay(
+    times: Int = 3,
+    initialDelay: Long = 100,
+    maxDelay: Long = 1000,
+    factor: Double = 2.0,
+    block: () -> Unit
+) {
+    var currentDelay = initialDelay
+    repeat(times - 1) {
+        try {
+            block()
+            return
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+        Thread.sleep(currentDelay)
+        currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
     }
     block()
 }

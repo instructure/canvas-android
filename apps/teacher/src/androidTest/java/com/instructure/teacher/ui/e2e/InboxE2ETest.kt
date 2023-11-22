@@ -10,6 +10,7 @@ import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.retry
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -376,11 +377,11 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.filterMessageScope("Inbox")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
-        retry(times = 10, delay = 3000) {
-            Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
-            inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
-            inboxPage.clickMarkAsRead()
+        Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
+        inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
+        inboxPage.clickMarkAsRead()
 
+        retry(times = 10, delay = 3000) {
             Log.d(STEP_TAG, "Assert that '${seedConversation3[0].subject}' conversation is read.")
             inboxPage.assertUnreadMarkerVisibility(seedConversation3[0].subject, ViewMatchers.Visibility.GONE)
         }
@@ -391,7 +392,7 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that both of the conversation are displayed in the 'STARRED' scope.")
         inboxPage.filterMessageScope("Starred")
 
-        retry(times = 10, delay = 3000) {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
             inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
             inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
         }

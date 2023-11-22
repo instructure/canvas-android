@@ -26,6 +26,7 @@ import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.retry
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -124,12 +125,13 @@ class InboxE2ETest: StudentTest() {
         inboxPage.filterInbox("Inbox")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
-        retry(times = 10, delay = 3000) {
-            Log.d(STEP_TAG, "Select the conversations (${seededConversation.subject} and star it." +
-                    "Assert that the selected number of conversations on the toolbar is 1 and the conversation is starred.")
-            inboxPage.selectConversations(listOf(seededConversation.subject))
-            inboxPage.assertSelectedConversationNumber("1")
-            inboxPage.clickUnstar()
+        Log.d(STEP_TAG, "Select the conversations (${seededConversation.subject} and star it." +
+                "Assert that the selected number of conversations on the toolbar is 1 and the conversation is starred.")
+        inboxPage.selectConversations(listOf(seededConversation.subject))
+        inboxPage.assertSelectedConversationNumber("1")
+        inboxPage.clickUnstar()
+
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
             inboxPage.assertConversationNotStarred(seededConversation.subject)
         }
 
@@ -162,10 +164,11 @@ class InboxE2ETest: StudentTest() {
         inboxPage.clickStar()
         inboxPage.assertConversationStarred(seededConversation.subject)
 
-        retry(times = 10, delay = 3000) {
-            Log.d(STEP_TAG, "Select the conversation. Unarchive it, and assert that it has not displayed in the 'ARCHIVED' scope.")
-            inboxPage.selectConversations(listOf(seededConversation.subject))
-            inboxPage.clickUnArchive()
+        Log.d(STEP_TAG, "Select the conversation. Unarchive it, and assert that it has not displayed in the 'ARCHIVED' scope.")
+        inboxPage.selectConversations(listOf(seededConversation.subject))
+        inboxPage.clickUnArchive()
+
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
             inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         }
 
