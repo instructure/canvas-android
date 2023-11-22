@@ -19,6 +19,7 @@ package com.instructure.student.navigation
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
@@ -33,5 +34,9 @@ class StudentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
 
     override fun openMedia(url: String) {
         RouteMatcher.openMedia(activity, url)
+    }
+
+    override fun routeExternally(url: String) {
+        RouteMatcher.route(activity, InternalWebviewFragment.makeRoute(url, url, false, ""))
     }
 }
