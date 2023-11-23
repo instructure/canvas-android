@@ -60,6 +60,7 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.hasPermissions
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.student.R
 import com.instructure.student.activity.VideoViewActivity
@@ -381,7 +382,12 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions, Navigati
         }
 
         onMainThread {
-            LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
+            try {
+                LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(owner), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
+            } catch (e: Exception) {
+                toast(R.string.unexpectedErrorOpeningFile)
+                onMediaLoadingComplete()
+            }
         }
     }
 
