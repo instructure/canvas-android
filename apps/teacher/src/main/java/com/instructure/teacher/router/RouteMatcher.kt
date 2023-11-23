@@ -51,6 +51,7 @@ import com.instructure.teacher.activities.*
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
@@ -80,6 +81,45 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java))
+
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"),
+                ModuleProgressionFragment::class.java
+            )
+        )
 
         routes.add(Route(courseOrGroup("/:course_id/assignments"), AssignmentListFragment::class.java))
         routes.add(
@@ -145,6 +185,7 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(ViewHtmlFragment::class.java)
         fullscreenFragments.add(EditDashboardFragment::class.java)
         fullscreenFragments.add(CourseBrowserFragment::class.java)
+        fullscreenFragments.add(ModuleProgressionFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)

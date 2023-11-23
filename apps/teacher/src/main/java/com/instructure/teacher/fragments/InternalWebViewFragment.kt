@@ -52,6 +52,8 @@ open class InternalWebViewFragment : BaseFragment() {
     var darkToolbar: Boolean by BooleanArg()
     private var shouldAuthenticate: Boolean by BooleanArg(key = AUTHENTICATE)
     var shouldRouteInternally: Boolean by BooleanArg(key = SHOULD_ROUTE_INTERNALLY, default = true)
+    private var navButtonClose: Boolean by BooleanArg(key = NAV_BUTTON_CLOSE, default = true)
+    private var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, default = true)
 
     private var shouldLoadUrl = true
     private var mSessionAuthJob: Job? = null
@@ -134,17 +136,24 @@ open class InternalWebViewFragment : BaseFragment() {
             }
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
-                loading?.setGone()
+                loading.setGone()
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) {
-                loading?.setVisible()
+                loading.setVisible()
             }
 
-            override fun canRouteInternallyDelegate(url: String): Boolean = shouldRouteInternally && RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
+            override fun canRouteInternallyDelegate(url: String): Boolean = shouldRouteInternally
+                    && shouldRouteIfUrlIsTheSame(url)
+                    && RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
 
             override fun routeInternallyCallback(url: String) {
                 RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
+            }
+
+            private fun shouldRouteIfUrlIsTheSame(url: String): Boolean {
+                val sameUrl = this@InternalWebViewFragment.url.contains(url)
+                return !sameUrl || allowRoutingTheSameUrlInternally
             }
         }
 
@@ -157,9 +166,15 @@ open class InternalWebViewFragment : BaseFragment() {
     }
 
     open fun setupToolbar(courseColor: Int) {
-        toolbar.setupCloseButton {
+        val closeAction = {
             shouldCloseFragment = true
             activity?.onBackPressed()
+        }
+
+        if (navButtonClose) {
+            toolbar.setupCloseButton { closeAction() }
+        } else {
+            toolbar.setupAsBackButton { closeAction() }
         }
 
         if(darkToolbar) {
@@ -239,6 +254,8 @@ open class InternalWebViewFragment : BaseFragment() {
         const val DARK_TOOLBAR = "darkToolbar"
         const val AUTHENTICATE = "authenticate"
         private const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
+        private const val NAV_BUTTON_CLOSE = "navButtonClose"
+        private const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
 
         fun newInstance(url: String) = InternalWebViewFragment().apply {
             this.url = url
@@ -262,6 +279,8 @@ open class InternalWebViewFragment : BaseFragment() {
             darkToolbar = args.getBoolean(DARK_TOOLBAR)
             shouldAuthenticate = args.getBoolean(AUTHENTICATE)
             shouldRouteInternally = args.getBoolean(SHOULD_ROUTE_INTERNALLY)
+            navButtonClose = args.getBoolean(NAV_BUTTON_CLOSE)
+            allowRoutingTheSameUrlInternally = args.getBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
         }
 
         @JvmOverloads
@@ -274,7 +293,16 @@ open class InternalWebViewFragment : BaseFragment() {
             return args
         }
 
-        fun makeBundle(url: String, title: String, darkToolbar: Boolean = false, html: String = "", shouldRouteInternally: Boolean = true, shouldAuthenticate: Boolean): Bundle {
+        fun makeBundle(
+            url: String,
+            title: String,
+            darkToolbar: Boolean = false,
+            html: String = "",
+            shouldRouteInternally: Boolean = true,
+            navButtonClose: Boolean = true,
+            allowRoutingTheSameUrlInternally: Boolean = true,
+            shouldAuthenticate: Boolean
+        ): Bundle {
             val args = Bundle()
             args.putString(URL, url)
             args.putString(TITLE, title)
@@ -282,6 +310,8 @@ open class InternalWebViewFragment : BaseFragment() {
             args.putBoolean(DARK_TOOLBAR, darkToolbar)
             args.putBoolean(AUTHENTICATE, shouldAuthenticate)
             args.putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
+            args.putBoolean(NAV_BUTTON_CLOSE, navButtonClose)
+            args.putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
             return args
         }
     }

@@ -24,17 +24,14 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.License
 import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.utils.tryOrNull
-import com.instructure.interactions.router.Route
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
 import com.instructure.teacher.features.modules.list.ModuleListEvent
-import com.instructure.teacher.fragments.*
+import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
@@ -104,40 +101,7 @@ class ModuleListView(
     }
 
     fun routeToModuleItem(item: ModuleItem, canvasContext: CanvasContext) {
-        val route = when (tryOrNull { ModuleItem.Type.valueOf(item.type!!) }) {
-            ModuleItem.Type.Assignment -> {
-                val args = AssignmentDetailsFragment.makeBundle(item.contentId)
-                Route(null, AssignmentDetailsFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.Discussion -> {
-                DiscussionRouterFragment.makeRoute(canvasContext, item.contentId)
-            }
-            ModuleItem.Type.Page -> {
-                val args = PageDetailsFragment.makeBundle(item.pageUrl!!)
-                Route(null, PageDetailsFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.Quiz -> {
-                val args = QuizDetailsFragment.makeBundle(item.contentId)
-                Route(null, QuizDetailsFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.ExternalUrl -> {
-                val args = InternalWebViewFragment.makeBundle(
-                    item.externalUrl.orEmpty(),
-                    item.title.orEmpty()
-                )
-                Route(null, InternalWebViewFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.ExternalTool -> {
-                val args = LtiLaunchFragment.makeBundle(
-                    canvasContext = canvasContext,
-                    url = item.url.orEmpty(),
-                    title = item.title.orEmpty(),
-                    sessionLessLaunch = true
-                )
-                Route(null, LtiLaunchFragment::class.java, canvasContext, args)
-            }
-            else -> null
-        }
+        val route = ModuleProgressionFragment.makeRoute(canvasContext, item.id)
         RouteMatcher.route(activity as FragmentActivity, route)
     }
 
