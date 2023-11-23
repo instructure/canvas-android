@@ -74,7 +74,7 @@ class LoginViewModel @Inject constructor(
     // We need to wait for the user to be set in ApiPrefs
     private suspend fun waitForUser() {
         repeat(30) {
-            if (ApiPrefs.user != null) return
+            if (apiPrefs.user != null) return
             delay(100)
         }
     }
