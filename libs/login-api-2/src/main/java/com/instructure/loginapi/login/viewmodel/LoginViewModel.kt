@@ -24,10 +24,10 @@ import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,6 +49,7 @@ class LoginViewModel @Inject constructor(
     fun checkLogin(checkToken: Boolean, checkElementary: Boolean): LiveData<Event<LoginResultAction>> {
         viewModelScope.launch {
             try {
+                waitForUser()
                 val offlineEnabled = featureFlagProvider.offlineEnabled()
                 val offlineLogin = offlineEnabled && !networkStateProvider.isOnline()
                 if (checkToken && !offlineLogin) {
@@ -68,6 +69,14 @@ class LoginViewModel @Inject constructor(
             }
         }
         return loginResultAction
+    }
+
+    // We need to wait for the user to be set in ApiPrefs
+    private suspend fun waitForUser() {
+        repeat(30) {
+            if (ApiPrefs.user != null) return
+            delay(100)
+        }
     }
 
     private suspend fun checkTermsAcceptance(canvasForElementary: Boolean, offlineLogin: Boolean = false) {
