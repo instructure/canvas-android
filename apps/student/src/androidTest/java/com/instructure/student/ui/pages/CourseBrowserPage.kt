@@ -189,11 +189,6 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         minimizeToolbar()
         scrollRecyclerView(R.id.courseBrowserRecyclerView, matcher)
     }
-
-    //OfflineMethod
-    fun assertMenuDisabled(menuLabel: String) {
-        onView(withText(menuLabel) + withId(R.id.label))
-    }
 }
 
 // Custom action to scroll to top of SwipeRefreshLayoutAppBar
