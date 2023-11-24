@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages
 
 import android.view.View
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
@@ -43,6 +44,7 @@ import com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.not
 
 open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
@@ -147,11 +149,11 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
 
     //OfflineMethod
     fun assertTabDisabled(tabTitle: String) {
-        onView(allOf(isAssignableFrom(LinearLayout::class.java), withChild(withId(R.id.label) + withText(tabTitle)))).scrollTo().check(matches(not(isEnabled())))
+        onView(allOf(anyOf(isAssignableFrom(LinearLayout::class.java), isAssignableFrom(ConstraintLayout::class.java)), withChild(anyOf(withId(R.id.label), withId(R.id.unsupportedLabel)) + withText(tabTitle)))).scrollTo().check(matches(not(isEnabled())))
     }
 
     fun assertTabEnabled(tabTitle: String) {
-        onView(allOf(isAssignableFrom(LinearLayout::class.java), withChild(withId(R.id.label) + withText(tabTitle)))).scrollTo().check(matches(isEnabled()))
+        onView(allOf(anyOf(isAssignableFrom(LinearLayout::class.java), isAssignableFrom(ConstraintLayout::class.java)), withChild(anyOf(withId(R.id.label), withId(R.id.unsupportedLabel)) + withText(tabTitle)))).scrollTo().check(matches(isEnabled()))
     }
 
     // Minimizes toolbar if it is not already minimized
