@@ -20,7 +20,6 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -61,7 +60,9 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         dashboardPage.openGlobalManageOfflineContentPage()
 
         Log.d(STEP_TAG, "Select the entire '${course1.name}' course for sync. Click on the 'Sync' button.")
-        manageOfflineContentPage.changeItemSelectionState(course1.name)
+        Log.d(STEP_TAG, "Expand '${course1.name}' course. Select only the 'Announcements' of the '${course1.name}' course. Click on the 'Sync' button and confirm the sync process.")
+        manageOfflineContentPage.expandCollapseItem(course1.name)
+        manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
@@ -83,9 +84,9 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         sleep(5000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
         dashboardPage.selectCourse(course1)
 
-        Log.d(STEP_TAG, "Assert that the 'Google Drive' and 'Collaborations' tabs are disabled because they aren't supported in offline mode, but the rest of the tabs are enabled because the whole course has been synced.")
-        var enabledTabs = arrayOf("Announcements", "Discussions", "Grades", "People", "Syllabus", "BigBlueButton")
-        var disabledTabs = arrayOf("Google Drive", "Collaborations")
+        Log.d(STEP_TAG, "Assert that only the 'Announcements' tab is enabled because it is the only one which has been synced, and assert that all the other, previously synced tabs are disabled, because they weren't synced now.")
+        var enabledTabs = arrayOf("Announcements")
+        var disabledTabs = arrayOf("Discussions", "Grades", "People", "Syllabus", "BigBlueButton")
         assertTabsEnabled(courseBrowserPage, enabledTabs)
         assertTabsDisabled(courseBrowserPage, disabledTabs)
 
@@ -98,12 +99,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         dashboardPage.openGlobalManageOfflineContentPage()
 
         Log.d(STEP_TAG, "Deselect the entire '${course1.name}' course for sync.")
-        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
         manageOfflineContentPage.changeItemSelectionState(course1.name)
-
-        Log.d(STEP_TAG, "Expand '${course1.name}' course. Select only the 'Announcements' of the '${course1.name}' course. Click on the 'Sync' button and confirm the sync process.")
-        manageOfflineContentPage.expandCollapseItem(course1.name)
-        manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
@@ -114,23 +110,19 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
         dashboardPage.waitForSyncProgressStartingNotification()
         dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
-        sleep(5000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
-        device.waitForIdle()
-        device.waitForWindowUpdate(null, 10000)
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         OfflineTestUtils.turnOffConnectionViaADB()
-        dashboardPage.waitForNetworkOff()
 
         Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
-        sleep(5000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
+        sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
         device.waitForIdle()
         device.waitForWindowUpdate(null, 10000)
         dashboardPage.selectCourse(course1)
 
-        Log.d(STEP_TAG, "Assert that only the 'Announcements' tab is enabled because it is the only one which has been synced, and assert that all the other, previously synced tabs are disabled, because they weren't synced now.")
-        enabledTabs = arrayOf("Announcements")
-        disabledTabs = arrayOf("Discussions", "Grades", "People", "Syllabus", "BigBlueButton")
+        Log.d(STEP_TAG, "Assert that the 'Google Drive' and 'Collaborations' tabs are disabled because they aren't supported in offline mode, but the rest of the tabs are enabled because the whole course has been synced.")
+        enabledTabs = arrayOf("Announcements", "Discussions", "Grades", "People", "Syllabus", "BigBlueButton")
+        disabledTabs = arrayOf("Google Drive", "Collaborations")
         assertTabsEnabled(courseBrowserPage, enabledTabs)
         assertTabsDisabled(courseBrowserPage, disabledTabs)
     }
