@@ -111,8 +111,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Odstrani predhodnega uporabnika</string>
     <string name="accountDomainFooter">Ali svoje šole ne najdete? Poskusite vnesti poln naslov URL šole.</string>
-    <string name="accountDomainFooterLink">Za pomoč tapnite tukaj.</string>
-
+    <string name="accountDomainFooterLoginHelp">Za pomoč pri prijavi tapnite tukaj.</string>
     <string name="login_noInternetConnectionTitle">Brez internetne povezave.</string>
     <string name="login_noInternetConnectionMessage">Pri tem dejanju je potrebna internetna povezava.</string>
     <string name="empty_feedback">Za pošiljanje povratnih informacij sta potrebna predmet in opis.</string>

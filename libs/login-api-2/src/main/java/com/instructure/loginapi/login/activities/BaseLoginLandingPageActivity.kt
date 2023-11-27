@@ -225,7 +225,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         ColorUtils.colorIt(color, canvasLogo)
 
         // App Name/Type. Will not be present in all layout versions
-        canvasWordmark.imageTintList = ColorStateList.valueOf(color)
         appDescriptionType.setText(appTypeName())
 
         ViewStyler.themeStatusBar(this@BaseLoginLandingPageActivity)

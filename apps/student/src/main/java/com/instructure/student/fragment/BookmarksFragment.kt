@@ -223,7 +223,7 @@ class BookmarksFragment : ParentFragment() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(R.string.bookmarkDelete)
         builder.setMessage(bookmark.name)
-        builder.setPositiveButton(android.R.string.yes) { _, _ ->
+        builder.setPositiveButton(android.R.string.ok) { _, _ ->
             BookmarkManager.deleteBookmark(bookmark.id, object : StatusCallback<Bookmark>() {
                 override fun onResponse(response: retrofit2.Response<Bookmark>, linkHeaders: LinkHeaders, type: ApiType) {
                     if (isAdded && response.code() == 200) {
@@ -239,7 +239,7 @@ class BookmarksFragment : ParentFragment() {
             })
         }
 
-        builder.setNegativeButton(android.R.string.no, null)
+        builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
         dialog.show()
     }

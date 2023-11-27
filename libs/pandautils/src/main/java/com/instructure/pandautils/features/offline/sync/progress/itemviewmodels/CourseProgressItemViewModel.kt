@@ -52,11 +52,11 @@ data class CourseProgressItemViewModel(
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
     private var courseSyncProgressEntity: CourseSyncProgressEntity? = null
-    private val fileProgresses = mutableMapOf<String, FileSyncProgressEntity>()
+    private val fileProgresses = mutableMapOf<Long, FileSyncProgressEntity>()
 
     private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> {
         it.forEach { fileProgress ->
-            fileProgresses[fileProgress.workerId] = fileProgress
+            fileProgresses[fileProgress.fileId] = fileProgress
         }
 
         updateProgress()

@@ -1705,4 +1705,7 @@ class AppLocalizations {
 
   String get aboutLogoSemanticsLabel =>
       Intl.message('Instructure logo', desc: 'Semantics label for the Instructure logo on the about page');
+
+  String get needToEnablePermission =>
+      Intl.message('You need to enable exact alarm permission for this action', desc: 'Error message when the user tries to set a reminder without the permission');
 }

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Urungkan</string>
+    <string name="rce_contentDescription_redo">Ulangi</string>
+    <string name="rce_contentDescription_bold">Format Tebal</string>
+    <string name="rce_contentDescription_italic">Format Miring</string>
+    <string name="rce_contentDescription_strikethrough">Garis Coret Tengah</string>
+    <string name="rce_contentDescription_underline">Garis bawah</string>
+    <string name="rce_contentDescription_format_text_color">Format Warna Teks</string>
+    <string name="rce_contentDescription_border_color">Format Warna Batas Teks</string>
+    <string name="rce_contentDescription_indent_increase">Tambah Indentasi</string>
+    <string name="rce_contentDescription_indent_decrease">Kurangi Indentasi</string>
+    <string name="rce_contentDescription_align_left">Selaraskan ke Kiri</string>
+    <string name="rce_contentDescription_align_right">Selaraskan ke Kanan</string>
+    <string name="rce_contentDescription_align_center">Selaraskan ke Tengah</string>
+    <string name="rce_contentDescription_insert_bullets">Masukkan Daftar Bullet</string>
+    <string name="rce_contentDescription_insert_numbers">Masukkan Daftar Bernomor</string>
+    <string name="rce_contentDescription_insert_photo">Masukkan Foto</string>
+    <string name="rce_contentDescription_upload_photo">Unggah Foto Dari Perangkat</string>
+    <string name="rce_contentDescription_insert_link">Masukkan Tautan</string>
+    <string name="rce_contentDescription_block_quote">Blokir Kutipan</string>
+
+    <string name="rce_contentDescription_color_none">Warna Tidak Ada</string>
+    <string name="rce_contentDescription_color_white">Warna Putih</string>
+    <string name="rce_contentDescription_color_black">Warna Hitam</string>
+    <string name="rce_contentDescription_color_blue">Warna Biru</string>
+    <string name="rce_contentDescription_color_red">Warna Merah</string>
+    <string name="rce_contentDescription_color_green">Warna Hijau</string>
+    <string name="rce_contentDescription_color_gray">Warna Abu-Abu</string>
+    <string name="rce_contentDescription_color_magenta">Warna Magenta</string>
+    <string name="rce_contentDescription_color_cyan">Warna Sian</string>
+    <string name="rce_contentDescription_color_orange">Warna Oranye</string>
+    <string name="rce_contentDescription_color_yellow">Warna Kuning</string>
+    <string name="rce_contentDescription_color_purple">Warna Ungu</string>
+
+    <string name="rce_editTextUrlHint">Tautan</string>
+    <string name="rce_editTextALTHint">Teks</string>
+    <string name="rce_dialogDone">Selesai</string>
+    <string name="rce_dialogCancel">Batal</string>
+    <string name="rce_insertLink">Masukkan Tautan</string>
+    <string name="rce_insertImage">Masukkan Gambar</string>
+    <string name="rce_uploadImage">Unggah Gambar</string>
+
+    <string name="rce_done">Selesai</string>
+    <string name="rce_cancel">Batal</string>
+    <string name="rce_exit">Keluar</string>
+    <string name="rce_dialog_exit_title">Keluar Pengeditan Tugas?</string>
+    <string name="rce_dialog_exit_message">Anda yakin mau keluar? Segala data yang belum disimpan akan hilang.</string>
+    <string name="rce_empty_message">Pesan</string>
+    <string name="rce_empty_description">Tambah deskripsi</string>
+    <string name="rce_scrollInstructions">Gulir untuk semua alat pengeditan</string>
+
+    <string name="rce_emptyUrlError">Url tidak boleh kosong</string>
+    <string name="rce_httpNotAllowed">Hanya menerima url https</string>
+    <string name="rce_dialogAltText">Tambah teks alternatif untuk screen reader</string>
+</resources>

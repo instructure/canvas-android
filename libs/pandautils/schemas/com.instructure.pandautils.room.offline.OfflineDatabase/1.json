@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f792290082e6cf2f70533d168ec4901b",
+    "identityHash": "8fa86dcf6c28df2a7e77dee7a0e3c7c6",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -4709,7 +4709,7 @@
       },
       {
         "tableName": "ModuleCompletionRequirementEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `minScore` REAL NOT NULL, `maxScore` REAL NOT NULL, `completed` INTEGER, `moduleId` INTEGER NOT NULL, FOREIGN KEY(`moduleId`) REFERENCES `ModuleObjectEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `minScore` REAL NOT NULL, `maxScore` REAL NOT NULL, `completed` INTEGER, `moduleId` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -4746,6 +4746,12 @@
             "columnName": "moduleId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -4757,11 +4763,11 @@
         "indices": [],
         "foreignKeys": [
           {
-            "table": "ModuleObjectEntity",
+            "table": "CourseEntity",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "moduleId"
+              "courseId"
             ],
             "referencedColumns": [
               "id"
@@ -5437,12 +5443,12 @@
       },
       {
         "tableName": "FileSyncProgressEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`workerId` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `additionalFile` INTEGER NOT NULL, `progressState` TEXT NOT NULL, `fileId` INTEGER NOT NULL, PRIMARY KEY(`workerId`), FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `courseId` INTEGER NOT NULL, `fileName` TEXT NOT NULL, `progress` INTEGER NOT NULL, `fileSize` INTEGER NOT NULL, `additionalFile` INTEGER NOT NULL, `progressState` TEXT NOT NULL, FOREIGN KEY(`courseId`) REFERENCES `CourseSyncProgressEntity`(`courseId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "workerId",
-            "columnName": "workerId",
-            "affinity": "TEXT",
+            "fieldPath": "fileId",
+            "columnName": "fileId",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -5480,18 +5486,12 @@
             "columnName": "progressState",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "fileId",
-            "columnName": "fileId",
-            "affinity": "INTEGER",
-            "notNull": true
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "workerId"
+            "fileId"
           ]
         },
         "indices": [],
@@ -5513,7 +5513,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f792290082e6cf2f70533d168ec4901b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8fa86dcf6c28df2a7e77dee7a0e3c7c6')"
     ]
   }
 }

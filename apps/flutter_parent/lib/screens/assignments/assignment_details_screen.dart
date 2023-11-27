@@ -26,9 +26,14 @@ import 'package:flutter_parent/utils/common_widgets/web_view/html_description_ti
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../../utils/veneers/flutter_snackbar_veneer.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -71,6 +76,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       );
 
   Future<Reminder?> _loadReminder() => _interactor.loadReminder(widget.assignmentId);
+
+  PermissionHandler get _permissionHandler => locator<PermissionHandler>();
 
   @override
   Widget build(BuildContext context) {
@@ -312,6 +319,15 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
       DateTime? date;
       TimeOfDay? time;
+
+      final permissionResult = await _permissionHandler.checkPermissionStatus(Permission.scheduleExactAlarm);
+      if (permissionResult != PermissionStatus.granted) {
+        final permissionGranted = await locator<NotificationUtil>().requestScheduleExactAlarmPermission();
+        if (permissionGranted != true) {
+          locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).needToEnablePermission);
+          return;
+        }
+      }
 
       date = await showDatePicker(
         context: context,

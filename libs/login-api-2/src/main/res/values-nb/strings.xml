@@ -111,8 +111,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Fjerne forrige bruker</string>
     <string name="accountDomainFooter">Finner du ikke skolen din? Prøv å skrive hele skolens URL.</string>
-    <string name="accountDomainFooterLink">Trykk her for hjelp.</string>
-
+    <string name="accountDomainFooterLoginHelp">Trykk her for innloggingshjelp.</string>
     <string name="login_noInternetConnectionTitle">Ingen Internett-tilkobling</string>
     <string name="login_noInternetConnectionMessage">Denne handlingen krever Internett-tilkobling.</string>
     <string name="empty_feedback">Et tittel og en beskrivelse må sende inn tilbakemelding.</string>

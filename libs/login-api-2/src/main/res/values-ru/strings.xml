@@ -109,8 +109,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Удалить предыдущего пользователя</string>
     <string name="accountDomainFooter">Не удается найти свое учебное заведение? Попробуйте набрать полный адрес URL учебного заведения.</string>
-    <string name="accountDomainFooterLink">Прикоснитесь здесь для получения помощи.</string>
-
+    <string name="accountDomainFooterLoginHelp">Нажмите здесь для получения справки по входу в систему.</string>
     <string name="login_noInternetConnectionTitle">Нет интернет-соединения</string>
     <string name="login_noInternetConnectionMessage">Для выполнения этого действия необходимо интернет-соединение.</string>
     <string name="empty_feedback">Для отправки отзыва необходимо указать тему и дать описание.</string>

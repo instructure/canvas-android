@@ -16,14 +16,14 @@
  */
 package com.instructure.student.ui.e2e.offline.utils
 
-import androidx.test.espresso.matcher.ViewMatchers.withChild
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.plus
 import com.instructure.student.R
@@ -31,16 +31,22 @@ import org.hamcrest.CoreMatchers.allOf
 
 object OfflineTestUtils {
 
+    private const val ENABLE_WIFI_COMMAND: String = "svc wifi enable"
+    private const val DISABLE_WIFI_COMMAND: String = "svc wifi disable"
+
+    private const val ENABLE_MOBILE_DATA_COMMAND: String = "svc data enable"
+    private const val DISABLE_MOBILE_DATA_COMMAND: String = "svc data disable"
+
     fun turnOffConnectionViaADB() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.executeShellCommand("svc wifi disable")
-        device.executeShellCommand("svc data disable")
+        device.executeShellCommand(DISABLE_WIFI_COMMAND)
+        device.executeShellCommand(DISABLE_MOBILE_DATA_COMMAND)
     }
 
     fun turnOnConnectionViaADB() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.executeShellCommand("svc wifi enable")
-        device.executeShellCommand("svc data enable")
+        device.executeShellCommand(ENABLE_WIFI_COMMAND)
+        device.executeShellCommand(ENABLE_MOBILE_DATA_COMMAND)
     }
 
     fun turnOffConnectionOnUI() {
@@ -79,5 +85,15 @@ object OfflineTestUtils {
                 withChild(withId(R.id.offlineIndicatorText) + withText(R.string.offline))
             )
         ).assertDisplayed()
+    }
+
+    fun assertNoInternetConnectionDialog() {
+        waitForView(withId(R.id.alertTitle) + withText(R.string.noInternetConnectionTitle)).assertDisplayed()
+    }
+
+    fun dismissNoInternetConnectionDialog() {
+        onView(withText(android.R.string.ok) + isDescendantOfA(withId(R.id.buttonPanel) +
+                hasSibling(withId(R.id.topPanel) +
+                        hasDescendant(withText(R.string.noInternetConnectionTitle))))).click()
     }
 }

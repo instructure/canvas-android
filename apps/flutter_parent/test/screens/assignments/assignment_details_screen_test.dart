@@ -38,10 +38,12 @@ import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
@@ -59,6 +61,7 @@ void main() {
 
   final interactor = MockAssignmentDetailsInteractor();
   final convoInteractor = MockCreateConversationInteractor();
+  final permissionHandler = MockPermissionHandler();
 
   final student = User((b) => b
     ..id = studentId
@@ -85,6 +88,7 @@ void main() {
     locator.registerFactory<CreateConversationInteractor>(() => convoInteractor);
     locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
     locator.registerFactory<QuickNav>(() => QuickNav());
+    locator.registerFactory<PermissionHandler>(() => permissionHandler);
   });
 
   setUp(() {
@@ -506,6 +510,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder without due date', (tester) async {
+    when(permissionHandler.checkPermissionStatus(Permission.scheduleExactAlarm)).thenAnswer((realInvocation) => Future.value(PermissionStatus.granted));
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
 
@@ -546,6 +551,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder with due date', (tester) async {
+    when(permissionHandler.checkPermissionStatus(Permission.scheduleExactAlarm)).thenAnswer((realInvocation) => Future.value(PermissionStatus.granted));
     final date = DateTime.now().add(Duration(hours: 1));
     when(interactor.loadAssignmentDetails(any, any, any, any))
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..dueAt = date)));
