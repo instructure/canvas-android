@@ -15,6 +15,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retry
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -71,12 +72,15 @@ class TodoE2ETest: StudentTest() {
         dashboardPage.clickTodoTab()
 
         Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed and ${borderDateAssignment.name} is displayed because it's 7 days away from now..")
-        todoPage.assertAssignmentDisplayed(testAssignment)
-        todoPage.assertAssignmentDisplayed(borderDateAssignment)
-
         Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed and ${tooFarAwayQuiz.title} quiz is not displayed because it's end date is more than a week away..")
-        todoPage.assertQuizDisplayed(quiz)
-        todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
+        retry(times = 5, delay = 3000, block = {
+            todoPage.assertAssignmentDisplayed(testAssignment)
+            todoPage.assertAssignmentDisplayed(borderDateAssignment)
+            todoPage.assertQuizDisplayed(quiz)
+            todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
+        }, catchBlock = {
+            refresh()
+        })
 
         Log.d(PREPARATION_TAG,"Submit ${testAssignment.name} assignment for ${student.name} student.")
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(

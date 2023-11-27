@@ -33,12 +33,17 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retry
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.seedAssignmentSubmission
+import com.instructure.teacher.ui.utils.seedAssignments
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -153,7 +158,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         assignmentSubmissionListPage.clickFilterDialogOk()
 
         Log.d(STEP_TAG,"Assert that there is one submission displayed.")
-        assignmentSubmissionListPage.assertHasSubmission(1)
+        retry(times  = 5, delay = 3000, block = { assignmentSubmissionListPage.assertHasSubmission(1) }, catchBlock =  { refresh() })
 
         Log.d(STEP_TAG, "Navigate back assignment's details page.")
         Espresso.pressBack()

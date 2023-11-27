@@ -356,9 +356,9 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that the conversation is displayed in the 'STARRED' scope.")
         inboxPage.filterInbox("Starred")
 
-        retry(times = 10, delay = 3000) {
+        retry(times = 10, delay = 3000, block = {
             inboxPage.assertConversationDisplayed(seededConversation.subject)
-        }
+        })
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'STARRED' scope because it has became unstarred.")
         inboxPage.swipeConversationLeft(seededConversation)

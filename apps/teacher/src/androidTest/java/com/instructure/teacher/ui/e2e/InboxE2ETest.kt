@@ -222,10 +222,10 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Select 'ARCHIVED' scope and assert that '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
         inboxPage.filterMessageScope("Archived")
 
-        retry(times = 10, delay = 3000) {
+        retry(times = 10, delay = 3000, block = {
             refresh()
             inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
-        }
+        })
 
         Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation and unarchive it." +
                 "Assert that the selected number of conversation on the toolbar is 1 and '${seedConversation2[0].subject}' conversation is not displayed in the 'ARCHIVED' scope.")
@@ -381,10 +381,10 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
         inboxPage.clickMarkAsRead()
 
-        retry(times = 10, delay = 3000) {
+        retry(times = 10, delay = 3000, block = {
             Log.d(STEP_TAG, "Assert that '${seedConversation3[0].subject}' conversation is read.")
             inboxPage.assertUnreadMarkerVisibility(seedConversation3[0].subject, ViewMatchers.Visibility.GONE)
-        }
+        })
 
         Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
         inboxPage.clickStar()
