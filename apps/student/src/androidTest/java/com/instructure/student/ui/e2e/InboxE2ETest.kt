@@ -131,7 +131,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertSelectedConversationNumber("1")
         inboxPage.clickUnstar()
 
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
             inboxPage.assertConversationNotStarred(seededConversation.subject)
         }
 
@@ -168,7 +168,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.selectConversations(listOf(seededConversation.subject))
         inboxPage.clickUnArchive()
 
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
             inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         }
 

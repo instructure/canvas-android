@@ -54,6 +54,7 @@ fun getCurrentDateInCanvasFormat(): String {
 fun retry(
     times: Int = 3,
     delay: Long = 1000,
+    catchBlock: (() -> Unit)? = null,
     block: () -> Unit
 ) {
     repeat(times - 1) {
@@ -63,6 +64,7 @@ fun retry(
         } catch (e: Throwable) {
             e.printStackTrace()
             Thread.sleep(delay)
+            catchBlock?.invoke()
         }
     }
     block()
@@ -73,6 +75,7 @@ fun retryWithIncreasingDelay(
     initialDelay: Long = 100,
     maxDelay: Long = 1000,
     factor: Double = 2.0,
+    catchBlock: (() -> Unit)? = null,
     block: () -> Unit
 ) {
     var currentDelay = initialDelay
@@ -84,6 +87,7 @@ fun retryWithIncreasingDelay(
             e.printStackTrace()
             Thread.sleep(currentDelay)
             currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
+            catchBlock?.invoke()
         }
     }
     block()
