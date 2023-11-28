@@ -498,11 +498,11 @@ abstract class CanvasTest : InstructureTestingContract {
 
         private var configChecked = false
 
-        val ENABLE_WIFI_COMMAND: String = "svc wifi enable"
-        val DISABLE_WIFI_COMMAND: String = "svc wifi disable"
+        private const val ENABLE_WIFI_COMMAND: String = "svc wifi enable"
+        private const val DISABLE_WIFI_COMMAND: String = "svc wifi disable"
 
-        val ENABLE_MOBILE_DATA_COMMAND: String = "svc data enable"
-        val DISABLE_MOBILE_DATA_COMMAND: String = "svc data disable"
+        private const val ENABLE_MOBILE_DATA_COMMAND: String = "svc data enable"
+        private const val DISABLE_MOBILE_DATA_COMMAND: String = "svc data disable"
 
         private fun getDeviceOrientation(context: Context): Int {
             val configuration = context.resources.configuration
