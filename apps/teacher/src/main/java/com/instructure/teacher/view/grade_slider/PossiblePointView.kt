@@ -48,11 +48,11 @@ class PossiblePointView @JvmOverloads constructor(
         strokeWidth = 4.toPx.toFloat()
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas?.drawLine(anchorRect.left.toFloat(), anchorRect.bottom.toFloat() - 16.toPx, anchorRect.left.toFloat(), anchorRect.bottom.toFloat() - 8.toPx, linePaint)
-        canvas?.drawText(label, anchorRect.left.toFloat(), anchorRect.bottom.toFloat() + 16.toPx, textPaint)
+        canvas.drawLine(anchorRect.left.toFloat(), anchorRect.bottom.toFloat() - 16.toPx, anchorRect.left.toFloat(), anchorRect.bottom.toFloat() - 8.toPx, linePaint)
+        canvas.drawText(label, anchorRect.left.toFloat(), anchorRect.bottom.toFloat() + 16.toPx, textPaint)
     }
 
     fun showPossiblePoint(anchorRect: Rect, label: String) {
