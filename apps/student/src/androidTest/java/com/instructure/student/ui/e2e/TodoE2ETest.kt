@@ -73,14 +73,12 @@ class TodoE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed and ${borderDateAssignment.name} is displayed because it's 7 days away from now..")
         Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed and ${tooFarAwayQuiz.title} quiz is not displayed because it's end date is more than a week away..")
-        retry(times = 5, delay = 3000, block = {
+        retry(times = 5, delay = 3000, catchBlock = { refresh() } ) {
             todoPage.assertAssignmentDisplayed(testAssignment)
             todoPage.assertAssignmentDisplayed(borderDateAssignment)
             todoPage.assertQuizDisplayed(quiz)
             todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
-        }, catchBlock = {
-            refresh()
-        })
+        }
 
         Log.d(PREPARATION_TAG,"Submit ${testAssignment.name} assignment for ${student.name} student.")
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(

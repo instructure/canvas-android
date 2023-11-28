@@ -392,7 +392,7 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that both of the conversation are displayed in the 'STARRED' scope.")
         inboxPage.filterMessageScope("Starred")
 
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
             inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
             inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
         }

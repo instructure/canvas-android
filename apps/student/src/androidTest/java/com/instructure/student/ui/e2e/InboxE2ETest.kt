@@ -131,7 +131,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertSelectedConversationNumber("1")
         inboxPage.clickUnstar()
 
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
             inboxPage.assertConversationNotStarred(seededConversation.subject)
         }
 
@@ -168,7 +168,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.selectConversations(listOf(seededConversation.subject))
         inboxPage.clickUnArchive()
 
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
             inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         }
 
@@ -356,9 +356,9 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that the conversation is displayed in the 'STARRED' scope.")
         inboxPage.filterInbox("Starred")
 
-        retry(times = 10, delay = 3000, block = {
+        retry(times = 10, delay = 3000) {
             inboxPage.assertConversationDisplayed(seededConversation.subject)
-        })
+        }
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'STARRED' scope because it has became unstarred.")
         inboxPage.swipeConversationLeft(seededConversation)

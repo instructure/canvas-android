@@ -158,7 +158,9 @@ class SpeedGraderE2ETest : TeacherTest() {
         assignmentSubmissionListPage.clickFilterDialogOk()
 
         Log.d(STEP_TAG,"Assert that there is one submission displayed.")
-        retry(times  = 5, delay = 3000, block = { assignmentSubmissionListPage.assertHasSubmission(1) }, catchBlock =  { refresh() })
+        retry(times  = 5, delay = 3000, catchBlock =  { refresh() }) {
+            assignmentSubmissionListPage.assertHasSubmission(1)
+        }
 
         Log.d(STEP_TAG, "Navigate back assignment's details page.")
         Espresso.pressBack()
