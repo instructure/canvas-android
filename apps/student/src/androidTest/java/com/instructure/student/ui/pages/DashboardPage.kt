@@ -355,6 +355,22 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     //OfflineMethod
+    fun waitForNetworkComeBack() {
+        assertDisplaysCourses()
+        retry(times = 5, delay = 2000) {
+            assertOfflineIndicatorNotDisplayed()
+        }
+    }
+
+    //OfflineMethod
+    fun waitForNetworkOff() {
+        assertDisplaysCourses()
+        retry(times = 5, delay = 2000) {
+            assertOfflineIndicatorDisplayed()
+        }
+    }
+
+    //OfflineMethod
     fun assertCourseOfflineSyncIconVisible(courseName: String) {
         waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }

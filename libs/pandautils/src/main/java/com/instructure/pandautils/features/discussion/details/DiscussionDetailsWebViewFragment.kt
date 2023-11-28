@@ -96,7 +96,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
             override fun routeInternallyCallback(url: String) {
                 if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
-                    webViewRouter.routeInternally(url)
+                    webViewRouter.routeExternally(url)
                 }
             }
 
