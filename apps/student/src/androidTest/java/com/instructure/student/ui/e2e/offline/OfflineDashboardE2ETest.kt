@@ -75,7 +75,7 @@ class OfflineDashboardE2ETest : StudentTest() {
         dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
-        OfflineTestUtils.turnOffConnectionViaADB()
+        turnOffConnectionViaADB()
         device.waitForIdle()
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
@@ -130,7 +130,7 @@ class OfflineDashboardE2ETest : StudentTest() {
         dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
-        OfflineTestUtils.turnOffConnectionViaADB()
+        turnOffConnectionViaADB()
         device.waitForIdle()
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
@@ -157,7 +157,7 @@ class OfflineDashboardE2ETest : StudentTest() {
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
-        OfflineTestUtils.turnOnConnectionViaADB()
+        turnOnConnectionViaADB()
     }
 
 }

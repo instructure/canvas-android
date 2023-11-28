@@ -25,7 +25,6 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.pages.CourseBrowserPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -75,7 +74,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
-        OfflineTestUtils.turnOffConnectionViaADB()
+        turnOffConnectionViaADB()
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
@@ -92,7 +91,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.Turn back on the Wi-Fi and Mobile Data on the device, and wait for it to come online.")
         Espresso.pressBack()
-        OfflineTestUtils.turnOnConnectionViaADB()
+        turnOnConnectionViaADB()
         dashboardPage.waitForNetworkComeBack()
 
         Log.d(STEP_TAG, "Open global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
@@ -112,7 +111,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
-        OfflineTestUtils.turnOffConnectionViaADB()
+        turnOffConnectionViaADB()
 
         Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
         sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
@@ -130,7 +129,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
-        OfflineTestUtils.turnOnConnectionViaADB()
+        turnOnConnectionViaADB()
     }
 
     private fun assertTabsEnabled(courseBrowserPage: CourseBrowserPage, tabs: Array<String>) {
