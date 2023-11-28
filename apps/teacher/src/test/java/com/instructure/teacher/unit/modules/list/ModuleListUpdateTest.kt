@@ -13,13 +13,17 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.unit.modules
+package com.instructure.teacher.unit.modules.list
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.teacher.features.modules.list.*
+import com.instructure.teacher.features.modules.list.ModuleListEffect
+import com.instructure.teacher.features.modules.list.ModuleListEvent
+import com.instructure.teacher.features.modules.list.ModuleListModel
+import com.instructure.teacher.features.modules.list.ModuleListPageData
+import com.instructure.teacher.features.modules.list.ModuleListUpdate
 import com.instructure.teacher.unit.utils.matchesEffects
 import com.instructure.teacher.unit.utils.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers

@@ -20,10 +20,8 @@
             android:id="@+id/itemPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:initialPosition="@{viewModel.data.initialPosition}"
             app:layout_constraintBottom_toTopOf="@id/previous"
             app:layout_constraintTop_toTopOf="parent"
-            app:moduleFragments="@{viewModel.data.moduleItemFragments}"
             app:onPageChangeListener="@{viewModel.data.onPageChangeListener}" />
 
         <Button
@@ -78,6 +76,12 @@
             app:emptyViewState="@{viewModel.state}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.state.isSuccessState ? View.VISIBLE : View.INVISIBLE}"
+            app:constraint_referenced_ids="itemPager, divider, previous, moduleName, next" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

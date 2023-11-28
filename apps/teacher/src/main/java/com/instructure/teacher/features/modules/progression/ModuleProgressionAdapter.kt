@@ -21,15 +21,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 
-class ModuleProgressionAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
-
-    private val fragments = mutableListOf<Fragment>()
-
-    fun addFragments(fragment: List<Fragment>) {
-        fragments.addAll(fragment)
-        notifyDataSetChanged()
-    }
-
+class ModuleProgressionAdapter(
+    fragmentManager: FragmentManager,
+    private val fragments: List<Fragment>
+) : FragmentStatePagerAdapter(fragmentManager) {
     override fun getCount() = fragments.size
 
     override fun getItem(position: Int) = fragments[position]

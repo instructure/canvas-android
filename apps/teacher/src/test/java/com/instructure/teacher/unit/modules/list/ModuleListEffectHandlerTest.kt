@@ -13,27 +13,44 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.unit.modules
+package com.instructure.teacher.unit.modules.list
 
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.License
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.teacher.features.modules.list.*
+import com.instructure.teacher.features.modules.list.CollapsedModulesStore
+import com.instructure.teacher.features.modules.list.ModuleListEffect
+import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
+import com.instructure.teacher.features.modules.list.ModuleListEvent
+import com.instructure.teacher.features.modules.list.ModuleListPageData
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.Ordering
+import io.mockk.coEvery
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.unmockkObject
+import io.mockk.unmockkStatic
+import io.mockk.verify
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
-import okhttp3.Headers
 import okhttp3.Headers.Companion.toHeaders
 import org.junit.Assert
 import org.junit.Before

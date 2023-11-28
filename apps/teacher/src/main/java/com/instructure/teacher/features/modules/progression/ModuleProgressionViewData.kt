@@ -19,13 +19,12 @@ package com.instructure.teacher.features.modules.progression
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.instructure.teacher.BR
 
 data class ModuleProgressionViewData(
-    val moduleItemFragments: List<Fragment>,
+    val moduleItems: List<ModuleItemViewData>,
     val moduleNames: List<String>,
     val initialPosition: Int
 ) : BaseObservable() {
@@ -45,5 +44,17 @@ data class ModuleProgressionViewData(
     fun isPreviousVisible(): Boolean = currentPosition > 0
 
     @Bindable
-    fun isNextVisible(): Boolean = currentPosition < moduleItemFragments.lastIndex
+    fun isNextVisible(): Boolean = currentPosition < moduleItems.lastIndex
+}
+
+sealed class ModuleProgressionAction {
+    data class RedirectToAsset(val asset: ModuleItemAsset) : ModuleProgressionAction()
+}
+
+sealed class ModuleItemViewData {
+    data class Page(val pageUrl: String) : ModuleItemViewData()
+    data class Assignment(val assignmentId: Long) : ModuleItemViewData()
+    data class Discussion(val isDiscussionRedesignEnabled: Boolean, val discussionTopicHeaderId: Long) : ModuleItemViewData()
+    data class Quiz(val quizId: Long) : ModuleItemViewData()
+    data class External(val url: String, val title: String) : ModuleItemViewData()
 }

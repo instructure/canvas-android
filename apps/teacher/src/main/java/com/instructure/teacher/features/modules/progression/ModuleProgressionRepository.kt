@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.depaginate
 
@@ -35,17 +36,22 @@ class ModuleProgressionRepository(
 
         return modules.map {
             if (it.itemCount != it.items.size) {
-                it.copy(items = getAllModuleItems(canvasContext, it.id, false))
+                it.copy(items = getAllModuleItems(canvasContext, it.id))
             } else {
                 it
             }
         }
     }
 
-    private suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): List<ModuleItem> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+    private suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long): List<ModuleItem> {
+        val params = RestParams(usePerPageQueryParam = true)
         return moduleApi.getFirstPageModuleItems(canvasContext.apiContext(), canvasContext.id, moduleId, params).depaginate {
             moduleApi.getNextPageModuleItemList(it, params)
         }.dataOrThrow
+    }
+
+    suspend fun getModuleItemSequence(canvasContext: CanvasContext, assetType: String, assetId: String): ModuleItemSequence {
+        val params = RestParams(usePerPageQueryParam = true)
+        return moduleApi.getModuleItemSequence(canvasContext.apiContext(), canvasContext.id, assetType, assetId, params).dataOrThrow
     }
 }
