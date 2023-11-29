@@ -320,7 +320,8 @@ dependencies {
     implementation Libs.SQLDELIGHT
 
     /* Qr Code */
-    implementation Libs.JOURNEY_ZXING
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 
     /* AAC */
     implementation Libs.VIEW_MODEL

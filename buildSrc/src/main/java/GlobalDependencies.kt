@@ -101,6 +101,7 @@ object Libs {
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
+    const val JOURNEY_ZXING_CORE = "com.google.zxing:core:3.5.2"
 
     /* Dependency Inejction */
     const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
