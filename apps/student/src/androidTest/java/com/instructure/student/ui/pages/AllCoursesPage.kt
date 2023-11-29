@@ -34,7 +34,7 @@ import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 
-class EditDashboardPage : BasePage(R.id.editDashboardPage) {
+class AllCoursesPage : BasePage(R.id.editDashboardPage) {
 
     fun assertCourseDisplayed(course: Course) {
         val itemMatcher = allOf(withText(containsString(course.name)), withId(R.id.title))

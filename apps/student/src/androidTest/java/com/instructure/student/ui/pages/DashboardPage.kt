@@ -272,7 +272,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
     }
 
-    fun clickEditDashboard() {
+    fun openAllCoursesPage() {
         onView(withId(R.id.editDashboardTextView)).scrollTo().click()
     }
 

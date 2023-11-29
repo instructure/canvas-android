@@ -93,10 +93,10 @@ class DashboardInteractionTest : StudentTest() {
         dashboardPage.assertCourseNotShown(nonFavorite)
 
         dashboardPage.editFavorites()
-        editDashboardPage.assertCourseDisplayed(nonFavorite)
-        editDashboardPage.assertCourseNotFavorited(nonFavorite)
-        editDashboardPage.favoriteCourse(nonFavorite)
-        editDashboardPage.assertCourseFavorited(nonFavorite)
+        allCoursesPage.assertCourseDisplayed(nonFavorite)
+        allCoursesPage.assertCourseNotFavorited(nonFavorite)
+        allCoursesPage.favoriteCourse(nonFavorite)
+        allCoursesPage.assertCourseFavorited(nonFavorite)
 
         Espresso.pressBack()
 
@@ -115,10 +115,10 @@ class DashboardInteractionTest : StudentTest() {
         dashboardPage.assertDisplaysCourse(favorite)
 
         dashboardPage.editFavorites()
-        editDashboardPage.assertCourseDisplayed(favorite)
-        editDashboardPage.assertCourseFavorited(favorite)
-        editDashboardPage.unfavoriteCourse(favorite)
-        editDashboardPage.assertCourseNotFavorited(favorite)
+        allCoursesPage.assertCourseDisplayed(favorite)
+        allCoursesPage.assertCourseFavorited(favorite)
+        allCoursesPage.unfavoriteCourse(favorite)
+        allCoursesPage.assertCourseNotFavorited(favorite)
 
         Espresso.pressBack()
 
@@ -137,9 +137,9 @@ class DashboardInteractionTest : StudentTest() {
         data.courses.values.forEach { dashboardPage.assertDisplaysCourse(it) }
 
         dashboardPage.editFavorites()
-        toFavorite.forEach { editDashboardPage.assertCourseNotFavorited(it) }
-        editDashboardPage.selectAllCourses()
-        toFavorite.forEach { editDashboardPage.assertCourseFavorited(it) }
+        toFavorite.forEach { allCoursesPage.assertCourseNotFavorited(it) }
+        allCoursesPage.selectAllCourses()
+        toFavorite.forEach { allCoursesPage.assertCourseFavorited(it) }
 
         Espresso.pressBack()
 
@@ -156,9 +156,9 @@ class DashboardInteractionTest : StudentTest() {
         toRemove.forEach { dashboardPage.assertDisplaysCourse(it) }
 
         dashboardPage.editFavorites()
-        toRemove.forEach { editDashboardPage.assertCourseFavorited(it) }
-        editDashboardPage.unselectAllCourses()
-        toRemove.forEach { editDashboardPage.assertCourseNotFavorited(it) }
+        toRemove.forEach { allCoursesPage.assertCourseFavorited(it) }
+        allCoursesPage.unselectAllCourses()
+        toRemove.forEach { allCoursesPage.assertCourseNotFavorited(it) }
 
         Espresso.pressBack()
 
