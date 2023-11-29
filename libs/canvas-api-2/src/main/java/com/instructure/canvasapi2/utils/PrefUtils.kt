@@ -390,7 +390,8 @@ class ColorPref(@ColorRes defaultValue: Int, keyName: String? = null) : Pref<Int
 class GsonPref<T>(
         private val klazz: Class<T>,
         defaultValue: T? = null,
-        keyName: String? = null
+        private val keyName: String? = null,
+        private val async: Boolean = true
 ) : Pref<T?>(defaultValue, keyName) {
 
     private var cachedObject: T? = null
@@ -412,6 +413,14 @@ class GsonPref<T>(
             putString(key, Gson().toJson(value) ?: return this)
         }
         return this
+    }
+
+    override fun setValue(thisRef: PrefManager, property: KProperty<*>, value: T?) {
+        if (async) {
+            super.setValue(thisRef, property, value)
+        } else {
+            thisRef.editor.setValue(keyName ?: property.name, value).commit()
+        }
     }
 }
 

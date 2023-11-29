@@ -65,7 +65,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     /* Non-masquerading Prefs */
     internal var originalDomain by StringPref("", "domain")
-    private var originalUser: User? by GsonPref(User::class.java, null, "user")
+    private var originalUser: User? by GsonPref(User::class.java, null, "user", false)
 
     var selectedLocale by StringPref(ACCOUNT_LOCALE)
 
@@ -84,7 +84,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var isMasqueradingFromQRCode by BooleanPref()
     var masqueradeId by LongPref(-1L)
     internal var masqueradeDomain by StringPref()
-    internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user")
+    internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user", false)
 
     // Used to determine if a student can generate a pairing code, saved during splash
     var canGeneratePairingCode by NBooleanPref()
