@@ -122,6 +122,7 @@ class ModuleProgressionViewModel @Inject constructor(
             val url = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build().toString()
             ModuleItemViewData.External(url, item.title.orEmpty())
         }
+        "File" -> ModuleItemViewData.File(item.url.orEmpty())
         else -> null
     }
 }

@@ -15,13 +15,9 @@
  */
 package com.instructure.teacher.unit.modules.list
 
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.models.License
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
@@ -83,39 +79,6 @@ class ModuleListEffectHandlerTest : Assert() {
         connection.accept(ModuleListEffect.ShowModuleItemDetailView(moduleItem, course))
         verify(timeout = 100) { view.routeToModuleItem(moduleItem, course) }
         confirmVerified(view)
-    }
-
-    @Test
-    fun `LoadFileInfo loads file data and calls routeToFile on the view`() {
-        val item = ModuleItem(id = 123L, type = "File", url = "fake url")
-        val course = Course(name = "Course 101")
-
-        val file: FileFolder = mockk()
-        val licenses = arrayListOf(License("1", "Fake license", "fake url"))
-
-        mockkObject(FileFolderManager, FeaturesManager)
-
-        every { FileFolderManager.getFileFolderFromUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(file)
-        }
-
-        every { FeaturesManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(listOf("usage_rights_required"))
-        }
-
-        every { FileFolderManager.getCourseFileLicensesAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(licenses)
-        }
-
-        connection.accept(ModuleListEffect.LoadFileInfo(item, course))
-        verify(timeout = 100, ordering = Ordering.SEQUENCE) {
-            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), true))
-            view.routeToFile(course, file, true, licenses)
-            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), false))
-        }
-        confirmVerified(view)
-
-        unmockkObject(FileFolderManager, FeaturesManager)
     }
 
     @Test

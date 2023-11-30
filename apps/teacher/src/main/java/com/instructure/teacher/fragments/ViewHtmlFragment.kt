@@ -33,6 +33,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import org.greenrobot.eventbus.EventBus
 import java.io.File
@@ -43,6 +44,7 @@ class ViewHtmlFragment : InternalWebViewFragment() {
     private val downloadUrl by NullableStringArg(key = DOWNLOAD_URL)
     private val toolbarColor by IntArg(key = TOOLBAR_COLOR)
     private val editableFile: EditableFile? by NullableParcelableArg(key = EDITABLE_FILE)
+    private val isInModulesPager by BooleanArg(key = IS_IN_MODULES_PAGER)
 
     private var job: WeaveJob? = null
 
@@ -100,7 +102,10 @@ class ViewHtmlFragment : InternalWebViewFragment() {
             }
         }
 
-        if(isTablet && toolbarColor != 0) {
+        if (isInModulesPager) {
+            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.white))
+        } else if (isTablet && toolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.white))
         } else {
             super.setupToolbar(courseColor)
@@ -116,6 +121,7 @@ class ViewHtmlFragment : InternalWebViewFragment() {
         private const val DOWNLOAD_URL = "downloadUrl"
         private const val TOOLBAR_COLOR = "toolbarColor"
         private const val EDITABLE_FILE = "editableFile"
+        private const val IS_IN_MODULES_PAGER = "isInModulesPager"
 
         fun makeAuthSessionBundle(
             canvasContext: CanvasContext,
@@ -139,12 +145,14 @@ class ViewHtmlFragment : InternalWebViewFragment() {
             downloadUrl: String,
             title: String,
             toolbarColor: Int = 0,
-            editableFile: EditableFile? = null
+            editableFile: EditableFile? = null,
+            isInModulesPager:Boolean = false
         ) = Bundle().apply {
             putString(DOWNLOAD_URL, downloadUrl)
             putString(Const.TITLE, title)
             putInt(TOOLBAR_COLOR, toolbarColor)
             putParcelable(EDITABLE_FILE, editableFile)
+            putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
         }
 
         @JvmStatic fun newInstance(bundle: Bundle) = ViewHtmlFragment().apply { arguments = bundle }

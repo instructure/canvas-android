@@ -20,6 +20,8 @@ package com.instructure.teacher.unit.modules.progression
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
@@ -96,5 +98,22 @@ class ModuleProgressionRepositoryTest {
         coEvery { moduleApi.getFirstPageModulesWithItems(any(), any(), any()) } returns DataResult.Fail()
 
         repository.getModulesWithItems(CanvasContext.emptyCourseContext(1L))
+    }
+
+    @Test
+    fun `Get module item sequence successfully returns data`() = runTest {
+        val expected = ModuleItemSequence(items = arrayOf(ModuleItemWrapper(current = ModuleItem(id = 1L))))
+
+        coEvery { moduleApi.getModuleItemSequence(any(), any(), any(), any(), any()) } returns DataResult.Success(expected)
+
+        val result = repository.getModuleItemSequence(CanvasContext.emptyCourseContext(1L), "", "")
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `Get module item sequence failure throws exception`() = runTest {
+        coEvery { moduleApi.getModuleItemSequence(any(), any(), any(), any(), any()) } returns DataResult.Fail()
+
+        repository.getModuleItemSequence(CanvasContext.emptyCourseContext(1L), "", "")
     }
 }

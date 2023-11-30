@@ -49,6 +49,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     private var mUrl by StringArg()
     private var mToolbarColor by IntArg()
     private var mEditableFile: EditableFile? by NullableParcelableArg()
+    private var isInModulesPager by BooleanArg()
 
     private val mPdfConfiguration: PdfConfiguration = PdfConfiguration.Builder().scrollDirection(PageScrollDirection.VERTICAL).build()
 
@@ -101,7 +102,10 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
             }
         }
 
-        if(isTablet && mToolbarColor != 0) {
+        if (isInModulesPager) {
+            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+        } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
@@ -139,12 +143,22 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     }
 
     companion object {
-        @JvmStatic @JvmOverloads fun newInstance(url: String, toolbarColor: Int = 0, editableFile: EditableFile? = null) = ViewPdfFragment().apply {
+        @JvmStatic
+        @JvmOverloads
+        fun newInstance(
+            url: String,
+            toolbarColor: Int = 0,
+            editableFile: EditableFile? = null,
+            isInModulesPager: Boolean = false
+        ) = ViewPdfFragment().apply {
             mUrl = url
             mToolbarColor = toolbarColor
             mEditableFile = editableFile
+            this.isInModulesPager = isInModulesPager
         }
-        @JvmStatic fun newInstance(bundle: Bundle) = ViewPdfFragment().apply { arguments = bundle }
+
+        @JvmStatic
+        fun newInstance(bundle: Bundle) = ViewPdfFragment().apply { arguments = bundle }
     }
 }
 

@@ -21,21 +21,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.models.License
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
-import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
 import com.instructure.teacher.features.modules.list.ModuleListEvent
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
-import com.instructure.teacher.utils.viewMedia
 import com.spotify.mobius.functions.Consumer
 
 class ModuleListView(
@@ -103,33 +97,6 @@ class ModuleListView(
     fun routeToModuleItem(item: ModuleItem, canvasContext: CanvasContext) {
         val route = ModuleProgressionFragment.makeRoute(canvasContext, item.id)
         RouteMatcher.route(activity as FragmentActivity, route)
-    }
-
-    fun routeToFile(
-        canvasContext: CanvasContext,
-        file: FileFolder,
-        requiresUsageRights: Boolean,
-        licenses: List<License>
-    ) {
-        val editableFile = EditableFile(
-            file = file,
-            usageRights = requiresUsageRights,
-            licenses = licenses,
-            courseColor = canvasContext.backgroundColor,
-            canvasContext = canvasContext,
-            iconRes = R.drawable.ic_document
-        )
-        viewMedia(
-            activity = activity as FragmentActivity,
-            filename = file.displayName.orEmpty(),
-            contentType = file.contentType.orEmpty(),
-            url = file.url,
-            thumbnailUrl = file.thumbnailUrl,
-            displayName = file.displayName,
-            iconRes = R.drawable.ic_document,
-            toolbarColor = canvasContext.backgroundColor,
-            editableFile = editableFile
-        )
     }
 
     fun scrollToItem(itemId: Long) {

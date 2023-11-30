@@ -17,14 +17,18 @@
 package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.Job
@@ -39,9 +43,6 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, M
         when (effect) {
             is ModuleListEffect.ShowModuleItemDetailView -> {
                 view?.routeToModuleItem(effect.moduleItem, effect.canvasContext)
-            }
-            is ModuleListEffect.LoadFileInfo -> {
-                loadFileInfo(effect.item, effect.canvasContext)
             }
             is ModuleListEffect.LoadNextPage -> loadNextPage(
                 effect.canvasContext,
@@ -68,29 +69,6 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, M
                 CanvasRestAdapter.clearCacheUrls("""/modules""")
             }
             consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(ids, false))
-        }
-    }
-
-    private fun loadFileInfo(item: ModuleItem, canvasContext: CanvasContext) {
-        fileInfoJob?.cancel()
-        fileInfoJob = launch {
-            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), true))
-            tryOrNull {
-                // Get the file
-                val file: FileFolder = FileFolderManager.getFileFolderFromUrlAsync(item.url!!, false).awaitOrThrow()
-
-                // Get usage rights and licenses, if applicable
-                val features = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, false).awaitOrThrow()
-
-                val requiresUsageRights = features.contains("usage_rights_required")
-                val licenses = if (requiresUsageRights) {
-                    FileFolderManager.getCourseFileLicensesAsync(canvasContext.id).awaitOrThrow()
-                } else {
-                    emptyList<License>()
-                }
-                view?.routeToFile(canvasContext, file, requiresUsageRights, licenses)
-            }
-            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), false))
         }
     }
 
@@ -180,6 +158,4 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, M
             nextPageUrl = APIHelper.parseLinkHeaderResponse(response.headers()).nextUrl
         )
     }
-
 }
-

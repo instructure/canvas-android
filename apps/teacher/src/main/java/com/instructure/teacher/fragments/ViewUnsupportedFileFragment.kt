@@ -58,6 +58,7 @@ class ViewUnsupportedFileFragment : Fragment() {
     private var mFallbackIcon by IntArg(R.drawable.ic_attachment)
     private var mEditableFile: EditableFile? by NullableParcelableArg()
     private var mToolbarColor by IntArg(0)
+    private var isInModulesPager by BooleanArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_unsupported_file_type, container, false)
@@ -101,7 +102,10 @@ class ViewUnsupportedFileFragment : Fragment() {
             }
         }
 
-        if (isTablet && mToolbarColor != 0) {
+        if (isInModulesPager) {
+            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+        } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
@@ -164,13 +168,14 @@ class ViewUnsupportedFileFragment : Fragment() {
     companion object {
         @JvmOverloads
         fun newInstance(
-                uri: Uri,
-                displayName: String,
-                contentType: String,
-                previewUri: Uri?,
-                @DrawableRes fallbackIcon: Int,
-                toolbarColor: Int = 0,
-                editableFile: EditableFile? = null
+            uri: Uri,
+            displayName: String,
+            contentType: String,
+            previewUri: Uri?,
+            @DrawableRes fallbackIcon: Int,
+            toolbarColor: Int = 0,
+            editableFile: EditableFile? = null,
+            isInModulesPager: Boolean = false
         ) = ViewUnsupportedFileFragment().apply {
             mUri = uri
             mDisplayName = displayName
@@ -179,6 +184,7 @@ class ViewUnsupportedFileFragment : Fragment() {
             mFallbackIcon = fallbackIcon
             mToolbarColor = toolbarColor
             mEditableFile = editableFile
+            this.isInModulesPager = isInModulesPager
         }
 
         fun newInstance(bundle: Bundle) = ViewUnsupportedFileFragment().apply { arguments = bundle }

@@ -55,6 +55,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
     private var mShowToolbar by BooleanArg()
     private var mToolbarColor by IntArg()
     private var mEditableFile: EditableFile? by NullableParcelableArg()
+    private var isInModulesPager by BooleanArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_view_image, container, false)
@@ -96,7 +97,10 @@ class ViewImageFragment : Fragment(), ShareableFile {
             }
         }
 
-        if (isTablet && mToolbarColor != 0) {
+        if (isInModulesPager) {
+            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+        } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
@@ -152,13 +156,22 @@ class ViewImageFragment : Fragment(), ShareableFile {
 
     companion object {
         @JvmOverloads
-        fun newInstance(title: String, uri: Uri, contentType: String, showToolbar: Boolean = true, toolbarColor: Int = 0, editableFile: EditableFile? = null) = ViewImageFragment().apply {
+        fun newInstance(
+            title: String,
+            uri: Uri,
+            contentType: String,
+            showToolbar: Boolean = true,
+            toolbarColor: Int = 0,
+            editableFile: EditableFile? = null,
+            isInModulesPager: Boolean = false
+        ) = ViewImageFragment().apply {
             mTitle = title
             mUri = uri
             mContentType = contentType
             mShowToolbar = showToolbar
             mToolbarColor = toolbarColor
             mEditableFile = editableFile
+            this.isInModulesPager = isInModulesPager
         }
 
         fun newInstance(bundle: Bundle) = ViewImageFragment().apply { arguments = bundle }

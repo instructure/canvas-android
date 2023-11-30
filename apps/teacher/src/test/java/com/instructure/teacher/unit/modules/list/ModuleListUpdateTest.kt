@@ -128,24 +128,6 @@ class ModuleListUpdateTest : Assert() {
     }
 
     @Test
-    fun `ModuleClicked event emits LoadFileInfo effect for files`() {
-        val item = ModuleItem(id = 123L, type = "File")
-        val event = ModuleListEvent.ModuleItemClicked(item.id)
-        val expectedEffect = ModuleListEffect.LoadFileInfo(item, course)
-        val model = initModel.copy(
-            modules = listOf(ModuleObject(items = listOf(item)))
-        )
-        updateSpec
-            .given(model)
-            .whenEvent(event)
-            .then(
-                assertThatNext<ModuleListModel, ModuleListEffect>(
-                    matchesEffects(expectedEffect)
-                )
-            )
-    }
-
-    @Test
     fun `ModuleExpanded event emits MarkModuleExpanded effect`() {
         val moduleId = 123L
         val isExpanded = true

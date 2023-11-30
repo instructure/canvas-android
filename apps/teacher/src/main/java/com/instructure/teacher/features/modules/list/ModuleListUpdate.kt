@@ -53,12 +53,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
             }
             is ModuleListEvent.ModuleItemClicked -> {
                 val item = model.modules.flatMap { it.items }.first { it.id == event.moduleItemId }
-                return if (item.type == "File") {
-                    // We need to grab additional file info from Canvas to know how to route
-                    Next.dispatch(setOf(ModuleListEffect.LoadFileInfo(item, model.course)))
-                } else {
-                    Next.dispatch(setOf(ModuleListEffect.ShowModuleItemDetailView(item, model.course)))
-                }
+                return Next.dispatch(setOf(ModuleListEffect.ShowModuleItemDetailView(item, model.course)))
             }
             is ModuleListEvent.PageLoaded -> {
                 val effects = mutableSetOf<ModuleListEffect>()

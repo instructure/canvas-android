@@ -39,6 +39,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderMediaBinding
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.view.MediaContent
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
@@ -50,6 +51,8 @@ class ViewMediaFragment : Fragment(), ShareableFile {
     private var mContentType by StringArg()
     private var mThumbnailUrl by NullableStringArg()
     private var mDisplayName by NullableStringArg()
+    private var isInModulesPager by BooleanArg()
+    private var toolbarColor by IntArg()
 
     private val mExoAgent get() = ExoAgent.getAgentForUri(mUri)
 
@@ -59,6 +62,21 @@ class ViewMediaFragment : Fragment(), ShareableFile {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.speedGraderMediaPlayerView.findViewById<Toolbar>(R.id.toolbar).setGone()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
+    }
+
+    private fun setupToolbar() = with(binding) {
+        if (isInModulesPager) {
+            toolbar.title = mDisplayName
+            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.white))
+        } else {
+            toolbar.setGone()
+        }
     }
 
     override fun onStart() = with(binding) {
@@ -156,11 +174,22 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
     companion object {
 
-        fun newInstance(media: MediaContent) = ViewMediaFragment().apply {
-            mUri = media.uri
-            mThumbnailUrl = media.thumbnailUrl
-            mContentType = media.contentType!!
-            mDisplayName = media.displayName
+        fun newInstance(media: MediaContent) = newInstance(media.uri, media.thumbnailUrl, media.contentType!!, media.displayName)
+
+        fun newInstance(
+            uri: Uri,
+            thumbnailUrl: String?,
+            contentType: String,
+            displayName: String?,
+            isInModulesPager: Boolean = false,
+            toolbarColor: Int = 0
+        ) = ViewMediaFragment().apply {
+            mUri = uri
+            mThumbnailUrl = thumbnailUrl
+            mContentType = contentType
+            mDisplayName = displayName
+            this.isInModulesPager = isInModulesPager
+            this.toolbarColor = toolbarColor
         }
 
         fun newInstance(bundle: Bundle) = ViewMediaFragment().apply { arguments = bundle }

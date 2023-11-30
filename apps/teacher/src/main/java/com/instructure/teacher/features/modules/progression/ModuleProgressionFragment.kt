@@ -32,6 +32,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.teacher.databinding.FragmentModuleProgressionBinding
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
+import com.instructure.teacher.features.files.details.FileDetailsFragment
 import com.instructure.teacher.fragments.AssignmentDetailsFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
@@ -110,6 +111,10 @@ class ModuleProgressionFragment : Fragment() {
                 navButtonClose = false,
                 allowRoutingTheSameUrlInternally = false
             )
+        )
+
+        is ModuleItemViewData.File -> FileDetailsFragment.newInstance(
+            FileDetailsFragment.makeBundle(viewModel.canvasContext, item.fileUrl)
         )
     }
 
