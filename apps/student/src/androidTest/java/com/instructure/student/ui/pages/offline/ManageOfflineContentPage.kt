@@ -116,11 +116,11 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
     }
 
     fun assertCheckedStateOfItem(itemName: String, state: Int) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)).scrollTo().assertDisplayed()
+        waitForView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName)) + hasCheckedState(state)).scrollTo().assertDisplayed()
     }
 
     fun waitForItemDisappear(itemName: String) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
+        waitForView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
     }
 
     fun assertDisplaysNoCourses() {

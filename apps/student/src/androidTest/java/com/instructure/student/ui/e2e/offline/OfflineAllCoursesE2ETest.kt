@@ -17,8 +17,9 @@
 package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
@@ -31,6 +32,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Test
+import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class OfflineAllCoursesE2ETest : StudentTest() {
@@ -49,10 +51,6 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
         val course3 = data.coursesList[2]
-        val testAnnouncement = data.announcementsList[0]
-
-        Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -61,6 +59,76 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Open the 'All Courses' page and wait for it to be rendered.")
         dashboardPage.openAllCoursesPage()
         allCoursesPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Favourite '${course1.name}' course and assert if it became favourited. Then navigate back to Dashboard page.")
+        allCoursesPage.favoriteCourse(course1.name)
+        allCoursesPage.assertCourseFavorited(course1)
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Open global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
+        dashboardPage.openGlobalManageOfflineContentPage()
+        manageOfflineContentPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state is 'Unchecked'.")
+        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_UNCHECKED)
+        manageOfflineContentPage.assertCheckedStateOfItem(course2.name, MaterialCheckBox.STATE_UNCHECKED)
+
+        Log.d(STEP_TAG, "Select '${course1.name}' and '${course2.name}' courses' checkboxes and Sync them.")
+        manageOfflineContentPage.changeItemSelectionState(course1.name)
+        manageOfflineContentPage.changeItemSelectionState(course2.name)
+        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+
+        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
+        dashboardPage.waitForRender()
+        dashboardPage.waitForSyncProgressDownloadStartedNotification()
+        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
+
+        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
+        dashboardPage.waitForSyncProgressStartingNotification()
+        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
+
+        Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
+        turnOffConnectionViaADB()
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered, and assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
+        dashboardPage.waitForRender()
+        sleep(10000)
+        dashboardPage.assertDisplaysCourse(course1)
+        dashboardPage.assertCourseNotDisplayed(course2)
+        dashboardPage.assertCourseNotDisplayed(course3)
+
+        Log.d(STEP_TAG, "Open the 'All Courses' page and wait for it to be rendered.")
+        dashboardPage.openAllCoursesPage()
+        allCoursesPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the plus 'Note' box is displayed in which warns the user that favouring courses can only be done in online mode.")
+        allCoursesPage.assertOfflineNoteDisplayed()
+
+        Log.d(STEP_TAG, "Dismiss the offline 'Note' box and assert if it's disappear.")
+        allCoursesPage.dismissOfflineNoteBox()
+        allCoursesPage.assertOfflineNoteNotDisplayed()
+
+        Log.d(STEP_TAG, "Assert that the select/unselect all button is not clickable because offline mode does not supports it.")
+        allCoursesPage.assertSelectUnselectAllButtonNotClickable()
+
+        Log.d(STEP_TAG, "Try to unfavorite '${course1.name}' course and assert it does not happened because favoring does not allowed in offline state.")
+        allCoursesPage.unfavoriteCourse(course1.name)
+        allCoursesPage.assertCourseFavorited(course1)
+
+        Log.d(STEP_TAG, "Assert that '${course3.name}' course's details are faded (and they having 0.4 alpha value) and it's offline sync icon is not displayed since it's not synced.")
+        allCoursesPage.assertCourseDetailsAlpha(course3.name, 0.4f)
+        allCoursesPage.assertCourseOfflineSyncButton(course3.name, ViewMatchers.Visibility.GONE)
+
+        Log.d(STEP_TAG, "Assert that '${course1.name}' course's favourite star is faded (and it's having 0.4 alpha value) because favoring is not possible in offline mode," +
+                "the course title and open button are not faded (1.0 alpha value) and the offline sync icon is displayed since the course is synced.")
+        allCoursesPage.assertCourseFavouriteStarAlpha(course1.name, 0.4f)
+        allCoursesPage.assertCourseTitleAlpha(course1.name, 1.0f)
+        allCoursesPage.assertCourseOpenButtonAlpha(course1.name, 1.0f)
+        allCoursesPage.assertCourseOfflineSyncButton(course1.name, ViewMatchers.Visibility.VISIBLE)
+
+        Log.d(STEP_TAG, "Click on '${course1.name}' course and assert if it will navigate the user to the CourseBrowser Page.")
+        allCoursesPage.openCourse(course1.name)
+        courseBrowserPage.assertTitleCorrect(course1)
 
     }
 

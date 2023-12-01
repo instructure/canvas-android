@@ -273,7 +273,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun openAllCoursesPage() {
-        onView(withId(R.id.editDashboardTextView)).scrollTo().click()
+        waitForView(withId(R.id.editDashboardTextView)).scrollTo().click()
     }
 
     fun assertCourseNotDisplayed(course: CourseApiModel) {
