@@ -81,7 +81,8 @@ class FileDetailsFragment : Fragment() {
                 fileData.contentType,
                 fileData.displayName,
                 true,
-                toolbarColor
+                toolbarColor,
+                fileData.editableFile
             )
 
             is FileViewData.Image -> ViewImageFragment.newInstance(

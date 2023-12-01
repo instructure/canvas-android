@@ -29,7 +29,7 @@ class ModuleProgressionRepository(
     private val moduleApi: ModuleAPI.ModuleInterface
 ) {
     suspend fun getModulesWithItems(canvasContext: CanvasContext): List<ModuleObject> {
-        val params = RestParams(usePerPageQueryParam = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         val modules = moduleApi.getFirstPageModulesWithItems(canvasContext.apiContext(), canvasContext.id, params).depaginate {
             moduleApi.getNextPageModuleObjectList(it, params)
         }.dataOrThrow
@@ -44,14 +44,14 @@ class ModuleProgressionRepository(
     }
 
     private suspend fun getAllModuleItems(canvasContext: CanvasContext, moduleId: Long): List<ModuleItem> {
-        val params = RestParams(usePerPageQueryParam = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         return moduleApi.getFirstPageModuleItems(canvasContext.apiContext(), canvasContext.id, moduleId, params).depaginate {
             moduleApi.getNextPageModuleItemList(it, params)
         }.dataOrThrow
     }
 
     suspend fun getModuleItemSequence(canvasContext: CanvasContext, assetType: String, assetId: String): ModuleItemSequence {
-        val params = RestParams(usePerPageQueryParam = true)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
         return moduleApi.getModuleItemSequence(canvasContext.apiContext(), canvasContext.id, assetType, assetId, params).dataOrThrow
     }
 }

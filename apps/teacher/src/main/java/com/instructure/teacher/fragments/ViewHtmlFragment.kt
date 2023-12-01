@@ -70,8 +70,9 @@ class ViewHtmlFragment : InternalWebViewFragment() {
 
         // If returning from editing this file, check if it was deleted so we can immediately go back
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
-        if (fileFolderDeletedEvent != null)
+        if (fileFolderDeletedEvent != null && fileFolderDeletedEvent.deletedFileFolder.id == editableFile?.file?.id) {
             requireActivity().finish()
+        }
 
         editableFile?.let {
             setupToolbar(toolbarColor)
@@ -83,7 +84,9 @@ class ViewHtmlFragment : InternalWebViewFragment() {
             // Check if we need to update the file name
             val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
             fileFolderUpdatedEvent?.let { event ->
-                it.file = event.updatedFileFolder
+                if (it.file.id == event.updatedFileFolder.id) {
+                    it.file = event.updatedFileFolder
+                }
             }
 
             toolbar?.title = it.file.displayName
