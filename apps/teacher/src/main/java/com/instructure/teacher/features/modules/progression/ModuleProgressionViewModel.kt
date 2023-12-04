@@ -34,6 +34,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -104,7 +105,8 @@ class ModuleProgressionViewModel @Inject constructor(
                 ModuleProgressionViewData(
                     items.map { it.first!! },
                     moduleNames,
-                    initialPosition
+                    initialPosition,
+                    canvasContext.textAndIconColor
                 )
             )
             _state.postValue(ViewState.Success)

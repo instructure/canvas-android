@@ -17,6 +17,7 @@
 
 package com.instructure.teacher.features.modules.progression
 
+import androidx.annotation.ColorInt
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
@@ -26,7 +27,8 @@ import com.instructure.teacher.BR
 data class ModuleProgressionViewData(
     val moduleItems: List<ModuleItemViewData>,
     val moduleNames: List<String>,
-    val initialPosition: Int
+    val initialPosition: Int,
+    @ColorInt val iconColor: Int
 ) : BaseObservable() {
     @Bindable
     var currentPosition = initialPosition

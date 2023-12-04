@@ -24,14 +24,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:onPageChangeListener="@{viewModel.data.onPageChangeListener}" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/previous"
             android:layout_width="?android:attr/actionBarSize"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_chevron_left"
-            android:backgroundTint="@color/backgroundDarkest"
+            android:layout_height="?android:attr/actionBarSize"
             android:contentDescription="@string/previous"
             android:onClick="@{()->itemPager.setCurrentItem(viewModel.data.currentPosition-1)}"
+            android:padding="16dp"
+            android:src="@drawable/ic_chevron_left"
+            android:tint="@{viewModel.data.iconColor}"
             android:visibility="@{viewModel.data.previousVisible ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -59,14 +60,15 @@
             app:layout_constraintTop_toTopOf="@id/previous"
             tools:text="Module name" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/next"
             android:layout_width="?android:attr/actionBarSize"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_chevron_right"
-            android:backgroundTint="@color/backgroundDarkest"
+            android:layout_height="?android:attr/actionBarSize"
             android:contentDescription="@string/next"
             android:onClick="@{()->itemPager.setCurrentItem(viewModel.data.currentPosition+1)}"
+            android:padding="16dp"
+            android:src="@drawable/ic_chevron_right"
+            android:tint="@{viewModel.data.iconColor}"
             android:visibility="@{viewModel.data.nextVisible ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
