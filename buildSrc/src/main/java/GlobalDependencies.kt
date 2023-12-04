@@ -12,7 +12,7 @@ object Versions {
 
     /* Testing */
     const val JUNIT = "4.13.2"
-    const val ROBOLECTRIC = "4.3.1"
+    const val ROBOLECTRIC = "4.11.1"
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
@@ -38,6 +38,7 @@ object Versions {
     const val OKHTTP = "4.10.0"
     const val HEAP = "1.10.5"
     const val ROOM = "2.6.0"
+    const val HAMCREST = "2.2"
 }
 
 object Libs {
@@ -158,6 +159,8 @@ object Libs {
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
     const val ROOM_COROUTINES = "androidx.room:room-ktx:${Versions.ROOM}"
     const val ROOM_TEST = "androidx.room:room-testing:${Versions.ROOM}"
+
+    const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 }
 
 object Plugins {

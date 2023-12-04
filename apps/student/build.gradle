@@ -350,6 +350,8 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
+
+    testImplementation Libs.HAMCREST
 }
 
 // Comment out this line if the reporting logic starts going wonky.
