@@ -29,6 +29,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_IMAGE
 import com.instructure.pandautils.analytics.ScreenView
@@ -41,7 +42,9 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentViewImageBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_IMAGE)
@@ -101,7 +104,11 @@ class ViewImageFragment : Fragment(), ShareableFile {
         }
 
         if (isInModulesPager) {
-            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewImageFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewImageFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))

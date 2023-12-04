@@ -28,6 +28,7 @@ import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_UNSUPPORTED_FILE
 import com.instructure.pandautils.analytics.ScreenView
@@ -39,7 +40,9 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentUnsupportedFileTypeBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import java.io.File
@@ -106,7 +109,11 @@ class ViewUnsupportedFileFragment : Fragment() {
         }
 
         if (isInModulesPager) {
-            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewUnsupportedFileFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewUnsupportedFileFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))

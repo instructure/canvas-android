@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
 import com.google.android.exoplayer2.upstream.HttpDataSource
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
@@ -40,8 +41,9 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderMediaBinding
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.view.MediaContent
 import org.greenrobot.eventbus.EventBus
 
@@ -193,7 +195,11 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
         if (isInModulesPager) {
             toolbar.setVisible()
-            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewMediaFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewMediaFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.white))
         }
     }

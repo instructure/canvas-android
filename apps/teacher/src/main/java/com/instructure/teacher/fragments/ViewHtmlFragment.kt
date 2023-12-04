@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_HTML
 import com.instructure.pandautils.analytics.ScreenView
@@ -33,8 +34,9 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -106,7 +108,11 @@ class ViewHtmlFragment : InternalWebViewFragment() {
         }
 
         if (isInModulesPager) {
-            toolbar.setupBackButton { requireActivity().onBackPressed() }
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewHtmlFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewHtmlFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.white))
         } else if (isTablet && toolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, toolbarColor, requireContext().getColor(R.color.white))

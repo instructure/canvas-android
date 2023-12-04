@@ -108,7 +108,7 @@ class ModuleProgressionFragment : Fragment() {
                 item.title,
                 darkToolbar = true,
                 shouldAuthenticate = true,
-                navButtonClose = false,
+                isInModulesPager = true,
                 allowRoutingTheSameUrlInternally = false
             )
         )
