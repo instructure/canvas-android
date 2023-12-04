@@ -1392,6 +1392,21 @@
     <string name="offline_content_select_all">全選</string>
     <string name="offline_content_deselect_all">取消全選</string>
     <string name="offline_content_loading_error">載入內容時發生錯誤。</string>
+    <string name="offline_content_empty_title">無課程</string>
+    <string name="offline_content_empty_message">您的課程將將在此處列出，然後您可以讓它們可以離線使用。</string>
+    <string name="offline_content_empty_course_title">沒有課程內容</string>
+    <string name="offline_content_empty_course_message">課程內容將在此處列出，然後您可以讓它們可以離線使用。</string>
+    <string name="offline_content_discard_dialog_title">捨棄變更？</string>
+    <string name="offline_content_discard_dialog_message">如果您選擇捨棄，系統將不會儲存變更。</string>
+    <string name="offline_content_discard_dialog_positive">放棄</string>
+    <string name="offline_content_sync_dialog_title">同步離線內容？</string>
+    <string name="offline_content_sync_dialog_message">這將同步 ~%s 內容。如果您未連線到 Wi-Fi 網路，則可能會導致您的資料提供者收取額外費用。</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">這將僅在您連線到 Wi-Fi 網路時同步 ~%s 內容。</string>
+    <string name="offline_content_sync_dialog_positive">同步</string>
+    <string name="offline_content_sync_loading_title">正在載入&#8230;&#8230;</string>
+    <string name="offline_content_sync_loading_message">請稍等，我們已經為您準備好了。</string>
+    <string name="content_description_expand_content">展開內容</string>
+    <string name="content_description_collapse_content">收起內容</string>
     <string name="syncSettings_autoContentSyncDescription">啟用「自動內容同步」將根據以下設定注意下載所選取的內容。內容同步將會進行，即使應用程式並未正在執行中。如果關閉設定，則將不會進行同步。已經下載的內容也將不會刪除。</string>
     <string name="syncSettings_syncFrequencyTitle">同步頻率</string>
     <string name="syncSettings_autoContentSyncTitle">自動內容同步</string>
@@ -1433,7 +1448,6 @@
     <plurals name="syncProgress_itemCount">
         <item quantity="other">%d 課程正在同步中。</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">課程內容影像</string>
     <string name="assignmentNoLongerAvailable">此作業不再可用。</string>
     <string name="editDashboardOfflineMode">您已離線</string>
     <string name="editDashboardOfflineModeMessage">您目前沒有任何可離線使用的課程。</string>
@@ -1444,4 +1458,5 @@
     <plurals name="offlineContentSyncSuccessNotificationBody">
         <item quantity="other">%d 課程已同步。</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">額外課程內容</string>
 </resources>

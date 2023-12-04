@@ -23,7 +23,6 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.R
-import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -139,7 +138,7 @@ class OfflineSyncSettingsE2ETest : StudentTest() {
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device via ADB, so it will come back online.")
-        OfflineTestUtils.turnOnConnectionViaADB()
+        turnOnConnectionViaADB()
     }
 
 }

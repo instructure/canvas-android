@@ -26,6 +26,7 @@ dependencies {
     implementation("com.android.tools.build:gradle-api:$agpVersion")
     implementation("org.javassist:javassist:3.24.1-GA")
     implementation("com.google.code.gson:gson:2.8.8")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.20")
 }
 
 plugins {

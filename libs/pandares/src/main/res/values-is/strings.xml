@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Velja allt</string>
     <string name="offline_content_deselect_all">Afvelja allt</string>
     <string name="offline_content_loading_error">Villa kom fram við að hlaða innihaldið.</string>
+    <string name="offline_content_empty_title">Engin námskeið</string>
+    <string name="offline_content_empty_message">Námskeiðin þín verða skráð hér og síðan geturðu gert þau aðgengileg til notkunar án nettengingar.</string>
+    <string name="offline_content_empty_course_title">Ekkert námskeiðsefni</string>
+    <string name="offline_content_empty_course_message">Efni námskeiðsins verður skráð hér og síðan geturðu gert það aðgengilegt til notkunar án nettengingar.</string>
+    <string name="offline_content_discard_dialog_title">Henda breytingum?</string>
+    <string name="offline_content_discard_dialog_message">Breytingarnar verða ekki vistaðar ef þú velur að henda.</string>
+    <string name="offline_content_discard_dialog_positive">Henda</string>
+    <string name="offline_content_sync_dialog_title">Samhæfa efni án nettengingar?</string>
+    <string name="offline_content_sync_dialog_message">Þetta mun samhæfa ~%s efni. Það getur leitt til viðbótargjalda frá gagnaveitunni þinni ef þú ert ekki tengd(ur) við Wi-Fi net.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Þetta mun eingöngu samhæfa ~%s efni á meðan þú ert tengd(ur) við Wi-Fi net.</string>
+    <string name="offline_content_sync_dialog_positive">Samhæfa</string>
+    <string name="offline_content_sync_loading_title">Hleður...</string>
+    <string name="offline_content_sync_loading_message">Bíddu við, við erum að gera hlutina tilbúna fyrir þig.</string>
+    <string name="content_description_expand_content">Víkka efni</string>
+    <string name="content_description_collapse_content">Fella saman efni</string>
     <string name="syncSettings_autoContentSyncDescription">Með því að virkja sjálfvirka samstillingu efnis mun hún sjá um að hlaða niður völdu efni byggt á stillingunum hér að neðan. Samstilling efnis mun gerast jafnvel þótt forritið sé ekki í gangi. Ef slökkt er á stillingunni mun engin samstilling eiga sér stað. Efni sem þegar hefur verið hlaðið niður verður ekki eytt.</string>
     <string name="syncSettings_syncFrequencyTitle">Samstillingartíðni</string>
     <string name="syncSettings_autoContentSyncTitle">Sjálfvirk samstilling efnis</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d námskeið er að samstillast.</item>
         <item quantity="other">%d námskeið eru að samstillast.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Myndir af innihaldi námskeiðs</string>
     <string name="assignmentNoLongerAvailable">Þetta verkefni er ekki lengur tiltækt.</string>
     <string name="editDashboardOfflineMode">Þú ert án nettengingar</string>
     <string name="editDashboardOfflineModeMessage">Þú ert ekki með nein námskeið sem eru í boði án nettengingar.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d námskeið hefur verið samstillt.</item>
         <item quantity="other">%d námskeið hafa verið samstillt.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Viðbótar námskeiðsefni</string>
 </resources>

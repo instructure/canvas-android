@@ -104,7 +104,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation "com.squareup.okhttp3:okhttp:4.9.1"
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.google.gms:google-services:4.3.14'

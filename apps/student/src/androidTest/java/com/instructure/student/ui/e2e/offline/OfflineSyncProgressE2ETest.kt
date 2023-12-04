@@ -59,8 +59,6 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Select the entire '${course1.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState(course1.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
-        manageOfflineContentPage.changeItemSelectionState(course1.name)
-        manageOfflineContentPage.clickOnSyncButton()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
         dashboardPage.waitForRender()
@@ -82,7 +80,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         Espresso.pressBack()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
-        OfflineTestUtils.turnOffConnectionViaADB()
+        turnOffConnectionViaADB()
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
@@ -103,7 +101,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device via ADB, so it will come back online.")
-        OfflineTestUtils.turnOnConnectionViaADB()
+        turnOnConnectionViaADB()
     }
 
 }

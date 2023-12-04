@@ -1416,6 +1416,21 @@
     <string name="offline_content_select_all">Pilih Semua</string>
     <string name="offline_content_deselect_all">Nyahpilih Semua</string>
     <string name="offline_content_loading_error">Ralat berlaku semasa memuatkan kandungan.</string>
+    <string name="offline_content_empty_title">Tiada Kursus</string>
+    <string name="offline_content_empty_message">kursus anda akan disenaraikan di sini, kemudian anda boleh menyediakannya untuk kegunaan luar talian.</string>
+    <string name="offline_content_empty_course_title">Tiada Kandungan Kursus</string>
+    <string name="offline_content_empty_course_message">Kandungan kursus akan disenaraikan di sini, kemudian anda boleh menyediakannya untuk kegunaan luar talian.</string>
+    <string name="offline_content_discard_dialog_title">Buang Perubahan?</string>
+    <string name="offline_content_discard_dialog_message">Jika anda memilih untuk membuangnya, perubahan tidak akan disimpan.</string>
+    <string name="offline_content_discard_dialog_positive">Buang</string>
+    <string name="offline_content_sync_dialog_title">Segerakkan Kandungan Luar Talian?</string>
+    <string name="offline_content_sync_dialog_message">Tindakan ini akan menyegerakkan ~%s kandungan. Hal ini mungkin akan menyebabkan anda dikenakan caj tambahan oleh penyedia data anda sekiranya anda tidak bersambung ke rangkaian Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Tindakan ini akan menyegerakkan ~%s kandungan hanya ketika anda bersambung ke rangkaian Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Segerakkan</string>
+    <string name="offline_content_sync_loading_title">Memuatkan...</string>
+    <string name="offline_content_sync_loading_message">Sila tunggu, kami sedang menyediakan beberapa perkara untuk anda.</string>
+    <string name="content_description_expand_content">Kembangkan kandungan</string>
+    <string name="content_description_collapse_content">Kuncupkan kandungan</string>
     <string name="syncSettings_autoContentSyncDescription">Mendayakan Segerakan Kandungan Automatik akan mengurus muat turun kandungan yang dipilih berdasarkan tetapan di bawah. Penyegerakan kandungan akan etap berlaku walaupun aplikasi tidak berjalan. Jika tetapan dimatikan maka tiada penyegerakan akan berlaku. Kandungan yang sudah dimuat turun tidak akan dipadamkan.</string>
     <string name="syncSettings_syncFrequencyTitle">Kekerapan Penyegerakan</string>
     <string name="syncSettings_autoContentSyncTitle">Segerakan Kandungan Automatik</string>
@@ -1458,7 +1473,6 @@
         <item quantity="one">%d Kursus sedang disegerakkan.</item>
         <item quantity="other">%d Kursus sedang disegerakkan.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Imej kandungan kursus</string>
     <string name="assignmentNoLongerAvailable">Tugasan ini tidak lagi tersedia.</string>
     <string name="editDashboardOfflineMode">Anda berada di luar talian</string>
     <string name="editDashboardOfflineModeMessage">Anda tidak mempunyai apa-apa kursus yang tersedia di luar talian buat masa ini.</string>
@@ -1470,4 +1484,5 @@
         <item quantity="one">%d Kursus telah disegerakkan.</item>
         <item quantity="other">%d Kursus telah disegerakkan.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Kandungan kursus tambahan</string>
 </resources>
