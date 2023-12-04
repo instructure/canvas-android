@@ -320,7 +320,8 @@ dependencies {
     implementation Libs.SQLDELIGHT
 
     /* Qr Code */
-    implementation Libs.JOURNEY_ZXING
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 
     /* AAC */
     implementation Libs.VIEW_MODEL
@@ -349,6 +350,8 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
+
+    testImplementation Libs.HAMCREST
 }
 
 // Comment out this line if the reporting logic starts going wonky.

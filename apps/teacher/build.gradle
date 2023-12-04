@@ -310,6 +310,8 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
+
+    testImplementation Libs.HAMCREST
 }
 
 apply plugin: 'com.google.gms.google-services'
