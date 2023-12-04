@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
@@ -88,6 +89,7 @@ class ModuleProgressionViewModelTest {
         every { mockUriBuilder.appendQueryParameter(any(), any()) } returns mockUriBuilder
         every { mockUriBuilder.build() } returns mockUri
         every { mockUri.toString() } answers { "mockUri" }
+        ContextKeeper.appContext = mockk(relaxed = true)
 
         every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns Course(id = 1L)
         every { savedStateHandle.get<Long>(RouterParams.MODULE_ITEM_ID) } returns 1L
@@ -120,7 +122,7 @@ class ModuleProgressionViewModelTest {
 
     @Test
     fun `Load success with module item id`() {
-        val expected = ModuleProgressionViewData(listOf(ModuleItemViewData.Page("pageUrl")), listOf("Name"), 0)
+        val expected = ModuleProgressionViewData(listOf(ModuleItemViewData.Page("pageUrl")), listOf("Name"), 0, 0)
 
         coEvery { repository.getModulesWithItems(any()) } returns listOf(
             ModuleObject(name = "Name", items = listOf(ModuleItem(id = 1L, type = "Page", pageUrl = "pageUrl")))
@@ -134,7 +136,7 @@ class ModuleProgressionViewModelTest {
 
     @Test
     fun `Load success with asset type and id`() {
-        val expected = ModuleProgressionViewData(listOf(ModuleItemViewData.Assignment(1L)), listOf("Name"), 0)
+        val expected = ModuleProgressionViewData(listOf(ModuleItemViewData.Assignment(1L)), listOf("Name"), 0, 0)
 
         every { savedStateHandle.get<Long>(RouterParams.MODULE_ITEM_ID) } returns -1L
         every { savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_TYPE) } returns ModuleItemAsset.ASSIGNMENT.name
@@ -167,6 +169,7 @@ class ModuleProgressionViewModelTest {
                 ModuleItemViewData.File("fileUri"),
             ),
             listOf("Module 1", "Module 1", "Module 2", "Module 2", "Module 3", "Module 3", "Module 3"),
+            0,
             0
         )
 
