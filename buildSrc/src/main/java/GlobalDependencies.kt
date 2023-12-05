@@ -82,7 +82,7 @@ object Libs {
     const val FIREBASE_CRASHLYTICS_NDK = "com.google.firebase:firebase-crashlytics-ndk"
 
     /* Play Services */
-    const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.0.1"
+    const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.1.0"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
 
     /* Mobius */
