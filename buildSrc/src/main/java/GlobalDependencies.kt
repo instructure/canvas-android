@@ -75,7 +75,7 @@ object Libs {
     const val ANDROIDX_DATABINDING_COMPILER = "androidx.databinding:databinding-compiler:${Versions.ANDROID_GRADLE_TOOLS}" // This is bundled with the gradle plugin so we use the same version
 
     /* Firebase */
-    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:31.2.3"
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:32.6.0"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config"
