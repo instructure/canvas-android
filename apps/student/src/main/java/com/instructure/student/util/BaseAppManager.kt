@@ -49,6 +49,11 @@ import io.flutter.embedding.engine.dart.DartExecutor
 
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling, Configuration.Provider {
 
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(getWorkManagerFactory())
+            .build()
+
     override fun onCreate() {
         super.onCreate()
 
@@ -152,11 +157,6 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
     }
 
     override fun performLogoutOnAuthError() = Unit
-
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
-            .setWorkerFactory(getWorkManagerFactory())
-            .build()
 
     abstract fun getWorkManagerFactory(): WorkerFactory
 
