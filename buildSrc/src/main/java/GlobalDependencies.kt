@@ -31,7 +31,7 @@ object Versions {
     const val HILT = "2.49"
     const val HILT_ANDROIDX = "1.1.0"
     const val LIFECYCLE = "2.6.2"
-    const val FRAGMENT = "1.5.5"
+    const val FRAGMENT = "1.6.2"
     const val WORK_MANAGER = "2.8.1"
     const val GLIDE_VERSION = "4.15.1"
     const val RETROFIT = "2.9.0"
