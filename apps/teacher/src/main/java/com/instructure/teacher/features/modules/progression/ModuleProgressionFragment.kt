@@ -27,9 +27,11 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleProgressionBinding
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.files.details.FileDetailsFragment
@@ -44,19 +46,20 @@ import dagger.hilt.android.AndroidEntryPoint
 class ModuleProgressionFragment : Fragment() {
 
     private val viewModel: ModuleProgressionViewModel by viewModels()
-    private lateinit var binding: FragmentModuleProgressionBinding
+    private val binding by viewBinding(FragmentModuleProgressionBinding::bind)
 
     private val route: Route by ParcelableArg(key = ROUTE)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentModuleProgressionBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-        return binding.root
+        return inflater.inflate(R.layout.fragment_module_progression, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
         viewModel.data.observe(viewLifecycleOwner) {
             setupPager(it.moduleItems, it.initialPosition)
         }

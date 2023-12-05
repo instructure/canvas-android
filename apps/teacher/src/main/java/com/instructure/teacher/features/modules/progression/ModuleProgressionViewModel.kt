@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleItem.Type
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.RouterParams
@@ -116,15 +117,15 @@ class ModuleProgressionViewModel @Inject constructor(
     }
 
     private fun createModuleItemViewData(item: ModuleItem, isDiscussionRedesignEnabled: Boolean) = when (item.type) {
-        "Page" -> ModuleItemViewData.Page(item.pageUrl.orEmpty())
-        "Assignment" -> ModuleItemViewData.Assignment(item.contentId)
-        "Discussion" -> ModuleItemViewData.Discussion(isDiscussionRedesignEnabled, item.contentId)
-        "Quiz" -> ModuleItemViewData.Quiz(item.contentId)
-        "ExternalUrl", "ExternalTool" -> {
+        Type.Page.name -> ModuleItemViewData.Page(item.pageUrl.orEmpty())
+        Type.Assignment.name -> ModuleItemViewData.Assignment(item.contentId)
+        Type.Discussion.name -> ModuleItemViewData.Discussion(isDiscussionRedesignEnabled, item.contentId)
+        Type.Quiz.name -> ModuleItemViewData.Quiz(item.contentId)
+        Type.ExternalUrl.name, Type.ExternalTool.name -> {
             val url = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build().toString()
             ModuleItemViewData.External(url, item.title.orEmpty())
         }
-        "File" -> ModuleItemViewData.File(item.url.orEmpty())
+        Type.File.name -> ModuleItemViewData.File(item.url.orEmpty())
         else -> null
     }
 }

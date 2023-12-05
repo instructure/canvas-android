@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.tryOrNull
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.makeBundle
@@ -43,17 +44,18 @@ import dagger.hilt.android.AndroidEntryPoint
 class FileDetailsFragment : Fragment() {
 
     private val viewModel: FileDetailsViewModel by viewModels()
-    private lateinit var binding: FragmentFileDetailsBinding
+    private val binding by viewBinding(FragmentFileDetailsBinding::bind)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentFileDetailsBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-        return binding.root
+        return inflater.inflate(R.layout.fragment_file_details, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
         viewModel.data.observe(viewLifecycleOwner) {
             setupFragment(getFragment(it.fileData))
         }
