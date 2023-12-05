@@ -138,7 +138,7 @@ object Libs {
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
-    const val OKIO = "com.squareup.okio:okio:3.3.0"
+    const val OKIO = "com.squareup.okio:okio:3.6.0"
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:6.0.0"
