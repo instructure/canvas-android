@@ -250,10 +250,11 @@ void main() {
       ..grade = '79'
       ..score = 79.0);
     var expected = baseGradedState.rebuild((b) => b
-      ..graphPercent = 0.85
-      ..score = '85'
+      ..graphPercent = 0.79
+      ..score = '79'
       ..showPointsLabel = true
-      ..latePenalty = 'Late penalty (-6)'
+      ..yourGrade = 'Your grade: 85'
+      ..latePenalty = 'Late penalty: -6'
       ..finalGrade = 'Final Grade: 79');
     var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);

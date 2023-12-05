@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/grade_cell_data.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -134,37 +135,49 @@ class GradeCell extends StatelessWidget {
           ],
         ),
         if (!_isGradedRestrictQuantitativeData) SizedBox(width: 16),
-        if (!_isGradedRestrictQuantitativeData) Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              if (data.grade.isNotEmpty)
-                Text(
-                  data.grade,
-                  key: Key('grade-cell-grade'),
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  semanticsLabel: data.gradeContentDescription,
-                ),
-              if (data.outOf.isNotEmpty) Text(data.outOf, key: Key('grade-cell-out-of')),
-              if (data.latePenalty.isNotEmpty)
-                Text(
-                  data.latePenalty,
-                  style: TextStyle(color: data.accentColor),
-                  key: Key('grade-cell-late-penalty'),
-                ),
-              if (data.finalGrade.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    data.finalGrade,
-                    key: Key('grade-cell-final-grade'),
-                    style: Theme.of(context).textTheme.titleMedium,
+        if (!_isGradedRestrictQuantitativeData)
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                if (data.grade.isNotEmpty)
+                  Text(
+                    data.grade,
+                    key: Key('grade-cell-grade'),
+                    style: Theme.of(context).textTheme.headlineMedium,
+                    semanticsLabel: data.gradeContentDescription,
                   ),
-                ),
-            ],
+                if (data.outOf.isNotEmpty) Text(data.outOf, key: Key('grade-cell-out-of')),
+                if (data.yourGrade.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      data.yourGrade,
+                      key: Key('grade-cell-your-grade'),
+                    ),
+                  ),
+                if (data.latePenalty.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      data.latePenalty,
+                      style: TextStyle(color: ParentColors.failure),
+                      key: Key('grade-cell-late-penalty'),
+                    ),
+                  ),
+                if (data.finalGrade.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      data.finalGrade,
+                      key: Key('grade-cell-final-grade'),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }

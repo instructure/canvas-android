@@ -40,6 +40,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
   String get grade;
   String get gradeContentDescription;
   String get outOf;
+  String get yourGrade;
   String get latePenalty;
   String get finalGrade;
 
@@ -58,6 +59,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..grade = ''
     ..gradeContentDescription = ''
     ..outOf = ''
+    ..yourGrade = ''
     ..latePenalty = ''
     ..finalGrade = '';
 
@@ -125,8 +127,8 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
         ..graphPercent = 1.0);
     }
 
-    var score = NumberFormat.decimalPattern().format(submission.enteredScore);
-    var graphPercent = (submission.enteredScore / assignment.pointsPossible).clamp(0.0, 1.0);
+    var score = NumberFormat.decimalPattern().format(submission.score);
+    var graphPercent = (submission.score / assignment.pointsPossible).clamp(0.0, 1.0);
 
     // If grading type is Points, don't show the grade since we're already showing it as the score
     var grade = assignment.gradingType != GradingType.points ? submission.grade ?? '' : '';
@@ -138,6 +140,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     // Screen reader fails on letter grades with a minus (e.g. 'A-'), so we replace the dash with the word 'minus'
     var accessibleGradeString = grade.replaceAll('-', '. ${l10n.accessibilityMinus}');
 
+    var yourGrade = '';
     var latePenalty = '';
     var finalGrade = '';
     var restrictedScore = grade;
@@ -146,6 +149,8 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     if ((submission.pointsDeducted ?? 0.0) > 0.0) {
       grade = ''; // Grade will be shown in the 'final grade' text
       var pointsDeducted = NumberFormat.decimalPattern().format(submission.pointsDeducted ?? 0.0);
+      var pointsAchieved = NumberFormat.decimalPattern().format(submission.enteredScore);
+      yourGrade = l10n.yourGrade(pointsAchieved);
       latePenalty = l10n.latePenalty(pointsDeducted);
       finalGrade = l10n.finalGrade(submission.grade ?? grade);
     }
@@ -166,6 +171,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
           ..outOf = outOfText
           ..grade = grade
           ..gradeContentDescription = accessibleGradeString
+          ..yourGrade = yourGrade
           ..latePenalty = latePenalty
           ..finalGrade = finalGrade);
   }
