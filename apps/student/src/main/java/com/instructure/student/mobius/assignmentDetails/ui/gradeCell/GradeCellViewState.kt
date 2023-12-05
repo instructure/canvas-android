@@ -134,7 +134,7 @@ sealed class GradeCellViewState {
             }
 
             val score = NumberHelper.formatDecimal(submission.score, 2, true)
-            val graphPercent = (submission.enteredScore / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
+            val graphPercent = (submission.score / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
 
             // If grading type is Points, don't show the grade since we're already showing it as the score
             var grade = if (assignment.gradingType != Assignment.POINTS_TYPE) submission.grade.orEmpty() else ""
