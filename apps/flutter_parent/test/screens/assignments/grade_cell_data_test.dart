@@ -254,7 +254,7 @@ void main() {
       ..score = '79'
       ..showPointsLabel = true
       ..yourGrade = 'Your grade: 85'
-      ..latePenalty = 'Late penalty: -6'
+      ..latePenalty = 'Late Penalty: -6 pts'
       ..finalGrade = 'Final Grade: 79');
     var actual = GradeCellData.forSubmission(baseCourse, baseAssignment, submission, theme, l10n);
     expect(actual, expected);
