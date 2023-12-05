@@ -141,12 +141,12 @@ object Libs {
     const val OKIO = "com.squareup.okio:okio:3.6.0"
 
     /* Other */
-    const val LOTTIE = "com.airbnb.android:lottie:6.0.0"
+    const val LOTTIE = "com.airbnb.android:lottie:6.2.0"
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val SQLDELIGHT = "com.squareup.sqldelight:android-driver:${Versions.SQLDELIGHT}"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"
-    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.4"
+    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.6"
     const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.1.2"
     const val PAPERDB = "io.github.pilgr:paperdb:2.7.2"
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
