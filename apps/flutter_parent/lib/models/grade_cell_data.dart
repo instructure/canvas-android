@@ -151,7 +151,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
       var pointsDeducted = NumberFormat.decimalPattern().format(submission.pointsDeducted ?? 0.0);
       var pointsAchieved = NumberFormat.decimalPattern().format(submission.enteredScore);
       yourGrade = l10n.yourGrade(pointsAchieved);
-      latePenalty = l10n.latePenalty(pointsDeducted);
+      latePenalty = l10n.latePenaltyUpdated(pointsDeducted);
       finalGrade = l10n.finalGrade(submission.grade ?? grade);
     }
 

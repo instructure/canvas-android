@@ -996,11 +996,11 @@ class AppLocalizations {
     name: 'yourGrade',
   );
 
-  String latePenalty(String pointsLost) => Intl.message(
-        'Late penalty: -$pointsLost',
+  String latePenaltyUpdated(String pointsLost) => Intl.message(
+        'Late Penalty: -$pointsLost pts',
         desc: 'Text displayed when a late penalty has been applied to the assignment',
         args: [pointsLost],
-        name: 'latePenalty',
+        name: 'latePenaltyUpdated',
       );
 
   String finalGrade(String grade) => Intl.message(
