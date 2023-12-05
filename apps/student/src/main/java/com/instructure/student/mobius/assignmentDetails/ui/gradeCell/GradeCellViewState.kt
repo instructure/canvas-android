@@ -157,7 +157,7 @@ sealed class GradeCellViewState {
                 val pointsDeducted = NumberHelper.formatDecimal(submission.pointsDeducted!!, 2, true)
                 val achievedScore = NumberHelper.formatDecimal(submission.enteredScore, 2, true)
                 yourGrade = context.getString(R.string.yourGrade, achievedScore)
-                latePenalty = context.getString(R.string.latePenalty, pointsDeducted)
+                latePenalty = context.getString(R.string.latePenaltyUpdated, pointsDeducted)
                 finalGrade = context.getString(R.string.finalGradeFormatted, submission.grade)
             }
 

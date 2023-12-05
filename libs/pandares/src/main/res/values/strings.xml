@@ -956,7 +956,8 @@
     <string name="courseInviteTitle">You have been invited.</string>
     <string name="inviteAccepted">Invite accepted!</string>
     <string name="inviteDeclined">Invite declined.</string>
-    <string name="latePenalty">Late penalty: -%s</string>
+    <string name="latePenalty">Late penalty (-%s)</string>
+    <string name="latePenaltyUpdated">Late Penalty: -%s pts</string>
     <string name="yourGrade">Your Grade: %s pts</string>
     <string name="finalGrade">Final Grade</string>
 

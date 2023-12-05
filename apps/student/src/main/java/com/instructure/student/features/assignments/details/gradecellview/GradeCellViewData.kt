@@ -178,7 +178,7 @@ data class GradeCellViewData(
                     val pointsDeducted = NumberHelper.formatDecimal(submission.pointsDeducted.orDefault(), 2, true)
                     val achievedScore = NumberHelper.formatDecimal(submission.enteredScore, 2, true)
                     yourGrade = resources.getString(R.string.yourGrade, achievedScore)
-                    latePenalty = resources.getString(R.string.latePenalty, pointsDeducted)
+                    latePenalty = resources.getString(R.string.latePenaltyUpdated, pointsDeducted)
                     finalGrade = resources.getString(R.string.finalGradeFormatted, submission.grade)
                 }
 
