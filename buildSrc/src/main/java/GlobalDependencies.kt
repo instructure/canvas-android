@@ -120,14 +120,14 @@ object Libs {
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.18.5"
+    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.18.5" // This is deprecated, we should migrate to https://developer.android.com/guide/topics/media/media3/getting-started/migration-guide
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE_VERSION}"
     const val GLIDE_OKHTTP = "com.github.bumptech.glide:okhttp3-integration:${Versions.GLIDE_VERSION}"
     const val GLIDE_COMPILER = "com.github.bumptech.glide:compiler:${Versions.GLIDE_VERSION}"
-    const val SCALE_IMAGE_VIEW = "com.davemorrissey.labs:subsampling-scale-image-view:3.9.0"
+    const val SCALE_IMAGE_VIEW = "com.davemorrissey.labs:subsampling-scale-image-view:3.10.0"
 
     /* Network */
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${Versions.RETROFIT}"
