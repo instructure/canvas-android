@@ -69,17 +69,22 @@ internal class SubmissionFilesHolder(view: View) : RecyclerView.ViewHolder(view)
         thumbnail.setVisible(data.thumbnailUrl.isValid())
         data.thumbnailUrl.validOrNull()?.let {
             Glide.with(root.context).load(it).listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>,
+                    isFirstResource: Boolean
+                ): Boolean {
                     fileIcon.setVisible(true)
                     thumbnail.setVisible(false)
                     return false
                 }
 
                 override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
+                    resource: Drawable,
+                    model: Any,
                     target: Target<Drawable>?,
-                    dataSource: DataSource?,
+                    dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
                     return false

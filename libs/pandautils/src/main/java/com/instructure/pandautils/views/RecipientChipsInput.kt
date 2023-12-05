@@ -196,7 +196,7 @@ class RecipientChip(context: Context, val recipient: Recipient, onRemoved: (Stri
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
-                    target: Target<Drawable>?,
+                    target: Target<Drawable>,
                     isFirstResource: Boolean
                 ): Boolean {
                     chipIcon = placeholder
@@ -204,10 +204,10 @@ class RecipientChip(context: Context, val recipient: Recipient, onRemoved: (Stri
                 }
 
                 override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
+                    resource: Drawable,
+                    model: Any,
                     target: Target<Drawable>?,
-                    source: DataSource?,
+                    source: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
                     chipIcon = resource

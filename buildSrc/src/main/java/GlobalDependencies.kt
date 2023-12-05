@@ -33,11 +33,11 @@ object Versions {
     const val LIFECYCLE = "2.6.2"
     const val FRAGMENT = "1.6.2"
     const val WORK_MANAGER = "2.8.1"
-    const val GLIDE_VERSION = "4.15.1"
+    const val GLIDE_VERSION = "4.16.0"
     const val RETROFIT = "2.9.0"
-    const val OKHTTP = "4.10.0"
-    const val HEAP = "1.10.5"
-    const val ROOM = "2.6.0"
+    const val OKHTTP = "4.12.0"
+    const val HEAP = "1.10.6"
+    const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
 }
 
