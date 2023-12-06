@@ -71,7 +71,7 @@ class ShareExtensionProgressViewModelTest {
     @Test
     fun `Show success dialog after uploading`() {
         viewModel.setUUID(uuid)
-        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.SUCCEEDED, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1))
+        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.SUCCEEDED, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1))
 
         viewModel.events.observe(lifecycleOwner) {}
         assertEquals(ShareExtensionProgressAction.ShowSuccessDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
@@ -86,7 +86,7 @@ class ShareExtensionProgressViewModelTest {
             .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, emptyArray())
             .build()
 
-        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, outputData, emptyList(), Data.EMPTY, 1, 1))
+        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, emptySet(), outputData, Data.EMPTY, 1, 1))
 
         assertEquals("Error", viewModel.data.value?.subtitle)
     }
@@ -124,8 +124,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 progressData,
                 1,
                 1
@@ -156,8 +156,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 progressData,
                 1,
                 1
@@ -213,8 +213,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 progressData.build(),
                 1,
                 1
@@ -248,8 +248,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 progressData.build(),
                 1,
                 1
@@ -290,8 +290,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.FAILED,
+                emptySet(),
                 progressData,
-                emptyList(),
                 Data.EMPTY,
                 1,
                 1
@@ -342,8 +342,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.FAILED,
+                emptySet(),
                 failedOutputData,
-                emptyList(),
                 Data.EMPTY,
                 1,
                 1
@@ -379,8 +379,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 successProgressData,
                 1,
                 1
@@ -395,8 +395,8 @@ class ShareExtensionProgressViewModelTest {
             WorkInfo(
                 uuid,
                 WorkInfo.State.SUCCEEDED,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 successProgressData,
                 1,
                 1

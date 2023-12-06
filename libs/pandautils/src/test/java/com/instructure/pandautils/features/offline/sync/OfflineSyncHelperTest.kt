@@ -245,7 +245,7 @@ class OfflineSyncHelperTest {
 
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
             listOf(
-                WorkInfo(originalRequest.id, WorkInfo.State.ENQUEUED, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
+                WorkInfo(originalRequest.id, WorkInfo.State.ENQUEUED, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
 

@@ -95,7 +95,7 @@ object Libs {
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
     const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.5"
-    const val MOCKK = "io.mockk:mockk:1.13.8"
+    const val MOCKK = "io.mockk:mockk:1.12.8"
     const val THREETEN_BP = "org.threeten:threetenbp:1.6.8"
     const val UI_AUTOMATOR = "com.android.support.test.uiautomator:uiautomator-v18:2.1.3"
     const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.4.2"
