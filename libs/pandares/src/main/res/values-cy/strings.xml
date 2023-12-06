@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Dewis y cyfan</string>
     <string name="offline_content_deselect_all">Dad-ddewis y Cyfan</string>
     <string name="offline_content_loading_error">Gwall wrth lwytho’r cynnwys.</string>
+    <string name="offline_content_empty_title">Dim Cyrsiau</string>
+    <string name="offline_content_empty_message">Bydd eich cyrsiau’n cael eu rhestru yma, ac yna gallwch chi ei gwneud ar gael i\'w defnyddio all-lein.</string>
+    <string name="offline_content_empty_course_title">Dim Cynnwys Cwrs</string>
+    <string name="offline_content_empty_course_message">Bydd cynnwys y cwrs yn cael ei restru yma, ac yna gallwch chi ei gwneud ar gael i\'w defnyddio all-lein.</string>
+    <string name="offline_content_discard_dialog_title">Hepgor y Newidiadau?</string>
+    <string name="offline_content_discard_dialog_message">Os byddwch chi’n dewis hepgor, ni fydd y newidiadau’n cael eu cadw.</string>
+    <string name="offline_content_discard_dialog_positive">Hepgor</string>
+    <string name="offline_content_sync_dialog_title">Cysoni Cynnwys All-lein?</string>
+    <string name="offline_content_sync_dialog_message">Bydd hyn yn cysoni ~%s cynnwys. Gall hyn arwain at gostau ychwanegol gan eich darparwr data, os nad ydych chi wedi cysylltu â rhwydwaith Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Bydd hyn yn cysoni ~%s cynnwys dim ond tra rydych chi wedi eich cysylltu i rwydwaith Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Cysoni</string>
+    <string name="offline_content_sync_loading_title">Wrthi’n llwytho...</string>
+    <string name="offline_content_sync_loading_message">Arhoswch, rydym ni’n cael pethau’n barod i chi.</string>
+    <string name="content_description_expand_content">Ehangu cynnwys</string>
+    <string name="content_description_collapse_content">Crebachu cynnwys</string>
     <string name="syncSettings_autoContentSyncDescription">Bydd galluogi Cysoni Cynnwys Awtomatig yn gofalu am lwytho’r cynnwys sydd wedi’i ddewis i lawr yn seiliedig ar y gosodiadau isod. Bydd cysoni cynnwys yn digwydd hyd yn oed os nad yw’r rhaglen yn rhedeg. Os yw’r gosodiadau wedi’i ddiffodd ni fydd cysoni’n digwydd. Ni fydd cynnwys sydd eisoes wedi’i lwytho i lawr yn cael ei ddileu.</string>
     <string name="syncSettings_syncFrequencyTitle">Amlder Cysoni</string>
     <string name="syncSettings_autoContentSyncTitle">Cysoni Cynnwys Awtomatig</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d cwrs yn cysoni.</item>
         <item quantity="other">%d cwrs yn cysoni.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Delweddau cynnwys cwrs</string>
     <string name="assignmentNoLongerAvailable">Dydy’r aseiniad hwn ddim ar gael mwyach.</string>
     <string name="editDashboardOfflineMode">Rydych chi all-lein</string>
     <string name="editDashboardOfflineModeMessage">Ar hyn o bryd, does gennych chi ddim cyrsiau sydd ar gael all-lein.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d cwrs wedi cael ei gysoni.</item>
         <item quantity="other">%d cwrs wedi cael eu cysoni.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Cynnwys cwrs ychwanegol</string>
 </resources>

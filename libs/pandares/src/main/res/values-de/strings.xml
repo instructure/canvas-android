@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Alle auswählen</string>
     <string name="offline_content_deselect_all">Alle abwählen</string>
     <string name="offline_content_loading_error">Beim Laden des Inhalts ist ein Fehler aufgetreten.</string>
+    <string name="offline_content_empty_title">Keine Kurse</string>
+    <string name="offline_content_empty_message">Ihre Kurse werden hier aufgelistet und können dann für die Offline-Nutzung verfügbar gemacht werden.</string>
+    <string name="offline_content_empty_course_title">Keine Kursinhalte</string>
+    <string name="offline_content_empty_course_message">Die Kursinhalte werden hier aufgelistet und können dann für die Offline-Nutzung verfügbar gemacht werden.</string>
+    <string name="offline_content_discard_dialog_title">Änderungen verwerfen?</string>
+    <string name="offline_content_discard_dialog_message">Wenn Sie die Änderungen verwerfen, werden sie nicht gespeichert.</string>
+    <string name="offline_content_discard_dialog_positive">Verwerfen</string>
+    <string name="offline_content_sync_dialog_title">Offline-Inhalte synchronisieren</string>
+    <string name="offline_content_sync_dialog_message">Damit werden ~%s Inhalte synchronisiert. Es können zusätzliche Gebühren von Ihrem Datenanbieter anfallen, wenn Sie nicht mit einem WLAN-Netzwerk verbunden sind.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Damit werden ~%s Inhalte synchronisiert, wenn Sie mit einem WLAN-Netzwerk verbunden sind.</string>
+    <string name="offline_content_sync_dialog_positive">Synchronisieren</string>
+    <string name="offline_content_sync_loading_title">Wird geladen ...</string>
+    <string name="offline_content_sync_loading_message">Bleiben Sie dran, wir bereiten alles für Sie vor.</string>
+    <string name="content_description_expand_content">Content erweitern</string>
+    <string name="content_description_collapse_content">Content ausblenden</string>
     <string name="syncSettings_autoContentSyncDescription">Wenn Sie die automatische Inhaltssynchronisierung aktivieren, wird der Download der ausgewählten Inhalte auf der Grundlage der unten aufgeführten Einstellungen durchgeführt. Die Synchronisierung der Inhalte erfolgt auch dann, wenn die Anwendung nicht ausgeführt wird. Wenn die Einstellung ausgeschaltet ist, findet keine Synchronisierung statt. Die bereits heruntergeladenen Inhalte werden nicht gelöscht.</string>
     <string name="syncSettings_syncFrequencyTitle">Synchronisierungsfrequenz</string>
     <string name="syncSettings_autoContentSyncTitle">Automatische Synchronisation von Inhalten</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d Kurs wird synchronisiert.</item>
         <item quantity="other">%d Kurse werden synchronisiert.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Bilder zum Kursinhalt</string>
     <string name="assignmentNoLongerAvailable">Diese Aufgabe ist nicht mehr verfügbar.</string>
     <string name="editDashboardOfflineMode">Sie sind offline</string>
     <string name="editDashboardOfflineModeMessage">Sie haben derzeit keine offline verfügbaren Kurse.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d Kurs wurde synchronisiert.</item>
         <item quantity="other">%d Kurse wurden synchronisiert.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Zusätzliche Kursinhalte</string>
 </resources>

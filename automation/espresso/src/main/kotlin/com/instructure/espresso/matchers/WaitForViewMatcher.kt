@@ -51,6 +51,11 @@ object WaitForViewMatcher {
         return waitForViewWithCustomMatcher(viewMatcher, duration, ViewMatchers.isClickable())
     }
 
+    fun waitForViewToBeCompletelyDisplayed(viewMatcher: Matcher<View>, duration: Long = 10): ViewInteraction {
+        log.i("Wait for View to be completely displayed.")
+        return waitForViewWithCustomMatcher(viewMatcher, duration, ViewMatchers.isCompletelyDisplayed())
+    }
+
     private fun waitForViewWithCustomMatcher(viewMatcher: Matcher<View>, duration: Long = 10, customMatcher: Matcher<View>): ViewInteraction {
         waiting.set(true)
         val waitTime = TimeUnit.SECONDS.toMillis(duration)

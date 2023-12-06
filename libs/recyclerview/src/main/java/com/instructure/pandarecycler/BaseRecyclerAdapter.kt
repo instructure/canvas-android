@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder?>(var context: Context) : RecyclerView.Adapter<T>() {
+abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder>(var context: Context) : RecyclerView.Adapter<T>() {
     abstract fun createViewHolder(v: View, viewType: Int): T
     abstract fun itemLayoutResId(viewType: Int): Int
     abstract fun loadData()

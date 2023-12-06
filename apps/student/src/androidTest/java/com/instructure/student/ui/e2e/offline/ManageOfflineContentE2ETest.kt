@@ -24,7 +24,6 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -48,7 +47,6 @@ class ManageOfflineContentE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
-        val testAnnouncement = data.announcementsList[0]
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -131,7 +129,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         manageOfflineContentPage.assertCheckedStateOfItem("Announcements", MaterialCheckBox.STATE_UNCHECKED)
         manageOfflineContentPage.assertCheckedStateOfItem("Discussions", MaterialCheckBox.STATE_UNCHECKED)
 
-        Log.d(STEP_TAG, "Assert that the 'SELECT ALL' will be displayed after clicking the 'SELECT ALL' button.")
+        Log.d(STEP_TAG, "Assert that the 'SELECT ALL' will be displayed after clicking the 'DESELECT ALL' button.")
         manageOfflineContentPage.assertSelectButtonText(selectAll = true)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Open 'Global' Manage Offline Content page.")
@@ -185,7 +183,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that both of the seeded courses are displayed as a selectable item in the Manage Offline Content page.")
         manageOfflineContentPage.assertCourseCountWithMatcher(2)
 
-        Log.d(STEP_TAG, "Click on the 'Sync' button.")
+        Log.d(STEP_TAG, "Click on the 'Sync' button and confirm sync.")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
@@ -198,7 +196,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
-        OfflineTestUtils.turnOffConnectionViaADB()
+        turnOffConnectionViaADB()
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Select '${course2.name}' course and open 'Grades' menu to check if it's really synced and can be seen in offline mode.")
@@ -212,7 +210,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device via ADB, so it will come back online.")
-        OfflineTestUtils.turnOnConnectionViaADB()
+        turnOnConnectionViaADB()
     }
 
 }

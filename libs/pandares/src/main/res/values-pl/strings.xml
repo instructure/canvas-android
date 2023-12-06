@@ -1446,6 +1446,21 @@
     <string name="offline_content_select_all">Zaznacz wszystko</string>
     <string name="offline_content_deselect_all">Usuń zaznaczenie wszystkich</string>
     <string name="offline_content_loading_error">Podczas wczytywania zawartości wystąpił błąd.</string>
+    <string name="offline_content_empty_title">Brak kursów</string>
+    <string name="offline_content_empty_message">Kursy zostaną wyszczególnione tutaj, następnie można je będzie udostępnić do użytku offline.</string>
+    <string name="offline_content_empty_course_title">Brak zawartości kursu</string>
+    <string name="offline_content_empty_course_message">Zawartość kursu zostanie podana tutaj, następnie można ją będzie udostępnić do użytku offline.</string>
+    <string name="offline_content_discard_dialog_title">Odrzucić zmiany?</string>
+    <string name="offline_content_discard_dialog_message">W przypadku odrzucenia, zmiany nie zostaną zapisane.</string>
+    <string name="offline_content_discard_dialog_positive">Odrzuć</string>
+    <string name="offline_content_sync_dialog_title">Zsynchronizować zawartość offline?</string>
+    <string name="offline_content_sync_dialog_message">Spowoduje to synchronizację zawartości ~%s. Może to skutkować pobraniem dodatkowych opłat przez usługodawcę, jeśli nie nawiązano połączenia z siecią Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Spowoduje to synchronizację zawartości ~%s, jeśli nawiązano połączenie z siecią Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Synchronizacja</string>
+    <string name="offline_content_sync_loading_title">Wczytywanie...</string>
+    <string name="offline_content_sync_loading_message">Chwileczkę, wszystko będzie niedługo gotowe.</string>
+    <string name="content_description_expand_content">Rozwiń zawartość</string>
+    <string name="content_description_collapse_content">Zwiń zawartość</string>
     <string name="syncSettings_autoContentSyncDescription">Włączenie automatycznej synchronizacji zawartości pozwoli pobierać wybraną zawartość w oparciu o poniższe ustawienia. Synchronizacja zawartości będzie się odbywać, nawet jeśli aplikacja nie zostanie włączona. Jeśli funkcja jest wyłączona, synchronizacja nie będzie działać. Pobrana już zawartość nie zostanie usunięta.</string>
     <string name="syncSettings_syncFrequencyTitle">Częstotliwość synchronizacji</string>
     <string name="syncSettings_autoContentSyncTitle">Automatyczna synchronizacja zawartości</string>
@@ -1490,7 +1505,6 @@
         <item quantity="many">Trwa synchronizacja kursów %d.</item>
         <item quantity="other">Trwa synchronizacja kursów %d.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Obrazy zawartości kursu</string>
     <string name="assignmentNoLongerAvailable">To zadanie nie jest już dostępne.</string>
     <string name="editDashboardOfflineMode">Jesteś offline</string>
     <string name="editDashboardOfflineModeMessage">Obecnie nie masz żadnych kursów dostępnych offline.</string>
@@ -1504,4 +1518,5 @@
         <item quantity="many">Kursy %d zostały zsynchronizowane.</item>
         <item quantity="other">Kursy %d zostały zsynchronizowane.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Dodatkowa zawartość kursu</string>
 </resources>
