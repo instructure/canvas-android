@@ -30,15 +30,20 @@ extension WebViewUtils on WebViewController {
     String? html, {
     String? baseUrl,
     Map<String, String>? headers,
-    double horizontalPadding = 0})
+    double horizontalPadding = 0,
+    bool darkMode = false})
     async {
       String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
       html = _applyWorkAroundForDoubleSlashesAsUrlSource(html);
       html = _addProtocolToLinks(html);
       html = _checkForMathTags(html);
       html = fileText.replaceAll('{CANVAS_CONTENT}', html);
+      html = html.replaceAll('{BACKGROUND}', darkMode ? '#000000' : '#ffffff');
+      html = html.replaceAll('{COLOR}', darkMode ? '#ffffff' : '#000000');
+      html = html.replaceAll('{LINK_COLOR}', darkMode ? '#1283C4' : '#0374B5');
+      html = html.replaceAll('{VISITED_LINK_COLOR}', darkMode ? '#C74BAF' : '#BF32A4');
       html = html.replaceAll('{PADDING}', horizontalPadding.toString());
-      this.loadData(baseUrl, html, 'text/html', 'utf-8');
+      this.loadHtmlString(html, baseUrl: baseUrl);
     }
 
   /**

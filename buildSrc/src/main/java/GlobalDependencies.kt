@@ -2,21 +2,21 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 33
+    const val COMPILE_SDK = 34
     const val MIN_SDK = 26
     const val TARGET_SDK = 33
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "7.1.3"
-    const val BUILD_TOOLS = "30.0.3"
+    const val BUILD_TOOLS = "34.0.0"
 
     /* Testing */
     const val JUNIT = "4.13.2"
-    const val ROBOLECTRIC = "4.3.1"
+    const val ROBOLECTRIC = "4.11.1"
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "1.8.10"
+    const val KOTLIN = "1.9.20"
     const val KOTLIN_COROUTINES = "1.6.4"
 
     /* Google, Play Services */
@@ -24,11 +24,11 @@ object Versions {
 
     /* Others */
     const val APOLLO = "2.5.14" // There is already a brand new version, Apollo 3, that requires lots of migration
-    const val PSPDFKIT = "8.7.1"
+    const val PSPDFKIT = "8.9.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.5.4"
-    const val HILT = "2.45"
+    const val HILT = "2.48"
     const val HILT_ANDROIDX = "1.0.0"
     const val LIFECYCLE = "2.6.0"
     const val FRAGMENT = "1.5.5"
@@ -37,7 +37,8 @@ object Versions {
     const val RETROFIT = "2.9.0"
     const val OKHTTP = "4.10.0"
     const val HEAP = "1.10.5"
-    const val ROOM = "2.5.0"
+    const val ROOM = "2.6.0"
+    const val HAMCREST = "2.2"
 }
 
 object Libs {
@@ -101,6 +102,7 @@ object Libs {
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
+    const val JOURNEY_ZXING_CORE = "com.google.zxing:core:3.5.2"
 
     /* Dependency Inejction */
     const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
@@ -157,6 +159,8 @@ object Libs {
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
     const val ROOM_COROUTINES = "androidx.room:room-ktx:${Versions.ROOM}"
     const val ROOM_TEST = "androidx.room:room-testing:${Versions.ROOM}"
+
+    const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 }
 
 object Plugins {

@@ -1411,6 +1411,21 @@
     <string name="offline_content_select_all">Chọn Tất Cả</string>
     <string name="offline_content_deselect_all">Bỏ Chọn Tất Cả</string>
     <string name="offline_content_loading_error">Đã xảy ra lỗi khi tải nội dung.</string>
+    <string name="offline_content_empty_title">Không Có Khóa Học</string>
+    <string name="offline_content_empty_message">Khóa học của bạn sẽ được liệt kê ở đây, và sau đó bạn có thể xử lý để sử dụng ngoại tuyến.</string>
+    <string name="offline_content_empty_course_title">Không Có Nội Dung Khóa Học</string>
+    <string name="offline_content_empty_course_message">Nội dung khóa học sẽ được liệt kê ở đây, và sau đó bạn có thể xử lý để sử dụng ngoại tuyến.</string>
+    <string name="offline_content_discard_dialog_title">Hủy Bỏ Thay Đổi?</string>
+    <string name="offline_content_discard_dialog_message">Nếu bạn chọn hủy, các thay đổi sẽ không được lưu.</string>
+    <string name="offline_content_discard_dialog_positive">Hủy Bỏ</string>
+    <string name="offline_content_sync_dialog_title">Đồng Bộ Hóa Nội Dung Ngoại Tuyến?</string>
+    <string name="offline_content_sync_dialog_message">Thao tác này sẽ đồng bộ ~%s nội dung. Điều này có thể khiến bạn bị tính thêm phí từ nhà cung cấp dữ liệu của bạn, nếu bạn không kết nối với mạng Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Thao tác này sẽ đồng bộ ~%s nội dung chỉ khi bạn kết nối với mạng Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Đồng bộ</string>
+    <string name="offline_content_sync_loading_title">Đang tải...</string>
+    <string name="offline_content_sync_loading_message">Hãy chờ nhé, chúng tôi đang chuẩn bị mọi thứ cho bạn.</string>
+    <string name="content_description_expand_content">Mở rộng nội dung</string>
+    <string name="content_description_collapse_content">Thu gọn nội dung</string>
     <string name="syncSettings_autoContentSyncDescription">Bật chức năng Tự Động Đồng Bộ Nội Dung sẽ xử lý việc tải xuống các nội dung được chọn dựa theo cài đặt dưới đây. Thao tác đồng bộ nội dung sẽ diễn ra ngay cả khi ứng dụng không chạy. Nếu tắt cài đặt thì quá trình đồng bộ sẽ không diễn ra. Nội dung đã được tải xuống sẽ không bị xóa.</string>
     <string name="syncSettings_syncFrequencyTitle">Tần Suất Đồng Bộ</string>
     <string name="syncSettings_autoContentSyncTitle">Tự Động Đồng Bộ Nội Dung</string>
@@ -1453,7 +1468,6 @@
         <item quantity="one">%d khóa học đang đồng bộ.</item>
         <item quantity="other">%d khóa học đang đồng bộ.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Hình ảnh nội dung khóa học</string>
     <string name="assignmentNoLongerAvailable">Bài tập này không còn khả dụng.</string>
     <string name="editDashboardOfflineMode">Bạn đang ngoại tuyến</string>
     <string name="editDashboardOfflineModeMessage">Hiện tại bạn không có bất kỳ khóa học nào khả dụng ngoại tuyến.</string>
@@ -1465,4 +1479,5 @@
         <item quantity="one">%d khóa học đã được đồng bộ.</item>
         <item quantity="other">%d khóa học đã được đồng bộ.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Nội dung khóa học bổ sung</string>
 </resources>

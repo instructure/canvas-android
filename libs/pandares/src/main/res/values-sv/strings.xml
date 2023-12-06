@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Välj alla</string>
     <string name="offline_content_deselect_all">Avmarkera alla</string>
     <string name="offline_content_loading_error">Ett fel uppstod vid inläsning av innehållet.</string>
+    <string name="offline_content_empty_title">Inga kurser</string>
+    <string name="offline_content_empty_message">Dina kurser kommer att listas här, och sedan kan du göra dem tillgängliga för offlineanvändning.</string>
+    <string name="offline_content_empty_course_title">Inget kursinnehåll</string>
+    <string name="offline_content_empty_course_message">Kursinnehållet kommer att listas här, och sedan kan du göra dem tillgängliga för offlineanvändning.</string>
+    <string name="offline_content_discard_dialog_title">Ignorera ändringar?</string>
+    <string name="offline_content_discard_dialog_message">Om du väljer att avvisa kommer ändringarna inte att sparas.</string>
+    <string name="offline_content_discard_dialog_positive">Avbryt</string>
+    <string name="offline_content_sync_dialog_title">Synkronisera offlineinnehåll?</string>
+    <string name="offline_content_sync_dialog_message">Detta synkroniserar ~%s-innehåll. Detta kan medföra ytterligare kostnader från din dataleverantör om du inte är ansluten till ett wifi-nätverk.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Detta synkroniserar ~%s-innehåll endast när du är ansluten till ett wifi-nätverk.</string>
+    <string name="offline_content_sync_dialog_positive">Synkronisera</string>
+    <string name="offline_content_sync_loading_title">Läser in ...</string>
+    <string name="offline_content_sync_loading_message">Vänta, vi förbereder åt dig.</string>
+    <string name="content_description_expand_content">Visa innehållet</string>
+    <string name="content_description_collapse_content">Dölj innehållet</string>
     <string name="syncSettings_autoContentSyncDescription">Om automatisk innehållssynkronisering aktiveras laddas det valda innehållet ned baserat på nedanstående inställningar. Innehållssynkroniseringen sker även om programmet inte körs. Om inställningen är avstängd sker ingen synkronisering. Innehåll som redan laddats ned raderas inte.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkroniseringsfrekvens</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisk innehållssynkronisering</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d-kurs synkroniserar.</item>
         <item quantity="other">%d-kurser synkroniserar.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Bilder i kursinnehållet</string>
     <string name="assignmentNoLongerAvailable">Denna uppgift är inte längre tillgänglig.</string>
     <string name="editDashboardOfflineMode">Du är offline</string>
     <string name="editDashboardOfflineModeMessage">Du har för närvarande inte några kurser som är tillgängliga offline.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d-kurs har synkroniserats.</item>
         <item quantity="other">%d-kurser har synkroniserats.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Extra kursinnehåll</string>
 </resources>

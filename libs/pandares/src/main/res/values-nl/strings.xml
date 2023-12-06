@@ -1410,6 +1410,21 @@
     <string name="offline_content_select_all">Alles selecteren</string>
     <string name="offline_content_deselect_all">Selectie van alle items opheffen</string>
     <string name="offline_content_loading_error">Er is een fout opgetreden tijdens het laden van de content.</string>
+    <string name="offline_content_empty_title">Geen cursussen</string>
+    <string name="offline_content_empty_message">Je cursussen worden hier weergegeven, waarvan je de inhoud beschikbaar kunt maken voor offline gebruik.</string>
+    <string name="offline_content_empty_course_title">Geen cursusinhoud</string>
+    <string name="offline_content_empty_course_message">De cursusinhoud wordt hier weergegeven, waar je deze beschikbaar kunt maken voor offline gebruik.</string>
+    <string name="offline_content_discard_dialog_title">Wijzigingen negeren?</string>
+    <string name="offline_content_discard_dialog_message">Als je kiest voor verwijderen, worden de wijzigingen niet opgeslagen.</string>
+    <string name="offline_content_discard_dialog_positive">Verwijderen</string>
+    <string name="offline_content_sync_dialog_title">Offline inhoud synchroniseren?</string>
+    <string name="offline_content_sync_dialog_message">Hiermee wordt ~%s inhoud gesynchroniseerd. Dat kan leiden tot extra kosten van je dataprovider als je niet verbonden bent met een wifi-netwerk.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Hiermee wordt ~%s inhoud alleen gesynchroniseerd als je verbonden bent met een wifi-netwerk.</string>
+    <string name="offline_content_sync_dialog_positive">Synchroniseren</string>
+    <string name="offline_content_sync_loading_title">Bezig met laden...</string>
+    <string name="offline_content_sync_loading_message">Een ogenblikje, we zetten het voor je klaar.</string>
+    <string name="content_description_expand_content">Inhoud uitvouwen</string>
+    <string name="content_description_collapse_content">Inhoud samenvouwen</string>
     <string name="syncSettings_autoContentSyncDescription">Door Automatisch synchroniseren van content in te schakelen wordt de geselecteerde content gedownload op basis van de onderstaande instellingen. De contentsynchronisatie vindt ook plaats als de applicatie niet wordt uitgevoerd. Als de instelling wordt uitgeschakeld, wordt er geen synchronisatie uitgevoerd. De reeds gedownloade content wordt niet verwijderd.</string>
     <string name="syncSettings_syncFrequencyTitle">Synchronisatiefrequentie</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisch synchroniseren van content</string>
@@ -1452,7 +1467,6 @@
         <item quantity="one">%d-cursus wordt gesynchroniseerd.</item>
         <item quantity="other">%d-cursussen worden gesynchroniseerd.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Afbeeldingen van cursusinhoud</string>
     <string name="assignmentNoLongerAvailable">Deze opdracht is niet meer beschikbaar.</string>
     <string name="editDashboardOfflineMode">Je bent offline</string>
     <string name="editDashboardOfflineModeMessage">Je hebt momenteel geen cursussen die offline beschikbaar zijn.</string>
@@ -1464,4 +1478,5 @@
         <item quantity="one">%d-cursus is gesynchroniseerd.</item>
         <item quantity="other">%d-cursussen zijn gesynchroniseerd.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Aanvullende cursusinhoud</string>
 </resources>
