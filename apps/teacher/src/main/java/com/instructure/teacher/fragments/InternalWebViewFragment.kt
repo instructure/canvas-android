@@ -49,6 +49,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentInternalWebviewBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
+import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import kotlinx.coroutines.Job
@@ -186,8 +187,10 @@ open class InternalWebViewFragment : BaseFragment() {
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
-            shouldCloseFragment = true
-            activity?.onBackPressed()
+            toolbar.setupCloseButton {
+                shouldCloseFragment = true
+                activity?.onBackPressed()
+            }
         }
 
         if (darkToolbar) {
