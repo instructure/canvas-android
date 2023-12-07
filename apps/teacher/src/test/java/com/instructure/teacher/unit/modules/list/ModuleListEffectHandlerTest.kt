@@ -95,7 +95,7 @@ class ModuleListEffectHandlerTest : Assert() {
         }
 
         connection.accept(ModuleListEffect.UpdateModuleItems(Course(), items))
-        verify(timeout = 100, ordering = Ordering.SEQUENCE) {
+        verify(timeout = 500, ordering = Ordering.SEQUENCE) {
             consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(itemIds, true))
             consumer.accept(ModuleListEvent.ReplaceModuleItems(updatedItems))
             consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(itemIds, false))

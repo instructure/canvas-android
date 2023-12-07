@@ -31,14 +31,10 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
-
-    private var fileInfoJob: Job? = null
-
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
             is ModuleListEffect.ShowModuleItemDetailView -> {
