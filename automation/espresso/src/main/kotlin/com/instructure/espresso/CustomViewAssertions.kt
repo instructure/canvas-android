@@ -26,9 +26,11 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import junit.framework.AssertionFailedError
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
@@ -117,6 +119,13 @@ class ConstraintLayoutItemCountAssertion(private val expectedCount: Int) : ViewA
         }
         val count = view.childCount
         ViewMatchers.assertThat(count, Matchers.`is`(expectedCount))
+    }
+}
+
+class ViewAlphaAssertion(private val expectedAlpha: Float): ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        assertThat("View alpha should be $expectedAlpha", view.alpha, `is`(expectedAlpha))
     }
 }
 

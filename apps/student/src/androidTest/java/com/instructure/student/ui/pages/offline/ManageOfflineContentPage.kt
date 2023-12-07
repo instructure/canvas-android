@@ -128,7 +128,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
     }
 
     fun waitForItemDisappear(itemName: String) {
-        onView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
+        waitForView(withId(R.id.checkbox) + hasSibling(withId(R.id.title) + withText(itemName))).check(DoesNotExistAssertion(5))
     }
 
     fun assertDisplaysNoCourses() {
