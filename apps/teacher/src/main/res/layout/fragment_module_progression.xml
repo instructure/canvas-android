@@ -21,19 +21,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/previous"
-            app:layout_constraintTop_toTopOf="parent"
-            app:onPageChangeListener="@{viewModel.data.onPageChangeListener}" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/previous"
             android:layout_width="?android:attr/actionBarSize"
             android:layout_height="?android:attr/actionBarSize"
             android:contentDescription="@string/previous"
-            android:onClick="@{()->itemPager.setCurrentItem(viewModel.data.currentPosition-1)}"
+            android:onClick="@{()->itemPager.setCurrentItem(itemPager.getCurrentItem()-1)}"
             android:padding="16dp"
             android:src="@drawable/ic_chevron_left"
             android:tint="@{viewModel.data.iconColor}"
-            android:visibility="@{viewModel.data.previousVisible ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -51,7 +50,6 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            android:text="@{viewModel.data.moduleNames[viewModel.data.currentPosition]}"
             android:textColor="@color/textDarkest"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -65,11 +63,11 @@
             android:layout_width="?android:attr/actionBarSize"
             android:layout_height="?android:attr/actionBarSize"
             android:contentDescription="@string/next"
-            android:onClick="@{()->itemPager.setCurrentItem(viewModel.data.currentPosition+1)}"
+            android:onClick="@{()->itemPager.setCurrentItem(itemPager.getCurrentItem()+1)}"
             android:padding="16dp"
             android:src="@drawable/ic_chevron_right"
             android:tint="@{viewModel.data.iconColor}"
-            android:visibility="@{viewModel.data.nextVisible ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -85,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.state.isSuccessState ? View.VISIBLE : View.INVISIBLE}"
-            app:constraint_referenced_ids="itemPager, divider, previous, moduleName, next" />
+            app:constraint_referenced_ids="itemPager, divider, moduleName" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

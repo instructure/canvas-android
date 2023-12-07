@@ -21,7 +21,6 @@ import android.content.res.Resources
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -29,12 +28,9 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItem.Type
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +38,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ModuleProgressionViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val resources: Resources,
     private val repository: ModuleProgressionRepository,
     private val discussionRouteHelperRepository: DiscussionRouteHelperRepository
@@ -60,19 +55,10 @@ class ModuleProgressionViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<ModuleProgressionAction>>()
 
-    val canvasContext = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT)!!
-    private var moduleItemId = savedStateHandle.get<Long>(RouterParams.MODULE_ITEM_ID).orDefault(-1)
-    private val assetType = savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_TYPE).orEmpty()
-    private val assetId = savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_ID).orEmpty()
-
-    init {
-        loadData()
-    }
-
-    private fun loadData() {
+    fun loadData(canvasContext: CanvasContext, moduleItemIdParam: Long, assetType: String, assetId: String) {
         viewModelScope.tryLaunch {
             _state.postValue(ViewState.Loading)
-
+            var moduleItemId = moduleItemIdParam
             if (moduleItemId == -1L) {
                 val asset = ModuleItemAsset.valueOf(assetType)
                 try {
@@ -96,7 +82,7 @@ class ModuleProgressionViewModel @Inject constructor(
                 .map { createModuleItemViewData(it, isDiscussionRedesignEnabled) to it }
                 .filter { it.first != null }
 
-            val initialPosition = items.indexOfFirst { it.second.id == moduleItemId }
+            val initialPosition = items.indexOfFirst { it.second.id == moduleItemId }.coerceAtLeast(0)
 
             val moduleNames = items.map { item ->
                 modules.find { item.second.moduleId == it.id }?.name.orEmpty()

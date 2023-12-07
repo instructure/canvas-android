@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.utils.depaginate
 class ModuleProgressionRepository(
     private val moduleApi: ModuleAPI.ModuleInterface
 ) {
+
+    //See com.instructure.teacher.features.modules.list.ModuleListEffectHandler.fetchPageData
     suspend fun getModulesWithItems(canvasContext: CanvasContext): List<ModuleObject> {
         val params = RestParams()
         val modules = moduleApi.getFirstPageModulesWithItems(canvasContext.apiContext(), canvasContext.id, params).depaginate {

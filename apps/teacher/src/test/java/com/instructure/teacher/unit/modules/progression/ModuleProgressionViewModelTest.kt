@@ -23,22 +23,18 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.features.modules.progression.ModuleItemAsset
 import com.instructure.teacher.features.modules.progression.ModuleItemViewData
 import com.instructure.teacher.features.modules.progression.ModuleProgressionAction
-import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionRepository
 import com.instructure.teacher.features.modules.progression.ModuleProgressionViewData
 import com.instructure.teacher.features.modules.progression.ModuleProgressionViewModel
@@ -70,7 +66,6 @@ class ModuleProgressionViewModelTest {
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val discussionRouteHelperRepository: DiscussionRouteHelperRepository = mockk(relaxed = true)
     private val repository: ModuleProgressionRepository = mockk(relaxed = true)
@@ -91,19 +86,12 @@ class ModuleProgressionViewModelTest {
         every { mockUri.toString() } answers { "mockUri" }
         ContextKeeper.appContext = mockk(relaxed = true)
 
-        every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns Course(id = 1L)
-        every { savedStateHandle.get<Long>(RouterParams.MODULE_ITEM_ID) } returns 1L
-        every { savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_TYPE) } returns ModuleItemAsset.MODULE_ITEM.name
-        every { savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_ID) } returns "1"
+        viewModel = ModuleProgressionViewModel(resources, repository, discussionRouteHelperRepository)
     }
 
     @After
     fun tearDown() {
         unmockkAll()
-    }
-
-    private fun createViewModel() {
-        viewModel = ModuleProgressionViewModel(savedStateHandle, resources, repository, discussionRouteHelperRepository)
     }
 
     @Test
@@ -114,7 +102,7 @@ class ModuleProgressionViewModelTest {
 
         coEvery { repository.getModulesWithItems(any()) } throws IllegalStateException()
 
-        createViewModel()
+        viewModel.loadData(Course(id = 1L), 1L, ModuleItemAsset.MODULE_ITEM.name, "")
 
         Assert.assertEquals(ViewState.Error(expected), viewModel.state.value)
         Assert.assertEquals(expected, (viewModel.state.value as? ViewState.Error)?.errorMessage)
@@ -128,7 +116,7 @@ class ModuleProgressionViewModelTest {
             ModuleObject(name = "Name", items = listOf(ModuleItem(id = 1L, type = "Page", pageUrl = "pageUrl")))
         )
 
-        createViewModel()
+        viewModel.loadData(Course(id = 1L), 1L, ModuleItemAsset.MODULE_ITEM.name, "")
 
         Assert.assertEquals(ViewState.Success, viewModel.state.value)
         Assert.assertEquals(expected, viewModel.data.value)
@@ -138,10 +126,6 @@ class ModuleProgressionViewModelTest {
     fun `Load success with asset type and id`() {
         val expected = ModuleProgressionViewData(listOf(ModuleItemViewData.Assignment(1L)), listOf("Name"), 0, 0)
 
-        every { savedStateHandle.get<Long>(RouterParams.MODULE_ITEM_ID) } returns -1L
-        every { savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_TYPE) } returns ModuleItemAsset.ASSIGNMENT.name
-        every { savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_ID) } returns "1"
-
         coEvery { repository.getModuleItemSequence(any(), any(), any()) } returns ModuleItemSequence(
             items = arrayOf(ModuleItemWrapper(current = ModuleItem(id = 1L, type = "Assignment", contentId = 1L)))
         )
@@ -150,7 +134,7 @@ class ModuleProgressionViewModelTest {
             ModuleObject(name = "Name", items = listOf(ModuleItem(id = 1L, type = "Assignment", contentId = 1L)))
         )
 
-        createViewModel()
+        viewModel.loadData(Course(id = 1L), -1, ModuleItemAsset.ASSIGNMENT.name, "1")
 
         Assert.assertEquals(ViewState.Success, viewModel.state.value)
         Assert.assertEquals(expected, viewModel.data.value)
@@ -197,7 +181,7 @@ class ModuleProgressionViewModelTest {
             )
         )
 
-        createViewModel()
+        viewModel.loadData(Course(id = 1L), 1L, ModuleItemAsset.MODULE_ITEM.name, "")
 
         verify { Uri.parse("externalUri1") }
         verify { Uri.parse("externalUri2") }
@@ -207,8 +191,6 @@ class ModuleProgressionViewModelTest {
 
     @Test
     fun `Initial position calculated correctly`() {
-        every { savedStateHandle.get<Long>(RouterParams.MODULE_ITEM_ID) } returns 3L
-
         coEvery { repository.getModulesWithItems(any()) } returns listOf(
             ModuleObject(
                 id = 1L, name = "Module 1", items = listOf(
@@ -224,7 +206,7 @@ class ModuleProgressionViewModelTest {
             )
         )
 
-        createViewModel()
+        viewModel.loadData(Course(id = 1L), 3L, ModuleItemAsset.MODULE_ITEM.name, "")
 
         Assert.assertEquals(ViewState.Success, viewModel.state.value)
         Assert.assertEquals(2, viewModel.data.value?.initialPosition)
@@ -234,13 +216,9 @@ class ModuleProgressionViewModelTest {
     fun `Redirect if asset is not in modules`() {
         val expected = ModuleProgressionAction.RedirectToAsset(ModuleItemAsset.ASSIGNMENT)
 
-        every { savedStateHandle.get<Long>(RouterParams.MODULE_ITEM_ID) } returns -1L
-        every { savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_TYPE) } returns ModuleItemAsset.ASSIGNMENT.name
-        every { savedStateHandle.get<String>(ModuleProgressionFragment.ASSET_ID) } returns "1"
-
         coEvery { repository.getModuleItemSequence(any(), any(), any()) } returns ModuleItemSequence()
 
-        createViewModel()
+        viewModel.loadData(Course(id = 1L), -1, ModuleItemAsset.ASSIGNMENT.name, "1")
 
         Assert.assertEquals(expected, viewModel.events.value?.peekContent())
     }

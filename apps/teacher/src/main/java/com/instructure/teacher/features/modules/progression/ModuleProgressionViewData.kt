@@ -18,36 +18,13 @@
 package com.instructure.teacher.features.modules.progression
 
 import androidx.annotation.ColorInt
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
-import com.instructure.teacher.BR
 
 data class ModuleProgressionViewData(
     val moduleItems: List<ModuleItemViewData>,
     val moduleNames: List<String>,
     val initialPosition: Int,
     @ColorInt val iconColor: Int
-) : BaseObservable() {
-    @Bindable
-    var currentPosition = initialPosition
-
-    val onPageChangeListener: OnPageChangeListener = object : SimpleOnPageChangeListener() {
-        override fun onPageSelected(position: Int) {
-            currentPosition = position
-            notifyPropertyChanged(BR.currentPosition)
-            notifyPropertyChanged(BR.previousVisible)
-            notifyPropertyChanged(BR.nextVisible)
-        }
-    }
-
-    @Bindable
-    fun isPreviousVisible(): Boolean = currentPosition > 0
-
-    @Bindable
-    fun isNextVisible(): Boolean = currentPosition < moduleItems.lastIndex
-}
+)
 
 sealed class ModuleProgressionAction {
     data class RedirectToAsset(val asset: ModuleItemAsset) : ModuleProgressionAction()

@@ -23,14 +23,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setHidden
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleProgressionBinding
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
@@ -48,6 +53,10 @@ class ModuleProgressionFragment : Fragment() {
     private val viewModel: ModuleProgressionViewModel by viewModels()
     private val binding by viewBinding(FragmentModuleProgressionBinding::bind)
 
+    private val canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    private val moduleItemId by LongArg(key = RouterParams.MODULE_ITEM_ID, default = -1L)
+    private val assetType by StringArg(key = ASSET_TYPE)
+    private val assetId by StringArg(key = ASSET_ID)
     private val route: Route by ParcelableArg(key = ROUTE)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -61,7 +70,7 @@ class ModuleProgressionFragment : Fragment() {
         binding.viewModel = viewModel
 
         viewModel.data.observe(viewLifecycleOwner) {
-            setupPager(it.moduleItems, it.initialPosition)
+            setupPager(it)
         }
 
         viewModel.events.observe(viewLifecycleOwner) {
@@ -69,11 +78,25 @@ class ModuleProgressionFragment : Fragment() {
                 handleAction(action)
             }
         }
+
+        viewModel.loadData(canvasContext, moduleItemId, assetType, assetId)
     }
 
-    private fun setupPager(items: List<ModuleItemViewData>, initialPosition: Int) = with(binding.itemPager) {
-        adapter = ModuleProgressionAdapter(childFragmentManager, items.map { createFragment(it) })
-        setCurrentItem(initialPosition, false)
+    private fun setupPager(data: ModuleProgressionViewData) = with(binding.itemPager) {
+        adapter = ModuleProgressionAdapter(childFragmentManager, data.moduleItems.map { createFragment(it) })
+        setCurrentItem(data.initialPosition, false)
+        setupCarousel(data, data.initialPosition)
+        addOnPageChangeListener(object : SimpleOnPageChangeListener() {
+            override fun onPageSelected(position: Int) {
+                setupCarousel(data, position)
+            }
+        })
+    }
+
+    private fun setupCarousel(data: ModuleProgressionViewData, position: Int) = with(binding) {
+        previous.setHidden(position == 0)
+        next.setHidden(position == data.moduleItems.lastIndex)
+        moduleName.text = data.moduleNames.getOrNull(position)
     }
 
     private fun handleAction(action: ModuleProgressionAction) = when (action) {
@@ -84,25 +107,25 @@ class ModuleProgressionFragment : Fragment() {
 
     private fun createFragment(item: ModuleItemViewData) = when (item) {
         is ModuleItemViewData.Page -> PageDetailsFragment.newInstance(
-            viewModel.canvasContext, PageDetailsFragment.makeBundle(item.pageUrl)
+            canvasContext, PageDetailsFragment.makeBundle(item.pageUrl)
         )
 
         is ModuleItemViewData.Assignment -> AssignmentDetailsFragment.newInstance(
-            viewModel.canvasContext as Course, AssignmentDetailsFragment.makeBundle(item.assignmentId)
+            canvasContext as Course, AssignmentDetailsFragment.makeBundle(item.assignmentId)
         )
 
         is ModuleItemViewData.Discussion -> if (item.isDiscussionRedesignEnabled) {
             DiscussionDetailsWebViewFragment.newInstance(
-                DiscussionDetailsWebViewFragment.makeRoute(viewModel.canvasContext, item.discussionTopicHeaderId)
+                DiscussionDetailsWebViewFragment.makeRoute(canvasContext, item.discussionTopicHeaderId)
             )!!
         } else {
             DiscussionsDetailsFragment.newInstance(
-                viewModel.canvasContext, DiscussionsDetailsFragment.makeBundle(item.discussionTopicHeaderId)
+                canvasContext, DiscussionsDetailsFragment.makeBundle(item.discussionTopicHeaderId)
             )
         }
 
         is ModuleItemViewData.Quiz -> QuizDetailsFragment.newInstance(
-            viewModel.canvasContext as Course, QuizDetailsFragment.makeBundle(item.quizId)
+            canvasContext as Course, QuizDetailsFragment.makeBundle(item.quizId)
         )
 
         is ModuleItemViewData.External -> InternalWebViewFragment.newInstance(
@@ -117,7 +140,7 @@ class ModuleProgressionFragment : Fragment() {
         )
 
         is ModuleItemViewData.File -> FileDetailsFragment.newInstance(
-            FileDetailsFragment.makeBundle(viewModel.canvasContext, item.fileUrl)
+            FileDetailsFragment.makeBundle(canvasContext, item.fileUrl)
         )
     }
 
@@ -152,7 +175,7 @@ class ModuleProgressionFragment : Fragment() {
                 return ModuleItemAsset.MODULE_ITEM to queryParams[RouterParams.MODULE_ITEM_ID].orEmpty()
             }
 
-            for (asset in ModuleItemAsset.values()) {
+            for (asset in ModuleItemAsset.entries) {
                 if (params.containsKey(asset.assetIdParamName)) {
                     return asset to (params[asset.assetIdParamName].orEmpty())
                 }
@@ -166,6 +189,6 @@ class ModuleProgressionFragment : Fragment() {
                 || route.arguments.containsKey(RouterParams.MODULE_ITEM_ID))
                 || route.paramsHash.keys.any { isModuleItemAsset(it) }
 
-        private fun isModuleItemAsset(paramName: String) = ModuleItemAsset.values().find { it.assetIdParamName == paramName } != null
+        private fun isModuleItemAsset(paramName: String) = ModuleItemAsset.entries.find { it.assetIdParamName == paramName } != null
     }
 }
