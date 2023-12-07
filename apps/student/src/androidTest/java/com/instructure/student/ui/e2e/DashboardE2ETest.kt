@@ -101,11 +101,11 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertDisplaysGroup(group2, course1)
 
         Log.d(STEP_TAG,"Click on 'All Courses' button. Assert that the All Courses Page is loaded.")
-        dashboardPage.clickEditDashboard()
-        editDashboardPage.assertPageObjects()
+        dashboardPage.openAllCoursesPage()
+        allCoursesPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Favorite '${course1.name}' course and navigate back to Dashboard Page.")
-        editDashboardPage.favoriteCourse(course1.name)
+        allCoursesPage.favoriteCourse(course1.name)
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Assert that only the favoured course, '${course1.name}' is displayed." +
@@ -124,16 +124,16 @@ class DashboardE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Click on 'All Courses' button. Assert that the All Courses Page is loaded.")
         dashboardPage.assertPageObjects()
-        dashboardPage.clickEditDashboard()
-        editDashboardPage.assertPageObjects()
+        dashboardPage.openAllCoursesPage()
+        allCoursesPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Assert that the mass select button's text is 'Unselect All', since one of the courses is selected.")
-        editDashboardPage.assertCourseMassSelectButtonIsDisplayed(true)
+        allCoursesPage.assertCourseMassSelectButtonIsDisplayed(true)
 
         Log.d(STEP_TAG, "Toggle off favourite star icon of '${course1.name}' course." +
                 "Assert that the 'mass' select button's label is 'Select All'.")
-        editDashboardPage.unfavoriteCourse(course1.name)
-        editDashboardPage.assertCourseMassSelectButtonIsDisplayed(false)
+        allCoursesPage.unfavoriteCourse(course1.name)
+        allCoursesPage.assertCourseMassSelectButtonIsDisplayed(false)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         Espresso.pressBack()
@@ -186,15 +186,15 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertCourseGrade(course2.name, "N/A")
 
         Log.d(STEP_TAG,"Click on 'All Courses' button.")
-        dashboardPage.clickEditDashboard()
-        editDashboardPage.assertPageObjects()
+        dashboardPage.openAllCoursesPage()
+        allCoursesPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Assert that the group 'mass' select button's label is 'Select All'.")
-        editDashboardPage.swipeUp()
-        editDashboardPage.assertGroupMassSelectButtonIsDisplayed(false)
+        allCoursesPage.swipeUp()
+        allCoursesPage.assertGroupMassSelectButtonIsDisplayed(false)
 
         Log.d(STEP_TAG, "Favorite '${group.name}' course and navigate back to Dashboard Page.")
-        editDashboardPage.favoriteGroup(group.name)
+        allCoursesPage.favoriteGroup(group.name)
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Assert that only the favoured group, '${group.name}' is displayed." +
@@ -203,18 +203,18 @@ class DashboardE2ETest : StudentTest() {
         dashboardPage.assertGroupNotDisplayed(group2)
 
         Log.d(STEP_TAG,"Click on 'All Courses' button.")
-        dashboardPage.clickEditDashboard()
-        editDashboardPage.assertPageObjects()
+        dashboardPage.openAllCoursesPage()
+        allCoursesPage.assertPageObjects()
         Thread.sleep(2000) //It can be flaky without this 2 seconds
-        editDashboardPage.swipeUp()
+        allCoursesPage.swipeUp()
 
         Log.d(STEP_TAG, "Assert that the group 'mass' select button's label is 'Unselect All'.")
-        editDashboardPage.assertGroupMassSelectButtonIsDisplayed(true)
+        allCoursesPage.assertGroupMassSelectButtonIsDisplayed(true)
 
         Log.d(STEP_TAG, "Toggle off favourite star icon of '${group.name}' group." +
                 "Assert that the 'mass' select button's label is 'Select All'.")
-        editDashboardPage.unfavoriteGroup(group.name)
-        editDashboardPage.assertGroupMassSelectButtonIsDisplayed(false)
+        allCoursesPage.unfavoriteGroup(group.name)
+        allCoursesPage.assertGroupMassSelectButtonIsDisplayed(false)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         Espresso.pressBack()

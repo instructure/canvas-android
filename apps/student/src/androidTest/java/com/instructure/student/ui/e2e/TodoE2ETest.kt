@@ -120,8 +120,8 @@ class TodoE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page. Open ${favoriteCourse.name} course. Mark it as favorite.")
         Espresso.pressBack()
-        dashboardPage.clickEditDashboard()
-        editDashboardPage.favoriteCourse(favoriteCourse.name)
+        dashboardPage.openAllCoursesPage()
+        allCoursesPage.favoriteCourse(favoriteCourse.name)
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page and open the To Do Page again.")
         Espresso.pressBack()
