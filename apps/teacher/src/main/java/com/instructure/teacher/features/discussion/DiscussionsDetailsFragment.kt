@@ -18,6 +18,7 @@ package com.instructure.teacher.features.discussion
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.webkit.CookieManager
@@ -39,7 +40,6 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.AttachmentPickerDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
@@ -74,9 +74,8 @@ import java.util.*
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
-        DiscussionsDetailsView>(), DiscussionsDetailsView, Identity {
-
-    private val binding by viewBinding(FragmentDiscussionsDetailsBinding::bind)
+        DiscussionsDetailsView,
+        FragmentDiscussionsDetailsBinding>(), DiscussionsDetailsView, Identity {
 
     //region Member Variables
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -100,7 +99,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     @PageViewUrlParam("topicId")
     private fun getTopicId() = discussionTopicHeader.id
 
-    override fun layoutResId(): Int = R.layout.fragment_discussions_details
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentDiscussionsDetailsBinding = FragmentDiscussionsDetailsBinding::inflate
 
     override fun onRefreshFinished() {
         binding.discussionProgressBar.setGone()

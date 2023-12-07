@@ -17,19 +17,28 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.AppThemeSelector
+import com.instructure.pandautils.utils.AppType
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSettingsBinding
@@ -41,14 +50,15 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.ProfileSettingsFragmentView
 
 @ScreenView(SCREEN_VIEW_SETTINGS)
-class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter, ProfileSettingsFragmentView>(),
+class SettingsFragment : BasePresenterFragment<
+        ProfileSettingsFragmentPresenter,
+        ProfileSettingsFragmentView,
+        FragmentSettingsBinding>(),
     ProfileSettingsFragmentView {
-
-    private val binding by viewBinding(FragmentSettingsBinding::bind)
 
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
-    override fun layoutResId() = R.layout.fragment_settings
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentSettingsBinding = FragmentSettingsBinding::inflate
 
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)

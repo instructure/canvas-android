@@ -23,6 +23,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -43,12 +44,27 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.descendants
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentEditQuizDetailsBinding
@@ -58,20 +74,24 @@ import com.instructure.teacher.factory.EditQuizDetailsPresenterFactory
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.presenters.EditQuizDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.getColorCompat
+import com.instructure.teacher.utils.groupedDueDates
+import com.instructure.teacher.utils.setGroupedDueDates
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Date
 
 @ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
 class EditQuizDetailsFragment : BasePresenterFragment<
         EditQuizDetailsPresenter,
-        EditQuizDetailsView>(), EditQuizDetailsView, Identity {
-
-    private val binding by viewBinding(FragmentEditQuizDetailsBinding::bind)
+        EditQuizDetailsView,
+        FragmentEditQuizDetailsBinding>(),
+    EditQuizDetailsView, Identity {
 
     private var mCourse: Course by ParcelableArg(Course())
 
@@ -124,7 +144,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
     }
 
-    override fun layoutResId() = R.layout.fragment_edit_quiz_details
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentEditQuizDetailsBinding = FragmentEditQuizDetailsBinding::inflate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

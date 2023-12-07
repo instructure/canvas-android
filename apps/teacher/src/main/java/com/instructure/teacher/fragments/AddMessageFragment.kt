@@ -26,19 +26,36 @@ import android.widget.AdapterView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_INBOX_COMPOSE
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadEvent
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CanvasContextSpinnerAdapter
@@ -56,16 +73,18 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 @PageView(url = "conversations/compose")
 @ScreenView(SCREEN_VIEW_INBOX_COMPOSE)
 @AndroidEntryPoint
-class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessageView>(), AddMessageView,
+class AddMessageFragment : BasePresenterFragment<
+        AddMessagePresenter,
+        AddMessageView,
+        FragmentAddMessageBinding>(),
+    AddMessageView,
     FileUploadDialogParent {
-
-    private val binding by viewBinding(FragmentAddMessageBinding::bind)
 
     private var currentMessage: Message? by NullableParcelableArg(null, Const.MESSAGE_TO_USER)
     private var selectedCourse: CanvasContext? = null
@@ -103,7 +122,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     private val recipientsFromRecipientEntries: ArrayList<Recipient>
         get() = ArrayList(binding.chips.recipients)
 
-    override fun layoutResId(): Int = R.layout.fragment_add_message
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentAddMessageBinding = FragmentAddMessageBinding::inflate
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_add_message, container, false)

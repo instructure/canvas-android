@@ -21,6 +21,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -29,11 +30,11 @@ import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.models.Page.Companion.ANYONE
 import com.instructure.canvasapi2.models.Page.Companion.GROUP_MEMBERS
 import com.instructure.canvasapi2.models.Page.Companion.STUDENTS
 import com.instructure.canvasapi2.models.Page.Companion.TEACHERS
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
@@ -41,11 +42,25 @@ import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentCreateOrEditPageBinding
@@ -58,12 +73,12 @@ import com.instructure.teacher.viewinterface.CreateOrEditPageView
 
 @PageView
 @ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_PAGE_DETAILS)
-class CreateOrEditPageDetailsFragment :
-        BasePresenterFragment<CreateOrEditPagePresenter, CreateOrEditPageView>(),
+class CreateOrEditPageDetailsFragment : BasePresenterFragment<
+        CreateOrEditPagePresenter,
         CreateOrEditPageView,
-        Identity {
-
-    private val binding by viewBinding(FragmentCreateOrEditPageBinding::bind)
+        FragmentCreateOrEditPageBinding>(),
+    CreateOrEditPageView,
+    Identity {
 
     /* The course this page belongs to */
     private var canvasContext by ParcelableArg<CanvasContext>(Course())
@@ -84,7 +99,8 @@ class CreateOrEditPageDetailsFragment :
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
     override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter) {}
-    override fun layoutResId(): Int = R.layout.fragment_create_or_edit_page
+
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCreateOrEditPageBinding = FragmentCreateOrEditPageBinding::inflate
 
     @PageViewUrl
     @Suppress("unused")

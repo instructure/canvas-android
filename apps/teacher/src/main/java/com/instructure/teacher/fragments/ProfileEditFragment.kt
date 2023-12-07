@@ -22,6 +22,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
+import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
@@ -43,11 +44,24 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_EDIT
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AvatarCropActivity
+import com.instructure.pandautils.utils.AvatarCropConfig
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FilePrefs
+import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.pandautils.utils.MediaUploadUtils.chooseFromGalleryBecausePermissionsAlreadyGranted
 import com.instructure.pandautils.utils.MediaUploadUtils.takeNewPhotoBecausePermissionsAlreadyGranted
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentProfileEditBinding
 import com.instructure.teacher.factory.ProfileEditFragmentPresenterFactory
@@ -62,9 +76,10 @@ import java.io.File
 @ScreenView(SCREEN_VIEW_PROFILE_EDIT)
 class ProfileEditFragment : BasePresenterFragment<
         ProfileEditFragmentPresenter,
-        ProfileEditFragmentView>(), ProfileEditFragmentView, LoaderManager.LoaderCallbacks<AvatarWrapper> {
-
-    private val binding by viewBinding(FragmentProfileEditBinding::bind)
+        ProfileEditFragmentView,
+        FragmentProfileEditBinding>(),
+    ProfileEditFragmentView,
+    LoaderManager.LoaderCallbacks<AvatarWrapper> {
 
     private var mLoaderBundle: Bundle? = null
 
@@ -76,7 +91,7 @@ class ProfileEditFragment : BasePresenterFragment<
 
     private val saveButton: TextView? get() = view?.findViewById(R.id.menu_save)
 
-    override fun layoutResId() = R.layout.fragment_profile_edit
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentProfileEditBinding = FragmentProfileEditBinding::inflate
 
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)

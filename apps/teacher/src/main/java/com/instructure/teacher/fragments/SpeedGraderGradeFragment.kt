@@ -15,14 +15,27 @@
  */
 package com.instructure.teacher.fragments
 
+import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_GRADE
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedgraderGradeBinding
 import com.instructure.teacher.dialog.CustomizeGradeDialog
@@ -39,16 +52,19 @@ import org.greenrobot.eventbus.ThreadMode
 import java.text.DecimalFormat
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_GRADE)
-class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter, SpeedGraderGradeView>(), SpeedGraderGradeView {
-
-    private val binding by viewBinding(FragmentSpeedgraderGradeBinding::bind)
+class SpeedGraderGradeFragment : BasePresenterFragment<
+        SpeedGraderGradePresenter,
+        SpeedGraderGradeView,
+        FragmentSpeedgraderGradeBinding>(),
+    SpeedGraderGradeView {
 
     private var mSubmission: Submission? by NullableParcelableArg(default = Submission())
     private var mAssignment: Assignment by ParcelableArg(default = Assignment())
     private var mAssignee: Assignee by ParcelableArg(default = StudentAssignee(User()))
     private var mCourse: Course by ParcelableArg(default = Course())
 
-    override fun layoutResId() = R.layout.fragment_speedgrader_grade
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentSpeedgraderGradeBinding = FragmentSpeedgraderGradeBinding::inflate
+
     override fun getPresenterFactory() = SpeedGraderGradePresenterFactory(mSubmission, mAssignment, mCourse, mAssignee)
     override fun onReadySetGo(presenter: SpeedGraderGradePresenter) {}
 
