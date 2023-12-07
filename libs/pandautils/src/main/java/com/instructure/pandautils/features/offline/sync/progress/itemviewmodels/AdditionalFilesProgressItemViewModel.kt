@@ -61,7 +61,7 @@ data class AdditionalFilesProgressItemViewModel(
         data.updateTotalSize(NumberHelper.readableFileSize(context, totalSize))
     }
 
-    private val courseProgressLiveData = courseSyncProgressDao.findByWorkerIdLiveData(data.courseWorkerId)
+    private val courseProgressLiveData = courseSyncProgressDao.findByCourseIdLiveData(data.courseId)
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
     private val courseProgressObserver = Observer<CourseSyncProgressEntity?> { progress ->

@@ -24,7 +24,6 @@ import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
@@ -120,8 +119,9 @@ class DashboardRepositoryTest {
         coEvery { localDataSource.getDashboardCards(any()) } returns offlineCards
 
         val result = repository.getDashboardCourses(true)
+        val expected = listOf(DashboardCard(3, position = 0), DashboardCard(4, position = 1))
 
-        Assert.assertEquals(offlineCards, result)
+        Assert.assertEquals(expected, result)
     }
 
     @Test
@@ -134,13 +134,14 @@ class DashboardRepositoryTest {
         coEvery { localDataSource.getDashboardCards(any()) } returns offlineCards
 
         val result = repository.getDashboardCourses(true)
+        val expected = listOf(DashboardCard(1, position = 0), DashboardCard(2, position = 1))
 
-        Assert.assertEquals(onlineCards, result)
+        Assert.assertEquals(expected, result)
     }
 
     @Test
     fun `Returned dashboard courses are saved to the local store`() = runTest {
-        val onlineCards = listOf(DashboardCard(1), DashboardCard(2))
+        val onlineCards = listOf(DashboardCard(1, position = 0), DashboardCard(2, position = 1))
 
         every { networkStateProvider.isOnline() } returns true
         coEvery { networkDataSource.getDashboardCards(any()) } returns onlineCards

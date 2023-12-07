@@ -37,6 +37,9 @@ interface FileSyncProgressDao {
     @Update
     suspend fun update(fileSyncProgressEntity: FileSyncProgressEntity)
 
+    @Query("SELECT * FROM FileSyncProgressEntity WHERE id = :id")
+    suspend fun findById(id: Long): FileSyncProgressEntity?
+
     @Query("SELECT * FROM FileSyncProgressEntity WHERE courseId = :courseId")
     fun findByCourseIdLiveData(courseId: Long): LiveData<List<FileSyncProgressEntity>>
 

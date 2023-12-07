@@ -18,6 +18,7 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.StatusCallback
@@ -39,11 +40,18 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
+import javax.inject.Inject
 
+@AndroidEntryPoint
 abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var loadInitialDataJob: Job? = null
 
@@ -129,6 +137,8 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             getUnreadMessageCount()
 
             getUnreadNotificationCount()
+
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
 
             initialCoreDataLoadingComplete()
         } catch {

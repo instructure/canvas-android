@@ -33,7 +33,6 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
     ]
 )
 data class FileSyncProgressEntity(
-    @PrimaryKey(autoGenerate = true)
     val fileId: Long,
     val courseId: Long,
     val fileName: String,
@@ -41,4 +40,6 @@ data class FileSyncProgressEntity(
     val fileSize: Long,
     val additionalFile: Boolean = false,
     val progressState: ProgressState,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0
 )

@@ -23,9 +23,6 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -45,13 +42,10 @@ import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.EditDashboardItemEntity
 import com.instructure.pandautils.room.offline.entities.EnrollmentState
-import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.delay
 import java.io.File
-import java.util.UUID
 import kotlin.random.Random
 
 const val COURSE_IDS = "course-ids"
@@ -60,12 +54,10 @@ const val COURSE_IDS = "course-ids"
 class OfflineSyncWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val workManager: WorkManager,
     private val featureFlagProvider: FeatureFlagProvider,
     private val courseApi: CourseAPI.CoursesInterface,
     private val dashboardCardDao: DashboardCardDao,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
-    private val syncSettingsFacade: SyncSettingsFacade,
     private val editDashboardItemDao: EditDashboardItemDao,
     private val courseDao: CourseDao,
     private val courseSyncProgressDao: CourseSyncProgressDao,
@@ -74,16 +66,23 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao,
     private val syncRouter: SyncRouter,
+    private val courseSync: CourseSync
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val notificationId = Random.nextInt()
 
     override suspend fun doWork(): Result {
-        if (!featureFlagProvider.offlineEnabled() && apiPrefs.user == null) return Result.success()
+        courseSyncProgressDao.deleteAll()
+        fileSyncProgressDao.deleteAll()
 
-        val dashboardCards =
+        if (!featureFlagProvider.offlineEnabled() || apiPrefs.user == null) return Result.success()
+
+        var dashboardCards =
             courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
+        if (dashboardCards.all { it.position == Int.MAX_VALUE }) {
+            dashboardCards = dashboardCards.mapIndexed { index, dashboardCard -> dashboardCard.copy(position = index) }
+        }
         dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
 
         val params = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
@@ -119,52 +118,33 @@ class OfflineSyncWorker @AssistedInject constructor(
                 }
         editDashboardItemDao.updateEntities(allCourses)
 
-        val courseIds = inputData.getLongArray(COURSE_IDS)
-        val courses = courseIds?.let {
-            courseSyncSettingsDao.findByIds(courseIds.toList())
-        } ?: courseSyncSettingsDao.findAll()
+        val courseIds = inputData.getLongArray(COURSE_IDS)?.toSet()
+        val courses = courseSyncSettingsDao.findAll()
 
-        val courseIdsToRemove = courseSyncSettingsDao.findAll().filter { !it.anySyncEnabled }.map { it.courseId }
+        var (coursesToSync, coursesToDelete) = courses.partition { it.anySyncEnabled }
+
+        val courseIdsToRemove = coursesToDelete.map { it.courseId }
         courseDao.deleteByIds(courseIdsToRemove)
         courseIdsToRemove.forEach {
             cleanupFiles(it)
         }
 
-        val settingsMap = courses.associateBy { it.courseId }
+        coursesToSync = coursesToSync.filter { courseIds?.contains(it.courseId) ?: true }
 
-        val courseWorkers = courses.filter { it.anySyncEnabled }
-            .map { CourseSyncWorker.createOnTimeWork(it.courseId, syncSettingsFacade.getSyncSettings().wifiOnly) }
-
-        val courseProgresses = courseWorkers.map {
-            val courseId = it.workSpec.input.getLong(CourseSyncWorker.COURSE_ID, 0)
-            CourseSyncProgressEntity(
-                workerId = it.id.toString(),
-                courseId = courseId,
-                courseName = settingsMap[courseId]?.courseName.orEmpty(),
-            )
+        coursesToSync.map { CourseSyncProgressEntity(it.courseId, it.courseName) }.let {
+            courseSyncProgressDao.insertAll(it)
         }
 
-        courseSyncProgressDao.deleteAll()
-        fileSyncProgressDao.deleteAll()
-        courseSyncProgressDao.insertAll(courseProgresses)
+        courseSync.syncCourses(coursesToSync.map { it.courseId })
 
-        workManager.beginWith(courseWorkers)
-            .enqueue()
+        val courseProgresses = courseSyncProgressDao.findAll()
+        val fileProgresses = fileSyncProgressDao.findAll()
 
-        val workerIds = courseWorkers.map { it.id }
-
-        while (true) {
-            delay(1000)
-            val infos = workManager.getWorkInfos(WorkQuery.fromIds(workerIds)).get()
-
-            if (infos.isEmpty()) break
-
-            if (infos.any { it.state == WorkInfo.State.CANCELLED }) break
-
-            if (infos.all { it.state.isFinished }) {
-                showNotification(infos.size, infos.all { it.state == WorkInfo.State.SUCCEEDED })
-                break
-            }
+        if (courseProgresses.isNotEmpty() && fileProgresses.isNotEmpty()) {
+            showNotification(
+                courseProgresses.size,
+                courseProgresses.all { it.progressState == ProgressState.COMPLETED }
+                        && fileProgresses.all { it.progressState == ProgressState.COMPLETED })
         }
 
         return Result.success()
@@ -224,6 +204,7 @@ class OfflineSyncWorker @AssistedInject constructor(
 
     companion object {
         const val CHANNEL_ID = "syncChannel"
-        const val TAG = "OfflineSyncWorker"
+        const val PERIODIC_TAG = "OfflineSyncWorkerPeriodic"
+        const val ONE_TIME_TAG = "OfflineSyncWorkerOneTime"
     }
 }

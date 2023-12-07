@@ -62,7 +62,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: PageListRecyclerAdapter
+    private var recyclerAdapter: PageListRecyclerAdapter? = null
     private var defaultSelectedPageTitle = PageListRecyclerAdapter.FRONT_PAGE_DETERMINER // blank string is used to determine front page
     private var isShowFrontPage by BooleanArg(key = SHOW_FRONT_PAGE)
 
@@ -73,7 +73,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     @Subscribe
     fun onUpdatePage(event: PageUpdatedEvent) {
         event.once(javaClass.simpleName) {
-            recyclerAdapter.refresh()
+            recyclerAdapter?.refresh()
         }
     }
 
@@ -88,7 +88,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun onDestroyView() {
-        recyclerAdapter.cancel()
+        recyclerAdapter?.cancel()
         super.onDestroyView()
     }
 
@@ -120,7 +120,9 @@ class PageListFragment : ParentFragment(), Bookmarkable {
             }
         }, defaultSelectedPageTitle)
 
-        configureRecyclerView(rootView!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        recyclerAdapter?.let {
+            configureRecyclerView(rootView!!, requireContext(), it, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -137,7 +139,9 @@ class PageListFragment : ParentFragment(), Bookmarkable {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        configureRecyclerView(rootView!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        recyclerAdapter?.let {
+            configureRecyclerView(rootView!!, requireContext(), it, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        }
         recyclerBinding.emptyView.changeTextSize()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (isTablet) {
@@ -172,7 +176,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
                 } else {
                     recyclerBinding.emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
                 }
-                recyclerAdapter.searchQuery = query
+                recyclerAdapter?.searchQuery = query
             }
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
