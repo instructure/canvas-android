@@ -147,6 +147,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(hamburgerButtonMatcher).waitForCheck(matches(isDisplayed()))
     }
 
+    fun openLeftSideMenu() {
+        onView(hamburgerButtonMatcher).click()
+    }
+
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
         // Arggghhh... This scrolling logic on the recycler view is really unreliable and seems
         // to fail for nonsensical reasons.  For now, "scrollAndAssertDisplayed"" is just going to

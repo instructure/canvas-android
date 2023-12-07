@@ -128,4 +128,3 @@ class ViewAlphaAssertion(private val expectedAlpha: Float): ViewAssertion {
         assertThat("View alpha should be $expectedAlpha", view.alpha, `is`(expectedAlpha))
     }
 }
-
