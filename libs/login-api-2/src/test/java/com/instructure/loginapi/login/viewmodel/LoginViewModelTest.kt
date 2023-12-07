@@ -67,6 +67,8 @@ class LoginViewModelTest {
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        every { apiPrefs.user } returns mockk()
     }
 
     @After

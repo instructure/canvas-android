@@ -28,13 +28,16 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.slot
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
 
 class FilesTabProgressItemViewModelTest {
 
@@ -61,11 +64,9 @@ class FilesTabProgressItemViewModelTest {
 
     @Test
     fun `Success if no files`() {
-        val courseUUID = UUID.randomUUID()
         val courseProgress =
             CourseSyncProgressEntity(
                 1L,
-                courseUUID.toString(),
                 "Course",
                 emptyMap(),
                 additionalFilesStarted = true,
@@ -73,17 +74,16 @@ class FilesTabProgressItemViewModelTest {
             )
         val courseLiveData = MutableLiveData(courseProgress)
 
-        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
         every { fileSyncProgressDao.findCourseFilesByCourseIdLiveData(1L) } returns MutableLiveData(emptyList())
 
-        filesTabProgressItemViewModel = createItemViewModel(courseUUID)
+        filesTabProgressItemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.COMPLETED, filesTabProgressItemViewModel.data.state)
     }
 
     @Test
     fun `Create file items`() {
-        val courseUUID = UUID.randomUUID()
         val fileSyncProgresses = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
@@ -113,7 +113,6 @@ class FilesTabProgressItemViewModelTest {
 
         val courseProgress = CourseSyncProgressEntity(
             1L,
-            courseUUID.toString(),
             "Course",
             emptyMap(),
             additionalFilesStarted = true,
@@ -122,10 +121,10 @@ class FilesTabProgressItemViewModelTest {
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileSyncProgresses)
 
-        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
         every { fileSyncProgressDao.findCourseFilesByCourseIdLiveData(1L) } returns fileLiveData
 
-        filesTabProgressItemViewModel = createItemViewModel(courseUUID)
+        filesTabProgressItemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.IN_PROGRESS, filesTabProgressItemViewModel.data.state)
         assertEquals(3, filesTabProgressItemViewModel.data.items.size)
@@ -139,7 +138,6 @@ class FilesTabProgressItemViewModelTest {
 
     @Test
     fun `Progress updates`() {
-        val courseUUID = UUID.randomUUID()
         var fileSyncData = listOf(
             FileSyncProgressEntity(
                 courseId = 1L,
@@ -168,7 +166,6 @@ class FilesTabProgressItemViewModelTest {
         )
         val courseProgress = CourseSyncProgressEntity(
             1L,
-            courseUUID.toString(),
             "Course",
             emptyMap(),
             progressState = ProgressState.COMPLETED
@@ -176,10 +173,10 @@ class FilesTabProgressItemViewModelTest {
         val courseLiveData = MutableLiveData(courseProgress)
         val fileLiveData = MutableLiveData(fileSyncData)
 
-        every { courseSyncProgressDao.findByWorkerIdLiveData(courseUUID.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
         every { fileSyncProgressDao.findCourseFilesByCourseIdLiveData(1L) } returns fileLiveData
 
-        filesTabProgressItemViewModel = createItemViewModel(courseUUID)
+        filesTabProgressItemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.IN_PROGRESS, filesTabProgressItemViewModel.data.state)
         assertEquals(50, filesTabProgressItemViewModel.data.progress)
@@ -248,10 +245,10 @@ class FilesTabProgressItemViewModelTest {
     }
 
 
-    private fun createItemViewModel(uuid: UUID): FilesTabProgressItemViewModel {
+    private fun createItemViewModel(courseId: Long): FilesTabProgressItemViewModel {
         return FilesTabProgressItemViewModel(
             FileTabProgressViewData(
-                courseWorkerId = uuid.toString(),
+                courseId,
                 emptyList(),
             ),
             context,

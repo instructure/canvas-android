@@ -144,9 +144,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     lateinit var databaseProvider: DatabaseProvider
 
     @Inject
-    lateinit var featureFlagProvider: FeatureFlagProvider
-
-    @Inject
     lateinit var repository: NavigationRepository
 
     @Inject
@@ -230,7 +227,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
-                R.id.navigationDrawerSettings -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                R.id.navigationDrawerSettings -> startActivity(SettingsActivity.createIntent(applicationContext, featureFlagProvider.offlineEnabled()))
             }
         }
     }
@@ -305,8 +302,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         setupNavDrawerItems()
 
-        loadFeatureFlags()
-
         checkAppUpdates()
 
         val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
@@ -342,12 +337,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
                 }
             }
-        }
-    }
-
-    private fun loadFeatureFlags() {
-        lifecycleScope.launch {
-            featureFlagProvider.fetchEnvironmentFeatureFlags()
         }
     }
 

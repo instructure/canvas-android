@@ -45,18 +45,16 @@ class TabProgressItemViewModelTest {
 
     @Test
     fun `Progress updates`() {
-        val uuid = UUID.randomUUID()
         var courseProgress = CourseSyncProgressEntity(
             1L,
-            uuid.toString(),
             "Course",
             CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
         )
         val courseLiveData = MutableLiveData(courseProgress)
 
-        every { courseSyncProgressDao.findByWorkerIdLiveData(uuid.toString()) } returns courseLiveData
+        every { courseSyncProgressDao.findByCourseIdLiveData(1L) } returns courseLiveData
 
-        tabProgressItemViewModel = createItemViewModel(uuid)
+        tabProgressItemViewModel = createItemViewModel(1L)
 
         assertEquals(ProgressState.IN_PROGRESS, tabProgressItemViewModel.data.state)
 
@@ -69,12 +67,12 @@ class TabProgressItemViewModelTest {
         assertEquals(ProgressState.COMPLETED, tabProgressItemViewModel.data.state)
     }
 
-    private fun createItemViewModel(uuid: UUID): TabProgressItemViewModel {
+    private fun createItemViewModel(courseId: Long): TabProgressItemViewModel {
         return TabProgressItemViewModel(
             TabProgressViewData(
                 Tab.ASSIGNMENTS_ID,
                 "Assignments",
-                uuid.toString(),
+                courseId,
                 ProgressState.IN_PROGRESS
             ),
             courseSyncProgressDao

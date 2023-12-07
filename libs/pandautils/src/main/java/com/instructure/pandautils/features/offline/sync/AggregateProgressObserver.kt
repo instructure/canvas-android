@@ -42,11 +42,11 @@ class AggregateProgressObserver(
     private var courseProgressLiveData: LiveData<List<CourseSyncProgressEntity>>? = null
     private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
 
-    private var courseProgresses = mutableMapOf<String, CourseSyncProgressEntity>()
+    private var courseProgresses = mutableMapOf<Long, CourseSyncProgressEntity>()
     private var fileProgresses = mutableMapOf<Long, FileSyncProgressEntity>()
 
     private val courseProgressObserver = Observer<List<CourseSyncProgressEntity>> {
-        courseProgresses = it.associateBy { it.workerId }.toMutableMap()
+        courseProgresses = it.associateBy { it.courseId }.toMutableMap()
 
         calculateProgress()
     }

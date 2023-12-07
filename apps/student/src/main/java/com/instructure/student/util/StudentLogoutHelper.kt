@@ -16,27 +16,15 @@
  *
  */
 
-package com.instructure.pandautils.di
+package com.instructure.student.util
 
-import android.content.Context
-import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.room.offline.DatabaseProvider
-import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
 import com.instructure.pandautils.utils.LogoutHelper
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.instructure.student.tasks.StudentLogoutTask
 
-@Module
-@InstallIn(SingletonComponent::class)
-class OfflineDatabaseProviderModule {
-
-    @Provides
-    @Singleton
-    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context, logoutHelper: LogoutHelper, firebaseCrashlytics: FirebaseCrashlytics): DatabaseProvider {
-        return OfflineDatabaseProvider(context, logoutHelper, firebaseCrashlytics)
+class StudentLogoutHelper : LogoutHelper {
+    override fun logout(databaseProvider: DatabaseProvider) {
+        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
     }
 }
