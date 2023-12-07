@@ -28,9 +28,11 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.teacher.features.modules.progression.ModuleProgressionRepository
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -39,6 +41,11 @@ class ModuleProgressionRepositoryTest {
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
 
     private val repository = ModuleProgressionRepository(moduleApi)
+
+    @Before
+    fun setup() {
+        unmockkAll()
+    }
 
     @Test
     fun `Get modules successfully returns data`() = runTest {
