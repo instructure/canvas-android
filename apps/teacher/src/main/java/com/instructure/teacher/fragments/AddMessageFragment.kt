@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import androidx.lifecycle.LiveData
@@ -123,10 +122,6 @@ class AddMessageFragment : BasePresenterFragment<
         get() = ArrayList(binding.chips.recipients)
 
     override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentAddMessageBinding = FragmentAddMessageBinding::inflate
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_add_message, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
 
