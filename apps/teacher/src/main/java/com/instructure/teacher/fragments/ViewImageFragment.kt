@@ -109,7 +109,7 @@ class ViewImageFragment : Fragment(), ShareableFile {
 
     private val requestListener = object : RequestListener<Bitmap> {
 
-        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<Bitmap>?, p3: Boolean): Boolean = with(binding) {
+        override fun onLoadFailed(p0: GlideException?, p1: Any?, target: Target<Bitmap>, p3: Boolean): Boolean = with(binding) {
             photoView.setGone()
             progressBar.setGone()
             errorContainer.setVisible()
@@ -118,11 +118,17 @@ class ViewImageFragment : Fragment(), ShareableFile {
             return false
         }
 
-        override fun onResourceReady(bitmap: Bitmap?, p1: Any?, p2: Target<Bitmap>?, p3: DataSource?, p4: Boolean): Boolean {
+        override fun onResourceReady(
+            resource: Bitmap,
+            model: Any,
+            p2: Target<Bitmap>?,
+            dataSource: DataSource,
+            p4: Boolean
+        ): Boolean {
             binding.progressBar.setGone()
 
             // Try to set the background color using palette if we can
-            bitmap?.let { colorBackground(it) }
+            colorBackground(resource)
             return false
         }
     }

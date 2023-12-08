@@ -23,15 +23,10 @@ import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class AppManager : BaseAppManager(), Configuration.Provider {
+class AppManager : BaseAppManager() {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
-
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
 
     override fun getWorkManagerFactory(): WorkerFactory = workerFactory
 }

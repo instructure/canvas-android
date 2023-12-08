@@ -43,6 +43,11 @@ import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configuration.Provider {
 
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(getWorkManagerFactory())
+            .build()
+
     override fun onCreate() {
         super.onCreate()
 
@@ -97,11 +102,6 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configu
     override fun performLogoutOnAuthError() {
         TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
-
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
-            .setWorkerFactory(getWorkManagerFactory())
-            .build()
 
     abstract fun getWorkManagerFactory(): WorkerFactory
 

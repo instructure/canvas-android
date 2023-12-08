@@ -505,8 +505,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.Builder()
                     .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title)
                     .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle)
@@ -522,8 +522,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId2,
                 WorkInfo.State.SUCCEEDED,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.Builder()
                     .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title2)
                     .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle2)
@@ -539,8 +539,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId3,
                 WorkInfo.State.FAILED,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.Builder()
                     .putString(FileUploadWorker.PROGRESS_DATA_TITLE, title3)
                     .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, subTitle3)
@@ -586,8 +586,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.EMPTY,
                 1,
                 1
@@ -603,8 +603,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId,
                 WorkInfo.State.SUCCEEDED,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.EMPTY,
                 1,
                 1
@@ -631,8 +631,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId,
                 WorkInfo.State.RUNNING,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.EMPTY,
                 1,
                 1
@@ -666,8 +666,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId,
                 WorkInfo.State.SUCCEEDED,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.EMPTY,
                 1,
                 1
@@ -707,8 +707,8 @@ class DashboardNotificationsViewModelTest {
             WorkInfo(
                 workerId,
                 WorkInfo.State.SUCCEEDED,
+                emptySet(),
                 Data.EMPTY,
-                emptyList(),
                 Data.EMPTY,
                 1,
                 1

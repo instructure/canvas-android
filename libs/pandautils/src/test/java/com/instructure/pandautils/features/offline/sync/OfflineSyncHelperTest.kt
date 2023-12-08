@@ -262,7 +262,7 @@ class OfflineSyncHelperTest {
 
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
             listOf(
-                WorkInfo(originalRequest.id, WorkInfo.State.ENQUEUED, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
+                WorkInfo(originalRequest.id, WorkInfo.State.ENQUEUED, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
 
@@ -281,7 +281,7 @@ class OfflineSyncHelperTest {
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
         every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
             listOf(
-                WorkInfo(uuid, WorkInfo.State.RUNNING, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
+                WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
 
@@ -297,7 +297,7 @@ class OfflineSyncHelperTest {
         val uuid = UUID.randomUUID()
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
             listOf(
-                WorkInfo(uuid, WorkInfo.State.RUNNING, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
+                WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
         every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
@@ -350,7 +350,7 @@ class OfflineSyncHelperTest {
         val uuid = UUID.randomUUID()
         every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
             listOf(
-                WorkInfo(uuid, WorkInfo.State.RUNNING, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
+                WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
         every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
@@ -377,7 +377,7 @@ class OfflineSyncHelperTest {
         )
         every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
             listOf(
-                WorkInfo(uuid, WorkInfo.State.RUNNING, Data.EMPTY, emptyList(), Data.EMPTY, 1, 1)
+                WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
 
