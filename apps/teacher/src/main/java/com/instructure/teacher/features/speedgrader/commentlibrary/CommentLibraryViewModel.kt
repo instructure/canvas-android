@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.CommentLibraryQuery
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.unaccent
 import com.instructure.teacher.features.speedgrader.commentlibrary.itemviewmodels.SuggestionItemViewModel
@@ -80,7 +79,7 @@ class CommentLibraryViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 // Silently fail if we don't have info about the comment library, and just don't show anything.
-                Logger.w(e.stackTraceToString())
+                e.printStackTrace()
             }
         }
     }

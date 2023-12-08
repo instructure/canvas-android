@@ -18,6 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -27,33 +28,53 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.textfield.TextInputLayout
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.FileAccessStatus
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.FileUsageRightsJustification
+import com.instructure.canvasapi2.models.License
+import com.instructure.canvasapi2.models.PublishStatus
+import com.instructure.canvasapi2.models.RestrictedScheduleStatus
+import com.instructure.canvasapi2.models.RestrictedStatus
+import com.instructure.canvasapi2.models.UnpublishStatus
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_FILE_FOLDER
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.descendants
+import com.instructure.pandautils.utils.postSticky
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.LongNameArrayAdapter
 import com.instructure.teacher.databinding.FragmentEditFilefolderBinding
 import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
 import com.instructure.teacher.factory.EditFilePresenterFactory
 import com.instructure.teacher.presenters.EditFileFolderPresenter
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.formatOrDoubleDash
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.view.EditFileView
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_EDIT_FILE_FOLDER)
 class EditFileFolderFragment : BasePresenterFragment<
         EditFileFolderPresenter,
-        EditFileView>(), EditFileView {
-
-    private val binding by viewBinding(FragmentEditFilefolderBinding::bind)
+        EditFileView,
+        FragmentEditFilefolderBinding>(), EditFileView {
 
     private var currentFileOrFolder: FileFolder by ParcelableArg()
     private var usageRightsEnabled: Boolean by BooleanArg()
@@ -98,7 +119,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         }.show(requireActivity().supportFragmentManager, TimePickerDialogFragment::class.java.simpleName)
     }
 
-    override fun layoutResId(): Int = R.layout.fragment_edit_filefolder
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentEditFilefolderBinding = FragmentEditFilefolderBinding::inflate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

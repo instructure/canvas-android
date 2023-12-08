@@ -127,8 +127,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.prevItem.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.textAndIconColor)
-        binding.nextItem.background = ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.textAndIconColor)
+        binding.prevItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.textAndIconColor))
+        binding.nextItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.textAndIconColor))
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

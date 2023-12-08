@@ -39,10 +39,6 @@ sealed class ModuleListEffect {
         val moduleItem: ModuleItem,
         val canvasContext: CanvasContext
     ) : ModuleListEffect()
-    data class LoadFileInfo(
-        val item: ModuleItem,
-        val canvasContext: CanvasContext
-    ) : ModuleListEffect()
     data class LoadNextPage(
         val canvasContext: CanvasContext,
         val pageData: ModuleListPageData,
