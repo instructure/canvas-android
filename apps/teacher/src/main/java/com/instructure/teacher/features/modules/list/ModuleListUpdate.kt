@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.features.modules.list
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.utils.patchedBy
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
@@ -137,6 +138,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                         )
                     }
                 )
+                CanvasRestAdapter.clearCacheUrls("""/modules""")
                 return Next.next(newModel)
             }
         }
