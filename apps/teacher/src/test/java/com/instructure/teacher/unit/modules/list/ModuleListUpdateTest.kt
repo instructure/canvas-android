@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.unit.modules.list
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
@@ -34,6 +35,10 @@ import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import org.junit.Assert
 import org.junit.Test
 
@@ -258,6 +263,9 @@ class ModuleListUpdateTest : Assert() {
 
     @Test
     fun `RemoveModuleItems event removed module items`() {
+        mockkObject(CanvasRestAdapter.Companion)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns mockk()
+
         val model = initModel.copy(
             modules = listOf(
                 ModuleObject(
@@ -287,6 +295,8 @@ class ModuleListUpdateTest : Assert() {
                     hasModel(expectedModel)
                 )
             )
+
+        unmockkObject(CanvasRestAdapter.Companion)
     }
 
     @Test
