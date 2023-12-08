@@ -17,13 +17,17 @@
 package com.instructure.teacher.holders
 
 import android.widget.ImageView
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -41,7 +45,11 @@ import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getSubmissionFormattedDate
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
-import com.instructure.teacher.view.*
+import com.instructure.teacher.view.CommentAttachmentsView
+import com.instructure.teacher.view.CommentDirection
+import com.instructure.teacher.view.CommentMediaAttachmentView
+import com.instructure.teacher.view.CommentSubmissionView
+import com.instructure.teacher.view.CommentView
 
 class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
@@ -83,7 +91,7 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
                         avatarView.setupAvatarA11y(comment.authorName)
                         avatarView.onClick {
                             val bundle = StudentContextFragment.makeBundle(comment.authorId, courseId)
-                            RouteMatcher.route(context as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
+                            RouteMatcher.route(context.getFragmentActivity(), Route(StudentContextFragment::class.java, null, bundle))
                         }
                     }
                     Triple(
@@ -143,7 +151,7 @@ class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBind
                         avatarView.setupAvatarA11y(assignee.name)
                         avatarView.onClick {
                             val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
-                            RouteMatcher.route(context as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
+                            RouteMatcher.route(context.getFragmentActivity(), Route(StudentContextFragment::class.java, null, bundle))
                         }
                         Triple(null, Pronouns.span(assignee.name, assignee.pronouns), assignee.student.avatarUrl)
                     }
