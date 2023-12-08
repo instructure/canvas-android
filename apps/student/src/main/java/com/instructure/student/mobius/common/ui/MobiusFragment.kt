@@ -18,7 +18,6 @@ package com.instructure.student.mobius.common.ui
 
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,10 +28,24 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.student.BuildConfig
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.mobius.common.*
-import com.spotify.mobius.*
+import com.instructure.student.mobius.common.ConsumerQueueWrapper
+import com.instructure.student.mobius.common.CoroutineConnection
+import com.instructure.student.mobius.common.GlobalEventMapper
+import com.instructure.student.mobius.common.GlobalEventSource
+import com.instructure.student.mobius.common.LateInit
+import com.instructure.student.mobius.common.MobiusExceptionLogger
+import com.instructure.student.mobius.common.contraMap
+import com.spotify.mobius.Connectable
+import com.spotify.mobius.Connection
+import com.spotify.mobius.EventSource
+import com.spotify.mobius.First
+import com.spotify.mobius.Init
+import com.spotify.mobius.Mobius
+import com.spotify.mobius.MobiusLoop
+import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.android.runners.MainThreadWorkRunner
 import com.spotify.mobius.functions.Consumer
@@ -176,13 +189,7 @@ abstract class MobiusView<VIEW_STATE, EVENT, BINDING: ViewBinding>(inflater: Lay
         get() = parent.context
 
     protected val activity: Activity
-        get() = getActivity(context)
-
-    private fun getActivity(context: Context): Activity {
-        if (context is Activity) return context
-        if (context is ContextWrapper) return getActivity(context.baseContext)
-        else throw IllegalStateException("Not activity context")
-    }
+        get() = context.getFragmentActivity()
 
     abstract fun onConnect(output: Consumer<EVENT>)
 
