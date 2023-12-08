@@ -42,7 +42,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.E2E)
     fun testOfflineCourseBrowserPageUnavailableE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")

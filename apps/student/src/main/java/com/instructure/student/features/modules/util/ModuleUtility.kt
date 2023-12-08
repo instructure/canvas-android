@@ -56,11 +56,7 @@ object ModuleUtility {
         syncedFileIds: List<Long>,
         context: Context
     ): Fragment? = when (item.type) {
-        "Page" -> {
-            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, setOf(Tab.PAGES_ID)) {
-                PageDetailsFragment.newInstance(PageDetailsFragment.makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
-            }
-        }
+        "Page" -> PageDetailsFragment.newInstance(PageDetailsFragment.makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
         "Assignment" -> {
             createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, setOf(Tab.ASSIGNMENTS_ID, Tab.GRADES_ID, Tab.SYLLABUS_ID)) {
                 AssignmentDetailsFragment.newInstance(makeRoute(course, getAssignmentId(item)))
@@ -78,10 +74,8 @@ object ModuleUtility {
         "Locked" -> LockedModuleItemFragment.newInstance(LockedModuleItemFragment.makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
         "SubHeader" -> null // Don't do anything with headers, they're just dividers so we don't show them here.
         "Quiz" -> {
-            createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, setOf(Tab.QUIZZES_ID)) {
-                val apiURL = removeDomain(item.url)
-                ModuleQuizDecider.newInstance(ModuleQuizDecider.makeRoute(course, item.htmlUrl!!, apiURL!!, item.contentId))
-            }
+            val apiURL = removeDomain(item.url)
+            ModuleQuizDecider.newInstance(ModuleQuizDecider.makeRoute(course, item.htmlUrl!!, apiURL!!, item.contentId))
         }
         "ChooseAssignmentGroup" -> {
             createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context) {

@@ -16,12 +16,13 @@
  */
 package com.instructure.teacher.di
 
+import com.instructure.pandautils.utils.LogoutHelper
+import com.instructure.teacher.utils.TeacherLogoutHelper
 import com.instructure.teacher.utils.TeacherPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 /**
  * Module that provides all the application scope dependencies, that are not related to other module.
@@ -33,5 +34,10 @@ class ApplicationModule {
     @Provides
     fun provideTeacherPrefs(): TeacherPrefs {
         return TeacherPrefs
+    }
+
+    @Provides
+    fun provideLogoutHelper(): LogoutHelper {
+        return TeacherLogoutHelper()
     }
 }

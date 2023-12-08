@@ -314,11 +314,13 @@ class GradeCellStateTest : Assert() {
             score = 79.0
         )
         val expected = baseGradedState.copy(
-            graphPercent = 0.85f,
-            score = "85",
+            graphPercent = 0.79f,
+            score = "79",
             showPointsLabel = true,
-            latePenalty = "Late penalty (-6)",
-            finalGrade = "Final Grade: 79"
+            yourGrade = "Your Grade: 85 pts",
+            latePenalty = "Late Penalty: -6 pts",
+            finalGrade = "Final Grade: 79",
+            gradeCellContentDescription = "79 Out of 100 points"
         )
         val actual = GradeCellViewState.fromSubmission(context, baseAssignment, submission)
         assertEquals(expected, actual)

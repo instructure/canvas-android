@@ -20,18 +20,48 @@ package com.instructure.pandautils.di
 import android.content.Context
 import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.AnnouncementAPI
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.ConferencesApi
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
+import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
+import com.instructure.pandautils.features.offline.sync.CourseSync
 import com.instructure.pandautils.features.offline.sync.FileSync
+import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.ConferenceFacade
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.GroupFacade
+import com.instructure.pandautils.room.offline.facade.ModuleFacade
+import com.instructure.pandautils.room.offline.facade.PageFacade
+import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -74,6 +104,81 @@ class OfflineSyncModule {
             fileSyncSettingsDao,
             courseSyncProgressDao,
             fileFolderApi
+        )
+    }
+
+    @Provides
+    fun provideCourseSync(
+        courseApi: CourseAPI.CoursesInterface,
+        pageApi: PageAPI.PagesInterface,
+        userApi: UserAPI.UsersInterface,
+        assignmentApi: AssignmentAPI.AssignmentInterface,
+        calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+        courseSyncSettingsDao: CourseSyncSettingsDao,
+        pageFacade: PageFacade,
+        userFacade: UserFacade,
+        courseFacade: CourseFacade,
+        assignmentFacade: AssignmentFacade,
+        quizDao: QuizDao,
+        quizApi: QuizAPI.QuizInterface,
+        scheduleItemFacade: ScheduleItemFacade,
+        conferencesApi: ConferencesApi.ConferencesInterface,
+        conferenceFacade: ConferenceFacade,
+        discussionApi: DiscussionAPI.DiscussionInterface,
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade,
+        announcementApi: AnnouncementAPI.AnnouncementInterface,
+        moduleApi: ModuleAPI.ModuleInterface,
+        moduleFacade: ModuleFacade,
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        courseFeaturesDao: CourseFeaturesDao,
+        courseFileSharedRepository: CourseFileSharedRepository,
+        fileFolderDao: FileFolderDao,
+        discussionTopicFacade: DiscussionTopicFacade,
+        groupApi: GroupAPI.GroupInterface,
+        groupFacade: GroupFacade,
+        enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
+        courseSyncProgressDao: CourseSyncProgressDao,
+        htmlParser: HtmlParser,
+        fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+        pageDao: PageDao,
+        firebaseCrashlytics: FirebaseCrashlytics,
+        fileSync: FileSync
+    ): CourseSync {
+        return CourseSync(
+            courseApi,
+            pageApi,
+            userApi,
+            assignmentApi,
+            calendarEventApi,
+            courseSyncSettingsDao,
+            pageFacade,
+            userFacade,
+            courseFacade,
+            assignmentFacade,
+            quizDao,
+            quizApi,
+            scheduleItemFacade,
+            conferencesApi,
+            conferenceFacade,
+            discussionApi,
+            discussionTopicHeaderFacade,
+            announcementApi,
+            moduleApi,
+            moduleFacade,
+            featuresApi,
+            courseFeaturesDao,
+            courseFileSharedRepository,
+            fileFolderDao,
+            discussionTopicFacade,
+            groupApi,
+            groupFacade,
+            enrollmentsApi,
+            courseSyncProgressDao,
+            htmlParser,
+            fileFolderApi,
+            pageDao,
+            firebaseCrashlytics,
+            fileSync
         )
     }
 }

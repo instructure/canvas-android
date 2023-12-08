@@ -42,6 +42,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.espresso.StudentHiltTestApplication_Application
 import com.instructure.student.ui.pages.AboutPage
+import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
 import com.instructure.student.ui.pages.AnnouncementListPage
 import com.instructure.student.ui.pages.AssignmentDetailsPage
@@ -56,7 +57,6 @@ import com.instructure.student.ui.pages.CourseGradesPage
 import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionDetailsPage
 import com.instructure.student.ui.pages.DiscussionListPage
-import com.instructure.student.ui.pages.EditDashboardPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.pages.FileListPage
@@ -162,7 +162,7 @@ abstract class StudentTest : CanvasTest() {
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val discussionDetailsPage = DiscussionDetailsPage()
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val editDashboardPage = EditDashboardPage()
+    val allCoursesPage = AllCoursesPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val fileUploadPage = FileUploadPage()
     val helpPage = HelpPage()

@@ -64,7 +64,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     private lateinit var recyclerBinding: PandaRecyclerRefreshLayoutBinding
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: ModuleListRecyclerAdapter
+    private var recyclerAdapter: ModuleListRecyclerAdapter? = null
 
     @Inject
     lateinit var repository: ModuleListRepository
@@ -85,7 +85,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun onDestroy() {
-        recyclerAdapter.cancel()
+        recyclerAdapter?.cancel()
         super.onDestroy()
     }
 
@@ -105,7 +105,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (recyclerAdapter.size() == 0) {
+        if (recyclerAdapter?.size() == 0) {
             recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
@@ -160,9 +160,9 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 if (isLocked) return
 
                 // Remove all the subheaders and stuff.
-                val groups = recyclerAdapter.groups
+                val groups = recyclerAdapter?.groups ?: arrayListOf()
 
-                val moduleItemsArray = groups.indices.mapTo(ArrayList()) { recyclerAdapter.getItems(groups[it]) }
+                val moduleItemsArray = groups.indices.mapTo(ArrayList()) { recyclerAdapter?.getItems(groups[it]) ?: arrayListOf() }
                 val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(
                     requireContext(), moduleItem.id, groups, moduleItemsArray
                 )
@@ -184,16 +184,16 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                     // We need to force the empty view to be visible to use it for errors on refresh
                     recyclerBinding.emptyView.setVisible()
                     setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_nomodules, R.string.modulesLocked, R.string.modulesLockedSubtext)
-                } else if (recyclerAdapter.size() == 0) {
+                } else if (recyclerAdapter?.size() == 0) {
                     setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
                 } else if (!arguments?.getString(MODULE_ID).isNullOrEmpty()) {
                     // We need to delay scrolling until the expand animation has completed, otherwise modules
                     // that appear near the end of the list will not have the extra 'expanded' space needed
                     // to scroll as far as possible toward the top
                     recyclerBinding.listView.postDelayed({
-                        val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(
+                        val groupPosition = recyclerAdapter?.getGroupItemPosition(arguments!!.getString(
                             MODULE_ID
-                        )!!.toLong())
+                        )!!.toLong()) ?: -1
                         if (groupPosition >= 0) {
                             val lm = recyclerBinding.listView.layoutManager as? LinearLayoutManager
                             lm?.scrollToPositionWithOffset(groupPosition, 0)
@@ -203,22 +203,24 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 }
             }
         })
-        configureRecyclerView(requireView(), requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        recyclerAdapter?.let {
+            configureRecyclerView(requireView(), requireContext(), it, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        }
     }
 
     fun notifyOfItemChanged(`object`: ModuleObject?, item: ModuleItem?) {
         if (item == null || `object` == null) return
 
-        recyclerAdapter.addOrUpdateItem(`object`, item)
+        recyclerAdapter?.addOrUpdateItem(`object`, item)
     }
 
-    fun refreshModuleList() = recyclerAdapter.updateMasteryPathItems()
+    fun refreshModuleList() = recyclerAdapter?.updateMasteryPathItems()
 
     /**
      * Update the list without clearing the data or collapsing headers. Used to update possibly updated
      * items (like a page that has now been viewed)
      */
-    private fun updateList(moduleObject: ModuleObject) = recyclerAdapter.updateWithoutResettingViews(moduleObject)
+    private fun updateList(moduleObject: ModuleObject) = recyclerAdapter?.updateWithoutResettingViews(moduleObject)
 
 
     // region Bus Events
@@ -227,7 +229,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     fun onModuleUpdated(event: ModuleUpdatedEvent) {
         event.once(javaClass.simpleName) {
             updateList(it)
-            recyclerAdapter.notifyDataSetChanged()
+            recyclerAdapter?.notifyDataSetChanged()
         }
     }
     // endregion

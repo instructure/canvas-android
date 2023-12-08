@@ -45,11 +45,14 @@ class DashboardRepository(
     }
 
     suspend fun getDashboardCourses(forceNetwork: Boolean): List<DashboardCard> {
-        val dashboardCards = dataSource().getDashboardCards(forceNetwork).sortedBy { it.position }
+        var dashboardCards = dataSource().getDashboardCards(forceNetwork)
+        if (dashboardCards.all { it.position == Int.MAX_VALUE }) {
+            dashboardCards = dashboardCards.mapIndexed { index, dashboardCard -> dashboardCard.copy(position = index) }
+        }
         if (isOnline() && isOfflineEnabled()) {
             localDataSource.saveDashboardCards(dashboardCards)
         }
-        return dashboardCards
+        return dashboardCards.sortedBy { it.position }
     }
 
     suspend fun getSyncedCourseIds(): Set<Long> {

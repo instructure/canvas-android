@@ -32,7 +32,6 @@ import javax.inject.Singleton
 class FeatureFlagModule {
 
     @Provides
-    @Singleton
     fun provideFeatureFlagProvider(userManager: UserManager, apiPrefs: ApiPrefs, featuresApi: FeaturesAPI.FeaturesInterface, environmentFeatureFlagsDao: EnvironmentFeatureFlagsDao): FeatureFlagProvider {
         return FeatureFlagProvider(userManager, apiPrefs, featuresApi, environmentFeatureFlagsDao)
     }

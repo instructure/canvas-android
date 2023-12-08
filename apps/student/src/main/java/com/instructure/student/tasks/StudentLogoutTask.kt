@@ -25,7 +25,6 @@ import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.features.offline.sync.CourseSyncWorker
 import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -79,8 +78,8 @@ class StudentLogoutTask(
     override fun stopOfflineSync() {
         val workManager = WorkManager.getInstance(ContextKeeper.appContext)
         workManager.apply {
-            cancelAllWorkByTag(CourseSyncWorker.TAG)
-            cancelAllWorkByTag(OfflineSyncWorker.TAG)
+            cancelAllWorkByTag(OfflineSyncWorker.PERIODIC_TAG)
+            cancelAllWorkByTag(OfflineSyncWorker.ONE_TIME_TAG)
         }
     }
 }
