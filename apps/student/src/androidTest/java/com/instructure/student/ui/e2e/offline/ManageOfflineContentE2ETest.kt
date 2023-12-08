@@ -73,6 +73,9 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that the tool bar texts are displayed properly, so the subtitle is '${course1.name}', because we are on the Manage Offline Content page of '${course1.name}' course.")
         manageOfflineContentPage.assertToolbarTexts(course1.name)
 
+        Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state became 'Checked'.")
+        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
+
         Log.d(STEP_TAG, "Deselect the 'Announcements' and 'Discussions' of the '${course1.name}' course.")
         manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.changeItemSelectionState("Discussions")

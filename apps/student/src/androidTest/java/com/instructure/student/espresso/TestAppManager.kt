@@ -16,7 +16,6 @@
  */
 package com.instructure.student.espresso
 
-import androidx.work.Configuration
 import androidx.work.WorkerFactory
 import com.instructure.student.util.BaseAppManager
 
@@ -25,8 +24,6 @@ open class TestAppManager : BaseAppManager() {
     var workerFactory: WorkerFactory? = null
 
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory?.let {
-            it
-        } ?: WorkerFactory.getDefaultWorkerFactory()
+        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
     }
 }

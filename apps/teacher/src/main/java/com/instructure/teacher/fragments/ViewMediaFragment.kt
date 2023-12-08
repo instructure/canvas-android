@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
 import com.google.android.exoplayer2.upstream.HttpDataSource
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
@@ -35,11 +36,16 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.interfaces.ShareableFile
+import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderMediaBinding
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
+import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.view.MediaContent
+import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
 class ViewMediaFragment : Fragment(), ShareableFile {
@@ -50,6 +56,9 @@ class ViewMediaFragment : Fragment(), ShareableFile {
     private var mContentType by StringArg()
     private var mThumbnailUrl by NullableStringArg()
     private var mDisplayName by NullableStringArg()
+    private var isInModulesPager by BooleanArg()
+    private var toolbarColor by IntArg()
+    private var editableFile: EditableFile? by NullableParcelableArg()
 
     private val mExoAgent get() = ExoAgent.getAgentForUri(mUri)
 
@@ -92,6 +101,14 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
     override fun onResume() = with(binding) {
         super.onResume()
+
+        // If returning from editing this file, check if it was deleted so we can immediately go back
+        val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
+        if (fileFolderDeletedEvent != null && fileFolderDeletedEvent.deletedFileFolder.id == editableFile?.file?.id) {
+            requireActivity().finish()
+        }
+
+        setupToolbar()
 
         mExoAgent.attach(speedGraderMediaPlayerView, object : ExoInfoListener {
             override fun onStateChanged(newState: ExoAgentState) {
@@ -149,6 +166,44 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
     private fun prepare() = mExoAgent.prepare(binding.speedGraderMediaPlayerView)
 
+    private fun setupToolbar() = with(binding) {
+        editableFile?.let {
+            // Check if we need to update the file name
+            val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
+            fileFolderUpdatedEvent?.let { event ->
+                if (it.file.id == event.updatedFileFolder.id) {
+                    it.file = event.updatedFileFolder
+                }
+            }
+
+            toolbar.title = it.file.displayName
+            toolbar.setupMenu(R.menu.menu_file_details) { menu ->
+                when (menu.itemId) {
+                    R.id.edit -> {
+                        val args = EditFileFolderFragment.makeBundle(it.file, it.usageRights, it.licenses, it.canvasContext!!.id)
+                        RouteMatcher.route(requireActivity(), Route(EditFileFolderFragment::class.java, it.canvasContext, args))
+                    }
+
+                    R.id.copyLink -> {
+                        if (it.file.url != null) {
+                            Utils.copyToClipboard(requireContext(), it.file.url!!)
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isInModulesPager) {
+            toolbar.setVisible()
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewMediaFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewMediaFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.white))
+        }
+    }
+
     override fun onDetach() {
         mExoAgent.release()
         super.onDetach()
@@ -156,11 +211,24 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
     companion object {
 
-        fun newInstance(media: MediaContent) = ViewMediaFragment().apply {
-            mUri = media.uri
-            mThumbnailUrl = media.thumbnailUrl
-            mContentType = media.contentType!!
-            mDisplayName = media.displayName
+        fun newInstance(media: MediaContent) = newInstance(media.uri, media.thumbnailUrl, media.contentType!!, media.displayName)
+
+        fun newInstance(
+            uri: Uri,
+            thumbnailUrl: String?,
+            contentType: String,
+            displayName: String?,
+            isInModulesPager: Boolean = false,
+            toolbarColor: Int = 0,
+            editableFile: EditableFile? = null
+        ) = ViewMediaFragment().apply {
+            mUri = uri
+            mThumbnailUrl = thumbnailUrl
+            mContentType = contentType
+            mDisplayName = displayName
+            this.isInModulesPager = isInModulesPager
+            this.toolbarColor = toolbarColor
+            this.editableFile = editableFile
         }
 
         fun newInstance(bundle: Bundle) = ViewMediaFragment().apply { arguments = bundle }

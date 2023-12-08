@@ -16,6 +16,7 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.instructure.canvasapi2.models.Assignment
@@ -23,18 +24,34 @@ import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeF
 import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPrettyPrintString
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
+import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
@@ -57,15 +74,16 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Date
 
 @PageView
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
-        AssignmentDetailsView>(), AssignmentDetailsView, Identity {
-
-    private val binding by viewBinding(FragmentAssignmentDetailsBinding::bind)
+        AssignmentDetailsView,
+        FragmentAssignmentDetailsBinding>(),
+    AssignmentDetailsView,
+    Identity {
 
     private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var course: Course by ParcelableArg(Course())
@@ -79,7 +97,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     @PageViewUrl
     private fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/${assignment.id}"
 
-    override fun layoutResId() = R.layout.fragment_assignment_details
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentAssignmentDetailsBinding = FragmentAssignmentDetailsBinding::inflate
 
     override fun onRefreshFinished() {}
 

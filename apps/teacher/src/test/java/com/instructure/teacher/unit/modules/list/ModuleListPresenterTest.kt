@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.unit.modules
+package com.instructure.teacher.unit.modules.list
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider

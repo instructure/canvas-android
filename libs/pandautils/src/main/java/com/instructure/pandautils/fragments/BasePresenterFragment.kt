@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
@@ -29,15 +30,16 @@ import instructure.androidblueprint.FragmentPresenter
 import instructure.androidblueprint.FragmentViewInterface
 import instructure.androidblueprint.PresenterFragment
 
-abstract class BasePresenterFragment<PRESENTER : FragmentPresenter<VIEW>, VIEW : FragmentViewInterface> :
+abstract class BasePresenterFragment<PRESENTER : FragmentPresenter<VIEW>, VIEW : FragmentViewInterface, BINDING : ViewBinding> :
     PresenterFragment<PRESENTER, VIEW>(), NavigationCallbacks {
-    protected lateinit var rootView: View
 
-    abstract fun layoutResId(): Int
+    lateinit var binding: BINDING
+
+    abstract val bindingInflater: (layoutInflater: LayoutInflater) -> BINDING
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(layoutResId(), container, false)
-        return rootView
+        binding = bindingInflater(inflater)
+        return binding.root
     }
 
     protected fun showToast(@StringRes s: Int) {
