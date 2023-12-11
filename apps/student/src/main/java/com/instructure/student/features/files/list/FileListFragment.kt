@@ -404,16 +404,20 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     private fun renameItem(item: FileFolder) {
         val title = getString(if (item.isFile) R.string.renameFile else R.string.renameFolder)
-        EditTextDialog.show(requireFragmentManager(), title, item.displayName ?: item.name ?: "") {
+        val fileExtension = item.displayName?.let { if ('.' in it) it.substringAfterLast(".") else null }
+        EditTextDialog.show(requireFragmentManager(), title, item.displayName?.substringBeforeLast(".")
+            ?: item.name ?: "") { it ->
             if (it.isBlank()) {
                 toast(R.string.blankName)
                 return@show
             }
             tryWeave {
-                val body = UpdateFileFolder(name = it)
                 val updateItem: FileFolder = if (item.isFile) {
+                    val body: UpdateFileFolder = if(fileExtension != null) UpdateFileFolder(name = "${it}.${fileExtension}")
+                    else UpdateFileFolder(name = it)
                     awaitApi { FileFolderManager.updateFile(item.id, body, it) }
                 } else {
+                    val body = UpdateFileFolder(name = it)
                     awaitApi { FileFolderManager.updateFolder(item.id, body, it) }
                 }
                 recyclerAdapter?.add(updateItem)
