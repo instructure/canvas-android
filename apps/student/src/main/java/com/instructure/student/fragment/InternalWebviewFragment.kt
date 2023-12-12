@@ -562,7 +562,8 @@ open class InternalWebviewFragment : ParentFragment() {
             allowRoutingTheSameUrlInternally: Boolean,
             shouldRouteToLogin: Boolean,
             allowEmbedRouting: Boolean,
-            isUnsupportedFeature: Boolean
+            isUnsupportedFeature: Boolean,
+            shouldRouteInternally: Boolean
         ): Route =
             Route(InternalWebviewFragment::class.java, canvasContext,
                 canvasContext.makeBundle().apply {
@@ -573,6 +574,7 @@ open class InternalWebviewFragment : ParentFragment() {
                     putBoolean(ALLOW_ROUTING_TO_LOGIN, shouldRouteToLogin)
                     putBoolean(ALLOW_EMBED_ROUTING, allowEmbedRouting)
                     putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
+                    putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
                 })
 
         fun makeRoute(

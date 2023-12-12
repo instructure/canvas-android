@@ -174,10 +174,23 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 
                 // LTI submission
-                Assignment.SubmissionType.BASIC_LTI_LAUNCH -> SubmissionDetailsContentType.ExternalToolContent(
-                        canvasContext,
-                        submission.previewUrl.validOrNull() ?: assignment?.url?.validOrNull() ?: assignment?.htmlUrl ?: ""
-                )
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH -> {
+                    if (submission.url?.contains(".instructuremedia.com") == true
+                        || submission.url?.contains(".arc.inseng.net") == true
+                        || submission.url?.contains(".arc.docker") == true
+                    ) {
+                        SubmissionDetailsContentType.StudioExternalContent(
+                            canvasContext,
+                            submission.previewUrl.orEmpty()
+                        )
+                    } else {
+                        SubmissionDetailsContentType.ExternalToolContent(
+                            canvasContext,
+                            submission.previewUrl.validOrNull() ?: assignment?.url?.validOrNull() ?: assignment?.htmlUrl
+                            ?: ""
+                        )
+                    }
+                }
 
                 // Text submission
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> SubmissionDetailsContentType.TextContent(submission.body ?: "")

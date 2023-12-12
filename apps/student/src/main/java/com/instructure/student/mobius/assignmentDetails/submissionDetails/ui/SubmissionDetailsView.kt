@@ -45,6 +45,7 @@ import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSubmissionDetailsBinding
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
+import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
@@ -115,7 +116,7 @@ class SubmissionDetailsView(
 
         // Use 90% luminance to ensure a 'light' ripple effect that doesn't overpower the tab text
         val rippleTint = tint.withLuminance(0.90f).asStateList()
-        drawerTabLayout.tabRippleColor =  rippleTint
+        drawerTabLayout.tabRippleColor = rippleTint
     }
 
     private fun configureSlidingPanelHeight() = with(binding) {
@@ -129,14 +130,19 @@ class SubmissionDetailsView(
             ) {
                 when (newState) {
                     SlidingUpPanelLayout.PanelState.ANCHORED -> {
-                        submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                        submissionContent.importantForAccessibility =
+                            View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                     }
+
                     SlidingUpPanelLayout.PanelState.EXPANDED -> {
-                        submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                        submissionContent.importantForAccessibility =
+                            View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                     }
+
                     SlidingUpPanelLayout.PanelState.COLLAPSED -> {
                         submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                     }
+
                     else -> {}
                 }
             }
@@ -223,7 +229,8 @@ class SubmissionDetailsView(
                 )
             )
         }
-        binding.submissionVersionsSpinner.adapter = BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
+        binding.submissionVersionsSpinner.adapter =
+            BindableSpinnerAdapter(context, R.layout.item_submission_attempt_spinner, itemViewModels)
         binding.submissionVersionsSpinner.setSelection(selectedIdx, false)
         binding.submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
@@ -271,7 +278,8 @@ class SubmissionDetailsView(
     }
 
     fun showVideoRecordingPlayback(file: File) {
-        val bundle = BaseViewMediaActivity.makeBundle(file, "video", context.getString(R.string.videoCommentReplay), true)
+        val bundle =
+            BaseViewMediaActivity.makeBundle(file, "video", context.getString(R.string.videoCommentReplay), true)
         RouteMatcher.route(activity as FragmentActivity, Route(bundle, RouteContext.MEDIA))
     }
 
@@ -294,16 +302,54 @@ class SubmissionDetailsView(
                 type.isObserver,
                 type.ltiTool
             )
-            is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(type.url, type.previewUrl)
-            is SubmissionDetailsContentType.QuizContent -> getFragmentWithOnlineCheck(QuizSubmissionViewFragment.newInstance(type.url), isOnline)
+
+            is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(
+                type.url,
+                type.previewUrl
+            )
+
+            is SubmissionDetailsContentType.QuizContent -> getFragmentWithOnlineCheck(
+                QuizSubmissionViewFragment.newInstance(
+                    type.url
+                ), isOnline
+            )
+
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
             is SubmissionDetailsContentType.DiscussionContent -> getFragmentWithOnlineCheck(
                 DiscussionSubmissionViewFragment.newInstance(type.previewUrl.orEmpty()),
                 isOnline
             )
-            is SubmissionDetailsContentType.PdfContent -> getFragmentWithOnlineCheck(PdfSubmissionViewFragment.newInstance(type.url), isOnline)
+
+            is SubmissionDetailsContentType.PdfContent -> getFragmentWithOnlineCheck(
+                PdfSubmissionViewFragment.newInstance(
+                    type.url
+                ), isOnline
+            )
+
+            is SubmissionDetailsContentType.StudioExternalContent -> getFragmentWithOnlineCheck(
+                InternalWebviewFragment.newInstance(
+                    InternalWebviewFragment.makeRoute(
+                        canvasContext = type.canvasContext,
+                        url = type.url,
+                        authenticate = false,
+                        hideToolbar = true,
+                        allowRoutingTheSameUrlInternally = false,
+                        shouldRouteToLogin = false,
+                        allowEmbedRouting = false,
+                        isUnsupportedFeature = false,
+                        shouldRouteInternally = false
+                    )
+                ), isOnline
+            )
+
             is SubmissionDetailsContentType.ExternalToolContent -> LtiSubmissionViewFragment.newInstance(type)
-            is SubmissionDetailsContentType.MediaContent -> getFragmentWithOnlineCheck(MediaSubmissionViewFragment.newInstance(type), isOnline)
+
+            is SubmissionDetailsContentType.MediaContent -> getFragmentWithOnlineCheck(
+                MediaSubmissionViewFragment.newInstance(
+                    type
+                ), isOnline
+            )
+
             is SubmissionDetailsContentType.OtherAttachmentContent -> ViewUnsupportedFileFragment.newInstance(
                 uri = Uri.parse(type.attachment.url),
                 displayName = type.attachment.displayName.orEmpty(),
@@ -311,6 +357,7 @@ class SubmissionDetailsView(
                 previewUri = type.attachment.previewUrl?.let { Uri.parse(it) },
                 fallbackIcon = R.drawable.ic_attachment
             )
+
             is SubmissionDetailsContentType.ImageContent -> getFragmentWithOnlineCheck(
                 ViewImageFragment.newInstance(
                     type.title,
@@ -319,24 +366,29 @@ class SubmissionDetailsView(
                     false
                 ), isOnline
             )
+
             SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(
                 title = R.string.noOnlineSubmissions,
                 subtitle = R.string.noneContentMessage
             )
+
             SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(
                 title = R.string.noOnlineSubmissions,
                 subtitle = R.string.onPaperContentMessage
             )
+
             SubmissionDetailsContentType.LockedContent -> SubmissionMessageFragment.newInstance(
                 title = R.string.submissionDetailsAssignmentLocked,
                 subtitle = R.string.could_not_route_locked
             )
+
             is SubmissionDetailsContentType.StudentAnnotationContent -> getFragmentWithOnlineCheck(
                 AnnotationSubmissionViewFragment.newInstance(
                     type.subissionId,
                     type.submissionAttempt
                 ), isOnline
             )
+
             is SubmissionDetailsContentType.UnsupportedContent -> {
                 // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
                 val bundle = Bundle().apply {
@@ -360,7 +412,12 @@ class SubmissionDetailsView(
         return if (isOnline) {
             fragmentIfOnline
         } else {
-            NotAvailableOfflineFragment.newInstance(NotAvailableOfflineFragment.makeRoute(canvasContext, showToolbar = false))
+            NotAvailableOfflineFragment.newInstance(
+                NotAvailableOfflineFragment.makeRoute(
+                    canvasContext,
+                    showToolbar = false
+                )
+            )
         }
     }
 
