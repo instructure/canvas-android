@@ -51,6 +51,8 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
         val testAnnouncement = data.announcementsList[0]
+
+        Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
