@@ -16,6 +16,7 @@
  */
 package com.instructure.student.adapter
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
@@ -23,9 +24,12 @@ import android.view.ViewGroup
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
@@ -33,10 +37,14 @@ import com.instructure.student.databinding.AdapterCourseBrowserBinding
 import com.instructure.student.databinding.AdapterCourseBrowserHomeBinding
 import com.instructure.student.databinding.AdapterCourseBrowserWebViewBinding
 import com.instructure.student.util.TabHelper
+import java.util.*
 
-class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContext, private val homePageTitle: String? = null, val callback: (Tab) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CourseBrowserAdapter(var items: List<Tab>, val canvasContext: CanvasContext, private val homePageTitle: String? = null, val callback: (Tab) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    val course = canvasContext as Course
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        items = course.enrollments?.get(0)?.let { getSavedOrder(ContextKeeper.appContext, it.userId) }!!
         return when (viewType) {
             HOME -> CourseBrowserHomeViewHolder(LayoutInflater.from(parent.context)
                     .inflate(CourseBrowserHomeViewHolder.HOLDER_RES_ID, parent, false), canvasContext, homePageTitle)
@@ -50,7 +58,8 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val tab = items[position]
+        val userId = course.enrollments?.get(0)?.userId
+        val tab = userId?.let { getSavedOrder(ContextKeeper.appContext, it) }!![position]
         when {
             tab.tabId == Tab.HOME_ID && holder is CourseBrowserHomeViewHolder -> holder.bind(holder, tab, callback)
             holder is CourseBrowserViewHolder -> holder.bind(tab, callback)
@@ -63,6 +72,37 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
             Tab.HOME_ID -> HOME
             Tab.COLLABORATIONS_ID, Tab.OUTCOMES_ID -> WEB_VIEW_ITEM
             else -> ITEM
+        }
+    }
+
+    fun onItemMove(fromPosition: Int, toPosition: Int) {
+        if(items[fromPosition].tabId == Tab.HOME_ID || items[toPosition].tabId == Tab.HOME_ID) return
+
+        if (fromPosition in 0 until itemCount && toPosition in 0 until itemCount) {
+            Collections.swap(items, fromPosition, toPosition)
+            notifyItemMoved(fromPosition, toPosition)
+            notifyDataSetChanged()
+            course.enrollments?.get(0)?.userId?.let { saveOrder(ContextKeeper.appContext, items, it)
+            }
+        }
+    }
+
+    private fun saveOrder(context: Context, order: List<Tab>, userId: Long) {
+        val orderString = Gson().toJson(order)
+        val sharedPreferences = context.getSharedPreferences("user_prefs_$userId", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("tabOrder_${canvasContext.contextId}", orderString)
+
+        editor.apply()
+    }
+
+    private fun getSavedOrder(context: Context, userId: Long): List<Tab> {
+        val sharedPreferences = context.getSharedPreferences("user_prefs_$userId", Context.MODE_PRIVATE)
+        val orderString = sharedPreferences.getString("tabOrder_${canvasContext.contextId}", null)
+        return if (orderString != null) {
+            Gson().fromJson(orderString, object : TypeToken<List<Tab>>() {}.type)
+        } else {
+            return items
         }
     }
 

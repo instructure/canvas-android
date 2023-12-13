@@ -25,6 +25,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.isValid
@@ -238,6 +240,12 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
                 toast(R.string.errorOccurred)
             }
         }
+
+        attachDragAndDropToRecyclerView(binding.courseBrowserRecyclerView) { fromPosition, toPosition ->
+            val adapter = binding.courseBrowserRecyclerView.adapter as? CourseBrowserAdapter
+            adapter?.onItemMove(fromPosition, toPosition)
+        }
+
     }
 
     /**
@@ -326,4 +334,37 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
         fun makeRoute(canvasContext: CanvasContext?) = Route(CourseBrowserFragment::class.java, canvasContext)
     }
+}
+
+fun attachDragAndDropToRecyclerView(
+    recyclerView: RecyclerView,
+    onItemMove: (fromPosition: Int, toPosition: Int) -> Unit,
+) {
+    val itemTouchHelperCallback = object : ItemTouchHelper.Callback() {
+        override fun isLongPressDragEnabled(): Boolean {
+            return true
+        }
+
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
+            return makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0)
+        }
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            onItemMove(viewHolder.bindingAdapterPosition, target.absoluteAdapterPosition)
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+
+    }
+
+    val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+    itemTouchHelper.attachToRecyclerView(recyclerView)
 }
