@@ -19,6 +19,8 @@ package com.instructure.student.ui.e2e.offline
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.panda_annotations.FeatureCategory
@@ -51,6 +53,9 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
         val course3 = data.coursesList[2]
+
+        Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -89,10 +94,12 @@ class OfflineAllCoursesE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
+        sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
+        device.waitForIdle()
+        device.waitForWindowUpdate(null, 10000)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered, and assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
         dashboardPage.waitForRender()
-        sleep(10000)
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertCourseNotDisplayed(course2)
         dashboardPage.assertCourseNotDisplayed(course3)
