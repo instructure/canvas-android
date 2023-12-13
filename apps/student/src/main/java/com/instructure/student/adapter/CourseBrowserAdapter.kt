@@ -41,10 +41,9 @@ import java.util.*
 
 class CourseBrowserAdapter(var items: List<Tab>, val canvasContext: CanvasContext, private val homePageTitle: String? = null, val callback: (Tab) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val course = canvasContext as Course
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        items = course.enrollments?.get(0)?.let { getSavedOrder(ContextKeeper.appContext, it.userId) }!!
+        if(canvasContext is Course)
+        items = canvasContext.enrollments?.get(0)?.let { getSavedOrder(ContextKeeper.appContext, it.userId) }!!
         return when (viewType) {
             HOME -> CourseBrowserHomeViewHolder(LayoutInflater.from(parent.context)
                     .inflate(CourseBrowserHomeViewHolder.HOLDER_RES_ID, parent, false), canvasContext, homePageTitle)
@@ -58,8 +57,11 @@ class CourseBrowserAdapter(var items: List<Tab>, val canvasContext: CanvasContex
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val userId = course.enrollments?.get(0)?.userId
-        val tab = userId?.let { getSavedOrder(ContextKeeper.appContext, it) }!![position]
+        var tab = items[position]
+        if(canvasContext is Course) {
+            val userId = canvasContext.enrollments?.get(0)?.userId
+            tab = userId?.let { getSavedOrder(ContextKeeper.appContext, it) }!![position]
+        }
         when {
             tab.tabId == Tab.HOME_ID && holder is CourseBrowserHomeViewHolder -> holder.bind(holder, tab, callback)
             holder is CourseBrowserViewHolder -> holder.bind(tab, callback)
@@ -82,7 +84,7 @@ class CourseBrowserAdapter(var items: List<Tab>, val canvasContext: CanvasContex
             Collections.swap(items, fromPosition, toPosition)
             notifyItemMoved(fromPosition, toPosition)
             notifyDataSetChanged()
-            course.enrollments?.get(0)?.userId?.let { saveOrder(ContextKeeper.appContext, items, it)
+            if(canvasContext is Course) canvasContext.enrollments?.get(0)?.userId?.let { saveOrder(ContextKeeper.appContext, items, it)
             }
         }
     }
