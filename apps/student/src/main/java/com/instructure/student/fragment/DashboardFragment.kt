@@ -31,6 +31,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkInfo.State
 import androidx.work.WorkManager
@@ -46,6 +47,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
@@ -65,6 +67,7 @@ import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.dashboard.DashboardRepository
 import com.instructure.student.flutterChannels.FlutterComm
+import com.instructure.student.holders.CourseViewHolder
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
@@ -343,6 +346,90 @@ class DashboardFragment : ParentFragment() {
         emptyCoursesView.onClickAddCourses {
             RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
         }
+
+        addItemTouchHelperForCardReorder()
+    }
+
+    private fun addItemTouchHelperForCardReorder() {
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP,
+            0
+        ) {
+
+            private var itemToMove: DashboardCourseItem? = null
+
+            // We need to consider other items in the recyclerview when dealing with positions.
+            // In the callbacks we get the adapter position, but we want to get the course items position so we use this.
+            // If there is any other recyclerview item added above the courses this should be modified.
+            private val POSITION_MODIFIER = 1
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+
+                if (viewHolder == null) return
+                val fromPosition = viewHolder.bindingAdapterPosition
+                val fromItem = recyclerAdapter?.getItem(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, fromPosition - POSITION_MODIFIER) as? DashboardCourseItem
+
+                itemToMove = fromItem
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPosition = viewHolder.bindingAdapterPosition
+                val toPosition = target.bindingAdapterPosition
+
+                val itemsSize = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)?.size ?: 0
+
+                if (toPosition - POSITION_MODIFIER in 0..< itemsSize) {
+                    recyclerAdapter?.notifyItemMoved(fromPosition, toPosition)
+                }
+
+                return true
+            }
+
+            override fun getDragDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                return if (viewHolder is CourseViewHolder && networkStateProvider.isOnline()) {
+                    ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP
+                } else 0
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                val finishingPosition = viewHolder.bindingAdapterPosition
+
+                itemToMove?.let {
+                    recyclerAdapter?.moveItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, it, finishingPosition - 1)
+                    recyclerAdapter?.notifyDataSetChanged()
+                    itemToMove == null
+                }
+
+                val courseItems = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)
+                        ?.mapNotNull { it as? DashboardCourseItem } ?: emptyList()
+                val positions = courseItems
+                    .mapIndexed { index, course -> Pair(course.course.contextId, index) }
+                    .toMap()
+
+                val dashboardPositions = DashboardPositions(positions)
+                lifecycleScope.launch {
+                    val updateResult = repository.updateDashboardPositions(dashboardPositions)
+                    if (updateResult.isFail) {
+                        toast(R.string.failedToUpdateDashboardOrder)
+                    }
+                }
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(recyclerBinding.listView)
     }
 
     override fun onStart() {

@@ -530,6 +530,14 @@ class GroupSortedList<GROUP, ITEM>(
         return isRemoved
     }
 
+    fun changeItemPosition(group: GROUP, item: ITEM, newPosition: Int) {
+        val groupItems = getGroupItems(group).toList().toMutableList()
+        groupItems.remove(item)
+        groupItems.add(newPosition, item)
+
+        addOrUpdateAllItems(group, groupItems)
+    }
+
     /**
      * Add the item to the group.
      *

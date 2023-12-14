@@ -18,17 +18,21 @@ package com.instructure.student.features.dashboard
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 
 class DashboardNetworkDataSource(
     private val courseApi: CourseAPI.CoursesInterface,
     private val groupApi: GroupAPI.GroupInterface,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val userApi: UserAPI.UsersInterface
 ): DashboardDataSource {
 
     override suspend fun getCourses(forceNetwork: Boolean): List<Course> {
@@ -52,5 +56,9 @@ class DashboardNetworkDataSource(
 
     override suspend fun getDashboardCards(forceNetwork: Boolean): List<DashboardCard> {
         return courseApi.getDashboardCourses(RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull.orEmpty()
+    }
+
+    suspend fun updateDashboardPositions(dashboardPositions: DashboardPositions): DataResult<DashboardPositions> {
+        return userApi.updateDashboardPositions(dashboardPositions, RestParams(isForceReadFromNetwork = true))
     }
 }
