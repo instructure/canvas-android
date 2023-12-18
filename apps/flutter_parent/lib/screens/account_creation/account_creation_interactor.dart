@@ -35,6 +35,6 @@ class AccountCreationInteractor {
   }
 
   launchPrivacyPolicy() {
-    locator<UrlLauncher>().launch('https://www.instructure.com/privacy-security');
+    locator<UrlLauncher>().launch('https://www.instructure.com/policies/product-privacy-policy);
   }
 }
