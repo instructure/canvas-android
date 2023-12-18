@@ -35,6 +35,6 @@ class AccountCreationInteractor {
   }
 
   launchPrivacyPolicy() {
-    locator<UrlLauncher>().launch('https://www.instructure.com/canvas/privacy');
+    locator<UrlLauncher>().launch('https://www.instructure.com/privacy-security');
   }
 }

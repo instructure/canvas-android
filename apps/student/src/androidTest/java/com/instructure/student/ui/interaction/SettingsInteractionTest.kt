@@ -96,7 +96,7 @@ class SettingsInteractionTest : StudentTest() {
         settingsPage.openLegalPage()
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
-        canvasWebViewPage.checkWebViewURL("https://www.instructure.com/canvas/privacy")
+        canvasWebViewPage.checkWebViewURL("https://www.instructure.com/privacy-security")
 
     }
 

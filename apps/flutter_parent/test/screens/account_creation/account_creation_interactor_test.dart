@@ -57,7 +57,7 @@ void main() {
   test('launchPrivacyPolicy calls the url launcher', () {
     AccountCreationInteractor().launchPrivacyPolicy();
     verify(
-      launcher.launch('https://www.instructure.com/canvas/privacy'),
+      launcher.launch('https://www.instructure.com/privacy-security'),
     ).called(1);
   });
 }

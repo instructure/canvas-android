@@ -34,7 +34,7 @@ class LegalScreen extends StatelessWidget {
           children: <Widget>[
             _LegalRow(
               label: l10n.privacyPolicy,
-              onTap: () => locator<UrlLauncher>().launch('https://www.instructure.com/canvas/privacy'),
+              onTap: () => locator<UrlLauncher>().launch('https://www.instructure.com/privacy-security'),
               icon: CanvasIcons.admin,
             ),
             _LegalRow(
