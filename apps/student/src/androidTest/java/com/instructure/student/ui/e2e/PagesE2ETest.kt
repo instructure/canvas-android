@@ -43,7 +43,7 @@ class PagesE2ETest: StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPagesE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")

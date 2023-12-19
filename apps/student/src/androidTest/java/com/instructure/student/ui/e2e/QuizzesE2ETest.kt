@@ -65,7 +65,7 @@ class QuizzesE2ETest: StudentTest() {
     @E2E
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testQuizzesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

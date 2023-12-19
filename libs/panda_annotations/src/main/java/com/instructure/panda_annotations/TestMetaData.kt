@@ -23,7 +23,6 @@ annotation class TestMetaData(
     val priority: Priority,
     val featureCategory: FeatureCategory,
     val testCategory: TestCategory,
-    val stubbed: Boolean = false,
     val secondaryFeature: SecondaryFeatureCategory = SecondaryFeatureCategory.NONE
 )
 

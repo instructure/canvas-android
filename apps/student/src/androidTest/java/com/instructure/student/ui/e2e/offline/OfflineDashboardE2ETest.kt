@@ -104,7 +104,7 @@ class OfflineDashboardE2ETest : StudentTest() {
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E, false, SecondaryFeatureCategory.OFFLINE_MODE)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineDashboardUnavailableFeaturesE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")

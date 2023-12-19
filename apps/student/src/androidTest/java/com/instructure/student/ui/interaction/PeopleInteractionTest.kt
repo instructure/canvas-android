@@ -33,7 +33,7 @@ class PeopleInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.PEOPLE, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.PEOPLE, TestCategory.INTERACTION)
     fun testClick_openContextCard() {
         // Should be able to view all enrolled users and tap on one to open their context card
         goToPeopleList()

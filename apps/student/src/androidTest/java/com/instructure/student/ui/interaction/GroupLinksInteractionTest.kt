@@ -58,7 +58,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group opens group browser - eg: "/groups/:id"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION)
     fun testGroupLink_base() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -67,7 +67,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to groups opens dashboard - eg: "/groups"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_DASHBOARD)
     fun testGroupLink_dashboard() {
         setUpGroupAndSignIn()
         dashboardPage.assertDisplaysGroup(group, course)
@@ -75,7 +75,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Test not favorite group on dashboard
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_DASHBOARD)
     fun testGroupLink_dashboard_favoriteLogics() {
         val data = setUpGroupAndSignIn()
         val user = data.users.values.first()
@@ -91,7 +91,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Test that if no groups has selected as favorite then we display all groups
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DASHBOARD)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_DASHBOARD)
     fun testGroupLink_dashboard_not_selected_displays_all() {
         val data = setUpGroupAndSignIn(isFavorite = false)
         val user = data.users.values.first()
@@ -107,7 +107,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_FILES)
     fun testGroupLink_filePreview() {
 
         // MBL-13499: This will cause an http request to our mock web server, and http requests from webviews are illegal
@@ -128,7 +128,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group announcement opens announcement - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_ANNOUNCEMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_ANNOUNCEMENTS)
     fun testGroupLink_announcement() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -140,7 +140,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group announcements list opens announcements - eg: "/groups/:id/announcements"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_ANNOUNCEMENTS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_ANNOUNCEMENTS)
     fun testGroupLink_announcementList() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -150,7 +150,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group discussion opens discussion - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_DISCUSSIONS)
     fun testGroupLink_discussion() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -161,7 +161,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_DISCUSSIONS)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_DISCUSSIONS)
     fun testGroupLink_discussionList() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -171,7 +171,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group files list opens group files list - eg: "/groups/:id/files"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_FILES)
     fun testGroupLink_files() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -181,7 +181,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_FILES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_FILES)
     fun testGroupLink_fileFolder() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -193,7 +193,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group page list opens pages - eg: "/groups/:id/pages"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_PAGES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_PAGES)
     fun testGroupLink_pagesList() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -203,7 +203,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group page opens page - eg: "/groups/:id/pages/:id"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_PAGES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_PAGES)
     fun testGroupLink_Page() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
@@ -216,7 +216,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Link to group people list opens list - eg: "/groups/:id/users"
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.GROUPS_PEOPLE)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.GROUPS, TestCategory.INTERACTION, SecondaryFeatureCategory.GROUPS_PEOPLE)
     fun testGroupLink_people() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)

@@ -41,7 +41,7 @@ class OfflineLoginE2ETest : StudentTest() {
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E, false, SecondaryFeatureCategory.CHANGE_USER)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.CHANGE_USER)
     fun testOfflineChangeUserE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

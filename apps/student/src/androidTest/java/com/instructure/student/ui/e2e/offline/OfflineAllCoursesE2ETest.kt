@@ -44,7 +44,7 @@ class OfflineAllCoursesE2ETest : StudentTest() {
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E, false, SecondaryFeatureCategory.ALL_COURSES)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E, SecondaryFeatureCategory.ALL_COURSES)
     fun testOfflineAllCoursesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

@@ -30,13 +30,13 @@ class LoginInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testLogin_canFindSchool() {
         // Should be able to search for and select a school in the "What's your school's name?" page
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testLogin_qrTutorialPageLoads() {
         // Should be able to view and assert page objects on the QR tutorial page
         loginLandingPage.clickQRCodeButton()

@@ -242,7 +242,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_tappingCourseCardDisplaysCourseBrowser() {
         // Tapping on a course card opens course browser page
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
@@ -260,7 +260,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_gradeIsDisplayedWhenShowGradesIsSelected() {
         // [Student] Grade is displayed when 'Show Grades' (located in navigation drawer) is selected
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
@@ -270,7 +270,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_gradeIsNotDisplayedWhenShowGradesIsDeSelected() {
         // [Student] Grade is NOT displayed when 'Show Grades' (located in navigation drawer) is de-selected
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
@@ -280,7 +280,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_gradeIsDisplayedWithGradeAndScoreWhenNotRestricted() {
         // [Student] Grade is displayed when 'Show Grades' (located in navigation drawer) is selected
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
@@ -291,7 +291,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testDashboardCourses_gradeIsDisplayedWithGradeOnlyWhenQuantitativeDataIsRestricted() {
         // [Student] Grade is displayed when 'Show Grades' (located in navigation drawer) is selected
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
@@ -302,7 +302,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testOfflineIndicatorDisplayedIfOffline() {
         goToDashboard(setUpData())
 
@@ -312,7 +312,7 @@ class DashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testOfflineIndicatorNotDisplayedIfOnline() {
         goToDashboard(setUpData())
 

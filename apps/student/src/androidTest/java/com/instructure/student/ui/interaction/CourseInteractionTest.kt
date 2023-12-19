@@ -46,7 +46,7 @@ class CourseInteractionTest : StudentTest() {
 
     // Link from a course page to another public course should open in the app
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COURSE, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COURSE, TestCategory.INTERACTION)
     fun testCourse_linkFromCoursePageToPublicCoursePage() {
 
         val data = getToCourse(courseCount = 2, favoriteCourseCount = 2)
@@ -81,7 +81,7 @@ class CourseInteractionTest : StudentTest() {
 
     // user should be able to open/preview course file
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testCourse_openFile() {
 
         // MBL-13499: Don't run this test on API 28 and above until we add HTTPS support

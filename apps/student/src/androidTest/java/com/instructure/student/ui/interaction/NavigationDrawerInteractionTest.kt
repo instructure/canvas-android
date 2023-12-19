@@ -77,7 +77,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should be able to change the user from the navigation drawer
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testNavDrawer_changeUser() {
 
         // This test fails on API-28 in FTL due to a "TOO_MANY_REGISTRATIONS" issue on logout.
@@ -123,7 +123,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should be able to log out from the navigation drawer
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testNavDrawer_logOut() {
 
         // This test fails on API-28 in FTL due to a "TOO_MANY_REGISTRATIONS" issue on logout.
@@ -141,7 +141,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     // Should open a dialog and send a question for the selected course
     // (Checks to see that we can fill out the question and the SEND button exists.)
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testHelp_askQuestion() {
 
         signInStudent()
@@ -152,7 +152,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should open the Canvas guides in a WebView
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testHelp_searchCanvasGuides() {
         signInStudent()
 
@@ -164,7 +164,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     // Should send an error report
     // (Checks to see that we can fill out an error report and that the SEND button is displayed.)
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testHelp_reportAProblem() {
 
         signInStudent()
@@ -181,7 +181,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     //
     // So this is a watered-down test that just checks whether an email app chooser gets displayed.
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testHelp_submitFeatureIdea() {
         signInStudent()
 
@@ -231,7 +231,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
 
     // Should send an intent to open the listing for Student App in the Play Store
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testHelp_shareYourLove() {
         signInStudent()
 
@@ -255,7 +255,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testMenuItemForDefaultStudent() {
         signInStudent()
 
@@ -263,7 +263,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testMenuItemForElementaryStudent() {
         signInElementaryStudent()
 
@@ -271,7 +271,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testOfflineIndicatorDisplayedIfOffline() {
         signInStudent()
 
@@ -281,7 +281,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testOfflineIndicatorNotDisplayedIfOnline() {
         signInStudent()
 

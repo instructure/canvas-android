@@ -19,8 +19,19 @@ package com.instructure.student.ui.interaction
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -39,7 +50,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Verify that a discussion header shows up properly after discussion creation
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionCreate_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
 
@@ -58,7 +69,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // It's actually impossible to attach anything to a discussion topic with our app,
     // so the attachment is done behind the scenes, after the fact.
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionCreate_withAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -102,7 +113,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Test that you can't create a discussion when discussion creation is disabled
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionCreate_disabledWhenNotPermitted() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = false)
 
@@ -113,7 +124,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests that links to other Canvas content routes properly
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussion_linksRouteInApp() {
         val data = getToCourse(studentCount = 2, courseCount = 2, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -141,7 +152,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Replies automatically get marked as read as the user scrolls through the list
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussion_postsGetMarkedAsRead() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -180,7 +191,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Attachment is html, so that we can keep the viewing of it "in-house"
     // NOTE: Very similar to testDiscussionCreate_withAttachment
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussion_previewAttachment() {
 
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
@@ -222,7 +233,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests that users can like entries and the correct like count is displayed, if the liking is enabled
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionLikePost_base() {
 
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
@@ -263,7 +274,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests that like count is shown if only graders can like
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionLikes_whenOnlyGradersCanRate() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -300,7 +311,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests that discussion entry liking is not available when disabled
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionLikePost_disabledWhenNotPermitted() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         data.discussionRatingsEnabled = false
@@ -329,7 +340,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Test basic discussion view
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionView_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -349,7 +360,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Test that you can reply to a discussion (if enabled)
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionView_replies() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -376,7 +387,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Test that replies are not possible when they are not enabled
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionView_repliesHiddenWhenNotPermitted() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -397,7 +408,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Test that a reply is displayed properly
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionReply_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -425,7 +436,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // It is a whole other gear to manually specify an attachment the same way that a user would,
     // so we add the attachments programmatically.
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionReply_withAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -480,7 +491,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests that we can make a threaded reply to a reply
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionReply_threaded() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -517,7 +528,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // It is a whole other gear to manually specify an attachment the same way that a user would,
     // so we add the attachments programmatically.
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussionReply_threadedWithAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -581,7 +592,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests a discussion with a linked assignment.
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussion_linkedAssignment() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -622,7 +633,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests a discussion with a linked assignment, show possible points if not restricted
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussion_showPointsIfNotRestricted() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -667,7 +678,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     // Tests a discussion with a linked assignment, hide possible points if restricted
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
     fun testDiscussion_hidePointsIfRestricted() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
