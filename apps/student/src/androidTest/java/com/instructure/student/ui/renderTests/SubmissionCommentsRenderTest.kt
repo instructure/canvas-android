@@ -22,8 +22,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.panda_annotations.*
-import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.db.sqlColAdapters.Date
