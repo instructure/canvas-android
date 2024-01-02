@@ -274,16 +274,13 @@ class DashboardFragment : ParentFragment() {
         }
 
         recyclerBinding.listView.fadeAnimationWithAction {
-            courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
-            groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
-            (recyclerBinding.listView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
-            view?.post { recyclerAdapter?.notifyDataSetChanged() }
+            configureGridSize()
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        configureRecyclerView()
+        configureGridSize()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (isTablet) {
                 binding.emptyCoursesView.setGuidelines(.37f, .49f, .6f, .7f, .12f, .88f)
@@ -298,6 +295,16 @@ class DashboardFragment : ParentFragment() {
                 binding.emptyCoursesView.setGuidelines(.27f, .52f, .58f,.73f, .15f, .85f)
             }
         }
+    }
+
+    private fun configureGridSize() {
+        courseColumns =
+            if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+        groupColumns =
+            if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
+        (recyclerBinding.listView.layoutManager as? GridLayoutManager)?.spanCount =
+            courseColumns * groupColumns
+        view?.post { recyclerAdapter?.notifyDataSetChanged() }
     }
 
     private fun configureRecyclerView() = with(binding) {
