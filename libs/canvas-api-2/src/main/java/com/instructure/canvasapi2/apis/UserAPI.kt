@@ -125,6 +125,9 @@ object UserAPI {
 
         @GET("courses/{courseId}/users?enrollment_type[]=teacher&enrollment_type[]=ta&include[]=avatar_url&include[]=bio&include[]=enrollments")
         fun getFirstPageTeacherListForCourse(@Path("courseId") courseId: Long): Call<List<User>>
+
+        @PUT("users/self/dashboard_positions")
+        suspend fun updateDashboardPositions(@Body positions: DashboardPositions, @Tag restParams: RestParams): DataResult<DashboardPositions>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {
