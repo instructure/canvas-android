@@ -86,14 +86,20 @@ android {
     buildFeatures {
         dataBinding true
         viewBinding true
+        compose true
     }
 
     hilt {
         enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
     }
 
     sourceSets {
         debug.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.4"
     }
 }
 
@@ -193,6 +199,18 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
+
+    /* Compose */
+    def composeBom = platform(Libs.COMPOSE_BOM)
+    implementation composeBom
+    androidTestImplementation composeBom
+
+    implementation Libs.COMPOSE_BOM
+    implementation Libs.COMPOSE_MATERIAL
+    implementation Libs.COMPOSE_PREVIEW
+    debugImplementation Libs.COMPOSE_TOOLING
+    implementation Libs.COMPOSE_VIEW_MODEL
+    implementation Libs.COMPOSE_LIVE_DATA
 
     implementation Libs.FLEXBOX_LAYOUT
 

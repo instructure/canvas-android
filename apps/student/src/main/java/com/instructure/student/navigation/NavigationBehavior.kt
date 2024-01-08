@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.InboxFragment
-import com.instructure.pandautils.utils.FontFamily
+import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.fragment.ParentFragment
 
@@ -39,7 +39,7 @@ interface NavigationBehavior {
 
     val visibleAccountMenuItems: Set<AccountMenuItem>
 
-    val fontFamily: FontFamily
+    val canvasFont: CanvasFont
 
     @get:MenuRes
     val bottomBarMenu: Int

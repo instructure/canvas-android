@@ -161,6 +161,14 @@ object Libs {
     const val ROOM_TEST = "androidx.room:room-testing:${Versions.ROOM}"
 
     const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
+
+    // Compose
+    const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.10.01"
+    const val COMPOSE_MATERIAL = "androidx.compose.material:material"
+    const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
+    const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"
+    const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+    const val COMPOSE_LIVE_DATA = "androidx.compose.runtime:runtime-livedata:1.4.3"
 }
 
 object Plugins {

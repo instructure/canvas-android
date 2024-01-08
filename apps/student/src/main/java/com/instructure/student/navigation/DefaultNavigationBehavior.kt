@@ -20,9 +20,9 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.FontFamily
+import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.R
-import com.instructure.student.fragment.CalendarFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
@@ -32,7 +32,7 @@ class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBeha
 
     override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
         DashboardFragment::class.java,
-        CalendarFragment::class.java,
+        ComposeCalendarFragment::class.java,
         ToDoListFragment::class.java,
         NotificationListFragment::class.java,
         getInboxBottomBarFragment(apiPrefs)
@@ -46,8 +46,8 @@ class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBeha
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
 
-    override val fontFamily: FontFamily
-        get() = FontFamily.REGULAR
+    override val canvasFont: CanvasFont
+        get() = CanvasFont.REGULAR
 
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu
 
