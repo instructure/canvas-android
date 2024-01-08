@@ -61,4 +61,12 @@ object ExternalToolManager {
         ExternalToolAPI.getExternalToolsForCourses(ids, adapter, params, callback)
     }
 
+    fun getLtiFromUrlAsync(url: String, forceNetwork: Boolean) = apiAsync<LTITool> { getLtiFromUrl(url, it, forceNetwork) }
+
+    private fun getLtiFromUrl(url: String, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        ExternalToolAPI.getLtiFromUrl(url, adapter, params, callback)
+    }
+
 }

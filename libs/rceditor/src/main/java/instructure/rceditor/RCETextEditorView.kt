@@ -43,6 +43,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.bumptech.glide.Glide
 import instructure.rceditor.databinding.RceDialogAltTextBinding
 import instructure.rceditor.databinding.RceTextEditorViewBinding
 
@@ -52,7 +53,7 @@ class RCETextEditorView @JvmOverloads constructor(
 ) : RelativeLayout(context, attrs, defStyleAttr) {
 
     private val binding: RceTextEditorViewBinding
-    
+
     @ColorInt
     private var themeColor = Color.BLACK
 
@@ -67,6 +68,8 @@ class RCETextEditorView @JvmOverloads constructor(
 
     // Let the fragments that use this view handle what to do when it's clicked
     var actionUploadImageCallback: (() -> Unit)? = null
+
+    var actionStudioSelectCallback: (() -> Unit)? = null
 
     init {
         binding = RceTextEditorViewBinding.inflate(LayoutInflater.from(context), this, true)
@@ -86,7 +89,8 @@ class RCETextEditorView @JvmOverloads constructor(
                     rceWebView.setPadding(padStart, padTop, padEnd, pagBottom)
                 }
 
-                val controlMarginStart = a.getDimensionPixelSize(R.styleable.RCETextEditorView_rce_controls_margin_start, 0)
+                val controlMarginStart =
+                    a.getDimensionPixelSize(R.styleable.RCETextEditorView_rce_controls_margin_start, 0)
                 val controlMarginEnd = a.getDimensionPixelSize(R.styleable.RCETextEditorView_rce_controls_margin_end, 0)
 
                 (rceControllerWrapper.layoutParams as ViewGroup.MarginLayoutParams).apply {
@@ -157,7 +161,13 @@ class RCETextEditorView @JvmOverloads constructor(
 
             rceController.actionInsertLink.setOnClickListener {
                 rceWebView.getSelectedText {
-                    RCEInsertDialog.newInstance(context.getString(R.string.rce_insertLink), themeColor, buttonColor, true, it)
+                    RCEInsertDialog.newInstance(
+                        context.getString(R.string.rce_insertLink),
+                        themeColor,
+                        buttonColor,
+                        true,
+                        it
+                    )
                         .setListener { url, alt ->
                             if (URLUtil.isValidUrl(url)) { // Checks if the url contains any valid schema, etc
                                 rceWebView.insertLink(url, alt)
@@ -168,6 +178,10 @@ class RCETextEditorView @JvmOverloads constructor(
                         }
                         .show(fragmentManager ?: return@getSelectedText, RCEInsertDialog::class.java.simpleName)
                 }
+            }
+
+            rceController.actionStudioSelect.setOnClickListener {
+                actionStudioSelectCallback?.invoke()
             }
 
             rceWebView.setOnDecorationChangeListener { state, _ ->
@@ -211,6 +225,13 @@ class RCETextEditorView @JvmOverloads constructor(
 
     fun insertImage(url: String, alt: String) {
         binding.rceWebView.insertImage(url, alt)
+    }
+
+    fun embedStudio(url: String, title: String) {
+        val studioIframe =
+            "<iframe class=\"lti-embed\" style=\"width: 800px; height: 880px;\" title=\"$title\" src=\"$url\" width=\"800\" height=\"880\" allowfullscreen=\"allowfullscreen\" webkitallowfullscreen=\"webkitallowfullscreen\" mozallowfullscreen=\"mozallowfullscreen\" allow=\"geolocation *; microphone *; camera *; midi *; encrypted-media *; autoplay *; clipboard-write *; display-capture *\" data-studio-resizable=\"false\" data-studio-tray-enabled=\"false\" data-studio-convertible-to-link=\"true\"></iframe>"
+        binding.rceWebView.evaluateJavascript("javascript:RE.prepareInsert();", null)
+        binding.rceWebView.evaluateJavascript("javascript:RE.insertHTML('$studioIframe');", null)
     }
 
     private fun showAltTextDialog(activity: Activity, onPositiveClick: (String) -> Unit, onNegativeClick: () -> Unit) {
@@ -296,7 +317,8 @@ class RCETextEditorView @JvmOverloads constructor(
 
     private fun toggleColorPicker() = with(binding) {
         if (rceColorPickerWrapper.visibility == View.VISIBLE) {
-            val animator = ObjectAnimator.ofFloat(rceColorPickerWrapper, "translationY", rceColorPickerWrapper.height * -1f, 0f)
+            val animator =
+                ObjectAnimator.ofFloat(rceColorPickerWrapper, "translationY", rceColorPickerWrapper.height * -1f, 0f)
             animator.duration = 200
             animator.addListener(object : RCEAnimationListener() {
                 override fun onAnimationFinish(animation: Animator) {
@@ -305,7 +327,8 @@ class RCETextEditorView @JvmOverloads constructor(
             })
             animator.start()
         } else {
-            val animator = ObjectAnimator.ofFloat(rceColorPickerWrapper, "translationY", 0f, rceColorPickerWrapper.height * -1f)
+            val animator =
+                ObjectAnimator.ofFloat(rceColorPickerWrapper, "translationY", 0f, rceColorPickerWrapper.height * -1f)
             animator.duration = 230
             animator.addListener(object : RCEAnimationListener() {
                 override fun onAnimationBegin(animation: Animator) {
@@ -346,6 +369,13 @@ class RCETextEditorView @JvmOverloads constructor(
     }
 
     fun requestEditorFocus() = binding.rceWebView.focusEditor()
+
+    fun setupStudioButton(iconUrl: String) {
+        binding.rceController.actionStudioSelect.visibility = View.VISIBLE
+        Glide.with(context)
+            .load(iconUrl)
+            .into(binding.rceController.actionStudioSelect)
+    }
 
     //region save and restore state
 
@@ -398,7 +428,8 @@ class RCETextEditorView @JvmOverloads constructor(
         companion object {
 
             // required field that makes Parcelables from a Parcel
-            @JvmField val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+            @JvmField
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
                 override fun createFromParcel(`in`: Parcel): SavedState {
                     return SavedState(`in`)
                 }

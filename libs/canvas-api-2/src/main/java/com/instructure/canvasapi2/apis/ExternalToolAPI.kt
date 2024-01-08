@@ -59,6 +59,10 @@ internal object ExternalToolAPI {
         callback.addCall(adapter.build(ExternalToolInterface::class.java, params).getExternalToolsForCourses(canvasContextIds)).enqueue(callback)
     }
 
+    fun getLtiFromUrl(url: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<LTITool>) {
+        callback.addCall(adapter.build(ExternalToolInterface::class.java, params).getLtiFromUrl(url)).enqueue(callback)
+    }
+
     fun getLtiFromUrlSynchronous(url: String, adapter: RestBuilder, params: RestParams): LTITool? {
         try {
             val response = adapter.build(ExternalToolInterface::class.java, params).getLtiFromUrl(url).execute()

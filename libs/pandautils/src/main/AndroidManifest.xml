@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,17 +16,21 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.instructure.pandautils" >
+    package="com.instructure.pandautils">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application>
         <activity
             android:name="com.instructure.pandautils.utils.AvatarCropActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".features.rce.StudioSelectResourceActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!--Push Notifications-->
 
-        <receiver android:name=".receivers.PushDeleteReceiver"/>
+        <receiver android:name=".receivers.PushDeleteReceiver" />
 
     </application>
 

@@ -35,6 +35,9 @@ object RequestCodes {
     const val PICK_FILE_FROM_DEVICE = 7000
     const val CROP_IMAGE = 4003
 
+    // LTI
+    const val STUDIO_EMBED = 5000
+
     // Canvas Context
     const val CANVAS_CONTEXT = 8000
 }

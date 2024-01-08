@@ -34,6 +34,7 @@
     <string name="rce_contentDescription_insert_numbers">Insert Numbered List</string>
     <string name="rce_contentDescription_insert_photo">Insert Photo</string>
     <string name="rce_contentDescription_upload_photo">Upload Photo From Device</string>
+    <string name="rce_contentDescription_studio_select">Select from Studio</string>
     <string name="rce_contentDescription_insert_link">Insert Link</string>
     <string name="rce_contentDescription_block_quote">Block Quote</string>
 

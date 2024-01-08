@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,118 +22,126 @@
     android:background="@color/rce_backgroundColor"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:scrollbars="none"
+    android:contentDescription="@string/rce_scrollInstructions"
     android:importantForAccessibility="yes"
-    android:contentDescription="@string/rce_scrollInstructions">
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/action_undo"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_undo"
-            app:srcCompat="@drawable/ic_rce_undo"/>
+            app:srcCompat="@drawable/ic_rce_undo" />
 
         <ImageButton
             android:id="@+id/action_redo"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_redo"
-            app:srcCompat="@drawable/ic_rce_redo"/>
+            app:srcCompat="@drawable/ic_rce_redo" />
 
         <ImageButton
             android:id="@+id/action_bold"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_bold"
-            app:srcCompat="@drawable/ic_rce_format_bold"/>
+            app:srcCompat="@drawable/ic_rce_format_bold" />
 
         <ImageButton
             android:id="@+id/action_italic"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_italic"
-            app:srcCompat="@drawable/ic_rce_format_italic"/>
+            app:srcCompat="@drawable/ic_rce_format_italic" />
 
         <!--<ImageButton-->
-            <!--android:id="@+id/action_strikethrough"-->
-            <!--style="@style/RCE_Item"-->
-            <!--android:contentDescription="@string/rce_contentDescription_italic"-->
-            <!--app:srcCompat="@drawable/ic_rce_strikethrough_s"/>-->
+        <!--android:id="@+id/action_strikethrough"-->
+        <!--style="@style/RCE_Item"-->
+        <!--android:contentDescription="@string/rce_contentDescription_italic"-->
+        <!--app:srcCompat="@drawable/ic_rce_strikethrough_s"/>-->
 
         <ImageButton
             android:id="@+id/action_underline"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_underline"
-            app:srcCompat="@drawable/ic_rce_format_underlined"/>
+            app:srcCompat="@drawable/ic_rce_format_underlined" />
 
         <ImageButton
             android:id="@+id/action_txt_color"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_format_text_color"
-            app:srcCompat="@drawable/ic_rce_format_color_text"/>
+            app:srcCompat="@drawable/ic_rce_format_color_text" />
 
         <!--<ImageButton-->
-            <!--android:id="@+id/action_indent"-->
-            <!--style="@style/RCE_Item"-->
-            <!--android:contentDescription="@string/rce_contentDescription_indent_increase"-->
-            <!--app:srcCompat="@drawable/ic_rce_format_indent_increase"/>-->
+        <!--android:id="@+id/action_indent"-->
+        <!--style="@style/RCE_Item"-->
+        <!--android:contentDescription="@string/rce_contentDescription_indent_increase"-->
+        <!--app:srcCompat="@drawable/ic_rce_format_indent_increase"/>-->
 
         <!--<ImageButton-->
-            <!--android:id="@+id/action_outdent"-->
-            <!--style="@style/RCE_Item"-->
-            <!--android:contentDescription="@string/rce_contentDescription_indent_decrease"-->
-            <!--app:srcCompat="@drawable/ic_rce_format_indent_decrease"/>-->
+        <!--android:id="@+id/action_outdent"-->
+        <!--style="@style/RCE_Item"-->
+        <!--android:contentDescription="@string/rce_contentDescription_indent_decrease"-->
+        <!--app:srcCompat="@drawable/ic_rce_format_indent_decrease"/>-->
 
         <!--<ImageButton-->
-            <!--android:id="@+id/action_align_left"-->
-            <!--style="@style/RCE_Item"-->
-            <!--android:contentDescription="@string/rce_contentDescription_align_left"-->
-            <!--app:srcCompat="@drawable/ic_rce_format_align_left"/>-->
+        <!--android:id="@+id/action_align_left"-->
+        <!--style="@style/RCE_Item"-->
+        <!--android:contentDescription="@string/rce_contentDescription_align_left"-->
+        <!--app:srcCompat="@drawable/ic_rce_format_align_left"/>-->
 
         <!--<ImageButton-->
-            <!--android:id="@+id/action_align_center"-->
-            <!--style="@style/RCE_Item"-->
-            <!--android:contentDescription="@string/rce_contentDescription_align_center"-->
-            <!--app:srcCompat="@drawable/ic_rce_format_align_center"/>-->
+        <!--android:id="@+id/action_align_center"-->
+        <!--style="@style/RCE_Item"-->
+        <!--android:contentDescription="@string/rce_contentDescription_align_center"-->
+        <!--app:srcCompat="@drawable/ic_rce_format_align_center"/>-->
 
         <!--<ImageButton-->
-            <!--android:id="@+id/action_align_right"-->
-            <!--style="@style/RCE_Item"-->
-            <!--android:contentDescription="@string/rce_contentDescription_align_right"-->
-            <!--app:srcCompat="@drawable/ic_rce_format_align_right"/>-->
+        <!--android:id="@+id/action_align_right"-->
+        <!--style="@style/RCE_Item"-->
+        <!--android:contentDescription="@string/rce_contentDescription_align_right"-->
+        <!--app:srcCompat="@drawable/ic_rce_format_align_right"/>-->
 
         <ImageButton
             android:id="@+id/action_insert_bullets"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_insert_bullets"
-            app:srcCompat="@drawable/ic_rce_format_list_bulleted"/>
+            app:srcCompat="@drawable/ic_rce_format_list_bulleted" />
 
         <ImageButton
             android:id="@+id/action_insert_numbers"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_insert_numbers"
-            app:srcCompat="@drawable/ic_rce_format_list_numbered"/>
+            app:srcCompat="@drawable/ic_rce_format_list_numbered" />
 
         <!--<ImageButton-->
-            <!--android:id="@+id/action_blockquote"-->
-            <!--style="@style/RCE_Item"-->
-            <!--android:contentDescription="@string/rce_contentDescription_block_quote"-->
-            <!--app:srcCompat="@drawable/ic_rce_format_quote"/>-->
+        <!--android:id="@+id/action_blockquote"-->
+        <!--style="@style/RCE_Item"-->
+        <!--android:contentDescription="@string/rce_contentDescription_block_quote"-->
+        <!--app:srcCompat="@drawable/ic_rce_format_quote"/>-->
 
         <ImageButton
             android:id="@+id/actionUploadImage"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_upload_photo"
-            app:srcCompat="@drawable/ic_rce_insert_photo"/>
+            app:srcCompat="@drawable/ic_rce_insert_photo" />
 
         <ImageButton
             android:id="@+id/action_insert_link"
             style="@style/RCE_Item"
             android:contentDescription="@string/rce_contentDescription_insert_link"
-            app:srcCompat="@drawable/ic_rce_insert_link"/>
+            app:srcCompat="@drawable/ic_rce_insert_link" />
+
+        <ImageButton
+            android:id="@+id/actionStudioSelect"
+            style="@style/RCE_Item"
+            android:contentDescription="@string/rce_contentDescription_studio_select"
+            android:padding="14dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

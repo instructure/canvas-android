@@ -28,6 +28,7 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -94,6 +95,13 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
+    api(Libs.GLIDE) {
+        exclude group: "com.android.support"
+    }
+    api (Libs.GLIDE_OKHTTP) {
+        exclude group: "com.android.support"
+    }
+    kapt Libs.GLIDE_COMPILER
 
     api Libs.RICH_EDITOR
 }
