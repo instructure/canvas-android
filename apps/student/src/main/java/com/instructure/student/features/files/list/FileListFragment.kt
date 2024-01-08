@@ -412,11 +412,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             tryWeave {
                 val body = UpdateFileFolder(name = it)
                 val updateItem: FileFolder = if (item.isFile) {
-                    //val body: UpdateFileFolder = if(fileExtension != null) UpdateFileFolder(name = "${it}.${fileExtension}")
-                    //else UpdateFileFolder(name = it)
                     awaitApi { FileFolderManager.updateFile(item.id, body, it) }
                 } else {
-                   // val body = UpdateFileFolder(name = it)
                     awaitApi { FileFolderManager.updateFolder(item.id, body, it) }
                 }
                 recyclerAdapter?.add(updateItem)
