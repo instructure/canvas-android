@@ -37,11 +37,11 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemIcon.setVisible(item.iconResId != null)
             item.iconResId?.let {
                 moduleItemIcon.setImageResource(it)
-                moduleItemIcon.imageTintList = ColorStateList.valueOf(item.tintColor)
             }
             moduleItemIndent.layoutParams.width = item.indent
             moduleItemTitle.setTextForVisibility(item.title)
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
+            moduleItemSubtitle2.setTextForVisibility(item.subtitle2)
             moduleItemPublishedIcon.setVisible(item.isPublished == true)
             moduleItemUnpublishedIcon.setVisible(item.isPublished == false)
             moduleItemLoadingView.setVisible(item.isLoading)

@@ -46,6 +46,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                                 id = item.id,
                                 title = null,
                                 subtitle = item.title,
+                                subtitle2 = null,
                                 iconResId = null,
                                 isPublished = item.published,
                                 indent = item.indent * indentWidth,
@@ -104,6 +105,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             )
         }
 
+        val subtitle2 = item.moduleDetails?.pointsPossible
+
         val iconRes: Int? = when (tryOrNull { ModuleItem.Type.valueOf(item.type.orEmpty()) }) {
             ModuleItem.Type.Assignment -> R.drawable.ic_assignment
             ModuleItem.Type.Discussion -> R.drawable.ic_discussion
@@ -119,6 +122,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             id = item.id,
             title = item.title,
             subtitle = subtitle,
+            subtitle2 = subtitle2,
             iconResId = iconRes.takeUnless { loading },
             isPublished = item.published,
             indent = item.indent * indentWidth,
