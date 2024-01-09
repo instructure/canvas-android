@@ -90,7 +90,7 @@ class QuizListRecyclerAdapter(
         }
 
         adapterToFragmentCallback?.onRefreshFinished()
-        if (size() == 0) adapterToRecyclerViewCallback.setIsEmpty(true)
+        if (size() == 0) adapterToRecyclerViewCallback?.setIsEmpty(true)
         notifyDataSetChanged()
     }
 
