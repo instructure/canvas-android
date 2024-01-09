@@ -18,6 +18,7 @@ package com.instructure.pandautils.typeface
 
 import android.content.Context
 import android.graphics.Typeface
+import com.instructure.pandautils.compose.overrideComposeFonts
 import com.instructure.pandautils.utils.CanvasFont
 import java.lang.reflect.Field
 
@@ -46,6 +47,8 @@ class TypefaceBehavior(private val context: Context) {
             val updatedSystemMap = mutableMapOf<String, Typeface>()
             updatedSystemMap.putAll(fontMap)
             staticField.set(null, updatedSystemMap)
+
+            overrideComposeFonts(canvasFont.fontRes)
             fontOverriden = true
         } catch (e: Exception) {
             e.printStackTrace()

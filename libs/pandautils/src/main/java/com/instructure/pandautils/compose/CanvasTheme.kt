@@ -1,5 +1,6 @@
 package com.instructure.pandautils.compose
 
+import androidx.annotation.FontRes
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
@@ -19,7 +20,16 @@ private val lato = FontFamily(
     Font(R.font.lato_regular)
 )
 
-
-var typography = Typography( // TODO make this dynamic with K5 fonts
+private var typography = Typography(
     defaultFontFamily = lato,
 )
+
+fun overrideComposeFonts(@FontRes fontResource: Int) {
+    val newFont = FontFamily(
+        Font(fontResource)
+    )
+
+    typography = Typography(
+        defaultFontFamily = newFont,
+    )
+}
