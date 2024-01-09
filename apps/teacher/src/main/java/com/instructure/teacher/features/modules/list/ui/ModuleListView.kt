@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.pandarecycler.PaginatedScrollListener
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
 import com.instructure.teacher.features.modules.list.ModuleListEvent
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
@@ -67,6 +68,7 @@ class ModuleListView(
             subtitle = course.name
             setupBackButton(activity)
             ViewStyler.themeToolbarColored(activity, this, course)
+            inflateMenu(R.menu.menu_module_list)
         }
 
         binding.recyclerView.apply {

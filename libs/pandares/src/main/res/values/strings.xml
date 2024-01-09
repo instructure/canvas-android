@@ -1491,4 +1491,7 @@
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Additional course content</string>
     <string name="failedToUpdateDashboardOrder">Failed to update Dashboard cards order</string>
+    <string name="publishAllModulesAndItems">Publish all Modules and Items</string>
+    <string name="publishModulesOnly">Publish Modules only</string>
+    <string name="unpublishAllModulesAndItems">Unpublish all Modules and Items</string>
 </resources>
