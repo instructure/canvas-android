@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -36,7 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -55,7 +57,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -65,7 +66,9 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 import java.time.format.TextStyle
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 import javax.inject.Inject
 
@@ -126,6 +129,28 @@ fun CalendarScreen(viewModel: CalendarViewModel, navigationActionClick: () -> Un
                 TopAppBar(title = {
                     Text(text = "Calendar")
                 },
+                    actions = {
+                        val selectedDay = viewModel.selectedDay.collectAsState().value
+                        if (selectedDay != LocalDate.now()) {
+                            Box(contentAlignment = Alignment.Center, modifier = Modifier
+                                .padding(horizontal = 12.dp)
+                                .clickable {
+                                    viewModel.jumpToToday()
+                                }) {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_calendar_day),
+                                    contentDescription = "",
+                                    tint = Color(ThemePrefs.primaryTextColor)
+                                )
+                                Text(
+                                    text = LocalDate.now().dayOfMonth.toString(),
+                                    fontSize = 9.sp,
+                                    modifier = Modifier.padding(top = 4.dp),
+                                    color = Color(ThemePrefs.primaryTextColor)
+                                )
+                            }
+                        }
+                    },
                     backgroundColor = Color(ThemePrefs.primaryColor),
                     contentColor = Color(ThemePrefs.primaryTextColor),
                     navigationIcon = {
@@ -155,11 +180,11 @@ fun CalendarScreen(viewModel: CalendarViewModel, navigationActionClick: () -> Un
 @Composable
 fun CalendarView(viewModel: CalendarViewModel) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        var calendarExpanded by remember { mutableStateOf(true) }
-        val centerIndex = Int.MAX_VALUE / 2
-        val startDay = viewModel.currentDay.collectAsState().value
+        val calendarExpanded = viewModel.expanded.collectAsState()
+        var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
+        val currentDay = viewModel.selectedDay.collectAsState()
         val pagerState = rememberPagerState(
-            initialPage = centerIndex,
+            initialPage = Int.MAX_VALUE / 2,
             initialPageOffsetFraction = 0f
         ) {
             Int.MAX_VALUE
@@ -170,32 +195,32 @@ fun CalendarView(viewModel: CalendarViewModel) {
             snapshotFlow { pagerState.currentPage }.collect { page ->
                 // Do something with each page change, for example:
                 val monthOffset = page - centerIndex
-                viewModel.dayChanged(startDay.plusMonths(monthOffset.toLong()))
+                centerIndex = page
+                // TODO Maybe move this logic to the ViewModel
+                val dateFieldToAdd = if (calendarExpanded.value) ChronoUnit.MONTHS else ChronoUnit.WEEKS
+                viewModel.dayChanged(currentDay.value.plus(monthOffset.toLong(), dateFieldToAdd))
             }
         }
 
-        val currentDay = viewModel.currentDay.collectAsState()
         val month = currentDay.value.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) // TODO Check where should we get the locale from
         val year = currentDay.value.year
 
         Spacer(modifier = Modifier.height(8.dp))
-        CalendarHeader(month, year.toString(), calendarExpanded) { calendarExpanded = it }
+        CalendarHeader(month, year.toString(), calendarExpanded.value) { viewModel.expandChanged(it) }
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalPager(
-            modifier = Modifier,
             state = pagerState,
-            pageSpacing = 0.dp,
-            userScrollEnabled = true,
             reverseLayout = false,
-            contentPadding = PaddingValues(0.dp),
-            beyondBoundsPageCount = 0,
             pageSize = PageSize.Fill,
-            key = null,
             pageContent = { page ->
                 val monthOffset = page - centerIndex
-                val offsetDate = startDay.plusMonths(monthOffset.toLong())
-                val calendarData = createMonthDataForLocalDate(offsetDate)
-                CalendarBody(calendarData.calendarRows,
+                val calendarData = viewModel.calendarData.collectAsState().value
+                val monthData = when (monthOffset) {
+                    -1 -> calendarData.previous
+                    1 -> calendarData.next
+                    else -> calendarData.current
+                }
+                CalendarBody(monthData.calendarRows,
                     Day(currentDay.value.dayOfMonth, currentDay.value),
                     selectedDayChanged = { viewModel.dayChanged(it.date) })
             }
@@ -210,7 +235,7 @@ fun CalendarHeader(
     calendarOpen: Boolean,
     calendarOpenChanged: (Boolean) -> Unit
 ) {
-    val rotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f)
+    val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f)
 
     Row(
         modifier = Modifier
@@ -226,6 +251,7 @@ fun CalendarHeader(
                 color = colorResource(id = R.color.textDark),
                 modifier = Modifier.align(Alignment.Start)
             )
+            Spacer(modifier = Modifier.size(2.dp))
             Row {
                 Text(
                     text = calendarTitle,
@@ -238,7 +264,7 @@ fun CalendarHeader(
                     tint = colorResource(id = R.color.textDarkest),
                     contentDescription = "",
                     modifier = Modifier
-                        .rotate(rotation + 180)
+                        .rotate(iconRotation + 180)
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -362,7 +388,7 @@ fun DaysOfWeekRow(
                         color = Color(ThemePrefs.buttonColor),
                         shape = RoundedCornerShape(500.dp)
                     )
-            } else if (day == selectedDay) {
+            } else if (day.date == selectedDay.date) {
                 dayModifier = dayModifier
                     .border(
                         width = borderSize,
@@ -386,5 +412,5 @@ fun DaysOfWeekRow(
 @Composable
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
-    CalendarScreen(CalendarViewModel(ApiPrefs)) {}
+    CalendarScreen(CalendarViewModel()) {}
 }

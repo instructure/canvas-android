@@ -1,8 +1,8 @@
-package com.instructure.student.di.feature
+package com.instructure.teacher.di
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.calendar.CalendarRouter
-import com.instructure.student.features.calendar.StudentCalendarRouter
+import com.instructure.teacher.features.calendar.TeacherCalendarRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ class CalendarModule {
 
     @Provides
     fun provideCalendarRouter(activity: FragmentActivity): CalendarRouter {
-        return StudentCalendarRouter(activity)
+        return TeacherCalendarRouter(activity)
     }
 }
