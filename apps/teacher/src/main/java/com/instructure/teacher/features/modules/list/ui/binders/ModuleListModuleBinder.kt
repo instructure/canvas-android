@@ -16,6 +16,9 @@
  */
 package com.instructure.teacher.features.modules.list.ui.binders
 
+import android.view.Gravity
+import androidx.appcompat.widget.PopupMenu
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
@@ -37,7 +40,15 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
                 moduleName.text = item.name
                 publishedIcon.setVisible(item.isPublished == true)
                 unpublishedIcon.setVisible(item.isPublished == false)
-                collapseIcon.rotation = if (isCollapsed) 0f else 180f
+                collapseIcon.rotation = if (isCollapsed) 180f else 0f
+
+                overflow.onClickWithRequireNetwork {
+                    val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
+                    popup.inflate(R.menu.menu_module)
+
+                    overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
+                    popup.show()
+                }
             }
         }
     )

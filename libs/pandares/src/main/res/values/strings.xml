@@ -1494,4 +1494,9 @@
     <string name="publishAllModulesAndItems">Publish all Modules and Items</string>
     <string name="publishModulesOnly">Publish Modules only</string>
     <string name="unpublishAllModulesAndItems">Unpublish all Modules and Items</string>
+    <string name="moduleOptions">Module Options</string>
+    <string name="publishModuleAndItems">Publish Module and all Items</string>
+    <string name="publishModuleOnly">Publish Module only</string>
+    <string name="unpublishModuleAndItems">Unpublish Module and all Items</string>
+    <string name="a11y_contentDescription_moduleOptions">Module options for %s</string>
 </resources>
