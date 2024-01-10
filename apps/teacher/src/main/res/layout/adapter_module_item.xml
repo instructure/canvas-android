@@ -44,6 +44,7 @@
         android:src="@drawable/ic_quiz"
         android:tint="@color/textDark"
         app:layout_constraintStart_toEndOf="@id/moduleItemIndent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
@@ -68,6 +69,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/moduleItemPublishedIcon"
         app:layout_constraintStart_toEndOf="@id/moduleItemIcon"
+        app:layout_constraintBottom_toTopOf="@+id/moduleItemSubtitle"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="General Questions &amp; Answers" />
 
@@ -82,6 +84,7 @@
         app:layout_constraintEnd_toStartOf="@+id/moduleItemPublishedIcon"
         app:layout_constraintStart_toEndOf="@id/moduleItemIcon"
         app:layout_constraintTop_toBottomOf="@id/moduleItemTitle"
+        app:layout_constraintBottom_toTopOf="@+id/moduleItemSubtitle2"
         tools:text="Due Apr 25 at 11:59pm" />
 
     <TextView
@@ -95,6 +98,7 @@
         app:layout_constraintEnd_toStartOf="@+id/moduleItemPublishedIcon"
         app:layout_constraintStart_toEndOf="@id/moduleItemIcon"
         app:layout_constraintTop_toBottomOf="@id/moduleItemSubtitle"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="100 pts" />
 
     <ImageView
