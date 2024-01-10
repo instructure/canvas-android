@@ -69,7 +69,7 @@ class CalendarViewModel @Inject constructor() : ViewModel() {
 
     private fun createMonthDataForLocalDate(date: LocalDate, fullMonth: Boolean): MonthData {
         val year = date.year
-        val month = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) // TODO maybe we need to get the locale from other source if app locale is overwritten
+        val month = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val daysInMonth = date.lengthOfMonth()
         val firstDayOfMonth = date.withDayOfMonth(1)
         val firstDayOfWeekIndex = firstDayOfMonth.dayOfWeek.value % 7 // 0 for Sunday, 6 for Saturday

@@ -71,6 +71,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
@@ -209,7 +210,7 @@ fun CalendarView(viewModel: CalendarViewModel) {
             }
         }
 
-        val month = currentDay.value.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) // TODO Check where should we get the locale from
+        val month = currentDay.value.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val year = currentDay.value.year
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -309,60 +310,27 @@ fun CalendarBody(
 }
 
 @Composable
-fun DayHeaders() { // TODO localise this
+fun DayHeaders() {
     Row(
         modifier = Modifier
             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = "Sun",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.textDark),
-            modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Mon",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Tue",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Wed",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Thu",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Fri",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = "Sat",
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.textDark),
-            modifier = Modifier.width(32.dp),
-            textAlign = TextAlign.Center
-        )
+        val daysOfWeek = DayOfWeek.values()
+        // Shift the starting point to Sunday
+        val shiftedDaysOfWeek = Array(7) { daysOfWeek[(it + 6) % 7] }
+
+        for (day in shiftedDaysOfWeek) {
+            val headerText = day.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+            val colorResource =
+                if (day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY) R.color.textDark else R.color.textDarkest
+            Text(
+                text = headerText,
+                fontSize = 12.sp,
+                color = colorResource(id = colorResource),
+                modifier = Modifier.width(32.dp),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
