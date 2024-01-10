@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -58,13 +59,17 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
+import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -72,7 +77,11 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 import javax.inject.Inject
 
+private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
+
 @AndroidEntryPoint
+@ScreenView(SCREEN_VIEW_CALENDAR)
+@PageView(url = "calendar")
 class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CalendarViewModel by viewModels()
@@ -87,7 +96,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     ): View {
         return ComposeView(requireActivity()).apply {
             setContent {
-                CalendarScreen(viewModel) {
+                CalendarScreen(title(), viewModel) {
                     calendarRouter.openNavigationDrawer()
                 }
             }
@@ -97,12 +106,10 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     override val navigation: Navigation?
         get() = activity as? Navigation
 
-    override fun title(): String {
-        return "Compose Calendar"
-    }
+    override fun title(): String = getString(R.string.calendar)
 
     override fun applyTheme() {
-
+        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
     }
 
     override fun getFragment(): Fragment? {
@@ -121,13 +128,13 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
 }
 
 @Composable
-fun CalendarScreen(viewModel: CalendarViewModel, navigationActionClick: () -> Unit) {
+fun CalendarScreen(title: String, viewModel: CalendarViewModel, navigationActionClick: () -> Unit) {
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 TopAppBar(title = {
-                    Text(text = "Calendar")
+                    Text(text = title)
                 },
                     actions = {
                         val selectedDay = viewModel.selectedDay.collectAsState().value
@@ -237,14 +244,21 @@ fun CalendarHeader(
 ) {
     val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f)
 
+    val screenHeightDp = LocalConfiguration.current.screenHeightDp
+    if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) calendarOpenChanged(false)
+    val clickableModifier = if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+        Modifier
+    } else {
+        Modifier.clickable { calendarOpenChanged(!calendarOpen) }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
-        Column(modifier = Modifier
-            .clickable { calendarOpenChanged(!calendarOpen) }) {
+        Column(modifier = clickableModifier) {
             Text(
                 text = year,
                 fontSize = 12.sp,
@@ -259,14 +273,16 @@ fun CalendarHeader(
                     color = colorResource(id = R.color.textDarkest),
                     modifier = Modifier.height(30.dp)
                 )
-                Icon(
-                    painterResource(id = R.drawable.ic_chevron_down),
-                    tint = colorResource(id = R.color.textDarkest),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .rotate(iconRotation + 180)
-                        .align(Alignment.CenterVertically)
-                )
+                if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_chevron_down),
+                        tint = colorResource(id = R.color.textDarkest),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .rotate(iconRotation + 180)
+                            .align(Alignment.CenterVertically)
+                    )
+                }
             }
         }
     }
@@ -412,5 +428,5 @@ fun DaysOfWeekRow(
 @Composable
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
-    CalendarScreen(CalendarViewModel()) {}
+    CalendarScreen("Calendar", CalendarViewModel()) {}
 }
