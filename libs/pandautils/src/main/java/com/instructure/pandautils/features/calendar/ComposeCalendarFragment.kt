@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -175,7 +174,7 @@ fun CalendarScreen(title: String, viewModel: CalendarViewModel, navigationAction
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(PaddingValues(16.dp, 8.dp, 16.dp, 16.dp)),
+                        .padding(PaddingValues(0.dp, 8.dp, 0.dp, 16.dp)),
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
                     CalendarView(viewModel)
@@ -255,7 +254,8 @@ fun CalendarHeader(
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
@@ -313,7 +313,8 @@ fun CalendarBody(
 fun DayHeaders() {
     Row(
         modifier = Modifier
-            .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val daysOfWeek = DayOfWeek.values()
         // Shift the starting point to Sunday
@@ -356,35 +357,32 @@ fun DaysOfWeekRow(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween
     ) {
         days.forEach { day ->
-            val color =
-                if (day.enabled) colorResource(id = R.color.textDarkest) else colorResource(id = R.color.textDark)
-            val borderSize = if (day == selectedDay) 1.dp else 0.dp
+            val textColor = when {
+                    day.date == selectedDay.date -> Color(ThemePrefs.buttonTextColor)
+                    day.today -> Color(ThemePrefs.textButtonColor)
+                    day.enabled -> colorResource(id = R.color.textDarkest)
+                    else -> colorResource(id = R.color.textDark)
+                }
             var dayModifier = Modifier
                 .width(32.dp)
                 .height(32.dp)
                 .clickable { selectedDayChanged(day) }
-            if (day.today) {
+            if (day.date == selectedDay.date) {
                 dayModifier = dayModifier
                     .background(
                         color = Color(ThemePrefs.buttonColor),
-                        shape = RoundedCornerShape(500.dp)
-                    )
-            } else if (day.date == selectedDay.date) {
-                dayModifier = dayModifier
-                    .border(
-                        width = borderSize,
-                        color = Color(ThemePrefs.buttonColor),
-                        shape = RoundedCornerShape(500.dp)
+                        shape = RoundedCornerShape(500.dp),
                     )
             }
             dayModifier = dayModifier.wrapContentHeight(align = Alignment.CenterVertically)
             Text(
                 text = day.dayNumber.toString(),
                 fontSize = 16.sp,
-                color = if (day.today) Color(ThemePrefs.buttonTextColor) else color,
+                color = textColor,
                 modifier = dayModifier,
                 textAlign = TextAlign.Center
             )
