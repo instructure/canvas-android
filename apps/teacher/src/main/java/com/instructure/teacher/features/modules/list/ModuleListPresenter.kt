@@ -27,6 +27,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
 import com.instructure.teacher.mobius.common.ui.Presenter
+import kotlin.math.roundToInt
 
 object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
 
@@ -50,7 +51,13 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                             published = item.published
                         )
                     } else {
-                        createModuleItemData(item, context, indentWidth, iconTint, item.id in model.loadingModuleItemIds)
+                        createModuleItemData(
+                            item,
+                            context,
+                            indentWidth,
+                            iconTint,
+                            item.id in model.loadingModuleItemIds
+                        )
                     }
                 }
             } else {
@@ -95,13 +102,12 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         loading: Boolean
     ): ModuleListItemData.ModuleItemData {
         val subtitle = item.moduleDetails?.dueDate?.let {
-            context.getString(
-                R.string.due,
-                DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, it, R.string.at)
-            )
+            DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, it, R.string.at)
         }
 
-        val subtitle2 = item.moduleDetails?.pointsPossible
+        val pointsPossible = item.moduleDetails?.pointsPossible?.toFloatOrNull()
+        val subtitle2 =
+            pointsPossible?.let { context.resources.getQuantityString(R.plurals.moduleItemPoints, it.toInt(), it) }
 
         val iconRes: Int? = when (tryOrNull { ModuleItem.Type.valueOf(item.type.orEmpty()) }) {
             ModuleItem.Type.Assignment -> R.drawable.ic_assignment
