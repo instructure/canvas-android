@@ -37,10 +37,11 @@ sealed class ModuleListItemData {
     data class InlineError(val buttonColor: Int): ModuleListItemData()
 
     data class SubHeader(
-        val title: String,
+        val id: Long,
+        val title: String?,
         val indent: Int,
         val enabled: Boolean,
-        val published: Boolean
+        val published: Boolean?
     ) : ModuleListItemData()
 
     data class ModuleData(

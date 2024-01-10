@@ -42,16 +42,12 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             val moduleItems: List<ModuleListItemData> = if (module.items.isNotEmpty()) {
                 module.items.map { item ->
                     if (item.type.equals(ModuleItem.Type.SubHeader.name, ignoreCase = true)) {
-                        ModuleListItemData.ModuleItemData(
-                                id = item.id,
-                                title = null,
-                                subtitle = item.title,
-                                subtitle2 = null,
-                                iconResId = null,
-                                isPublished = item.published,
-                                indent = item.indent * indentWidth,
-                                tintColor = 0,
-                                enabled = false
+                        ModuleListItemData.SubHeader(
+                            id = item.id,
+                            title = item.title,
+                            indent = item.indent * indentWidth,
+                            enabled = false,
+                            published = item.published
                         )
                     } else {
                         createModuleItemData(item, context, indentWidth, iconTint, item.id in model.loadingModuleItemIds)

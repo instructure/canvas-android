@@ -49,6 +49,7 @@ class ModuleListRecyclerAdapter(
         register(ModuleListItemBinder())
         register(ModuleListLoadingBinder())
         register(ModuleListEmptyItemBinder())
+        register(ModuleListSubHeaderBinder())
     }
 
     fun setData(items: List<ModuleListItemData>, collapsedModuleIds: Set<Long>) {
