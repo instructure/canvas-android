@@ -18,6 +18,11 @@ package com.instructure.student.ui.renderTests
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
@@ -131,7 +136,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testSingleComment() {
         val state = SubmissionCommentsViewState(
             commentStates = listOf(commentItemIsAudience),
@@ -143,7 +151,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testSingleSubmission() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(submissionItem)
@@ -153,7 +164,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testSinglePendingComment() {
         val state = SubmissionCommentsViewState(
             commentStates = listOf(pendingCommentItem)
@@ -163,7 +177,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testSingleCommentDisplaysAuthorPronoun() {
         val commentItem = commentItemIsAudience.copy(authorPronouns = "Pro/Noun")
         val state = SubmissionCommentsViewState(commentStates = listOf(commentItem))
@@ -172,7 +189,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testSingleSubmissionDisplaysAuthorPronoun() {
         val commentItem = submissionItem.copy(authorPronouns = "Pro/Noun")
         val state = SubmissionCommentsViewState(commentStates = listOf(commentItem))
@@ -181,7 +201,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testSinglePendingCommentDisplaysAuthorPronoun() {
         val commentItem = pendingCommentItem.copy(authorPronouns = "Pro/Noun")
         val state = SubmissionCommentsViewState(commentStates = listOf(commentItem))
@@ -190,7 +213,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testEmptyState() {
         val state = SubmissionCommentsViewState(
             commentStates = listOf(CommentItemState.Empty)
@@ -200,7 +226,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testFailedCommentDisplaysRetryAndDeleteOptions() {
         db.setCommentError(true, pendingCommentItem.pendingComment.id)
         val state = SubmissionCommentsViewState(
@@ -212,7 +241,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testMixedCommentsAndSubmission() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(commentItemIsAudience, submissionItem, commentItemNotAudience)
@@ -228,7 +260,10 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
+    @TestMetaData(
+        Priority.COMMON,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
     fun testAudienceDistinction() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(commentItemIsAudience, commentItemNotAudience)

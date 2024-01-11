@@ -19,6 +19,10 @@ package com.instructure.student.ui.interaction
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -32,10 +36,6 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin

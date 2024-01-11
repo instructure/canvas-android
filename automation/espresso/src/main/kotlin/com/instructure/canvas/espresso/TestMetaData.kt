@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.panda_annotations
+package com.instructure.canvas.espresso
 
 
 @Target(AnnotationTarget.FUNCTION)
