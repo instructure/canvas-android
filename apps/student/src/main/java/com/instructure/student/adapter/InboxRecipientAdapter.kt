@@ -22,8 +22,11 @@ import com.instructure.canvasapi2.managers.RecipientManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.canvasapi2.utils.weave.*
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitPaginated
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.holders.RecipientViewHolder
@@ -139,7 +142,7 @@ open class InboxRecipientAdapter(
                 }
                 onComplete {
                     setNextUrl(null)
-                    adapterToRecyclerViewCallback.setIsEmpty(size() == 0)
+                    adapterToRecyclerViewCallback?.setIsEmpty(size() == 0)
                     adapterToFragmentCallback.onRefreshFinished()
                 }
             }
