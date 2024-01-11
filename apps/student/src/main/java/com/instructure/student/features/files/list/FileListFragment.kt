@@ -404,7 +404,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
     private fun renameItem(item: FileFolder) {
         val title = getString(if (item.isFile) R.string.renameFile else R.string.renameFolder)
-        EditTextDialog.show(parentFragmentManager, title, item.displayName ?: item.name ?: "") {
+        EditTextDialog.show(requireFragmentManager(), title, item.displayName ?: item.name ?: "") {
             if (it.isBlank()) {
                 toast(R.string.blankName)
                 return@show
