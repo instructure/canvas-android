@@ -240,7 +240,6 @@ dependencies {
     androidTestImplementation project(':espresso')
     androidTestImplementation project(':dataseedingapi')
     androidTestImplementation Libs.JUNIT
-    androidTestImplementation project(path: ':panda_annotations')
 
     androidTestUtil(Libs.TEST_ORCHESTRATOR) {
         exclude module: 'support-annotations'
