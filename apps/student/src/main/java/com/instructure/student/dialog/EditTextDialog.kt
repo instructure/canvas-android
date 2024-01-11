@@ -68,7 +68,11 @@ class EditTextDialog : AppCompatDialogFragment() {
         binding.textInput.setText(mDefaultText)
 
         val endIndex = mDefaultText.lastIndexOf(".")
-        if (endIndex != -1) binding.textInput.setSelection(0, endIndex) else binding.textInput.selectAll()
+        if (endIndex != -1) {
+            binding.textInput.setSelection(0, endIndex)
+        } else {
+            binding.textInput.selectAll()
+        }
         binding.textInput.requestFocus()
 
         val dialog = AlertDialog.Builder(requireContext())
