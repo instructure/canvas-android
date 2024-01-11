@@ -295,17 +295,13 @@ fun CalendarBody(
     selectedDay: Day,
     selectedDayChanged: (Day) -> Unit
 ) {
-    Column {
-        Surface(
-            color = colorResource(id = R.color.backgroundLightest)
-        ) {
-            Column {
-                DayHeaders()
-                Spacer(modifier = Modifier.height(4.dp))
-                CalendarExpanded(month, selectedDay, selectedDayChanged)
-            }
-        }
+    Column(
+        Modifier
+            .background(colorResource(id = R.color.backgroundLightest))
+            .height(260.dp)) {
+        DayHeaders()
         Spacer(modifier = Modifier.height(4.dp))
+        CalendarExpanded(month, selectedDay, selectedDayChanged)
     }
 }
 
