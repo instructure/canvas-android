@@ -39,7 +39,17 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentLtiLaunchBinding
 import com.instructure.teacher.router.RouteMatcher
@@ -111,8 +121,10 @@ class LtiLaunchFragment : BaseFragment() {
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
 
-                    when {
-                        sessionLessLaunch -> {
+                    if (sessionLessLaunch) {
+                        if (url.contains("sessionless_launch")) {
+                            getSessionlessLtiUrl(url)
+                        } else {
                             val id = url.substringAfterLast("/external_tools/").substringBefore("?")
                             url = when {
                                 (id.toIntOrNull() != null) -> when (canvasContext) {
@@ -131,7 +143,8 @@ class LtiLaunchFragment : BaseFragment() {
                             }
                             getSessionlessLtiUrl(url)
                         }
-                        else -> launchCustomTab(url)
+                    } else {
+                        launchCustomTab(url)
                     }
                 }
                 else -> displayError()
