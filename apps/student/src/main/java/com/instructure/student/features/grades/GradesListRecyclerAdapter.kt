@@ -21,11 +21,6 @@ import android.content.Context
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
@@ -33,9 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.models.GradingPeriodResponse
 import com.instructure.canvasapi2.models.GradingSchemeRow
-import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isNullOrEmpty
 import com.instructure.pandarecycler.util.GroupSortedList
@@ -117,7 +110,7 @@ open class GradesListRecyclerAdapter(
     }
 
     fun loadCachedData() {
-        adapterToRecyclerViewCallback.refresh()
+        adapterToRecyclerViewCallback?.refresh()
         resetData()
         loadData(false)
     }

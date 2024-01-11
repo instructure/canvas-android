@@ -76,6 +76,9 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state became 'Checked'.")
         manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
 
+        Log.d(STEP_TAG, "Expand '${course1.name}' course.")
+        manageOfflineContentPage.expandCollapseItem(course1.name)
+
         Log.d(STEP_TAG, "Deselect the 'Announcements' and 'Discussions' of the '${course1.name}' course.")
         manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.changeItemSelectionState("Discussions")
