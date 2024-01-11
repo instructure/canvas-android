@@ -18,7 +18,6 @@
 package com.instructure.student.adapter
 
 import android.content.Context
-import android.os.Handler
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -30,7 +29,6 @@ import com.instructure.canvasapi2.models.Bookmark
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
@@ -39,7 +37,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.CacheControlFlags
 import retrofit2.Call
 import retrofit2.Response
-import java.util.Locale
+import java.util.*
 
 class BookmarkRecyclerAdapter(context: Context, isShortcutActivity: Boolean, private val mAdapterToFragmentCallback: BookmarkAdapterToFragmentCallback<Bookmark>)
     : BaseListRecyclerAdapter<Bookmark, BookmarkViewHolder>(context, Bookmark::class.java) {
@@ -81,7 +79,7 @@ class BookmarkRecyclerAdapter(context: Context, isShortcutActivity: Boolean, pri
 
             override fun onFail(call: Call<List<Bookmark>>?, error: Throwable, response: Response<*>?) {
                 if (response != null && !APIHelper.isCachedResponse(response) || !APIHelper.hasNetworkConnection()) {
-                    adapterToRecyclerViewCallback.setIsEmpty(true)
+                    adapterToRecyclerViewCallback?.setIsEmpty(true)
                 }
             }
 
