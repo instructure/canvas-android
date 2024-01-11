@@ -73,7 +73,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
-import java.time.temporal.ChronoUnit
 import java.util.Locale
 import javax.inject.Inject
 
@@ -96,7 +95,10 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     ): View {
         return ComposeView(requireActivity()).apply {
             setContent {
-                CalendarScreen(title(), viewModel) {
+                val uiState by viewModel.uiState.collectAsState()
+                CalendarScreen(title(), uiState, actionHandler = {
+                    viewModel.handleAction(it)
+                }) {
                     calendarRouter.openNavigationDrawer()
                 }
             }
@@ -128,7 +130,12 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
 }
 
 @Composable
-fun CalendarScreen(title: String, viewModel: CalendarViewModel, navigationActionClick: () -> Unit) {
+fun CalendarScreen(
+    title: String,
+    calendarUiState: CalendarUiState,
+    actionHandler: (CalendarAction) -> Unit,
+    navigationActionClick: () -> Unit
+) {
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
@@ -137,12 +144,11 @@ fun CalendarScreen(title: String, viewModel: CalendarViewModel, navigationAction
                     Text(text = title)
                 },
                     actions = {
-                        val selectedDay = viewModel.selectedDay.collectAsState().value
-                        if (selectedDay != LocalDate.now()) {
+                        if (calendarUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
                                 .padding(horizontal = 12.dp)
                                 .clickable {
-                                    viewModel.jumpToToday()
+                                    actionHandler(CalendarAction.TodayTapped)
                                 }) {
                                 Icon(
                                     painterResource(id = R.drawable.ic_calendar_day),
@@ -177,7 +183,7 @@ fun CalendarScreen(title: String, viewModel: CalendarViewModel, navigationAction
                         .padding(PaddingValues(0.dp, 8.dp, 0.dp, 16.dp)),
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
-                    CalendarView(viewModel)
+                    CalendarView(calendarUiState, actionHandler)
                 }
             })
     }
@@ -185,11 +191,9 @@ fun CalendarScreen(title: String, viewModel: CalendarViewModel, navigationAction
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CalendarView(viewModel: CalendarViewModel) {
+fun CalendarView(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        val calendarExpanded = viewModel.expanded.collectAsState()
         var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
-        val currentDay = viewModel.selectedDay.collectAsState()
         val pagerState = rememberPagerState(
             initialPage = Int.MAX_VALUE / 2,
             initialPageOffsetFraction = 0f
@@ -203,17 +207,12 @@ fun CalendarView(viewModel: CalendarViewModel) {
                 // Do something with each page change, for example:
                 val monthOffset = page - centerIndex
                 centerIndex = page
-                // TODO Maybe move this logic to the ViewModel
-                val dateFieldToAdd = if (calendarExpanded.value) ChronoUnit.MONTHS else ChronoUnit.WEEKS
-                viewModel.dayChanged(currentDay.value.plus(monthOffset.toLong(), dateFieldToAdd))
+                actionHandler(CalendarAction.PageChanged(monthOffset))
             }
         }
 
-        val month = currentDay.value.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-        val year = currentDay.value.year
-
         Spacer(modifier = Modifier.height(8.dp))
-        CalendarHeader(month, year.toString(), calendarExpanded.value) { viewModel.expandChanged(it) }
+        CalendarHeader(calendarUiState.headerUiState, calendarUiState.expanded, actionHandler)
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalPager(
             state = pagerState,
@@ -221,15 +220,15 @@ fun CalendarView(viewModel: CalendarViewModel) {
             pageSize = PageSize.Fill,
             pageContent = { page ->
                 val monthOffset = page - centerIndex
-                val calendarData = viewModel.calendarData.collectAsState().value
-                val monthData = when (monthOffset) {
-                    -1 -> calendarData.previous
-                    1 -> calendarData.next
-                    else -> calendarData.current
+                val calendarBodyUiState = calendarUiState.bodyUiState
+                val calendarPageUiState = when (monthOffset) {
+                    -1 -> calendarBodyUiState.previousPage
+                    1 -> calendarBodyUiState.nextPage
+                    else -> calendarBodyUiState.currentPage
                 }
-                CalendarBody(monthData.calendarRows,
-                    Day(currentDay.value.dayOfMonth, currentDay.value),
-                    selectedDayChanged = { viewModel.dayChanged(it.date) })
+                CalendarBody(calendarPageUiState.calendarRows,
+                    calendarUiState.selectedDay,
+                    selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) })
             }
         )
     }
@@ -237,19 +236,18 @@ fun CalendarView(viewModel: CalendarViewModel) {
 
 @Composable
 fun CalendarHeader(
-    calendarTitle: String,
-    year: String,
+    headerUiState: CalendarHeaderUiState,
     calendarOpen: Boolean,
-    calendarOpenChanged: (Boolean) -> Unit
+    actionHandler: (CalendarAction) -> Unit
 ) {
     val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f)
 
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
-    if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) calendarOpenChanged(false)
+    if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) actionHandler(CalendarAction.ExpandDisabled)
     val clickableModifier = if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
         Modifier
     } else {
-        Modifier.clickable { calendarOpenChanged(!calendarOpen) }
+        Modifier.clickable { actionHandler(CalendarAction.ExpandChanged) }
     }
 
     Row(
@@ -261,7 +259,7 @@ fun CalendarHeader(
     ) {
         Column(modifier = clickableModifier) {
             Text(
-                text = year,
+                text = headerUiState.yearTitle,
                 fontSize = 12.sp,
                 color = colorResource(id = R.color.textDark),
                 modifier = Modifier.align(Alignment.Start)
@@ -269,7 +267,7 @@ fun CalendarHeader(
             Spacer(modifier = Modifier.size(2.dp))
             Row {
                 Text(
-                    text = calendarTitle,
+                    text = headerUiState.monthTitle,
                     fontSize = 22.sp,
                     color = colorResource(id = R.color.textDarkest),
                     modifier = Modifier.height(30.dp)
@@ -291,9 +289,9 @@ fun CalendarHeader(
 
 @Composable
 fun CalendarBody(
-    month: List<CalendarRow>,
-    selectedDay: Day,
-    selectedDayChanged: (Day) -> Unit
+    calendarRows: List<CalendarRowUiState>,
+    selectedDay: LocalDate,
+    selectedDayChanged: (LocalDate) -> Unit
 ) {
     Column(
         Modifier
@@ -301,7 +299,7 @@ fun CalendarBody(
             .height(260.dp)) {
         DayHeaders()
         Spacer(modifier = Modifier.height(4.dp))
-        CalendarExpanded(month, selectedDay, selectedDayChanged)
+        CalendarPage(calendarRows, selectedDay, selectedDayChanged)
     }
 }
 
@@ -332,13 +330,13 @@ fun DayHeaders() {
 }
 
 @Composable
-fun CalendarExpanded(
-    monthDays: List<CalendarRow>,
-    selectedDay: Day,
-    selectedDayChanged: (Day) -> Unit
+fun CalendarPage(
+    calendarRows: List<CalendarRowUiState>,
+    selectedDay: LocalDate,
+    selectedDayChanged: (LocalDate) -> Unit
 ) {
     Column {
-        monthDays.forEach {
+        calendarRows.forEach {
             DaysOfWeekRow(days = it.days, selectedDay, selectedDayChanged)
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -347,9 +345,9 @@ fun CalendarExpanded(
 
 @Composable
 fun DaysOfWeekRow(
-    days: List<Day>,
-    selectedDay: Day,
-    selectedDayChanged: (Day) -> Unit,
+    days: List<CalendarDayUiState>,
+    selectedDay: LocalDate,
+    selectedDayChanged: (LocalDate) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -358,7 +356,7 @@ fun DaysOfWeekRow(
     ) {
         days.forEach { day ->
             val textColor = when {
-                    day.date == selectedDay.date -> Color(ThemePrefs.buttonTextColor)
+                    day.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
                     day.today -> Color(ThemePrefs.textButtonColor)
                     day.enabled -> colorResource(id = R.color.textDarkest)
                     else -> colorResource(id = R.color.textDark)
@@ -366,8 +364,8 @@ fun DaysOfWeekRow(
             var dayModifier = Modifier
                 .width(32.dp)
                 .height(32.dp)
-                .clickable { selectedDayChanged(day) }
-            if (day.date == selectedDay.date) {
+                .clickable { selectedDayChanged(day.date) }
+            if (day.date == selectedDay) {
                 dayModifier = dayModifier
                     .background(
                         color = Color(ThemePrefs.buttonColor),
@@ -390,5 +388,5 @@ fun DaysOfWeekRow(
 @Composable
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
-    CalendarScreen("Calendar", CalendarViewModel()) {}
+    CalendarScreen("Calendar", CalendarUiState(LocalDate.now().plusDays(1), true), {}) {}
 }
