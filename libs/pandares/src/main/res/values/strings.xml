@@ -1490,4 +1490,8 @@
         <item quantity="other">%d courses have been synced.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Additional course content</string>
+
+    <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
+    <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
+    <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
 </resources>

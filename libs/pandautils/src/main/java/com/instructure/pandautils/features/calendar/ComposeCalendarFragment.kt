@@ -27,6 +27,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -51,6 +52,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -77,6 +79,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
+private const val CALENDAR_PAGE_HEIGHT = 260
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR)
@@ -152,14 +155,14 @@ fun CalendarScreen(
                                 }) {
                                 Icon(
                                     painterResource(id = R.drawable.ic_calendar_day),
-                                    contentDescription = "",
+                                    contentDescription = stringResource(id = R.string.a11y_contentDescriptionCalendarJumpToToday),
                                     tint = Color(ThemePrefs.primaryTextColor)
                                 )
                                 Text(
                                     text = LocalDate.now().dayOfMonth.toString(),
                                     fontSize = 9.sp,
                                     modifier = Modifier.padding(top = 4.dp),
-                                    color = Color(ThemePrefs.primaryTextColor)
+                                    color = Color(ThemePrefs.primaryTextColor),
                                 )
                             }
                         }
@@ -203,7 +206,7 @@ fun CalendarView(calendarUiState: CalendarUiState, actionHandler: (CalendarActio
 
         LaunchedEffect(pagerState) {
             // Collect from the a snapshotFlow reading the currentPage
-            snapshotFlow { pagerState.currentPage }.collect { page ->
+            snapshotFlow { pagerState.settledPage }.collect { page ->
                 // Do something with each page change, for example:
                 val monthOffset = page - centerIndex
                 centerIndex = page
@@ -216,9 +219,12 @@ fun CalendarView(calendarUiState: CalendarUiState, actionHandler: (CalendarActio
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalPager(
             state = pagerState,
+            beyondBoundsPageCount = 2,
             reverseLayout = false,
             pageSize = PageSize.Fill,
             pageContent = { page ->
+                val settledPage = pagerState.settledPage
+
                 val monthOffset = page - centerIndex
                 val calendarBodyUiState = calendarUiState.bodyUiState
                 val calendarPageUiState = when (monthOffset) {
@@ -226,9 +232,19 @@ fun CalendarView(calendarUiState: CalendarUiState, actionHandler: (CalendarActio
                     1 -> calendarBodyUiState.nextPage
                     else -> calendarBodyUiState.currentPage
                 }
-                CalendarBody(calendarPageUiState.calendarRows,
-                    calendarUiState.selectedDay,
-                    selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) })
+
+                if (page >= settledPage - 1 && page <= settledPage + 1) {
+                    CalendarBody(calendarPageUiState.calendarRows,
+                        calendarUiState.selectedDay,
+                        selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) })
+                } else {
+                    Box(
+                        Modifier
+                            .height(CALENDAR_PAGE_HEIGHT.dp)
+                            .fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
+                    }
+                }
             }
         )
     }
@@ -244,10 +260,13 @@ fun CalendarHeader(
 
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
     if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) actionHandler(CalendarAction.ExpandDisabled)
-    val clickableModifier = if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
-        Modifier
-    } else {
-        Modifier.clickable { actionHandler(CalendarAction.ExpandChanged) }
+
+    var monthRowModifier = Modifier.semantics(mergeDescendants = true){}
+    if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+        monthRowModifier = monthRowModifier.clickable(
+            onClick = { actionHandler(CalendarAction.ExpandChanged) },
+            onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
+        )
     }
 
     Row(
@@ -257,7 +276,7 @@ fun CalendarHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
-        Column(modifier = clickableModifier) {
+        Column(modifier = monthRowModifier) {
             Text(
                 text = headerUiState.yearTitle,
                 fontSize = 12.sp,
@@ -276,7 +295,7 @@ fun CalendarHeader(
                     Icon(
                         painterResource(id = R.drawable.ic_chevron_down),
                         tint = colorResource(id = R.color.textDarkest),
-                        contentDescription = "",
+                        contentDescription = null,
                         modifier = Modifier
                             .rotate(iconRotation + 180)
                             .align(Alignment.CenterVertically)
@@ -296,7 +315,7 @@ fun CalendarBody(
     Column(
         Modifier
             .background(colorResource(id = R.color.backgroundLightest))
-            .height(260.dp)) {
+            .height(CALENDAR_PAGE_HEIGHT.dp)) {
         DayHeaders()
         Spacer(modifier = Modifier.height(4.dp))
         CalendarPage(calendarRows, selectedDay, selectedDayChanged)

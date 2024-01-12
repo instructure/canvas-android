@@ -13,11 +13,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarViewModel @Inject constructor() : ViewModel() {
 
-    private val _uiState = MutableStateFlow(createUiState())
-    val uiState = _uiState.asStateFlow()
-
     private var selectedDay = LocalDate.now()
     private var expanded = true
+
+    private val _uiState = MutableStateFlow(createUiState())
+    val uiState = _uiState.asStateFlow()
 
     private fun createUiState(): CalendarUiState {
         return CalendarUiState(selectedDay, expanded)
