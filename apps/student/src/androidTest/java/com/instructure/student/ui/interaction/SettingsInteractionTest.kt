@@ -20,15 +20,15 @@ import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.StubMultiAPILevel
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -54,7 +54,7 @@ class SettingsInteractionTest : StudentTest() {
 
     // Should launch an intent to go to our canvas-android github page
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testLegal_showCanvasOnGithub() {
         setUpAndSignIn()
 
@@ -75,7 +75,7 @@ class SettingsInteractionTest : StudentTest() {
 
     // Should display terms of use in a WebView
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testLegal_showTermsOfUse() {
         setUpAndSignIn()
 
@@ -87,7 +87,7 @@ class SettingsInteractionTest : StudentTest() {
 
     // Should display the privacy policy in a WebView
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     @StubMultiAPILevel("Failed API levels = { 28 }", "Somehow the Privacy Policy URL does not load on API lvl 28, but does on other API lvl devices.")
     fun testLegal_showPrivacyPolicy() {
         setUpAndSignIn()
@@ -96,14 +96,14 @@ class SettingsInteractionTest : StudentTest() {
         settingsPage.openLegalPage()
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
-        canvasWebViewPage.checkWebViewURL("https://www.instructure.com/canvas/privacy")
+        canvasWebViewPage.checkWebViewURL("https://www.instructure.com/policies/product-privacy-policy")
 
     }
 
     // Should open a page and have a pairing code that can be refreshed
     // (Checks to see that we can refresh and get a new code)
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testPairObserver_refreshCode() {
         setUpAndSignIn()
 
@@ -117,7 +117,7 @@ class SettingsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testOfflineContent_notDisplayedIfFeatureIsDisabled() {
         setUpAndSignIn(offlineEnabled = false)
 
@@ -126,7 +126,7 @@ class SettingsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testOfflineContent_displayedIfFeatureIsEnabled() {
         setUpAndSignIn(offlineEnabled = true)
 

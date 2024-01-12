@@ -19,11 +19,11 @@ package com.instructure.student.ui.e2e.offline
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -75,6 +75,9 @@ class ManageOfflineContentE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state became 'Checked'.")
         manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
+
+        Log.d(STEP_TAG, "Expand '${course1.name}' course.")
+        manageOfflineContentPage.expandCollapseItem(course1.name)
 
         Log.d(STEP_TAG, "Deselect the 'Announcements' and 'Discussions' of the '${course1.name}' course.")
         manageOfflineContentPage.changeItemSelectionState("Announcements")

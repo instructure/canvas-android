@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.webkit.CookieManager
 import androidx.work.WorkManager
+import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -55,7 +56,10 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideCrashlytics(): FirebaseCrashlytics {
+    fun provideCrashlytics(@ApplicationContext context: Context): FirebaseCrashlytics {
+        // Have to initialize FirebaseApp because we inject DatabaseProvider into AppManager and DatabaseProvider uses FirebaseCrashlytics
+        // No-op if already initialized
+        FirebaseApp.initializeApp(context)
         return FirebaseCrashlytics.getInstance()
     }
 

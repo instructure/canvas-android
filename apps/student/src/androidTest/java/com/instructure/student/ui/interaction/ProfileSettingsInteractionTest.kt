@@ -2,13 +2,13 @@ package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addUserPermissions
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -69,7 +69,7 @@ class ProfileSettingsInteractionTest : StudentTest() {
 
     // Creates a panda avatar, saves it, and verifies that a new panda avatar was saved.
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
     fun testProfileSettings_createPandaAvatar() {
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val student = data.students[0]

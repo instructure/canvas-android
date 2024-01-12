@@ -20,11 +20,23 @@ package com.instructure.student.features.assignments.details
 import android.app.Application
 import android.content.Context
 import android.content.res.Resources
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.isNullOrEmpty
+import com.instructure.canvasapi2.utils.isRtl
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.BR
@@ -32,7 +44,11 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AssignmentUtils2
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
@@ -44,7 +60,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import com.instructure.student.Submission as DatabaseSubmission
 
@@ -340,10 +357,11 @@ class AssignmentDetailsViewModel @Inject constructor(
         )
 
         // Observers shouldn't see the submit button OR if the course is soft concluded
-        val submitVisible = if (isObserver || !course?.isBetweenValidDateRange().orDefault()) {
-            false
-        } else {
-            when (assignment.turnInType) {
+        val submitVisible = when {
+            isObserver -> false
+            !course?.isBetweenValidDateRange().orDefault() -> false
+            assignment.submission?.excused.orDefault() -> false
+            else -> when (assignment.turnInType) {
                 Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
                 Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
                 else -> false
