@@ -19,10 +19,10 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.pandautils.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -35,14 +35,14 @@ class SyncSettingsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testFurtherSettingsDisplayedByDefault() {
         goToSyncSettings()
         offlineSyncSettingsPage.assertFurtherSettingsIsDisplayed()
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testClickAutoSyncHidesFurtherSettings() {
         goToSyncSettings()
         offlineSyncSettingsPage.clickAutoSyncSwitch()
@@ -50,7 +50,7 @@ class SyncSettingsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testChangeFrequency() {
         goToSyncSettings()
         offlineSyncSettingsPage.assertSyncFrequencyLabelText(R.string.daily)
@@ -60,7 +60,7 @@ class SyncSettingsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testChangeContentOverWifiOnly() {
         goToSyncSettings()
         offlineSyncSettingsPage.assertWifiOnlySwitchIsChecked()
@@ -71,7 +71,7 @@ class SyncSettingsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testChangesSavedCorrectly() {
         val data = createMockCanvas()
         goToSyncSettings(data)
