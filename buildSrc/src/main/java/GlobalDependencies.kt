@@ -18,6 +18,7 @@ object Versions {
     /* Kotlin */
     const val KOTLIN = "1.9.20"
     const val KOTLIN_COROUTINES = "1.6.4"
+    const val KOTLIN_COMPOSE_COMPILER_VERSION = "1.5.4"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.15"
@@ -168,7 +169,6 @@ object Libs {
     const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
     const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    const val COMPOSE_LIVE_DATA = "androidx.compose.runtime:runtime-livedata:1.4.3"
 }
 
 object Plugins {

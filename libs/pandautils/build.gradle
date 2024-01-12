@@ -99,7 +99,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
 }
 
@@ -210,7 +210,6 @@ dependencies {
     implementation Libs.COMPOSE_PREVIEW
     debugImplementation Libs.COMPOSE_TOOLING
     implementation Libs.COMPOSE_VIEW_MODEL
-    implementation Libs.COMPOSE_LIVE_DATA
 
     implementation Libs.FLEXBOX_LAYOUT
 
