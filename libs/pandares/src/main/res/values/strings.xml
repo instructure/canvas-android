@@ -1491,4 +1491,8 @@
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Additional course content</string>
     <string name="failedToUpdateDashboardOrder">Failed to update Dashboard cards order</string>
+
+    <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
+    <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
+    <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
 </resources>

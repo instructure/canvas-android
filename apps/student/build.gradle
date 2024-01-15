@@ -240,6 +240,7 @@ android {
     hilt {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
     }
 }
 

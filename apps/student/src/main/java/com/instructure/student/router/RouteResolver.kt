@@ -3,6 +3,7 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
@@ -117,7 +118,7 @@ object RouteResolver {
             cls.isA<FileListFragment>() -> FileListFragment.newInstance(route)
             cls.isA<FileSearchFragment>() -> FileSearchFragment.newInstance(route)
             cls.isA<CalendarEventFragment>() -> CalendarEventFragment.newInstance(route)
-            cls.isA<CalendarFragment>() -> CalendarFragment.newInstance(route)
+            cls.isA<ComposeCalendarFragment>() -> ComposeCalendarFragment.newInstance(route)
             cls.isA<FileDetailsFragment>() -> FileDetailsFragment.newInstance(route)
             cls.isA<ViewImageFragment>() -> ViewImageFragment.newInstance(route)
             cls.isA<ViewHtmlFragment>() -> ViewHtmlFragment.newInstance(route)
