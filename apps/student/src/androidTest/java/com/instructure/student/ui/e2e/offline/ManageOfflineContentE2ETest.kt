@@ -18,6 +18,8 @@ package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
@@ -47,6 +49,9 @@ class ManageOfflineContentE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
+
+        Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -203,6 +208,11 @@ class ManageOfflineContentE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
+        Thread.sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
+        device.waitForIdle()
+        device.waitForWindowUpdate(null, 10000)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Select '${course2.name}' course and open 'Grades' menu to check if it's really synced and can be seen in offline mode.")
