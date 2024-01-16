@@ -34,7 +34,7 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
 
     override val bindBehavior = Header(
         onExpand = { item, isExpanded, callback -> callback.markModuleExpanded(item.id, isExpanded) },
-        onBind = { item, view, isCollapsed, _ ->
+        onBind = { item, view, isCollapsed, callback ->
             val binding = AdapterModuleBinding.bind(view)
             with(binding) {
                 moduleName.text = item.name
@@ -45,6 +45,24 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
                 overflow.onClickWithRequireNetwork {
                     val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
                     popup.inflate(R.menu.menu_module)
+
+                    popup.setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.itemId) {
+                            R.id.publishModuleItems -> {
+                                callback.publishModuleAndItems(item.id)
+                                true
+                            }
+                            R.id.publishModule -> {
+                                callback.publishModule(item.id)
+                                true
+                            }
+                            R.id.unpublishModuleItems -> {
+                                callback.unpublishModuleAndItems(item.id)
+                                true
+                            }
+                            else -> false
+                        }
+                    }
 
                     overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
                     popup.show()

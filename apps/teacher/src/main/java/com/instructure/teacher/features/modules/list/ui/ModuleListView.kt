@@ -60,6 +60,18 @@ class ModuleListView(
             consumer?.accept(ModuleListEvent.ModuleExpanded(moduleId, isExpanded))
         }
 
+        override fun publishModule(moduleId: Long) {
+            consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", true))
+        }
+
+        override fun publishModuleAndItems(moduleId: Long) {
+            consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", false))
+        }
+
+        override fun unpublishModuleAndItems(moduleId: Long) {
+            consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "unpublish", false))
+        }
+
     })
 
     init {

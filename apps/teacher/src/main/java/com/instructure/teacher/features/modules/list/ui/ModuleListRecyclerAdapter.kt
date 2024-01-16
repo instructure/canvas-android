@@ -26,6 +26,9 @@ interface ModuleListCallback : ListItemCallback {
     fun retryNextPage()
     fun moduleItemClicked(moduleItemId: Long)
     fun markModuleExpanded(moduleId: Long, isExpanded: Boolean)
+    fun publishModule(moduleId: Long)
+    fun publishModuleAndItems(moduleId: Long)
+    fun unpublishModuleAndItems(moduleId: Long)
 }
 
 class ModuleListRecyclerAdapter(
