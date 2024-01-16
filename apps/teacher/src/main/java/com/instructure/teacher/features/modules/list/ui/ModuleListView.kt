@@ -69,6 +69,23 @@ class ModuleListView(
             setupBackButton(activity)
             ViewStyler.themeToolbarColored(activity, this, course)
             inflateMenu(R.menu.menu_module_list)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.actionPublishModulesItems -> {
+                        consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", false))
+                        true
+                    }
+                    R.id.actionPublishModules -> {
+                        consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", true))
+                        true
+                    }
+                    R.id.actionUnpublishModulesItems -> {
+                        consumer?.accept(ModuleListEvent.BulkUpdateAllModules("unpublish", false))
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
 
         binding.recyclerView.apply {

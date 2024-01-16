@@ -17,6 +17,10 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.content.res.ColorStateList
+import android.view.Gravity
+import android.view.View
+import androidx.appcompat.widget.PopupMenu
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -34,7 +38,7 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
     override val bindBehavior = Item { item, view, callback ->
         val binding = AdapterModuleItemBinding.bind(view)
         with(binding) {
-            moduleItemIcon.setVisible(item.iconResId != null)
+            moduleItemIcon.visibility = if (item.iconResId != null) View.VISIBLE else View.INVISIBLE
             item.iconResId?.let {
                 moduleItemIcon.setImageResource(it)
             }
@@ -47,6 +51,23 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemLoadingView.setVisible(item.isLoading)
             root.setOnClickListener { callback.moduleItemClicked(item.id) }
             root.isEnabled = item.enabled
+
+            overflow.onClickWithRequireNetwork {
+                val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
+                val menu = popup.menu
+
+                when (item.isPublished) {
+                    true -> menu.add(0, 0, 0, R.string.unpublish)
+                    false -> menu.add(0, 0, 1, R.string.publish)
+                    else -> {
+                        menu.add(0, 0, 0, R.string.unpublish)
+                        menu.add(0, 1, 1, R.string.publish)
+                    }
+                }
+
+                overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
+                popup.show()
+            }
         }
     }
 }

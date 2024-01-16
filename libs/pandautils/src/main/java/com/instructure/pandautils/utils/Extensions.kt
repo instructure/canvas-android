@@ -19,6 +19,7 @@ package com.instructure.pandautils.utils
 import androidx.work.Data
 import androidx.work.WorkInfo
 import com.google.gson.Gson
+import com.instructure.canvasapi2.utils.DataResult
 import java.util.*
 import kotlin.math.ln
 import kotlin.math.pow
@@ -58,4 +59,17 @@ fun Double?.orDefault(default: Double = 0.0): Double {
 fun Data.newBuilder(): Data.Builder {
     return Data.Builder()
         .putAll(this)
+}
+
+suspend fun retry(retryCount: Int = 5, initialDelay: Long = 100, factor: Float = 2f, maxDelay: Long = 1000, block: suspend () -> Unit) {
+    var currentDelay = initialDelay
+    repeat(retryCount) {
+        try {
+            block()
+            return
+        } catch (e: Exception) {
+            Thread.sleep(currentDelay)
+            currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
+        }
+    }
 }

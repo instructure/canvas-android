@@ -18,6 +18,7 @@ package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.utils.patchedBy
+import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -140,6 +141,57 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 CanvasRestAdapter.clearCacheUrls("""/modules""")
                 return Next.next(newModel)
+            }
+            is ModuleListEvent.BulkUpdateModule -> {
+                val affectedIds = mutableListOf(event.moduleId)
+                if (!event.skipContentTags) {
+                    affectedIds.addAll(model.modules.filter { it.id == event.moduleId }
+                        .flatMap { it.items }
+                        .map { it.id })
+                }
+
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds + affectedIds
+                )
+                val effect = ModuleListEffect.BulkUpdateModules(
+                    model.course,
+                    listOf(event.moduleId),
+                    event.event,
+                    event.skipContentTags
+                )
+                return Next.next(newModel, setOf(effect))
+            }
+            is ModuleListEvent.BulkUpdateAllModules -> {
+                val affectedIds = mutableListOf<Long>()
+                affectedIds.addAll(model.modules.map { it.id })
+                if (!event.skipContentTags) {
+                    affectedIds.addAll(model.modules.flatMap { it.items }.map { it.id })
+                }
+
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds + affectedIds
+                )
+                val effect = ModuleListEffect.BulkUpdateModules(
+                    model.course,
+                    model.modules.map { it.id },
+                    event.event,
+                    event.skipContentTags
+                )
+                return Next.next(newModel, setOf(effect))
+            }
+            is ModuleListEvent.BulkUpdateFinished -> {
+                val newModel = model.copy(
+                    isLoading = true,
+                    modules = emptyList(),
+                    pageData = ModuleListPageData(forceNetwork = true),
+                    loadingModuleItemIds = emptySet()
+                )
+                val effect = ModuleListEffect.LoadNextPage(
+                    newModel.course,
+                    newModel.pageData,
+                    newModel.scrollToItemId
+                )
+                return Next.next(newModel, setOf(effect))
             }
         }
     }

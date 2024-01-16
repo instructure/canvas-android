@@ -17,10 +17,14 @@
 package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
@@ -29,27 +33,44 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.pandautils.utils.retry
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
+private const val POLLING_TIMEOUT = 50000L
+private const val POLLING_INTERVAL = 500L
+
+class ModuleListEffectHandler(
+    private val moduleApi: ModuleAPI.ModuleInterface,
+    private val progressApi: ProgressAPI.ProgressInterface
+) : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
             is ModuleListEffect.ShowModuleItemDetailView -> {
                 view?.routeToModuleItem(effect.moduleItem, effect.canvasContext)
             }
+
             is ModuleListEffect.LoadNextPage -> loadNextPage(
                 effect.canvasContext,
                 effect.pageData,
                 effect.scrollToItemId
             )
+
             is ModuleListEffect.ScrollToItem -> view?.scrollToItem(effect.moduleItemId)
             is ModuleListEffect.MarkModuleExpanded -> {
                 CollapsedModulesStore.markModuleCollapsed(effect.canvasContext, effect.moduleId, !effect.isExpanded)
             }
+
             is ModuleListEffect.UpdateModuleItems -> updateModuleItems(effect.canvasContext, effect.items)
+            is ModuleListEffect.BulkUpdateModules -> bulkUpdateModules(
+                effect.canvasContext,
+                effect.moduleIds,
+                effect.event,
+                effect.skipContentTags
+            )
         }.exhaustive
     }
 
@@ -130,9 +151,11 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, M
             pageData.isFirstPage -> awaitApiResponse {
                 ModuleManager.getFirstPageModulesWithItems(canvasContext, it, pageData.forceNetwork)
             }
+
             pageData.nextPageUrl.isValid() -> awaitApiResponse {
                 ModuleManager.getNextPageModuleObjects(pageData.nextPageUrl, it, pageData.forceNetwork)
             }
+
             else -> throw IllegalStateException("Unable to fetch page data; invalid nextPageUrl")
         }
 
@@ -153,5 +176,59 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, M
             lastPageResult = DataResult.Success(modules),
             nextPageUrl = APIHelper.parseLinkHeaderResponse(response.headers()).nextUrl
         )
+    }
+
+    private fun bulkUpdateModules(
+        canvasContext: CanvasContext,
+        moduleIds: List<Long>,
+        event: String,
+        skipContentTags: Boolean,
+        async: Boolean = true
+    ) {
+        launch {
+            val restParams = RestParams(
+                canvasContext = canvasContext,
+                isForceReadFromNetwork = true
+            )
+            val progress = moduleApi.bulkUpdateModules(
+                canvasContext.type.apiString,
+                canvasContext.id,
+                moduleIds,
+                event,
+                skipContentTags,
+                async,
+                restParams
+            ).dataOrNull?.progress
+
+            progress?.progress?.let {
+                trackUpdateProgress(it)
+            }
+        }
+    }
+
+    private suspend fun trackUpdateProgress(progress: Progress) {
+        val params = RestParams(isForceReadFromNetwork = true)
+        var currentProgress = progress
+        var pollingTime = 0L
+
+        while (!currentProgress.hasRun && pollingTime < POLLING_TIMEOUT) {
+            delay(POLLING_INTERVAL)
+            pollingTime += POLLING_INTERVAL
+
+            var newProgress: Progress? = null
+            retry(initialDelay = 500) {
+                newProgress = progressApi.getProgress(progress.id.toString(), params).dataOrThrow
+            }
+
+            if (newProgress == null) {
+                break
+            }
+
+            newProgress?.let {
+                currentProgress = it
+            }
+        }
+
+        consumer.accept(ModuleListEvent.BulkUpdateFinished)
     }
 }

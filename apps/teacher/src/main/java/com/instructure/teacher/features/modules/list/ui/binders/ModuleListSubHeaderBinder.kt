@@ -18,6 +18,9 @@
 
 package com.instructure.teacher.features.modules.list.ui.binders
 
+import android.view.Gravity
+import androidx.appcompat.widget.PopupMenu
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
@@ -37,6 +40,23 @@ class ModuleListSubHeaderBinder : ListItemBinder<ModuleListItemData.SubHeader, M
             moduleItemPublishedIcon.setVisible(item.published == true)
             moduleItemUnpublishedIcon.setVisible(item.published == false)
             moduleItemIndent.layoutParams.width = item.indent
+
+            overflow.onClickWithRequireNetwork {
+                val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
+                val menu = popup.menu
+
+                when (item.published) {
+                    true -> menu.add(0, 0, 0, R.string.unpublish)
+                    false -> menu.add(0, 0, 0, R.string.publish)
+                    else -> {
+                        menu.add(0, 0, 0, R.string.unpublish)
+                        menu.add(0, 1, 1, R.string.publish)
+                    }
+                }
+
+                overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
+                popup.show()
+            }
         }
     }
 }

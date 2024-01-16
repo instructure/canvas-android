@@ -20,19 +20,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/publishModulesItems"
+        android:id="@+id/actionPublishModulesItems"
         android:icon="@drawable/ic_publish"
         android:title="@string/publishAllModulesAndItems"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/publishModules"
+        android:id="@+id/actionPublishModules"
         android:icon="@drawable/ic_publish"
         android:title="@string/publishModulesOnly"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/unpublishModulesItems"
+        android:id="@+id/actionUnpublishModulesItems"
         android:icon="@drawable/ic_unpublish"
         android:title="@string/unpublishAllModulesAndItems"
         app:showAsAction="never" />

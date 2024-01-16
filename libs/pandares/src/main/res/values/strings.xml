@@ -1499,6 +1499,9 @@
     <string name="publishModuleOnly">Publish Module only</string>
     <string name="unpublishModuleAndItems">Unpublish Module and all Items</string>
     <string name="a11y_contentDescription_moduleOptions">Module options for %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Module item options for %s</string>
+    <string name="publishModuleItem">Publish Module Item</string>
+    <string name="unpublishModuleItem">Unpublish Module Item</string>
     <plurals name="moduleItemPoints">
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>
