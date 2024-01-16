@@ -18,12 +18,14 @@ package com.instructure.teacher.features.modules.list.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.pandarecycler.PaginatedScrollListener
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.showThemed
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
 import com.instructure.teacher.features.modules.list.ModuleListEvent
@@ -61,19 +63,31 @@ class ModuleListView(
         }
 
         override fun publishModule(moduleId: Long) {
-            consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", true))
+            showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModuleDialogMessage, R.string.publish, R.string.cancel) {
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", true))
+            }
         }
 
         override fun publishModuleAndItems(moduleId: Long) {
-            consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", false))
+            showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModuleAndItemsDialogMessage, R.string.publish, R.string.cancel) {
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", false))
+            }
         }
 
         override fun unpublishModuleAndItems(moduleId: Long) {
-            consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "unpublish", false))
+            showConfirmationDialog(R.string.unpublishDialogTitle, R.string.unpublishModuleAndItemsDialogMessage, R.string.unpublish, R.string.cancel) {
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "unpublish", false))
+            }
         }
 
         override fun updateModuleItem(itemId: Long, isPublished: Boolean) {
-            consumer?.accept(ModuleListEvent.UpdateModuleItem(itemId, isPublished))
+            val title = if (isPublished) R.string.publishDialogTitle else R.string.unpublishDialogTitle
+            val message = if (isPublished) R.string.publishModuleItemDialogMessage else R.string.unpublishModuleItemDialogMessage
+            val positiveButton = if (isPublished) R.string.publish else R.string.unpublish
+
+            showConfirmationDialog(title, message, positiveButton, R.string.cancel) {
+                consumer?.accept(ModuleListEvent.UpdateModuleItem(itemId, isPublished))
+            }
         }
     })
 
@@ -87,15 +101,21 @@ class ModuleListView(
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.actionPublishModulesItems -> {
-                        consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", false))
+                        showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModulesAndItemsDialogMessage, R.string.publish, R.string.cancel) {
+                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", false))
+                        }
                         true
                     }
                     R.id.actionPublishModules -> {
-                        consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", true))
+                        showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModulesDialogMessage, R.string.publish, R.string.cancel) {
+                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", true))
+                        }
                         true
                     }
                     R.id.actionUnpublishModulesItems -> {
-                        consumer?.accept(ModuleListEvent.BulkUpdateAllModules("unpublish", false))
+                        showConfirmationDialog(R.string.unpublishDialogTitle, R.string.unpublishModulesAndItemsDialogMessage, R.string.unpublish, R.string.cancel) {
+                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules("unpublish", false))
+                        }
                         true
                     }
                     else -> false
@@ -136,5 +156,21 @@ class ModuleListView(
     fun scrollToItem(itemId: Long) {
         val itemPosition = adapter.getItemVisualPosition(itemId)
         binding.recyclerView.scrollToPosition(itemPosition)
+    }
+
+    fun showConfirmationDialog(title: Int, message: Int, positiveButton: Int, negativeButton: Int, onConfirmed: () -> Unit) {
+        AlertDialog.Builder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(positiveButton) { _, _ ->
+                onConfirmed()
+            }
+            .setNegativeButton(negativeButton) { _, _ ->
+
+            }
+            .setOnCancelListener {
+
+            }
+            .showThemed()
     }
 }

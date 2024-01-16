@@ -1502,6 +1502,16 @@
     <string name="a11y_contentDescription_moduleItemOptions">Module item options for %s</string>
     <string name="publishModuleItem">Publish Module Item</string>
     <string name="unpublishModuleItem">Unpublish Module Item</string>
+    <string name="publishDialogTitle">Publish?</string>
+    <string name="publishModuleDialogMessage">This will make only the module visible to students.</string>
+    <string name="publishModuleAndItemsDialogMessage">This will make the module and all items visible to students.</string>
+    <string name="unpublishDialogTitle">Unpublish?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">This will make the module and all items invisible to students.</string>
+    <string name="publishModuleItemDialogMessage">This will make only this item visible to students.</string>
+    <string name="unpublishModuleItemDialogMessage">This will make only this item invisible to students.</string>
+    <string name="publishModulesAndItemsDialogMessage">This will make all modules and items visible to students.</string>
+    <string name="publishModulesDialogMessage">This will make only the modules visible to students.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">This will make all modules and items invisible to students.</string>
     <plurals name="moduleItemPoints">
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>
