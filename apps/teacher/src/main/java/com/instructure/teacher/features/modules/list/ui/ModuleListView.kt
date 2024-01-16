@@ -72,6 +72,9 @@ class ModuleListView(
             consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "unpublish", false))
         }
 
+        override fun updateModuleItem(itemId: Long, isPublished: Boolean) {
+            consumer?.accept(ModuleListEvent.UpdateModuleItem(itemId, isPublished))
+        }
     })
 
     init {

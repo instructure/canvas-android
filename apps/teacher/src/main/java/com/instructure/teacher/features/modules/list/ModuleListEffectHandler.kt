@@ -71,6 +71,12 @@ class ModuleListEffectHandler(
                 effect.event,
                 effect.skipContentTags
             )
+            is ModuleListEffect.UpdateModuleItem -> updateModuleItem(
+                effect.canvasContext,
+                effect.moduleId,
+                effect.itemId,
+                effect.published
+            )
         }.exhaustive
     }
 
@@ -230,5 +236,26 @@ class ModuleListEffectHandler(
         }
 
         consumer.accept(ModuleListEvent.BulkUpdateFinished)
+    }
+
+    private fun updateModuleItem(canvasContext: CanvasContext, moduleId: Long, itemId: Long, published: Boolean) {
+        launch {
+            val restParams = RestParams(
+                canvasContext = canvasContext,
+                isForceReadFromNetwork = true
+            )
+            val moduleItem = moduleApi.publishModuleItem(
+                canvasContext.type.apiString,
+                canvasContext.id,
+                moduleId,
+                itemId,
+                published,
+                restParams
+            ).dataOrNull
+
+            moduleItem?.let {
+                consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it))
+            } ?: consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(itemId))
+        }
     }
 }

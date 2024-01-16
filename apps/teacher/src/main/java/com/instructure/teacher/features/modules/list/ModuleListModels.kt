@@ -35,6 +35,9 @@ sealed class ModuleListEvent {
     data class RemoveModuleItems(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
     data class BulkUpdateModule(val moduleId: Long, val event: String, val skipContentTags: Boolean) : ModuleListEvent()
     data class BulkUpdateAllModules(val event: String, val skipContentTags: Boolean) : ModuleListEvent()
+    data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
+    data class ModuleItemUpdateSuccess(val item: ModuleItem): ModuleListEvent()
+    data class ModuleItemUpdateFailed(val itemId: Long): ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -42,19 +45,34 @@ sealed class ModuleListEffect {
         val moduleItem: ModuleItem,
         val canvasContext: CanvasContext
     ) : ModuleListEffect()
+
     data class LoadNextPage(
         val canvasContext: CanvasContext,
         val pageData: ModuleListPageData,
         val scrollToItemId: Long?
     ) : ModuleListEffect()
+
     data class ScrollToItem(val moduleItemId: Long) : ModuleListEffect()
     data class MarkModuleExpanded(
         val canvasContext: CanvasContext,
         val moduleId: Long,
         val isExpanded: Boolean
     ) : ModuleListEffect()
+
     data class UpdateModuleItems(val canvasContext: CanvasContext, val items: List<ModuleItem>) : ModuleListEffect()
-    data class BulkUpdateModules(val canvasContext: CanvasContext, val moduleIds: List<Long>, val event: String, val skipContentTags: Boolean): ModuleListEffect()
+    data class BulkUpdateModules(
+        val canvasContext: CanvasContext,
+        val moduleIds: List<Long>,
+        val event: String,
+        val skipContentTags: Boolean
+    ) : ModuleListEffect()
+
+    data class UpdateModuleItem(
+        val canvasContext: CanvasContext,
+        val moduleId: Long,
+        val itemId: Long,
+        val published: Boolean
+    ) : ModuleListEffect()
 }
 
 data class ModuleListModel(

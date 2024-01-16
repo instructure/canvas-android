@@ -85,6 +85,9 @@ object ModuleAPI {
 
         @PUT("{contextType}/{contextId}/modules")
         suspend fun bulkUpdateModules(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Query("module_ids[]") moduleIds: List<Long>, @Query("event") event: String, @Query("skip_content_tags") skipContentTags: Boolean, @Query("async") async: Boolean, @Tag params: RestParams): DataResult<BulkUpdateResponse>
+
+        @PUT("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}")
+        suspend fun publishModuleItem(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Query("module_item[published]") publish: Boolean, @Tag params: RestParams): DataResult<ModuleItem>
     }
 
 
