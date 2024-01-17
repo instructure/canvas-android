@@ -21,6 +21,7 @@ package com.instructure.teacher.features.modules.list.ui.binders
 import android.view.Gravity
 import androidx.appcompat.widget.PopupMenu
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
@@ -37,9 +38,11 @@ class ModuleListSubHeaderBinder : ListItemBinder<ModuleListItemData.SubHeader, M
         val binding = AdapterModuleSubHeaderBinding.bind(view)
         with(binding) {
             subHeaderTitle.text = item.title
-            moduleItemPublishedIcon.setVisible(item.published == true)
-            moduleItemUnpublishedIcon.setVisible(item.published == false)
+            moduleItemPublishedIcon.setVisible(item.published == true && !item.isLoading)
+            moduleItemUnpublishedIcon.setVisible(item.published == false && !item.isLoading)
             moduleItemIndent.layoutParams.width = item.indent
+
+            moduleItemLoadingView.setVisible(item.isLoading)
 
             overflow.onClickWithRequireNetwork {
                 val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))

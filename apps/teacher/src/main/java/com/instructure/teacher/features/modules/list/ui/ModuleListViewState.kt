@@ -41,14 +41,16 @@ sealed class ModuleListItemData {
         val title: String?,
         val indent: Int,
         val enabled: Boolean,
-        val published: Boolean?
+        val published: Boolean?,
+        val isLoading: Boolean
     ) : ModuleListItemData()
 
     data class ModuleData(
         val id: Long,
         val name: String,
         val isPublished: Boolean?,
-        val moduleItems: List<ModuleListItemData>
+        val moduleItems: List<ModuleListItemData>,
+        val isLoading: Boolean
     ): ModuleListItemData()
 
     data class ModuleItemData(

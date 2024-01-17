@@ -76,6 +76,13 @@
             android:tint="@color/textDark"
             tools:visibility="gone" />
 
+        <ProgressBar
+            android:id="@+id/loadingView"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/overflow"
             android:layout_width="48dp"

@@ -21,6 +21,7 @@ import android.view.Gravity
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -38,7 +39,7 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
     override val bindBehavior = Item { item, view, callback ->
         val binding = AdapterModuleItemBinding.bind(view)
         with(binding) {
-            moduleItemIcon.visibility = if (item.iconResId != null) View.VISIBLE else View.INVISIBLE
+            moduleItemIcon.setVisible(item.iconResId != null)
             item.iconResId?.let {
                 moduleItemIcon.setImageResource(it)
             }
@@ -46,11 +47,12 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemTitle.setTextForVisibility(item.title)
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
             moduleItemSubtitle2.setTextForVisibility(item.subtitle2)
-            moduleItemPublishedIcon.setVisible(item.isPublished == true)
-            moduleItemUnpublishedIcon.setVisible(item.isPublished == false)
-            moduleItemLoadingView.setVisible(item.isLoading)
+            moduleItemPublishedIcon.setVisible(item.isPublished == true && !item.isLoading)
+            moduleItemUnpublishedIcon.setVisible(item.isPublished == false && !item.isLoading)
             root.setOnClickListener { callback.moduleItemClicked(item.id) }
             root.isEnabled = item.enabled
+
+            moduleItemLoadingView.setVisible(item.isLoading)
 
             overflow.onClickWithRequireNetwork {
                 val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))

@@ -38,9 +38,11 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
             val binding = AdapterModuleBinding.bind(view)
             with(binding) {
                 moduleName.text = item.name
-                publishedIcon.setVisible(item.isPublished == true)
-                unpublishedIcon.setVisible(item.isPublished == false)
+                publishedIcon.setVisible(item.isPublished == true && !item.isLoading)
+                unpublishedIcon.setVisible(item.isPublished == false && !item.isLoading)
                 collapseIcon.rotation = if (isCollapsed) 180f else 0f
+
+                loadingView.setVisible(item.isLoading)
 
                 overflow.onClickWithRequireNetwork {
                     val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))

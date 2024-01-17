@@ -67,7 +67,7 @@ suspend fun retry(retryCount: Int = 5, initialDelay: Long = 100, factor: Float =
             block()
             return
         } catch (e: Exception) {
-            Thread.sleep(currentDelay)
+            delay(currentDelay)
             currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
         }
     }

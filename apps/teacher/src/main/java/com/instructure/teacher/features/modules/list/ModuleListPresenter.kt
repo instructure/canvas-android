@@ -48,7 +48,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                             title = item.title,
                             indent = item.indent * indentWidth,
                             enabled = false,
-                            published = item.published
+                            published = item.published,
+                            isLoading = item.id in model.loadingModuleItemIds
                         )
                     } else {
                         createModuleItemData(
@@ -67,7 +68,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                 id = module.id,
                 name = module.name.orEmpty(),
                 isPublished = module.published,
-                moduleItems = moduleItems
+                moduleItems = moduleItems,
+                isLoading = module.id in model.loadingModuleItemIds
             )
         }
 
@@ -125,7 +127,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             title = item.title,
             subtitle = subtitle,
             subtitle2 = subtitle2,
-            iconResId = iconRes.takeUnless { loading },
+            iconResId = iconRes,
             isPublished = item.published,
             indent = item.indent * indentWidth,
             tintColor = courseColor,
