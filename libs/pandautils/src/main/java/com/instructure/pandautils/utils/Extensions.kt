@@ -17,9 +17,8 @@
 package com.instructure.pandautils.utils
 
 import androidx.work.Data
-import androidx.work.WorkInfo
 import com.google.gson.Gson
-import com.instructure.canvasapi2.utils.DataResult
+import kotlinx.coroutines.delay
 import java.util.*
 import kotlin.math.ln
 import kotlin.math.pow
@@ -63,7 +62,7 @@ fun Data.newBuilder(): Data.Builder {
 
 suspend fun retry(retryCount: Int = 5, initialDelay: Long = 100, factor: Float = 2f, maxDelay: Long = 1000, block: suspend () -> Unit) {
     var currentDelay = initialDelay
-    repeat(retryCount) {
+    repeat(retryCount.coerceAtLeast(1)) {
         try {
             block()
             return
@@ -72,4 +71,24 @@ suspend fun retry(retryCount: Int = 5, initialDelay: Long = 100, factor: Float =
             currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
         }
     }
+}
+
+suspend fun <T> poll(
+    pollInterval: Long = 1000,
+    maxAttempts: Int = 10,
+    block: suspend () -> T?,
+    validate: suspend (T) -> Boolean
+): T? {
+    var attempts = 0
+    while (attempts < maxAttempts) {
+        val result = block()
+        result?.let {
+            if (validate(it)) {
+                return result
+            }
+        }
+        attempts++
+        delay(pollInterval)
+    }
+    return null
 }

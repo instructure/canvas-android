@@ -18,7 +18,6 @@ package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.utils.patchedBy
-import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -156,7 +155,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 val effect = ModuleListEffect.BulkUpdateModules(
                     model.course,
                     listOf(event.moduleId),
-                    event.event,
+                    event.action,
                     event.skipContentTags
                 )
                 return Next.next(newModel, setOf(effect))
@@ -174,12 +173,12 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 val effect = ModuleListEffect.BulkUpdateModules(
                     model.course,
                     model.modules.map { it.id },
-                    event.event,
+                    event.action,
                     event.skipContentTags
                 )
                 return Next.next(newModel, setOf(effect))
             }
-            is ModuleListEvent.BulkUpdateFinished -> {
+            is ModuleListEvent.BulkUpdateSuccess -> {
                 val newModel = model.copy(
                     isLoading = true,
                     modules = emptyList(),
@@ -192,6 +191,12 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     newModel.scrollToItemId
                 )
                 return Next.next(newModel, setOf(effect))
+            }
+            is ModuleListEvent.BulkUpdateFailed -> {
+                val newModel = model.copy(
+                    loadingModuleItemIds = emptySet()
+                )
+                return Next.next(newModel)
             }
             is ModuleListEvent.UpdateModuleItem -> {
                 val newModel = model.copy(

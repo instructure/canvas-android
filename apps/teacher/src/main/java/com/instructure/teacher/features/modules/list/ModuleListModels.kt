@@ -25,7 +25,8 @@ import com.instructure.canvasapi2.utils.isValid
 sealed class ModuleListEvent {
     object PullToRefresh : ModuleListEvent()
     object NextPageRequested : ModuleListEvent()
-    object BulkUpdateFinished : ModuleListEvent()
+    object BulkUpdateSuccess : ModuleListEvent()
+    object BulkUpdateFailed : ModuleListEvent()
     data class ModuleItemClicked(val moduleItemId: Long) : ModuleListEvent()
     data class ModuleExpanded(val moduleId: Long, val isExpanded: Boolean) : ModuleListEvent()
     data class PageLoaded(val pageData: ModuleListPageData) : ModuleListEvent()
@@ -33,8 +34,8 @@ sealed class ModuleListEvent {
     data class ItemRefreshRequested(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
     data class ReplaceModuleItems(val items: List<ModuleItem>) : ModuleListEvent()
     data class RemoveModuleItems(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
-    data class BulkUpdateModule(val moduleId: Long, val event: String, val skipContentTags: Boolean) : ModuleListEvent()
-    data class BulkUpdateAllModules(val event: String, val skipContentTags: Boolean) : ModuleListEvent()
+    data class BulkUpdateModule(val moduleId: Long, val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
+    data class BulkUpdateAllModules(val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
     data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
     data class ModuleItemUpdateSuccess(val item: ModuleItem): ModuleListEvent()
     data class ModuleItemUpdateFailed(val itemId: Long): ModuleListEvent()
@@ -63,7 +64,7 @@ sealed class ModuleListEffect {
     data class BulkUpdateModules(
         val canvasContext: CanvasContext,
         val moduleIds: List<Long>,
-        val event: String,
+        val action: BulkModuleUpdateAction,
         val skipContentTags: Boolean
     ) : ModuleListEffect()
 
@@ -91,4 +92,9 @@ data class ModuleListPageData(
 ) {
     val isFirstPage get() = lastPageResult == null
     val hasMorePages get() = isFirstPage || nextPageUrl.isValid()
+}
+
+enum class BulkModuleUpdateAction(val event: String) {
+    PUBLISH("publish"),
+    UNPUBLISH("unpublish")
 }

@@ -28,6 +28,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
+import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.ModuleListEvent
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
@@ -64,19 +65,19 @@ class ModuleListView(
 
         override fun publishModule(moduleId: Long) {
             showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModuleDialogMessage, R.string.publish, R.string.cancel) {
-                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", true))
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.PUBLISH, true))
             }
         }
 
         override fun publishModuleAndItems(moduleId: Long) {
             showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModuleAndItemsDialogMessage, R.string.publish, R.string.cancel) {
-                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "publish", false))
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.PUBLISH, false))
             }
         }
 
         override fun unpublishModuleAndItems(moduleId: Long) {
             showConfirmationDialog(R.string.unpublishDialogTitle, R.string.unpublishModuleAndItemsDialogMessage, R.string.unpublish, R.string.cancel) {
-                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, "unpublish", false))
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.UNPUBLISH, false))
             }
         }
 
@@ -102,19 +103,19 @@ class ModuleListView(
                 when (it.itemId) {
                     R.id.actionPublishModulesItems -> {
                         showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModulesAndItemsDialogMessage, R.string.publish, R.string.cancel) {
-                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", false))
+                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.PUBLISH, false))
                         }
                         true
                     }
                     R.id.actionPublishModules -> {
                         showConfirmationDialog(R.string.publishDialogTitle, R.string.publishModulesDialogMessage, R.string.publish, R.string.cancel) {
-                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules("publish", true))
+                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.PUBLISH, true))
                         }
                         true
                     }
                     R.id.actionUnpublishModulesItems -> {
                         showConfirmationDialog(R.string.unpublishDialogTitle, R.string.unpublishModulesAndItemsDialogMessage, R.string.unpublish, R.string.cancel) {
-                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules("unpublish", false))
+                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.UNPUBLISH, false))
                         }
                         true
                     }
@@ -165,12 +166,7 @@ class ModuleListView(
             .setPositiveButton(positiveButton) { _, _ ->
                 onConfirmed()
             }
-            .setNegativeButton(negativeButton) { _, _ ->
-
-            }
-            .setOnCancelListener {
-
-            }
+            .setNegativeButton(negativeButton) { _, _ -> }
             .showThemed()
     }
 }

@@ -33,15 +33,12 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.pandautils.utils.poll
 import com.instructure.pandautils.utils.retry
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Response
-
-private const val POLLING_TIMEOUT = 50000L
-private const val POLLING_INTERVAL = 500L
 
 class ModuleListEffectHandler(
     private val moduleApi: ModuleAPI.ModuleInterface,
@@ -68,9 +65,10 @@ class ModuleListEffectHandler(
             is ModuleListEffect.BulkUpdateModules -> bulkUpdateModules(
                 effect.canvasContext,
                 effect.moduleIds,
-                effect.event,
+                effect.action,
                 effect.skipContentTags
             )
+
             is ModuleListEffect.UpdateModuleItem -> updateModuleItem(
                 effect.canvasContext,
                 effect.moduleId,
@@ -187,7 +185,7 @@ class ModuleListEffectHandler(
     private fun bulkUpdateModules(
         canvasContext: CanvasContext,
         moduleIds: List<Long>,
-        event: String,
+        action: BulkModuleUpdateAction,
         skipContentTags: Boolean,
         async: Boolean = true
     ) {
@@ -200,7 +198,7 @@ class ModuleListEffectHandler(
                 canvasContext.type.apiString,
                 canvasContext.id,
                 moduleIds,
-                event,
+                action.event,
                 skipContentTags,
                 async,
                 restParams
@@ -208,34 +206,30 @@ class ModuleListEffectHandler(
 
             progress?.progress?.let {
                 trackUpdateProgress(it)
-            }
+            } ?: consumer.accept(ModuleListEvent.BulkUpdateFailed)
         }
     }
 
     private suspend fun trackUpdateProgress(progress: Progress) {
         val params = RestParams(isForceReadFromNetwork = true)
-        var currentProgress = progress
-        var pollingTime = 0L
 
-        while (!currentProgress.hasRun && pollingTime < POLLING_TIMEOUT) {
-            delay(POLLING_INTERVAL)
-            pollingTime += POLLING_INTERVAL
+        val result = poll(500,
+            validate = {
+                it.hasRun
+            },
+            block = {
+                var newProgress: Progress? = null
+                retry(initialDelay = 500) {
+                    newProgress = progressApi.getProgress(progress.id.toString(), params).dataOrThrow
+                }
+                newProgress
+            })
 
-            var newProgress: Progress? = null
-            retry(initialDelay = 500) {
-                newProgress = progressApi.getProgress(progress.id.toString(), params).dataOrThrow
-            }
-
-            if (newProgress == null) {
-                break
-            }
-
-            newProgress?.let {
-                currentProgress = it
-            }
+        if (result?.hasRun == true && result.isCompleted) {
+            consumer.accept(ModuleListEvent.BulkUpdateSuccess)
+        } else {
+            consumer.accept(ModuleListEvent.BulkUpdateFailed)
         }
-
-        consumer.accept(ModuleListEvent.BulkUpdateFinished)
     }
 
     private fun updateModuleItem(canvasContext: CanvasContext, moduleId: Long, itemId: Long, published: Boolean) {
