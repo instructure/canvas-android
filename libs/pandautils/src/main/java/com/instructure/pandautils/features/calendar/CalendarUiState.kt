@@ -16,15 +16,17 @@
  */
 package com.instructure.pandautils.features.calendar
 
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.time.temporal.ChronoUnit
+import com.instructure.canvasapi2.models.CanvasContext
+import org.threeten.bp.DayOfWeek
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.TextStyle
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.Locale
 
 data class CalendarUiState(
     val selectedDay: LocalDate,
-    val expanded: Boolean
+    val expanded: Boolean,
+    val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState()
 ) {
     val headerUiState: CalendarHeaderUiState
         get() {
@@ -121,6 +123,27 @@ data class CalendarDayUiState(
         }
 }
 
+data class CalendarEventsUiState(
+    val previousPage: CalendarEventsPageUiState = CalendarEventsPageUiState(),
+    val currentPage: CalendarEventsPageUiState = CalendarEventsPageUiState(),
+    val nextPage: CalendarEventsPageUiState = CalendarEventsPageUiState()
+)
+
+data class CalendarEventsPageUiState(
+    val date: LocalDate = LocalDate.now(),
+    val loading: Boolean = false,
+    val error: Boolean = false,
+    val events: List<EventUiState> = emptyList()
+)
+
+data class EventUiState(
+    val contextName: String,
+    val canvasContext: CanvasContext,
+    val name: String,
+    val dueDate: LocalDate? = null,
+    val status: String = ""
+)
+
 sealed class CalendarAction {
     data object ExpandChanged : CalendarAction()
     data object ExpandDisabled : CalendarAction()
@@ -128,4 +151,5 @@ sealed class CalendarAction {
     data object TodayTapped : CalendarAction()
 
     data class PageChanged(val offset: Int) : CalendarAction()
+    data class EventPageChanged(val offset: Int) : CalendarAction()
 }

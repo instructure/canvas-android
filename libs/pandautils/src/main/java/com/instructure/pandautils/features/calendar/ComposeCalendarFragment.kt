@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -59,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
@@ -71,10 +75,11 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.textAndIconColor
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.format.TextStyle
+import org.threeten.bp.DayOfWeek
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
 
@@ -186,7 +191,10 @@ fun CalendarScreen(
                         .padding(PaddingValues(0.dp, 8.dp, 0.dp, 16.dp)),
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
-                    CalendarView(calendarUiState, actionHandler)
+                    Column {
+                        CalendarView(calendarUiState, actionHandler)
+                        CalendarEventsView(calendarUiState.calendarEventsUiState, actionHandler)
+                    }
                 }
             })
     }
@@ -403,9 +411,152 @@ fun DaysOfWeekRow(
     }
 }
 
+@ExperimentalFoundationApi
+@Composable
+fun CalendarEventsView(
+    calendarEventsUiState: CalendarEventsUiState,
+    actionHandler: (CalendarAction) -> Unit
+) {
+    var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
+    val pagerState = rememberPagerState(
+        initialPage = Int.MAX_VALUE / 2,
+        initialPageOffsetFraction = 0f
+    ) {
+        Int.MAX_VALUE
+    }
+
+    LaunchedEffect(pagerState) {
+        // Collect from the a snapshotFlow reading the currentPage
+        snapshotFlow { pagerState.settledPage }.collect { page ->
+            // Do something with each page change, for example:
+            val monthOffset = page - centerIndex
+            centerIndex = page
+            actionHandler(CalendarAction.EventPageChanged(monthOffset))
+        }
+    }
+
+    HorizontalPager(
+        state = pagerState,
+        beyondBoundsPageCount = 2,
+        reverseLayout = false,
+        pageSize = PageSize.Fill,
+        pageContent = { page ->
+            val settledPage = pagerState.settledPage
+
+            val monthOffset = page - centerIndex
+            val calendarEventsPageUiState = when (monthOffset) {
+                -1 -> calendarEventsUiState.previousPage
+                1 -> calendarEventsUiState.nextPage
+                else -> calendarEventsUiState.currentPage
+            }
+
+            if (page >= settledPage - 1 && page <= settledPage + 1 && !calendarEventsPageUiState.loading) {
+                CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState)
+            } else {
+                Box(
+                    Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(), contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState) {
+    if (calendarEventsPageUiState.events.isNotEmpty()) {
+        LazyColumn(
+            Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(), verticalArrangement = Arrangement.Top
+        ) {
+            items(calendarEventsPageUiState.events) {
+                CalendarEventItem(eventUiState = it)
+            }
+        }
+    } else {
+        CalendarEmptyView()
+    }
+}
+
+@Composable
+fun CalendarEventItem(eventUiState: EventUiState) {
+    Row {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_assignment),
+            contentDescription = null,
+            tint = Color(eventUiState.canvasContext.textAndIconColor)
+        )
+        Column {
+            Text(text = eventUiState.contextName)
+            Text(text = eventUiState.name)
+            Text(text = eventUiState.dueDate.toString())
+            Text(text = eventUiState.status)
+        }
+    }
+}
+
+@Composable
+fun CalendarEmptyView() {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_no_events),
+            tint = Color.Unspecified,
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = stringResource(id = R.string.calendarNoEvents),
+            fontSize = 22.sp,
+            color = colorResource(
+                id = R.color.textDarkest
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = stringResource(id = R.string.calendarNoEventsDescription),
+            fontSize = 16.sp,
+            color = colorResource(
+                id = R.color.textDarkest
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
-    CalendarScreen("Calendar", CalendarUiState(LocalDate.now().plusDays(1), true), {}) {}
+    CalendarScreen("Calendar", CalendarUiState(
+        LocalDate.now().plusDays(1), true, CalendarEventsUiState(
+            currentPage = CalendarEventsPageUiState(
+                events = listOf(
+                    EventUiState(
+                        "Course To Do",
+                        CanvasContext.defaultCanvasContext(),
+                        "Todo 1"
+                    ),
+                    EventUiState(
+                        "Course",
+                        CanvasContext.defaultCanvasContext(),
+                        "Assignment 1",
+                        LocalDate.now().plusDays(1),
+                        "Missing"
+                    )
+                )
+            )
+        )
+    ), {}) {}
 }
