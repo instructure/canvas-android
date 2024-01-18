@@ -84,7 +84,8 @@ import java.util.Locale
 import javax.inject.Inject
 
 private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
-private const val CALENDAR_PAGE_HEIGHT = 260
+private const val HEADER_HEIGHT = 20
+private const val CALENDAR_ROW_HEIGHT = 40
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR)
@@ -241,14 +242,19 @@ fun CalendarView(calendarUiState: CalendarUiState, actionHandler: (CalendarActio
                     else -> calendarBodyUiState.currentPage
                 }
 
+                val rowsHeight =
+                    if (calendarUiState.expanded) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
+                val height = rowsHeight + HEADER_HEIGHT
+
                 if (page >= settledPage - 1 && page <= settledPage + 1) {
                     CalendarBody(calendarPageUiState.calendarRows,
                         calendarUiState.selectedDay,
+                        height = height,
                         selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) })
                 } else {
                     Box(
                         Modifier
-                            .height(CALENDAR_PAGE_HEIGHT.dp)
+                            .height(height.dp)
                             .fillMaxWidth(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
                     }
@@ -318,12 +324,13 @@ fun CalendarHeader(
 fun CalendarBody(
     calendarRows: List<CalendarRowUiState>,
     selectedDay: LocalDate,
+    height: Int,
     selectedDayChanged: (LocalDate) -> Unit
 ) {
     Column(
         Modifier
             .background(colorResource(id = R.color.backgroundLightest))
-            .height(CALENDAR_PAGE_HEIGHT.dp)) {
+            .height(height.dp)) {
         DayHeaders()
         Spacer(modifier = Modifier.height(4.dp))
         CalendarPage(calendarRows, selectedDay, selectedDayChanged)
