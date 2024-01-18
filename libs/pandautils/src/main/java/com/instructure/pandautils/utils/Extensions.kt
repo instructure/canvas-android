@@ -80,7 +80,7 @@ suspend fun <T> poll(
     validate: suspend (T) -> Boolean
 ): T? {
     var attempts = 0
-    while (attempts < maxAttempts) {
+    while (attempts < maxAttempts || maxAttempts == -1) {
         val result = block()
         result?.let {
             if (validate(it)) {

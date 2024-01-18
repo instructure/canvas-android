@@ -213,7 +213,7 @@ class ModuleListEffectHandler(
     private suspend fun trackUpdateProgress(progress: Progress) {
         val params = RestParams(isForceReadFromNetwork = true)
 
-        val result = poll(500,
+        val result = poll(500, maxAttempts = -1,
             validate = {
                 it.hasRun
             },
