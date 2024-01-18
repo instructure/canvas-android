@@ -22,10 +22,12 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.CollapsedModulesStore
 import com.instructure.teacher.features.modules.list.ModuleListEffect
 import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
@@ -284,6 +286,75 @@ class ModuleListEffectHandlerTest : Assert() {
         confirmVerified(consumer)
 
         unmockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+    }
+
+    @Test
+    fun `BulkUpdateModules results in correct success event`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateSuccess
+
+        coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk(relaxed = true))
+        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(Progress(1L, workflowState = "completed"))
+
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `BulkUpdateModules results in correct failed event when call fails`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed
+
+        coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
+
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `BulkUpdateModules results in correct failed event when progress fails`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed
+
+        coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk(relaxed = true))
+        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(Progress(1L, workflowState = "failed"))
+
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `UpdateModuleItem results in correct success event`() {
+        val moduleId = 1L
+        val itemId = 2L
+        val expectedEvent = ModuleListEvent.ModuleItemUpdateSuccess(ModuleItem(id = itemId, moduleId = moduleId, published = true))
+
+        coEvery { moduleApi.publishModuleItem(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(ModuleItem(2L, 1L, published = true))
+
+        connection.accept(ModuleListEffect.UpdateModuleItem(course, moduleId, itemId, true))
+
+        verify(timeout = 100) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `UpdateModuleItem results in correct failed event`() {
+        val moduleId = 1L
+        val itemId = 2L
+        val expectedEvent = ModuleListEvent.ModuleItemUpdateFailed(itemId)
+
+        coEvery { moduleApi.publishModuleItem(any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
+
+        connection.accept(ModuleListEffect.UpdateModuleItem(course, moduleId, itemId, true))
+
+        verify(timeout = 100) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
     }
 
     private fun makeModulePage(
