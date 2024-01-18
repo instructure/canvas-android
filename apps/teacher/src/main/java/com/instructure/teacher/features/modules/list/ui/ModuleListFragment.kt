@@ -39,6 +39,11 @@ class ModuleListFragment : ModuleListMobiusFragment() {
 
     override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
+
     companion object {
 
         fun makeBundle(course: CanvasContext, scrollToModuleItemId: Long? = null) = Bundle().apply {
