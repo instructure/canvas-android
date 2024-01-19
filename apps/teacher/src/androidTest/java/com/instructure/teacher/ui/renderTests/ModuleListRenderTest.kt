@@ -51,12 +51,14 @@ class ModuleListRenderTest : TeacherRenderTest() {
             id = 1L,
             name = "Module 1",
             isPublished = true,
+            isLoading = false,
             moduleItems = emptyList()
         )
         moduleItemTemplate = ModuleListItemData.ModuleItemData(
             id = 2L,
             title = "Assignment Module Item",
             subtitle = "Due Tomorrow",
+            subtitle2 = "10 pts",
             iconResId = R.drawable.ic_assignment,
             isPublished = true,
             indent = 0,
@@ -86,9 +88,9 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun displaysInlineError() {
         val state = ModuleListViewState(
             items = listOf(
-                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList()),
-                ModuleListItemData.ModuleData(2, "Module 2", true, emptyList()),
-                ModuleListItemData.ModuleData(3, "Module 3", true, emptyList()),
+                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList(), false),
+                ModuleListItemData.ModuleData(2, "Module 2", true, emptyList(), false),
+                ModuleListItemData.ModuleData(3, "Module 3", true, emptyList(), false),
                 ModuleListItemData.InlineError(Color.BLUE)
             )
         )
@@ -107,7 +109,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
 
     @Test
     fun displaysEmptyModule() {
-        val module = ModuleListItemData.ModuleData(1, "Module 1", true, emptyList())
+        val module = ModuleListItemData.ModuleData(1, "Module 1", true, emptyList(), false)
         val state = ModuleListViewState(
             items = listOf(module)
         )
@@ -128,7 +130,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun displaysInlineLoadingView() {
         val state = ModuleListViewState(
             items = listOf(
-                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList()),
+                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList(), false),
                 ModuleListItemData.Loading
             )
         )
@@ -215,13 +217,15 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             id = idx + 2L,
                             title = "Module Item ${idx + 1}",
                             subtitle = null,
+                            subtitle2 = null,
                             iconResId = R.drawable.ic_assignment,
                             isPublished = false,
+                            isLoading = false,
                             indent = 0,
                             tintColor = Color.BLUE,
                             enabled = true
                         )
-                    }
+                    }, false
                 )
             )
         )
@@ -308,13 +312,15 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             id = idx + 2L,
                             title = "Module Item ${idx + 1}",
                             subtitle = null,
+                            subtitle2 = null,
                             iconResId = R.drawable.ic_assignment,
                             isPublished = false,
+                            isLoading = false,
                             indent = 0,
                             tintColor = Color.BLUE,
                             enabled = true
                         )
-                    }
+                    }, false
                 )
             ),
             collapsedModuleIds = setOf(1L)
@@ -327,7 +333,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun scrollsToTargetItem() {
         val itemCount = 50
         val targetItem = ModuleListItemData.ModuleItemData(
-            1234L, "This is the target item", null, R.drawable.ic_attachment, false, 0, Color.BLUE, true
+            1234L, "This is the target item", null, null, R.drawable.ic_attachment, false, 0, Color.BLUE, true
         )
         val state = ModuleListViewState(
             items = listOf(
@@ -339,10 +345,11 @@ class ModuleListRenderTest : TeacherRenderTest() {
                         } else {
                             moduleItemTemplate.copy(
                                 id = idx + 2L,
-                                title = "Module Item ${idx + 1}"
+                                title = "Module Item ${idx + 1}",
+                                isLoading = false
                             )
                         }
-                    }
+                    }, false
                 )
             )
         )

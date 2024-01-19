@@ -36,11 +36,21 @@ sealed class ModuleListItemData {
 
     data class InlineError(val buttonColor: Int): ModuleListItemData()
 
+    data class SubHeader(
+        val id: Long,
+        val title: String?,
+        val indent: Int,
+        val enabled: Boolean,
+        val published: Boolean?,
+        val isLoading: Boolean
+    ) : ModuleListItemData()
+
     data class ModuleData(
         val id: Long,
         val name: String,
         val isPublished: Boolean?,
-        val moduleItems: List<ModuleListItemData>
+        val moduleItems: List<ModuleListItemData>,
+        val isLoading: Boolean
     ): ModuleListItemData()
 
     data class ModuleItemData(
@@ -52,6 +62,9 @@ sealed class ModuleListItemData {
 
         /** The subtitle. If null, the subtitle should be hidden. */
         val subtitle: String?,
+
+        /** The second line of subtitle. If null, it should be hidden. */
+        val subtitle2: String?,
 
         /** The resource ID of the icon to show for this item. If null, the icon should be hidden. */
         val iconResId: Int?,

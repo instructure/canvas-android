@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.utils.isValid
 sealed class ModuleListEvent {
     object PullToRefresh : ModuleListEvent()
     object NextPageRequested : ModuleListEvent()
+    object BulkUpdateSuccess : ModuleListEvent()
+    object BulkUpdateFailed : ModuleListEvent()
     data class ModuleItemClicked(val moduleItemId: Long) : ModuleListEvent()
     data class ModuleExpanded(val moduleId: Long, val isExpanded: Boolean) : ModuleListEvent()
     data class PageLoaded(val pageData: ModuleListPageData) : ModuleListEvent()
@@ -32,6 +34,11 @@ sealed class ModuleListEvent {
     data class ItemRefreshRequested(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
     data class ReplaceModuleItems(val items: List<ModuleItem>) : ModuleListEvent()
     data class RemoveModuleItems(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
+    data class BulkUpdateModule(val moduleId: Long, val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
+    data class BulkUpdateAllModules(val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
+    data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
+    data class ModuleItemUpdateSuccess(val item: ModuleItem): ModuleListEvent()
+    data class ModuleItemUpdateFailed(val itemId: Long): ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -39,18 +46,34 @@ sealed class ModuleListEffect {
         val moduleItem: ModuleItem,
         val canvasContext: CanvasContext
     ) : ModuleListEffect()
+
     data class LoadNextPage(
         val canvasContext: CanvasContext,
         val pageData: ModuleListPageData,
         val scrollToItemId: Long?
     ) : ModuleListEffect()
+
     data class ScrollToItem(val moduleItemId: Long) : ModuleListEffect()
     data class MarkModuleExpanded(
         val canvasContext: CanvasContext,
         val moduleId: Long,
         val isExpanded: Boolean
     ) : ModuleListEffect()
+
     data class UpdateModuleItems(val canvasContext: CanvasContext, val items: List<ModuleItem>) : ModuleListEffect()
+    data class BulkUpdateModules(
+        val canvasContext: CanvasContext,
+        val moduleIds: List<Long>,
+        val action: BulkModuleUpdateAction,
+        val skipContentTags: Boolean
+    ) : ModuleListEffect()
+
+    data class UpdateModuleItem(
+        val canvasContext: CanvasContext,
+        val moduleId: Long,
+        val itemId: Long,
+        val published: Boolean
+    ) : ModuleListEffect()
 }
 
 data class ModuleListModel(
@@ -69,4 +92,9 @@ data class ModuleListPageData(
 ) {
     val isFirstPage get() = lastPageResult == null
     val hasMorePages get() = isFirstPage || nextPageUrl.isValid()
+}
+
+enum class BulkModuleUpdateAction(val event: String) {
+    PUBLISH("publish"),
+    UNPUBLISH("unpublish")
 }

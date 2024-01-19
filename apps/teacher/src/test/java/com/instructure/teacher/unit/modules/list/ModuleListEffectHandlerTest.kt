@@ -15,15 +15,19 @@
  */
 package com.instructure.teacher.unit.modules.list
 
+import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.CollapsedModulesStore
 import com.instructure.teacher.features.modules.list.ModuleListEffect
 import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
@@ -62,12 +66,15 @@ class ModuleListEffectHandlerTest : Assert() {
     private lateinit var connection: Connection<ModuleListEffect>
     private val course: CanvasContext = Course()
 
+    private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
+    private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
+
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         view = mockk(relaxed = true)
-        effectHandler = ModuleListEffectHandler().apply { view = this@ModuleListEffectHandlerTest.view }
+        effectHandler = ModuleListEffectHandler(moduleApi, progressApi).apply { view = this@ModuleListEffectHandlerTest.view }
         consumer = mockk(relaxed = true)
         connection = effectHandler.connect(consumer)
     }
@@ -279,6 +286,75 @@ class ModuleListEffectHandlerTest : Assert() {
         confirmVerified(consumer)
 
         unmockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+    }
+
+    @Test
+    fun `BulkUpdateModules results in correct success event`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateSuccess
+
+        coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk(relaxed = true))
+        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(Progress(1L, workflowState = "completed"))
+
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `BulkUpdateModules results in correct failed event when call fails`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed
+
+        coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
+
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `BulkUpdateModules results in correct failed event when progress fails`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed
+
+        coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk(relaxed = true))
+        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(Progress(1L, workflowState = "failed"))
+
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `UpdateModuleItem results in correct success event`() {
+        val moduleId = 1L
+        val itemId = 2L
+        val expectedEvent = ModuleListEvent.ModuleItemUpdateSuccess(ModuleItem(id = itemId, moduleId = moduleId, published = true))
+
+        coEvery { moduleApi.publishModuleItem(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(ModuleItem(2L, 1L, published = true))
+
+        connection.accept(ModuleListEffect.UpdateModuleItem(course, moduleId, itemId, true))
+
+        verify(timeout = 100) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `UpdateModuleItem results in correct failed event`() {
+        val moduleId = 1L
+        val itemId = 2L
+        val expectedEvent = ModuleListEvent.ModuleItemUpdateFailed(itemId)
+
+        coEvery { moduleApi.publishModuleItem(any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
+
+        connection.accept(ModuleListEffect.UpdateModuleItem(course, moduleId, itemId, true))
+
+        verify(timeout = 100) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
     }
 
     private fun makeModulePage(

@@ -63,6 +63,7 @@ class ModuleListPresenterTest : Assert() {
             id = 1L,
             name = "Module 1",
             isPublished = true,
+            isLoading = false,
             moduleItems = listOf(ModuleListItemData.EmptyItem(1L))
         )
         moduleItemTemplate = ModuleItem(
@@ -78,7 +79,8 @@ class ModuleListPresenterTest : Assert() {
         moduleItemDataTemplate = ModuleListItemData.ModuleItemData(
             id = 1000L,
             title = "Module Item 1",
-            subtitle = "Due February 12, 2050 at 3:07 PM",
+            subtitle = "February 12, 2050 at 3:07 PM",
+            subtitle2 = null,
             iconResId = R.drawable.ic_assignment,
             isPublished = true,
             indent = 0,
@@ -328,12 +330,7 @@ class ModuleListPresenterTest : Assert() {
                 moduleTemplate.copy(items = listOf(item))
             )
         )
-        val expectedState = moduleItemDataTemplate.copy(
-            title = null,
-            subtitle = item.title,
-            iconResId = null,
-            enabled = false
-        )
+        val expectedState = ModuleListItemData.SubHeader(1000L, "This is a header", 0, false, true, false)
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
         assertEquals(expectedState, itemState)
@@ -353,9 +350,9 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = null,
             enabled = false,
-            isLoading = true
+            isLoading = true,
+            iconResId = R.drawable.ic_attachment
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()

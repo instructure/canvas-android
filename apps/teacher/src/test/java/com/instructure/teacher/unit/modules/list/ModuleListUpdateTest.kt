@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.ModuleListEffect
 import com.instructure.teacher.features.modules.list.ModuleListEvent
 import com.instructure.teacher.features.modules.list.ModuleListModel
@@ -196,7 +197,7 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             modules = listOf(ModuleObject(items = items))
         )
-        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id in 1L..3L}
+        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id in 1L..3L }
         val expectedEffect = ModuleListEffect.UpdateModuleItems(model.course, listOf(items[1]))
         updateSpec
             .given(model)
@@ -218,7 +219,7 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             modules = listOf(ModuleObject(items = items))
         )
-        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id == 3L}
+        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id == 3L }
         updateSpec
             .given(model)
             .whenEvent(event)
@@ -413,5 +414,242 @@ class ModuleListUpdateTest : Assert() {
                 )
             )
     }
+
+    @Test
+    fun `BulkUpdateModule sets loading for module`() {
+        val module = ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L)))
+        val event = ModuleListEvent.BulkUpdateModule(1L, BulkModuleUpdateAction.PUBLISH, true)
+        val model = initModel.copy(modules = listOf(module))
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L),
+            BulkModuleUpdateAction.PUBLISH,
+            true
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateModule sets loading for module and items`() {
+        val module = ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L)))
+        val event = ModuleListEvent.BulkUpdateModule(1L, BulkModuleUpdateAction.PUBLISH, false)
+        val model = initModel.copy(modules = listOf(module))
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L, 100L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L),
+            BulkModuleUpdateAction.PUBLISH,
+            false
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateAllModules sets loading for modules`() {
+        val modules = listOf(
+            ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L))),
+            ModuleObject(
+                id = 2L, items = listOf(
+                    ModuleItem(id = 200L, moduleId = 2L),
+                    ModuleItem(id = 201L, moduleId = 2L)
+                )
+            )
+        )
+        val event = ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.UNPUBLISH, true)
+        val model = initModel.copy(modules = modules)
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L, 2L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L, 2L),
+            BulkModuleUpdateAction.UNPUBLISH,
+            true
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateAllModules sets loading for modules and items`() {
+        val modules = listOf(
+            ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L))),
+            ModuleObject(
+                id = 2L, items = listOf(
+                    ModuleItem(id = 200L, moduleId = 2L),
+                    ModuleItem(id = 201L, moduleId = 2L)
+                )
+            )
+        )
+        val event = ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.UNPUBLISH, false)
+        val model = initModel.copy(modules = modules)
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L, 100L, 2L, 200L, 201L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L, 2L),
+            BulkModuleUpdateAction.UNPUBLISH,
+            false
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess emits refresh effect and clears loading`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(ModuleObject(1L)),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateFailed clears loading`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L)),
+            loadingModuleItemIds = setOf(1L)
+        )
+
+        val expectedModel = model.copy(
+            loadingModuleItemIds = emptySet()
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateFailed)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `UpdateModuleItem emits UpdateModuleItem effect`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L)))),
+        )
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(100L)
+        )
+        val expectedEffect = ModuleListEffect.UpdateModuleItem(
+            model.course,
+            1L,
+            100L,
+            true
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.UpdateModuleItem(100L, true))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `ModuleItemUpdateSuccess replaces module item`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = false)))),
+            loadingModuleItemIds = setOf(100L)
+        )
+        val expectedModel = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = true)))),
+            loadingModuleItemIds = emptySet()
+        )
+        val event = ModuleListEvent.ModuleItemUpdateSuccess(ModuleItem(100L, 1L, published = true))
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `ModuleItemUpdateFailed clears loading`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = false)))),
+            loadingModuleItemIds = setOf(100L)
+        )
+        val expectedModel = model.copy(
+            loadingModuleItemIds = emptySet()
+        )
+        val event = ModuleListEvent.ModuleItemUpdateFailed(100L)
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
 
 }

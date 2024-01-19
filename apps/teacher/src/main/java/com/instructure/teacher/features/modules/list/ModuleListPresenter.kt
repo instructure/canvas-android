@@ -27,6 +27,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
 import com.instructure.teacher.mobius.common.ui.Presenter
+import kotlin.math.roundToInt
 
 object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
 
@@ -42,18 +43,22 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             val moduleItems: List<ModuleListItemData> = if (module.items.isNotEmpty()) {
                 module.items.map { item ->
                     if (item.type.equals(ModuleItem.Type.SubHeader.name, ignoreCase = true)) {
-                        ModuleListItemData.ModuleItemData(
-                                id = item.id,
-                                title = null,
-                                subtitle = item.title,
-                                iconResId = null,
-                                isPublished = item.published,
-                                indent = item.indent * indentWidth,
-                                tintColor = 0,
-                                enabled = false
+                        ModuleListItemData.SubHeader(
+                            id = item.id,
+                            title = item.title,
+                            indent = item.indent * indentWidth,
+                            enabled = false,
+                            published = item.published,
+                            isLoading = item.id in model.loadingModuleItemIds
                         )
                     } else {
-                        createModuleItemData(item, context, indentWidth, iconTint, item.id in model.loadingModuleItemIds)
+                        createModuleItemData(
+                            item,
+                            context,
+                            indentWidth,
+                            iconTint,
+                            item.id in model.loadingModuleItemIds
+                        )
                     }
                 }
             } else {
@@ -63,7 +68,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                 id = module.id,
                 name = module.name.orEmpty(),
                 isPublished = module.published,
-                moduleItems = moduleItems
+                moduleItems = moduleItems,
+                isLoading = module.id in model.loadingModuleItemIds
             )
         }
 
@@ -98,11 +104,12 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         loading: Boolean
     ): ModuleListItemData.ModuleItemData {
         val subtitle = item.moduleDetails?.dueDate?.let {
-            context.getString(
-                R.string.due,
-                DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, it, R.string.at)
-            )
+            DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, it, R.string.at)
         }
+
+        val pointsPossible = item.moduleDetails?.pointsPossible?.toFloatOrNull()
+        val subtitle2 =
+            pointsPossible?.let { context.resources.getQuantityString(R.plurals.moduleItemPoints, it.toInt(), it) }
 
         val iconRes: Int? = when (tryOrNull { ModuleItem.Type.valueOf(item.type.orEmpty()) }) {
             ModuleItem.Type.Assignment -> R.drawable.ic_assignment
@@ -119,7 +126,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             id = item.id,
             title = item.title,
             subtitle = subtitle,
-            iconResId = iconRes.takeUnless { loading },
+            subtitle2 = subtitle2,
+            iconResId = iconRes,
             isPublished = item.published,
             indent = item.indent * indentWidth,
             tintColor = courseColor,

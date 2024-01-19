@@ -26,6 +26,10 @@ interface ModuleListCallback : ListItemCallback {
     fun retryNextPage()
     fun moduleItemClicked(moduleItemId: Long)
     fun markModuleExpanded(moduleId: Long, isExpanded: Boolean)
+    fun updateModuleItem(itemId: Long, isPublished: Boolean)
+    fun publishModule(moduleId: Long)
+    fun publishModuleAndItems(moduleId: Long)
+    fun unpublishModuleAndItems(moduleId: Long)
 }
 
 class ModuleListRecyclerAdapter(
@@ -49,6 +53,7 @@ class ModuleListRecyclerAdapter(
         register(ModuleListItemBinder())
         register(ModuleListLoadingBinder())
         register(ModuleListEmptyItemBinder())
+        register(ModuleListSubHeaderBinder())
     }
 
     fun setData(items: List<ModuleListItemData>, collapsedModuleIds: Set<Long>) {

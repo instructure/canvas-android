@@ -141,6 +141,94 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 CanvasRestAdapter.clearCacheUrls("""/modules""")
                 return Next.next(newModel)
             }
+            is ModuleListEvent.BulkUpdateModule -> {
+                val affectedIds = mutableListOf(event.moduleId)
+                if (!event.skipContentTags) {
+                    affectedIds.addAll(model.modules.filter { it.id == event.moduleId }
+                        .flatMap { it.items }
+                        .map { it.id })
+                }
+
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds + affectedIds
+                )
+                val effect = ModuleListEffect.BulkUpdateModules(
+                    model.course,
+                    listOf(event.moduleId),
+                    event.action,
+                    event.skipContentTags
+                )
+                return Next.next(newModel, setOf(effect))
+            }
+            is ModuleListEvent.BulkUpdateAllModules -> {
+                val affectedIds = mutableListOf<Long>()
+                affectedIds.addAll(model.modules.map { it.id })
+                if (!event.skipContentTags) {
+                    affectedIds.addAll(model.modules.flatMap { it.items }.map { it.id })
+                }
+
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds + affectedIds
+                )
+                val effect = ModuleListEffect.BulkUpdateModules(
+                    model.course,
+                    model.modules.map { it.id },
+                    event.action,
+                    event.skipContentTags
+                )
+                return Next.next(newModel, setOf(effect))
+            }
+            is ModuleListEvent.BulkUpdateSuccess -> {
+                val newModel = model.copy(
+                    isLoading = true,
+                    modules = emptyList(),
+                    pageData = ModuleListPageData(forceNetwork = true),
+                    loadingModuleItemIds = emptySet()
+                )
+                val effect = ModuleListEffect.LoadNextPage(
+                    newModel.course,
+                    newModel.pageData,
+                    newModel.scrollToItemId
+                )
+                return Next.next(newModel, setOf(effect))
+            }
+            is ModuleListEvent.BulkUpdateFailed -> {
+                val newModel = model.copy(
+                    loadingModuleItemIds = emptySet()
+                )
+                return Next.next(newModel)
+            }
+            is ModuleListEvent.UpdateModuleItem -> {
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds + event.itemId
+                )
+                val effect = ModuleListEffect.UpdateModuleItem(
+                    model.course,
+                    model.modules.first { it.items.any { it.id == event.itemId } }.id,
+                    event.itemId,
+                    event.isPublished
+                )
+                return Next.next(newModel, setOf(effect))
+            }
+            is ModuleListEvent.ModuleItemUpdateSuccess -> {
+                val newModel = model.copy(
+                    modules = model.modules.map { module ->
+                        if (event.item.moduleId == module.id) {
+                            module.copy(items = module.items.patchedBy(listOf(event.item)) { it.id })
+                        } else {
+                            module
+                        }
+                    },
+                    loadingModuleItemIds = model.loadingModuleItemIds - event.item.id
+                )
+                return Next.next(newModel)
+            }
+            is ModuleListEvent.ModuleItemUpdateFailed -> {
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds - event.itemId
+                )
+                return Next.next(newModel)
+            }
         }
     }
 

@@ -17,6 +17,11 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.content.res.ColorStateList
+import android.view.Gravity
+import android.view.View
+import androidx.appcompat.widget.PopupMenu
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -37,16 +42,48 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemIcon.setVisible(item.iconResId != null)
             item.iconResId?.let {
                 moduleItemIcon.setImageResource(it)
-                moduleItemIcon.imageTintList = ColorStateList.valueOf(item.tintColor)
             }
             moduleItemIndent.layoutParams.width = item.indent
             moduleItemTitle.setTextForVisibility(item.title)
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
-            moduleItemPublishedIcon.setVisible(item.isPublished == true)
-            moduleItemUnpublishedIcon.setVisible(item.isPublished == false)
-            moduleItemLoadingView.setVisible(item.isLoading)
+            moduleItemSubtitle2.setTextForVisibility(item.subtitle2)
+            moduleItemPublishedIcon.setVisible(item.isPublished == true && !item.isLoading)
+            moduleItemUnpublishedIcon.setVisible(item.isPublished == false && !item.isLoading)
             root.setOnClickListener { callback.moduleItemClicked(item.id) }
             root.isEnabled = item.enabled
+
+            moduleItemLoadingView.setVisible(item.isLoading)
+
+            overflow.onClickWithRequireNetwork {
+                val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
+                val menu = popup.menu
+
+                when (item.isPublished) {
+                    true -> menu.add(0, 0, 0, R.string.unpublish)
+                    false -> menu.add(0, 1, 1, R.string.publish)
+                    else -> {
+                        menu.add(0, 0, 0, R.string.unpublish)
+                        menu.add(0, 1, 1, R.string.publish)
+                    }
+                }
+
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        0 -> {
+                            callback.updateModuleItem(item.id, false)
+                            true
+                        }
+                        1 -> {
+                            callback.updateModuleItem(item.id, true)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+
+                overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
+                popup.show()
+            }
         }
     }
 }
