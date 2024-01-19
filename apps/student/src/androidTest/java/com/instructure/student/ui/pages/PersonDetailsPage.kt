@@ -16,12 +16,18 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.withId
 import com.instructure.student.R
+import org.hamcrest.Matchers
 
 class PersonDetailsPage: BasePage(R.id.clickContainer) {
 
@@ -36,5 +42,10 @@ class PersonDetailsPage: BasePage(R.id.clickContainer) {
 
     fun assertIsPerson(user: User) {
         userName.assertContainsText(user.name)
+    }
+
+    //OfflineMethod
+    fun assertComposeMessageIcon(visibility: ViewMatchers.Visibility) {
+        onView(Matchers.allOf(withId(R.id.compose))).check(matches(withEffectiveVisibility(visibility)))
     }
 }
