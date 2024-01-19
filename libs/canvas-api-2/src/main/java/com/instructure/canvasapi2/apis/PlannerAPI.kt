@@ -24,6 +24,9 @@ object PlannerAPI {
             @Tag restParams: RestParams
         ): DataResult<List<PlannerItem>>
 
+        @GET
+        suspend fun nextPagePlannerItems(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<PlannerItem>>
+
         @POST("planner/overrides")
         fun createPlannerOverride(@Body plannerOverride: PlannerOverride): Call<PlannerOverride>
 
