@@ -19,7 +19,6 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import android.os.Bundle
-import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.models.CanvasContext
@@ -38,10 +37,7 @@ class ModuleListFragment : ModuleListMobiusFragment() {
     @Inject
     lateinit var progressApi: ProgressAPI.ProgressInterface
 
-    @Inject
-    lateinit var assignmentApi: AssignmentAPI.AssignmentInterface
-
-    override fun makeEffectHandler() = ModuleListEffectHandler(assignmentApi, moduleApi, progressApi)
+    override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

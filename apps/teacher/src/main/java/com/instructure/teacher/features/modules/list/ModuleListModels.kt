@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.modules.list
 
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
@@ -89,8 +88,7 @@ data class ModuleListModel(
 data class ModuleListPageData(
     val lastPageResult: DataResult<List<ModuleObject>>? = null,
     val forceNetwork: Boolean = false,
-    val nextPageUrl: String? = null,
-    val assignmentMap: Map<Long, Assignment> = emptyMap()
+    val nextPageUrl: String? = null
 ) {
     val isFirstPage get() = lastPageResult == null
     val hasMorePages get() = isFirstPage || nextPageUrl.isValid()

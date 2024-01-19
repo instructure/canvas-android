@@ -19,14 +19,11 @@ package com.instructure.teacher.features.modules.list.ui.binders
 import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.View
-import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
 import com.instructure.teacher.databinding.AdapterModuleItemBinding
@@ -51,48 +48,41 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
             moduleItemSubtitle2.setTextForVisibility(item.subtitle2)
             moduleItemPublishedIcon.setVisible(item.isPublished == true && !item.isLoading)
-            moduleItemPublishedIcon.alpha = if (item.unpublishable) 1f else 0.5f
             moduleItemUnpublishedIcon.setVisible(item.isPublished == false && !item.isLoading)
             root.setOnClickListener { callback.moduleItemClicked(item.id) }
             root.isEnabled = item.enabled
 
             moduleItemLoadingView.setVisible(item.isLoading)
 
-            if (item.unpublishable) {
-                overflow.onClickWithRequireNetwork {
-                    val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
-                    val menu = popup.menu
+            overflow.onClickWithRequireNetwork {
+                val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
+                val menu = popup.menu
 
-                    when (item.isPublished) {
-                        true -> menu.add(0, 0, 0, R.string.unpublish)
-                        false -> menu.add(0, 1, 1, R.string.publish)
-                        else -> {
-                            menu.add(0, 0, 0, R.string.unpublish)
-                            menu.add(0, 1, 1, R.string.publish)
-                        }
+                when (item.isPublished) {
+                    true -> menu.add(0, 0, 0, R.string.unpublish)
+                    false -> menu.add(0, 1, 1, R.string.publish)
+                    else -> {
+                        menu.add(0, 0, 0, R.string.unpublish)
+                        menu.add(0, 1, 1, R.string.publish)
                     }
+                }
 
-                    popup.setOnMenuItemClickListener { menuItem ->
-                        when (menuItem.itemId) {
-                            0 -> {
-                                callback.updateModuleItem(item.id, false)
-                                true
-                            }
-                            1 -> {
-                                callback.updateModuleItem(item.id, true)
-                                true
-                            }
-                            else -> false
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        0 -> {
+                            callback.updateModuleItem(item.id, false)
+                            true
                         }
+                        1 -> {
+                            callback.updateModuleItem(item.id, true)
+                            true
+                        }
+                        else -> false
                     }
+                }
 
-                    overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
-                    popup.show()
-                }
-            } else {
-                overflow.setOnClickListener {
-                    Toast.makeText(it.context, it.context.getString(R.string.unpublish_assignment_error), Toast.LENGTH_SHORT).show()
-                }
+                overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
+                popup.show()
             }
         }
     }

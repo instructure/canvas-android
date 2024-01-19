@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.unit.modules.list
 
-import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.managers.ModuleManager
@@ -67,7 +66,6 @@ class ModuleListEffectHandlerTest : Assert() {
     private lateinit var connection: Connection<ModuleListEffect>
     private val course: CanvasContext = Course()
 
-    private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
     private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
 
@@ -76,11 +74,9 @@ class ModuleListEffectHandlerTest : Assert() {
     fun setUp() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         view = mockk(relaxed = true)
-        effectHandler = ModuleListEffectHandler(assignmentApi, moduleApi, progressApi).apply { view = this@ModuleListEffectHandlerTest.view }
+        effectHandler = ModuleListEffectHandler(moduleApi, progressApi).apply { view = this@ModuleListEffectHandlerTest.view }
         consumer = mockk(relaxed = true)
         connection = effectHandler.connect(consumer)
-
-        coEvery { assignmentApi.getAssignments(any(), any()) } returns DataResult.Success(emptyList())
     }
 
     @Test

@@ -86,12 +86,7 @@ sealed class ModuleListItemData {
          * Whether additional data is being loaded for this item, either for the purpose of routing or for the purpose
          * of refreshing this item after it has been updated elsewhere in the app.
          */
-        val isLoading: Boolean = false,
-
-        /**
-         * Whether this item can be unpublished when the item is published. Happens when an assignment has submissions already.
-         */
-        val unpublishable: Boolean = true
+        val isLoading: Boolean = false
     ) : ModuleListItemData()
 
 }
