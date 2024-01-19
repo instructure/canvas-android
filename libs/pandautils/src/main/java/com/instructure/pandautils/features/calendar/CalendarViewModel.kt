@@ -16,6 +16,7 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.YearMonth
 import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
+import kotlin.math.min
 
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
@@ -25,11 +26,11 @@ class CalendarViewModel @Inject constructor(
     private var selectedDay = LocalDate.now()
     private var expanded = true
 
-    private val eventsByDay = mutableMapOf<String, MutableList<PlannerItem>>()
+    private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
     private val loadingDays = mutableSetOf<LocalDate>()
     private val loadedMonths = mutableSetOf<YearMonth>()
 
-    private val _uiState = MutableStateFlow(CalendarUiState(selectedDay, expanded))
+    private val _uiState = MutableStateFlow(CalendarUiState(selectedDay, expanded, eventIndicators = emptyMap()))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -66,8 +67,7 @@ class CalendarViewModel @Inject constructor(
 
             result.forEach { plannerItem ->
                 val plannableDate = plannerItem.plannableDate.toLocalDate()
-                val key = createDateKey(plannableDate)
-                val plannerItemsForDay = eventsByDay.getOrPut(key) { mutableListOf() }
+                val plannerItemsForDay = eventsByDay.getOrPut(plannableDate) { mutableListOf() }
                 val index =
                     plannerItemsForDay.indexOfFirst { it.plannable.id == plannerItem.plannable.id }
                 if (index == -1) {
@@ -99,6 +99,8 @@ class CalendarViewModel @Inject constructor(
         val previousPage = createEventsPageForDate(selectedDay.minusDays(1))
         val nextPage = createEventsPageForDate(selectedDay.plusDays(1))
 
+        val eventIndicators = eventsByDay.mapValues { min(3, it.value.size) }
+
         return _uiState.value.copy(
             selectedDay = selectedDay,
             expanded = expanded,
@@ -106,12 +108,13 @@ class CalendarViewModel @Inject constructor(
                 previousPage = previousPage,
                 currentPage = currentPage,
                 nextPage = nextPage
-            )
+            ),
+            eventIndicators = eventIndicators
         )
     }
 
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
-        val eventUiStates = eventsByDay[createDateKey(date)]?.map {
+        val eventUiStates = eventsByDay[date]?.map {
             EventUiState(
                 contextName = it.contextName ?: "",
                 canvasContext = it.canvasContext,

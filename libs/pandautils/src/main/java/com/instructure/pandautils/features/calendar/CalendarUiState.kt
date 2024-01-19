@@ -26,7 +26,8 @@ import java.util.Locale
 data class CalendarUiState(
     val selectedDay: LocalDate,
     val expanded: Boolean,
-    val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState()
+    val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
+    val eventIndicators: Map<LocalDate, Int> = emptyMap()
 ) {
     val headerUiState: CalendarHeaderUiState
         get() {
@@ -65,7 +66,8 @@ data class CalendarUiState(
                 firstDayOfMonth.minusDays(firstDayOfWeekIndex.toLong())
             val previousMonthDays = previousMonthFirstVisibleDay.dayOfMonth
             for (day in (previousMonthDays) until previousMonthDays + firstDayOfWeekIndex) {
-                currentWeek.add(CalendarDayUiState(day, LocalDate.of(previousMonthYear, previousMonth, day), enabled = false))
+                val dateForDay = LocalDate.of(previousMonthYear, previousMonth, day)
+                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0))
             }
         }
 
@@ -74,7 +76,7 @@ data class CalendarUiState(
             val dateForDay = LocalDate.of(date.year, date.month, day)
             val enabled =
                 dateForDay.dayOfWeek != DayOfWeek.SUNDAY && dateForDay.dayOfWeek != DayOfWeek.SATURDAY
-            currentWeek.add(CalendarDayUiState(day, dateForDay, enabled))
+            currentWeek.add(CalendarDayUiState(day, dateForDay, enabled, eventIndicators[dateForDay] ?: 0))
             if (currentWeek.size == 7) {
                 calendarRows.add(CalendarRowUiState(currentWeek.toList()))
                 currentWeek.clear()
@@ -87,7 +89,8 @@ data class CalendarUiState(
             val nextMonthYear = date.plusMonths(1).year
             val daysToAdd = 7 - currentWeek.size
             for (day in 1..daysToAdd) {
-                currentWeek.add(CalendarDayUiState(day, LocalDate.of(nextMonthYear, nextMonth, day), enabled = false))
+                val dateForDay = LocalDate.of(nextMonthYear, nextMonth, day)
+                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0))
             }
             calendarRows.add(CalendarRowUiState(currentWeek.toList()))
         }
@@ -114,7 +117,8 @@ data class CalendarRowUiState(val days: List<CalendarDayUiState>)
 data class CalendarDayUiState(
     val dayNumber: Int,
     val date: LocalDate = LocalDate.now(),
-    val enabled: Boolean = true
+    val enabled: Boolean = true,
+    val indicatorCount: Int = 0
 ) {
     val today: Boolean
         get() {

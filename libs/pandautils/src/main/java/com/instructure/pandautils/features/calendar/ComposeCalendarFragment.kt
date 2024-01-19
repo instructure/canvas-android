@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
@@ -47,8 +48,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -76,6 +79,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.textAndIconColor
+import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
@@ -85,7 +89,7 @@ import javax.inject.Inject
 
 private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
 private const val HEADER_HEIGHT = 20
-private const val CALENDAR_ROW_HEIGHT = 40
+private const val CALENDAR_ROW_HEIGHT = 46
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR)
@@ -97,6 +101,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     @Inject
     lateinit var calendarRouter: CalendarRouter
 
+    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -138,6 +143,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun CalendarScreen(
     title: String,
@@ -372,7 +378,7 @@ fun CalendarPage(
     Column {
         calendarRows.forEach {
             DaysOfWeekRow(days = it.days, selectedDay, selectedDayChanged)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
@@ -388,18 +394,18 @@ fun DaysOfWeekRow(
             .fillMaxWidth()
             .padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        days.forEach { day ->
+        days.forEach { dayState ->
             val textColor = when {
-                    day.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
-                    day.today -> Color(ThemePrefs.textButtonColor)
-                    day.enabled -> colorResource(id = R.color.textDarkest)
-                    else -> colorResource(id = R.color.textDark)
-                }
+                dayState.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
+                dayState.today -> Color(ThemePrefs.textButtonColor)
+                dayState.enabled -> colorResource(id = R.color.textDarkest)
+                else -> colorResource(id = R.color.textDark)
+            }
             var dayModifier = Modifier
                 .width(32.dp)
                 .height(32.dp)
-                .clickable { selectedDayChanged(day.date) }
-            if (day.date == selectedDay) {
+                .clickable { selectedDayChanged(dayState.date) }
+            if (dayState.date == selectedDay) {
                 dayModifier = dayModifier
                     .background(
                         color = Color(ThemePrefs.buttonColor),
@@ -407,15 +413,44 @@ fun DaysOfWeekRow(
                     )
             }
             dayModifier = dayModifier.wrapContentHeight(align = Alignment.CenterVertically)
-            Text(
-                text = day.dayNumber.toString(),
-                fontSize = 16.sp,
-                color = textColor,
-                modifier = dayModifier,
-                textAlign = TextAlign.Center
-            )
+            Column(
+                Modifier
+                    .width(32.dp)
+                    .wrapContentHeight()
+            ) {
+                Text(
+                    text = dayState.dayNumber.toString(),
+                    fontSize = 16.sp,
+                    color = textColor,
+                    modifier = dayModifier,
+                    textAlign = TextAlign.Center
+                )
+                Row(
+                    Modifier
+                        .height(10.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    repeat(dayState.indicatorCount) {
+                        EventIndicator()
+                    }
+                }
+            }
         }
     }
+}
+
+@Composable
+fun EventIndicator() {
+    Box(
+        Modifier
+            .padding(horizontal = 3.dp)
+            .graphicsLayer()
+            .clip(CircleShape)
+            .size(4.dp)
+            .background(Color(ThemePrefs.buttonColor))
+    )
 }
 
 @ExperimentalFoundationApi
@@ -542,10 +577,12 @@ fun CalendarEmptyView() {
     }
 }
 
+@ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
+    AndroidThreeTen.init(LocalContext.current)
     CalendarScreen("Calendar", CalendarUiState(
         LocalDate.now().plusDays(1), true, CalendarEventsUiState(
             currentPage = CalendarEventsPageUiState(
