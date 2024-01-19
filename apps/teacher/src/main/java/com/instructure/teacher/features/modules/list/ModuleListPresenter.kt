@@ -39,6 +39,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
 
         val iconTint = model.course.textAndIconColor
 
+        val assignmentMap = model.pageData.assignmentMap
+
         items += model.modules.map { module ->
             val moduleItems: List<ModuleListItemData> = if (module.items.isNotEmpty()) {
                 module.items.map { item ->
@@ -57,7 +59,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                             context,
                             indentWidth,
                             iconTint,
-                            item.id in model.loadingModuleItemIds
+                            item.id in model.loadingModuleItemIds,
+                            assignmentMap[item.contentId]?.unpublishable ?: true
                         )
                     }
                 }
@@ -101,7 +104,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         context: Context,
         indentWidth: Int,
         courseColor: Int,
-        loading: Boolean
+        loading: Boolean,
+        unpublishable: Boolean
     ): ModuleListItemData.ModuleItemData {
         val subtitle = item.moduleDetails?.dueDate?.let {
             DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, it, R.string.at)
@@ -132,7 +136,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             indent = item.indent * indentWidth,
             tintColor = courseColor,
             enabled = !loading,
-            isLoading = loading
+            isLoading = loading,
+            unpublishable = unpublishable
         )
     }
 

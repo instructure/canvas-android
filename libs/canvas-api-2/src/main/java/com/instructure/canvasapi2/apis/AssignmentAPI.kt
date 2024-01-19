@@ -134,6 +134,9 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignments?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getAssignments(@Path("courseId") courseId: Long): Call<List<Assignment>>
 
+        @GET("courses/{courseId}/assignments?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
+        suspend fun getAssignments(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<List<Assignment>>
+
         @GET
         fun getNextPageAssignments(@Url nextUrl: String): Call<List<Assignment>>
     }

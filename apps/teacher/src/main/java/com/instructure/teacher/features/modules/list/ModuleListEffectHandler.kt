@@ -17,10 +17,12 @@
 package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.ModuleManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
@@ -41,9 +43,13 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class ModuleListEffectHandler(
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val progressApi: ProgressAPI.ProgressInterface
 ) : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
+
+    var assignmentMap: Map<Long, Assignment> = mutableMapOf()
+
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
             is ModuleListEffect.ShowModuleItemDetailView -> {
@@ -96,6 +102,11 @@ class ModuleListEffectHandler(
     private fun loadNextPage(canvasContext: CanvasContext, lastPageData: ModuleListPageData, scrollToItemId: Long?) {
         launch {
             try {
+                assignmentMap = assignmentApi.getAssignments(
+                    canvasContext.id,
+                    RestParams(isForceReadFromNetwork = false)
+                ).dataOrNull?.associateBy { it.id } ?: emptyMap()
+
                 val newPageData = if (scrollToItemId != null) {
                     fetchDataUntilItem(lastPageData, canvasContext, scrollToItemId)
                 } else {
@@ -138,7 +149,7 @@ class ModuleListEffectHandler(
             CollapsedModulesStore.markModuleCollapsed(canvasContext, it.id, false)
         }
 
-        return latestData.copy(lastPageResult = DataResult.Success(fetchedModules))
+        return latestData.copy(lastPageResult = DataResult.Success(fetchedModules), assignmentMap = assignmentMap)
     }
 
     /**
@@ -178,7 +189,8 @@ class ModuleListEffectHandler(
 
         return pageData.copy(
             lastPageResult = DataResult.Success(modules),
-            nextPageUrl = APIHelper.parseLinkHeaderResponse(response.headers()).nextUrl
+            nextPageUrl = APIHelper.parseLinkHeaderResponse(response.headers()).nextUrl,
+            assignmentMap = assignmentMap
         )
     }
 

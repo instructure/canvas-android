@@ -91,7 +91,8 @@ class ModuleListPresenterTest : Assert() {
             course = course,
             modules = listOf(moduleTemplate),
             pageData = ModuleListPageData(
-                lastPageResult = DataResult.Success(listOf(moduleTemplate))
+                lastPageResult = DataResult.Success(listOf(moduleTemplate)),
+                assignmentMap = emptyMap()
             )
         )
     }
