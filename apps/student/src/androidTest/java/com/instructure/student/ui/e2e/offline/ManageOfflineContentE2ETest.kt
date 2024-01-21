@@ -203,6 +203,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
+        device.waitForIdle()
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Select '${course2.name}' course and open 'Grades' menu to check if it's really synced and can be seen in offline mode.")
