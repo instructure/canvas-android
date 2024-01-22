@@ -68,6 +68,7 @@ class OfflineLoginE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
+        device.waitForWindowUpdate(null, 10000)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
