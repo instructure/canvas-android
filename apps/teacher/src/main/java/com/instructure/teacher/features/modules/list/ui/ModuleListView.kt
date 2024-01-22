@@ -18,9 +18,11 @@ package com.instructure.teacher.features.modules.list.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.pandarecycler.PaginatedScrollListener
@@ -168,5 +170,9 @@ class ModuleListView(
             }
             .setNegativeButton(negativeButton) { _, _ -> }
             .showThemed()
+    }
+
+    fun showSnackbar(@StringRes message: Int) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 }

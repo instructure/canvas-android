@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.features.modules.list
 
+import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
@@ -25,8 +26,6 @@ import com.instructure.canvasapi2.utils.isValid
 sealed class ModuleListEvent {
     object PullToRefresh : ModuleListEvent()
     object NextPageRequested : ModuleListEvent()
-    object BulkUpdateSuccess : ModuleListEvent()
-    object BulkUpdateFailed : ModuleListEvent()
     data class ModuleItemClicked(val moduleItemId: Long) : ModuleListEvent()
     data class ModuleExpanded(val moduleId: Long, val isExpanded: Boolean) : ModuleListEvent()
     data class PageLoaded(val pageData: ModuleListPageData) : ModuleListEvent()
@@ -37,8 +36,10 @@ sealed class ModuleListEvent {
     data class BulkUpdateModule(val moduleId: Long, val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
     data class BulkUpdateAllModules(val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
     data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
-    data class ModuleItemUpdateSuccess(val item: ModuleItem): ModuleListEvent()
+    data class ModuleItemUpdateSuccess(val item: ModuleItem, val published: Boolean): ModuleListEvent()
     data class ModuleItemUpdateFailed(val itemId: Long): ModuleListEvent()
+    data class BulkUpdateSuccess(val skipContentTags: Boolean, val action: BulkModuleUpdateAction, val allModules: Boolean) : ModuleListEvent()
+    data class BulkUpdateFailed(val skipContentTags: Boolean) : ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -65,7 +66,8 @@ sealed class ModuleListEffect {
         val canvasContext: CanvasContext,
         val moduleIds: List<Long>,
         val action: BulkModuleUpdateAction,
-        val skipContentTags: Boolean
+        val skipContentTags: Boolean,
+        val allModules: Boolean
     ) : ModuleListEffect()
 
     data class UpdateModuleItem(
@@ -74,6 +76,8 @@ sealed class ModuleListEffect {
         val itemId: Long,
         val published: Boolean
     ) : ModuleListEffect()
+
+    data class ShowSnackbar(@StringRes val message: Int) : ModuleListEffect()
 }
 
 data class ModuleListModel(
