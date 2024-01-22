@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Inbjudan accepterades!</string>
     <string name="inviteDeclined">Inbjudan avböjd.</string>
     <string name="latePenalty">Förseningsbestraffning (-%s)</string>
+    <string name="latePenaltyUpdated">Förseningsavdrag: -%s poäng</string>
+    <string name="yourGrade">Din bedömning: %s poäng</string>
     <string name="finalGrade">Totalt omdöme</string>
 
     <string name="max_count">99+</string>

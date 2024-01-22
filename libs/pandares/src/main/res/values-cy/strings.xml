@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Mae\'r gwahoddiad wedi’i dderbyn!</string>
     <string name="inviteDeclined">Mae\'r gwahoddiad wedi\'i wrthod!</string>
     <string name="latePenalty">Cosb am fod yn hwyr (-%s)</string>
+    <string name="latePenaltyUpdated">Cosb am fod yn hwyr: %s pwynt</string>
+    <string name="yourGrade">Eich Gradd: %s pwynt</string>
     <string name="finalGrade">Gradd Derfynol</string>
 
     <string name="max_count">99+</string>
