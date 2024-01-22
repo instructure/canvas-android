@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Invitation accepteret!</string>
     <string name="inviteDeclined">Invitation afvist.</string>
     <string name="latePenalty">Straf for sen aflevering (-%s)</string>
+    <string name="latePenaltyUpdated">Straf for sen aflevering: -%s pt</string>
+    <string name="yourGrade">Din karakter: %s point</string>
     <string name="finalGrade">Endelig karakter</string>
 
     <string name="max_count">99+</string>

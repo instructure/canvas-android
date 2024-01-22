@@ -948,6 +948,8 @@
     <string name="inviteAccepted">接受邀請！</string>
     <string name="inviteDeclined">拒絕邀請。</string>
     <string name="latePenalty">逾期懲罰 (-%s)</string>
+    <string name="latePenaltyUpdated">逾期懲罰：-%s 分</string>
+    <string name="yourGrade">您的評分：%s 分</string>
     <string name="finalGrade">最終評分</string>
 
     <string name="max_count">99+</string>

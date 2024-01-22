@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Invitation acceptée!</string>
     <string name="inviteDeclined">Invitation déclinée.</string>
     <string name="latePenalty">Pénalité de retard (-%s)</string>
+    <string name="latePenaltyUpdated">Pénalité de retard : -%s pts</string>
+    <string name="yourGrade">Votre notation : %s pts</string>
     <string name="finalGrade">Note finale</string>
 
     <string name="max_count">Plus de 99</string>
