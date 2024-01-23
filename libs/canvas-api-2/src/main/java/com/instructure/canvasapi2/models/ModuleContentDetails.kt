@@ -38,7 +38,8 @@ data class ModuleContentDetails(
         @SerializedName("lock_explanation")
         val lockExplanation: String? = null,
         @SerializedName("lock_info")
-        val lockInfo: LockInfo? = null
+        val lockInfo: LockInfo? = null,
+        val hidden: Boolean? = null
 ) : CanvasComparable<ModuleContentDetails>() {
     @IgnoredOnParcel
     val dueDate: Date? get() = dueAt.toDate()

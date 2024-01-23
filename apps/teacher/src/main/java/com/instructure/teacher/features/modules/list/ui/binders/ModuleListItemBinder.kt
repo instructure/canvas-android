@@ -16,10 +16,13 @@
  */
 package com.instructure.teacher.features.modules.list.ui.binders
 
-import android.content.res.ColorStateList
 import android.view.Gravity
-import android.view.View
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.PopupMenu
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.pandautils.binding.setTint
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setTextForVisibility
@@ -47,11 +50,16 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemTitle.setTextForVisibility(item.title)
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
             moduleItemSubtitle2.setTextForVisibility(item.subtitle2)
-            moduleItemPublishedIcon.setVisible(item.isPublished == true && !item.isLoading)
-            moduleItemUnpublishedIcon.setVisible(item.isPublished == false && !item.isLoading)
+
             root.setOnClickListener { callback.moduleItemClicked(item.id) }
             root.isEnabled = item.enabled
 
+            val statusIcon = getStatusIcon(item)
+            moduleItemPublishedIcon.apply {
+                moduleItemPublishedIcon.setImageResource(statusIcon.icon)
+                moduleItemPublishedIcon.setTint(statusIcon.tint)
+                setVisible(!item.isLoading)
+            }
             moduleItemLoadingView.setVisible(item.isLoading)
 
             overflow.onClickWithRequireNetwork {
@@ -86,4 +94,34 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             }
         }
     }
+
+    private fun getStatusIcon(data: ModuleListItemData.ModuleItemData): StatusIcon {
+        val icon: Int
+        val tint: Int
+        when (data.type) {
+            ModuleItem.Type.File -> {
+                if (data.contentDetails?.hidden == true) {
+                    icon = R.drawable.ic_eye
+                    tint = R.color.textWarning
+                } else if (data.contentDetails?.lockAt.isValid() || data.contentDetails?.unlockAt.isValid()) {
+                    icon = R.drawable.ic_calendar
+                    tint = R.color.textWarning
+                } else {
+                    icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
+                    tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
+                }
+            }
+            else -> {
+                icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
+                tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
+            }
+        }
+
+        return StatusIcon(icon, tint)
+    }
 }
+
+data class StatusIcon(
+    @DrawableRes val icon: Int,
+    @ColorRes val tint: Int
+)
