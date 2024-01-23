@@ -67,6 +67,8 @@
     <string name="submissionDeleted">Submission Deleted</string>
     <string name="missingSubmissionLabel">Missing</string>
     <string name="gradedSubmissionLabel">Graded</string>
+    <string name="reminderTitle">Reminder</string>
+    <string name="reminderDescription">Add due date reminder notifications about this assignment on this device.</string>
 
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>

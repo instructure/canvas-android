@@ -17,11 +17,14 @@
 
 package com.instructure.student.features.assignments.details
 
+import androidx.lifecycle.LiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
+import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsDataSource
@@ -32,7 +35,8 @@ class AssignmentDetailsRepository(
     localDataSource: AssignmentDetailsLocalDataSource,
     networkDataSource: AssignmentDetailsNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
+    featureFlagProvider: FeatureFlagProvider,
+    private val reminderDao: ReminderDao
 ) : Repository<AssignmentDetailsDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
@@ -53,5 +57,17 @@ class AssignmentDetailsRepository(
 
     suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
         return dataSource().getLtiFromAuthenticationUrl(url, forceNetwork)
+    }
+
+    fun getRemindersByAssignmentIdLiveData(userId: Long, assignmentId: Long): LiveData<List<ReminderEntity>> {
+        return reminderDao.findByAssignmentIdLiveData(userId, assignmentId)
+    }
+
+    suspend fun deleteReminderById(id: Long) {
+        reminderDao.deleteById(id)
+    }
+
+    suspend fun addReminder(userId: Long, assignmentId: Long) {
+        reminderDao.insert(ReminderEntity(userId = userId, assignmentId = assignmentId, text = "Test Reminder"))
     }
 }
