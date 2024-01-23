@@ -608,7 +608,7 @@ class DiscussionsInteractionTest : StudentTest() {
         // Add an assignment
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             name = assignmentName,
             pointsPossible = 12
         )
@@ -649,7 +649,7 @@ class DiscussionsInteractionTest : StudentTest() {
         // Add an assignment
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             name = assignmentName,
             pointsPossible = 12
         )
@@ -694,7 +694,7 @@ class DiscussionsInteractionTest : StudentTest() {
         // Add an assignment
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             name = assignmentName,
             pointsPossible = 12
         )

@@ -187,7 +187,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                submissionTypeList = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
                 pointsPossible = pointsPossible,
                 gradingType = gradingType
         )

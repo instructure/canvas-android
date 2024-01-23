@@ -207,7 +207,7 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
                 withDescription = withDescription,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionType = submissionTypes.firstOrNull()
+                submissionTypeList = submissionTypes.firstOrNull()
                         ?: Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
 

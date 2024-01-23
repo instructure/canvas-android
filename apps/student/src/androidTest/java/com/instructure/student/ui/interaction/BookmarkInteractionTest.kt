@@ -115,7 +115,7 @@ class BookmarkInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         val token = data.tokenFor(student)!!

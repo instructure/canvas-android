@@ -15,7 +15,11 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -155,7 +159,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = if(submissionTypes.isEmpty()) SubmissionType.ONLINE_TEXT_ENTRY else submissionTypes.first(),
+                submissionTypeList = if(submissionTypes.isEmpty()) SubmissionType.ONLINE_TEXT_ENTRY else submissionTypes.first(),
                 lockAt = lockAt,
                 unlockAt = unlockAt,
                 description = if(withDescription) Randomizer.randomCourseDescription() else "",

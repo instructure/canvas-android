@@ -234,8 +234,8 @@ class HomeroomInteractionTest : StudentTest() {
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
-        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+        data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         goToHomeroomTab(data)
 
@@ -259,8 +259,8 @@ class HomeroomInteractionTest : StudentTest() {
 
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+        data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         goToHomeroomTab(data)
 

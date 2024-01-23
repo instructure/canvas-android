@@ -53,7 +53,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val student = data.students[0]
         val token = data.tokenFor(student)!!
-        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_URL)
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL))
         data.addSubmissionForAssignment(
             assignmentId = assignment.id,
             userId = data.users.values.first().id,
@@ -401,7 +401,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             gradingType = Assignment.gradingTypeToAPIString(gradingType) ?: "",
             pointsPossible = maxScore,
         )
