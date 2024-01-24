@@ -16,8 +16,10 @@
  */
 package com.instructure.teacher.features.modules.list
 
+import androidx.annotation.StringRes
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.utils.patchedBy
+import com.instructure.teacher.R
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -52,10 +54,12 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 return Next.next(newModel, setOf(effect))
             }
+
             is ModuleListEvent.ModuleItemClicked -> {
                 val item = model.modules.flatMap { it.items }.first { it.id == event.moduleItemId }
                 return Next.dispatch(setOf(ModuleListEffect.ShowModuleItemDetailView(item, model.course)))
             }
+
             is ModuleListEvent.PageLoaded -> {
                 val effects = mutableSetOf<ModuleListEffect>()
                 var newModel = model.copy(
@@ -67,7 +71,8 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     val newModules = event.pageData.lastPageResult.dataOrThrow
                     newModel = newModel.copy(modules = model.modules + newModules)
                     if (model.scrollToItemId != null
-                        && newModules.any { module -> module.items.any { it.id == model.scrollToItemId } }) {
+                        && newModules.any { module -> module.items.any { it.id == model.scrollToItemId } }
+                    ) {
                         newModel = newModel.copy(scrollToItemId = null)
                         effects += ModuleListEffect.ScrollToItem(model.scrollToItemId)
                     }
@@ -75,6 +80,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
 
                 return Next.next(newModel, effects)
             }
+
             ModuleListEvent.NextPageRequested -> {
                 return if (model.isLoading || !model.pageData.hasMorePages) {
                     // Do nothing if we're already loading or all pages have loaded
@@ -89,13 +95,19 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     Next.next(newModel, setOf(effect))
                 }
             }
+
             is ModuleListEvent.ModuleExpanded -> {
-                return Next.dispatch(setOf(ModuleListEffect.MarkModuleExpanded(
-                    model.course,
-                    event.moduleId,
-                    event.isExpanded
-                )))
+                return Next.dispatch(
+                    setOf(
+                        ModuleListEffect.MarkModuleExpanded(
+                            model.course,
+                            event.moduleId,
+                            event.isExpanded
+                        )
+                    )
+                )
             }
+
             is ModuleListEvent.ModuleItemLoadStatusChanged -> {
                 return Next.next(
                     model.copy(
@@ -107,6 +119,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     )
                 )
             }
+
             is ModuleListEvent.ItemRefreshRequested -> {
                 val items = model.modules.flatMap { it.items }.filter { it.type == event.type }.filter(event.predicate)
                 return if (items.isEmpty()) {
@@ -116,6 +129,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     Next.dispatch(setOf(effect))
                 }
             }
+
             is ModuleListEvent.ReplaceModuleItems -> {
                 val itemGroups = event.items.groupBy { it.moduleId }
                 val newModel = model.copy(
@@ -130,6 +144,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 return Next.next(newModel)
             }
+
             is ModuleListEvent.RemoveModuleItems -> {
                 val newModel = model.copy(
                     modules = model.modules.map { module ->
@@ -141,6 +156,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 CanvasRestAdapter.clearCacheUrls("""/modules""")
                 return Next.next(newModel)
             }
+
             is ModuleListEvent.BulkUpdateModule -> {
                 val affectedIds = mutableListOf(event.moduleId)
                 if (!event.skipContentTags) {
@@ -156,10 +172,12 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     model.course,
                     listOf(event.moduleId),
                     event.action,
-                    event.skipContentTags
+                    event.skipContentTags,
+                    false
                 )
                 return Next.next(newModel, setOf(effect))
             }
+
             is ModuleListEvent.BulkUpdateAllModules -> {
                 val affectedIds = mutableListOf<Long>()
                 affectedIds.addAll(model.modules.map { it.id })
@@ -174,10 +192,12 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     model.course,
                     model.modules.map { it.id },
                     event.action,
-                    event.skipContentTags
+                    event.skipContentTags,
+                    true
                 )
                 return Next.next(newModel, setOf(effect))
             }
+
             is ModuleListEvent.BulkUpdateSuccess -> {
                 val newModel = model.copy(
                     isLoading = true,
@@ -190,14 +210,24 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     newModel.pageData,
                     newModel.scrollToItemId
                 )
-                return Next.next(newModel, setOf(effect))
+
+                val message = getBulkUpdateSnackbarMessage(event.action, event.skipContentTags, event.allModules)
+
+                val snackbarEffect = ModuleListEffect.ShowSnackbar(message)
+
+                return Next.next(newModel, setOf(effect, snackbarEffect))
             }
+
             is ModuleListEvent.BulkUpdateFailed -> {
                 val newModel = model.copy(
                     loadingModuleItemIds = emptySet()
                 )
-                return Next.next(newModel)
+
+                val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.errorOccurred)
+
+                return Next.next(newModel, setOf(snackbarEffect))
             }
+
             is ModuleListEvent.UpdateModuleItem -> {
                 val newModel = model.copy(
                     loadingModuleItemIds = model.loadingModuleItemIds + event.itemId
@@ -210,6 +240,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 return Next.next(newModel, setOf(effect))
             }
+
             is ModuleListEvent.ModuleItemUpdateSuccess -> {
                 val newModel = model.copy(
                     modules = model.modules.map { module ->
@@ -221,13 +252,50 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     },
                     loadingModuleItemIds = model.loadingModuleItemIds - event.item.id
                 )
-                return Next.next(newModel)
+
+                val snackbarEffect =
+                    ModuleListEffect.ShowSnackbar(if (event.item.published == true) R.string.moduleItemPublished else R.string.moduleItemUnpublished)
+
+                return Next.next(newModel, setOf(snackbarEffect))
             }
+
             is ModuleListEvent.ModuleItemUpdateFailed -> {
                 val newModel = model.copy(
                     loadingModuleItemIds = model.loadingModuleItemIds - event.itemId
                 )
-                return Next.next(newModel)
+
+                val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.errorOccurred)
+
+                return Next.next(newModel, setOf(snackbarEffect))
+            }
+        }
+    }
+
+    @StringRes
+    private fun getBulkUpdateSnackbarMessage(
+        action: BulkModuleUpdateAction,
+        skipContentTags: Boolean,
+        allModules: Boolean
+    ): Int {
+        return if (allModules) {
+            if (action == BulkModuleUpdateAction.PUBLISH) {
+                if (skipContentTags) {
+                    R.string.onlyModulesPublished
+                } else {
+                    R.string.allModulesAndAllItemsPublished
+                }
+            } else {
+                R.string.allModulesAndAllItemsUnpublished
+            }
+        } else {
+            if (action == BulkModuleUpdateAction.PUBLISH) {
+                if (skipContentTags) {
+                    R.string.onlyModulePublished
+                } else {
+                    R.string.moduleAndAllItemsPublished
+                }
+            } else {
+                R.string.moduleAndAllItemsUnpublished
             }
         }
     }
