@@ -28,6 +28,7 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
@@ -118,7 +119,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun testDisplayBookmarMenu() {
+    fun testDisplayBookmarkMenu() {
         val data = setUpData()
         goToAssignmentList()
         val assignmentList = data.assignments
@@ -347,6 +348,41 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         assignmentDetailsPage.assertGradeDisplayed("Complete")
         assignmentDetailsPage.assertOutOfTextNotDisplayed()
         assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MULTIPLE_TYPE)
+    fun testSubmission_multipleSubmissionType() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, Assignment.SubmissionType.ONLINE_UPLOAD, Assignment.SubmissionType.MEDIA_RECORDING, Assignment.SubmissionType.DISCUSSION_TOPIC, Assignment.SubmissionType.ONLINE_URL))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.ONLINE_URL.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+        assignmentListPage.waitForPage()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Text Entry")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Website URL")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("File Upload")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Media Recording")
+
+        //Try 1 submission to check if it's possible to submit even when there are multiple submission types available.
+        assignmentDetailsPage.selectSubmissionType(SubmissionType.ONLINE_URL)
+        urlSubmissionUploadPage.submitText("https://google.com")
+        assignmentDetailsPage.assertStatusSubmitted()
     }
 
     private fun setUpData(restrictQuantitativeData: Boolean = false): MockCanvas {
