@@ -80,7 +80,7 @@ class SpeedGraderFilesPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = Assignment.SubmissionType.ONLINE_UPLOAD
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD)
         )
 
         repeat(submissionCount) {

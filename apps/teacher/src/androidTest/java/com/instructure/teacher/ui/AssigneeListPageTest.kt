@@ -87,7 +87,7 @@ class AssigneeListPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                     courseId = course.id,
-                    submissionTypeList = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+                    submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)

@@ -106,7 +106,7 @@ class SyllabusPageTest : TeacherTest() {
         repeat(assignmentCount) {
             data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 dueAt = 2.days.fromNow.iso8601,
                 name = "Assignment: $it"
             )

@@ -45,7 +45,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
     @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
         getToAssignmentDetailsPage(
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
                 students = 1,
                 withSubmission = true)
         assignmentDetailsPage.assertPageObjects()
@@ -159,7 +159,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = if(submissionTypes.isEmpty()) SubmissionType.ONLINE_TEXT_ENTRY else submissionTypes.first(),
+                submissionTypeList = (if(submissionTypes.isEmpty()) listOf(ONLINE_TEXT_ENTRY) else submissionTypes.first()) as List<SubmissionType>,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
                 description = if(withDescription) Randomizer.randomCourseDescription() else "",

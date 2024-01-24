@@ -943,6 +943,45 @@ fun MockCanvas.addAssignment(
 }
 
 /**
+ * Adds multiple (type) submissions to the assignment submission map.
+ */
+fun MockCanvas.addSubmissionsForAssignment(
+    assignmentId: Long,
+    userId: Long,
+    types: List<String>,
+    body: String? = null,
+    url: String? = null,
+    attachment: Attachment? = null,
+    comment: SubmissionComment? = null,
+    state: String = "submitted",
+    grade: String? = null,
+    attempt: Long = 1,
+    score: Double? = null,
+    excused: Boolean = false): MutableList<Submission> {
+
+    val submissionList = mutableListOf<Submission>()
+    types.forEach { type ->
+        val submission = addSubmissionForAssignment(
+            assignmentId,
+            userId,
+            type,
+            body,
+            url,
+            attachment,
+            comment,
+            state,
+            grade,
+            attempt,
+            score,
+            excused
+        )
+        submissionList.add(submission)
+    }
+
+    return submissionList
+
+}
+/**
  * Adds a submission to the assignment submission map.
  */
 fun MockCanvas.addSubmissionForAssignment(

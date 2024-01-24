@@ -201,14 +201,12 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
                 CanvasContextPermission() // Just need to have some sort of permissions object registered
         )
 
-
         val assignment = data.addAssignment(
                 courseId = course.id,
                 withDescription = withDescription,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionTypeList = submissionTypes.firstOrNull()
-                        ?: Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = (if(submissionTypes.isEmpty()) listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY) else submissionTypes.first()) as List<Assignment.SubmissionType>
         )
 
         val token = data.tokenFor(teacher)!!
