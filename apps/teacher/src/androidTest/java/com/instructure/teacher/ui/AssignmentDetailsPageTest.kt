@@ -80,7 +80,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3134482")
+    @TestRail(ID = "C313448 2")
     fun displaysNoFromDate() {
         val lockAt = 7.days.fromNow.iso8601
         getToAssignmentDetailsPage(lockAt = lockAt)
@@ -159,7 +159,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = (if(submissionTypes.isEmpty()) listOf(ONLINE_TEXT_ENTRY) else listOf(submissionTypes.first())),
+                submissionTypeList = submissionTypes.ifEmpty { listOf(ONLINE_TEXT_ENTRY) },
                 lockAt = lockAt,
                 unlockAt = unlockAt,
                 description = if(withDescription) Randomizer.randomCourseDescription() else "",

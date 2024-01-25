@@ -54,35 +54,35 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
 
     @Test
     fun displaysAuthorName() {
-        val submission = goToSpeedGraderCommentsPage(
+        val submissionList = goToSpeedGraderCommentsPage(
                 submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 withComment = true
         )
 
-        val authorName = submission?.get(0)!!.submissionComments[0].authorName!!
+        val authorName = submissionList?.get(0)!!.submissionComments[0].authorName!!
         speedGraderCommentsPage.assertDisplaysAuthorName(authorName)
     }
 
     @Test
     fun displaysCommentText() {
-        val submission = goToSpeedGraderCommentsPage(
+        val submissionList = goToSpeedGraderCommentsPage(
                 submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 withComment = true
         )
 
-        val commentText = submission?.get(0)!!.submissionComments[0].comment!!
+        val commentText = submissionList?.get(0)!!.submissionComments[0].comment!!
         speedGraderCommentsPage.assertDisplaysCommentText(commentText)
     }
 
     @Test
     fun displaysCommentAttachment() {
-        val submission = goToSpeedGraderCommentsPage(
+        val submissionList = goToSpeedGraderCommentsPage(
                 submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 withComment = true,
                 attachment = attachment
         )
 
-        val attachment = submission?.get(0)!!.submissionComments[0].attachments.get(0)
+        val attachment = submissionList?.get(0)!!.submissionComments[0].attachments.get(0)
         speedGraderCommentsPage.assertDisplaysCommentAttachment(attachment)
     }
 
@@ -97,12 +97,12 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
 
     @Test
     fun displaysSubmissionFile() {
-        val submission = goToSpeedGraderCommentsPage(
+        val submissionList = goToSpeedGraderCommentsPage(
                 submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD),
                 attachment = attachment
         )
 
-        val fileAttachments = submission?.get(0)!!.attachments[0]
+        val fileAttachments = submissionList?.get(0)!!.attachments[0]
         speedGraderCommentsPage.assertDisplaysSubmissionFile(fileAttachments)
     }
 
