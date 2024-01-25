@@ -159,7 +159,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = (if(submissionTypes.isEmpty()) listOf(ONLINE_TEXT_ENTRY) else submissionTypes.first()) as List<SubmissionType>,
+                submissionTypeList = (if(submissionTypes.isEmpty()) listOf(ONLINE_TEXT_ENTRY) else listOf(submissionTypes.first())),
                 lockAt = lockAt,
                 unlockAt = unlockAt,
                 description = if(withDescription) Randomizer.randomCourseDescription() else "",

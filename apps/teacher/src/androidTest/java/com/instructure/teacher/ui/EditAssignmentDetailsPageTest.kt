@@ -206,7 +206,7 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
                 withDescription = withDescription,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionTypeList = (if(submissionTypes.isEmpty()) listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY) else submissionTypes.first()) as List<Assignment.SubmissionType>
+                submissionTypeList = (if(submissionTypes.isEmpty()) listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY) else listOf(submissionTypes.first()))
         )
 
         val token = data.tokenFor(teacher)!!
