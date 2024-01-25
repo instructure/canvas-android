@@ -126,7 +126,7 @@ class ModuleListEffectHandler(
             ).dataOrNull
 
             moduleItem?.let {
-                consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it))
+                consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it, published))
             } ?: consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(moduleItemId))
         }
     }
