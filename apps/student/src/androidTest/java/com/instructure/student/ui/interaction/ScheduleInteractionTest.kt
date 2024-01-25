@@ -83,7 +83,7 @@ class ScheduleInteractionTest : StudentTest() {
         courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate, name = "Assignment 1")
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(10)
@@ -101,7 +101,7 @@ class ScheduleInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(12)
@@ -140,8 +140,8 @@ class ScheduleInteractionTest : StudentTest() {
         schedulePage.assertNoScheduleItemDisplayed()
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
-        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
+        val assignment2 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
 
         schedulePage.scrollToPosition(0)
         schedulePage.refresh()
@@ -209,7 +209,7 @@ class ScheduleInteractionTest : StudentTest() {
         courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
+        val assignment = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate, name = "Assignment 1")
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(9)
@@ -228,7 +228,7 @@ class ScheduleInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(8)
@@ -265,7 +265,7 @@ class ScheduleInteractionTest : StudentTest() {
         courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate, name = "Assignment 1")
 
         goToScheduleTab(data)
 

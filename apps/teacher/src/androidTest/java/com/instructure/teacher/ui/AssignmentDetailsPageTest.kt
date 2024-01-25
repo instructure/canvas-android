@@ -15,7 +15,11 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -41,7 +45,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
     @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
         getToAssignmentDetailsPage(
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
                 students = 1,
                 withSubmission = true)
         assignmentDetailsPage.assertPageObjects()
@@ -76,7 +80,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3134482")
+    @TestRail(ID = "C313448 2")
     fun displaysNoFromDate() {
         val lockAt = 7.days.fromNow.iso8601
         getToAssignmentDetailsPage(lockAt = lockAt)
@@ -155,7 +159,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = if(submissionTypes.isEmpty()) SubmissionType.ONLINE_TEXT_ENTRY else submissionTypes.first(),
+                submissionTypeList = submissionTypes.ifEmpty { listOf(ONLINE_TEXT_ENTRY) },
                 lockAt = lockAt,
                 unlockAt = unlockAt,
                 description = if(withDescription) Randomizer.randomCourseDescription() else "",

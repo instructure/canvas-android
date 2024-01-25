@@ -23,5 +23,6 @@ enum class SubmissionType {
     ONLINE_TEXT_ENTRY,
     ONLINE_URL,
     EXTERNAL_TOOL,
-    DISCUSSION_TOPIC
+    DISCUSSION_TOPIC,
+    MEDIA_RECORDING
 }
