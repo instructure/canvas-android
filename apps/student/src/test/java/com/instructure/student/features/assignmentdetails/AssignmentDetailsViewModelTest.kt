@@ -24,6 +24,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -38,6 +39,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
@@ -45,6 +47,7 @@ import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.AssignmentDetailAction
 import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
+import com.instructure.student.features.assignments.details.ReminderViewData
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import io.mockk.coEvery
 import io.mockk.every
@@ -97,6 +100,8 @@ class AssignmentDetailsViewModelTest {
 
         every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns Course()
         every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 0L
+
+        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData()
     }
 
     fun tearDown() {
@@ -774,5 +779,84 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
 
         Assert.assertFalse(viewModel.data.value?.submitVisible!!)
+    }
+
+    @Test
+    fun `Reminder section is not visible if there's no future deadline`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(name = "Test", submissionTypesRaw = listOf("online_text_entry"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        Assert.assertFalse(viewModel.data.value?.showReminders!!)
+    }
+
+    @Test
+    fun `Reminder section visible if there's a future deadline`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        Assert.assertTrue(viewModel.data.value?.showReminders!!)
+    }
+
+    @Test
+    fun `Reminders map correctly`() {
+        val reminderEntities = listOf(
+            ReminderEntity(1, 1, 1, "Test 1"),
+            ReminderEntity(2, 1, 1, "Test 2"),
+            ReminderEntity(3, 1, 1, "Test 3")
+        )
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
+
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        Assert.assertEquals(
+            reminderEntities.map { ReminderViewData(it.id, it.text) },
+            viewModel.data.value?.reminders?.map { it.data }
+        )
+    }
+
+    @Test
+    fun `Reminders update correctly`() {
+        val remindersLiveData = MutableLiveData<List<ReminderEntity>>()
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns remindersLiveData
+
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        Assert.assertEquals(0, viewModel.data.value?.reminders?.size)
+
+        remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "Test 1"))
+
+        Assert.assertEquals(ReminderViewData(1, "Test 1"), viewModel.data.value?.reminders?.first()?.data)
     }
 }
