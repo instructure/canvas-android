@@ -69,7 +69,8 @@ class ModuleListEffectHandler(
                 effect.canvasContext,
                 effect.moduleIds,
                 effect.action,
-                effect.skipContentTags
+                effect.skipContentTags,
+                allModules = effect.allModules
             )
 
             is ModuleListEffect.UpdateModuleItem -> updateModuleItem(
@@ -86,6 +87,9 @@ class ModuleListEffectHandler(
                 effect.fileId,
                 effect.isPublished
             )
+            is ModuleListEffect.ShowSnackbar -> {
+                view?.showSnackbar(effect.message)
+            }
         }.exhaustive
     }
 
@@ -236,7 +240,8 @@ class ModuleListEffectHandler(
         moduleIds: List<Long>,
         action: BulkModuleUpdateAction,
         skipContentTags: Boolean,
-        async: Boolean = true
+        async: Boolean = true,
+        allModules: Boolean
     ) {
         launch {
             val restParams = RestParams(
@@ -253,13 +258,23 @@ class ModuleListEffectHandler(
                 restParams
             ).dataOrNull?.progress
 
-            progress?.progress?.let {
-                trackUpdateProgress(it)
-            } ?: consumer.accept(ModuleListEvent.BulkUpdateFailed)
+            val bulkUpdateProgress = progress?.progress
+            if (bulkUpdateProgress == null) {
+                consumer.accept(ModuleListEvent.BulkUpdateFailed(skipContentTags))
+                return@launch
+            }
+
+            val success = trackUpdateProgress(bulkUpdateProgress)
+
+            if (success) {
+                consumer.accept(ModuleListEvent.BulkUpdateSuccess(skipContentTags, action, allModules))
+            } else {
+                consumer.accept(ModuleListEvent.BulkUpdateFailed(skipContentTags))
+            }
         }
     }
 
-    private suspend fun trackUpdateProgress(progress: Progress) {
+    private suspend fun trackUpdateProgress(progress: Progress): Boolean {
         val params = RestParams(isForceReadFromNetwork = true)
 
         val result = poll(500, maxAttempts = -1,
@@ -274,11 +289,7 @@ class ModuleListEffectHandler(
                 newProgress
             })
 
-        if (result?.hasRun == true && result.isCompleted) {
-            consumer.accept(ModuleListEvent.BulkUpdateSuccess)
-        } else {
-            consumer.accept(ModuleListEvent.BulkUpdateFailed)
-        }
+        return result?.hasRun == true && result.isCompleted
     }
 
     private fun updateModuleItem(canvasContext: CanvasContext, moduleId: Long, itemId: Long, published: Boolean) {
@@ -297,7 +308,7 @@ class ModuleListEffectHandler(
             ).dataOrNull
 
             moduleItem?.let {
-                consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it))
+                consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it, published))
             } ?: consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(itemId))
         }
     }

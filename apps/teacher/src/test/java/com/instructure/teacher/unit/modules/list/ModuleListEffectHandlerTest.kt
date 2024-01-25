@@ -291,12 +291,12 @@ class ModuleListEffectHandlerTest : Assert() {
     @Test
     fun `BulkUpdateModules results in correct success event`() {
         val pageModules = makeModulePage()
-        val expectedEvent = ModuleListEvent.BulkUpdateSuccess
+        val expectedEvent = ModuleListEvent.BulkUpdateSuccess(false, BulkModuleUpdateAction.PUBLISH, false)
 
         coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk(relaxed = true))
         coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(Progress(1L, workflowState = "completed"))
 
-        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false, false))
 
         verify(timeout = 1000) { consumer.accept(expectedEvent) }
         confirmVerified(consumer)
@@ -305,11 +305,11 @@ class ModuleListEffectHandlerTest : Assert() {
     @Test
     fun `BulkUpdateModules results in correct failed event when call fails`() {
         val pageModules = makeModulePage()
-        val expectedEvent = ModuleListEvent.BulkUpdateFailed
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed(false)
 
         coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
-        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false, false))
 
         verify(timeout = 1000) { consumer.accept(expectedEvent) }
         confirmVerified(consumer)
@@ -318,12 +318,12 @@ class ModuleListEffectHandlerTest : Assert() {
     @Test
     fun `BulkUpdateModules results in correct failed event when progress fails`() {
         val pageModules = makeModulePage()
-        val expectedEvent = ModuleListEvent.BulkUpdateFailed
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed(false)
 
         coEvery { moduleApi.bulkUpdateModules(any(), any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk(relaxed = true))
         coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(Progress(1L, workflowState = "failed"))
 
-        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false))
+        connection.accept(ModuleListEffect.BulkUpdateModules(course, pageModules.map { it.id }, BulkModuleUpdateAction.PUBLISH, false, false))
 
         verify(timeout = 1000) { consumer.accept(expectedEvent) }
         confirmVerified(consumer)
@@ -333,7 +333,7 @@ class ModuleListEffectHandlerTest : Assert() {
     fun `UpdateModuleItem results in correct success event`() {
         val moduleId = 1L
         val itemId = 2L
-        val expectedEvent = ModuleListEvent.ModuleItemUpdateSuccess(ModuleItem(id = itemId, moduleId = moduleId, published = true))
+        val expectedEvent = ModuleListEvent.ModuleItemUpdateSuccess(ModuleItem(id = itemId, moduleId = moduleId, published = true), true)
 
         coEvery { moduleApi.publishModuleItem(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(ModuleItem(2L, 1L, published = true))
 
@@ -355,6 +355,14 @@ class ModuleListEffectHandlerTest : Assert() {
 
         verify(timeout = 100) { consumer.accept(expectedEvent) }
         confirmVerified(consumer)
+    }
+
+    @Test
+    fun `ShowSnackbar calls showSnackbar on view`() {
+        val message = 123
+        connection.accept(ModuleListEffect.ShowSnackbar(message))
+        verify(timeout = 100) { view.showSnackbar(message) }
+        confirmVerified(view)
     }
 
     private fun makeModulePage(

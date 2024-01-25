@@ -1515,6 +1515,14 @@
     <string name="only_available_with_link">Only available with link</string>
     <string name="schedule_availability">Schedule availability</string>
     <string name="change_visibility">Change visibility</string>
+    <string name="moduleItemPublished">Item published</string>
+    <string name="moduleItemUnpublished">Item unpublished</string>
+    <string name="onlyModulePublished">Only Module published</string>
+    <string name="moduleAndAllItemsPublished">Module and all Items published</string>
+    <string name="moduleAndAllItemsUnpublished">Module and all Items unpublished</string>
+    <string name="onlyModulesPublished">Only Modules published</string>
+    <string name="allModulesAndAllItemsPublished">All Modules and all Items published</string>
+    <string name="allModulesAndAllItemsUnpublished">All Modules and all Items unpublished</string>
     <plurals name="moduleItemPoints">
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>
