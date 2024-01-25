@@ -18,8 +18,6 @@ package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
 import androidx.test.espresso.Espresso
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
@@ -49,9 +47,6 @@ class ManageOfflineContentE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
-
-        Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2018-present Instructure, Inc.
+// Copyright (C) 2024-present Instructure, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,10 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 package com.instructure.dataseeding.model
 
-enum class FileUploadType {
-    ASSIGNMENT_SUBMISSION,
-    COMMENT_ATTACHMENT,
-    COURSE_FILE
-}
+import com.google.gson.annotations.SerializedName
+
+data class CourseRootFolderApiModel(
+        @SerializedName("id")
+        val id: Long,
+        @SerializedName("context_type")
+        val contextType: String,
+        @SerializedName("context_id")
+        val contextId: Long,
+        @SerializedName("name")
+        val name: String
+)

@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Uitnodiging geaccepteerd.</string>
     <string name="inviteDeclined">Uitnodiging geweigerd.</string>
     <string name="latePenalty">Sanctie indien te laat (-%s)</string>
+    <string name="latePenaltyUpdated">Sanctie indien te laat: -%s ptn</string>
+    <string name="yourGrade">Je cijfer: %s punten</string>
     <string name="finalGrade">Eindcijfer</string>
 
     <string name="max_count">99+</string>
