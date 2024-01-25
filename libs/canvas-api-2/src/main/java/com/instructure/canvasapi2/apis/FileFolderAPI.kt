@@ -98,6 +98,9 @@ object FileFolderAPI {
         @PUT("files/{fileId}?include[]=usage_rights")
         fun updateFile(@Path("fileId") fileId: Long, @Body updateFileFolder: UpdateFileFolder): Call<FileFolder>
 
+        @PUT("files/{fileId}?include[]=usage_rights")
+        suspend fun updateFile(@Path("fileId") fileId: Long, @Body updateFileFolder: UpdateFileFolder, @Tag params: RestParams): DataResult<FileFolder>
+
         @POST("folders/{folderId}/folders")
         fun createFolder(@Path("folderId") folderId: Long, @Body newFolderName: CreateFolder): Call<FileFolder>
 

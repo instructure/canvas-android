@@ -229,6 +229,19 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 return Next.next(newModel)
             }
+            is ModuleListEvent.SetFileModuleItemPublished -> {
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds + event.moduleItemId
+                )
+                val effect = ModuleListEffect.SetFileModuleItemPublished(
+                    model.course,
+                    model.modules.first { it.items.any { it.id == event.moduleItemId } }.id,
+                    event.moduleItemId,
+                    event.fileId,
+                    event.isPublished
+                )
+                return Next.next(newModel, setOf(effect))
+            }
         }
     }
 

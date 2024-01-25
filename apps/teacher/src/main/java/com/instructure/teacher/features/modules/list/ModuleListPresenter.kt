@@ -134,7 +134,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             enabled = !loading,
             isLoading = loading,
             type = ModuleItem.Type.valueOf(item.type.orEmpty()),
-            contentDetails = item.moduleDetails
+            contentDetails = item.moduleDetails,
+            contentId = item.contentId
         )
     }
 

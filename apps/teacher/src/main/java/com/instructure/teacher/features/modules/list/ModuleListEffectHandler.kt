@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -25,6 +26,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
@@ -42,7 +44,8 @@ import retrofit2.Response
 
 class ModuleListEffectHandler(
     private val moduleApi: ModuleAPI.ModuleInterface,
-    private val progressApi: ProgressAPI.ProgressInterface
+    private val progressApi: ProgressAPI.ProgressInterface,
+    private val fileApi: FileFolderAPI.FilesFoldersInterface
 ) : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
@@ -75,7 +78,53 @@ class ModuleListEffectHandler(
                 effect.itemId,
                 effect.published
             )
+
+            is ModuleListEffect.SetFileModuleItemPublished -> setFileModuleItemPublished(
+                effect.canvasContext,
+                effect.moduleId,
+                effect.moduleItemId,
+                effect.fileId,
+                effect.isPublished
+            )
         }.exhaustive
+    }
+
+    private fun setFileModuleItemPublished(
+        canvasContext: CanvasContext,
+        moduleId: Long,
+        moduleItemId: Long,
+        fileId: Long,
+        published: Boolean
+    ) {
+        val restParams = RestParams(
+            canvasContext = canvasContext,
+            isForceReadFromNetwork = true
+        )
+
+        launch {
+            val updatedFile = fileApi.updateFile(
+                fileId,
+                UpdateFileFolder(locked = !published, hidden = false, unlockAt = null, lockAt = null),
+                restParams
+            ).dataOrNull
+
+            if (updatedFile == null) {
+                consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(moduleItemId))
+                return@launch
+            }
+
+            val moduleItem = moduleApi.getModuleItem(
+                canvasContext.type.apiString,
+                canvasContext.id,
+                moduleId,
+                moduleItemId,
+                restParams
+            ).dataOrNull
+
+            moduleItem?.let {
+                consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it))
+            } ?: consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(moduleItemId))
+        }
     }
 
     private fun updateModuleItems(canvasContext: CanvasContext, items: List<ModuleItem>) {

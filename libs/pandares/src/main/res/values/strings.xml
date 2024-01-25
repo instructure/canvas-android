@@ -1512,6 +1512,9 @@
     <string name="publishModulesAndItemsDialogMessage">This will make all modules and items visible to students.</string>
     <string name="publishModulesDialogMessage">This will make only the modules visible to students.</string>
     <string name="unpublishModulesAndItemsDialogMessage">This will make all modules and items invisible to students.</string>
+    <string name="only_available_with_link">Only available with link</string>
+    <string name="schedule_availability">Schedule availability</string>
+    <string name="change_visibility">Change visibility</string>
     <plurals name="moduleItemPoints">
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>

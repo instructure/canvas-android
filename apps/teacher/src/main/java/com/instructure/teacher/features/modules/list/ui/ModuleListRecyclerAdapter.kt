@@ -30,6 +30,7 @@ interface ModuleListCallback : ListItemCallback {
     fun publishModule(moduleId: Long)
     fun publishModuleAndItems(moduleId: Long)
     fun unpublishModuleAndItems(moduleId: Long)
+    fun setFileModuleItemPublished(moduleItemId: Long, fileId: Long, isPublished: Boolean)
 }
 
 class ModuleListRecyclerAdapter(

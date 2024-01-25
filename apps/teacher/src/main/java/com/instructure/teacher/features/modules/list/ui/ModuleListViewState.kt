@@ -94,7 +94,9 @@ sealed class ModuleListItemData {
 
         val type: ModuleItem.Type,
 
-        val contentDetails: ModuleContentDetails? = null
+        val contentDetails: ModuleContentDetails? = null,
+
+        val contentId: Long? = null
     ) : ModuleListItemData()
 
 }

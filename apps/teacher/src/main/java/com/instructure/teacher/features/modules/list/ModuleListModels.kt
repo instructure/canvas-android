@@ -39,6 +39,7 @@ sealed class ModuleListEvent {
     data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
     data class ModuleItemUpdateSuccess(val item: ModuleItem): ModuleListEvent()
     data class ModuleItemUpdateFailed(val itemId: Long): ModuleListEvent()
+    data class SetFileModuleItemPublished(val moduleItemId: Long, val fileId: Long, val isPublished: Boolean) : ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -61,6 +62,7 @@ sealed class ModuleListEffect {
     ) : ModuleListEffect()
 
     data class UpdateModuleItems(val canvasContext: CanvasContext, val items: List<ModuleItem>) : ModuleListEffect()
+
     data class BulkUpdateModules(
         val canvasContext: CanvasContext,
         val moduleIds: List<Long>,
@@ -73,6 +75,14 @@ sealed class ModuleListEffect {
         val moduleId: Long,
         val itemId: Long,
         val published: Boolean
+    ) : ModuleListEffect()
+
+    data class SetFileModuleItemPublished(
+        val canvasContext: CanvasContext,
+        val moduleId: Long,
+        val moduleItemId: Long,
+        val fileId: Long,
+        val isPublished: Boolean
     ) : ModuleListEffect()
 }
 

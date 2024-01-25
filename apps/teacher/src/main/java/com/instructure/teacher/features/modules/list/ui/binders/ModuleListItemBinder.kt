@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.modules.list.ui.binders
 
 import android.view.Gravity
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.PopupMenu
@@ -63,35 +64,14 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemLoadingView.setVisible(item.isLoading)
 
             overflow.onClickWithRequireNetwork {
-                val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
-                val menu = popup.menu
-
-                when (item.isPublished) {
-                    true -> menu.add(0, 0, 0, R.string.unpublish)
-                    false -> menu.add(0, 1, 1, R.string.publish)
-                    else -> {
-                        menu.add(0, 0, 0, R.string.unpublish)
-                        menu.add(0, 1, 1, R.string.publish)
-                    }
+                if (item.type == ModuleItem.Type.File) {
+                    showFileActions(it, item, callback)
+                } else {
+                    showModuleItemActions(it, item, callback)
                 }
-
-                popup.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        0 -> {
-                            callback.updateModuleItem(item.id, false)
-                            true
-                        }
-                        1 -> {
-                            callback.updateModuleItem(item.id, true)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-
-                overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
-                popup.show()
             }
+
+
         }
     }
 
@@ -101,16 +81,17 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
         when (data.type) {
             ModuleItem.Type.File -> {
                 if (data.contentDetails?.hidden == true) {
-                    icon = R.drawable.ic_eye
+                    icon = R.drawable.ic_eye_off
                     tint = R.color.textWarning
                 } else if (data.contentDetails?.lockAt.isValid() || data.contentDetails?.unlockAt.isValid()) {
-                    icon = R.drawable.ic_calendar
+                    icon = R.drawable.ic_calendar_month
                     tint = R.color.textWarning
                 } else {
                     icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
                     tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
                 }
             }
+
             else -> {
                 icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
                 tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
@@ -118,6 +99,83 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
         }
 
         return StatusIcon(icon, tint)
+    }
+
+    private fun showModuleItemActions(
+        view: View,
+        item: ModuleListItemData.ModuleItemData,
+        callback: ModuleListCallback
+    ) {
+        val popup = PopupMenu(view.context, view, Gravity.START.and(Gravity.TOP))
+        val menu = popup.menu
+
+        when (item.isPublished) {
+            true -> menu.add(0, 0, 0, R.string.unpublish)
+            false -> menu.add(0, 1, 1, R.string.publish)
+            else -> {
+                menu.add(0, 0, 0, R.string.unpublish)
+                menu.add(0, 1, 1, R.string.publish)
+            }
+        }
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                0 -> {
+                    callback.updateModuleItem(item.id, false)
+                    true
+                }
+
+                1 -> {
+                    callback.updateModuleItem(item.id, true)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        view.contentDescription = view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
+        popup.show()
+    }
+
+    private fun showFileActions(view: View, item: ModuleListItemData.ModuleItemData, callback: ModuleListCallback) {
+        val popup = PopupMenu(view.context, view, Gravity.START.and(Gravity.TOP))
+        popup.inflate(R.menu.menu_file_module_item)
+
+        popup.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.actionFilePublish -> {
+                    item.contentId?.let {
+                        callback.setFileModuleItemPublished(item.id, item.contentId, true)
+                        true
+                    } ?: false
+                }
+
+                R.id.actionFileUnpublish -> {
+                    item.contentId?.let {
+                        callback.setFileModuleItemPublished(item.id, item.contentId, false)
+                        true
+                    } ?: false
+                }
+
+                R.id.actionFileHide -> {
+                    true
+                }
+
+                R.id.actionFileScheduleAvailability -> {
+                    true
+                }
+
+                R.id.actionFileChangeVisibility -> {
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        view.contentDescription = view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
+        popup.show()
     }
 }
 

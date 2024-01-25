@@ -90,6 +90,16 @@ class ModuleListView(
                 consumer?.accept(ModuleListEvent.UpdateModuleItem(itemId, isPublished))
             }
         }
+
+        override fun setFileModuleItemPublished(moduleItemId: Long, fileId: Long, isPublished: Boolean) {
+            val title = if (isPublished) R.string.publishDialogTitle else R.string.unpublishDialogTitle
+            val message = if (isPublished) R.string.publishModuleItemDialogMessage else R.string.unpublishModuleItemDialogMessage
+            val positiveButton = if (isPublished) R.string.publish else R.string.unpublish
+
+            showConfirmationDialog(title, message, positiveButton, R.string.cancel) {
+                consumer?.accept(ModuleListEvent.SetFileModuleItemPublished(moduleItemId, fileId, isPublished))
+            }
+        }
     })
 
     init {
