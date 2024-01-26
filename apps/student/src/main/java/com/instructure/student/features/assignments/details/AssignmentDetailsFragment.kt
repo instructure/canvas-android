@@ -17,16 +17,25 @@
 
 package com.instructure.student.features.assignments.details
 
+import android.app.AlarmManager
 import android.app.Dialog
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -82,6 +91,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
+import com.instructure.student.receivers.AlarmReceiver
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
 import dagger.hilt.android.AndroidEntryPoint
@@ -217,10 +227,13 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
                 showDiscussionAttachments(action.attachments)
             }
             is AssignmentDetailAction.ShowReminderDialog -> {
-                showCreateReminderDialog()
+                checkAlarmPermission()
             }
             is AssignmentDetailAction.ShowCustomReminderDialog -> {
                 showCustomReminderDialog()
+            }
+            is AssignmentDetailAction.SetAlarm -> {
+                setAlarm(action.assignmentPath, action.assignmentName, action.dueIn, action.timeInMillis)
             }
         }
     }
@@ -415,6 +428,32 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
         )
     }
 
+    private fun checkAlarmPermission() {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                showCreateReminderDialog()
+            } else {
+                showAlertPermissionSnackbar()
+            }
+        } else {
+            showCreateReminderDialog()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun showAlertPermissionSnackbar() {
+        Snackbar.make(requireView(), getText(R.string.reminderSnackbarDescription), Snackbar.LENGTH_LONG)
+            .setActionTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            .setAction(getText(R.string.reminderSnackbarAction)) {
+                Intent().apply {
+                    action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                    context?.startActivity(this)
+                }
+            }
+            .show()
+    }
+
     private fun showCreateReminderDialog() {
         val choices = listOf(
             ReminderChoice.Minute(5),
@@ -440,6 +479,18 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showCustomReminderDialog() {
         CustomReminderDialog.newInstance().show(childFragmentManager, null)
+    }
+
+    private fun setAlarm(assignmentPath: String, assignmentName: String, dueIn: String, timeInMillis: Long) {
+        val intent = Intent(context, AlarmReceiver::class.java)
+        intent.putExtra(AlarmReceiver.ASSIGNMENT_PATH, assignmentPath)
+        intent.putExtra(AlarmReceiver.ASSIGNMENT_NAME, assignmentName)
+        intent.putExtra(AlarmReceiver.DUE_IN, dueIn)
+
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
     }
 
     companion object {

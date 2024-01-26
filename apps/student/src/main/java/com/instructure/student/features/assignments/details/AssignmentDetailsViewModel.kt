@@ -482,7 +482,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun mapReminders(reminders: List<ReminderEntity>) = reminders.map {
-        ReminderItemViewModel(ReminderViewData(it.id, it.text)) {
+        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text))) {
             viewModelScope.launch {
                 assignmentDetailsRepository.deleteReminderById(it)
             }
@@ -608,8 +608,24 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun setReminder(reminderChoice: ReminderChoice) {
+        val alarmTimeInMillis = getAlarmTimeInMillis(reminderChoice) ?: return
+
+        postAction(
+            AssignmentDetailAction.SetAlarm(
+                assignment?.htmlUrl.orEmpty(),
+                assignment?.name.orEmpty(),
+                reminderChoice.getText(resources),
+                alarmTimeInMillis
+            )
+        )
+
         viewModelScope.launch {
             assignmentDetailsRepository.addReminder(apiPrefs.user?.id.orDefault(), assignmentId, reminderChoice.getText(resources))
         }
+    }
+
+    private fun getAlarmTimeInMillis(reminderChoice: ReminderChoice): Long? {
+        val dueDate = assignment?.dueDate?.time ?: return null
+        return dueDate - reminderChoice.getTimeInMillis()
     }
 }

@@ -76,6 +76,14 @@ sealed class ReminderChoice {
         is Week -> resources.getQuantityString(R.plurals.reminderWeek, quantity, quantity)
         is Custom -> resources.getString(R.string.reminderCustom)
     }
+
+    fun getTimeInMillis() = when (this) {
+        is Minute -> quantity * 60 * 1000L
+        is Hour -> quantity * 60 * 60 * 1000L
+        is Day -> quantity * 24 * 60 * 60 * 1000L
+        is Week -> quantity * 7 * 24 * 60 * 60 * 1000L
+        else -> 0
+    }
 }
 
 sealed class AssignmentDetailAction {
@@ -105,4 +113,5 @@ sealed class AssignmentDetailAction {
     data class OnDiscussionHeaderAttachmentClicked(val attachments: List<RemoteFile>) : AssignmentDetailAction()
     data object ShowReminderDialog : AssignmentDetailAction()
     data object ShowCustomReminderDialog : AssignmentDetailAction()
+    data class SetAlarm(val assignmentPath: String, val assignmentName: String, val dueIn: String, val timeInMillis: Long) : AssignmentDetailAction()
 }
