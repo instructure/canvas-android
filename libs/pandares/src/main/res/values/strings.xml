@@ -71,6 +71,29 @@
     <string name="reminderDescription">Add due date reminder notifications about this assignment on this device.</string>
     <string name="a11y_addReminder">Add reminder</string>
     <string name="a11y_removeReminder">Remove reminder</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minute Before</item>
+        <item quantity="other">%d Minutes Before</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Hour Before</item>
+        <item quantity="other">%d Hours Before</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Day Before</item>
+        <item quantity="other">%d Days Before</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Week Before</item>
+        <item quantity="other">%d Weeks Before</item>
+    </plurals>
+    <string name="reminderCustom">Custom</string>
+    <string name="customReminderTitle">Custom Reminder</string>
+    <string name="customReminderQuantityHint">Quantity</string>
+    <string name="customReminderMinutes">Minutes Before</string>
+    <string name="customReminderHours">Hours Before</string>
+    <string name="customReminderDays">Days Before</string>
+    <string name="customReminderWeeks">Weeks Before</string>
 
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>

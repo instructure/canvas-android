@@ -1,5 +1,6 @@
 package com.instructure.student.features.assignments.details
 
+import android.content.res.Resources
 import android.text.Spanned
 import androidx.annotation.ColorRes
 import androidx.databinding.BaseObservable
@@ -11,6 +12,7 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.student.R
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.student.features.assignments.details.itemviewmodels.ReminderItemViewModel
 
@@ -60,6 +62,22 @@ data class DiscussionHeaderViewData(
 
 data class ReminderViewData(val id: Long, val text: String)
 
+sealed class ReminderChoice {
+    data class Minute(val quantity: Int) : ReminderChoice()
+    data class Hour(val quantity: Int) : ReminderChoice()
+    data class Day(val quantity: Int) : ReminderChoice()
+    data class Week(val quantity: Int) : ReminderChoice()
+    data object Custom : ReminderChoice()
+
+    fun getText(resources: Resources) = when (this) {
+        is Minute -> resources.getQuantityString(R.plurals.reminderMinute, quantity, quantity)
+        is Hour -> resources.getQuantityString(R.plurals.reminderHour, quantity, quantity)
+        is Day -> resources.getQuantityString(R.plurals.reminderDay, quantity, quantity)
+        is Week -> resources.getQuantityString(R.plurals.reminderWeek, quantity, quantity)
+        is Custom -> resources.getString(R.string.reminderCustom)
+    }
+}
+
 sealed class AssignmentDetailAction {
     data class ShowToast(val message: String) : AssignmentDetailAction()
     data class NavigateToLtiScreen(val url: String) : AssignmentDetailAction()
@@ -85,4 +103,6 @@ sealed class AssignmentDetailAction {
     data class ShowSubmitDialog(val assignment: Assignment, val studioLTITool: LTITool?) : AssignmentDetailAction()
     data class NavigateToUploadStatusScreen(val submissionId: Long) : AssignmentDetailAction()
     data class OnDiscussionHeaderAttachmentClicked(val attachments: List<RemoteFile>) : AssignmentDetailAction()
+    data object ShowReminderDialog : AssignmentDetailAction()
+    data object ShowCustomReminderDialog : AssignmentDetailAction()
 }

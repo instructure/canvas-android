@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
@@ -47,9 +48,11 @@ import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.AssignmentDetailAction
 import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
+import com.instructure.student.features.assignments.details.ReminderChoice
 import com.instructure.student.features.assignments.details.ReminderViewData
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -102,6 +105,7 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 0L
 
         every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData()
+        every { apiPrefs.user } returns User(id = 1)
     }
 
     fun tearDown() {
@@ -858,5 +862,66 @@ class AssignmentDetailsViewModelTest {
         remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "Test 1"))
 
         Assert.assertEquals(ReminderViewData(1, "Test 1"), viewModel.data.value?.reminders?.first()?.data)
+    }
+
+    @Test
+    fun `Add reminder posts action`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        viewModel.onAddReminderClicked()
+
+        Assert.assertEquals(AssignmentDetailAction.ShowReminderDialog, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Selected reminder choice`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 1
+        every { resources.getQuantityString(R.plurals.reminderDay, 3, 3) } returns "3 days"
+
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        viewModel.onReminderSelected(ReminderChoice.Day(3))
+
+        coVerify(exactly = 1) {
+            assignmentDetailsRepository.addReminder(1, 1, "3 days")
+        }
+    }
+
+    @Test
+    fun `Selected reminder choice custom`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        viewModel.onReminderSelected(ReminderChoice.Custom)
+
+        Assert.assertEquals(AssignmentDetailAction.ShowCustomReminderDialog, viewModel.events.value?.peekContent())
     }
 }
