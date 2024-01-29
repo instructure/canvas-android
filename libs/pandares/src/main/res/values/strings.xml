@@ -1517,4 +1517,5 @@
         <item quantity="other">%d courses have been synced.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Additional course content</string>
+    <string name="failedToUpdateDashboardOrder">Failed to update Dashboard cards order</string>
 </resources>
