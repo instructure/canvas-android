@@ -20,16 +20,16 @@ package com.instructure.student.ui.interaction
 import android.text.format.Formatter
 import androidx.test.espresso.Espresso
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.Randomizer
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.student.ui.utils.StudentTest
@@ -47,14 +47,14 @@ class OfflineContentInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysNoCourses() {
         goToOfflineContent(createMockCanvas(courseCount = 0))
         manageOfflineContentPage.assertDisplaysNoCourses()
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysEmptyCourse() {
         val data = createMockCanvas(courseCount = 1, hasTabs = false)
         goToOfflineContent(data)
@@ -63,7 +63,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysCoursesCollapsedIfGlobalOfflineContent() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -72,7 +72,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysCourseCollapsedIfCourseOfflineContent() {
         val data = createMockCanvas()
         goToOfflineContentByCourse(data)
@@ -80,7 +80,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysCourseTabsAndFiles() {
         val data = createMockCanvas(courseCount = 1)
         goToOfflineContent(data)
@@ -90,7 +90,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun expandCourse() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -102,7 +102,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun selectCourse() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -114,7 +114,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun selectTab() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -128,7 +128,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun expandFilesTab() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -143,7 +143,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun selectFilesTab() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -160,7 +160,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun selectFile() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -177,7 +177,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun selectAllFiles() {
         val data = createMockCanvas(courseCount = 1)
         goToOfflineContent(data)
@@ -196,7 +196,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun selectAllTabs() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -214,7 +214,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun selectAllToggle() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -229,7 +229,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysDiscardDialogIfNeeded() {
         goToOfflineContent()
         Espresso.pressBack()
@@ -240,7 +240,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysWifiOnlySyncDialog() {
         val data = createMockCanvas()
         val course = data.courses.values.first()
@@ -256,7 +256,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun displaysSyncDialog() {
         val data = createMockCanvas()
         val course = data.courses.values.first()
@@ -272,7 +272,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun savesChangesOnSync() {
         val data = createMockCanvas()
         goToOfflineContent(data)
@@ -283,7 +283,7 @@ class OfflineContentInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.OFFLINE_CONTENT, TestCategory.INTERACTION)
     fun calculatesStorageInfoCorrectly() {
         val data = createMockCanvas(fileCount = 10, largeFiles = true)
         val course = data.courses.values.first()

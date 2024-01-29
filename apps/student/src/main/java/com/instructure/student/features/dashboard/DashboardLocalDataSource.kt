@@ -16,8 +16,10 @@
  */
 package com.instructure.student.features.dashboard
 
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
@@ -42,5 +44,29 @@ class DashboardLocalDataSource(
 
     suspend fun saveDashboardCards(dashboardCards: List<DashboardCard>) {
         dashboardCardDao.updateEntities(dashboardCards.map { DashboardCardEntity(it) })
+    }
+
+    suspend fun updateDashboardCardsOrder(dashboardPositions: DashboardPositions) {
+        val cards = dashboardCardDao.findAll()
+        val coursesWithPosition = dashboardPositions.positions
+            .map { Pair(CanvasContext.fromContextCode(it.key), it.value) }
+            .filter { it.first is Course }
+            .associate { Pair((it.first as Course).id, it.second) }
+
+        // If somehow we end up with different items in the positions response than the stored dashboard cards we should return and not update the positions
+        val cardIds = cards.map { it.id }.toSet()
+        val positionUpdateIds = coursesWithPosition.keys
+        if (cardIds != positionUpdateIds) return
+
+        val newCards = cards.map {
+            val newPosition = coursesWithPosition[it.id]
+            if (newPosition != null) {
+                it.copy(position = newPosition)
+            } else {
+                it
+            }
+        }
+
+        dashboardCardDao.updateEntities(newCards)
     }
 }

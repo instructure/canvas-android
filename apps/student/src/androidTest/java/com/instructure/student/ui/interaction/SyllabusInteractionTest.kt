@@ -15,6 +15,10 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
@@ -26,10 +30,6 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -43,7 +43,7 @@ class SyllabusInteractionTest : StudentTest() {
     // Tests that we can display a calendar event from the syllabus/summary,
     // and does some verification of the calendar event.
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.INTERACTION)
     fun testSyllabus_calendarEvent() {
         val data = goToSyllabus(eventCount = 1, assignmentCount = 0)
 
@@ -87,7 +87,7 @@ class SyllabusInteractionTest : StudentTest() {
         repeat(assignmentCount) {
             data.addAssignment(
                     courseId = course.id,
-                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                    submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                     dueAt = 2.days.fromNow.iso8601
             )
         }

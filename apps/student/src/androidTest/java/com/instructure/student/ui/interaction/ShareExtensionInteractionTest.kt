@@ -131,7 +131,7 @@ class ShareExtensionInteractionTest : StudentTest() {
         val uri = setupFileOnDevice("sample.jpg")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        val assignment = data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+        val assignment = data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
 
         login(student)
         device.pressHome()
@@ -182,8 +182,8 @@ class ShareExtensionInteractionTest : StudentTest() {
         val uri = setupFileOnDevice("sample.jpg")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
-        val assignment2 = data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+        data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
+        val assignment2 = data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
 
         login(student)
         device.pressHome()
@@ -239,7 +239,7 @@ class ShareExtensionInteractionTest : StudentTest() {
         val uri = setupFileOnDevice("sample.jpg")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+        data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
 
         login(student)
         device.pressHome()

@@ -32,6 +32,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
@@ -220,6 +221,23 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     private fun assertAttemptInformation() {
         waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
         waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
+    }
+
+    fun selectSubmissionType(submissionType: SubmissionType) {
+        val viewMatcher = when (submissionType) {
+            SubmissionType.ONLINE_TEXT_ENTRY -> withId(R.id.submissionEntryText)
+            SubmissionType.ONLINE_UPLOAD -> withId(R.id.submissionEntryFile)
+            SubmissionType.ONLINE_URL -> withId(R.id.submissionEntryWebsite)
+            SubmissionType.MEDIA_RECORDING -> withId(R.id.submissionEntryMedia)
+
+            else -> {withId(R.id.submissionEntryText)}
+        }
+
+        onView(viewMatcher).click()
+    }
+
+    fun assertSubmissionTypeDisplayed(submissionType: String) {
+        onView(withText(submissionType) + withAncestor(R.id.customPanel)).assertDisplayed()
     }
 }
 

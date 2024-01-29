@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Envitasyon an aksepte!</string>
     <string name="inviteDeclined">Envitasyon an dekline!</string>
     <string name="latePenalty">Penalite pou reta (-%s)</string>
+    <string name="latePenaltyUpdated">Penalite Reta: -%s pwen yo</string>
+    <string name="yourGrade">Rezilta ou: %s pwen</string>
     <string name="finalGrade">Nòt Final</string>
 
     <string name="max_count">99+</string>

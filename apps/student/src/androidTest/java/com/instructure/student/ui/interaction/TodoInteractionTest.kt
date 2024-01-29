@@ -16,8 +16,12 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.StubLandscape
 import com.instructure.canvas.espresso.StubMultiAPILevel
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
@@ -28,10 +32,6 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -47,7 +47,7 @@ class TodoInteractionTest : StudentTest() {
 
     // Todo items should be clickable
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.INTERACTION)
     fun testClick_todoItemClickable() {
 
         val data = goToTodos()
@@ -67,7 +67,7 @@ class TodoInteractionTest : StudentTest() {
     @Test
     @StubLandscape("Stubbed because on lowres device in landscape mode, the space is too narrow to scroll properly. Will be refactored and running when we changed to non-lowres device on nightly runs.")
     @StubMultiAPILevel("Somehow the 'OK' button within chooseFavoriteCourseFilter row is not clickable and not shown on the layout inspector as well.")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.TODOS, TestCategory.INTERACTION)
     fun testFilters() {
         val data = goToTodos(courseCount = 2, favoriteCourseCount = 1)
         val favoriteCourse = data.courses.values.first {course -> course.isFavorite}
@@ -104,7 +104,7 @@ class TodoInteractionTest : StudentTest() {
         for(course in data.courses.values) {
             assignment = data.addAssignment(
                     courseId = course.id,
-                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                    submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                     dueAt = 1.days.fromNow.iso8601
             )
 

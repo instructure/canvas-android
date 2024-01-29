@@ -186,6 +186,10 @@ abstract class BaseExpandableRecyclerAdapter<GROUP, ITEM, VIEW_HOLDER : Recycler
         groupSortedList.addOrUpdateAllItems(group, items)
     }
 
+    fun moveItems(group: GROUP, item: ITEM, newPosition: Int) {
+        groupSortedList.changeItemPosition(group, item, newPosition)
+    }
+
     /** See [GroupSortedList.addOrUpdateAllItems]  */
     fun addOrUpdateAllItems(group: GROUP, items: Array<ITEM>) {
         groupSortedList.addOrUpdateAllItems(group, items)

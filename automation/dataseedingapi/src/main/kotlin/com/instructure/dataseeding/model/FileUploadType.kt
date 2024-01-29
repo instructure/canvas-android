@@ -17,5 +17,6 @@ package com.instructure.dataseeding.model
 
 enum class FileUploadType {
     ASSIGNMENT_SUBMISSION,
-    COMMENT_ATTACHMENT
+    COMMENT_ATTACHMENT,
+    COURSE_FILE
 }
