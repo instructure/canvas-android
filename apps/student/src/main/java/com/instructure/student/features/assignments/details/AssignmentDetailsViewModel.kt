@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -114,13 +115,15 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
 
+    private val remindersObserver = Observer<List<ReminderEntity>> {
+        _data.value?.reminders = mapReminders(it)
+        _data.value?.notifyPropertyChanged(BR.reminders)
+    }
+
     private val remindersLiveData = assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(
         apiPrefs.user?.id.orDefault(), assignmentId
     ).apply {
-        observeForever {
-            _data.value?.reminders = mapReminders(it)
-            _data.value?.notifyPropertyChanged(BR.reminders)
-        }
+        observeForever(remindersObserver)
     }
 
     init {
@@ -128,6 +131,11 @@ class AssignmentDetailsViewModel @Inject constructor(
         submissionQuery.addListener(this)
         _state.postValue(ViewState.Loading)
         loadData()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        remindersLiveData.removeObserver(remindersObserver)
     }
 
     override fun queryResultsChanged() {
