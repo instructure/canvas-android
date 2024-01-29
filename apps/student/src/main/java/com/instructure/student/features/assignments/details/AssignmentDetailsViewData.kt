@@ -4,10 +4,15 @@ import android.text.Spanned
 import androidx.annotation.ColorRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
+import com.instructure.student.features.assignments.details.itemviewmodels.ReminderItemViewModel
 
 data class AssignmentDetailsViewData(
     val courseColor: ThemedColor,
@@ -32,7 +37,9 @@ data class AssignmentDetailsViewData(
     val discussionHeaderViewData: DiscussionHeaderViewData? = null,
     val quizDetails: QuizViewViewData? = null,
     val attemptsViewData: AttemptsViewData? = null,
-    @Bindable var hasDraft: Boolean = false
+    @Bindable var hasDraft: Boolean = false,
+    val showReminders: Boolean = false,
+    @Bindable var reminders: List<ReminderItemViewModel> = emptyList()
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()
     val noDescriptionVisible = description.isEmpty() && !fullLocked
@@ -50,6 +57,8 @@ data class DiscussionHeaderViewData(
     val attachmentIconVisible: Boolean,
     val onAttachmentClicked: () -> Unit
 )
+
+data class ReminderViewData(val id: Long, val text: String)
 
 sealed class AssignmentDetailAction {
     data class ShowToast(val message: String) : AssignmentDetailAction()
