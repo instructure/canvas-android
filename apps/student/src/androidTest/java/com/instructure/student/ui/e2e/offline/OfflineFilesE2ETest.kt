@@ -26,6 +26,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.FileFolderApi
 import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -77,20 +78,12 @@ class OfflineFilesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Files")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
-        dashboardPage.waitForRender()
-        dashboardPage.waitForSyncProgressDownloadStartedNotification()
-        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
-
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
-        dashboardPage.waitForSyncProgressStartingNotification()
-        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
+        Log.d(STEP_TAG, "Wait for the 'Download Started' and 'Syncing Offline Content' dashboard notifications to be displayed, and then to disappear.")
+        dashboardPage.waitForOfflineSyncDashboardNotifications()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        Thread.sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
-        device.waitForIdle()
-        device.waitForWindowUpdate(null, 10000)
+        OfflineTestUtils.waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
