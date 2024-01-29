@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
@@ -41,6 +42,7 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.util.Date
 
 class ModuleListEffectHandler(
     private val moduleApi: ModuleAPI.ModuleInterface,
@@ -80,12 +82,16 @@ class ModuleListEffectHandler(
                 effect.published
             )
 
-            is ModuleListEffect.SetFileModuleItemPublished -> setFileModuleItemPublished(
+            is ModuleListEffect.UpdateFileModuleItem -> updateFileModuleItem(
                 effect.canvasContext,
                 effect.moduleId,
                 effect.moduleItemId,
                 effect.fileId,
-                effect.isPublished
+                effect.isPublished,
+                effect.isHidden,
+                effect.lockAt,
+                effect.unlockAt,
+                effect.visibility
             )
             is ModuleListEffect.ShowSnackbar -> {
                 view?.showSnackbar(effect.message)
@@ -93,12 +99,16 @@ class ModuleListEffectHandler(
         }.exhaustive
     }
 
-    private fun setFileModuleItemPublished(
+    private fun updateFileModuleItem(
         canvasContext: CanvasContext,
         moduleId: Long,
         moduleItemId: Long,
         fileId: Long,
-        published: Boolean
+        published: Boolean,
+        hidden: Boolean,
+        lockAt: Date?,
+        unlockAt: Date?,
+        visibility: String?
     ) {
         val restParams = RestParams(
             canvasContext = canvasContext,
@@ -108,7 +118,7 @@ class ModuleListEffectHandler(
         launch {
             val updatedFile = fileApi.updateFile(
                 fileId,
-                UpdateFileFolder(locked = !published, hidden = false, unlockAt = null, lockAt = null),
+                UpdateFileFolder(locked = !published, hidden = hidden, lockAt = lockAt?.toApiString(), unlockAt = unlockAt?.toApiString()),
                 restParams
             ).dataOrNull
 

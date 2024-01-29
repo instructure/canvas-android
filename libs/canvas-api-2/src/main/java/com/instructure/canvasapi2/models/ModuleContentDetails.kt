@@ -25,26 +25,29 @@ import java.util.*
 
 @Parcelize
 data class ModuleContentDetails(
-        @SerializedName("points_possible")
-        val pointsPossible: String? = null,
-        @SerializedName("due_at")
-        val dueAt: String? = null,
-        @SerializedName("unlock_at")
-        val unlockAt: String? = null,
-        @SerializedName("lock_at")
-        val lockAt: String? = null,
-        @SerializedName("locked_for_user")
-        val lockedForUser: Boolean = false,
-        @SerializedName("lock_explanation")
-        val lockExplanation: String? = null,
-        @SerializedName("lock_info")
-        val lockInfo: LockInfo? = null,
-        val hidden: Boolean? = null
+    @SerializedName("points_possible")
+    val pointsPossible: String? = null,
+    @SerializedName("due_at")
+    val dueAt: String? = null,
+    @SerializedName("unlock_at")
+    val unlockAt: String? = null,
+    @SerializedName("lock_at")
+    val lockAt: String? = null,
+    @SerializedName("locked_for_user")
+    val lockedForUser: Boolean = false,
+    @SerializedName("lock_explanation")
+    val lockExplanation: String? = null,
+    @SerializedName("lock_info")
+    val lockInfo: LockInfo? = null,
+    val hidden: Boolean? = null,
+    val locked: Boolean? = null
 ) : CanvasComparable<ModuleContentDetails>() {
     @IgnoredOnParcel
     val dueDate: Date? get() = dueAt.toDate()
+
     @IgnoredOnParcel
     val unlockDate: Date? get() = unlockAt.toDate()
+
     @IgnoredOnParcel
     val lockDate: Date? get() = lockAt.toDate()
 }

@@ -269,16 +269,20 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 return Next.next(newModel, setOf(snackbarEffect))
             }
 
-            is ModuleListEvent.SetFileModuleItemPublished -> {
+            is ModuleListEvent.UpdateFileModuleItem -> {
                 val newModel = model.copy(
                     loadingModuleItemIds = model.loadingModuleItemIds + event.moduleItemId
                 )
-                val effect = ModuleListEffect.SetFileModuleItemPublished(
+                val effect = ModuleListEffect.UpdateFileModuleItem(
                     model.course,
                     model.modules.first { it.items.any { it.id == event.moduleItemId } }.id,
                     event.moduleItemId,
                     event.fileId,
-                    event.isPublished
+                    event.isPublished,
+                    event.isHidden,
+                    event.lockAt,
+                    event.unlockAt,
+                    event.visibility
                 )
                 return Next.next(newModel, setOf(effect))
             }

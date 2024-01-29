@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.instructure.teacher.features.modules.list.ui.file.FileAvailability" />
+
+        <import type="com.instructure.teacher.features.modules.list.ui.file.FileVisibility" />
+
+        <variable
+            name="viewModel"
+            type="com.instructure.teacher.features.modules.list.ui.file.UpdateFileViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/closeButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/close"
+            android:onClick="@{() -> viewModel.close()}"
+            android:padding="12dp"
+            android:src="@drawable/ic_close"
+            android:tint="@color/textDarkest"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/edit_permissions"
+            android:textColor="@color/textDarkest"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/closeButton"
+            app:layout_constraintEnd_toStartOf="@+id/updateButton"
+            app:layout_constraintStart_toEndOf="@id/closeButton"
+            app:layout_constraintTop_toTopOf="@id/closeButton" />
+
+        <TextView
+            android:id="@+id/updateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:onClick="@{() -> viewModel.update()}"
+            android:paddingHorizontal="12dp"
+            android:text="@string/update"
+            android:textColor="@color/textInfo"
+            app:layout_constraintBottom_toBottomOf="@id/closeButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/closeButton" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/toolbarDivider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/closeButton" />
+
+        <TextView
+            android:id="@+id/availabilityTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/availability_title"
+            android:textColor="@color/textDarkest"
+            android:textSize="22sp"
+            app:layout_constraintTop_toBottomOf="@id/toolbarDivider" />
+
+        <RadioGroup
+            android:id="@+id/availabilityRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/availabilityTitle">
+
+            <RadioButton
+                android:id="@+id/publish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedAvailability == FileAvailability.PUBLISHED}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onAvailabilityChanged(isChecked, FileAvailability.PUBLISHED)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/publish" />
+
+            <RadioButton
+                android:id="@+id/unpublish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedAvailability == FileAvailability.UNPUBLISHED}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onAvailabilityChanged(isChecked, FileAvailability.UNPUBLISHED)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/unpublish"
+                tools:checked="true" />
+
+            <RadioButton
+                android:id="@+id/hide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedAvailability == FileAvailability.HIDDEN}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onAvailabilityChanged(isChecked, FileAvailability.HIDDEN)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/only_available_with_link" />
+
+            <RadioButton
+                android:id="@+id/schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedAvailability == FileAvailability.SCHEDULED}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onAvailabilityChanged(isChecked, FileAvailability.SCHEDULED)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/schedule_availability" />
+        </RadioGroup>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/availabilityRadioGroup" />
+
+        <TextView
+            android:id="@+id/visibilityTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/visibility_title"
+            android:textColor="@color/textDarkest"
+            android:textSize="22sp"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <RadioGroup
+            android:id="@+id/visibilityRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/visibilityTitle">
+
+            <RadioButton
+                android:id="@+id/visibilityInherit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedVisibility == FileVisibility.INHERIT}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onVisibilityChanged(isChecked, FileVisibility.INHERIT)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/inherit_from_course" />
+
+            <RadioButton
+                android:id="@+id/visibilityContext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedVisibility == FileVisibility.CONTEXT}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onVisibilityChanged(isChecked, FileVisibility.CONTEXT)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/course_members"
+                tools:checked="true" />
+
+            <RadioButton
+                android:id="@+id/visibilityInstitution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedVisibility == FileVisibility.INSTITUTION}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onVisibilityChanged(isChecked, FileVisibility.INSTITUTION)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/institution_members" />
+
+            <RadioButton
+                android:id="@+id/visibilityPublic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="@{viewModel.data.selectedVisibility == FileVisibility.PUBLIC}"
+                android:drawableTint="@color/textDark"
+                android:minHeight="48dp"
+                android:onCheckedChanged="@{(view, isChecked) -> viewModel.onVisibilityChanged(isChecked, FileVisibility.PUBLIC)}"
+                android:paddingHorizontal="8dp"
+                android:text="@string/public_title" />
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

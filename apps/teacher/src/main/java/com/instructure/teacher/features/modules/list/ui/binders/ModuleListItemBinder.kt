@@ -24,8 +24,8 @@ import androidx.appcompat.widget.PopupMenu
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.binding.setTint
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
-import com.instructure.pandautils.utils.setHidden
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -33,6 +33,7 @@ import com.instructure.teacher.adapters.ListItemBinder
 import com.instructure.teacher.databinding.AdapterModuleItemBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
+import com.instructure.teacher.features.modules.list.ui.file.UpdateFileDialogFragment
 
 class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, ModuleListCallback>() {
 
@@ -65,7 +66,11 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
 
             overflow.onClickWithRequireNetwork {
                 if (item.type == ModuleItem.Type.File) {
-                    showFileActions(it, item, callback)
+                    UpdateFileDialogFragment.newInstance(
+                        moduleId = -1L,
+                        moduleItemId = item.id,
+                        contentId = item.contentId ?: 0,
+                        contentDetails = item.contentDetails).show(it.context.getFragmentActivity().supportFragmentManager, null)
                 } else {
                     showModuleItemActions(it, item, callback)
                 }
@@ -142,23 +147,25 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
         val popup = PopupMenu(view.context, view, Gravity.START.and(Gravity.TOP))
         popup.inflate(R.menu.menu_file_module_item)
 
+        if (item.contentId == null) {
+            return
+        }
+
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.actionFilePublish -> {
-                    item.contentId?.let {
-                        callback.setFileModuleItemPublished(item.id, item.contentId, true)
-                        true
-                    } ?: false
+                    callback.updateFileModuleItem(item.id, item.contentId, true, false)
+                    true
+
                 }
 
                 R.id.actionFileUnpublish -> {
-                    item.contentId?.let {
-                        callback.setFileModuleItemPublished(item.id, item.contentId, false)
-                        true
-                    } ?: false
+                    callback.updateFileModuleItem(item.id, item.contentId, false, false)
+                    true
                 }
 
                 R.id.actionFileHide -> {
+                    callback.updateFileModuleItem(item.id, item.contentId, true, true)
                     true
                 }
 

@@ -20,6 +20,7 @@ import android.content.Context
 import com.instructure.teacher.adapters.GroupedRecyclerAdapter
 import com.instructure.teacher.adapters.ListItemCallback
 import com.instructure.teacher.features.modules.list.ui.binders.*
+import java.util.Date
 
 
 interface ModuleListCallback : ListItemCallback {
@@ -30,7 +31,15 @@ interface ModuleListCallback : ListItemCallback {
     fun publishModule(moduleId: Long)
     fun publishModuleAndItems(moduleId: Long)
     fun unpublishModuleAndItems(moduleId: Long)
-    fun setFileModuleItemPublished(moduleItemId: Long, fileId: Long, isPublished: Boolean)
+    fun updateFileModuleItem(
+        moduleItemId: Long,
+        fileId: Long,
+        isPublished: Boolean,
+        isHidden: Boolean,
+        lockAt: Date? = null,
+        unlockAt: Date? = null,
+        visibility: String? = null
+    )
 }
 
 class ModuleListRecyclerAdapter(

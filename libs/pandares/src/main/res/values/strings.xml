@@ -1523,6 +1523,14 @@
     <string name="onlyModulesPublished">Only Modules published</string>
     <string name="allModulesAndAllItemsPublished">All Modules and all Items published</string>
     <string name="allModulesAndAllItemsUnpublished">All Modules and all Items unpublished</string>
+    <string name="inherit_from_course">Inherit from Course</string>
+    <string name="course_members">Course Members</string>
+    <string name="institution_members">Institutions Members</string>
+    <string name="public_title">Public</string>
+    <string name="edit_permissions">Edit Permissions</string>
+    <string name="update">Update</string>
+    <string name="availability_title">Availability</string>
+    <string name="visibility_title">Visibility</string>
     <plurals name="moduleItemPoints">
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>

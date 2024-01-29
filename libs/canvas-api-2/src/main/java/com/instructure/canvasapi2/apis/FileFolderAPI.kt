@@ -122,6 +122,9 @@ object FileFolderAPI {
 
         @GET("files/{fileNumber}?include=avatar")
         fun getAvatarFileToken(@Path("fileNumber") fileNumber: String): Call<FileFolder>
+
+        @GET("files/{fileId}")
+        suspend fun getFile(@Path("fileId") fileId: Long, @Tag params: RestParams): DataResult<FileFolder>
     }
 
     fun getFileFolderFromURL(adapter: RestBuilder, url: String, callback: StatusCallback<FileFolder>, params: RestParams) {
