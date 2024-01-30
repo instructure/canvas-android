@@ -1,13 +1,21 @@
 package com.instructure.pandautils.features.calendar
 
+import android.content.Context
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,6 +28,7 @@ import kotlin.math.min
 
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val calendarRepository: CalendarRepository
 ) : ViewModel() {
 
@@ -37,10 +46,6 @@ class CalendarViewModel @Inject constructor(
         loadEventsForMonth(selectedDay)
         loadEventsForMonth(selectedDay.plusMonths(1))
         loadEventsForMonth(selectedDay.minusMonths(1))
-    }
-
-    private fun createDateKey(date: LocalDate): String {
-        return "${date.year}-${date.monthValue}-${date.dayOfMonth}"
     }
 
     private fun loadEventsForMonth(date: LocalDate) {
@@ -116,9 +121,12 @@ class CalendarViewModel @Inject constructor(
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
         val eventUiStates = eventsByDay[date]?.map {
             EventUiState(
-                contextName = it.contextName ?: "",
+                contextName = getContextNameForPlannerItem(it),
                 canvasContext = it.canvasContext,
-                name = it.plannable.title
+                iconRes = getIconForPlannerItem(it),
+                name = it.plannable.title,
+                date = getDateForPlannerItem(it),
+                status = getStatusForPlannerItem(it)
             )
         } ?: emptyList()
 
@@ -127,6 +135,63 @@ class CalendarViewModel @Inject constructor(
             loading = loadingDays.contains(date),
             events = eventUiStates
         )
+    }
+
+    private fun getContextNameForPlannerItem(plannerItem: PlannerItem): String {
+        return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
+            if (plannerItem.contextName.isNullOrEmpty()) {
+                context.getString(R.string.userCalendarToDo)
+            } else {
+                context.getString(R.string.courseToDo, plannerItem.contextName)
+            }
+        } else {
+            plannerItem.contextName.orEmpty()
+        }
+    }
+
+    @DrawableRes
+    private fun getIconForPlannerItem(plannerItem: PlannerItem): Int {
+        return when (plannerItem.plannableType) {
+            PlannableType.ASSIGNMENT -> R.drawable.ic_assignment
+            PlannableType.QUIZ -> R.drawable.ic_quiz
+            PlannableType.CALENDAR_EVENT -> R.drawable.ic_calendar
+            PlannableType.DISCUSSION_TOPIC -> R.drawable.ic_discussion
+            PlannableType.PLANNER_NOTE -> R.drawable.ic_todo
+            else -> R.drawable.ic_calendar
+        }
+    }
+
+    private fun getDateForPlannerItem(plannerItem: PlannerItem): String? {
+        return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
+            val date = plannerItem.plannable.todoDate.toDate()
+            date?.let {
+                DateHelper.getDateTimeString(context, it)
+            }
+        } else {
+            plannerItem.plannable.dueAt?.let {
+                context.getString(R.string.calendarDueDate, DateHelper.getDateTimeString(context, it))
+            }
+        }
+    }
+
+    private fun getStatusForPlannerItem(plannerItem: PlannerItem): String? {
+        val submissionState = plannerItem.submissionState
+        return if (submissionState != null) {
+            when {
+                submissionState.excused -> context.getString(R.string.calendarEventExcused)
+                submissionState.missing -> context.getString(R.string.calendarEventMissing)
+                submissionState.graded -> context.getString(R.string.calendarEventGraded)
+                submissionState.needsGrading -> context.getString(R.string.calendarEventSubmitted)
+                plannerItem.plannable.pointsPossible != null -> context.getString(
+                    R.string.calendarEventPoints,
+                    NumberHelper.formatDecimal(plannerItem.plannable.pointsPossible!!, 1, true)
+                )
+
+                else -> null
+            }
+        } else {
+            null
+        }
     }
 
     fun handleAction(calendarAction: CalendarAction) {

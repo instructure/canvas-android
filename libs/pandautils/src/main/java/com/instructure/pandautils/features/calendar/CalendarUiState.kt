@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.calendar
 
+import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
@@ -144,8 +145,9 @@ data class EventUiState(
     val contextName: String,
     val canvasContext: CanvasContext,
     val name: String,
-    val dueDate: LocalDate? = null,
-    val status: String = ""
+    @DrawableRes val iconRes: Int,
+    val date: String? = null,
+    val status: String? = null
 )
 
 sealed class CalendarAction {

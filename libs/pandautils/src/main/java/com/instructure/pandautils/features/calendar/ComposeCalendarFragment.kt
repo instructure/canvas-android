@@ -66,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
@@ -195,7 +196,7 @@ fun CalendarScreen(
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(PaddingValues(0.dp, 8.dp, 0.dp, 16.dp)),
+                        .padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp)),
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
                     Column {
@@ -526,17 +527,49 @@ fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState) {
 
 @Composable
 fun CalendarEventItem(eventUiState: EventUiState) {
-    Row {
+    val contextColor = if (eventUiState.canvasContext is User) {
+        Color(ThemePrefs.brandColor)
+    } else {
+        Color(eventUiState.canvasContext.textAndIconColor)
+    }
+    Row(
+        Modifier
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .fillMaxWidth()
+    ) {
+        Spacer(modifier = Modifier.width(6.dp))
         Icon(
-            painter = painterResource(id = R.drawable.ic_assignment),
+            painter = painterResource(id = eventUiState.iconRes),
             contentDescription = null,
-            tint = Color(eventUiState.canvasContext.textAndIconColor)
+            modifier = Modifier.size(24.dp),
+            tint = contextColor
         )
+        Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text(text = eventUiState.contextName)
-            Text(text = eventUiState.name)
-            Text(text = eventUiState.dueDate.toString())
-            Text(text = eventUiState.status)
+            Text(
+                text = eventUiState.contextName,
+                fontSize = 14.sp,
+                color = contextColor,
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+            Text(
+                text = eventUiState.name,
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest),
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+            if (eventUiState.date != null) Text(
+                text = eventUiState.date,
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.textDark),
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+            if (eventUiState.status != null) Text(
+                text = eventUiState.status,
+                fontSize = 14.sp,
+                color = Color(ThemePrefs.brandColor),
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
         }
     }
 }
@@ -590,13 +623,15 @@ fun CalendarPreview() {
                     EventUiState(
                         "Course To Do",
                         CanvasContext.defaultCanvasContext(),
-                        "Todo 1"
+                        "Todo 1",
+                        R.drawable.ic_assignment
                     ),
                     EventUiState(
                         "Course",
                         CanvasContext.defaultCanvasContext(),
                         "Assignment 1",
-                        LocalDate.now().plusDays(1),
+                        R.drawable.ic_assignment,
+                        "Due Jan 9 at 8:00 AM",
                         "Missing"
                     )
                 )
