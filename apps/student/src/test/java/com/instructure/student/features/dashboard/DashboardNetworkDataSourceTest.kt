@@ -18,6 +18,7 @@ package com.instructure.student.features.dashboard
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Group
@@ -37,8 +38,9 @@ class DashboardNetworkDataSourceTest {
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val groupApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
 
-    private val dataSource = DashboardNetworkDataSource(courseApi, groupApi, apiPrefs)
+    private val dataSource = DashboardNetworkDataSource(courseApi, groupApi, apiPrefs, userApi)
 
     @Test
     fun `getCourses returns courses for teacher if we are in the student view`() = runTest {

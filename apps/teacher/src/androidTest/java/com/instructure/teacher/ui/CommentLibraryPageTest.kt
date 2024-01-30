@@ -17,16 +17,16 @@
 package com.instructure.teacher.ui
 
 import androidx.test.espresso.Espresso
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -255,7 +255,7 @@ class CommentLibraryPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         data.addSubmissionForAssignment(

@@ -15,17 +15,18 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
-import com.instructure.student.ui.utils.*
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -79,7 +80,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testLetterGradeAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
@@ -89,7 +90,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testGpaScaleAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
@@ -99,7 +100,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
@@ -109,7 +110,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentExcusedWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
@@ -119,7 +120,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPercentageAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "90%", 90.0, 100)
@@ -129,7 +130,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPassFailAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
@@ -139,7 +140,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testLetterGradeAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
@@ -149,7 +150,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testGpaScaleAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
@@ -159,7 +160,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
@@ -169,7 +170,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentExcusedWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
@@ -179,7 +180,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPercentageAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "80%", 80.0, 100)
@@ -189,7 +190,7 @@ class AssignmentListInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPassFailAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
@@ -225,7 +226,7 @@ class AssignmentListInteractionTest : StudentTest() {
         repeat(assignmentCount) {
             val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
             )
             assignmentList.add(assignment)
         }
@@ -253,7 +254,7 @@ class AssignmentListInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             gradingType = Assignment.gradingTypeToAPIString(gradingType) ?: "",
             pointsPossible = maxScore,
         )

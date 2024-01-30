@@ -975,6 +975,8 @@
     <string name="inviteAccepted">Приглашение принято!</string>
     <string name="inviteDeclined">Приглашение отклонено.</string>
     <string name="latePenalty">Снижение оценки за опоздание (-%s)</string>
+    <string name="latePenaltyUpdated">Снижение оценки за опоздание: -%s балла/баллов</string>
+    <string name="yourGrade">Ваша оценка: %s баллов</string>
     <string name="finalGrade">Итоговая оценка</string>
 
     <string name="max_count">99+</string>

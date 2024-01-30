@@ -160,10 +160,10 @@ class DashboardRecyclerAdapter(
 
             notifyDataSetChanged()
             isAllPagesLoaded = true
-            if (itemCount == 0) adapterToRecyclerViewCallback.setIsEmpty(true)
+            if (itemCount == 0) adapterToRecyclerViewCallback?.setIsEmpty(true)
             mAdapterToFragmentCallback.onRefreshFinished()
         } catch {
-            adapterToRecyclerViewCallback.setDisplayNoConnection(true)
+            adapterToRecyclerViewCallback?.setDisplayNoConnection(true)
             mAdapterToFragmentCallback.onRefreshFinished()
         }
     }

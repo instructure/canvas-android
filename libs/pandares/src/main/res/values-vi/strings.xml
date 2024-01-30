@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Lời mời đã được chấp nhận!</string>
     <string name="inviteDeclined">Lời mời đã bị từ chối.</string>
     <string name="latePenalty">Hình phạt trễ (-%s)</string>
+    <string name="latePenaltyUpdated">Phạt Do Muộn: -%s điểm thành phần</string>
+    <string name="yourGrade">Điểm của Bạn: %s điểm thành phần</string>
     <string name="finalGrade">Điểm Cuối Cùng</string>
 
     <string name="max_count">99+</string>

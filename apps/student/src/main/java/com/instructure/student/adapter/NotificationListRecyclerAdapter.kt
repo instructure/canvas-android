@@ -28,7 +28,12 @@ import com.instructure.canvasapi2.managers.InboxManager.getConversation
 import com.instructure.canvasapi2.managers.StreamManager.getCourseStream
 import com.instructure.canvasapi2.managers.StreamManager.getUserStream
 import com.instructure.canvasapi2.managers.StreamManager.hideStreamItem
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.HiddenStreamItem
+import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.APIHelper.hasNetworkConnection
 import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.ApiType
@@ -196,7 +201,7 @@ class NotificationListRecyclerAdapter(
                 if (!hasNetworkConnection()) {
                     onNoNetwork()
                 } else {
-                    adapterToRecyclerViewCallback.setIsEmpty(true)
+                    adapterToRecyclerViewCallback?.setIsEmpty(true)
                 }
             }
 
@@ -252,15 +257,15 @@ class NotificationListRecyclerAdapter(
 
     override fun refresh() {
         isNoNetwork = false
-        adapterToRecyclerViewCallback.setDisplayNoConnection(false)
+        adapterToRecyclerViewCallback?.setDisplayNoConnection(false)
         streamCallback.reset()
         super.refresh()
     }
 
     private fun populateActivityStreamAdapter() {
         if (isNoNetwork) { // Workaround for the multiple callbacks, which mess up the generic solution
-            adapterToRecyclerViewCallback.setDisplayNoConnection(true)
-            adapterToRecyclerViewCallback.setIsEmpty(size() == 0)
+            adapterToRecyclerViewCallback?.setDisplayNoConnection(true)
+            adapterToRecyclerViewCallback?.setIsEmpty(size() == 0)
         }
 
         // Wait until all calls return;

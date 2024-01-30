@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Invitació acceptada.</string>
     <string name="inviteDeclined">Invitació rebutjada.</string>
     <string name="latePenalty">Sanció per endarreriment (-%s)</string>
+    <string name="latePenaltyUpdated">Penalització per entrega endarrerida: -%s punts</string>
+    <string name="yourGrade">La vostra nota: %s punts</string>
     <string name="finalGrade">Nota final</string>
 
     <string name="max_count">99+</string>

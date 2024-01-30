@@ -44,7 +44,7 @@ object AnnouncementAPI {
         fun getNextPageAnnouncementsList(@Url nextUrl: String): Call<List<DiscussionTopicHeader>>
 
         @GET
-        fun getNextPageAnnouncementsList(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
+        suspend fun getNextPageAnnouncementsList(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
 
         /**
          * This API call returns the latest announcement. The current implementation is the latest announcement from the last 14 days.

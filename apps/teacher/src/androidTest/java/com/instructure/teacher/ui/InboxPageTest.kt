@@ -18,6 +18,10 @@
 package com.instructure.teacher.ui
 
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addConversation
 import com.instructure.canvas.espresso.mockCanvas.addConversations
@@ -25,10 +29,6 @@ import com.instructure.canvas.espresso.mockCanvas.createBasicConversation
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.clickInboxTab
 import com.instructure.teacher.ui.utils.tokenLogin

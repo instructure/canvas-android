@@ -44,6 +44,11 @@ object FileUploadsApi {
                 @Path("assignmentId") assignmentId: Long,
                 @Body startFileUpload: StartFileUpload): Call<FileUploadParams>
 
+        @POST("folders/{folderId}/files")
+        fun courseFolderFileUpload(
+            @Path("folderId") folderId: Long?,
+            @Body startFileUpload: StartFileUpload): Call<FileUploadParams>
+
         @Multipart
         @POST
         fun uploadFile(
@@ -66,14 +71,14 @@ object FileUploadsApi {
      * Start here to upload a file!
      */
     fun uploadFile(courseId: Long,
-                   assignmentId: Long,
+                   assignmentId: Long? = null,
                    file: ByteArray,
                    fileName: String,
                    token: String,
                    fileUploadType: FileUploadType): AttachmentApiModel {
 
         // Get file upload params from Canvas, telling us where to upload the file
-        val params = getFileUploadParams(courseId, assignmentId, file, fileName, fileUploadType, token)
+        val params = getFileUploadParams(courseId = courseId, assignmentId= assignmentId, file = file, fileName = fileName, fileUploadType = fileUploadType, token = token)
 
         // Upload the file based on the params we got back; return the resulting attachment
         return uploadFileToCanvas(params, file)
@@ -94,7 +99,7 @@ object FileUploadsApi {
     }
 
     private fun getFileUploadParams(courseId: Long,
-                                    assignmentId: Long,
+                                    assignmentId: Long? = null,
                                     file: ByteArray,
                                     fileName: String,
                                     fileUploadType: FileUploadType,
@@ -103,8 +108,9 @@ object FileUploadsApi {
         val request = StartFileUpload(fileName, file.size.toLong())
 
         return when (fileUploadType) {
-            FileUploadType.ASSIGNMENT_SUBMISSION -> fileUploadsService(token).assignmentSubmissionFileUpload(courseId, assignmentId, request)
-            FileUploadType.COMMENT_ATTACHMENT -> fileUploadsService(token).commentAttachmentFileUpload(courseId, assignmentId, request)
+            FileUploadType.ASSIGNMENT_SUBMISSION -> fileUploadsService(token).assignmentSubmissionFileUpload(courseId, assignmentId!!, request)
+            FileUploadType.COMMENT_ATTACHMENT -> fileUploadsService(token).commentAttachmentFileUpload(courseId, assignmentId!!, request)
+            FileUploadType.COURSE_FILE -> fileUploadsService(token).courseFolderFileUpload(courseId, request)
             else -> TODO()
         }.execute().body()!!
     }

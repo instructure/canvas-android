@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.panda_annotations
+package com.instructure.canvas.espresso
 
 
 @Target(AnnotationTarget.FUNCTION)
@@ -23,7 +23,6 @@ annotation class TestMetaData(
     val priority: Priority,
     val featureCategory: FeatureCategory,
     val testCategory: TestCategory,
-    val stubbed: Boolean = false,
     val secondaryFeature: SecondaryFeatureCategory = SecondaryFeatureCategory.NONE
 )
 
@@ -39,7 +38,7 @@ enum class FeatureCategory {
 
 enum class SecondaryFeatureCategory {
     NONE, LOGIN_K5,
-    SUBMISSIONS_TEXT_ENTRY, SUBMISSIONS_ANNOTATIONS, SUBMISSIONS_ONLINE_URL,
+    SUBMISSIONS_TEXT_ENTRY, SUBMISSIONS_ANNOTATIONS, SUBMISSIONS_ONLINE_URL, SUBMISSIONS_MULTIPLE_TYPE,
     ASSIGNMENT_COMMENTS, ASSIGNMENT_QUIZZES, ASSIGNMENT_DISCUSSIONS,
     GROUPS_DASHBOARD, GROUPS_FILES, GROUPS_ANNOUNCEMENTS, GROUPS_DISCUSSIONS, GROUPS_PAGES, GROUPS_PEOPLE,
     EVENTS_DISCUSSIONS, EVENTS_QUIZZES, EVENTS_ASSIGNMENTS, EVENTS_NOTIFICATIONS,
