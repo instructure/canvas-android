@@ -29,7 +29,6 @@ import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.retry
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -140,11 +139,11 @@ class InboxE2ETest: StudentTest() {
         inboxPage.clickArchive()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
-        sleep(2000)
-
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that the conversation is displayed there.")
         inboxPage.filterInbox("Archived")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
 
         Log.d(STEP_TAG, "Navigate to 'UNREAD' scope and assert that the conversation is displayed there, because a conversation cannot be archived and unread at the same time.")
         inboxPage.filterInbox("Unread")
@@ -175,8 +174,6 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope and assert that the conversations is displayed there.")
         inboxPage.filterInbox("Starred")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
-
-        sleep(2000)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope and assert that the conversation is displayed there because it is not archived yet.")
         inboxPage.filterInbox("Inbox")
@@ -351,12 +348,10 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationStarred(seededConversation.subject)
         inboxPage.clickMarkAsUnread()
 
-        sleep(1000)
-
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that the conversation is displayed in the 'STARRED' scope.")
         inboxPage.filterInbox("Starred")
 
-        retry(times = 10, delay = 3000) {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
             inboxPage.assertConversationDisplayed(seededConversation.subject)
         }
 
