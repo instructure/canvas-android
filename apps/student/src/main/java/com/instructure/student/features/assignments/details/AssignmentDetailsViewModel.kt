@@ -604,8 +604,20 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     fun onAddReminderClicked() {
+        postAction(AssignmentDetailAction.ShowReminderDialog)
+    }
+
+    fun onReminderSelected(reminderChoice: ReminderChoice) {
+        if (reminderChoice == ReminderChoice.Custom) {
+            postAction(AssignmentDetailAction.ShowCustomReminderDialog)
+        } else {
+            setReminder(reminderChoice)
+        }
+    }
+
+    private fun setReminder(reminderChoice: ReminderChoice) {
         viewModelScope.launch {
-            assignmentDetailsRepository.addReminder(apiPrefs.user?.id.orDefault(), assignmentId)
+            assignmentDetailsRepository.addReminder(apiPrefs.user?.id.orDefault(), assignmentId, reminderChoice.getText(resources))
         }
     }
 }

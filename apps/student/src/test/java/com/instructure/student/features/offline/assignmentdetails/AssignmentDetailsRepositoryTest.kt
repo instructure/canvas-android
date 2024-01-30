@@ -204,7 +204,7 @@ class AssignmentDetailsRepositoryTest {
 
     @Test
     fun `Add reminder`() = runTest {
-        repository.addReminder(1, 1)
+        repository.addReminder(1, 1, "Test Reminder")
 
         coVerify(exactly = 1) {
             reminderDao.insert(ReminderEntity(userId = 1, assignmentId = 1, text = "Test Reminder"))

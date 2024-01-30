@@ -28,9 +28,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -41,7 +47,18 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
@@ -49,7 +66,12 @@ import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.databinding.DialogSubmissionPickerBinding
 import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
 import com.instructure.student.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.student.fragment.*
+import com.instructure.student.features.assignments.reminder.CustomReminderDialog
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.getVideoUri
 import com.instructure.student.mobius.assignmentDetails.launchAudio
 import com.instructure.student.mobius.assignmentDetails.needsPermissions
@@ -193,6 +215,12 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             }
             is AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked -> {
                 showDiscussionAttachments(action.attachments)
+            }
+            is AssignmentDetailAction.ShowReminderDialog -> {
+                showCreateReminderDialog()
+            }
+            is AssignmentDetailAction.ShowCustomReminderDialog -> {
+                showCustomReminderDialog()
             }
         }
     }
@@ -385,6 +413,33 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             discussionAttachment.url.orEmpty(),
             discussionAttachment.fileName.orEmpty()
         )
+    }
+
+    private fun showCreateReminderDialog() {
+        val choices = listOf(
+            ReminderChoice.Minute(5),
+            ReminderChoice.Minute(15),
+            ReminderChoice.Minute(30),
+            ReminderChoice.Hour(1),
+            ReminderChoice.Day(1),
+            ReminderChoice.Week(1),
+            ReminderChoice.Custom,
+        )
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.reminderTitle)
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+            .setSingleChoiceItems(
+                choices.map { it.getText(resources) }.toTypedArray(), -1
+            ) { dialog, which ->
+                viewModel.onReminderSelected(choices[which])
+                dialog.dismiss()
+            }
+            .showThemed()
+    }
+
+    private fun showCustomReminderDialog() {
+        CustomReminderDialog.newInstance().show(childFragmentManager, null)
     }
 
     companion object {
