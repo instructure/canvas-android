@@ -213,13 +213,13 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
                     // Load Pages List
                     if (tabs.any { it.tabId == Tab.PAGES_ID }) {
                         // Do not load the pages list if the tab is hidden or locked.
-                        RouteMatcher.route(requireActivity(), TabHelper.getRouteByTabId(tab, canvasContext))
+                        RouteMatcher.route(requireActivity(), TabHelper.getRouteByTabId(tab, canvasContext, homePageTitle))
                     }
 
                     // If the home tab is a Page and we clicked it lets route directly there.
                     RouteMatcher.route(
                         requireActivity(),
-                        PageDetailsFragment.makeRoute(canvasContext, Page.FRONT_PAGE_NAME)
+                        PageDetailsFragment.makeRoute(canvasContext, homePageTitle ?: Page.FRONT_PAGE_NAME)
                             .apply { ignoreDebounce = true })
                 } else {
                     val route = TabHelper.getRouteByTabId(tab, canvasContext)?.apply { ignoreDebounce = true }

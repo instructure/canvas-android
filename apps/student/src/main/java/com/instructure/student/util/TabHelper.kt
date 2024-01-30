@@ -36,7 +36,11 @@ import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.AnnouncementListFragment
+import com.instructure.student.fragment.CourseSettingsFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import java.util.*
@@ -71,7 +75,7 @@ object TabHelper {
 
     fun isHomeTab(tab: Tab): Boolean = "home".equals(tab.tabId, ignoreCase = true)
 
-    fun getRouteByTabId(tabb: Tab?, canvasContext: CanvasContext): Route? {
+    fun getRouteByTabId(tabb: Tab?, canvasContext: CanvasContext, homePageTitle: String? = null): Route? {
         val tab = tabb ?: Tab(Tab.HOME_ID, "")
 
         // Student view doesn't support groups, collaborations, or external LTIs from the Course Browser
@@ -97,7 +101,7 @@ object TabHelper {
             Tab.ASSIGNMENTS_ID -> AssignmentListFragment.makeRoute(canvasContext)
             Tab.MODULES_ID -> ModuleListFragment.makeRoute(canvasContext)
             Tab.PAGES_ID -> PageListFragment.makeRoute(canvasContext, false)
-            Tab.FRONT_PAGE_ID -> PageDetailsFragment.makeRoute(canvasContext, Page.FRONT_PAGE_NAME)
+            Tab.FRONT_PAGE_ID -> PageDetailsFragment.makeRoute(canvasContext, homePageTitle ?: Page.FRONT_PAGE_NAME)
             Tab.DISCUSSIONS_ID -> DiscussionListFragment.makeRoute(canvasContext)
             Tab.PEOPLE_ID -> PeopleListFragment.makeRoute(canvasContext)
             Tab.FILES_ID -> FileListFragment.makeRoute(canvasContext)
