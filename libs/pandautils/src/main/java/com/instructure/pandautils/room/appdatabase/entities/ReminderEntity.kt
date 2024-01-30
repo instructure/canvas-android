@@ -27,5 +27,8 @@ data class ReminderEntity(
     val id: Long = 0,
     val userId: Long,
     val assignmentId: Long,
-    val text: String
+    val htmlUrl: String,
+    val name: String,
+    val text: String,
+    val time: Long
 )

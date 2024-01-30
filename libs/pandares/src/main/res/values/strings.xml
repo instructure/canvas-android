@@ -101,6 +101,7 @@
     <string name="reminderNotificationDescription">This assignment is due in %s: %s</string>
     <string name="reminderSnackbarDescription">To set a reminder, please enable reminders in the app settings.</string>
     <string name="reminderSnackbarAction">Go to Settings</string>
+    <string name="reminderInPast">Please choose a future time for your reminder!</string>
 
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>

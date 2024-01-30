@@ -19,7 +19,6 @@ package com.instructure.student.features.assignments.details
 
 import android.app.AlarmManager
 import android.app.Dialog
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -91,7 +90,6 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
-import com.instructure.student.receivers.AlarmReceiver
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
 import dagger.hilt.android.AndroidEntryPoint
@@ -231,9 +229,6 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             }
             is AssignmentDetailAction.ShowCustomReminderDialog -> {
                 showCustomReminderDialog()
-            }
-            is AssignmentDetailAction.SetAlarm -> {
-                setAlarm(action.assignmentPath, action.assignmentName, action.dueIn, action.timeInMillis)
             }
         }
     }
@@ -479,18 +474,6 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showCustomReminderDialog() {
         CustomReminderDialog.newInstance().show(childFragmentManager, null)
-    }
-
-    private fun setAlarm(assignmentPath: String, assignmentName: String, dueIn: String, timeInMillis: Long) {
-        val intent = Intent(context, AlarmReceiver::class.java)
-        intent.putExtra(AlarmReceiver.ASSIGNMENT_PATH, assignmentPath)
-        intent.putExtra(AlarmReceiver.ASSIGNMENT_NAME, assignmentName)
-        intent.putExtra(AlarmReceiver.DUE_IN, dueIn)
-
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent)
     }
 
     companion object {

@@ -25,23 +25,34 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.instructure.pandautils.models.PushNotification
+import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.util.goAsync
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AlarmReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var reminderDao: ReminderDao
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context != null && intent != null) {
+            val assignmentId = intent.getLongExtra(ASSIGNMENT_ID, 0L)
             val assignmentPath = intent.getStringExtra(ASSIGNMENT_PATH) ?: return
             val assignmentName = intent.getStringExtra(ASSIGNMENT_NAME) ?: return
             val dueIn = intent.getStringExtra(DUE_IN) ?: return
+
             createNotificationChannel(context)
-            showNotification(context, assignmentPath, assignmentName, dueIn)
+            showNotification(context, assignmentId, assignmentPath, assignmentName, dueIn)
+            goAsync { reminderDao.deletePastReminders(System.currentTimeMillis()) }
         }
     }
 
-    private fun showNotification(context: Context, assignmentPath: String, assignmentName: String, dueIn: String) {
+    private fun showNotification(context: Context, assignmentId: Long, assignmentPath: String, assignmentName: String, dueIn: String) {
         val intent = Intent(context, NavigationActivity.startActivityClass).apply {
             putExtra(Const.LOCAL_NOTIFICATION, true)
             putExtra(PushNotification.HTML_URL, assignmentPath)
@@ -61,7 +72,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(0, builder.build())
+        notificationManager.notify(assignmentId.toInt(), builder.build())
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -79,6 +90,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     companion object {
         private const val CHANNEL_ID = "REMINDERS_CHANNEL_ID"
+        const val ASSIGNMENT_ID = "ASSIGNMENT_ID"
         const val ASSIGNMENT_PATH = "ASSIGNMENT_PATH"
         const val ASSIGNMENT_NAME = "ASSIGNMENT_NAME"
         const val DUE_IN = "DUE_IN"

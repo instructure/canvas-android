@@ -55,6 +55,7 @@ import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.student.features.assignments.details.itemviewmodels.ReminderItemViewModel
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.util.getStudioLTITool
@@ -77,6 +78,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val colorKeeper: ColorKeeper,
     private val application: Application,
     private val apiPrefs: ApiPrefs,
+    private val alarmScheduler: AlarmScheduler,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
 
@@ -490,10 +492,12 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun mapReminders(reminders: List<ReminderEntity>) = reminders.map {
-        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text))) {
-            viewModelScope.launch {
-                assignmentDetailsRepository.deleteReminderById(it)
-            }
+        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text)), ::deleteReminderById)
+    }
+
+    private fun deleteReminderById(id: Long) {
+        viewModelScope.launch {
+            assignmentDetailsRepository.deleteReminderById(id)
         }
     }
 
@@ -616,19 +620,30 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun setReminder(reminderChoice: ReminderChoice) {
+        val assignment = assignment ?: return
         val alarmTimeInMillis = getAlarmTimeInMillis(reminderChoice) ?: return
+        val reminderText = reminderChoice.getText(resources)
 
-        postAction(
-            AssignmentDetailAction.SetAlarm(
-                assignment?.htmlUrl.orEmpty(),
-                assignment?.name.orEmpty(),
-                reminderChoice.getText(resources),
-                alarmTimeInMillis
-            )
+        if (alarmTimeInMillis < System.currentTimeMillis()) {
+            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderInPast)))
+            return
+        }
+
+        alarmScheduler.scheduleAlarm(
+            assignment.id,
+            assignment.htmlUrl.orEmpty(),
+            assignment.name.orEmpty(),
+            reminderText,
+            alarmTimeInMillis
         )
 
         viewModelScope.launch {
-            assignmentDetailsRepository.addReminder(apiPrefs.user?.id.orDefault(), assignmentId, reminderChoice.getText(resources))
+            assignmentDetailsRepository.addReminder(
+                apiPrefs.user?.id.orDefault(),
+                assignment,
+                reminderText,
+                alarmTimeInMillis
+            )
         }
     }
 

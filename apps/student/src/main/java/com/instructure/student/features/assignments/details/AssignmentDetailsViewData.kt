@@ -113,5 +113,4 @@ sealed class AssignmentDetailAction {
     data class OnDiscussionHeaderAttachmentClicked(val attachments: List<RemoteFile>) : AssignmentDetailAction()
     data object ShowReminderDialog : AssignmentDetailAction()
     data object ShowCustomReminderDialog : AssignmentDetailAction()
-    data class SetAlarm(val assignmentPath: String, val assignmentName: String, val dueIn: String, val timeInMillis: Long) : AssignmentDetailAction()
 }

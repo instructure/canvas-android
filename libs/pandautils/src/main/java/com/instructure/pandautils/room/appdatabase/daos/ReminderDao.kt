@@ -34,6 +34,12 @@ interface ReminderDao {
     @Query("DELETE FROM ReminderEntity WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM ReminderEntity WHERE time < :time")
+    suspend fun deletePastReminders(time: Long)
+
     @Query("SELECT * FROM ReminderEntity WHERE userId = :userId AND assignmentId = :assignmentId")
     fun findByAssignmentIdLiveData(userId: Long, assignmentId: Long): LiveData<List<ReminderEntity>>
+
+    @Query("SELECT * FROM ReminderEntity WHERE userId = :userId")
+    suspend fun findByUseId(userId: Long): List<ReminderEntity>
 }
