@@ -1481,4 +1481,5 @@
         <item quantity="other">%d kou yo senkwonize.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Plis kontni kou</string>
+    <string name="failedToUpdateDashboardOrder">Echèk mizajou kòmann kat tablodbò a</string>
 </resources>

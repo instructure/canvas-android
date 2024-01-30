@@ -1482,4 +1482,5 @@
         <item quantity="other">%d khóa học đã được đồng bộ.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Nội dung khóa học bổ sung</string>
+    <string name="failedToUpdateDashboardOrder">Không thể cập nhật thứ tự thẻ Bảng Điều Khiển</string>
 </resources>

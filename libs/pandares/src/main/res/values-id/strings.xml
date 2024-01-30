@@ -1484,4 +1484,5 @@
         <item quantity="other">Kursus %d telah disinkronkan.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Konten kursus tambahan</string>
+    <string name="failedToUpdateDashboardOrder">Gagal memperbarui urutan kartu Dashboard</string>
 </resources>

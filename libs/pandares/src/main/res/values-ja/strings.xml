@@ -1461,4 +1461,5 @@
         <item quantity="other">%dコースが同期されました。</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">追加のコースコンテンツ</string>
+    <string name="failedToUpdateDashboardOrder">ダッシュボードのカードの順番を更新できませんでした</string>
 </resources>

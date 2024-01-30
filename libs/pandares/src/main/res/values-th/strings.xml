@@ -1481,4 +1481,5 @@
         <item quantity="other">%d บทเรียนได้รับการซิงค์แล้ว</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">เนื้อหาบทเรียนเพิ่มเติม</string>
+    <string name="failedToUpdateDashboardOrder">ไม่สามารถอัพเดตลำดับการ์ดแผงข้อมูล</string>
 </resources>

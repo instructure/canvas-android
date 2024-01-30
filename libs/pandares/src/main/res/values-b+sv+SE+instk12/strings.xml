@@ -1481,4 +1481,5 @@
         <item quantity="other">%d-kurser har synkroniserats.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Extra kursinnehåll</string>
+    <string name="failedToUpdateDashboardOrder">Det gick inte att uppdatera översiktens kortordning</string>
 </resources>

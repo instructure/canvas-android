@@ -1482,4 +1482,5 @@
         <item quantity="other">%d emner er synkronisert.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Ytterligere emneinnhold</string>
+    <string name="failedToUpdateDashboardOrder">Kunne ikke oppdatere rekkefølge på Dashbord-kort</string>
 </resources>
