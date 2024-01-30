@@ -87,8 +87,7 @@ class DataResultTest : Assert() {
         val result: DataResult<String> = DataResult.Success(expectedValue)
         val block = mockk<(String) -> Unit>(relaxed = true)
         result.onSuccess(block)
-        verify { block.invoke(expectedValue) }
-        confirmVerified()
+        verify(exactly = 1) { block.invoke(expectedValue) }
     }
 
     @Test
@@ -97,7 +96,6 @@ class DataResultTest : Assert() {
         val block = mockk<(String) -> Unit>(relaxed = true)
         result.onSuccess(block)
         verify(exactly = 0) { block.invoke(capture(slot())) }
-        confirmVerified()
     }
 
     @Test
@@ -106,8 +104,7 @@ class DataResultTest : Assert() {
         val result: DataResult<String> = DataResult.Fail(expectedFailure)
         val block = mockk<(Failure) -> Unit>(relaxed = true)
         result.onFail<Failure.Exception>(block)
-        verify { block.invoke(expectedFailure) }
-        confirmVerified()
+        verify(exactly = 1) { block.invoke(expectedFailure) }
     }
 
     @Test
@@ -116,8 +113,7 @@ class DataResultTest : Assert() {
         val result: DataResult<String> = DataResult.Fail(expectedFailure)
         val block = mockk<(Failure) -> Unit>(relaxed = true)
         result.onFail<Failure.Network>(block)
-        verify { block.invoke(expectedFailure) }
-        confirmVerified()
+        verify(exactly = 1) { block.invoke(expectedFailure) }
     }
 
     @Test
@@ -126,8 +122,7 @@ class DataResultTest : Assert() {
         val result: DataResult<String> = DataResult.Fail(expectedFailure)
         val block = mockk<(Failure) -> Unit>(relaxed = true)
         result.onFail<Failure.Authorization>(block)
-        verify { block.invoke(expectedFailure) }
-        confirmVerified()
+        verify(exactly = 1) { block.invoke(expectedFailure) }
     }
 
     @Test
@@ -135,8 +130,7 @@ class DataResultTest : Assert() {
         val result: DataResult<String> = DataResult.Fail()
         val block = mockk<(Failure?) -> Unit>(relaxed = true)
         result.onFailure(block)
-        verify { block.invoke(null) }
-        confirmVerified()
+        verify(exactly = 1) { block.invoke(null) }
     }
 
     @Test
@@ -145,8 +139,7 @@ class DataResultTest : Assert() {
         val result: DataResult<String> = DataResult.Fail(expectedFailure)
         val block = mockk<(Failure?) -> Unit>(relaxed = true)
         result.onFailure(block)
-        verify { block.invoke(expectedFailure) }
-        confirmVerified()
+        verify(exactly = 1) { block.invoke(expectedFailure) }
     }
 
     @Test
@@ -155,7 +148,6 @@ class DataResultTest : Assert() {
         val block = mockk<(Failure?) -> Unit>(relaxed = true)
         result.onFailure(block)
         verify(exactly = 0) { block.invoke(capture(slot())) }
-        confirmVerified()
     }
 
     @Test
@@ -164,6 +156,5 @@ class DataResultTest : Assert() {
         val block = mockk<(Failure) -> Unit>(relaxed = true)
         result.onFail<Failure.Network>(block)
         verify(exactly = 0) { block.invoke(capture(slot())) }
-        confirmVerified()
     }
 }

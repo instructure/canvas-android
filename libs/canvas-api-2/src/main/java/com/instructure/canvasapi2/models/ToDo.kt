@@ -63,7 +63,7 @@ data class ToDo(
         }
 
     override val comparisonString get() = title
-    override val id: Long get() = assignment?.id ?: scheduleItem?.id ?: -1
+    override val id: Long get() = assignment?.id ?: quiz?.id ?: scheduleItem?.id ?: -1
 
     ///////////////////////////////////////////////////////////////////////////
     // Helpers

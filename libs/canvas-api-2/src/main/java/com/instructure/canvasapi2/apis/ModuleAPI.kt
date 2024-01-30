@@ -43,6 +43,9 @@ object ModuleAPI {
         @GET("{contextId}/modules?include[]=items&include[]=content_details")
         fun getFirstPageModulesWithItems(@Path("contextId") contextId: Long) : Call<List<ModuleObject>>
 
+        @GET("{contextType}/{contextId}/modules?include[]=items&include[]=content_details")
+        suspend fun getFirstPageModulesWithItems(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<ModuleObject>>
+
         @GET("{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
         fun getFirstPageModuleItems(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long) : Call<List<ModuleItem>>
 

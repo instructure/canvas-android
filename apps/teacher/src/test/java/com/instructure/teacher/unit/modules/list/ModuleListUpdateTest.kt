@@ -13,13 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.unit.modules
+package com.instructure.teacher.unit.modules.list
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.teacher.features.modules.list.*
+import com.instructure.teacher.features.modules.list.ModuleListEffect
+import com.instructure.teacher.features.modules.list.ModuleListEvent
+import com.instructure.teacher.features.modules.list.ModuleListModel
+import com.instructure.teacher.features.modules.list.ModuleListPageData
+import com.instructure.teacher.features.modules.list.ModuleListUpdate
 import com.instructure.teacher.unit.utils.matchesEffects
 import com.instructure.teacher.unit.utils.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
@@ -30,6 +35,10 @@ import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import org.junit.Assert
 import org.junit.Test
 
@@ -110,24 +119,6 @@ class ModuleListUpdateTest : Assert() {
         val item = ModuleItem(id = 123L)
         val event = ModuleListEvent.ModuleItemClicked(item.id)
         val expectedEffect = ModuleListEffect.ShowModuleItemDetailView(item, course)
-        val model = initModel.copy(
-            modules = listOf(ModuleObject(items = listOf(item)))
-        )
-        updateSpec
-            .given(model)
-            .whenEvent(event)
-            .then(
-                assertThatNext<ModuleListModel, ModuleListEffect>(
-                    matchesEffects(expectedEffect)
-                )
-            )
-    }
-
-    @Test
-    fun `ModuleClicked event emits LoadFileInfo effect for files`() {
-        val item = ModuleItem(id = 123L, type = "File")
-        val event = ModuleListEvent.ModuleItemClicked(item.id)
-        val expectedEffect = ModuleListEffect.LoadFileInfo(item, course)
         val model = initModel.copy(
             modules = listOf(ModuleObject(items = listOf(item)))
         )
@@ -272,6 +263,9 @@ class ModuleListUpdateTest : Assert() {
 
     @Test
     fun `RemoveModuleItems event removed module items`() {
+        mockkObject(CanvasRestAdapter.Companion)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns mockk()
+
         val model = initModel.copy(
             modules = listOf(
                 ModuleObject(
@@ -301,6 +295,8 @@ class ModuleListUpdateTest : Assert() {
                     hasModel(expectedModel)
                 )
             )
+
+        unmockkObject(CanvasRestAdapter.Companion)
     }
 
     @Test

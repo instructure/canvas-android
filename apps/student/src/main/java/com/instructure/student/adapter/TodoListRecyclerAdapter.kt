@@ -29,7 +29,11 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.ToDo
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.student.R
@@ -142,8 +146,8 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
         isLoadedFirstPage = true
         shouldShowLoadingFooter()
         if (!isNoNetwork) {
-            adapterToRecyclerViewCallback.setDisplayNoConnection(false)
-            adapterToRecyclerViewCallback.setIsEmpty(isAllPagesLoaded && size() == 0)
+            adapterToRecyclerViewCallback?.setDisplayNoConnection(false)
+            adapterToRecyclerViewCallback?.setIsEmpty(isAllPagesLoaded && size() == 0)
         }
     }
 
@@ -154,7 +158,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
 
     override fun refresh() {
         isNoNetwork = false
-        adapterToRecyclerViewCallback.setDisplayNoConnection(false)
+        adapterToRecyclerViewCallback?.setDisplayNoConnection(false)
         super.refresh()
     }
 
@@ -285,7 +289,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
             ToDoManager.dismissTodo(todo, object : StatusCallback<Void>() {
                 override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
                     removeItem(todo)
-                    adapterToRecyclerViewCallback.setIsEmpty(size() == 0)
+                    adapterToRecyclerViewCallback?.setIsEmpty(size() == 0)
                 }
 
                 override fun onFail(call: Call<Void>?, error: Throwable, response: Response<*>?) {

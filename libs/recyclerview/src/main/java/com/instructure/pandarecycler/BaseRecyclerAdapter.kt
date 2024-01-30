@@ -44,7 +44,7 @@ abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder>(var context: Con
         fun refresh()
     }
 
-    lateinit var adapterToRecyclerViewCallback: AdapterToRecyclerViewCallback
+    var adapterToRecyclerViewCallback: AdapterToRecyclerViewCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T {
         context = parent.context
@@ -56,7 +56,7 @@ abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder>(var context: Con
     open val isPaginated: Boolean get() = false
 
     open fun refresh() {
-        adapterToRecyclerViewCallback.refresh()
+        adapterToRecyclerViewCallback?.refresh()
     }
 
     open fun cancel() {}

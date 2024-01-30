@@ -18,6 +18,7 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.Toast
@@ -34,9 +35,19 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.getModuleItemId
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
@@ -61,10 +72,10 @@ import org.greenrobot.eventbus.ThreadMode
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 class PageDetailsFragment : BasePresenterFragment<
         PageDetailsPresenter,
-        PageDetailsView>(),
-        PageDetailsView, Identity {
-
-    private val binding by viewBinding(FragmentPageDetailsBinding::bind)
+        PageDetailsView,
+        FragmentPageDetailsBinding>(),
+    PageDetailsView,
+    Identity {
 
     private var canvasContext: CanvasContext by ParcelableArg(default = Course())
     private var page: Page by ParcelableArg(Page(), PAGE)
@@ -154,7 +165,7 @@ class PageDetailsFragment : BasePresenterFragment<
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = !RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
         }
 
-        canvasWebViewWraper.webView.setMediaDownloadCallback (object : CanvasWebView.MediaDownloadCallback{
+        canvasWebViewWraper.webView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback {
             override fun downloadMedia(mime: String?, url: String?, filename: String?) {
                 downloadUrl = url
                 downloadFileName = filename
@@ -182,7 +193,7 @@ class PageDetailsFragment : BasePresenterFragment<
     override fun getPresenterFactory() = PageDetailsPresenterFactory(canvasContext, page)
     override fun onPresenterPrepared(presenter: PageDetailsPresenter) = Unit
 
-    override fun layoutResId() = R.layout.fragment_page_details
+    override val bindingInflater: (LayoutInflater) -> FragmentPageDetailsBinding = FragmentPageDetailsBinding::inflate
 
     override val identity: Long? get() = page.id
     override val skipCheck: Boolean get() = false

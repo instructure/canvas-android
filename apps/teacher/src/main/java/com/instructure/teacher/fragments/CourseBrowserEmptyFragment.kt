@@ -15,10 +15,10 @@
  */
 package com.instructure.teacher.fragments
 
+import android.view.LayoutInflater
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER_EMPTY
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -30,17 +30,15 @@ import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
 
 @ScreenView(SCREEN_VIEW_COURSE_BROWSER_EMPTY)
-class CourseBrowserEmptyFragment: BasePresenterFragment<
+class CourseBrowserEmptyFragment : BasePresenterFragment<
         CourseBrowserEmptyPresenter,
-        CourseBrowserEmptyView>(), CourseBrowserEmptyView {
-
-    private val binding by viewBinding(FragmentCourseBrowserEmptyBinding::bind)
+        CourseBrowserEmptyView,
+        FragmentCourseBrowserEmptyBinding>(),
+    CourseBrowserEmptyView {
 
     private var mCourse: Course by ParcelableArg(Course())
 
-    override fun layoutResId(): Int {
-        return R.layout.fragment_course_browser_empty
-    }
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCourseBrowserEmptyBinding = FragmentCourseBrowserEmptyBinding::inflate
 
     private fun setupToolbar(courseColor: Int?) {
         if(courseColor != null) {

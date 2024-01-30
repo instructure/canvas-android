@@ -43,6 +43,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
@@ -327,4 +328,9 @@ fun bindImageColor(imageView: ImageView, @ColorInt color: Int) {
 @BindingAdapter("onClickWithNetworkCheck")
 fun bindOnClickWithNetworkCheck(view: View, clickListener: OnClickListener) {
     view.onClickWithRequireNetwork(clickListener)
+}
+
+@BindingAdapter("onPageChangeListener")
+fun addOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageChangeListener?) {
+    listener?.let { viewPager.addOnPageChangeListener(it) }
 }

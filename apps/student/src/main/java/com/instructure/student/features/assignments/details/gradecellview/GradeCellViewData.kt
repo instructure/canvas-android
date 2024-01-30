@@ -24,6 +24,7 @@ data class GradeCellViewData(
     val grade: String = "",
     val gradeCellContentDescription: String = "",
     val outOf: String = "",
+    val yourGrade: String = "",
     val latePenalty: String = "",
     val finalGrade: String = "",
     val stats: GradeCellViewState.GradeStats? = null
@@ -39,7 +40,6 @@ data class GradeCellViewData(
     }
 
     companion object {
-        @Suppress("DEPRECATION")
         fun fromSubmission(
             resources: Resources,
             courseColor: ThemedColor,
@@ -145,7 +145,7 @@ data class GradeCellViewData(
                     gradeCellContentDescription = contentDescription,
                 )
             } else {
-                val score = NumberHelper.formatDecimal(submission.enteredScore, 2, true)
+                val score = NumberHelper.formatDecimal(submission.score, 2, true)
                 val chartPercent = (submission.enteredScore / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
                 // If grading type is Points, don't show the grade since we're already showing it as the score
                 var grade = if (assignment.gradingType != Assignment.POINTS_TYPE) submission.grade.orEmpty() else ""
@@ -170,12 +170,15 @@ data class GradeCellViewData(
 
                 var latePenalty = ""
                 var finalGrade = ""
+                var yourGrade = ""
 
                 // Adjust for late penalty, if any
                 if (submission.pointsDeducted.orDefault() > 0.0) {
                     grade = "" // Grade will be shown in the 'final grade' text
                     val pointsDeducted = NumberHelper.formatDecimal(submission.pointsDeducted.orDefault(), 2, true)
-                    latePenalty = resources.getString(R.string.latePenalty, pointsDeducted)
+                    val achievedScore = NumberHelper.formatDecimal(submission.enteredScore, 2, true)
+                    yourGrade = resources.getString(R.string.yourGrade, achievedScore)
+                    latePenalty = resources.getString(R.string.latePenaltyUpdated, pointsDeducted)
                     finalGrade = resources.getString(R.string.finalGradeFormatted, submission.grade)
                 }
 
@@ -210,6 +213,7 @@ data class GradeCellViewData(
                     grade = grade,
                     gradeCellContentDescription = gradeCellContentDescription,
                     outOf = outOfText,
+                    yourGrade = yourGrade,
                     latePenalty = latePenalty,
                     finalGrade = finalGrade,
                     stats = stats

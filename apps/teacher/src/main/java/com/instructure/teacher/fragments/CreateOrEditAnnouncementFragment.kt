@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -33,7 +34,6 @@ import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -41,7 +41,23 @@ import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
@@ -57,17 +73,18 @@ import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @PageView("courses/{canvasContext}/discussion_topics/new?is_announcement=true")
 @ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT)
-class CreateOrEditAnnouncementFragment :
-        BasePresenterFragment<CreateOrEditAnnouncementPresenter, CreateOrEditAnnouncementView>(),
+class CreateOrEditAnnouncementFragment : BasePresenterFragment<
+        CreateOrEditAnnouncementPresenter,
         CreateOrEditAnnouncementView,
-        Identity,
-        FileUploadDialogParent {
-
-    private val binding by viewBinding(FragmentCreateOrEditAnnouncementBinding::bind)
+        FragmentCreateOrEditAnnouncementBinding>(),
+    CreateOrEditAnnouncementView,
+    Identity,
+    FileUploadDialogParent {
 
     /* The course this announcement belongs to */
     private var canvasContext by ParcelableArg<CanvasContext>(Course())
@@ -101,7 +118,7 @@ class CreateOrEditAnnouncementFragment :
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
     override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter) {}
-    override fun layoutResId(): Int = R.layout.fragment_create_or_edit_announcement
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCreateOrEditAnnouncementBinding = FragmentCreateOrEditAnnouncementBinding::inflate
 
     override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(canvasContext, editAnnouncement?.parcelCopy())
 

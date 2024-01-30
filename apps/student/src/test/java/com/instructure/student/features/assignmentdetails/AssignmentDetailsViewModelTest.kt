@@ -25,7 +25,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.LockInfo
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
@@ -39,7 +46,11 @@ import com.instructure.student.features.assignments.details.AssignmentDetailActi
 import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -48,7 +59,8 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 class AssignmentDetailsViewModelTest {
@@ -722,5 +734,45 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
 
         Assert.assertTrue(viewModel.showContent(viewModel.state.value))
+    }
+
+    @Test
+    fun `Submit button is not visible when loaded as Observer`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Observer)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(name = "Test", submissionTypesRaw = listOf("online_text_entry"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        Assert.assertFalse(viewModel.data.value?.submitVisible!!)
+    }
+
+    @Test
+    fun `Submit button is not visible when not between valid date range`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)), accessRestrictedByDate = true)
+        every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns course
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(name = "Test", submissionTypesRaw = listOf("online_text_entry"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        Assert.assertFalse(viewModel.data.value?.submitVisible!!)
+    }
+
+    @Test
+    fun `Submit button is not visible when excused`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(name = "Test", submissionTypesRaw = listOf("online_text_entry"), submission = Submission(excused = true))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        Assert.assertFalse(viewModel.data.value?.submitVisible!!)
     }
 }

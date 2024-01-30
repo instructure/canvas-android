@@ -22,16 +22,16 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -46,7 +46,7 @@ class CourseInteractionTest : StudentTest() {
 
     // Link from a course page to another public course should open in the app
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COURSE, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.COURSE, TestCategory.INTERACTION)
     fun testCourse_linkFromCoursePageToPublicCoursePage() {
 
         val data = getToCourse(courseCount = 2, favoriteCourseCount = 2)
@@ -81,7 +81,7 @@ class CourseInteractionTest : StudentTest() {
 
     // user should be able to open/preview course file
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testCourse_openFile() {
 
         // MBL-13499: Don't run this test on API 28 and above until we add HTTPS support

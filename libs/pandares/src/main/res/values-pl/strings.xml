@@ -975,6 +975,8 @@
     <string name="inviteAccepted">Zaakceptowano zaproszenie!</string>
     <string name="inviteDeclined">Odrzucono zaproszenie.</string>
     <string name="latePenalty">Kara za spóźnienie (-%s)</string>
+    <string name="latePenaltyUpdated">Kara za spóźnienie: -%s pkt</string>
+    <string name="yourGrade">Twoja ocena: %s pkt</string>
     <string name="finalGrade">Ocena końcowa</string>
 
     <string name="max_count">99+</string>

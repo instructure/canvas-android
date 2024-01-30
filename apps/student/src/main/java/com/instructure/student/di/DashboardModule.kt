@@ -19,6 +19,7 @@ package com.instructure.student.di
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
@@ -56,9 +57,10 @@ class DashboardModule {
     fun provideDashboardNetworkDataSource(
         courseApi: CourseAPI.CoursesInterface,
         groupApi: GroupAPI.GroupInterface,
-        apiPrefs: ApiPrefs
+        apiPrefs: ApiPrefs,
+        userApi: UserAPI.UsersInterface
     ): DashboardNetworkDataSource {
-        return DashboardNetworkDataSource(courseApi, groupApi, apiPrefs)
+        return DashboardNetworkDataSource(courseApi, groupApi, apiPrefs, userApi)
     }
 
     @Provides

@@ -35,7 +35,7 @@ import com.instructure.student.holders.NoViewholder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.util.*
 
 open class DiscussionListRecyclerAdapter(
     context: Context,
@@ -125,7 +125,7 @@ open class DiscussionListRecyclerAdapter(
         }
         callback.onRefreshFinished()
         onCallbackFinished(ApiType.API)
-        adapterToRecyclerViewCallback.setIsEmpty(size() == 0)
+        adapterToRecyclerViewCallback?.setIsEmpty(size() == 0)
     }
 
     private fun getHeaderType(discussionTopicHeader: DiscussionTopicHeader): String {
