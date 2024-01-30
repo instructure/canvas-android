@@ -1481,4 +1481,5 @@
         <item quantity="other">%d cursos foram sincronizados.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Conteúdo adicional do curso</string>
+    <string name="failedToUpdateDashboardOrder">Falha ao atualizar a ordem dos cartões do Painel</string>
 </resources>

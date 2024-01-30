@@ -1481,4 +1481,5 @@
         <item quantity="other">%d kurssia on synkronoitu.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">LIsäkurssin sisältö.</string>
+    <string name="failedToUpdateDashboardOrder">Hallintapaneelin koontinäytön korttien päivittäminen epäonnistui</string>
 </resources>

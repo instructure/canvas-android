@@ -1482,4 +1482,5 @@
         <item quantity="other">S’han sincronitzat %d assignatures.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Contingut de l’assignatura addicional</string>
+    <string name="failedToUpdateDashboardOrder">No s’ha pogut actualitzar la comanda de targetes del panell de control</string>
 </resources>

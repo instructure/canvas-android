@@ -1521,4 +1521,5 @@
         <item quantity="other">%d курса(-ов) были синхронизированы.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Дополнительный контент курса</string>
+    <string name="failedToUpdateDashboardOrder">Не удалось обновить порядок карт на информационной панели</string>
 </resources>
