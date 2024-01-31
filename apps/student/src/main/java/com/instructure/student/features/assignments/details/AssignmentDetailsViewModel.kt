@@ -496,6 +496,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun deleteReminderById(id: Long) {
+        alarmScheduler.cancelAlarm(id)
         viewModelScope.launch {
             assignmentDetailsRepository.deleteReminderById(id)
         }
@@ -629,20 +630,21 @@ class AssignmentDetailsViewModel @Inject constructor(
             return
         }
 
-        alarmScheduler.scheduleAlarm(
-            assignment.id,
-            assignment.htmlUrl.orEmpty(),
-            assignment.name.orEmpty(),
-            reminderText,
-            alarmTimeInMillis
-        )
-
         viewModelScope.launch {
-            assignmentDetailsRepository.addReminder(
+            val reminderId = assignmentDetailsRepository.addReminder(
                 apiPrefs.user?.id.orDefault(),
                 assignment,
                 reminderText,
                 alarmTimeInMillis
+            )
+
+            alarmScheduler.scheduleAlarm(
+                assignment.id,
+                assignment.htmlUrl.orEmpty(),
+                assignment.name.orEmpty(),
+                reminderText,
+                alarmTimeInMillis,
+                reminderId
             )
         }
     }

@@ -258,7 +258,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     StudentLogoutTask(
                         if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS,
                         typefaceBehavior = typefaceBehavior,
-                        databaseProvider = databaseProvider
+                        databaseProvider = databaseProvider,
+                        alarmScheduler = alarmScheduler
                     ).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
@@ -268,7 +269,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                                 StudentLogoutTask(
                                     LogoutTask.Type.LOGOUT,
                                     typefaceBehavior = typefaceBehavior,
-                                    databaseProvider = databaseProvider
+                                    databaseProvider = databaseProvider,
+                                    alarmScheduler = alarmScheduler
                                 ).execute()
                             }
                             .setNegativeButton(android.R.string.cancel, null)
@@ -390,7 +392,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             lifecycleScope.launch {
                 val isTokenValid = repository.isTokenValid()
                 if (!isTokenValid) {
-                    StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
+                    StudentLogoutTask(
+                        LogoutTask.Type.LOGOUT,
+                        typefaceBehavior = typefaceBehavior,
+                        databaseProvider = databaseProvider,
+                        alarmScheduler = alarmScheduler
+                    ).execute()
                 }
             }
         }
@@ -443,7 +450,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
-            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
+            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
         }
 
         setupBottomNavigation()

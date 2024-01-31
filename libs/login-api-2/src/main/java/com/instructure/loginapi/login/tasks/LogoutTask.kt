@@ -58,7 +58,7 @@ abstract class LogoutTask(
 
     protected open fun stopOfflineSync() = Unit
 
-    protected open fun cancelAlarms() = Unit
+    protected open suspend fun cancelAlarms() = Unit
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun execute() {

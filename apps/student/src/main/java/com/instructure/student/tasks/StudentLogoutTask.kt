@@ -16,8 +16,6 @@
  */
 package com.instructure.student.tasks
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -31,8 +29,8 @@ import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.receivers.AlarmReceiver
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
 import java.io.File
@@ -42,7 +40,8 @@ class StudentLogoutTask(
     uri: Uri? = null,
     canvasForElementaryFeatureFlag: Boolean = false,
     typefaceBehavior: TypefaceBehavior? = null,
-    private val databaseProvider: DatabaseProvider? = null
+    private val databaseProvider: DatabaseProvider? = null,
+    private val alarmScheduler: AlarmScheduler? = null
 ) : LogoutTask(type, uri, canvasForElementaryFeatureFlag, typefaceBehavior) {
 
     override fun onCleanup() {
@@ -86,11 +85,7 @@ class StudentLogoutTask(
         }
     }
 
-    override fun cancelAlarms() {
-        val context = ContextKeeper.appContext
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(pendingIntent)
+    override suspend fun cancelAlarms() {
+        alarmScheduler?.cancelAllAlarmsForCurrentUser()
     }
 }

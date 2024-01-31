@@ -67,16 +67,14 @@ class AssignmentDetailsRepository(
         reminderDao.deleteById(id)
     }
 
-    suspend fun addReminder(userId: Long, assignment: Assignment, text: String, time: Long) {
-        reminderDao.insert(
-            ReminderEntity(
-                userId = userId,
-                assignmentId = assignment.id,
-                htmlUrl = assignment.htmlUrl.orEmpty(),
-                name = assignment.name.orEmpty(),
-                text = text,
-                time = time
-            )
+    suspend fun addReminder(userId: Long, assignment: Assignment, text: String, time: Long) = reminderDao.insert(
+        ReminderEntity(
+            userId = userId,
+            assignmentId = assignment.id,
+            htmlUrl = assignment.htmlUrl.orEmpty(),
+            name = assignment.name.orEmpty(),
+            text = text,
+            time = time
         )
-    }
+    )
 }

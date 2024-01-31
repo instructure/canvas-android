@@ -29,7 +29,7 @@ import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 interface ReminderDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(reminder: ReminderEntity)
+    suspend fun insert(reminder: ReminderEntity): Long
 
     @Query("DELETE FROM ReminderEntity WHERE id = :id")
     suspend fun deleteById(id: Long)

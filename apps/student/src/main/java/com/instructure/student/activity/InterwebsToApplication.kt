@@ -45,6 +45,7 @@ import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
@@ -64,6 +65,9 @@ class InterwebsToApplication : AppCompatActivity() {
 
     @Inject
     lateinit var typefaceBehavior: TypefaceBehavior
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     private var loadingJob: Job? = null
 
@@ -106,7 +110,13 @@ class InterwebsToApplication : AppCompatActivity() {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if(signedIn) { // If the user is already signed in, use the QR Switch
-                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data, canvasForElementaryFeatureFlag = featureFlagProvider.getCanvasForElementaryFlag(), typefaceBehavior = typefaceBehavior).execute()
+                        StudentLogoutTask(
+                            type = LogoutTask.Type.QR_CODE_SWITCH,
+                            uri = data,
+                            canvasForElementaryFeatureFlag = featureFlagProvider.getCanvasForElementaryFlag(),
+                            typefaceBehavior = typefaceBehavior,
+                            alarmScheduler = alarmScheduler
+                        ).execute()
                         finish()
                         return@tryWeave
                     }

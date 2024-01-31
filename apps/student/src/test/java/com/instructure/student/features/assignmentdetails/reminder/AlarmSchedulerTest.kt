@@ -57,14 +57,35 @@ class AlarmSchedulerTest {
         every { apiPrefs.user } returns User(id = 1)
         coEvery { reminderDao.findByUserId(1) } returns listOf(reminder1, reminder2)
 
-        coEvery { alarmScheduler.scheduleAlarm(any(), any(), any(), any(), any()) } just Runs
+        coEvery { alarmScheduler.scheduleAlarm(any(), any(), any(), any(), any(), any()) } just Runs
         coEvery { alarmScheduler.scheduleAllAlarmsForCurrentUser() } answers { callOriginal() }
 
         alarmScheduler.scheduleAllAlarmsForCurrentUser()
 
         coVerify {
-            alarmScheduler.scheduleAlarm(reminder1.assignmentId, reminder1.htmlUrl, reminder1.name, reminder1.text, reminder1.time)
-            alarmScheduler.scheduleAlarm(reminder2.assignmentId, reminder2.htmlUrl, reminder2.name, reminder2.text, reminder2.time)
+            alarmScheduler.scheduleAlarm(reminder1.assignmentId, reminder1.htmlUrl, reminder1.name, reminder1.text, reminder1.time, reminder1.id)
+            alarmScheduler.scheduleAlarm(reminder2.assignmentId, reminder2.htmlUrl, reminder2.name, reminder2.text, reminder2.time, reminder2.id)
+        }
+    }
+
+    @Test
+    fun `Test cancel all alarms for the current user`() = runTest {
+        val alarmScheduler = spyk(AlarmScheduler(context, reminderDao, apiPrefs))
+
+        val reminder1 = ReminderEntity(1, 1, 1, "path1", "Assignment 1", "1 day", 12345678)
+        val reminder2 = ReminderEntity(2, 1, 2, "path2", "Assignment 2", "2 hours", 12345678)
+
+        every { apiPrefs.user } returns User(id = 1)
+        coEvery { reminderDao.findByUserId(1) } returns listOf(reminder1, reminder2)
+
+        coEvery { alarmScheduler.cancelAlarm(any()) } just Runs
+        coEvery { alarmScheduler.cancelAllAlarmsForCurrentUser() } answers { callOriginal() }
+
+        alarmScheduler.cancelAllAlarmsForCurrentUser()
+
+        coVerify {
+            alarmScheduler.cancelAlarm(reminder1.id)
+            alarmScheduler.cancelAlarm(reminder2.id)
         }
     }
 }
