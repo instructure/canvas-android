@@ -42,7 +42,7 @@ class AlarmScheduler(private val context: Context, private val reminderDao: Remi
     }
 
     suspend fun scheduleAllAlarmsForCurrentUser() {
-        val reminders = reminderDao.findByUseId(apiPrefs.user?.id ?: return)
+        val reminders = reminderDao.findByUserId(apiPrefs.user?.id ?: return)
         reminders.forEach {
             scheduleAlarm(it.assignmentId, it.htmlUrl, it.name, it.text, it.time)
         }

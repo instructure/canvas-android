@@ -48,7 +48,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
             createNotificationChannel(context)
             showNotification(context, assignmentId, assignmentPath, assignmentName, dueIn)
-            goAsync { reminderDao.deletePastReminders(System.currentTimeMillis()) }
+            goAsync {
+                reminderDao.deletePastReminders(System.currentTimeMillis())
+            }
         }
     }
 

@@ -204,10 +204,19 @@ class AssignmentDetailsRepositoryTest {
 
     @Test
     fun `Add reminder`() = runTest {
-        repository.addReminder(1, 1, "Test Reminder")
+        repository.addReminder(1, Assignment(1, name = "Assignment 1", htmlUrl = "htmlUrl"), "Test Reminder", 1000)
 
         coVerify(exactly = 1) {
-            reminderDao.insert(ReminderEntity(userId = 1, assignmentId = 1, text = "Test Reminder"))
+            reminderDao.insert(
+                ReminderEntity(
+                    userId = 1,
+                    assignmentId = 1,
+                    htmlUrl = "htmlUrl",
+                    name = "Assignment 1",
+                    text = "Test Reminder",
+                    time = 1000
+                )
+            )
         }
     }
 }

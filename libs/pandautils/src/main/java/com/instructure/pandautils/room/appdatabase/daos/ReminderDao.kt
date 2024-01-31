@@ -41,5 +41,5 @@ interface ReminderDao {
     fun findByAssignmentIdLiveData(userId: Long, assignmentId: Long): LiveData<List<ReminderEntity>>
 
     @Query("SELECT * FROM ReminderEntity WHERE userId = :userId")
-    suspend fun findByUseId(userId: Long): List<ReminderEntity>
+    suspend fun findByUserId(userId: Long): List<ReminderEntity>
 }
