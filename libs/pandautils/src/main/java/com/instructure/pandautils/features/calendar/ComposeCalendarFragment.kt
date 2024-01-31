@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,7 +38,11 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -51,6 +56,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -183,6 +189,18 @@ fun CalendarScreen(
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
+        val snackbarHostState = remember { SnackbarHostState() }
+        val localCoroutineScope = rememberCoroutineScope()
+        if (calendarUiState.snackbarMessage != null) {
+            LaunchedEffect(Unit) {
+                localCoroutineScope.launch {
+                    val result = snackbarHostState.showSnackbar(calendarUiState.snackbarMessage)
+                    if (result == SnackbarResult.Dismissed) {
+                        actionHandler(CalendarAction.SnackbarDismissed)
+                    }
+                }
+            }
+        }
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
@@ -222,6 +240,7 @@ fun CalendarScreen(
 
                     })
             },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
                 Surface(
                     modifier = Modifier
@@ -555,9 +574,13 @@ fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState, act
                     .fillMaxHeight(), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
-                    CalendarEventItem(eventUiState = it) { id -> actionHandler(CalendarAction.EventSelected(id)) }
+                    CalendarEventItem(eventUiState = it) { id ->
+                        actionHandler(CalendarAction.EventSelected(id))
+                    }
                 }
             }
+        } else if (calendarEventsPageUiState.error) {
+            CalendarErrorView(actionHandler)
         } else {
             CalendarEmptyView()
         }
@@ -658,15 +681,59 @@ fun CalendarEmptyView() {
     }
 }
 
+@Composable
+fun CalendarErrorView(actionHandler: (CalendarAction) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_warning),
+            tint = colorResource(id = R.color.textDanger),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(id = R.string.calendarPageError),
+            fontSize = 16.sp,
+            color = colorResource(
+                id = R.color.textDark
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        OutlinedButton(
+            onClick = { actionHandler(CalendarAction.Retry) },
+            border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
+            shape = RoundedCornerShape(4.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.calendarPageErrorRetry),
+                fontSize = 16.sp,
+                color = colorResource(
+                    id = R.color.textDark
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
+    }
+}
+
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
-    CalendarScreen("Calendar", CalendarUiState(
-        LocalDate.now().plusDays(1), true, CalendarEventsUiState(
-            currentPage = CalendarEventsPageUiState(
+    CalendarScreen(
+        "Calendar", CalendarUiState(
+            LocalDate.now().plusDays(1), true, CalendarEventsUiState(
+                currentPage = CalendarEventsPageUiState(
                 events = listOf(
                     EventUiState(
                         1L,

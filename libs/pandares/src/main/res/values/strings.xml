@@ -1505,4 +1505,7 @@
     <string name="calendarEventSubmitted">Submitted</string>
     <string name="calendarEventPoints">%s pts</string>
     <string name="calendarDueDate">Due %s</string>
+    <string name="calendarPageError">There was an error loading your calendar</string>
+    <string name="calendarPageErrorRetry">Retry</string>
+    <string name="calendarRefreshFailed">Failed to refresh calendar</string>
 </resources>

@@ -40,6 +40,7 @@ class CalendarViewModel @Inject constructor(
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
     private val loadingDays = mutableSetOf<LocalDate>()
+    private val errorDays = mutableSetOf<LocalDate>()
     private val refreshingDays = mutableSetOf<LocalDate>()
     private val loadedMonths = mutableSetOf<YearMonth>()
 
@@ -51,6 +52,10 @@ class CalendarViewModel @Inject constructor(
     val events = _events.asStateFlow()
 
     init {
+        loadVisibleMonths()
+    }
+
+    private fun loadVisibleMonths() {
         loadEventsForMonth(selectedDay)
         loadEventsForMonth(selectedDay.plusMonths(1))
         loadEventsForMonth(selectedDay.minusMonths(1))
@@ -65,8 +70,10 @@ class CalendarViewModel @Inject constructor(
         val startDate = date.withDayOfMonth(1).atStartOfDay()
         val endDate = date.plusMonths(1).withDayOfMonth(1).atStartOfDay()
 
+        val daysToFetch = daysBetweenDates(startDate, endDate)
         viewModelScope.tryLaunch {
-            loadingDays.addAll(daysBetweenDates(startDate, endDate))
+            errorDays.removeAll(daysToFetch)
+            loadingDays.addAll(daysToFetch)
             _uiState.emit(createNewUiState())
 
             val result = calendarRepository.getPlannerItems(
@@ -76,12 +83,17 @@ class CalendarViewModel @Inject constructor(
                 true
             )
 
-            loadingDays.removeAll(daysBetweenDates(startDate, endDate))
+            loadingDays.removeAll(daysToFetch)
 
             storeResults(result)
             _uiState.emit(createNewUiState())
         } catch {
             loadedMonths.remove(yearMonth)
+            loadingDays.removeAll(daysToFetch)
+            errorDays.addAll(daysToFetch)
+            viewModelScope.launch {
+                _uiState.emit(createNewUiState())
+            }
         }
     }
 
@@ -132,6 +144,7 @@ class CalendarViewModel @Inject constructor(
             date = date,
             loading = loadingDays.contains(date),
             refreshing = refreshingDays.contains(date),
+            error = errorDays.contains(date),
             events = eventUiStates
         )
     }
@@ -212,6 +225,10 @@ class CalendarViewModel @Inject constructor(
 
             is CalendarAction.EventSelected -> openSelectedEvent(calendarAction.id)
             is CalendarAction.RefreshDay -> refreshDay(calendarAction.date)
+            CalendarAction.Retry -> loadVisibleMonths()
+            CalendarAction.SnackbarDismissed -> viewModelScope.launch {
+                _uiState.emit(createNewUiState().copy(snackbarMessage = null))
+            }
         }
     }
 
@@ -236,67 +253,34 @@ class CalendarViewModel @Inject constructor(
         val plannerItem = eventsByDay.values.flatten().find { it.plannable.id == id } ?: return
 
         viewModelScope.launch {
-            when (plannerItem.plannableType) {
+            val event = when (plannerItem.plannableType) {
                 PlannableType.ASSIGNMENT -> {
-                    _events.emit(
-                        Event(
-                            CalendarViewModelAction.OpenAssignment(
-                                plannerItem.canvasContext,
-                                plannerItem.plannable.id
-                            )
-                        )
-                    )
+                    Event(CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id))
                 }
 
                 PlannableType.DISCUSSION_TOPIC -> {
-                    _events.emit(
-                        Event(
-                            CalendarViewModelAction.OpenDiscussion(
-                                plannerItem.canvasContext,
-                                plannerItem.plannable.id
-                            )
-                        )
-                    )
+                    Event(CalendarViewModelAction.OpenDiscussion(plannerItem.canvasContext, plannerItem.plannable.id))
                 }
 
                 PlannableType.QUIZ -> {
                     if (plannerItem.plannable.assignmentId != null) {
                         // This is a quiz assignment, go to the assignment page
-                        _events.emit(
-                            Event(
-                                CalendarViewModelAction.OpenAssignment(
-                                    plannerItem.canvasContext,
-                                    plannerItem.plannable.assignmentId!!
-                                )
-                            )
-                        )
+                        Event(CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.assignmentId!!))
                     } else {
                         var htmlUrl = plannerItem.htmlUrl.orEmpty()
                         if (htmlUrl.startsWith('/')) htmlUrl = apiPrefs.fullDomain + htmlUrl
-                        _events.emit(
-                            Event(
-                                CalendarViewModelAction.OpenQuiz(
-                                    plannerItem.canvasContext,
-                                    htmlUrl
-                                )
-                            )
-                        )
+                        Event(CalendarViewModelAction.OpenQuiz(plannerItem.canvasContext, htmlUrl))
                     }
                 }
 
                 PlannableType.CALENDAR_EVENT -> {
-                    _events.emit(
-                        Event(
-                            CalendarViewModelAction.OpenCalendarEvent(
-                                plannerItem.canvasContext,
-                                plannerItem.plannable.id
-                            )
-                        )
-                    )
+                    Event(CalendarViewModelAction.OpenCalendarEvent(plannerItem.canvasContext, plannerItem.plannable.id))
                 }
 
-                else -> {}
+                else -> Event(null)
             }
+
+            _events.emit(event)
         }
     }
 
@@ -320,7 +304,10 @@ class CalendarViewModel @Inject constructor(
             storeResults(result)
             _uiState.emit(createNewUiState())
         } catch {
-            // TODO Refresh failed
+            refreshingDays.remove(date)
+            viewModelScope.launch {
+                _uiState.emit(createNewUiState().copy(snackbarMessage = context.getString(R.string.calendarRefreshFailed)))
+            }
         }
     }
 
