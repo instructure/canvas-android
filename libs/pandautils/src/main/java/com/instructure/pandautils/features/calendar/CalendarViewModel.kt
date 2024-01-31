@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -13,6 +14,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,7 +31,8 @@ import kotlin.math.min
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val calendarRepository: CalendarRepository
+    private val calendarRepository: CalendarRepository,
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now()
@@ -39,8 +42,12 @@ class CalendarViewModel @Inject constructor(
     private val loadingDays = mutableSetOf<LocalDate>()
     private val loadedMonths = mutableSetOf<YearMonth>()
 
-    private val _uiState = MutableStateFlow(CalendarUiState(selectedDay, expanded, eventIndicators = emptyMap()))
+    private val _uiState =
+        MutableStateFlow(CalendarUiState(selectedDay, expanded, eventIndicators = emptyMap()))
     val uiState = _uiState.asStateFlow()
+
+    private val _events = MutableStateFlow<Event<CalendarViewModelAction>>(Event(null))
+    val events = _events.asStateFlow()
 
     init {
         loadEventsForMonth(selectedDay)
@@ -121,6 +128,7 @@ class CalendarViewModel @Inject constructor(
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
         val eventUiStates = eventsByDay[date]?.map {
             EventUiState(
+                it.plannable.id,
                 contextName = getContextNameForPlannerItem(it),
                 canvasContext = it.canvasContext,
                 iconRes = getIconForPlannerItem(it),
@@ -210,6 +218,8 @@ class CalendarViewModel @Inject constructor(
                     calendarAction.offset.toLong()
                 )
             )
+
+            is CalendarAction.EventSelected -> openSelectedEvent(calendarAction.id)
         }
     }
 
@@ -227,6 +237,74 @@ class CalendarViewModel @Inject constructor(
         this.expanded = expanded
         viewModelScope.launch {
             _uiState.emit(createNewUiState())
+        }
+    }
+
+    private fun openSelectedEvent(id: Long) {
+        val plannerItem = eventsByDay.values.flatten().find { it.plannable.id == id } ?: return
+
+        viewModelScope.launch {
+            when (plannerItem.plannableType) {
+                PlannableType.ASSIGNMENT -> {
+                    _events.emit(
+                        Event(
+                            CalendarViewModelAction.OpenAssignment(
+                                plannerItem.canvasContext,
+                                plannerItem.plannable.id
+                            )
+                        )
+                    )
+                }
+
+                PlannableType.DISCUSSION_TOPIC -> {
+                    _events.emit(
+                        Event(
+                            CalendarViewModelAction.OpenDiscussion(
+                                plannerItem.canvasContext,
+                                plannerItem.plannable.id
+                            )
+                        )
+                    )
+                }
+
+                PlannableType.QUIZ -> {
+                    if (plannerItem.plannable.assignmentId != null) {
+                        // This is a quiz assignment, go to the assignment page
+                        _events.emit(
+                            Event(
+                                CalendarViewModelAction.OpenAssignment(
+                                    plannerItem.canvasContext,
+                                    plannerItem.plannable.assignmentId!!
+                                )
+                            )
+                        )
+                    } else {
+                        var htmlUrl = plannerItem.htmlUrl.orEmpty()
+                        if (htmlUrl.startsWith('/')) htmlUrl = apiPrefs.fullDomain + htmlUrl
+                        _events.emit(
+                            Event(
+                                CalendarViewModelAction.OpenQuiz(
+                                    plannerItem.canvasContext,
+                                    htmlUrl
+                                )
+                            )
+                        )
+                    }
+                }
+
+                PlannableType.CALENDAR_EVENT -> {
+                    _events.emit(
+                        Event(
+                            CalendarViewModelAction.OpenCalendarEvent(
+                                plannerItem.canvasContext,
+                                plannerItem.plannable.id
+                            )
+                        )
+                    )
+                }
+
+                else -> {}
+            }
         }
     }
 }

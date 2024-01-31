@@ -142,6 +142,7 @@ data class CalendarEventsPageUiState(
 )
 
 data class EventUiState(
+    val plannableId: Long,
     val contextName: String,
     val canvasContext: CanvasContext,
     val name: String,
@@ -158,4 +159,12 @@ sealed class CalendarAction {
 
     data class PageChanged(val offset: Int) : CalendarAction()
     data class EventPageChanged(val offset: Int) : CalendarAction()
+    data class EventSelected(val id: Long): CalendarAction()
+}
+
+sealed class CalendarViewModelAction {
+    data class OpenAssignment(val canvasContext: CanvasContext, val assignmentId: Long): CalendarViewModelAction()
+    data class OpenDiscussion(val canvasContext: CanvasContext, val discussionId: Long): CalendarViewModelAction()
+    data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String): CalendarViewModelAction()
+    data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
 }

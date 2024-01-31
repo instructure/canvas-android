@@ -65,6 +65,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -82,6 +85,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.textAndIconColor
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
@@ -108,6 +112,16 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.events.collect { event ->
+                    event.getContentIfNotHandled()?.let {
+                        handleAction(it)
+                    }
+                }
+            }
+        }
+
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
@@ -117,6 +131,15 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
                     calendarRouter.openNavigationDrawer()
                 }
             }
+        }
+    }
+
+    private fun handleAction(action: CalendarViewModelAction) {
+        when (action) {
+            is CalendarViewModelAction.OpenAssignment -> calendarRouter.openAssignment(action.canvasContext, action.assignmentId)
+            is CalendarViewModelAction.OpenDiscussion -> calendarRouter.openDiscussion(action.canvasContext, action.discussionId)
+            is CalendarViewModelAction.OpenQuiz -> calendarRouter.openQuiz(action.canvasContext, action.htmlUrl)
+            is CalendarViewModelAction.OpenCalendarEvent -> calendarRouter.openCalendarEvent(action.canvasContext, action.eventId)
         }
     }
 
@@ -494,7 +517,7 @@ fun CalendarEventsView(
             }
 
             if (page >= settledPage - 1 && page <= settledPage + 1 && !calendarEventsPageUiState.loading) {
-                CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState)
+                CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState, actionHandler)
             } else {
                 Box(
                     Modifier
@@ -509,7 +532,7 @@ fun CalendarEventsView(
 }
 
 @Composable
-fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState) {
+fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState, actionHandler: (CalendarAction) -> Unit) {
     if (calendarEventsPageUiState.events.isNotEmpty()) {
         LazyColumn(
             Modifier
@@ -517,7 +540,7 @@ fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState) {
                 .fillMaxHeight(), verticalArrangement = Arrangement.Top
         ) {
             items(calendarEventsPageUiState.events) {
-                CalendarEventItem(eventUiState = it)
+                CalendarEventItem(eventUiState = it) { id -> actionHandler(CalendarAction.EventSelected(id)) }
             }
         }
     } else {
@@ -526,7 +549,7 @@ fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState) {
 }
 
 @Composable
-fun CalendarEventItem(eventUiState: EventUiState) {
+fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit) {
     val contextColor = if (eventUiState.canvasContext is User) {
         Color(ThemePrefs.brandColor)
     } else {
@@ -534,6 +557,7 @@ fun CalendarEventItem(eventUiState: EventUiState) {
     }
     Row(
         Modifier
+            .clickable { onEventClick(eventUiState.plannableId) }
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .fillMaxWidth()
     ) {
@@ -621,12 +645,14 @@ fun CalendarPreview() {
             currentPage = CalendarEventsPageUiState(
                 events = listOf(
                     EventUiState(
+                        1L,
                         "Course To Do",
                         CanvasContext.defaultCanvasContext(),
                         "Todo 1",
                         R.drawable.ic_assignment
                     ),
                     EventUiState(
+                        2L,
                         "Course",
                         CanvasContext.defaultCanvasContext(),
                         "Assignment 1",
