@@ -28,23 +28,37 @@ data class UpdateFileViewData(
     val selectedAvailability: FileAvailability,
     val selectedVisibility: FileVisibility,
     val lockAt: Date?,
-    val unlockAt: Date?
+    val unlockAt: Date?,
+    val lockAtDateString: String?,
+    val lockAtTimeString: String?,
+    val unlockAtDateString: String?,
+    val unlockAtTimeString: String?
 )
 
-enum class FileVisibility(@StringRes val resource: Int) {
-    INHERIT(R.string.inherit_from_course),
-    CONTEXT(R.string.course_members),
-    INSTITUTION(R.string.institution_members),
-    PUBLIC(R.string.public_title)
+enum class FileVisibility {
+    INHERIT,
+    CONTEXT,
+    INSTITUTION,
+    PUBLIC
 }
 
-enum class FileAvailability(@StringRes val resource: Int, @DrawableRes iconRes: Int) {
-    PUBLISHED(R.string.publish, R.drawable.ic_publish),
-    UNPUBLISHED(R.string.unpublish, R.drawable.ic_unpublish),
-    HIDDEN(R.string.only_available_with_link, R.drawable.ic_eye_off),
-    SCHEDULED(R.string.schedule_availability, R.drawable.ic_calendar_month)
+enum class FileAvailability {
+    PUBLISHED,
+    UNPUBLISHED,
+    HIDDEN,
+    SCHEDULED
 }
 
 sealed class UpdateFileEvent {
-    object Close: UpdateFileEvent()
+    object Close : UpdateFileEvent()
+
+    data class ShowDatePicker(
+        val selectedDate: Date?,
+        val callback: (year: Int, month: Int, dayOfMonth: Int) -> Unit
+    ) : UpdateFileEvent()
+
+    data class ShowTimePicker(
+        val selectedDate: Date?,
+        val callback: (hourOfDay: Int, minute: Int) -> Unit
+    ) : UpdateFileEvent()
 }

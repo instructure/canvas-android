@@ -142,48 +142,6 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
         view.contentDescription = view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
         popup.show()
     }
-
-    private fun showFileActions(view: View, item: ModuleListItemData.ModuleItemData, callback: ModuleListCallback) {
-        val popup = PopupMenu(view.context, view, Gravity.START.and(Gravity.TOP))
-        popup.inflate(R.menu.menu_file_module_item)
-
-        if (item.contentId == null) {
-            return
-        }
-
-        popup.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.actionFilePublish -> {
-                    callback.updateFileModuleItem(item.id, item.contentId, true, false)
-                    true
-
-                }
-
-                R.id.actionFileUnpublish -> {
-                    callback.updateFileModuleItem(item.id, item.contentId, false, false)
-                    true
-                }
-
-                R.id.actionFileHide -> {
-                    callback.updateFileModuleItem(item.id, item.contentId, true, true)
-                    true
-                }
-
-                R.id.actionFileScheduleAvailability -> {
-                    true
-                }
-
-                R.id.actionFileChangeVisibility -> {
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        view.contentDescription = view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
-        popup.show()
-    }
 }
 
 data class StatusIcon(

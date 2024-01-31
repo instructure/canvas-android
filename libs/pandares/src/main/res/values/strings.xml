@@ -1514,7 +1514,6 @@
     <string name="unpublishModulesAndItemsDialogMessage">This will make all modules and items invisible to students.</string>
     <string name="only_available_with_link">Only available with link</string>
     <string name="schedule_availability">Schedule availability</string>
-    <string name="change_visibility">Change visibility</string>
     <string name="moduleItemPublished">Item published</string>
     <string name="moduleItemUnpublished">Item unpublished</string>
     <string name="onlyModulePublished">Only Module published</string>
@@ -1531,6 +1530,14 @@
     <string name="update">Update</string>
     <string name="availability_title">Availability</string>
     <string name="visibility_title">Visibility</string>
+    <string name="available_from">Available From</string>
+    <string name="available_until">Available Until</string>
+    <string name="from">From</string>
+    <string name="until">Until</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Clear From Date</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Clear Until Date</string>
     <plurals name="moduleItemPoints">
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>
