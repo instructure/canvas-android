@@ -40,6 +40,7 @@ class CalendarViewModel @Inject constructor(
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
     private val loadingDays = mutableSetOf<LocalDate>()
+    private val refreshingDays = mutableSetOf<LocalDate>()
     private val loadedMonths = mutableSetOf<YearMonth>()
 
     private val _uiState =
@@ -77,18 +78,7 @@ class CalendarViewModel @Inject constructor(
 
             loadingDays.removeAll(daysBetweenDates(startDate, endDate))
 
-            result.forEach { plannerItem ->
-                val plannableDate = plannerItem.plannableDate.toLocalDate()
-                val plannerItemsForDay = eventsByDay.getOrPut(plannableDate) { mutableListOf() }
-                val index =
-                    plannerItemsForDay.indexOfFirst { it.plannable.id == plannerItem.plannable.id }
-                if (index == -1) {
-                    plannerItemsForDay.add(plannerItem)
-                } else {
-                    plannerItemsForDay[index] = plannerItem
-                }
-            }
-
+            storeResults(result)
             _uiState.emit(createNewUiState())
         } catch {
             loadedMonths.remove(yearMonth)
@@ -141,6 +131,7 @@ class CalendarViewModel @Inject constructor(
         return CalendarEventsPageUiState(
             date = date,
             loading = loadingDays.contains(date),
+            refreshing = refreshingDays.contains(date),
             events = eventUiStates
         )
     }
@@ -220,6 +211,7 @@ class CalendarViewModel @Inject constructor(
             )
 
             is CalendarAction.EventSelected -> openSelectedEvent(calendarAction.id)
+            is CalendarAction.RefreshDay -> refreshDay(calendarAction.date)
         }
     }
 
@@ -304,6 +296,44 @@ class CalendarViewModel @Inject constructor(
                 }
 
                 else -> {}
+            }
+        }
+    }
+
+    private fun refreshDay(date: LocalDate) {
+        val startDate = date.atStartOfDay()
+        val endDate = date.plusDays(1).atStartOfDay()
+
+        viewModelScope.tryLaunch {
+            refreshingDays.add(date)
+            _uiState.emit(createNewUiState())
+
+            val result = calendarRepository.getPlannerItems(
+                startDate.toApiString() ?: "",
+                endDate.toApiString() ?: "",
+                emptyList(),
+                true
+            )
+
+            refreshingDays.remove(date)
+
+            storeResults(result)
+            _uiState.emit(createNewUiState())
+        } catch {
+            // TODO Refresh failed
+        }
+    }
+
+    private fun storeResults(result: List<PlannerItem>) {
+        result.forEach { plannerItem ->
+            val plannableDate = plannerItem.plannableDate.toLocalDate()
+            val plannerItemsForDay = eventsByDay.getOrPut(plannableDate) { mutableListOf() }
+            val index =
+                plannerItemsForDay.indexOfFirst { it.plannable.id == plannerItem.plannable.id }
+            if (index == -1) {
+                plannerItemsForDay.add(plannerItem)
+            } else {
+                plannerItemsForDay[index] = plannerItem
             }
         }
     }

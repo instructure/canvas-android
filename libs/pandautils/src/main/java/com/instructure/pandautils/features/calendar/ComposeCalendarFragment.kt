@@ -29,15 +29,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.pullrefresh.PullRefreshDefaults
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -531,20 +538,36 @@ fun CalendarEventsView(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState, actionHandler: (CalendarAction) -> Unit) {
-    if (calendarEventsPageUiState.events.isNotEmpty()) {
-        LazyColumn(
-            Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(), verticalArrangement = Arrangement.Top
-        ) {
-            items(calendarEventsPageUiState.events) {
-                CalendarEventItem(eventUiState = it) { id -> actionHandler(CalendarAction.EventSelected(id)) }
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = calendarEventsPageUiState.refreshing,
+        onRefresh = { actionHandler(CalendarAction.RefreshDay(calendarEventsPageUiState.date)) },
+        refreshThreshold = PullRefreshDefaults.RefreshingOffset
+    )
+
+    Box(Modifier.pullRefresh(pullRefreshState)) {
+        if (calendarEventsPageUiState.events.isNotEmpty()) {
+            LazyColumn(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(), verticalArrangement = Arrangement.Top
+            ) {
+                items(calendarEventsPageUiState.events) {
+                    CalendarEventItem(eventUiState = it) { id -> actionHandler(CalendarAction.EventSelected(id)) }
+                }
             }
+        } else {
+            CalendarEmptyView()
         }
-    } else {
-        CalendarEmptyView()
+
+        PullRefreshIndicator(
+            refreshing = calendarEventsPageUiState.refreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            backgroundColor = colorResource(id = R.color.white),
+        )
     }
 }
 
@@ -605,6 +628,7 @@ fun CalendarEmptyView() {
         horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
+            .verticalScroll(rememberScrollState())
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_no_events),

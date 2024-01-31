@@ -138,6 +138,7 @@ data class CalendarEventsPageUiState(
     val date: LocalDate = LocalDate.now(),
     val loading: Boolean = false,
     val error: Boolean = false,
+    val refreshing: Boolean = false,
     val events: List<EventUiState> = emptyList()
 )
 
@@ -156,10 +157,10 @@ sealed class CalendarAction {
     data object ExpandDisabled : CalendarAction()
     data class DaySelected(val selectedDay: LocalDate) : CalendarAction()
     data object TodayTapped : CalendarAction()
-
     data class PageChanged(val offset: Int) : CalendarAction()
     data class EventPageChanged(val offset: Int) : CalendarAction()
     data class EventSelected(val id: Long): CalendarAction()
+    data class RefreshDay(val date: LocalDate): CalendarAction()
 }
 
 sealed class CalendarViewModelAction {
