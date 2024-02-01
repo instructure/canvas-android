@@ -1482,4 +1482,5 @@
         <item quantity="other">%d fag er synkronisert.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Ytterligere faginnhold</string>
+    <string name="failedToUpdateDashboardOrder">Kunne ikke oppdatere rekkefølge på oversiktskort</string>
 </resources>

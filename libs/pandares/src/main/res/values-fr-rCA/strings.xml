@@ -1481,4 +1481,5 @@
         <item quantity="other">%d cours ont été synchronisés.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Contenu supplémentaire de cours</string>
+    <string name="failedToUpdateDashboardOrder">Échec de la mise à jour de la commande des cartes du tableau de bord</string>
 </resources>

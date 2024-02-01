@@ -1461,4 +1461,5 @@
         <item quantity="other">%d 门课程已同步。</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">更多课程内容</string>
+    <string name="failedToUpdateDashboardOrder">无法更新控制面板卡片顺序</string>
 </resources>
