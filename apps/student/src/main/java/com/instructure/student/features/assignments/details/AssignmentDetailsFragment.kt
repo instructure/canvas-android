@@ -32,6 +32,7 @@ import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -161,6 +162,11 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkAlarmPermissionResult()
+    }
+
     private fun handleAction(action: AssignmentDetailAction) {
         val canvasContext = canvasContext as? CanvasContext ?: run {
             toast(R.string.generalUnexpectedError)
@@ -226,6 +232,9 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             }
             is AssignmentDetailAction.ShowCustomReminderDialog -> {
                 showCustomReminderDialog()
+            }
+            is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
+                showDeleteReminderConfirmationDialog(action.onConfirmed)
             }
         }
     }
@@ -426,6 +435,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             if (alarmManager.canScheduleExactAlarms()) {
                 showCreateReminderDialog()
             } else {
+                viewModel.checkingReminderPermission = true
                 startActivity(
                     Intent(
                         Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
@@ -435,6 +445,16 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             }
         } else {
             showCreateReminderDialog()
+        }
+    }
+
+    private fun checkAlarmPermissionResult() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
+            if ((context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
+                showCreateReminderDialog()
+            } else {
+                Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -451,7 +471,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
 
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.reminderTitle)
-            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.cancel, null)
             .setSingleChoiceItems(
                 choices.map { it.getText(resources) }.toTypedArray(), -1
             ) { dialog, which ->
@@ -463,6 +483,18 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun showCustomReminderDialog() {
         CustomReminderDialog.newInstance().show(childFragmentManager, null)
+    }
+
+    private fun showDeleteReminderConfirmationDialog(onConfirmed: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.deleteReminderTitle)
+            .setMessage(R.string.deleteReminderMessage)
+            .setNegativeButton(R.string.no, null)
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                onConfirmed()
+                dialog.dismiss()
+            }
+            .showThemed()
     }
 
     companion object {

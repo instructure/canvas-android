@@ -953,4 +953,30 @@ class AssignmentDetailsViewModelTest {
 
         Assert.assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
     }
+
+    @Test
+    fun `Selected reminder already set up`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 1
+        every { resources.getQuantityString(R.plurals.reminderDay, 3, 3) } returns "3 days"
+        every { resources.getString(R.string.reminderAlreadySet) } returns "Reminder in past"
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 4) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        val time = assignment.dueDate?.time?.minus(3 * 24 * 60 * 60 * 1000L)
+        val reminderEntities = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", time!!)
+        )
+        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
+
+        val viewModel = getViewModel()
+
+        viewModel.onReminderSelected(ReminderChoice.Day(3))
+
+        Assert.assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
+    }
 }

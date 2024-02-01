@@ -18,8 +18,11 @@
 package com.instructure.student.features.assignments.reminder
 
 import android.app.Dialog
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.utils.ThemePrefs
@@ -52,11 +55,29 @@ class CustomReminderDialog : DialogFragment() {
                     R.id.weeks -> parentViewModel.onReminderSelected(ReminderChoice.Week(quantity))
                 }
             }
+            .setNegativeButton(R.string.cancel, null)
             .create().apply {
                 setOnShowListener {
-                    getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ThemePrefs.textButtonColor)
+                    getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ThemePrefs.textButtonColor)
+                    setupPositiveButton(getButton(AlertDialog.BUTTON_POSITIVE))
                 }
             }
+    }
+
+    private fun setupPositiveButton(button: Button) {
+        button.isEnabled = false
+        button.setTextColor(
+            ColorStateList(
+                arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf()),
+                intArrayOf(requireContext().getColor(R.color.textDark), ThemePrefs.textButtonColor)
+            )
+        )
+        binding.choices.setOnCheckedChangeListener { _, _ -> updateButtonState(button) }
+        binding.quantity.doAfterTextChanged { updateButtonState(button) }
+    }
+
+    private fun updateButtonState(button: Button) {
+        button.isEnabled = binding.choices.checkedRadioButtonId != -1 && binding.quantity.text.isNotEmpty()
     }
 
     companion object {

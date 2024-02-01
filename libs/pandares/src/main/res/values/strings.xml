@@ -100,6 +100,10 @@
     <string name="reminderNotificationTitle">Due Date Reminder</string>
     <string name="reminderNotificationDescription">This assignment is due in %s: %s</string>
     <string name="reminderInPast">Please choose a future time for your reminder!</string>
+    <string name="reminderAlreadySet">You have already set a reminder for this time</string>
+    <string name="deleteReminderTitle">Delete Reminder</string>
+    <string name="deleteReminderMessage">Are you sure you would like to delete this reminder?</string>
+    <string name="reminderPermissionNotGrantedError">You need to enable exact alarm permission for this action</string>
 
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>

@@ -128,6 +128,8 @@ class AssignmentDetailsViewModel @Inject constructor(
         observeForever(remindersObserver)
     }
 
+    var checkingReminderPermission = false
+
     init {
         markSubmissionAsRead()
         submissionQuery.addListener(this)
@@ -492,7 +494,11 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun mapReminders(reminders: List<ReminderEntity>) = reminders.map {
-        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text)), ::deleteReminderById)
+        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text))) {
+            postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog {
+                deleteReminderById(it)
+            })
+        }
     }
 
     private fun deleteReminderById(id: Long) {
@@ -627,6 +633,11 @@ class AssignmentDetailsViewModel @Inject constructor(
 
         if (alarmTimeInMillis < System.currentTimeMillis()) {
             postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderInPast)))
+            return
+        }
+
+        if (remindersLiveData.value?.any { it.time == alarmTimeInMillis }.orDefault()) {
+            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderAlreadySet)))
             return
         }
 
