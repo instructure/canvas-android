@@ -45,8 +45,6 @@ import java.util.Date
 @AndroidEntryPoint
 class UpdateFileDialogFragment : BottomSheetDialogFragment() {
 
-    private val moduleId: Long by LongArg(key = "moduleId")
-    private val moduleItemId: Long by LongArg(key = "moduleItemId")
     private val contentId: Long by LongArg(key = "contentId")
     private val contentDetails: ModuleContentDetails? by NullableParcelableArg(key = "contentDetails")
 
@@ -129,15 +127,11 @@ class UpdateFileDialogFragment : BottomSheetDialogFragment() {
     companion object {
 
         fun newInstance(
-            moduleId: Long,
-            moduleItemId: Long,
             contentId: Long,
             contentDetails: ModuleContentDetails?
         ): UpdateFileDialogFragment {
             return UpdateFileDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putLong("moduleId", moduleId)
-                    putLong("moduleItemId", moduleItemId)
                     putLong("contentId", contentId)
                     putParcelable("contentDetails", contentDetails)
                 }

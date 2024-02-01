@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.pandarecycler.PaginatedScrollListener
 import com.instructure.pandautils.utils.ViewStyler
@@ -32,6 +33,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
 import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.ModuleListEvent
+import com.instructure.teacher.features.modules.list.ui.file.UpdateFileDialogFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
@@ -103,6 +105,15 @@ class ModuleListView(
             }
         }
 
+        override fun updateFileModuleItem(fileId: Long, contentDetails: ModuleContentDetails) {
+            consumer?.accept(
+                ModuleListEvent.UpdateFileModuleItem(
+                    fileId,
+                    contentDetails
+                )
+            )
+        }
+
         override fun updateModuleItem(itemId: Long, isPublished: Boolean) {
             val title = if (isPublished) R.string.publishDialogTitle else R.string.unpublishDialogTitle
             val message =
@@ -112,28 +123,6 @@ class ModuleListView(
             showConfirmationDialog(title, message, positiveButton, R.string.cancel) {
                 consumer?.accept(ModuleListEvent.UpdateModuleItem(itemId, isPublished))
             }
-        }
-
-        override fun updateFileModuleItem(
-            moduleItemId: Long,
-            fileId: Long,
-            isPublished: Boolean,
-            isHidden: Boolean,
-            lockAt: Date?,
-            unlockAt: Date?,
-            visibility: String?
-        ) {
-            consumer?.accept(
-                ModuleListEvent.UpdateFileModuleItem(
-                    moduleItemId,
-                    fileId,
-                    isPublished,
-                    isHidden,
-                    lockAt,
-                    unlockAt,
-                    visibility
-                )
-            )
         }
     })
 
@@ -251,5 +240,10 @@ class ModuleListView(
 
     fun showSnackbar(@StringRes message: Int) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    fun showUpdateFileDialog(fileId: Long, contentDetails: ModuleContentDetails) {
+        val fragment = UpdateFileDialogFragment.newInstance(fileId, contentDetails)
+        fragment.show((context as FragmentActivity).supportFragmentManager, "editFileDialog")
     }
 }

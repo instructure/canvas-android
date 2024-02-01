@@ -21,6 +21,7 @@ import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.PopupMenu
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.binding.setTint
@@ -66,11 +67,9 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
 
             overflow.onClickWithRequireNetwork {
                 if (item.type == ModuleItem.Type.File) {
-                    UpdateFileDialogFragment.newInstance(
-                        moduleId = -1L,
-                        moduleItemId = item.id,
-                        contentId = item.contentId ?: 0,
-                        contentDetails = item.contentDetails).show(it.context.getFragmentActivity().supportFragmentManager, null)
+                    item.contentId?.let {
+                        callback.updateFileModuleItem(item.contentId, item.contentDetails ?: ModuleContentDetails())
+                    }
                 } else {
                     showModuleItemActions(it, item, callback)
                 }

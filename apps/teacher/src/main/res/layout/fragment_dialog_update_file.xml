@@ -25,6 +25,8 @@
 
         <import type="com.instructure.teacher.features.modules.list.ui.file.FileVisibility" />
 
+        <import type="com.instructure.pandautils.mvvm.ViewState" />
+
         <import type="android.view.View" />
 
         <variable
@@ -32,15 +34,16 @@
             type="com.instructure.teacher.features.modules.list.ui.file.UpdateFileViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/closeButton"
@@ -74,10 +77,10 @@
                 android:id="@+id/updateButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:background="?selectableItemBackground"
                 android:gravity="center"
                 android:minWidth="48dp"
-                android:layout_marginEnd="4dp"
                 android:minHeight="48dp"
                 android:onClick="@{() -> viewModel.update()}"
                 android:paddingHorizontal="12dp"
@@ -96,9 +99,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:nestedScrollingEnabled="true">
+            android:layout_height="0dp"
+            android:nestedScrollingEnabled="true"
+            android:visibility="@{viewModel.state instanceof ViewState.Success ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -422,5 +429,14 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-    </LinearLayout>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:emptyViewState="@{viewModel.state}"
+            app:layout_constraintBottom_toBottomOf="@id/scrollView"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

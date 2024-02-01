@@ -31,7 +31,9 @@ import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.teacher.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -44,7 +46,8 @@ import javax.inject.Inject
 @SuppressLint("StaticFieldLeak")
 class UpdateFileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val fileApi: FileFolderAPI.FilesFoldersInterface
+    private val fileApi: FileFolderAPI.FilesFoldersInterface,
+    private val eventBus: EventBus
 ) : ViewModel() {
 
     val data: LiveData<UpdateFileViewData>
@@ -55,7 +58,15 @@ class UpdateFileViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<UpdateFileEvent>>()
 
+    val state: LiveData<ViewState>
+        get() = _state
+    private val _state = MutableLiveData<ViewState>()
+
     private var fileId: Long = -1L
+
+    init {
+        _state.postValue(ViewState.Loading)
+    }
 
     fun loadData(contentDetails: ModuleContentDetails, fileId: Long) {
         viewModelScope.launch {
@@ -85,6 +96,7 @@ class UpdateFileViewModel @Inject constructor(
                     unlockAtTimeString = DateHelper.getFormattedTime(context, contentDetails.unlockDate),
                 )
             )
+            _state.postValue(ViewState.Success)
         }
     }
 
@@ -114,6 +126,7 @@ class UpdateFileViewModel @Inject constructor(
 
     fun update() {
         viewModelScope.launch {
+            _state.postValue(ViewState.Loading)
             val updateFileFolder = UpdateFileFolder(
                 locked = data.value?.selectedAvailability == FileAvailability.UNPUBLISHED,
                 hidden = data.value?.selectedAvailability == FileAvailability.HIDDEN,
@@ -126,8 +139,10 @@ class UpdateFileViewModel @Inject constructor(
             val updatedFile =
                 fileApi.updateFile(fileId, updateFileFolder, RestParams(isForceReadFromNetwork = true)).dataOrNull
             if (updatedFile != null) {
-                EventBus.getDefault().post(FileFolderUpdatedEvent(updatedFile))
+                eventBus.post(FileFolderUpdatedEvent(updatedFile))
                 _events.postValue(Event(UpdateFileEvent.Close))
+            } else {
+                _state.postValue(ViewState.Error(context.getString(R.string.errorOccurred), R.drawable.ic_panda_nofiles))
             }
         }
     }

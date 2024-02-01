@@ -47,7 +47,6 @@ import java.util.Date
 class ModuleListEffectHandler(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val progressApi: ProgressAPI.ProgressInterface,
-    private val fileApi: FileFolderAPI.FilesFoldersInterface
 ) : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
@@ -82,63 +81,14 @@ class ModuleListEffectHandler(
                 effect.published
             )
 
-            is ModuleListEffect.UpdateFileModuleItem -> updateFileModuleItem(
-                effect.canvasContext,
-                effect.moduleId,
-                effect.moduleItemId,
-                effect.fileId,
-                effect.isPublished,
-                effect.isHidden,
-                effect.lockAt,
-                effect.unlockAt,
-                effect.visibility
-            )
             is ModuleListEffect.ShowSnackbar -> {
                 view?.showSnackbar(effect.message)
             }
-        }.exhaustive
-    }
 
-    private fun updateFileModuleItem(
-        canvasContext: CanvasContext,
-        moduleId: Long,
-        moduleItemId: Long,
-        fileId: Long,
-        published: Boolean,
-        hidden: Boolean,
-        lockAt: Date?,
-        unlockAt: Date?,
-        visibility: String?
-    ) {
-        val restParams = RestParams(
-            canvasContext = canvasContext,
-            isForceReadFromNetwork = true
-        )
-
-        launch {
-            val updatedFile = fileApi.updateFile(
-                fileId,
-                UpdateFileFolder(locked = !published, hidden = hidden, lockAt = lockAt?.toApiString(), unlockAt = unlockAt?.toApiString()),
-                restParams
-            ).dataOrNull
-
-            if (updatedFile == null) {
-                consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(moduleItemId))
-                return@launch
+            is ModuleListEffect.UpdateFileModuleItem -> {
+                view?.showUpdateFileDialog(effect.fileId, effect.contentDetails)
             }
-
-            val moduleItem = moduleApi.getModuleItem(
-                canvasContext.type.apiString,
-                canvasContext.id,
-                moduleId,
-                moduleItemId,
-                restParams
-            ).dataOrNull
-
-            moduleItem?.let {
-                consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it, published))
-            } ?: consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(moduleItemId))
-        }
+        }.exhaustive
     }
 
     private fun updateModuleItems(canvasContext: CanvasContext, items: List<ModuleItem>) {

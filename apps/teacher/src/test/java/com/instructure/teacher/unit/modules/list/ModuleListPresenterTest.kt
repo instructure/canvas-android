@@ -85,7 +85,8 @@ class ModuleListPresenterTest : Assert() {
             isPublished = true,
             indent = 0,
             tintColor = course.backgroundColor,
-            enabled = true
+            enabled = true,
+            type = ModuleItem.Type.Assignment,
         )
         modelTemplate = ModuleListModel(
             course = course,

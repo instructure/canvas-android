@@ -18,6 +18,7 @@ package com.instructure.teacher.features.modules.list
 
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
@@ -43,16 +44,6 @@ sealed class ModuleListEvent {
     data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
     data class ModuleItemUpdateSuccess(val item: ModuleItem, val published: Boolean) : ModuleListEvent()
     data class ModuleItemUpdateFailed(val itemId: Long) : ModuleListEvent()
-    data class UpdateFileModuleItem(
-        val moduleItemId: Long,
-        val fileId: Long,
-        val isPublished: Boolean,
-        val isHidden: Boolean,
-        val lockAt: Date? = null,
-        val unlockAt: Date? = null,
-        val visibility: String? = null
-    ) : ModuleListEvent()
-
     data class BulkUpdateSuccess(
         val skipContentTags: Boolean,
         val action: BulkModuleUpdateAction,
@@ -60,6 +51,8 @@ sealed class ModuleListEvent {
     ) : ModuleListEvent()
 
     data class BulkUpdateFailed(val skipContentTags: Boolean) : ModuleListEvent()
+
+    data class UpdateFileModuleItem(val fileId: Long, val contentDetails: ModuleContentDetails) : ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -101,15 +94,8 @@ sealed class ModuleListEffect {
     data class ShowSnackbar(@StringRes val message: Int) : ModuleListEffect()
 
     data class UpdateFileModuleItem(
-        val canvasContext: CanvasContext,
-        val moduleId: Long,
-        val moduleItemId: Long,
         val fileId: Long,
-        val isPublished: Boolean,
-        val isHidden: Boolean,
-        val lockAt: Date? = null,
-        val unlockAt: Date? = null,
-        val visibility: String? = null
+        val contentDetails: ModuleContentDetails
     ) : ModuleListEffect()
 }
 

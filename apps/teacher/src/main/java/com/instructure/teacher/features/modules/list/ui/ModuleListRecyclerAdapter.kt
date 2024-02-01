@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import android.content.Context
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.teacher.adapters.GroupedRecyclerAdapter
 import com.instructure.teacher.adapters.ListItemCallback
 import com.instructure.teacher.features.modules.list.ui.binders.*
@@ -31,15 +32,7 @@ interface ModuleListCallback : ListItemCallback {
     fun publishModule(moduleId: Long)
     fun publishModuleAndItems(moduleId: Long)
     fun unpublishModuleAndItems(moduleId: Long)
-    fun updateFileModuleItem(
-        moduleItemId: Long,
-        fileId: Long,
-        isPublished: Boolean,
-        isHidden: Boolean,
-        lockAt: Date? = null,
-        unlockAt: Date? = null,
-        visibility: String? = null
-    )
+    fun updateFileModuleItem(fileId: Long, contentDetails: ModuleContentDetails)
 }
 
 class ModuleListRecyclerAdapter(

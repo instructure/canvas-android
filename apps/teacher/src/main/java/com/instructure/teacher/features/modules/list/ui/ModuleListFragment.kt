@@ -38,10 +38,7 @@ class ModuleListFragment : ModuleListMobiusFragment() {
     @Inject
     lateinit var progressApi: ProgressAPI.ProgressInterface
 
-    @Inject
-    lateinit var fileApi: FileFolderAPI.FilesFoldersInterface
-
-    override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi, fileApi)
+    override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
