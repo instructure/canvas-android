@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Progress
@@ -380,6 +381,14 @@ class ModuleListEffectHandlerTest : Assert() {
         }
     }
 
+    @Test
+    fun `UpdateFileModuleItem calls showUpdateFileDialog on view`() {
+        val fileId = 123L
+        val contentDetails = ModuleContentDetails()
+        connection.accept(ModuleListEffect.UpdateFileModuleItem(fileId, contentDetails))
+        verify(timeout = 100) { view.showUpdateFileDialog(fileId, contentDetails) }
+        confirmVerified(view)
+    }
 
     private fun makeLinkHeader(nextUrl: String) =
         mapOf("Link" to """<$nextUrl>; rel="next"""").toHeaders()
