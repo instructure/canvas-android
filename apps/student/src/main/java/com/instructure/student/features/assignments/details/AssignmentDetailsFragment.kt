@@ -30,11 +30,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -429,24 +426,16 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             if (alarmManager.canScheduleExactAlarms()) {
                 showCreateReminderDialog()
             } else {
-                showAlertPermissionSnackbar()
+                startActivity(
+                    Intent(
+                        Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                        Uri.parse("package:" + requireContext().packageName)
+                    )
+                )
             }
         } else {
             showCreateReminderDialog()
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    private fun showAlertPermissionSnackbar() {
-        Snackbar.make(requireView(), getText(R.string.reminderSnackbarDescription), Snackbar.LENGTH_LONG)
-            .setActionTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            .setAction(getText(R.string.reminderSnackbarAction)) {
-                Intent().apply {
-                    action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-                    context?.startActivity(this)
-                }
-            }
-            .show()
     }
 
     private fun showCreateReminderDialog() {
