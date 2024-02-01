@@ -28,8 +28,8 @@ import com.instructure.canvasapi2.models.ModuleName
     foreignKeys = [
         ForeignKey(
             entity = LockInfoEntity::class,
-            parentColumns = ["lockedModuleId"],
-            childColumns = ["id"],
+            parentColumns = ["id"],
+            childColumns = ["lockInfoId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
@@ -41,15 +41,17 @@ data class LockedModuleEntity(
     val contextType: String?,
     val name: String?,
     val unlockAt: String?,
-    val isRequireSequentialProgress: Boolean
+    val isRequireSequentialProgress: Boolean,
+    val lockInfoId: Long?
 ) {
-    constructor(lockedModule: LockedModule) : this(
+    constructor(lockedModule: LockedModule, lockInfoId: Long?) : this(
         id = lockedModule.id,
         contextId = lockedModule.contextId,
         contextType = lockedModule.contextType,
         name = lockedModule.name,
         unlockAt = lockedModule.unlockAt,
-        isRequireSequentialProgress = lockedModule.isRequireSequentialProgress
+        isRequireSequentialProgress = lockedModule.isRequireSequentialProgress,
+        lockInfoId = lockInfoId
     )
 
     fun toApiModel(

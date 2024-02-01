@@ -781,7 +781,7 @@ fun <T> ImageView.loadCircularImage(
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
-                target: Target<Bitmap>?,
+                target: Target<Bitmap>,
                 isFirstResource: Boolean
             ): Boolean {
                 onFailure?.invoke()
@@ -789,10 +789,10 @@ fun <T> ImageView.loadCircularImage(
             }
 
             override fun onResourceReady(
-                resource: Bitmap?,
-                model: Any?,
+                resource: Bitmap,
+                model: Any,
                 target: Target<Bitmap>?,
-                dataSource: DataSource?,
+                dataSource: DataSource,
                 isFirstResource: Boolean
             ): Boolean {
                 return false

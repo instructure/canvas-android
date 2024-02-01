@@ -19,8 +19,10 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabaseProvider
+import com.instructure.pandautils.utils.LogoutHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,7 +36,7 @@ class OfflineDatabaseProviderModule {
 
     @Provides
     @Singleton
-    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context): DatabaseProvider {
-        return OfflineDatabaseProvider(context)
+    fun provideOfflineDatabaseProvider(@ApplicationContext context: Context, logoutHelper: LogoutHelper, firebaseCrashlytics: FirebaseCrashlytics): DatabaseProvider {
+        return OfflineDatabaseProvider(context, logoutHelper, firebaseCrashlytics)
     }
 }

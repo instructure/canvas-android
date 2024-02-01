@@ -65,19 +65,19 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: NotificationListRecyclerAdapter
+    private var recyclerAdapter: NotificationListRecyclerAdapter? = null
 
     private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<StreamItem> =
         object : NotificationAdapterToFragmentCallback<StreamItem> {
             override fun onRowClicked(streamItem: StreamItem, position: Int, isOpenDetail: Boolean) {
-                recyclerAdapter.setSelectedPosition(position)
+                recyclerAdapter?.setSelectedPosition(position)
                 onRowClick(streamItem)
             }
 
             override fun onRefreshFinished() {
                 setRefreshing(false)
                 binding.editOptions.setGone()
-                if (recyclerAdapter.size() == 0) {
+                if (recyclerAdapter?.size() == 0) {
                     setEmptyView(recyclerBinding.emptyView, R.drawable.ic_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
                     if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                         recyclerBinding.emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
@@ -112,21 +112,23 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
-        configureRecyclerView(
-            view,
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView
-        )
+        recyclerAdapter?.let {
+            configureRecyclerView(
+                view,
+                requireContext(),
+                it,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView
+            )
+        }
 
         recyclerBinding.listView.isSelectionEnabled = false
 
         binding.confirmButton.text = getString(R.string.delete)
-        binding.confirmButton.setOnClickListener { recyclerAdapter.confirmButtonClicked() }
+        binding.confirmButton.setOnClickListener { recyclerAdapter?.confirmButtonClicked() }
         binding.cancelButton.text = getString(R.string.cancel)
-        binding.cancelButton.setOnClickListener { recyclerAdapter.cancelButtonClicked() }
+        binding.cancelButton.setOnClickListener { recyclerAdapter?.cancelButtonClicked() }
 
         applyTheme()
 
@@ -139,14 +141,14 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
         if (activity?.supportFragmentManager?.fragments?.lastOrNull()?.javaClass == this.javaClass) {
             if (shouldRefreshOnResume) {
                 recyclerBinding.swipeRefreshLayout.isRefreshing = true
-                recyclerAdapter.refresh()
+                recyclerAdapter?.refresh()
                 shouldRefreshOnResume = false
             }
         }
     }
 
     override fun onDestroyView() {
-        recyclerAdapter.cancel()
+        recyclerAdapter?.cancel()
         activity?.supportFragmentManager?.removeOnBackStackChangedListener(this)
         super.onDestroyView()
     }
@@ -170,16 +172,18 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        configureRecyclerView(
-            requireView(),
-            requireContext(),
-            recyclerAdapter,
-            R.id.swipeRefreshLayout,
-            R.id.emptyView,
-            R.id.listView,
+        recyclerAdapter?.let {
+            configureRecyclerView(
+                requireView(),
+                requireContext(),
+                it,
+                R.id.swipeRefreshLayout,
+                R.id.emptyView,
+                R.id.listView,
                 R.string.noNotifications
-        )
-        if (recyclerAdapter.size() == 0) {
+            )
+        }
+        if (recyclerAdapter?.size() == 0) {
             recyclerBinding.emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {

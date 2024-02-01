@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Convite aceito!</string>
     <string name="inviteDeclined">Convite recusado.</string>
     <string name="latePenalty">Penalidade tardia (-%s)</string>
+    <string name="latePenaltyUpdated">Penalidade tardia: -%s pts</string>
+    <string name="yourGrade">Sua Classificação: %s pts</string>
     <string name="finalGrade">Nota final</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d as disciplinas foram sincronizadas.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Conteúdo adicional da disciplina</string>
+    <string name="failedToUpdateDashboardOrder">Falha ao atualizar a ordem dos cartões do Painel</string>
 </resources>

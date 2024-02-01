@@ -989,11 +989,18 @@ class AppLocalizations {
         desc: 'Screen reader-friendly replacement for the "-" character in letter grades like "A-"',
       );
 
-  String latePenalty(String pointsLost) => Intl.message(
-        'Late penalty (-$pointsLost)',
+  String yourGrade(String pointsAchieved) => Intl.message(
+    'Your grade: $pointsAchieved',
+    desc: 'Text displayed when a late penalty has been applied to the assignment, this is the achieved score without the penalty',
+    args: [pointsAchieved],
+    name: 'yourGrade',
+  );
+
+  String latePenaltyUpdated(String pointsLost) => Intl.message(
+        'Late Penalty: -$pointsLost pts',
         desc: 'Text displayed when a late penalty has been applied to the assignment',
         args: [pointsLost],
-        name: 'latePenalty',
+        name: 'latePenaltyUpdated',
       );
 
   String finalGrade(String grade) => Intl.message(

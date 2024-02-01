@@ -58,7 +58,7 @@ fun StudentTest.slowLogIn(enrollmentType: String = EnrollmentTypes.STUDENT_ENROL
     return user
 }
 
-fun StudentTest.seedDataForK5(
+fun seedDataForK5(
     teachers: Int = 0,
     tas: Int = 0,
     pastCourses: Int = 0,
@@ -69,7 +69,8 @@ fun StudentTest.seedDataForK5(
     announcements: Int = 0,
     discussions: Int = 0,
     syllabusBody: String? = null,
-    gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
+    gradingPeriods: Boolean = false
+): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest (
         teachers = teachers,
@@ -88,7 +89,7 @@ fun StudentTest.seedDataForK5(
     return SeedApi.seedDataForSubAccount(request)
 }
 
-fun StudentTest.seedData(
+fun seedData(
     teachers: Int = 0,
     tas: Int = 0,
     pastCourses: Int = 0,
@@ -100,7 +101,8 @@ fun StudentTest.seedData(
     locked: Boolean = false,
     discussions: Int = 0,
     syllabusBody: String? = null,
-    gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
+    gradingPeriods: Boolean = false
+): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest (
             teachers = teachers,
@@ -119,15 +121,16 @@ fun StudentTest.seedData(
     return SeedApi.seedData(request)
 }
 
-fun StudentTest.seedAssignments(
-        courseId: Long,
-        assignments: Int = 1,
-        withDescription: Boolean = false,
-        lockAt: String = "",
-        unlockAt: String = "",
-        dueAt: String = "",
-        submissionTypes: List<SubmissionType> = emptyList(),
-        teacherToken: String): List<AssignmentApiModel> {
+fun seedAssignments(
+    courseId: Long,
+    assignments: Int = 1,
+    withDescription: Boolean = false,
+    lockAt: String = "",
+    unlockAt: String = "",
+    dueAt: String = "",
+    submissionTypes: List<SubmissionType> = emptyList(),
+    teacherToken: String
+): List<AssignmentApiModel> {
 
     return AssignmentsApi.seedAssignments(AssignmentsApi.CreateAssignmentRequest(
             courseId = courseId,
@@ -203,7 +206,7 @@ fun StudentTest.tokenLoginElementary(user: CanvasUserApiModel) {
     elementaryDashboardPage.assertPageObjects()
 }
 
-fun StudentTest.routeTo(route: String) {
+fun routeTo(route: String) {
     val url = "canvas-student://${CanvasNetworkAdapter.canvasDomain}/$route"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -213,7 +216,7 @@ fun StudentTest.routeTo(route: String) {
     context.startActivity(intent)
 }
 
-fun StudentTest.routeTo(route: String, domain: String) {
+fun routeTo(route: String, domain: String) {
     val url = "canvas-student://$domain/$route"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
     val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -223,39 +226,41 @@ fun StudentTest.routeTo(route: String, domain: String) {
     context.startActivity(intent)
 }
 
-fun StudentTest.routeTo(route: Route, activity: FragmentActivity) {
+fun routeTo(route: Route, activity: FragmentActivity) {
     RouteMatcher.route(activity, route)
 }
 
-fun StudentTest.seedAssignmentSubmission(
-        submissionSeeds: List<SubmissionsApi.SubmissionSeedInfo>,
-        assignmentId: Long,
-        courseId: Long,
-        studentToken: String,
-        commentSeeds: List<SubmissionsApi.CommentSeedInfo> = kotlin.collections.emptyList()
+fun seedAssignmentSubmission(
+    submissionSeeds: List<SubmissionsApi.SubmissionSeedInfo>,
+    assignmentId: Long,
+    courseId: Long,
+    studentToken: String,
+    commentSeeds: List<SubmissionsApi.CommentSeedInfo> = emptyList()
 ): List<SubmissionApiModel> {
 
     // Upload one submission file for each submission seed
     submissionSeeds.forEach {
         it.attachmentsList.add(
                 when (it.submissionType) {
-                    SubmissionType.ONLINE_UPLOAD -> uploadTextFile(courseId, assignmentId, studentToken,
+                    SubmissionType.ONLINE_UPLOAD -> uploadTextFile(
+                        courseId, assignmentId, studentToken,
                         FileUploadType.ASSIGNMENT_SUBMISSION
                     )
                     else -> AttachmentApiModel(displayName="", fileName="", id=0L) // Not handled right now
                 }
-            );
+            )
     }
 
     // Add attachments to comment seeds
     commentSeeds.forEach {
-        val fileAttachments: MutableList<AttachmentApiModel> = kotlin.collections.mutableListOf()
+        val fileAttachments: MutableList<AttachmentApiModel> = mutableListOf()
 
         for (i in 0..it.amount) {
             if (it.fileType != FileType.NONE) {
                 fileAttachments.add(when (it.fileType) {
-                    FileType.PDF -> kotlin.TODO()
-                    FileType.TEXT -> uploadTextFile(courseId, assignmentId, studentToken,
+                    FileType.PDF -> TODO()
+                    FileType.TEXT -> uploadTextFile(
+                        courseId, assignmentId, studentToken,
                         FileUploadType.COMMENT_ATTACHMENT
                     )
                     else -> throw RuntimeException("Unknown file type passed into StudentTest.seedAssignmentSubmission") // Unknown type
@@ -278,7 +283,12 @@ fun StudentTest.seedAssignmentSubmission(
     return SubmissionsApi.seedAssignmentSubmission(submissionRequest)
 }
 
-fun StudentTest.uploadTextFile(courseId: Long, assignmentId: Long, token: String, fileUploadType: FileUploadType): AttachmentApiModel {
+fun uploadTextFile(
+    courseId: Long,
+    assignmentId: Long? = null,
+    token: String,
+    fileUploadType: FileUploadType
+): AttachmentApiModel {
 
     // Create the file
     val file = File(

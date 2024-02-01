@@ -15,10 +15,11 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.espresso.retry
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedAssignments
 import com.instructure.student.ui.utils.seedData
@@ -71,12 +72,13 @@ class TodoE2ETest: StudentTest() {
         dashboardPage.clickTodoTab()
 
         Log.d(STEP_TAG,"Assert that ${testAssignment.name} assignment is displayed and ${borderDateAssignment.name} is displayed because it's 7 days away from now..")
-        todoPage.assertAssignmentDisplayed(testAssignment)
-        todoPage.assertAssignmentDisplayed(borderDateAssignment)
-
         Log.d(STEP_TAG,"Assert that ${quiz.title} quiz is displayed and ${tooFarAwayQuiz.title} quiz is not displayed because it's end date is more than a week away..")
-        todoPage.assertQuizDisplayed(quiz)
-        todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
+        retry(times = 5, delay = 3000, catchBlock = { refresh() } ) {
+            todoPage.assertAssignmentDisplayed(testAssignment)
+            todoPage.assertAssignmentDisplayed(borderDateAssignment)
+            todoPage.assertQuizDisplayed(quiz)
+            todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
+        }
 
         Log.d(PREPARATION_TAG,"Submit ${testAssignment.name} assignment for ${student.name} student.")
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
@@ -118,8 +120,8 @@ class TodoE2ETest: StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page. Open ${favoriteCourse.name} course. Mark it as favorite.")
         Espresso.pressBack()
-        dashboardPage.clickEditDashboard()
-        editDashboardPage.favoriteCourse(favoriteCourse.name)
+        dashboardPage.openAllCoursesPage()
+        allCoursesPage.favoriteCourse(favoriteCourse.name)
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page and open the To Do Page again.")
         Espresso.pressBack()

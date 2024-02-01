@@ -18,15 +18,27 @@ package com.instructure.teacher.mobius.common.ui
 
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.instructure.teacher.mobius.common.*
-import com.spotify.mobius.*
+import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.teacher.mobius.common.ConsumerQueueWrapper
+import com.instructure.teacher.mobius.common.CoroutineConnection
+import com.instructure.teacher.mobius.common.GlobalEventMapper
+import com.instructure.teacher.mobius.common.GlobalEventSource
+import com.instructure.teacher.mobius.common.LateInit
+import com.instructure.teacher.mobius.common.contraMap
+import com.spotify.mobius.Connectable
+import com.spotify.mobius.Connection
+import com.spotify.mobius.EventSource
+import com.spotify.mobius.First
+import com.spotify.mobius.Init
+import com.spotify.mobius.Mobius
+import com.spotify.mobius.MobiusLoop
+import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.android.runners.MainThreadWorkRunner
 import com.spotify.mobius.functions.Consumer
@@ -154,13 +166,7 @@ abstract class MobiusView<VIEW_STATE, EVENT, BINDING : ViewBinding>(
         get() = parent.context
 
     protected val activity: Activity
-        get() = getActivity(context)
-
-    private fun getActivity(context: Context): Activity {
-        if (context is Activity) return context
-        if (context is ContextWrapper) return getActivity(context.baseContext)
-        else throw IllegalStateException("Not activity context")
-    }
+        get() = context.getFragmentActivity()
 
     abstract fun onConnect(output: Consumer<EVENT>)
 

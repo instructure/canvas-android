@@ -19,6 +19,7 @@ package com.instructure.teacher.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.WindowManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -28,11 +29,15 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_REPLY
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentDiscussionsReplyBinding
@@ -49,9 +54,12 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsReplyView
 
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_REPLY)
-class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter, DiscussionsReplyView>(), DiscussionsReplyView, FileUploadDialogParent {
-
-    private val binding by viewBinding(FragmentDiscussionsReplyBinding::bind)
+class DiscussionsReplyFragment : BasePresenterFragment<
+        DiscussionsReplyPresenter,
+        DiscussionsReplyView,
+        FragmentDiscussionsReplyBinding>(),
+    DiscussionsReplyView,
+    FileUploadDialogParent {
 
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
     private var mDiscussionTopicHeaderId: Long by LongArg(default = 0L) // The topic the discussion belongs too
@@ -66,7 +74,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
 
-    override fun layoutResId(): Int = R.layout.fragment_discussions_reply
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentDiscussionsReplyBinding = FragmentDiscussionsReplyBinding::inflate
 
     override fun getPresenterFactory() = DiscussionsReplyFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntryId)
 

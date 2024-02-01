@@ -69,11 +69,11 @@ class LockedModuleDaoTest {
 
     @Test
     fun testFindById() = runTest {
-        val expected = LockedModuleEntity(LockedModule(id = 1))
+        val expected = LockedModuleEntity(LockedModule(id = 1), 1L)
 
         lockedModuleDao.insert(expected)
-        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 2)))
-        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 3)))
+        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 2), 2L))
+        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 3), 3L))
 
         val result = lockedModuleDao.findById(1)
 
@@ -82,14 +82,15 @@ class LockedModuleDaoTest {
 
     @Test(expected = SQLiteConstraintException::class)
     fun testLockInfoForeignKey() = runTest {
-        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 4)))
+        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 4), 4L))
     }
 
     @Test
     fun testLockInfoCascade() = runTest {
-        val id = lockInfoDao.insert(LockInfoEntity(LockInfo(contextModule = LockedModule(1))))
+        val rowId = lockInfoDao.insert(LockInfoEntity(LockInfo(contextModule = LockedModule(1))))
+        val id = lockInfoDao.findByRowId(rowId)?.id ?: 0
 
-        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 1)))
+        lockedModuleDao.insert(LockedModuleEntity(LockedModule(id = 1), id))
 
         lockInfoDao.delete(LockInfoEntity(id, null, null, null, null, null, null))
 

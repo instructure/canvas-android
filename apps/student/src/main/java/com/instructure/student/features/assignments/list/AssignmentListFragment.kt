@@ -75,7 +75,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: AssignmentListRecyclerAdapter
+    private var recyclerAdapter: AssignmentListRecyclerAdapter? = null
     private var termAdapter: TermSpinnerAdapter? = null
 
     private var filterPosition = 0
@@ -118,7 +118,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         override fun onRefreshFinished() {
             if (!isAdded) return // Refresh can finish after user has left screen, causing emptyView to be null
             setRefreshing(false)
-            if (recyclerAdapter.size() == 0) {
+            if (recyclerAdapter?.size() == 0) {
                 setEmptyView(binding.emptyView, R.drawable.ic_panda_space, R.string.noAssignments, R.string.noAssignmentsSubtext)
             }
         }
@@ -140,14 +140,16 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         binding.sortByTextView.setText(sortOrder.buttonTextRes)
         binding.sortByButton.contentDescription = getString(sortOrder.contentDescriptionRes)
 
-        configureRecyclerView(
+        recyclerAdapter?.let {
+            configureRecyclerView(
                 view,
                 requireContext(),
-                recyclerAdapter,
+                it,
                 R.id.swipeRefreshLayout,
                 R.id.emptyView,
                 R.id.listView
-        )
+            )
+        }
 
         binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, i ->
             // Workaround for Toolbar not showing with swipe to refresh
@@ -230,7 +232,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         dialog.dismiss()
         filterPosition = index
         filter = AssignmentListFilter.values()[index]
-        recyclerAdapter.filter = filter
+        recyclerAdapter?.filter = filter
         updateBadge()
     }
 
@@ -262,7 +264,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             } else {
                 emptyView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
-            recyclerAdapter.searchQuery = query
+            recyclerAdapter?.searchQuery = query
         }
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
@@ -290,22 +292,22 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
                 if (adapter.getItem(i)!!.title == getString(R.string.assignmentsListAllGradingPeriods)) {
-                    recyclerAdapter.loadAssignment()
+                    recyclerAdapter?.loadAssignment()
                 } else {
-                    recyclerAdapter.loadAssignmentsForGradingPeriod(adapter.getItem(i)!!.id, true)
+                    recyclerAdapter?.loadAssignmentsForGradingPeriod(adapter.getItem(i)!!.id, true)
                     termSpinner.isEnabled = false
                     adapter.isLoading = true
                     adapter.notifyDataSetChanged()
                 }
-                recyclerAdapter.currentGradingPeriod = adapter.getItem(i)
+                recyclerAdapter?.currentGradingPeriod = adapter.getItem(i)
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
         }
 
         // If we have a "current" grading period select it
-        if (hasGradingPeriods && recyclerAdapter.currentGradingPeriod != null) {
-            val position = adapter.getPositionForId(recyclerAdapter.currentGradingPeriod?.id ?: 0)
+        if (hasGradingPeriods && recyclerAdapter?.currentGradingPeriod != null) {
+            val position = adapter.getPositionForId(recyclerAdapter?.currentGradingPeriod?.id ?: 0)
             if (position != -1) {
                 termSpinner.setSelection(position)
             } else {
@@ -318,16 +320,17 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     override fun onConfigurationChanged(newConfig: Configuration) = with(binding) {
         super.onConfigurationChanged(newConfig)
-        configureRecyclerView(
+        recyclerAdapter?.let {
+            configureRecyclerView(
                 requireView(),
                 requireContext(),
-                recyclerAdapter,
+                it,
                 R.id.swipeRefreshLayout,
                 R.id.emptyView,
-                R.id.listView,
-                R.string.noAssignments
-        )
-        if (recyclerAdapter.size() == 0) {
+                R.id.listView
+            )
+        }
+        if (recyclerAdapter?.size() == 0) {
             emptyView.changeTextSize()
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 if (isTablet) {
@@ -348,7 +351,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     override fun onDestroy() {
         super.onDestroy()
-        recyclerAdapter.cancel()
+        recyclerAdapter?.cancel()
     }
 
     companion object {

@@ -16,11 +16,11 @@
  */
 package com.instructure.student.features.dashboard
 
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -29,7 +29,7 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 
 class DashboardRepository(
     private val localDataSource: DashboardLocalDataSource,
-    networkDataSource: DashboardNetworkDataSource,
+    private val networkDataSource: DashboardNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
@@ -45,11 +45,14 @@ class DashboardRepository(
     }
 
     suspend fun getDashboardCourses(forceNetwork: Boolean): List<DashboardCard> {
-        val dashboardCards = dataSource().getDashboardCards(forceNetwork).sortedBy { it.position }
+        var dashboardCards = dataSource().getDashboardCards(forceNetwork)
+        if (dashboardCards.all { it.position == Int.MAX_VALUE }) {
+            dashboardCards = dashboardCards.mapIndexed { index, dashboardCard -> dashboardCard.copy(position = index) }
+        }
         if (isOnline() && isOfflineEnabled()) {
             localDataSource.saveDashboardCards(dashboardCards)
         }
-        return dashboardCards
+        return dashboardCards.sortedBy { it.position }
     }
 
     suspend fun getSyncedCourseIds(): Set<Long> {
@@ -63,5 +66,13 @@ class DashboardRepository(
 
         val syncedCourses = courseDao.findByIds(syncedCourseIds)
         return syncedCourses.map { it.id }.toSet()
+    }
+
+    suspend fun updateDashboardPositions(dashboardPositions: DashboardPositions): DataResult<DashboardPositions> {
+        val result = networkDataSource.updateDashboardPositions(dashboardPositions)
+        if (result is DataResult.Success) {
+            localDataSource.updateDashboardCardsOrder(dashboardPositions)
+        }
+        return networkDataSource.updateDashboardPositions(dashboardPositions)
     }
 }

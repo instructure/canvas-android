@@ -109,7 +109,7 @@ open class PageListRecyclerAdapter(
             onCallbackFinished()
         } catch {
             if (itemCount == 0 || !APIHelper.hasNetworkConnection()) {
-                adapterToRecyclerViewCallback.setIsEmpty(true)
+                adapterToRecyclerViewCallback?.setIsEmpty(true)
             } else {
                 context.toast(R.string.errorOccurred)
             }

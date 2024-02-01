@@ -36,4 +36,8 @@ sealed class ViewState {
     fun isInLoadingState(): Boolean {
         return this is Loading || this is Refresh || this is LoadingNextPage
     }
+
+    fun isSuccessState(): Boolean {
+        return this is Success
+    }
 }

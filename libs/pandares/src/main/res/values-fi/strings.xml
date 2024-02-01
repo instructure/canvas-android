@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Kutsu hyväksytty!</string>
     <string name="inviteDeclined">Kutsu kielletty.</string>
     <string name="latePenalty">Rangaistus myöhästymisestä (-%s)</string>
+    <string name="latePenaltyUpdated">Rangaistus myöhästymisestä: -%s pistettä</string>
+    <string name="yourGrade">Arvosanasi: %s pistettä</string>
     <string name="finalGrade">Lopullinen arvosana</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d kurssia on synkronoitu.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">LIsäkurssin sisältö.</string>
+    <string name="failedToUpdateDashboardOrder">Hallintapaneelin koontinäytön korttien päivittäminen epäonnistui</string>
 </resources>

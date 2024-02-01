@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Invitació acceptada.</string>
     <string name="inviteDeclined">Invitació rebutjada.</string>
     <string name="latePenalty">Sanció per endarreriment (-%s)</string>
+    <string name="latePenaltyUpdated">Penalització per entrega endarrerida: -%s punts</string>
+    <string name="yourGrade">La vostra nota: %s punts</string>
     <string name="finalGrade">Nota final</string>
 
     <string name="max_count">99+</string>
@@ -1480,4 +1482,5 @@
         <item quantity="other">S’han sincronitzat %d assignatures.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Contingut de l’assignatura addicional</string>
+    <string name="failedToUpdateDashboardOrder">No s’ha pogut actualitzar la comanda de targetes del panell de control</string>
 </resources>

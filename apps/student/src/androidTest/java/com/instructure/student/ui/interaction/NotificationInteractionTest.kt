@@ -15,16 +15,20 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionStreamItem
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -36,7 +40,7 @@ class NotificationInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testClick_itWorks() {
         // Test that push notifications work when you click on them
         val data = goToNotifications()
@@ -49,7 +53,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfNotRestricted_points() {
         val grade = "10.0"
         val data = goToNotifications(
@@ -65,7 +69,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfNotRestricted_percent() {
         val grade = "10%"
         val data = goToNotifications(
@@ -81,7 +85,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfNotRestricted_letter() {
         val grade = "A"
         val data = goToNotifications(
@@ -97,7 +101,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfNotRestricted_gpa() {
         val grade = "GPA"
         val data = goToNotifications(
@@ -113,7 +117,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfNotRestricted_passFail() {
         val grade = "complete"
         val data = goToNotifications(
@@ -130,7 +134,7 @@ class NotificationInteractionTest : StudentTest() {
 
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeUpdatedIfRestricted_points() {
         val grade = "15.0"
         val data = goToNotifications(
@@ -146,7 +150,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_convertGradeIfRestricted_percent() {
         val grade = "50%"
         val data = goToNotifications(
@@ -162,7 +166,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfRestricted_letter() {
         val grade = "A"
         val data = goToNotifications(
@@ -178,7 +182,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfRestricted_gpa() {
         val grade = "GPA"
         val data = goToNotifications(
@@ -194,7 +198,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showGradeIfRestricted_passFail() {
         val grade = "complete"
         val data = goToNotifications(
@@ -210,7 +214,7 @@ class NotificationInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
     fun testNotificationList_showExcused() {
         val data = goToNotifications(
             restrictQuantitativeData = true,
@@ -251,7 +255,7 @@ class NotificationInteractionTest : StudentTest() {
         repeat(numSubmissions) {
             val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 gradingType = Assignment.gradingTypeToAPIString(gradingType).orEmpty(),
                 pointsPossible = 20
             )

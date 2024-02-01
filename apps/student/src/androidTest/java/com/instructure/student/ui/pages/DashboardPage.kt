@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
+import com.instructure.espresso.matchers.WaitForViewMatcher.waitForViewToBeCompletelyDisplayed
 import com.instructure.espresso.page.*
 import com.instructure.student.R
 import com.instructure.student.ui.utils.ViewUtils
@@ -144,6 +145,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         //onView(allOf(withId(R.id.listView),  withAncestor(R.id.dashboardPage))).waitForCheck(matches(isDisplayed()))
         //listView.waitForCheck(matches(isDisplayed()))
         onView(hamburgerButtonMatcher).waitForCheck(matches(isDisplayed()))
+    }
+
+    fun openLeftSideMenu() {
+        onView(hamburgerButtonMatcher).click()
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
@@ -255,20 +260,24 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun switchCourseView() {
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        clickDashboardGlobalOverflowButton()
         onView(withText(containsString("Switch to")))
             .perform(click());
     }
 
-    //OfflineMethod
     fun openGlobalManageOfflineContentPage() {
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
-        onView(withText(containsString("Manage Offline Content")))
+       clickDashboardGlobalOverflowButton()
+       onView(withText(containsString("Manage Offline Content")))
             .perform(click());
     }
 
-    fun clickEditDashboard() {
-        onView(withId(R.id.editDashboardTextView)).scrollTo().click()
+    private fun clickDashboardGlobalOverflowButton() {
+        waitForViewToBeCompletelyDisplayed(withContentDescription("More options") + withAncestor(R.id.toolbar))
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+    }
+
+    fun openAllCoursesPage() {
+        waitForView(withId(R.id.editDashboardTextView)).scrollTo().click()
     }
 
     fun assertCourseNotDisplayed(course: CourseApiModel) {
@@ -304,12 +313,16 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun clickCourseOverflowMenu(courseTitle: String, menuTitle: String) {
+        clickOnCourseOverflowButton(courseTitle)
+        waitForView(withId(R.id.title) + withText(menuTitle)).click()
+    }
+
+    fun clickOnCourseOverflowButton(courseTitle: String) {
         val courseOverflowMatcher = withId(R.id.overflow) + withAncestor(
             withId(R.id.cardView)
                     + withDescendant(withId(R.id.titleTextView) + withText(courseTitle))
         )
         waitForView(courseOverflowMatcher).scrollTo().click()
-        waitForView(withId(R.id.title) + withText(menuTitle)).click()
     }
 
     fun assertCourseGrade(courseName: String, courseGrade: String) {
@@ -346,6 +359,22 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     //OfflineMethod
+    fun waitForNetworkComeBack() {
+        assertDisplaysCourses()
+        retry(times = 5, delay = 2000) {
+            assertOfflineIndicatorNotDisplayed()
+        }
+    }
+
+    //OfflineMethod
+    fun waitForNetworkOff() {
+        assertDisplaysCourses()
+        retry(times = 5, delay = 2000) {
+            assertOfflineIndicatorDisplayed()
+        }
+    }
+
+    //OfflineMethod
     fun assertCourseOfflineSyncIconVisible(courseName: String) {
         waitForView(withId(R.id.offlineSyncIcon) + hasSibling(withId(R.id.titleTextView) + withText(courseName))).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
@@ -378,6 +407,14 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     //OfflineMethod
     fun waitForSyncProgressStartingNotificationToDisappear() {
         ViewUtils.waitForViewToDisappear(withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent), 30)
+    }
+
+    //OfflineMethod
+    fun assertBottomMenusAreDisabled() {
+        onView(withId(R.id.bottomNavigationCalendar)).check(matches(isNotEnabled()))
+        onView(withId(R.id.bottomNavigationToDo)).check(matches(isNotEnabled()))
+        onView(withId(R.id.bottomNavigationNotifications)).check(matches(isNotEnabled()))
+        onView(withId(R.id.bottomNavigationInbox)).check(matches(isNotEnabled()))
     }
 }
 

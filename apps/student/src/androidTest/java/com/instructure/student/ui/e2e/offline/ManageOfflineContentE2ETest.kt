@@ -19,12 +19,11 @@ package com.instructure.student.ui.e2e.offline
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -48,7 +47,6 @@ class ManageOfflineContentE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
-        val testAnnouncement = data.announcementsList[0]
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -74,6 +72,12 @@ class ManageOfflineContentE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Assert that the tool bar texts are displayed properly, so the subtitle is '${course1.name}', because we are on the Manage Offline Content page of '${course1.name}' course.")
         manageOfflineContentPage.assertToolbarTexts(course1.name)
+
+        Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state became 'Checked'.")
+        manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_CHECKED)
+
+        Log.d(STEP_TAG, "Expand '${course1.name}' course.")
+        manageOfflineContentPage.expandCollapseItem(course1.name)
 
         Log.d(STEP_TAG, "Deselect the 'Announcements' and 'Discussions' of the '${course1.name}' course.")
         manageOfflineContentPage.changeItemSelectionState("Announcements")
@@ -185,8 +189,8 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that both of the seeded courses are displayed as a selectable item in the Manage Offline Content page.")
         manageOfflineContentPage.assertCourseCountWithMatcher(2)
 
-        Log.d(STEP_TAG, "Click on the 'Sync' button.")
-        manageOfflineContentPage.clickOnSyncButton()
+        Log.d(STEP_TAG, "Click on the 'Sync' button and confirm sync.")
+        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
         dashboardPage.waitForRender()
@@ -198,7 +202,12 @@ class ManageOfflineContentE2ETest : StudentTest() {
         dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
-        OfflineTestUtils.turnOffConnectionViaADB()
+        turnOffConnectionViaADB()
+        Thread.sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
+        device.waitForIdle()
+        device.waitForWindowUpdate(null, 10000)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Select '${course2.name}' course and open 'Grades' menu to check if it's really synced and can be seen in offline mode.")
@@ -212,7 +221,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device via ADB, so it will come back online.")
-        OfflineTestUtils.turnOnConnectionViaADB()
+        turnOnConnectionViaADB()
     }
 
 }

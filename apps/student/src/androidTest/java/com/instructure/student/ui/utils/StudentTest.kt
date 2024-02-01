@@ -32,6 +32,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.Searchable
@@ -42,6 +43,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.espresso.StudentHiltTestApplication_Application
 import com.instructure.student.ui.pages.AboutPage
+import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
 import com.instructure.student.ui.pages.AnnouncementListPage
 import com.instructure.student.ui.pages.AssignmentDetailsPage
@@ -56,7 +58,6 @@ import com.instructure.student.ui.pages.CourseGradesPage
 import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionDetailsPage
 import com.instructure.student.ui.pages.DiscussionListPage
-import com.instructure.student.ui.pages.EditDashboardPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.pages.FileListPage
@@ -112,6 +113,8 @@ import javax.inject.Inject
 
 abstract class StudentTest : CanvasTest() {
 
+    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)
 
@@ -162,7 +165,7 @@ abstract class StudentTest : CanvasTest() {
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val discussionDetailsPage = DiscussionDetailsPage()
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val editDashboardPage = EditDashboardPage()
+    val allCoursesPage = AllCoursesPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val fileUploadPage = FileUploadPage()
     val helpPage = HelpPage()

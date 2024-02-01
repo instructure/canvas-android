@@ -114,6 +114,9 @@ object FileFolderAPI {
         @GET("courses/{courseId}/content_licenses")
         fun getCourseFileLicenses(@Path("courseId") courseId: Long): Call<ArrayList<License>>
 
+        @GET("courses/{courseId}/content_licenses")
+        suspend fun getCourseFileLicenses(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<List<License>>
+
         @GET("files/{fileNumber}?include=avatar")
         fun getAvatarFileToken(@Path("fileNumber") fileNumber: String): Call<FileFolder>
     }

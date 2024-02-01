@@ -50,8 +50,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 255
-        versionName = '6.26.1'
+        versionCode = 258
+        versionName = '7.0.2'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -244,8 +244,6 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':panda_annotations')
-    kaptAndroidTestQa project(path: ':panda_processor')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -320,7 +318,8 @@ dependencies {
     implementation Libs.SQLDELIGHT
 
     /* Qr Code */
-    implementation Libs.JOURNEY_ZXING
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 
     /* AAC */
     implementation Libs.VIEW_MODEL
@@ -349,6 +348,8 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
+
+    testImplementation Libs.HAMCREST
 }
 
 // Comment out this line if the reporting logic starts going wonky.

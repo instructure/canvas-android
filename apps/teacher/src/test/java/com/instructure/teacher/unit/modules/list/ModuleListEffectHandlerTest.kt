@@ -13,27 +13,40 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.unit.modules
+package com.instructure.teacher.unit.modules.list
 
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.teacher.features.modules.list.*
+import com.instructure.teacher.features.modules.list.CollapsedModulesStore
+import com.instructure.teacher.features.modules.list.ModuleListEffect
+import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
+import com.instructure.teacher.features.modules.list.ModuleListEvent
+import com.instructure.teacher.features.modules.list.ModuleListPageData
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.Ordering
+import io.mockk.coEvery
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.unmockkObject
+import io.mockk.unmockkStatic
+import io.mockk.verify
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
-import okhttp3.Headers
 import okhttp3.Headers.Companion.toHeaders
 import org.junit.Assert
 import org.junit.Before
@@ -69,39 +82,6 @@ class ModuleListEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `LoadFileInfo loads file data and calls routeToFile on the view`() {
-        val item = ModuleItem(id = 123L, type = "File", url = "fake url")
-        val course = Course(name = "Course 101")
-
-        val file: FileFolder = mockk()
-        val licenses = arrayListOf(License("1", "Fake license", "fake url"))
-
-        mockkObject(FileFolderManager, FeaturesManager)
-
-        every { FileFolderManager.getFileFolderFromUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(file)
-        }
-
-        every { FeaturesManager.getEnabledFeaturesForCourseAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(listOf("usage_rights_required"))
-        }
-
-        every { FileFolderManager.getCourseFileLicensesAsync(any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(licenses)
-        }
-
-        connection.accept(ModuleListEffect.LoadFileInfo(item, course))
-        verify(timeout = 100, ordering = Ordering.SEQUENCE) {
-            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), true))
-            view.routeToFile(course, file, true, licenses)
-            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), false))
-        }
-        confirmVerified(view)
-
-        unmockkObject(FileFolderManager, FeaturesManager)
-    }
-
-    @Test
     fun `UpdateModuleItem loads new data and sends correct events`() {
         val items = List(3) { ModuleItem(id = it.toLong(), title = "Before") }
         val updatedItems = items.map { it.copy(title = "After") }
@@ -115,7 +95,7 @@ class ModuleListEffectHandlerTest : Assert() {
         }
 
         connection.accept(ModuleListEffect.UpdateModuleItems(Course(), items))
-        verify(timeout = 100, ordering = Ordering.SEQUENCE) {
+        verify(timeout = 500, ordering = Ordering.SEQUENCE) {
             consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(itemIds, true))
             consumer.accept(ModuleListEvent.ReplaceModuleItems(updatedItems))
             consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(itemIds, false))

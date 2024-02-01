@@ -22,6 +22,10 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
@@ -38,10 +42,6 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
@@ -131,7 +131,7 @@ class AssignmentsE2ETest: StudentTest() {
     fun testLetterGradeTextAssignmentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -163,7 +163,7 @@ class AssignmentsE2ETest: StudentTest() {
     fun testPercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -186,7 +186,12 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.clickAssignment(percentageFileAssignment)
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
-        val uploadInfo = uploadTextFile(courseId = course.id, assignmentId = percentageFileAssignment.id, token = student.token, fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION)
+        val uploadInfo = uploadTextFile(
+            courseId = course.id,
+            assignmentId = percentageFileAssignment.id,
+            token = student.token,
+            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
+        )
 
         Log.d(PREPARATION_TAG,"Submit ${percentageFileAssignment.name} assignment for ${student.name} student.")
         submitCourseAssignment(course, percentageFileAssignment, uploadInfo, student)
@@ -245,7 +250,7 @@ class AssignmentsE2ETest: StudentTest() {
     fun testMultipleAssignmentsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -288,7 +293,7 @@ class AssignmentsE2ETest: StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testFilterAndSortAssignmentsE2E() {
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -420,7 +425,7 @@ class AssignmentsE2ETest: StudentTest() {
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -464,7 +469,7 @@ class AssignmentsE2ETest: StudentTest() {
     fun testAddFileCommentE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -481,8 +486,8 @@ class AssignmentsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
-            assignmentId = assignment.id,
             courseId = course.id,
+            assignmentId = assignment.id,
             token = student.token,
             fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
@@ -510,7 +515,7 @@ class AssignmentsE2ETest: StudentTest() {
     fun testSubmissionAttemptSelection() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -572,7 +577,7 @@ class AssignmentsE2ETest: StudentTest() {
     fun testCommentsBelongToSubmissionAttempts() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -665,7 +670,7 @@ class AssignmentsE2ETest: StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun showOnlyLetterGradeOnDashboardAndAssignmentListPageE2E() {
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -821,7 +826,7 @@ class AssignmentsE2ETest: StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
     fun showOnlyLetterGradeOnGradesPageE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]

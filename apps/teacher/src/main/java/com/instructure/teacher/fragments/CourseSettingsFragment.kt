@@ -20,15 +20,21 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.LayoutInflater
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.globalName
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentCourseSettingsBinding
 import com.instructure.teacher.dialog.EditCourseNameDialog
@@ -43,9 +49,9 @@ import com.instructure.teacher.viewinterface.CourseSettingsFragmentView
 @ScreenView(SCREEN_VIEW_COURSE_SETTINGS)
 class CourseSettingsFragment : BasePresenterFragment<
         CourseSettingsFragmentPresenter,
-        CourseSettingsFragmentView>(), CourseSettingsFragmentView {
-
-    private val binding by viewBinding(FragmentCourseSettingsBinding::bind)
+        CourseSettingsFragmentView,
+        FragmentCourseSettingsBinding>(),
+    CourseSettingsFragmentView {
 
     private var course: Course by ParcelableArg(default = Course())
 
@@ -64,7 +70,8 @@ class CourseSettingsFragment : BasePresenterFragment<
         )
     }
 
-    override fun layoutResId() = R.layout.fragment_course_settings
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCourseSettingsBinding = FragmentCourseSettingsBinding::inflate
+
     override fun getPresenterFactory() = CourseSettingsFragmentPresenterFactory()
 
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
