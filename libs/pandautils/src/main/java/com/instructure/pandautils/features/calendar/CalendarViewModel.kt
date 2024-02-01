@@ -175,13 +175,16 @@ class CalendarViewModel @Inject constructor(
 
     private fun getDateForPlannerItem(plannerItem: PlannerItem): String? {
         return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
-            val date = plannerItem.plannable.todoDate.toDate()
-            date?.let {
-                DateHelper.getDateTimeString(context, it)
+            plannerItem.plannable.todoDate.toDate()?.let {
+                val dateText = DateHelper.dayMonthDateFormat.format(it)
+                val timeText = DateHelper.getFormattedTime(context, it)
+                context.getString(R.string.calendarDate, dateText, timeText)
             }
         } else {
             plannerItem.plannable.dueAt?.let {
-                context.getString(R.string.calendarDueDate, DateHelper.getDateTimeString(context, it))
+                val dateText = DateHelper.dayMonthDateFormat.format(it)
+                val timeText = DateHelper.getFormattedTime(context, it)
+                context.getString(R.string.calendarDueDate, dateText, timeText)
             }
         }
     }
