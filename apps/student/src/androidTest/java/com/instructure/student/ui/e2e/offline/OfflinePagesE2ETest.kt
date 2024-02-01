@@ -160,7 +160,6 @@ class OfflinePagesE2ETest : StudentTest() {
         canvasWebViewPage.clickEditPencilIcon()
         OfflineTestUtils.assertNoInternetConnectionDialog()
         OfflineTestUtils.dismissNoInternetConnectionDialog()
-
     }
 
     @After
