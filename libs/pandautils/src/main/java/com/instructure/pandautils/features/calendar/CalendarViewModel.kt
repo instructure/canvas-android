@@ -240,9 +240,7 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.emit(createNewUiState())
         }
-        loadEventsForMonth(selectedDay)
-        loadEventsForMonth(selectedDay.plusMonths(1))
-        loadEventsForMonth(selectedDay.minusMonths(1))
+        loadVisibleMonths()
     }
 
     private fun expandChanged(expanded: Boolean) {

@@ -271,9 +271,7 @@ fun CalendarView(calendarUiState: CalendarUiState, actionHandler: (CalendarActio
         }
 
         LaunchedEffect(pagerState) {
-            // Collect from the a snapshotFlow reading the currentPage
             snapshotFlow { pagerState.settledPage }.collect { page ->
-                // Do something with each page change, for example:
                 val monthOffset = page - centerIndex
                 centerIndex = page
                 actionHandler(CalendarAction.PageChanged(monthOffset))
@@ -519,9 +517,7 @@ fun CalendarEventsView(
     }
 
     LaunchedEffect(pagerState) {
-        // Collect from the a snapshotFlow reading the currentPage
         snapshotFlow { pagerState.settledPage }.collect { page ->
-            // Do something with each page change, for example:
             val monthOffset = page - centerIndex
             centerIndex = page
             actionHandler(CalendarAction.EventPageChanged(monthOffset))
