@@ -74,7 +74,7 @@ object TabHelper {
 
     fun isHomeTab(tab: Tab): Boolean = "home".equals(tab.tabId, ignoreCase = true)
 
-    fun getRouteByTabId(tabb: Tab?, canvasContext: CanvasContext, homePageTitle: String? = null): Route? {
+    fun getRouteByTabId(tabb: Tab?, canvasContext: CanvasContext): Route? {
         val tab = tabb ?: Tab(Tab.HOME_ID, "")
 
         // Student view doesn't support groups, collaborations, or external LTIs from the Course Browser
