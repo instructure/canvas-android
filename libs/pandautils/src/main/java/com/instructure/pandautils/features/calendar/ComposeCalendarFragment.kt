@@ -34,6 +34,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -709,7 +710,8 @@ fun CalendarErrorView(actionHandler: (CalendarAction) -> Unit) {
         OutlinedButton(
             onClick = { actionHandler(CalendarAction.Retry) },
             border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
-            shape = RoundedCornerShape(4.dp)
+            shape = RoundedCornerShape(4.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundLightest))
         ) {
             Text(
                 text = stringResource(id = R.string.calendarPageErrorRetry),
