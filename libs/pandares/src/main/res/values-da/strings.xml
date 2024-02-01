@@ -1481,4 +1481,5 @@
         <item quantity="other">%d fagene er blevet synkroniseret.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Yderligere fagindhold</string>
+    <string name="failedToUpdateDashboardOrder">Kunne ikke opdatere oversigtens kortordren</string>
 </resources>

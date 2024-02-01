@@ -1481,4 +1481,5 @@
         <item quantity="other">%d námskeið hafa verið samstillt.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Viðbótar námskeiðsefni</string>
+    <string name="failedToUpdateDashboardOrder">Ekki tókst að uppfæra röð Skjáborðsspjalda</string>
 </resources>

@@ -1481,4 +1481,5 @@
         <item quantity="other">%d cwrs wedi cael eu cysoni.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Cynnwys cwrs ychwanegol</string>
+    <string name="failedToUpdateDashboardOrder">Wedi methu diweddaru trefn cardiau’r Dangosfwrdd</string>
 </resources>

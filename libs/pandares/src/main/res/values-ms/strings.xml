@@ -1487,4 +1487,5 @@
         <item quantity="other">%d Kursus telah disegerakkan.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Kandungan kursus tambahan</string>
+    <string name="failedToUpdateDashboardOrder">Gagal untuk mengemas kini susunan kad Papan Pemuka</string>
 </resources>

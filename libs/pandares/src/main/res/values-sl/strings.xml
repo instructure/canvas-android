@@ -1481,4 +1481,5 @@
         <item quantity="other">%d predmetov je bilo sinhroniziranih.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Dodatna vsebina predmeta</string>
+    <string name="failedToUpdateDashboardOrder">Vrstnega reda kartic nadzorne plošče ni bilo mogoče posodobiti</string>
 </resources>

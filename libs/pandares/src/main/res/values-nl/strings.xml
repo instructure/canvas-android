@@ -1481,4 +1481,5 @@
         <item quantity="other">%d-cursussen zijn gesynchroniseerd.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Aanvullende cursusinhoud</string>
+    <string name="failedToUpdateDashboardOrder">Kan de volgorde van Dashboard-kaarten niet wijzigen</string>
 </resources>
