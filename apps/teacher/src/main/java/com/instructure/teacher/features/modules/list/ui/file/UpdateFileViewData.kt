@@ -24,7 +24,6 @@ import com.instructure.teacher.R
 import java.util.Date
 
 data class UpdateFileViewData(
-    val title: String,
     val selectedAvailability: FileAvailability,
     val selectedVisibility: FileVisibility,
     val lockAt: Date?,

@@ -85,7 +85,6 @@ class UpdateFileViewModel @Inject constructor(
 
             _data.postValue(
                 UpdateFileViewData(
-                    title = file?.displayName ?: "",
                     selectedAvailability = availability,
                     selectedVisibility = visibility,
                     lockAt = contentDetails.lockDate,
@@ -100,24 +99,20 @@ class UpdateFileViewModel @Inject constructor(
         }
     }
 
-    fun onAvailabilityChanged(isChecked: Boolean, availability: FileAvailability) {
-        if (isChecked) {
-            _data.postValue(
-                data.value?.copy(
-                    selectedAvailability = availability
-                )
+    fun onAvailabilityChanged(availability: FileAvailability) {
+        _data.postValue(
+            data.value?.copy(
+                selectedAvailability = availability
             )
-        }
+        )
     }
 
-    fun onVisibilityChanged(isChecked: Boolean, visibility: FileVisibility) {
-        if (isChecked) {
-            _data.postValue(
-                data.value?.copy(
-                    selectedVisibility = visibility
-                )
+    fun onVisibilityChanged(visibility: FileVisibility) {
+        _data.postValue(
+            data.value?.copy(
+                selectedVisibility = visibility
             )
-        }
+        )
     }
 
     fun close() {
@@ -142,7 +137,12 @@ class UpdateFileViewModel @Inject constructor(
                 eventBus.post(FileFolderUpdatedEvent(updatedFile))
                 _events.postValue(Event(UpdateFileEvent.Close))
             } else {
-                _state.postValue(ViewState.Error(context.getString(R.string.errorOccurred), R.drawable.ic_panda_nofiles))
+                _state.postValue(
+                    ViewState.Error(
+                        context.getString(R.string.errorOccurred),
+                        R.drawable.ic_panda_nofiles
+                    )
+                )
             }
         }
     }
