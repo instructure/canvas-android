@@ -19,7 +19,6 @@ package com.instructure.student.util
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -101,7 +100,7 @@ object TabHelper {
             Tab.ASSIGNMENTS_ID -> AssignmentListFragment.makeRoute(canvasContext)
             Tab.MODULES_ID -> ModuleListFragment.makeRoute(canvasContext)
             Tab.PAGES_ID -> PageListFragment.makeRoute(canvasContext, false)
-            Tab.FRONT_PAGE_ID -> PageDetailsFragment.makeRoute(canvasContext, homePageTitle ?: Page.FRONT_PAGE_NAME)
+            Tab.FRONT_PAGE_ID -> PageDetailsFragment.makeFrontPageRoute(canvasContext)
             Tab.DISCUSSIONS_ID -> DiscussionListFragment.makeRoute(canvasContext)
             Tab.PEOPLE_ID -> PeopleListFragment.makeRoute(canvasContext)
             Tab.FILES_ID -> FileListFragment.makeRoute(canvasContext)
