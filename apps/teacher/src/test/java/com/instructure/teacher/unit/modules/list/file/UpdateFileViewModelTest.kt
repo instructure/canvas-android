@@ -408,6 +408,7 @@ class UpdateFileViewModelTest {
     fun `Hiding file calls api with correct params`() {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
+        coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, unlockAt = Date().toApiString())
         viewModel.loadData(contentDetails, 1L)
 
@@ -434,6 +435,7 @@ class UpdateFileViewModelTest {
     fun `Unpublishing file calls api with correct params`() {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
+        coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, unlockAt = Date().toApiString())
         viewModel.loadData(contentDetails, 1L)
 
@@ -460,6 +462,7 @@ class UpdateFileViewModelTest {
     fun `Publishing file calls api with correct params`() {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.CONTEXT.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
+        coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = true, unlockAt = Date().toApiString())
         viewModel.loadData(contentDetails, 1L)
 
