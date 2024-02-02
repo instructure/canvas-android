@@ -91,7 +91,7 @@ class ModulesPage : BasePage() {
      */
     fun assertModuleItemIsPublished(moduleItemName: String) {
         val siblingChildMatcher = withChild(withId(R.id.moduleItemTitle) + withText(moduleItemName))
-        onView(withId(R.id.moduleItemPublishedIcon) + hasSibling(siblingChildMatcher)).assertDisplayed()
+        onView(withId(R.id.moduleItemStatusIcon) + hasSibling(siblingChildMatcher)).assertDisplayed()
         onView(withId(R.id.moduleItemUnpublishedIcon) + hasSibling(siblingChildMatcher)).assertNotDisplayed()
     }
 
@@ -104,7 +104,7 @@ class ModulesPage : BasePage() {
     fun assertModuleItemNotPublished(moduleTitle: String, moduleItemName: String) {
         val siblingChildMatcher = withChild(withId(R.id.moduleItemTitle) + withText(moduleItemName))
         onView(withId(R.id.moduleItemUnpublishedIcon) + hasSibling(siblingChildMatcher)).assertDisplayed()
-        onView(withId(R.id.moduleItemPublishedIcon) + hasSibling(siblingChildMatcher)).assertNotDisplayed()
+        onView(withId(R.id.moduleItemStatusIcon) + hasSibling(siblingChildMatcher)).assertNotDisplayed()
     }
 
     /**

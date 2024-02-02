@@ -101,7 +101,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/moduleItemPublishedIcon"
+            android:id="@+id/moduleItemStatusIcon"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="center_vertical"

@@ -160,8 +160,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             items = listOf(moduleItem)
         )
         loadPageWithViewState(state)
-        page.moduleItemPublishedIcon.assertDisplayed()
-        page.moduleItemUnpublishedIcon.assertNotDisplayed()
+        page.assertStatusIcon(R.drawable.ic_complete_solid, R.color.textSuccess)
     }
 
     @Test
@@ -173,21 +172,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             items = listOf(moduleItem)
         )
         loadPageWithViewState(state)
-        page.moduleItemUnpublishedIcon.assertDisplayed()
-        page.moduleItemPublishedIcon.assertNotDisplayed()
-    }
-
-    @Test
-    fun doesNotDisplayModuleItemPublishStatusIcon() {
-        val moduleItem = moduleItemTemplate.copy(
-            isPublished = null
-        )
-        val state = ModuleListViewState(
-            items = listOf(moduleItem)
-        )
-        loadPageWithViewState(state)
-        page.moduleItemUnpublishedIcon.assertNotDisplayed()
-        page.moduleItemPublishedIcon.assertNotDisplayed()
+        page.assertStatusIcon(R.drawable.ic_no, R.color.textDark)
     }
 
     @Test

@@ -58,9 +58,9 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             root.isEnabled = item.enabled
 
             val statusIcon = getStatusIcon(item)
-            moduleItemPublishedIcon.apply {
-                moduleItemPublishedIcon.setImageResource(statusIcon.icon)
-                moduleItemPublishedIcon.setTint(statusIcon.tint)
+            moduleItemStatusIcon.apply {
+                setImageResource(statusIcon.icon)
+                setTint(statusIcon.tint)
                 setVisible(!item.isLoading)
             }
             moduleItemLoadingView.setVisible(item.isLoading)
