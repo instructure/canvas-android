@@ -29,11 +29,17 @@ import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 interface ReminderDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(reminder: ReminderEntity)
+    suspend fun insert(reminder: ReminderEntity): Long
 
     @Query("DELETE FROM ReminderEntity WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM ReminderEntity WHERE time < :time")
+    suspend fun deletePastReminders(time: Long)
+
     @Query("SELECT * FROM ReminderEntity WHERE userId = :userId AND assignmentId = :assignmentId")
     fun findByAssignmentIdLiveData(userId: Long, assignmentId: Long): LiveData<List<ReminderEntity>>
+
+    @Query("SELECT * FROM ReminderEntity WHERE userId = :userId")
+    suspend fun findByUserId(userId: Long): List<ReminderEntity>
 }

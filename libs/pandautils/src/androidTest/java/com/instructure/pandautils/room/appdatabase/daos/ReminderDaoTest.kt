@@ -58,9 +58,9 @@ class ReminderDaoTest {
     @Test
     fun testFindItemsByAssignmentId() = runTest {
         val entities = listOf(
-            ReminderEntity(1, 1, 1, "Test 1"),
-            ReminderEntity(2, 2, 1, "Test 2"),
-            ReminderEntity(3, 1, 2, "Test 3"),
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000),
+            ReminderEntity(2, 2, 1, "htmlUrl2", "Assignment 2", "2 days", 2000),
+            ReminderEntity(3, 1, 2, "htmlUrl3", "Assignment 3", "3 days", 3000)
         )
         entities.forEach { reminderDao.insert(it) }
 
@@ -73,8 +73,8 @@ class ReminderDaoTest {
     @Test
     fun testDeleteById() = runTest {
         val entities = listOf(
-            ReminderEntity(1, 1, 1, "Test 1"),
-            ReminderEntity(2, 1, 1, "Test 2")
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000),
+            ReminderEntity(2, 1, 1, "htmlUrl2", "Assignment 2", "2 days", 2000),
         )
         entities.forEach { reminderDao.insert(it) }
 
@@ -84,5 +84,36 @@ class ReminderDaoTest {
         result.observeForever { }
 
         Assert.assertEquals(entities.takeLast(1), result.value)
+    }
+
+    @Test
+    fun testDeletePastReminders() = runTest {
+        val entities = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000),
+            ReminderEntity(2, 1, 1, "htmlUrl2", "Assignment 2", "2 days", 2000),
+            ReminderEntity(2, 1, 1, "htmlUrl2", "Assignment 2", "2 days", 3000)
+        )
+        entities.forEach { reminderDao.insert(it) }
+
+        reminderDao.deletePastReminders(2000)
+
+        val result = reminderDao.findByAssignmentIdLiveData(1, 1)
+        result.observeForever { }
+
+        Assert.assertEquals(entities.takeLast(1), result.value)
+    }
+
+    @Test
+    fun testFindItemsByUserId() = runTest {
+        val entities = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000),
+            ReminderEntity(2, 1, 3, "htmlUrl2", "Assignment 2", "2 days", 2000),
+            ReminderEntity(3, 2, 3, "htmlUrl3", "Assignment 3", "3 days", 3000)
+        )
+        entities.forEach { reminderDao.insert(it) }
+
+        val result = reminderDao.findByUserId(1)
+
+        Assert.assertEquals(entities.take(2), result)
     }
 }

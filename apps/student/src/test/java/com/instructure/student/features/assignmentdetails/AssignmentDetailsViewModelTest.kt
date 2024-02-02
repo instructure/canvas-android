@@ -51,6 +51,7 @@ import com.instructure.student.features.assignments.details.AssignmentDetailsVie
 import com.instructure.student.features.assignments.details.ReminderChoice
 import com.instructure.student.features.assignments.details.ReminderViewData
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -87,6 +88,7 @@ class AssignmentDetailsViewModelTest {
     private val application: Application = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val database: StudentDb = mockk(relaxed = true)
+    private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -120,6 +122,7 @@ class AssignmentDetailsViewModelTest {
         colorKeeper,
         application,
         apiPrefs,
+        alarmScheduler,
         database
     )
 
@@ -818,13 +821,14 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Reminders map correctly`() {
         val reminderEntities = listOf(
-            ReminderEntity(1, 1, 1, "Test 1"),
-            ReminderEntity(2, 1, 1, "Test 2"),
-            ReminderEntity(3, 1, 1, "Test 3")
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000),
+            ReminderEntity(2, 1, 1, "htmlUrl2", "Assignment 2", "2 days", 2000),
+            ReminderEntity(3, 1, 1, "htmlUrl3", "Assignment 3", "3 days", 3000)
         )
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
         every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
+        every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
 
         val assignment = Assignment(
             name = "Test",
@@ -836,7 +840,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel()
 
         Assert.assertEquals(
-            reminderEntities.map { ReminderViewData(it.id, it.text) },
+            reminderEntities.map { ReminderViewData(it.id, "${it.text} Before") },
             viewModel.data.value?.reminders?.map { it.data }
         )
     }
@@ -847,6 +851,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
         every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns remindersLiveData
+        every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
 
         val assignment = Assignment(
             name = "Test",
@@ -859,9 +864,9 @@ class AssignmentDetailsViewModelTest {
 
         Assert.assertEquals(0, viewModel.data.value?.reminders?.size)
 
-        remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "Test 1"))
+        remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000))
 
-        Assert.assertEquals(ReminderViewData(1, "Test 1"), viewModel.data.value?.reminders?.first()?.data)
+        Assert.assertEquals(ReminderViewData(1, "1 day Before"), viewModel.data.value?.reminders?.first()?.data)
     }
 
     @Test
@@ -893,7 +898,7 @@ class AssignmentDetailsViewModelTest {
         val assignment = Assignment(
             name = "Test",
             submissionTypesRaw = listOf("online_text_entry"),
-            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 4) }.time.toApiString()
         )
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
@@ -901,8 +906,10 @@ class AssignmentDetailsViewModelTest {
 
         viewModel.onReminderSelected(ReminderChoice.Day(3))
 
+        val time = assignment.dueDate?.time?.minus(3 * 24 * 60 * 60 * 1000L)
+
         coVerify(exactly = 1) {
-            assignmentDetailsRepository.addReminder(1, 1, "3 days")
+            assignmentDetailsRepository.addReminder(1, assignment, "3 days", time!!)
         }
     }
 
@@ -923,5 +930,53 @@ class AssignmentDetailsViewModelTest {
         viewModel.onReminderSelected(ReminderChoice.Custom)
 
         Assert.assertEquals(AssignmentDetailAction.ShowCustomReminderDialog, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Selected past reminder choice`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 1
+        every { resources.getQuantityString(R.plurals.reminderDay, 3, 3) } returns "3 days"
+        every { resources.getString(R.string.reminderInPast) } returns "Reminder in past"
+
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        viewModel.onReminderSelected(ReminderChoice.Day(3))
+
+        Assert.assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Selected reminder already set up`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 1
+        every { resources.getQuantityString(R.plurals.reminderDay, 3, 3) } returns "3 days"
+        every { resources.getString(R.string.reminderAlreadySet) } returns "Reminder in past"
+        val assignment = Assignment(
+            name = "Test",
+            submissionTypesRaw = listOf("online_text_entry"),
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 4) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        val time = assignment.dueDate?.time?.minus(3 * 24 * 60 * 60 * 1000L)
+        val reminderEntities = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", time!!)
+        )
+        every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
+
+        val viewModel = getViewModel()
+
+        viewModel.onReminderSelected(ReminderChoice.Day(3))
+
+        Assert.assertEquals(AssignmentDetailAction.ShowToast("Reminder in past"), viewModel.events.value?.peekContent())
     }
 }

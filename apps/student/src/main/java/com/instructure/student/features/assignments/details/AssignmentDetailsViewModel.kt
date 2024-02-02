@@ -55,6 +55,7 @@ import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.student.features.assignments.details.itemviewmodels.ReminderItemViewModel
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.util.getStudioLTITool
@@ -77,6 +78,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val colorKeeper: ColorKeeper,
     private val application: Application,
     private val apiPrefs: ApiPrefs,
+    private val alarmScheduler: AlarmScheduler,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
 
@@ -125,6 +127,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     ).apply {
         observeForever(remindersObserver)
     }
+
+    var checkingReminderPermission = false
 
     init {
         markSubmissionAsRead()
@@ -490,10 +494,17 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun mapReminders(reminders: List<ReminderEntity>) = reminders.map {
-        ReminderItemViewModel(ReminderViewData(it.id, it.text)) {
-            viewModelScope.launch {
-                assignmentDetailsRepository.deleteReminderById(it)
-            }
+        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text))) {
+            postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog {
+                deleteReminderById(it)
+            })
+        }
+    }
+
+    private fun deleteReminderById(id: Long) {
+        alarmScheduler.cancelAlarm(id)
+        viewModelScope.launch {
+            assignmentDetailsRepository.deleteReminderById(id)
         }
     }
 
@@ -616,8 +627,41 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun setReminder(reminderChoice: ReminderChoice) {
-        viewModelScope.launch {
-            assignmentDetailsRepository.addReminder(apiPrefs.user?.id.orDefault(), assignmentId, reminderChoice.getText(resources))
+        val assignment = assignment ?: return
+        val alarmTimeInMillis = getAlarmTimeInMillis(reminderChoice) ?: return
+        val reminderText = reminderChoice.getText(resources)
+
+        if (alarmTimeInMillis < System.currentTimeMillis()) {
+            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderInPast)))
+            return
         }
+
+        if (remindersLiveData.value?.any { it.time == alarmTimeInMillis }.orDefault()) {
+            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderAlreadySet)))
+            return
+        }
+
+        viewModelScope.launch {
+            val reminderId = assignmentDetailsRepository.addReminder(
+                apiPrefs.user?.id.orDefault(),
+                assignment,
+                reminderText,
+                alarmTimeInMillis
+            )
+
+            alarmScheduler.scheduleAlarm(
+                assignment.id,
+                assignment.htmlUrl.orEmpty(),
+                assignment.name.orEmpty(),
+                reminderText,
+                alarmTimeInMillis,
+                reminderId
+            )
+        }
+    }
+
+    private fun getAlarmTimeInMillis(reminderChoice: ReminderChoice): Long? {
+        val dueDate = assignment?.dueDate?.time ?: return null
+        return dueDate - reminderChoice.getTimeInMillis()
     }
 }

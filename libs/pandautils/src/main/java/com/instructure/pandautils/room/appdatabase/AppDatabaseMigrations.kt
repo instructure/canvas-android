@@ -56,6 +56,6 @@ val appDatabaseMigrations = arrayOf(
     },
 
     createMigration(8, 9) { database ->
-        database.execSQL("CREATE TABLE IF NOT EXISTS ReminderEntity (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userId INTEGER NOT NULL, assignmentId INTEGER NOT NULL, text TEXT NOT NULL)")
+        database.execSQL("CREATE TABLE IF NOT EXISTS ReminderEntity (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userId INTEGER NOT NULL, assignmentId INTEGER NOT NULL, htmlUrl TEXT NOT NULL, name TEXT NOT NULL, text TEXT NOT NULL, time INTEGER NOT NULL)")
     }
 )

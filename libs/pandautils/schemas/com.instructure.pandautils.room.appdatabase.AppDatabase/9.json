@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "73877a0396a69ef01fc040c995d1a5bd",
+    "identityHash": "d1a4b121027a0855fb86782dbdc1d7cd",
     "entities": [
       {
         "tableName": "AttachmentEntity",
@@ -502,7 +502,7 @@
       },
       {
         "tableName": "ReminderEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `assignmentId` INTEGER NOT NULL, `text` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, `assignmentId` INTEGER NOT NULL, `htmlUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `text` TEXT NOT NULL, `time` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -523,9 +523,27 @@
             "notNull": true
           },
           {
+            "fieldPath": "htmlUrl",
+            "columnName": "htmlUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "text",
             "columnName": "text",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -542,7 +560,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '73877a0396a69ef01fc040c995d1a5bd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd1a4b121027a0855fb86782dbdc1d7cd')"
     ]
   }
 }
