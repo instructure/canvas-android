@@ -20,6 +20,7 @@ import android.os.Build
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
@@ -63,7 +64,8 @@ class ModuleListRenderTest : TeacherRenderTest() {
             isPublished = true,
             indent = 0,
             tintColor = Color.BLUE,
-            enabled = true
+            enabled = true,
+            type = ModuleItem.Type.Assignment
         )
     }
 
@@ -223,7 +225,8 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             isLoading = false,
                             indent = 0,
                             tintColor = Color.BLUE,
-                            enabled = true
+                            enabled = true,
+                            type = ModuleItem.Type.Assignment
                         )
                     }, false
                 )
@@ -318,7 +321,8 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             isLoading = false,
                             indent = 0,
                             tintColor = Color.BLUE,
-                            enabled = true
+                            enabled = true,
+                            type = ModuleItem.Type.Assignment
                         )
                     }, false
                 )
@@ -333,7 +337,16 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun scrollsToTargetItem() {
         val itemCount = 50
         val targetItem = ModuleListItemData.ModuleItemData(
-            1234L, "This is the target item", null, null, R.drawable.ic_attachment, false, 0, Color.BLUE, true
+            1234L,
+            "This is the target item",
+            null,
+            null,
+            R.drawable.ic_attachment,
+            false,
+            0,
+            Color.BLUE,
+            true,
+            type = ModuleItem.Type.Assignment
         )
         val state = ModuleListViewState(
             items = listOf(
