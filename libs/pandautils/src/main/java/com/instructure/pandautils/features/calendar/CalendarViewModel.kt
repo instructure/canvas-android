@@ -195,7 +195,14 @@ class CalendarViewModel @Inject constructor(
                 val timeText = DateHelper.getFormattedTime(context, it)
                 context.getString(R.string.calendarDate, dateText, timeText)
             }
-        } else {
+        } else if (plannerItem.plannableType == PlannableType.CALENDAR_EVENT) {
+            if (plannerItem.plannable.startAt != null && plannerItem.plannable.endAt != null) {
+                val dateText = DateHelper.dayMonthDateFormat.format(plannerItem.plannable.startAt!!)
+                val startText = DateHelper.getFormattedTime(context, plannerItem.plannable.startAt)
+                val endText = DateHelper.getFormattedTime(context, plannerItem.plannable.endAt)
+                context.getString(R.string.calendarEventDate, dateText, startText, endText)
+            } else null
+        } else  {
             plannerItem.plannable.dueAt?.let {
                 val dateText = DateHelper.dayMonthDateFormat.format(it)
                 val timeText = DateHelper.getFormattedTime(context, it)

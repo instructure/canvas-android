@@ -270,6 +270,7 @@ fun DaysOfWeekRow(
             var dayModifier = Modifier
                 .width(32.dp)
                 .height(32.dp)
+                .clip(RoundedCornerShape(32.dp))
                 .clickable { selectedDayChanged(dayState.date) }
             if (dayState.date == selectedDay) {
                 dayModifier = dayModifier
