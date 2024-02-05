@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
@@ -29,13 +30,14 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {
@@ -383,6 +385,130 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         assignmentDetailsPage.selectSubmissionType(SubmissionType.ONLINE_URL)
         urlSubmissionUploadPage.submitText("https://google.com")
         assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionIsNotVisibleWhenThereIsNoFutureDueDate() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertReminderSectionNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionIsVisibleWhenThereIsFutureDueDate() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertReminderSectionDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminder() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickOneHourBefore()
+
+        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testRemoveReminder() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickOneHourBefore()
+
+        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
+
+        assignmentDetailsPage.removeReminderWithText("1 Hour Before")
+
+        assignmentDetailsPage.assertReminderNotDisplayedWithText("1 Hour Before")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddCustomReminder() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickCustom()
+        assignmentDetailsPage.fillQuantity("15")
+        assignmentDetailsPage.clickHoursBefore()
+        assignmentDetailsPage.clickDone()
+
+        assignmentDetailsPage.assertReminderDisplayedWithText("15 Hours Before")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminderInPastShowsError() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.MINUTE, 30)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickOneHourBefore()
+
+        checkToastText(R.string.reminderInPast, activityRule.activity)
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminderForTheSameTimeShowsError() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickOneHourBefore()
+
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }
 
     private fun setUpData(restrictQuantitativeData: Boolean = false): MockCanvas {

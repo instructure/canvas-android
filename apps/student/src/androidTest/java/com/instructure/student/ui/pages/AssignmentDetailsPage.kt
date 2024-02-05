@@ -25,6 +25,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvas.espresso.CanvasTest
@@ -41,6 +42,8 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getPluralFromResource
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
@@ -238,6 +241,67 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
         onView(withText(submissionType) + withAncestor(R.id.customPanel)).assertDisplayed()
+    }
+
+    fun assertReminderSectionNotDisplayed() {
+        onView(withId(R.id.reminderTitle)).assertNotDisplayed()
+        onView(withId(R.id.reminderDescription)).assertNotDisplayed()
+        onView(withId(R.id.reminderAdd)).assertNotDisplayed()
+    }
+
+    fun assertReminderSectionDisplayed() {
+        onView(withId(R.id.reminderTitle)).assertDisplayed()
+        onView(withId(R.id.reminderDescription)).assertDisplayed()
+        onView(withId(R.id.reminderAdd)).assertDisplayed()
+    }
+
+    fun clickAddReminder() {
+        onView(withId(R.id.reminderAdd)).click()
+    }
+
+    fun clickOneHourBefore() {
+        onView(
+            withText(
+                getStringFromResource(
+                    R.string.reminderBefore,
+                    getPluralFromResource(R.plurals.reminderHour, 1, 1)
+                )
+            )
+        ).click()
+    }
+
+    fun assertReminderDisplayedWithText(text: String) {
+        onView(withText(text)).assertDisplayed()
+    }
+
+    fun removeReminderWithText(text: String) {
+        onView(
+            allOf(
+                withId(R.id.remove),
+                hasSibling(withText(text))
+            )
+        ).click()
+        onView(withText(R.string.yes)).click()
+    }
+
+    fun assertReminderNotDisplayedWithText(text: String) {
+        onView(withText(text)).check(doesNotExist())
+    }
+
+    fun clickCustom() {
+        onView(withText(R.string.reminderCustom)).click()
+    }
+
+    fun fillQuantity(quantity: String) {
+        onView(withId(R.id.quantity)).typeText(quantity)
+    }
+
+    fun clickHoursBefore() {
+        onView(withId(R.id.hours)).click()
+    }
+
+    fun clickDone() {
+        onView(withText(R.string.done)).click()
     }
 }
 
