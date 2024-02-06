@@ -921,7 +921,9 @@ class ScheduleViewModelTest {
             pointsPossible,
             date,
             assignmentId,
-            todoDate
+            todoDate,
+            null,
+            null
         )
         return PlannerItem(
             courseId,
@@ -976,7 +978,7 @@ class ScheduleViewModelTest {
     }
 
     private fun createToDoItem(id: Long, title: String): PlannerItem {
-        val plannable = Plannable(id = id, title = title, null, null, null, null, Date(), null, null)
+        val plannable = Plannable(id = id, title = title, null, null, null, null, Date(), null, null, null, null)
         return PlannerItem(
             plannable = plannable,
             plannableType = PlannableType.PLANNER_NOTE,
