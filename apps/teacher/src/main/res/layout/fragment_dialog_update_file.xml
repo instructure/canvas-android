@@ -139,7 +139,8 @@
                         android:minHeight="48dp"
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.PUBLISHED) : null}"
                         android:paddingHorizontal="8dp"
-                        android:text="@string/publish" />
+                        android:text="@string/publish"
+                        android:textColor="@color/textDarkest" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/unpublish"
@@ -150,6 +151,7 @@
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.UNPUBLISHED) : null}"
                         android:paddingHorizontal="8dp"
                         android:text="@string/unpublish"
+                        android:textColor="@color/textDarkest"
                         tools:checked="true" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -160,7 +162,8 @@
                         android:minHeight="48dp"
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.HIDDEN) : null}"
                         android:paddingHorizontal="8dp"
-                        android:text="@string/only_available_with_link" />
+                        android:text="@string/only_available_with_link"
+                        android:textColor="@color/textDarkest" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/schedule"
@@ -170,7 +173,8 @@
                         android:minHeight="48dp"
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.SCHEDULED) : null}"
                         android:paddingHorizontal="8dp"
-                        android:text="@string/schedule_availability" />
+                        android:text="@string/schedule_availability"
+                        android:textColor="@color/textDarkest" />
                 </RadioGroup>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -390,7 +394,8 @@
                         android:minHeight="48dp"
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.INHERIT) : null}"
                         android:paddingHorizontal="8dp"
-                        android:text="@string/inherit_from_course" />
+                        android:text="@string/inherit_from_course"
+                        android:textColor="@color/textDarkest" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/visibilityContext"
@@ -402,6 +407,7 @@
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.CONTEXT) : null}"
                         android:paddingHorizontal="8dp"
                         android:text="@string/course_members"
+                        android:textColor="@color/textDarkest"
                         tools:checked="true" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
@@ -413,7 +419,8 @@
                         android:minHeight="48dp"
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.INSTITUTION) : null}"
                         android:paddingHorizontal="8dp"
-                        android:text="@string/institution_members" />
+                        android:text="@string/institution_members"
+                        android:textColor="@color/textDarkest" />
 
                     <androidx.appcompat.widget.AppCompatRadioButton
                         android:id="@+id/visibilityPublic"
@@ -424,7 +431,8 @@
                         android:minHeight="48dp"
                         android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.PUBLIC) : null}"
                         android:paddingHorizontal="8dp"
-                        android:text="@string/public_title" />
+                        android:text="@string/public_title"
+                        android:textColor="@color/textDarkest" />
                 </RadioGroup>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

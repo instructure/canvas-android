@@ -19,7 +19,6 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import android.os.Bundle
-import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.models.CanvasContext

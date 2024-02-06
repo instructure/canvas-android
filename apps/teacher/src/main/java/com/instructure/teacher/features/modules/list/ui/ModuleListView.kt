@@ -243,7 +243,7 @@ class ModuleListView(
     }
 
     fun showUpdateFileDialog(fileId: Long, contentDetails: ModuleContentDetails) {
-        val fragment = UpdateFileDialogFragment.newInstance(fileId, contentDetails)
+        val fragment = UpdateFileDialogFragment.newInstance(fileId, contentDetails, course)
         fragment.show((context as FragmentActivity).supportFragmentManager, "editFileDialog")
     }
 }
