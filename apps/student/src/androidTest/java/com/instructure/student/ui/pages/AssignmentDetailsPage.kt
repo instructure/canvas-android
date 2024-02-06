@@ -20,10 +20,13 @@ import android.view.View
 import android.widget.ScrollView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
@@ -61,6 +64,7 @@ import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anything
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     val toolbar by OnViewWithId(R.id.toolbar)
@@ -250,13 +254,13 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun assertReminderSectionDisplayed() {
-        onView(withId(R.id.reminderTitle)).assertDisplayed()
-        onView(withId(R.id.reminderDescription)).assertDisplayed()
-        onView(withId(R.id.reminderAdd)).assertDisplayed()
+        onView(withId(R.id.reminderTitle)).scrollTo().assertDisplayed()
+        onView(withId(R.id.reminderDescription)).scrollTo().assertDisplayed()
+        onView(withId(R.id.reminderAdd)).scrollTo().assertDisplayed()
     }
 
     fun clickAddReminder() {
-        onView(withId(R.id.reminderAdd)).click()
+        onView(withId(R.id.reminderAdd)).scrollTo().click()
     }
 
     fun clickOneHourBefore() {
@@ -267,11 +271,11 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
                     getPluralFromResource(R.plurals.reminderHour, 1, 1)
                 )
             )
-        ).click()
+        ).scrollTo().click()
     }
 
     fun assertReminderDisplayedWithText(text: String) {
-        onView(withText(text)).assertDisplayed()
+        onView(withText(text)).scrollTo().assertDisplayed()
     }
 
     fun removeReminderWithText(text: String) {
@@ -281,7 +285,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
                 hasSibling(withText(text))
             )
         ).click()
-        onView(withText(R.string.yes)).click()
+        onView(withText(R.string.yes)).scrollTo().click()
     }
 
     fun assertReminderNotDisplayedWithText(text: String) {
@@ -289,15 +293,16 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun clickCustom() {
-        onView(withText(R.string.reminderCustom)).click()
+        onData(anything()).inRoot(isDialog()).atPosition(6).perform(click())
     }
 
     fun fillQuantity(quantity: String) {
-        onView(withId(R.id.quantity)).typeText(quantity)
+        onView(withId(R.id.quantity)).scrollTo().typeText(quantity)
+        Espresso.closeSoftKeyboard()
     }
 
     fun clickHoursBefore() {
-        onView(withId(R.id.hours)).click()
+        onView(withId(R.id.hours)).scrollTo().click()
     }
 
     fun clickDone() {
