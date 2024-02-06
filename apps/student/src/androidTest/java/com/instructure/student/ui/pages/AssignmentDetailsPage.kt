@@ -31,6 +31,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
@@ -65,6 +66,7 @@ import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anything
+import org.hamcrest.Matchers.not
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     val toolbar by OnViewWithId(R.id.toolbar)
@@ -303,6 +305,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun clickHoursBefore() {
         onView(withId(R.id.hours)).scrollTo().click()
+    }
+
+    fun assertDoneButtonIsDisabled() {
+        onView(withText(R.string.done)).check(matches(not(isEnabled())))
     }
 
     fun clickDone() {

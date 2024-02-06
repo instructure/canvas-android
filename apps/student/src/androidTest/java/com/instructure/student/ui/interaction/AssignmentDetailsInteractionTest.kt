@@ -418,7 +418,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddReminder() {
         val data = setUpData()
         val course = data.courses.values.first()
@@ -435,7 +435,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testRemoveReminder() {
         val data = setUpData()
         val course = data.courses.values.first()
@@ -456,7 +456,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testAddCustomReminder() {
         val data = setUpData()
         val course = data.courses.values.first()
@@ -468,7 +468,9 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
         assignmentDetailsPage.clickCustom()
+        assignmentDetailsPage.assertDoneButtonIsDisabled()
         assignmentDetailsPage.fillQuantity("15")
+        assignmentDetailsPage.assertDoneButtonIsDisabled()
         assignmentDetailsPage.clickHoursBefore()
         assignmentDetailsPage.clickDone()
 
