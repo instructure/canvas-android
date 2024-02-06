@@ -303,8 +303,15 @@ class UpdateFileViewModelTest {
 
     @Test
     fun `Close emits correct event`() {
+        val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
+        coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
+
+        val contentDetails = ModuleContentDetails(hidden = false, locked = false)
+
         every { savedStateHandle.get<Long>("contentId") } returns 1L
-        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns ModuleContentDetails()
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel = createViewModel()
         viewModel.close()
