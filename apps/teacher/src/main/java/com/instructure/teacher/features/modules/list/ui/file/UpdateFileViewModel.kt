@@ -72,7 +72,7 @@ class UpdateFileViewModel @Inject constructor(
         loadData()
     }
 
-    fun loadData() {
+    private fun loadData() {
         viewModelScope.launch {
             val file = fileApi.getFile(fileId, RestParams(isForceReadFromNetwork = true)).dataOrNull
 
