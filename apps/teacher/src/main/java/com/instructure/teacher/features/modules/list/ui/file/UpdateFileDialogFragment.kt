@@ -32,8 +32,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
-import com.instructure.pandautils.utils.LongArg
-import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.children
@@ -44,9 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class UpdateFileDialogFragment : BottomSheetDialogFragment() {
 
-    private val contentId: Long by LongArg(key = "contentId")
-    private val contentDetails: ModuleContentDetails? by NullableParcelableArg(key = "contentDetails")
-    private val canvasContext: CanvasContext by ParcelableArg(key = "canvasContext")
+    private val canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     private lateinit var binding: FragmentDialogUpdateFileBinding
 
@@ -61,10 +58,6 @@ class UpdateFileDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        contentDetails?.let {
-            viewModel.loadData(it, contentId)
-        }
 
         viewModel.events.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let {
@@ -95,9 +88,11 @@ class UpdateFileDialogFragment : BottomSheetDialogFragment() {
             is UpdateFileEvent.Close -> dismiss()
             is UpdateFileEvent.ShowDatePicker -> {
                 val dialog = DatePickerDialogFragment.getInstance(
-                    childFragmentManager,
-                    event.selectedDate,
-                    event.callback
+                    manager = childFragmentManager,
+                    defaultDate = event.selectedDate,
+                    minDate = event.minDate,
+                    maxDate = event.maxDate,
+                    callback = event.callback
                 )
                 dialog.show(childFragmentManager, "datePicker")
             }
@@ -136,7 +131,7 @@ class UpdateFileDialogFragment : BottomSheetDialogFragment() {
                 arguments = Bundle().apply {
                     putLong("contentId", contentId)
                     putParcelable("contentDetails", contentDetails)
-                    putParcelable("canvasContext", canvasContext)
+                    putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 }
             }
 

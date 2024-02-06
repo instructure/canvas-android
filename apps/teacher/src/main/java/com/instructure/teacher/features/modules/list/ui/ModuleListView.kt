@@ -39,7 +39,6 @@ import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import com.spotify.mobius.functions.Consumer
-import java.util.Date
 
 class ModuleListView(
     inflater: LayoutInflater,

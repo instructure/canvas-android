@@ -22,6 +22,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.FileFolderAPI
@@ -45,10 +46,14 @@ import javax.inject.Inject
 @HiltViewModel
 @SuppressLint("StaticFieldLeak")
 class UpdateFileViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     @ApplicationContext private val context: Context,
     private val fileApi: FileFolderAPI.FilesFoldersInterface,
     private val eventBus: EventBus
 ) : ViewModel() {
+
+    private val fileId: Long = savedStateHandle.get<Long>("contentId") ?: -1L
+    private val contentDetails: ModuleContentDetails = savedStateHandle.get<ModuleContentDetails>("contentDetails") ?: ModuleContentDetails()
 
     val data: LiveData<UpdateFileViewData>
         get() = _data
@@ -62,15 +67,13 @@ class UpdateFileViewModel @Inject constructor(
         get() = _state
     private val _state = MutableLiveData<ViewState>()
 
-    private var fileId: Long = -1L
-
     init {
         _state.postValue(ViewState.Loading)
+        loadData()
     }
 
-    fun loadData(contentDetails: ModuleContentDetails, fileId: Long) {
+    fun loadData() {
         viewModelScope.launch {
-            this@UpdateFileViewModel.fileId = fileId
             val file = fileApi.getFile(fileId, RestParams(isForceReadFromNetwork = true)).dataOrNull
 
             val availability = when {
@@ -148,7 +151,7 @@ class UpdateFileViewModel @Inject constructor(
     }
 
     fun updateLockAt() {
-        _events.postValue(Event(UpdateFileEvent.ShowDatePicker(data.value?.lockAt, ::setLockAtDate)))
+        _events.postValue(Event(UpdateFileEvent.ShowDatePicker(selectedDate = data.value?.lockAt, minDate = data.value?.unlockAt, callback = ::setLockAtDate)))
     }
 
     fun updateLockTime() {
@@ -156,7 +159,7 @@ class UpdateFileViewModel @Inject constructor(
     }
 
     fun updateUnlockAt() {
-        _events.postValue(Event(UpdateFileEvent.ShowDatePicker(data.value?.unlockAt, ::setUnlockAtDate)))
+        _events.postValue(Event(UpdateFileEvent.ShowDatePicker(selectedDate = data.value?.unlockAt, maxDate = data.value?.lockAt, callback = ::setUnlockAtDate)))
     }
 
     fun updateUnlockTime() {

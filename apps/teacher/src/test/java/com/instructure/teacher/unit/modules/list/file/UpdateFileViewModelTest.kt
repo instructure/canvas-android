@@ -23,6 +23,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.ModuleContentDetails
@@ -70,6 +71,7 @@ class UpdateFileViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
+    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val fileApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
     private val eventBus: EventBus = mockk(relaxed = true)
@@ -83,8 +85,6 @@ class UpdateFileViewModelTest {
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
-
-        viewModel = UpdateFileViewModel(context, fileApi, eventBus)
 
         mockkObject(DateHelper)
         val dateCaptor = slot<Date>()
@@ -103,18 +103,16 @@ class UpdateFileViewModelTest {
     }
 
     @Test
-    fun `Starts with Loading state`() {
-        assertEquals(ViewState.Loading, viewModel.state.value)
-    }
-
-    @Test
     fun `loadData sets correct state`() {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(ViewState.Success, viewModel.state.value)
     }
@@ -125,7 +123,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileVisibility.INHERIT, viewModel.data.value?.selectedVisibility)
         assert(viewModel.state.value is ViewState.Success)
@@ -138,7 +139,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileAvailability.PUBLISHED, viewModel.data.value?.selectedAvailability)
         assert(viewModel.state.value is ViewState.Success)
@@ -151,7 +155,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = true)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileAvailability.UNPUBLISHED, viewModel.data.value?.selectedAvailability)
     }
@@ -163,7 +170,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = true, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileAvailability.HIDDEN, viewModel.data.value?.selectedAvailability)
     }
@@ -185,7 +195,10 @@ class UpdateFileViewModelTest {
             unlockAt = unlockDate.toApiString()
         )
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileAvailability.SCHEDULED, viewModel.data.value?.selectedAvailability)
         assertEquals(dateFormat.format(lockDate), viewModel.data.value?.lockAtDateString)
@@ -201,7 +214,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileVisibility.INHERIT, viewModel.data.value?.selectedVisibility)
     }
@@ -213,7 +229,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileVisibility.CONTEXT, viewModel.data.value?.selectedVisibility)
     }
@@ -225,7 +244,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileVisibility.INSTITUTION, viewModel.data.value?.selectedVisibility)
     }
@@ -237,7 +259,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         assertEquals(FileVisibility.PUBLIC, viewModel.data.value?.selectedVisibility)
     }
@@ -249,7 +274,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.onAvailabilityChanged(FileAvailability.HIDDEN)
 
@@ -263,7 +291,10 @@ class UpdateFileViewModelTest {
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = false)
 
-        viewModel.loadData(contentDetails, 1L)
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.onVisibilityChanged(FileVisibility.CONTEXT)
 
@@ -272,6 +303,10 @@ class UpdateFileViewModelTest {
 
     @Test
     fun `Close emits correct event`() {
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns ModuleContentDetails()
+
+        viewModel = createViewModel()
         viewModel.close()
 
         assertEquals(UpdateFileEvent.Close, viewModel.events.value?.getContentIfNotHandled())
@@ -287,7 +322,11 @@ class UpdateFileViewModelTest {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, lockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.updateLockAt()
         val event = viewModel.events.value?.getContentIfNotHandled()
@@ -309,7 +348,11 @@ class UpdateFileViewModelTest {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, lockAt = calendar.time.toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.updateLockTime()
         val event = viewModel.events.value?.getContentIfNotHandled()
@@ -336,7 +379,11 @@ class UpdateFileViewModelTest {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, unlockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.updateUnlockAt()
         val event = viewModel.events.value?.getContentIfNotHandled()
@@ -359,7 +406,11 @@ class UpdateFileViewModelTest {
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         val contentDetails =
             ModuleContentDetails(hidden = false, locked = false, unlockAt = calendar.time.toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.updateUnlockTime()
         val event = viewModel.events.value?.getContentIfNotHandled()
@@ -381,7 +432,11 @@ class UpdateFileViewModelTest {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, lockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.clearLockDate()
 
@@ -395,7 +450,11 @@ class UpdateFileViewModelTest {
         val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.PUBLIC.name.lowercase())
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, unlockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.clearUnlockDate()
 
@@ -410,7 +469,11 @@ class UpdateFileViewModelTest {
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, unlockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.onAvailabilityChanged(FileAvailability.HIDDEN)
 
@@ -437,7 +500,11 @@ class UpdateFileViewModelTest {
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = false, unlockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.onAvailabilityChanged(FileAvailability.UNPUBLISHED)
 
@@ -464,7 +531,11 @@ class UpdateFileViewModelTest {
         coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
         coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Success(file)
         val contentDetails = ModuleContentDetails(hidden = false, locked = true, unlockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.onAvailabilityChanged(FileAvailability.PUBLISHED)
 
@@ -492,7 +563,11 @@ class UpdateFileViewModelTest {
         coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Success(file)
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = true, unlockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.onAvailabilityChanged(FileAvailability.PUBLISHED)
 
@@ -512,7 +587,11 @@ class UpdateFileViewModelTest {
         coEvery { fileApi.updateFile(any(), any(), any()) } returns DataResult.Fail()
 
         val contentDetails = ModuleContentDetails(hidden = false, locked = true, unlockAt = Date().toApiString())
-        viewModel.loadData(contentDetails, 1L)
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
 
         viewModel.onAvailabilityChanged(FileAvailability.PUBLISHED)
 
@@ -520,4 +599,42 @@ class UpdateFileViewModelTest {
 
         assert(viewModel.state.value is ViewState.Error)
     }
+
+    @Test
+    fun `minDate is set if unlockDate is not null`() {
+        val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.CONTEXT.name.lowercase())
+        coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
+        val contentDetails = ModuleContentDetails(hidden = false, locked = true, unlockAt = Date().toApiString())
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
+
+        viewModel.updateLockAt()
+
+        val event = viewModel.events.value?.getContentIfNotHandled()
+        assert(event is UpdateFileEvent.ShowDatePicker)
+        assertEquals(contentDetails.unlockDate, (event as UpdateFileEvent.ShowDatePicker).minDate)
+    }
+
+    @Test
+    fun `maxDate is set if lockDate is not null`() {
+        val file = FileFolder(id = 1L, visibilityLevel = FileVisibility.CONTEXT.name.lowercase())
+        coEvery { fileApi.getFile(any(), any()) } returns DataResult.Success(file)
+        val contentDetails = ModuleContentDetails(hidden = false, locked = true, unlockAt = Date().toApiString())
+
+        every { savedStateHandle.get<Long>("contentId") } returns 1L
+        every { savedStateHandle.get<ModuleContentDetails>("contentDetails") } returns contentDetails
+
+        viewModel = createViewModel()
+
+        viewModel.updateUnlockAt()
+
+        val event = viewModel.events.value?.getContentIfNotHandled()
+        assert(event is UpdateFileEvent.ShowDatePicker)
+        assertEquals(contentDetails.lockDate, (event as UpdateFileEvent.ShowDatePicker).maxDate)
+    }
+
+    private fun createViewModel() = UpdateFileViewModel(savedStateHandle, context, fileApi, eventBus)
 }

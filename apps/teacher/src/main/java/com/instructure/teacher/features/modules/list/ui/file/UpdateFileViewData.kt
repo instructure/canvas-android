@@ -53,6 +53,8 @@ sealed class UpdateFileEvent {
 
     data class ShowDatePicker(
         val selectedDate: Date?,
+        val minDate: Date? = null,
+        val maxDate: Date? = null,
         val callback: (year: Int, month: Int, dayOfMonth: Int) -> Unit
     ) : UpdateFileEvent()
 
