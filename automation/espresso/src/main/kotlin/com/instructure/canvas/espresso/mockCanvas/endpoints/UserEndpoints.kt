@@ -75,7 +75,7 @@ object UserEndpoint : Endpoint(
                         .map {
                             val plannableDate = it.dueDate ?: Date()
                             val plannable = Plannable(it.id, it.name
-                                ?: "", it.courseId, null, userId, null, it.dueDate, it.id, null)
+                                ?: "", it.courseId, null, userId, null, it.dueDate, it.id, null, null, null)
                             PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, plannableDate, null, SubmissionState(), false)
                         }
                         .plus(todos)
