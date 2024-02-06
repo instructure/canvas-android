@@ -473,7 +473,13 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             .setTitle(R.string.reminderTitle)
             .setNegativeButton(R.string.cancel, null)
             .setSingleChoiceItems(
-                choices.map { it.getText(resources) }.toTypedArray(), -1
+                choices.map {
+                    if (it is ReminderChoice.Custom) {
+                        it.getText(resources)
+                    } else {
+                        getString(R.string.reminderBefore, it.getText(resources))
+                    }
+                }.toTypedArray(), -1
             ) { dialog, which ->
                 viewModel.onReminderSelected(choices[which])
                 dialog.dismiss()
