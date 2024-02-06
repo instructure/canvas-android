@@ -41,15 +41,24 @@ import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
 class PeopleListRecyclerAdapter(
-        context: Context,
-        private val lifecycleScope: CoroutineScope,
-        private val repository: PeopleListRepository,
-        private val canvasContext: CanvasContext,
-        private val adapterToFragmentCallback: AdapterToFragmentCallback<User>
-) : ExpandableRecyclerAdapter<EnrollmentType, User, RecyclerView.ViewHolder>(context, EnrollmentType::class.java, User::class.java) {
+    context: Context,
+    private val lifecycleScope: CoroutineScope,
+    private val repository: PeopleListRepository,
+    private val canvasContext: CanvasContext,
+    private val adapterToFragmentCallback: AdapterToFragmentCallback<User>
+) : ExpandableRecyclerAdapter<EnrollmentType, User, RecyclerView.ViewHolder>(
+    context,
+    EnrollmentType::class.java,
+    User::class.java
+) {
 
     private val mCourseColor = canvasContext.backgroundColor
-    private val mEnrollmentPriority = mapOf( EnrollmentType.Teacher to 4, EnrollmentType.Ta to 3, EnrollmentType.Student to 2, EnrollmentType.Observer to 1)
+    private val mEnrollmentPriority = mapOf(
+        EnrollmentType.Teacher to 4,
+        EnrollmentType.Ta to 3,
+        EnrollmentType.Student to 2,
+        EnrollmentType.Observer to 1
+    )
 
     init {
         isExpandedByDefault = true
@@ -58,16 +67,18 @@ class PeopleListRecyclerAdapter(
 
     override fun loadFirstPage() {
         lifecycleScope.tryLaunch {
-            var canvasContext = canvasContext
+            val teacherContext =
+                if (CanvasContext.Type.isGroup(this@PeopleListRecyclerAdapter.canvasContext) && (this@PeopleListRecyclerAdapter.canvasContext as Group).courseId > 0) {
+                    // We build a generic CanvasContext with type set to COURSE and give it the CourseId from the group, so that it wil use the course API not the group API
+                    CanvasContext.getGenericContext(
+                        CanvasContext.Type.COURSE,
+                        this@PeopleListRecyclerAdapter.canvasContext.courseId,
+                        ""
+                    )
+                } else canvasContext
 
-            // If the canvasContext is a group, and has a course we want to add the Teachers and TAs from that course to the peoples list
-            if (CanvasContext.Type.isGroup(this@PeopleListRecyclerAdapter.canvasContext) && (this@PeopleListRecyclerAdapter.canvasContext as Group).courseId > 0) {
-                // We build a generic CanvasContext with type set to COURSE and give it the CourseId from the group, so that it wil use the course API not the group API
-                canvasContext = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this@PeopleListRecyclerAdapter.canvasContext.courseId, "")
-            }
-
-            val teachers = repository.loadTeachers(canvasContext, isRefresh)
-            val tas = repository.loadTAs(canvasContext, isRefresh)
+            val teachers = repository.loadTeachers(teacherContext, isRefresh)
+            val tas = repository.loadTAs(teacherContext, isRefresh)
             val peopleFirstPage = repository.loadFirstPagePeople(canvasContext, isRefresh)
             val result = teachers.dataOrThrow + tas.dataOrThrow + peopleFirstPage.dataOrThrow
 
@@ -102,38 +113,59 @@ class PeopleListRecyclerAdapter(
     private fun populateAdapter(result: List<User>) {
         val (enrolled, unEnrolled) = result.partition { it.enrollments.isNotEmpty() }
         enrolled
-                .groupBy {
-                    it.enrollments.sortedByDescending { enrollment -> mEnrollmentPriority[enrollment.type] }[0].type
-                }
-                .forEach { (type, users) -> addOrUpdateAllItems(type!!, users) }
+            .groupBy {
+                it.enrollments.sortedByDescending { enrollment -> mEnrollmentPriority[enrollment.type] }[0].type
+            }
+            .forEach { (type, users) -> addOrUpdateAllItems(type!!, users) }
         if (CanvasContext.Type.isGroup(canvasContext)) addOrUpdateAllItems(EnrollmentType.NoEnrollment, unEnrolled)
         notifyDataSetChanged()
         adapterToFragmentCallback.onRefreshFinished()
     }
 
     override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder =
-            if (viewType == Types.TYPE_HEADER) PeopleHeaderViewHolder(v) else PeopleViewHolder(v)
+        if (viewType == Types.TYPE_HEADER) PeopleHeaderViewHolder(v) else PeopleViewHolder(v)
 
     override fun itemLayoutResId(viewType: Int): Int =
-            if (viewType == Types.TYPE_HEADER) PeopleHeaderViewHolder.HOLDER_RES_ID else PeopleViewHolder.HOLDER_RES_ID
+        if (viewType == Types.TYPE_HEADER) PeopleHeaderViewHolder.HOLDER_RES_ID else PeopleViewHolder.HOLDER_RES_ID
 
     override fun contextReady() = Unit
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, peopleGroupType: EnrollmentType, user: User) {
         val groupItemCount = getGroupItemCount(peopleGroupType)
         val itemPosition = storedIndexOfItem(peopleGroupType, user)
-        (holder as PeopleViewHolder).bind(user, adapterToFragmentCallback, mCourseColor, itemPosition == 0, itemPosition == groupItemCount - 1)
+        (holder as PeopleViewHolder).bind(
+            user,
+            adapterToFragmentCallback,
+            mCourseColor,
+            itemPosition == 0,
+            itemPosition == groupItemCount - 1
+        )
     }
 
-    override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, enrollmentType: EnrollmentType, isExpanded: Boolean) {
-        (holder as PeopleHeaderViewHolder).bind(enrollmentType, getHeaderTitle(enrollmentType), isExpanded, viewHolderHeaderClicked)
+    override fun onBindHeaderHolder(
+        holder: RecyclerView.ViewHolder,
+        enrollmentType: EnrollmentType,
+        isExpanded: Boolean
+    ) {
+        (holder as PeopleHeaderViewHolder).bind(
+            enrollmentType,
+            getHeaderTitle(enrollmentType),
+            isExpanded,
+            viewHolderHeaderClicked
+        )
     }
 
     override fun createGroupCallback(): GroupSortedList.GroupComparatorCallback<EnrollmentType> {
         return object : GroupSortedList.GroupComparatorCallback<EnrollmentType> {
-            override fun compare(o1: EnrollmentType, o2: EnrollmentType) = getHeaderTitle(o2).compareTo(getHeaderTitle(o1))
-            override fun areContentsTheSame(oldGroup: EnrollmentType, newGroup: EnrollmentType) = getHeaderTitle(oldGroup) == getHeaderTitle(newGroup)
-            override fun areItemsTheSame(group1: EnrollmentType, group2: EnrollmentType) = getHeaderTitle(group1) == getHeaderTitle(group2)
+            override fun compare(o1: EnrollmentType, o2: EnrollmentType) =
+                getHeaderTitle(o2).compareTo(getHeaderTitle(o1))
+
+            override fun areContentsTheSame(oldGroup: EnrollmentType, newGroup: EnrollmentType) =
+                getHeaderTitle(oldGroup) == getHeaderTitle(newGroup)
+
+            override fun areItemsTheSame(group1: EnrollmentType, group2: EnrollmentType) =
+                getHeaderTitle(group1) == getHeaderTitle(group2)
+
             override fun getUniqueGroupId(group: EnrollmentType) = getHeaderTitle(group).hashCode().toLong()
             override fun getGroupType(group: EnrollmentType) = Types.TYPE_HEADER
         }
@@ -141,7 +173,11 @@ class PeopleListRecyclerAdapter(
 
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<EnrollmentType, User> {
         return object : GroupSortedList.ItemComparatorCallback<EnrollmentType, User> {
-            override fun compare(group: EnrollmentType, o1: User, o2: User) = NaturalOrderComparator.compare(o1.sortableName?.lowercase(Locale.getDefault()).orEmpty(), o2.sortableName?.lowercase(Locale.getDefault()).orEmpty())
+            override fun compare(group: EnrollmentType, o1: User, o2: User) = NaturalOrderComparator.compare(
+                o1.sortableName?.lowercase(Locale.getDefault()).orEmpty(),
+                o2.sortableName?.lowercase(Locale.getDefault()).orEmpty()
+            )
+
             override fun areContentsTheSame(oldItem: User, newItem: User) = oldItem.sortableName == newItem.sortableName
             override fun areItemsTheSame(item1: User, item2: User) = item1.id == item2.id
             override fun getUniqueItemId(item: User) = item.id
