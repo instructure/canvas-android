@@ -27,11 +27,13 @@ import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentAcceptableUsePolicyRouter(
     private val activity: FragmentActivity,
-    private val databaseProvider: DatabaseProvider
+    private val databaseProvider: DatabaseProvider,
+    private val alarmScheduler: AlarmScheduler
 ) : AcceptableUsePolicyRouter {
 
     override fun openPolicy(content: String) {
@@ -54,6 +56,6 @@ class StudentAcceptableUsePolicyRouter(
     }
 
     override fun logout() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
+        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
     }
 }

@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -44,6 +45,7 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -52,6 +54,8 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
+import com.instructure.student.features.assignments.details.itemviewmodels.ReminderItemViewModel
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.util.getStudioLTITool
@@ -73,7 +77,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
     private val application: Application,
-    apiPrefs: ApiPrefs,
+    private val apiPrefs: ApiPrefs,
+    private val alarmScheduler: AlarmScheduler,
     database: StudentDb
 ) : ViewModel(), Query.Listener {
 
@@ -112,11 +117,29 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
 
+    private val remindersObserver = Observer<List<ReminderEntity>> {
+        _data.value?.reminders = mapReminders(it)
+        _data.value?.notifyPropertyChanged(BR.reminders)
+    }
+
+    private val remindersLiveData = assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(
+        apiPrefs.user?.id.orDefault(), assignmentId
+    ).apply {
+        observeForever(remindersObserver)
+    }
+
+    var checkingReminderPermission = false
+
     init {
         markSubmissionAsRead()
         submissionQuery.addListener(this)
         _state.postValue(ViewState.Loading)
         loadData()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        remindersLiveData.removeObserver(remindersObserver)
     }
 
     override fun queryResultsChanged() {
@@ -244,7 +267,6 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    @Suppress("DEPRECATION")
     private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailsViewData {
         val points = if (restrictQuantitativeData) {
             ""
@@ -461,12 +483,29 @@ class AssignmentDetailsViewModel @Inject constructor(
             discussionHeaderViewData = discussionHeaderViewData,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
-            hasDraft = hasDraft
+            hasDraft = hasDraft,
+            showReminders = assignment.dueDate?.after(Date()).orDefault(),
+            reminders = mapReminders(remindersLiveData.value.orEmpty())
         )
     }
 
     private fun postAction(action: AssignmentDetailAction) {
         _events.postValue(Event(action))
+    }
+
+    private fun mapReminders(reminders: List<ReminderEntity>) = reminders.map {
+        ReminderItemViewModel(ReminderViewData(it.id, resources.getString(R.string.reminderBefore, it.text))) {
+            postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog {
+                deleteReminderById(it)
+            })
+        }
+    }
+
+    private fun deleteReminderById(id: Long) {
+        alarmScheduler.cancelAlarm(id)
+        viewModelScope.launch {
+            assignmentDetailsRepository.deleteReminderById(id)
+        }
     }
 
     fun refresh() {
@@ -573,5 +612,56 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     fun showContent(viewState: ViewState?): Boolean {
         return (viewState == ViewState.Success || viewState == ViewState.Refresh) && assignment != null
+    }
+
+    fun onAddReminderClicked() {
+        postAction(AssignmentDetailAction.ShowReminderDialog)
+    }
+
+    fun onReminderSelected(reminderChoice: ReminderChoice) {
+        if (reminderChoice == ReminderChoice.Custom) {
+            postAction(AssignmentDetailAction.ShowCustomReminderDialog)
+        } else {
+            setReminder(reminderChoice)
+        }
+    }
+
+    private fun setReminder(reminderChoice: ReminderChoice) {
+        val assignment = assignment ?: return
+        val alarmTimeInMillis = getAlarmTimeInMillis(reminderChoice) ?: return
+        val reminderText = reminderChoice.getText(resources)
+
+        if (alarmTimeInMillis < System.currentTimeMillis()) {
+            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderInPast)))
+            return
+        }
+
+        if (remindersLiveData.value?.any { it.time == alarmTimeInMillis }.orDefault()) {
+            postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.reminderAlreadySet)))
+            return
+        }
+
+        viewModelScope.launch {
+            val reminderId = assignmentDetailsRepository.addReminder(
+                apiPrefs.user?.id.orDefault(),
+                assignment,
+                reminderText,
+                alarmTimeInMillis
+            )
+
+            alarmScheduler.scheduleAlarm(
+                assignment.id,
+                assignment.htmlUrl.orEmpty(),
+                assignment.name.orEmpty(),
+                reminderText,
+                alarmTimeInMillis,
+                reminderId
+            )
+        }
+    }
+
+    private fun getAlarmTimeInMillis(reminderChoice: ReminderChoice): Long? {
+        val dueDate = assignment?.dueDate?.time ?: return null
+        return dueDate - reminderChoice.getTimeInMillis()
     }
 }

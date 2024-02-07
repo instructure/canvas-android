@@ -24,7 +24,9 @@ import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.models.PushNotification
@@ -56,6 +58,8 @@ abstract class LogoutTask(
 
     protected open fun stopOfflineSync() = Unit
 
+    protected open suspend fun cancelAlarms() = Unit
+
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun execute() {
         try {
@@ -81,6 +85,8 @@ abstract class LogoutTask(
                 PushNotification.clearPushHistory()
 
                 stopOfflineSync()
+
+                cancelAlarms()
 
                 when (type) {
                     Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> {

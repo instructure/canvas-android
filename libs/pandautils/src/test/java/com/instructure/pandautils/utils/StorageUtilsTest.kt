@@ -23,6 +23,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -37,6 +38,7 @@ class StorageUtilsTest {
         mockkStatic(Environment::class)
     }
 
+    @After
     fun tearDown() {
         unmockkAll()
     }
