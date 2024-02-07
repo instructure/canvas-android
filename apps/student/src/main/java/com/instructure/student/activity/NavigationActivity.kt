@@ -727,7 +727,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun overrideFont() {
         super.overrideFont()
-        typefaceBehavior.overrideFont(navigationBehavior.fontFamily.fontPath)
+        typefaceBehavior.overrideFont(navigationBehavior.canvasFont)
     }
 
     //endregion
