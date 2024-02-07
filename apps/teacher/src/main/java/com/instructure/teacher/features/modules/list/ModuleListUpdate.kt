@@ -268,6 +268,14 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
 
                 return Next.next(newModel, setOf(snackbarEffect))
             }
+
+            is ModuleListEvent.UpdateFileModuleItem -> {
+                val effect = ModuleListEffect.UpdateFileModuleItem(
+                    event.fileId,
+                    event.contentDetails
+                )
+                return Next.dispatch(setOf(effect))
+            }
         }
     }
 

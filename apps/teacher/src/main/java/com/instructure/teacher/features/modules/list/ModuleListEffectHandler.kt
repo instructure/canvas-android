@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -25,11 +26,13 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
@@ -39,10 +42,11 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.util.Date
 
 class ModuleListEffectHandler(
     private val moduleApi: ModuleAPI.ModuleInterface,
-    private val progressApi: ProgressAPI.ProgressInterface
+    private val progressApi: ProgressAPI.ProgressInterface,
 ) : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
@@ -76,8 +80,13 @@ class ModuleListEffectHandler(
                 effect.itemId,
                 effect.published
             )
+
             is ModuleListEffect.ShowSnackbar -> {
                 view?.showSnackbar(effect.message)
+            }
+
+            is ModuleListEffect.UpdateFileModuleItem -> {
+                view?.showUpdateFileDialog(effect.fileId, effect.contentDetails)
             }
         }.exhaustive
     }

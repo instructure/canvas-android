@@ -17,9 +17,17 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import android.content.Context
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.teacher.adapters.GroupedRecyclerAdapter
 import com.instructure.teacher.adapters.ListItemCallback
-import com.instructure.teacher.features.modules.list.ui.binders.*
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListEmptyBinder
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListEmptyItemBinder
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListFullErrorBinder
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListInlineErrorBinder
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListItemBinder
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListLoadingBinder
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListModuleBinder
+import com.instructure.teacher.features.modules.list.ui.binders.ModuleListSubHeaderBinder
 
 
 interface ModuleListCallback : ListItemCallback {
@@ -30,6 +38,7 @@ interface ModuleListCallback : ListItemCallback {
     fun publishModule(moduleId: Long)
     fun publishModuleAndItems(moduleId: Long)
     fun unpublishModuleAndItems(moduleId: Long)
+    fun updateFileModuleItem(fileId: Long, contentDetails: ModuleContentDetails)
 }
 
 class ModuleListRecyclerAdapter(

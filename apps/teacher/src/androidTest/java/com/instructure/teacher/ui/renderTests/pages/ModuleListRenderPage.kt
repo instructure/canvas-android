@@ -15,6 +15,8 @@
  */
 package com.instructure.teacher.ui.renderTests.pages
 
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -22,9 +24,11 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.matchers.WithDrawableViewMatcher
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.SwipeRefreshLayoutMatchers
@@ -51,6 +55,7 @@ class ModuleListRenderPage : BasePage(R.id.moduleList) {
     val moduleItemTitle by OnViewWithId(R.id.moduleItemTitle)
     val moduleItemIndent by OnViewWithId(R.id.moduleItemIndent)
     val moduleItemSubtitle by OnViewWithId(R.id.moduleItemSubtitle)
+    val moduleItemStatusIcon by OnViewWithId(R.id.moduleItemStatusIcon)
     val moduleItemPublishedIcon by OnViewWithId(R.id.moduleItemPublishedIcon)
     val moduleItemUnpublishedIcon by OnViewWithId(R.id.moduleItemUnpublishedIcon)
     val moduleItemLoadingView by OnViewWithId(R.id.moduleItemLoadingView)
@@ -75,5 +80,9 @@ class ModuleListRenderPage : BasePage(R.id.moduleList) {
 
     fun assertHasItemIndent(indent: Int) {
         moduleItemIndent.check(matches(ViewSizeMatcher.hasWidth(indent)))
+    }
+
+    fun assertStatusIcon(@DrawableRes iconId: Int, @ColorRes tintId: Int) {
+        WithDrawableViewMatcher(iconId, tintId).matches(withId(R.id.moduleItemStatusIcon))
     }
 }

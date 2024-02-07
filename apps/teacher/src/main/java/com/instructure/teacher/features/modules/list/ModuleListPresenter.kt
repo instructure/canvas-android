@@ -132,7 +132,10 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             indent = item.indent * indentWidth,
             tintColor = courseColor,
             enabled = !loading,
-            isLoading = loading
+            isLoading = loading,
+            type = tryOrNull { ModuleItem.Type.valueOf(item.type.orEmpty()) } ?: ModuleItem.Type.Assignment,
+            contentDetails = item.moduleDetails,
+            contentId = item.contentId
         )
     }
 

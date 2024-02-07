@@ -17,6 +17,7 @@ package com.instructure.teacher.unit.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
@@ -575,7 +576,10 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             isLoading = false,
             pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
-            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L))), ModuleObject(2L, items = listOf(ModuleItem(200L)))),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
             loadingModuleItemIds = setOf(1L, 100L, 2L, 200L)
         )
         val expectedModel = initModel.copy(
@@ -605,7 +609,10 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             isLoading = false,
             pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
-            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L))), ModuleObject(2L, items = listOf(ModuleItem(200L)))),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
             loadingModuleItemIds = setOf(1L, 100L, 2L, 200L)
         )
         val expectedModel = initModel.copy(
@@ -635,7 +642,10 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             isLoading = false,
             pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
-            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L))), ModuleObject(2L, items = listOf(ModuleItem(200L)))),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
             loadingModuleItemIds = setOf(1L, 2L)
         )
         val expectedModel = initModel.copy(
@@ -665,7 +675,10 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             isLoading = false,
             pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
-            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L))), ModuleObject(2L, items = listOf(ModuleItem(200L)))),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
             loadingModuleItemIds = setOf(1L, 100L)
         )
         val expectedModel = initModel.copy(
@@ -695,7 +708,10 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             isLoading = false,
             pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
-            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L))), ModuleObject(2L, items = listOf(ModuleItem(200L)))),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
             loadingModuleItemIds = setOf(1L, 100L)
         )
         val expectedModel = initModel.copy(
@@ -725,7 +741,10 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             isLoading = false,
             pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
-            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L))), ModuleObject(2L, items = listOf(ModuleItem(200L)))),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
             loadingModuleItemIds = setOf(1L)
         )
         val expectedModel = initModel.copy(
@@ -835,6 +854,25 @@ class ModuleListUpdateTest : Assert() {
             .then(
                 assertThatNext(
                     hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `UpdateFileModuleItem emits UpdateFileModuleItem effect`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = false)))),
+        )
+        val expectedEffect = ModuleListEffect.UpdateFileModuleItem(
+            100L,
+            ModuleContentDetails()
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.UpdateFileModuleItem(100L, ModuleContentDetails()))
+            .then(
+                assertThatNext(
+                    matchesEffects(expectedEffect)
                 )
             )
     }

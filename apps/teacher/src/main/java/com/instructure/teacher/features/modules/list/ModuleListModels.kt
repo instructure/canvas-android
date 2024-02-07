@@ -18,10 +18,12 @@ package com.instructure.teacher.features.modules.list
 
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.isValid
+import java.util.Date
 
 sealed class ModuleListEvent {
     object PullToRefresh : ModuleListEvent()
@@ -33,13 +35,24 @@ sealed class ModuleListEvent {
     data class ItemRefreshRequested(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
     data class ReplaceModuleItems(val items: List<ModuleItem>) : ModuleListEvent()
     data class RemoveModuleItems(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
-    data class BulkUpdateModule(val moduleId: Long, val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
-    data class BulkUpdateAllModules(val action: BulkModuleUpdateAction, val skipContentTags: Boolean) : ModuleListEvent()
+    data class BulkUpdateModule(val moduleId: Long, val action: BulkModuleUpdateAction, val skipContentTags: Boolean) :
+        ModuleListEvent()
+
+    data class BulkUpdateAllModules(val action: BulkModuleUpdateAction, val skipContentTags: Boolean) :
+        ModuleListEvent()
+
     data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
-    data class ModuleItemUpdateSuccess(val item: ModuleItem, val published: Boolean): ModuleListEvent()
-    data class ModuleItemUpdateFailed(val itemId: Long): ModuleListEvent()
-    data class BulkUpdateSuccess(val skipContentTags: Boolean, val action: BulkModuleUpdateAction, val allModules: Boolean) : ModuleListEvent()
+    data class ModuleItemUpdateSuccess(val item: ModuleItem, val published: Boolean) : ModuleListEvent()
+    data class ModuleItemUpdateFailed(val itemId: Long) : ModuleListEvent()
+    data class BulkUpdateSuccess(
+        val skipContentTags: Boolean,
+        val action: BulkModuleUpdateAction,
+        val allModules: Boolean
+    ) : ModuleListEvent()
+
     data class BulkUpdateFailed(val skipContentTags: Boolean) : ModuleListEvent()
+
+    data class UpdateFileModuleItem(val fileId: Long, val contentDetails: ModuleContentDetails) : ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -62,6 +75,7 @@ sealed class ModuleListEffect {
     ) : ModuleListEffect()
 
     data class UpdateModuleItems(val canvasContext: CanvasContext, val items: List<ModuleItem>) : ModuleListEffect()
+
     data class BulkUpdateModules(
         val canvasContext: CanvasContext,
         val moduleIds: List<Long>,
@@ -78,6 +92,11 @@ sealed class ModuleListEffect {
     ) : ModuleListEffect()
 
     data class ShowSnackbar(@StringRes val message: Int) : ModuleListEffect()
+
+    data class UpdateFileModuleItem(
+        val fileId: Long,
+        val contentDetails: ModuleContentDetails
+    ) : ModuleListEffect()
 }
 
 data class ModuleListModel(

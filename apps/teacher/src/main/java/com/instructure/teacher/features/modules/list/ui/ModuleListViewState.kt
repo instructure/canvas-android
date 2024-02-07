@@ -17,6 +17,10 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.ModuleItem
 
 data class ModuleListViewState(
     val showRefreshing: Boolean = false,
@@ -86,7 +90,13 @@ sealed class ModuleListItemData {
          * Whether additional data is being loaded for this item, either for the purpose of routing or for the purpose
          * of refreshing this item after it has been updated elsewhere in the app.
          */
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+
+        val type: ModuleItem.Type,
+
+        val contentDetails: ModuleContentDetails? = null,
+
+        val contentId: Long? = null
     ) : ModuleListItemData()
 
 }

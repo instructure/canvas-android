@@ -85,7 +85,12 @@ class ModuleListPresenterTest : Assert() {
             isPublished = true,
             indent = 0,
             tintColor = course.backgroundColor,
-            enabled = true
+            enabled = true,
+            type = ModuleItem.Type.Assignment,
+            contentDetails = ModuleContentDetails(
+                dueAt = DateHelper.makeDate(2050, 1, 12, 15, 7, 0).toApiString()
+            ),
+            contentId = 0
         )
         modelTemplate = ModuleListModel(
             course = course,
@@ -212,7 +217,8 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.ic_discussion
+            iconResId = R.drawable.ic_discussion,
+            type = ModuleItem.Type.Discussion
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -232,7 +238,8 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.ic_attachment
+            iconResId = R.drawable.ic_attachment,
+            type = ModuleItem.Type.File
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -252,7 +259,8 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.ic_pages
+            iconResId = R.drawable.ic_pages,
+            type = ModuleItem.Type.Page
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -272,7 +280,8 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.ic_quiz
+            iconResId = R.drawable.ic_quiz,
+            type = ModuleItem.Type.Quiz
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -292,7 +301,8 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.ic_link
+            iconResId = R.drawable.ic_link,
+            type = ModuleItem.Type.ExternalUrl
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -312,7 +322,8 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.ic_lti
+            iconResId = R.drawable.ic_lti,
+            type = ModuleItem.Type.ExternalTool
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -352,7 +363,8 @@ class ModuleListPresenterTest : Assert() {
             title = item.title,
             enabled = false,
             isLoading = true,
-            iconResId = R.drawable.ic_attachment
+            iconResId = R.drawable.ic_attachment,
+            type = ModuleItem.Type.File
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
