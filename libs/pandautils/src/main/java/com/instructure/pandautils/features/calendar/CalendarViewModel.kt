@@ -36,6 +36,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.YearMonth
@@ -47,10 +48,11 @@ import kotlin.math.min
 class CalendarViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val calendarRepository: CalendarRepository,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val clock: Clock
 ) : ViewModel() {
 
-    private var selectedDay = LocalDate.now()
+    private var selectedDay = LocalDate.now(clock)
     private var expanded = true
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
@@ -236,7 +238,7 @@ class CalendarViewModel @Inject constructor(
             is CalendarAction.DaySelected -> selectedDayChanged(calendarAction.selectedDay)
             CalendarAction.ExpandChanged -> expandChanged(!expanded)
             CalendarAction.ExpandDisabled -> expandChanged(false)
-            CalendarAction.TodayTapped -> selectedDayChanged(LocalDate.now())
+            CalendarAction.TodayTapped -> selectedDayChanged(LocalDate.now(clock))
             is CalendarAction.PageChanged -> {
                 val dateFieldToAdd = if (expanded) ChronoUnit.MONTHS else ChronoUnit.WEEKS
                 selectedDayChanged(selectedDay.plus(calendarAction.offset.toLong(), dateFieldToAdd))

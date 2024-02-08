@@ -49,8 +49,8 @@ fun LocalDate?.toApiString(): String? {
 
 fun LocalDateTime?.toApiString(): String? {
     this ?: return null
-    val asd = this.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC)
-    return DateTimeFormatter.ISO_INSTANT.format(asd.truncatedTo(ChronoUnit.SECONDS))
+    val zonedDateTime = this.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC)
+    return DateTimeFormatter.ISO_INSTANT.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS))
 }
 
 fun String?.toDate(): Date? {
