@@ -16,7 +16,9 @@
 
 package com.instructure.pandautils.utils
 
-enum class FontFamily(val fontPath: String) {
-    REGULAR("fonts/lato_regular.ttf"),
-    K5("fonts/balsamiq_regular.ttf")
+import com.instructure.pandautils.R
+
+enum class CanvasFont(val fontPath: String, val fontRes: Int) {
+    REGULAR("fonts/lato_regular.ttf", R.font.lato_regular),
+    K5("fonts/balsamiq_regular.ttf", R.font.balsamiq_regular)
 }

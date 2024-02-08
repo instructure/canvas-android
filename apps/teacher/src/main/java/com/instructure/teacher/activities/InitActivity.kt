@@ -167,7 +167,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             updateTheme()
         }
 
-        typefaceBehaviour.overrideFont(FontFamily.REGULAR.fontPath)
+        typefaceBehaviour.overrideFont(CanvasFont.REGULAR)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)

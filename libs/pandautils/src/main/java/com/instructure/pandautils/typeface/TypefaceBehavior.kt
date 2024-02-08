@@ -18,9 +18,9 @@ package com.instructure.pandautils.typeface
 
 import android.content.Context
 import android.graphics.Typeface
-import android.graphics.fonts.FontFamily
+import com.instructure.pandautils.compose.overrideComposeFonts
+import com.instructure.pandautils.utils.CanvasFont
 import java.lang.reflect.Field
-import java.lang.reflect.Type
 
 const val REGULAR_FONT_KEY = "sans-serif"
 const val MEDIUM_FONT_KEY = "sans-serif-medium"
@@ -29,8 +29,10 @@ class TypefaceBehavior(private val context: Context) {
 
     private var fontOverriden = false
 
-    fun overrideFont(fontPath: String) {
+    fun overrideFont(canvasFont: CanvasFont) {
         if (fontOverriden) return
+
+        val fontPath = canvasFont.fontPath
 
         val typefaceMap: Map<String, String> = mapOf(
                 REGULAR_FONT_KEY to fontPath,
@@ -45,10 +47,13 @@ class TypefaceBehavior(private val context: Context) {
             val updatedSystemMap = mutableMapOf<String, Typeface>()
             updatedSystemMap.putAll(fontMap)
             staticField.set(null, updatedSystemMap)
+
+            overrideComposeFonts(canvasFont.fontRes)
             fontOverriden = true
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
     }
 
     fun resetFonts() {
