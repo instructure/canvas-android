@@ -145,7 +145,8 @@
             android:label="@string/student_app_name"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true">
-            <intent-filter>
+            <intent-filter
+                android:autoVerify="true">
                 <data
                     android:host="*.instructure.com"
                     android:scheme="https"/>
