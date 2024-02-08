@@ -94,7 +94,13 @@ class CalendarViewModelTest {
         initViewModel()
         val initialState = viewModel.uiState.value
 
-        val expectedState = CalendarUiState(LocalDate.now(clock), true)
+        val expectedState = CalendarUiState(
+            LocalDate.now(clock), true, CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            )
+        )
 
         assertEquals(expectedState, initialState)
     }
