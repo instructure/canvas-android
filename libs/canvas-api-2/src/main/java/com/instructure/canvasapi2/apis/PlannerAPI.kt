@@ -3,21 +3,29 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
-import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
 object PlannerAPI {
 
-    internal interface PlannerInterface {
+    interface PlannerInterface {
 
         @GET("users/self/planner/items")
-        fun getPlannerItems(@Query("start_date") startDate: String?,
-                            @Query("end_date") endDate: String?): Call<List<PlannerItem>>
+        fun getPlannerItems(@Query("start_date") startDate: String?, @Query("end_date") endDate: String?): Call<List<PlannerItem>>
+
+        @GET("users/self/planner/items")
+        suspend fun getPlannerItems(
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?,
+            @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>,
+            @Tag restParams: RestParams
+        ): DataResult<List<PlannerItem>>
+
+        @GET
+        suspend fun nextPagePlannerItems(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<PlannerItem>>
 
         @POST("planner/overrides")
         fun createPlannerOverride(@Body plannerOverride: PlannerOverride): Call<PlannerOverride>

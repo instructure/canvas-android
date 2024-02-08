@@ -16,8 +16,10 @@
  */
 package com.instructure.pandautils.utils
 
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
 import java.util.*
@@ -70,4 +72,8 @@ fun Date.getNextSaturday(): Date {
     calendar.time = this
     calendar.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - calendar.get(Calendar.DAY_OF_WEEK))
     return calendar.time
+}
+
+fun Date.toLocalDate(): LocalDate {
+    return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDate()
 }

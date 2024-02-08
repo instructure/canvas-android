@@ -1495,4 +1495,19 @@
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
     <string name="a11y_calendarSwitchToWeekView">Switch to week view</string>
+    <string name="calendarNoEvents">No Events Today!</string>
+    <string name="calendarNoEventsDescription">It looks like a great day to rest, relax, and recharge.</string>
+    <string name="userCalendarToDo">To Do</string>
+    <string name="courseToDo">%s To Do</string>
+    <string name="calendarEventExcused">Excused</string>
+    <string name="calendarEventMissing">Missing</string>
+    <string name="calendarEventGraded">Graded</string>
+    <string name="calendarEventSubmitted">Submitted</string>
+    <string name="calendarEventPoints">%s pts</string>
+    <string name="calendarDueDate">Due %1$s at %2$s</string>
+    <string name="calendarDate">%1$s at %2$s</string>
+    <string name="calendarEventDate">%1$s from %2$s to %3$s</string>
+    <string name="calendarPageError">There was an error loading your calendar</string>
+    <string name="calendarPageErrorRetry">Retry</string>
+    <string name="calendarRefreshFailed">Failed to refresh calendar</string>
 </resources>

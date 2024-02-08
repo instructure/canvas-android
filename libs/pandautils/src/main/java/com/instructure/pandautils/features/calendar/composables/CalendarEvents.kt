@@ -1,0 +1,293 @@
+/*
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+package com.instructure.pandautils.features.calendar.composables
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshDefaults
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendar.CalendarAction
+import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
+import com.instructure.pandautils.features.calendar.CalendarEventsUiState
+import com.instructure.pandautils.features.calendar.EventUiState
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.textAndIconColor
+
+@ExperimentalFoundationApi
+@Composable
+fun CalendarEvents(
+    calendarEventsUiState: CalendarEventsUiState,
+    actionHandler: (CalendarAction) -> Unit
+) {
+    var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
+    val pagerState = rememberPagerState(
+        initialPage = Int.MAX_VALUE / 2,
+        initialPageOffsetFraction = 0f
+    ) {
+        Int.MAX_VALUE
+    }
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page ->
+            val monthOffset = page - centerIndex
+            centerIndex = page
+            actionHandler(CalendarAction.EventPageChanged(monthOffset))
+        }
+    }
+
+    HorizontalPager(
+        state = pagerState,
+        beyondBoundsPageCount = 2,
+        reverseLayout = false,
+        pageSize = PageSize.Fill,
+        pageContent = { page ->
+            val settledPage = pagerState.settledPage
+
+            val monthOffset = page - centerIndex
+            val calendarEventsPageUiState = when (monthOffset) {
+                -1 -> calendarEventsUiState.previousPage
+                1 -> calendarEventsUiState.nextPage
+                else -> calendarEventsUiState.currentPage
+            }
+
+            if (page >= settledPage - 1 && page <= settledPage + 1 && !calendarEventsPageUiState.loading) {
+                CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState, actionHandler)
+            } else {
+                Box(
+                    Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(), contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
+                }
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState, actionHandler: (CalendarAction) -> Unit) {
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = calendarEventsPageUiState.refreshing,
+        onRefresh = { actionHandler(CalendarAction.RefreshDay(calendarEventsPageUiState.date)) },
+        refreshThreshold = PullRefreshDefaults.RefreshingOffset
+    )
+
+    Box(Modifier.pullRefresh(pullRefreshState)) {
+        if (calendarEventsPageUiState.events.isNotEmpty()) {
+            LazyColumn(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(), verticalArrangement = Arrangement.Top
+            ) {
+                items(calendarEventsPageUiState.events) {
+                    CalendarEventItem(eventUiState = it) { id ->
+                        actionHandler(CalendarAction.EventSelected(id))
+                    }
+                }
+            }
+        } else if (calendarEventsPageUiState.error) {
+            CalendarEventsError(actionHandler)
+        } else {
+            CalendarEventsEmpty()
+        }
+
+        PullRefreshIndicator(
+            refreshing = calendarEventsPageUiState.refreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+            backgroundColor = colorResource(id = R.color.white),
+        )
+    }
+}
+
+@Composable
+fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit) {
+    val contextColor = if (eventUiState.canvasContext is User) {
+        Color(ThemePrefs.brandColor)
+    } else {
+        Color(eventUiState.canvasContext.textAndIconColor)
+    }
+    Row(
+        Modifier
+            .clickable { onEventClick(eventUiState.plannableId) }
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .fillMaxWidth()
+    ) {
+        Spacer(modifier = Modifier.width(6.dp))
+        Icon(
+            painter = painterResource(id = eventUiState.iconRes),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = contextColor
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(
+                text = eventUiState.contextName,
+                fontSize = 14.sp,
+                color = contextColor,
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+            Text(
+                text = eventUiState.name,
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest),
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+            if (eventUiState.date != null) Text(
+                text = eventUiState.date,
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.textDark),
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+            if (eventUiState.status != null) Text(
+                text = eventUiState.status,
+                fontSize = 14.sp,
+                color = Color(ThemePrefs.brandColor),
+                modifier = Modifier.padding(vertical = 1.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun CalendarEventsEmpty() {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_no_events),
+            tint = Color.Unspecified,
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = stringResource(id = R.string.calendarNoEvents),
+            fontSize = 22.sp,
+            color = colorResource(
+                id = R.color.textDarkest
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = stringResource(id = R.string.calendarNoEventsDescription),
+            fontSize = 16.sp,
+            color = colorResource(
+                id = R.color.textDarkest
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+    }
+}
+
+@Composable
+fun CalendarEventsError(actionHandler: (CalendarAction) -> Unit) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_warning),
+            tint = colorResource(id = R.color.textDanger),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = stringResource(id = R.string.calendarPageError),
+            fontSize = 16.sp,
+            color = colorResource(
+                id = R.color.textDark
+            ),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 32.dp)
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+        OutlinedButton(
+            onClick = { actionHandler(CalendarAction.Retry) },
+            border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
+            shape = RoundedCornerShape(4.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundLightest))
+        ) {
+            Text(
+                text = stringResource(id = R.string.calendarPageErrorRetry),
+                fontSize = 16.sp,
+                color = colorResource(
+                    id = R.color.textDark
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
+    }
+}

@@ -242,4 +242,9 @@ class ApiModule {
     fun provideFileDownloadApi(): FileDownloadAPI {
         return RestBuilder().build(FileDownloadAPI::class.java, RestParams())
     }
+
+    @Provides
+    fun providePlannerApiInterface(): PlannerAPI.PlannerInterface {
+        return RestBuilder().build(PlannerAPI.PlannerInterface::class.java, RestParams())
+    }
 }

@@ -86,6 +86,6 @@ class ContextFilterViewModelTest {
         val listItems = viewModel.itemViewModels.value ?: emptyList()
         (listItems[1] as ContextFilterItemViewModel).onClicked()
 
-        assertEquals(1, viewModel.events.value!!.peekContent())
+        assertEquals(1L, viewModel.events.value!!.peekContent())
     }
 }

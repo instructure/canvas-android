@@ -13,19 +13,21 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.calendar
+package com.instructure.pandautils.di
 
-import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.pandautils.features.calendar.CalendarRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-interface CalendarRouter {
+@Module
+@InstallIn(ViewModelComponent::class)
+class CalendarModule {
 
-    fun openNavigationDrawer()
-
-    fun openAssignment(canvasContext: CanvasContext, assignmentId: Long)
-
-    fun openDiscussion(canvasContext: CanvasContext, discussionId: Long)
-
-    fun openQuiz(canvasContext: CanvasContext, htmlUrl: String)
-
-    fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long)
+    @Provides
+    fun provideCalendarRepository(plannerApi: PlannerAPI.PlannerInterface): CalendarRepository {
+        return CalendarRepository(plannerApi)
+    }
 }
