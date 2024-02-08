@@ -17,9 +17,14 @@
 
 package com.instructure.student.features.assignments.details
 
+import android.app.AlarmManager
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,10 +32,17 @@ import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -41,7 +53,18 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
@@ -49,7 +72,12 @@ import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.databinding.DialogSubmissionPickerBinding
 import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
 import com.instructure.student.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.student.fragment.*
+import com.instructure.student.features.assignments.reminder.CustomReminderDialog
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.getVideoUri
 import com.instructure.student.mobius.assignmentDetails.launchAudio
 import com.instructure.student.mobius.assignmentDetails.needsPermissions
@@ -134,6 +162,11 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkAlarmPermissionResult()
+    }
+
     private fun handleAction(action: AssignmentDetailAction) {
         val canvasContext = canvasContext as? CanvasContext ?: run {
             toast(R.string.generalUnexpectedError)
@@ -193,6 +226,15 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             }
             is AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked -> {
                 showDiscussionAttachments(action.attachments)
+            }
+            is AssignmentDetailAction.ShowReminderDialog -> {
+                checkAlarmPermission()
+            }
+            is AssignmentDetailAction.ShowCustomReminderDialog -> {
+                showCustomReminderDialog()
+            }
+            is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
+                showDeleteReminderConfirmationDialog(action.onConfirmed)
             }
         }
     }
@@ -385,6 +427,80 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             discussionAttachment.url.orEmpty(),
             discussionAttachment.fileName.orEmpty()
         )
+    }
+
+    private fun checkAlarmPermission() {
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                showCreateReminderDialog()
+            } else {
+                viewModel.checkingReminderPermission = true
+                startActivity(
+                    Intent(
+                        Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                        Uri.parse("package:" + requireContext().packageName)
+                    )
+                )
+            }
+        } else {
+            showCreateReminderDialog()
+        }
+    }
+
+    private fun checkAlarmPermissionResult() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && viewModel.checkingReminderPermission) {
+            if ((context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager).canScheduleExactAlarms()) {
+                showCreateReminderDialog()
+            } else {
+                Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun showCreateReminderDialog() {
+        val choices = listOf(
+            ReminderChoice.Minute(5),
+            ReminderChoice.Minute(15),
+            ReminderChoice.Minute(30),
+            ReminderChoice.Hour(1),
+            ReminderChoice.Day(1),
+            ReminderChoice.Week(1),
+            ReminderChoice.Custom,
+        )
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.reminderTitle)
+            .setNegativeButton(R.string.cancel, null)
+            .setSingleChoiceItems(
+                choices.map {
+                    if (it is ReminderChoice.Custom) {
+                        it.getText(resources)
+                    } else {
+                        getString(R.string.reminderBefore, it.getText(resources))
+                    }
+                }.toTypedArray(), -1
+            ) { dialog, which ->
+                viewModel.onReminderSelected(choices[which])
+                dialog.dismiss()
+            }
+            .showThemed()
+    }
+
+    private fun showCustomReminderDialog() {
+        CustomReminderDialog.newInstance().show(childFragmentManager, null)
+    }
+
+    private fun showDeleteReminderConfirmationDialog(onConfirmed: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.deleteReminderTitle)
+            .setMessage(R.string.deleteReminderMessage)
+            .setNegativeButton(R.string.no, null)
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                onConfirmed()
+                dialog.dismiss()
+            }
+            .showThemed()
     }
 
     companion object {

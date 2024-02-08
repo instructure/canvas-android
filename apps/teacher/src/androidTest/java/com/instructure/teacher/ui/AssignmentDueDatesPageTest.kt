@@ -77,7 +77,7 @@ class AssignmentDueDatesPageTest : TeacherTest() {
                 dueAt = dueAt,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         val token = data.tokenFor(teacher)!!

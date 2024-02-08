@@ -50,8 +50,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 258
-        versionName = '7.0.2'
+        versionCode = 259
+        versionName = '7.1.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -240,6 +240,7 @@ android {
     hilt {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
     }
 }
 

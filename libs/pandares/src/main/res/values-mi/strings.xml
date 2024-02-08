@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Kua whakāetia te tono!</string>
     <string name="inviteDeclined">Kaore i whakāetia te tono.</string>
     <string name="latePenalty">Whiu tōmuri (-%s)</string>
+    <string name="latePenaltyUpdated">Whiu tōmuri: -%s ngā koinga</string>
+    <string name="yourGrade">Tō Kōeke: %s ngā koinga</string>
     <string name="finalGrade">Kōeke whakamutunga</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d kua tukutahia nga akoranga.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Ihirangi akoranga taapiri</string>
+    <string name="failedToUpdateDashboardOrder">I rahua te whakahōu i te raupapa kāri Papatohu</string>
 </resources>

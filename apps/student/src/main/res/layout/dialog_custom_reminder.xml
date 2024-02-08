@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <EditText
+            android:id="@+id/quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_rounded_rectangle"
+            android:backgroundTint="@color/backgroundDark"
+            android:hint="@string/customReminderQuantityHint"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/choices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/quantity">
+
+            <RadioButton
+                android:id="@+id/minutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/listPreferredItemHeightSmall"
+                android:paddingHorizontal="20dp"
+                android:text="@string/customReminderMinutes"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/textColorAlertDialogListItem" />
+
+            <RadioButton
+                android:id="@+id/hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/listPreferredItemHeightSmall"
+                android:paddingHorizontal="20dp"
+                android:text="@string/customReminderHours"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/textColorAlertDialogListItem" />
+
+            <RadioButton
+                android:id="@+id/days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/listPreferredItemHeightSmall"
+                android:paddingHorizontal="20dp"
+                android:text="@string/customReminderDays"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/textColorAlertDialogListItem" />
+
+            <RadioButton
+                android:id="@+id/weeks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/listPreferredItemHeightSmall"
+                android:paddingHorizontal="20dp"
+                android:text="@string/customReminderWeeks"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/textColorAlertDialogListItem" />
+
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

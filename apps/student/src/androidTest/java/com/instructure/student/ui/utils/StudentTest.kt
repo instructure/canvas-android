@@ -32,6 +32,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.Searchable
@@ -111,6 +112,8 @@ import java.io.File
 import javax.inject.Inject
 
 abstract class StudentTest : CanvasTest() {
+
+    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)

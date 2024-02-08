@@ -26,6 +26,7 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertNoInternetConnectionDialog
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.dismissNoInternetConnectionDialog
+import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.waitForNetworkToGoOffline
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -61,6 +62,8 @@ class OfflineLoginE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
         loginWithUser(student2, true)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Assert that the Offline indicator is not displayed because we are in online mode yet.")
@@ -68,6 +71,7 @@ class OfflineLoginE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
+        waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
@@ -103,7 +107,6 @@ class OfflineLoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Assert that the offline indicator is displayed to ensure we are in offline mode, and change user function is supported.")
         dashboardPage.waitForRender()
         dashboardPage.assertOfflineIndicatorDisplayed()
-
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {

@@ -40,14 +40,14 @@ class DiscussionRouteHelperNetworkDataSource(
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return if (canvasContext.isCourse) {
             val featureFlags = featuresApi.getEnabledFeaturesForCourse(canvasContext.id, params).dataOrNull
-            featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+            featureFlags?.contains("react_discussions_post") ?: false
         } else if (canvasContext.isGroup) {
             val group = canvasContext as Group
             if (group.courseId == 0L) {
                 featureFlagProvider.getDiscussionRedesignFeatureFlag()
             } else {
                 val featureFlags = featuresApi.getEnabledFeaturesForCourse(group.courseId, params).dataOrNull
-                featureFlags?.contains("react_discussions_post") ?: false && featureFlagProvider.getDiscussionRedesignFeatureFlag()
+                featureFlags?.contains("react_discussions_post") ?: false
             }
         } else {
             false

@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.pandautils.room.offline.DatabaseProvider
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.features.login.StudentAcceptableUsePolicyRouter
 import com.instructure.student.features.login.StudentLoginNavigation
 import dagger.Module
@@ -32,12 +33,16 @@ import dagger.hilt.android.components.ActivityComponent
 class LoginModule {
 
     @Provides
-    fun provideAcceptabelUsePolicyRouter(activity: FragmentActivity, databaseProvider: DatabaseProvider): AcceptableUsePolicyRouter {
-        return StudentAcceptableUsePolicyRouter(activity, databaseProvider)
+    fun provideAcceptabelUsePolicyRouter(
+        activity: FragmentActivity,
+        databaseProvider: DatabaseProvider,
+        alarmScheduler: AlarmScheduler
+    ): AcceptableUsePolicyRouter {
+        return StudentAcceptableUsePolicyRouter(activity, databaseProvider, alarmScheduler)
     }
 
     @Provides
-    fun provideLoginNavigation(activity: FragmentActivity, databaseProvider: DatabaseProvider): LoginNavigation {
-        return StudentLoginNavigation(activity, databaseProvider)
+    fun provideLoginNavigation(activity: FragmentActivity, databaseProvider: DatabaseProvider, alarmScheduler: AlarmScheduler): LoginNavigation {
+        return StudentLoginNavigation(activity, databaseProvider, alarmScheduler)
     }
 }

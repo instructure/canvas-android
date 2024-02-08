@@ -51,7 +51,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
-import java.util.regex.Pattern
+import java.util.regex.*
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
@@ -67,6 +67,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     private var page: Page by ParcelableArg(default = Page(), key = PAGE)
     private var pageUrl: String? by NullableStringArg(key = PAGE_URL)
     private var navigatedFromModules: Boolean by BooleanArg(key = NAVIGATED_FROM_MODULES)
+    private var frontPage: Boolean by BooleanArg(key = FRONT_PAGE)
 
     // Flag for the webview client to know whether or not we should clear the history
     private var isUpdated = false
@@ -152,11 +153,11 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             } else {
                 loadFailedPageInfo(null)
             }
-        } else if (pageName == null || pageName == Page.FRONT_PAGE_NAME) fetchFontPage()
+        } else if (frontPage) fetchFrontPage()
         else fetchPageDetails()
     }
 
-    private fun fetchFontPage() {
+    private fun fetchFrontPage() {
         lifecycleScope.tryLaunch {
             val result = repository.getFrontPage(canvasContext, true)
             result.onSuccess {
@@ -331,6 +332,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         const val PAGE = "pageDetails"
         const val PAGE_URL = "pageUrl"
         const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
+        private const val FRONT_PAGE = "frontPage"
 
         fun newInstance(route: Route): PageDetailsFragment? {
             return if (validRoute(route)) PageDetailsFragment().apply {
@@ -349,9 +351,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                             route.paramsHash.containsKey(RouterParams.PAGE_ID))
         }
 
-        fun makeRoute(canvasContext: CanvasContext, pageName: String?): Route {
+        fun makeFrontPageRoute(canvasContext: CanvasContext): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
-                if (pageName != null) putString(PAGE_NAME, pageName)
+                putBoolean(FRONT_PAGE, true)
             }))
         }
 

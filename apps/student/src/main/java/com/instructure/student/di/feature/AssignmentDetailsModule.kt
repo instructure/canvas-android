@@ -18,6 +18,7 @@
 package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.*
+import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -59,8 +60,9 @@ class AssignmentDetailsModule {
         networkStateProvider: NetworkStateProvider,
         localDataSource: AssignmentDetailsLocalDataSource,
         networkDataSource: AssignmentDetailsNetworkDataSource,
-        featureFlagProvider: FeatureFlagProvider
+        featureFlagProvider: FeatureFlagProvider,
+        reminderDao: ReminderDao
     ): AssignmentDetailsRepository {
-        return AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        return AssignmentDetailsRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, reminderDao)
     }
 }

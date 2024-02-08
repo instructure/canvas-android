@@ -89,7 +89,7 @@ class AssignmentListPageTest : TeacherTest() {
         repeat(assignments) {
             data.addAssignment(
                     courseId = course.id,
-                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                    submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                     assignmentGroupId = assignmentGroup.id)
         }
 
