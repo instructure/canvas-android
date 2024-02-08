@@ -148,11 +148,8 @@
             <intent-filter
                 android:autoVerify="true">
                 <data
-                    android:host="*.instructure.com"
+                    android:host="tamaskozmer.instructure.com"
                     android:scheme="https"/>
-                <data
-                    android:host="*.instructure.com"
-                    android:scheme="http"/>
                 <data
                     android:host="*.canvas.net"
                     android:scheme="https"/>
