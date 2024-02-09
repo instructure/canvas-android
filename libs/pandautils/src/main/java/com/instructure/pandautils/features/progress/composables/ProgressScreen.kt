@@ -18,8 +18,6 @@
 
 package com.instructure.pandautils.features.progress.composables
 
-import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,12 +34,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,12 +47,12 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.progress.ProgressState
 import com.instructure.pandautils.features.progress.ProgressUiState
-import com.instructure.pandautils.features.progress.ProgressViewModelAction
+import com.instructure.pandautils.features.progress.ProgressAction
 
 @Composable
 fun ProgressScreen(
     progressUiState: ProgressUiState,
-    actionHandler: (ProgressViewModelAction) -> Unit
+    actionHandler: (ProgressAction) -> Unit
 ) {
     CanvasTheme {
         Scaffold(
@@ -65,7 +60,7 @@ fun ProgressScreen(
             topBar = {
                 ProgressTopBar(
                     title = progressUiState.title,
-                    buttonText = progressUiState.buttonTitle,
+                    state = progressUiState.state,
                     actionHandler = actionHandler
                 )
             }
@@ -92,13 +87,13 @@ fun ProgressScreen(
 fun ProgressTopBar(
     modifier: Modifier = Modifier,
     title: String,
-    buttonText: String,
-    actionHandler: (ProgressViewModelAction) -> Unit
+    state: ProgressState,
+    actionHandler: (ProgressAction) -> Unit
 ) {
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { actionHandler(ProgressViewModelAction.Close) }) {
-                Icon(Icons.Filled.Close, contentDescription = "Close")
+            IconButton(onClick = { actionHandler(ProgressAction.Close) }) {
+                Icon(Icons.Filled.Close, contentDescription = stringResource(id = R.string.a11y_closeProgress))
             }
             Text(
                 text = title,
@@ -108,8 +103,14 @@ fun ProgressTopBar(
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.weight(1f))
-            TextButton(onClick = { actionHandler(ProgressViewModelAction.Cancel) }) {
-                Text(text = buttonText, color = colorResource(id = R.color.textDarkest))
+            if (state == ProgressState.COMPLETED || state == ProgressState.FAILED) {
+                TextButton(onClick = { actionHandler(ProgressAction.Close) }) {
+                    Text(text = stringResource(id = R.string.done), color = colorResource(id = R.color.textDarkest))
+                }
+            } else {
+                TextButton(onClick = { actionHandler(ProgressAction.Cancel) }) {
+                    Text(text = stringResource(id = R.string.cancel), color = colorResource(id = R.color.textDarkest))
+                }
             }
         }
         Divider()

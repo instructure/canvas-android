@@ -18,6 +18,7 @@
 
 package com.instructure.pandautils.features.progress
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,10 +27,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.features.progress.composables.ProgressScreen
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProgressDialogFragment : BottomSheetDialogFragment() {
@@ -41,6 +45,31 @@ class ProgressDialogFragment : BottomSheetDialogFragment() {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 ProgressScreen(uiState, viewModel::handleAction)
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lifecycleScope.launch {
+            viewModel.events.collect { action ->
+                when (action) {
+                    is ProgressViewModelAction.Close -> dismiss()
+                }
+            }
+        }
+
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState).apply {
+            setOnShowListener {
+                val bottomSheet = findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheet.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+                val behavior = BottomSheetBehavior.from(bottomSheet)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
             }
         }
     }

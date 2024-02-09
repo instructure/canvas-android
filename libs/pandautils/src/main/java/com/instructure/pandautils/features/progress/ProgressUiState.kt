@@ -34,7 +34,11 @@ enum class ProgressState {
     FAILED
 }
 
+sealed class ProgressAction {
+    object Cancel : ProgressAction()
+    object Close : ProgressAction()
+}
+
 sealed class ProgressViewModelAction {
-    object Cancel : ProgressViewModelAction()
     object Close : ProgressViewModelAction()
 }
