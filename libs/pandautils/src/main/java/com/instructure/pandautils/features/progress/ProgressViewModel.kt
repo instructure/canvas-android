@@ -96,7 +96,7 @@ class ProgressViewModel @Inject constructor(
         viewModelScope.launch {
             when (action) {
                 is ProgressAction.Cancel -> {
-
+                    cancel()
                 }
 
                 is ProgressAction.Close -> {
@@ -104,6 +104,12 @@ class ProgressViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun cancel() {
+        val params = RestParams(isForceReadFromNetwork = true)
+        progressApi.cancelProgress(progressId.toString(), params).dataOrNull
+        _events.send(ProgressViewModelAction.Close)
     }
 
 }
