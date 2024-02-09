@@ -130,11 +130,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
     // If there is no current grade, return 'No grade'
     // Otherwise, we have a grade, so check if we have the actual grade string
     // or a score
+    var formattedScore = (grade.currentScore() != null && !(course.settings?.restrictQuantitativeData ?? false))
+        ? format.format(grade.currentScore()! / 100)
+        : '';
     var text = grade.noCurrentGrade()
         ? L10n(context).noGrade
         : grade.currentGrade()?.isNotEmpty == true
-            ? grade.currentGrade()!
-            : format.format(grade.currentScore()! / 100);
+            ? "${grade.currentGrade()}${formattedScore.isNotEmpty ? ' $formattedScore' : ''}"
+            : formattedScore;
 
     return Text(
       text,
