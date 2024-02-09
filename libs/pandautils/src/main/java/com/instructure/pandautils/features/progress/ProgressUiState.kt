@@ -21,9 +21,8 @@ package com.instructure.pandautils.features.progress
 data class ProgressUiState(
     val title: String,
     val progressTitle: String,
-    val progress: Long,
+    val progress: Float,
     val note: String?,
-    val buttonTitle: String,
     val state: ProgressState,
 )
 

@@ -43,11 +43,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.progress.ProgressState
 import com.instructure.pandautils.features.progress.ProgressUiState
 import com.instructure.pandautils.features.progress.ProgressAction
+import kotlin.math.roundToInt
 
 @Composable
 fun ProgressScreen(
@@ -104,11 +106,15 @@ fun ProgressTopBar(
             )
             Spacer(modifier = Modifier.weight(1f))
             if (state == ProgressState.COMPLETED || state == ProgressState.FAILED) {
-                TextButton(onClick = { actionHandler(ProgressAction.Close) }) {
+                TextButton(
+                    modifier = Modifier.padding(end = 12.dp),
+                    onClick = { actionHandler(ProgressAction.Close) }) {
                     Text(text = stringResource(id = R.string.done), color = colorResource(id = R.color.textDarkest))
                 }
             } else {
-                TextButton(onClick = { actionHandler(ProgressAction.Cancel) }) {
+                TextButton(
+                    modifier = Modifier.padding(end = 12.dp),
+                    onClick = { actionHandler(ProgressAction.Cancel) }) {
                     Text(text = stringResource(id = R.string.cancel), color = colorResource(id = R.color.textDarkest))
                 }
             }
@@ -122,7 +128,7 @@ fun ProgressTopBar(
 fun ProgressContent(
     modifier: Modifier = Modifier,
     progressTitle: String,
-    progress: Long,
+    progress: Float,
     note: String?,
     state: ProgressState
 ) {
@@ -159,13 +165,23 @@ fun Note(note: String) {
 }
 
 @Composable
-fun ProgressIndicator(modifier: Modifier = Modifier, progressTitle: String, progress: Long, state: ProgressState) {
+fun ProgressIndicator(modifier: Modifier = Modifier, progressTitle: String, progress: Float, state: ProgressState) {
+    val title = when (state) {
+        ProgressState.COMPLETED -> stringResource(id = R.string.success)
+        ProgressState.FAILED -> stringResource(id = R.string.updateFailed)
+        else -> "$progressTitle ${progress.roundToInt()}%"
+    }
+    val progressColor = when (state) {
+        ProgressState.COMPLETED -> colorResource(id = R.color.backgroundSuccess)
+        ProgressState.FAILED -> colorResource(id = R.color.backgroundDanger)
+        else -> colorResource(id = R.color.backgroundInfo)
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()
     ) {
         Text(
-            text = "$progressTitle $progress%",
+            text = title,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             fontSize = 14.sp,
             color = colorResource(id = R.color.textDarkest)
@@ -175,11 +191,7 @@ fun ProgressIndicator(modifier: Modifier = Modifier, progressTitle: String, prog
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            color = if (state == ProgressState.COMPLETED) {
-                colorResource(id = R.color.backgroundSuccess)
-            } else {
-                colorResource(id = R.color.backgroundInfo)
-            },
+            color = progressColor,
         )
     }
 }
@@ -191,9 +203,8 @@ fun ProgressScreenPreview() {
         progressUiState = ProgressUiState(
             title = "All modules and items",
             progressTitle = "Publishing",
-            progress = 40L,
+            progress = 40f,
             note = "Modules and items that have already been processed will not be reverted to their previous state when the process is discontinued.",
-            buttonTitle = "Cancel",
             state = ProgressState.RUNNING
         ),
         actionHandler = {}

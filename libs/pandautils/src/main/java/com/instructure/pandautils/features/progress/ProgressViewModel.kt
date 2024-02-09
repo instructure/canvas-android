@@ -24,6 +24,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.poll
 import com.instructure.pandautils.utils.retry
@@ -51,9 +53,8 @@ class ProgressViewModel @Inject constructor(
         ProgressUiState(
             title = title,
             progressTitle = progressTitle,
-            progress = 0L,
+            progress = 0f,
             note = note,
-            buttonTitle = "Cancel",
             state = ProgressState.QUEUED,
         )
     )
@@ -63,32 +64,31 @@ class ProgressViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
-        loadData()
+        viewModelScope.launch {
+            loadData()
+        }
     }
 
-    private fun loadData() {
+    private suspend fun loadData() {
         val params = RestParams(isForceReadFromNetwork = true)
-        viewModelScope.launch {
-            val progress = poll(500, -1, block = {
-                var newProgress: Progress? = null
-                retry(initialDelay = 500) {
-                    newProgress = progressApi.getProgress(progressId.toString(), params).dataOrThrow
+        try {
+            poll(500, -1, block = {
+                val progress = progressApi.getProgress(progressId.toString(), params).dataOrThrow
+                val newState = when {
+                    progress.isQueued -> ProgressState.QUEUED
+                    progress.isRunning -> ProgressState.RUNNING
+                    progress.isCompleted -> ProgressState.COMPLETED
+                    progress.isFailed -> ProgressState.FAILED
+                    else -> ProgressState.QUEUED
                 }
-                newProgress?.let {
-                    val newState = when {
-                        it.isQueued -> ProgressState.QUEUED
-                        it.isRunning -> ProgressState.RUNNING
-                        it.isCompleted -> ProgressState.COMPLETED
-                        it.isFailed -> ProgressState.FAILED
-                        else -> ProgressState.QUEUED
-                    }
-                    _uiState.emit(_uiState.value.copy(progress = it.completion.roundToLong(), state = newState))
-                }
-                newProgress
+                _uiState.emit(_uiState.value.copy(progress = progress.completion, state = newState))
+                progress
             },
                 validate = {
                     it.hasRun
                 })
+        } catch (e: Exception) {
+            _uiState.emit(_uiState.value.copy(state = ProgressState.FAILED))
         }
     }
 
@@ -98,6 +98,7 @@ class ProgressViewModel @Inject constructor(
                 is ProgressAction.Cancel -> {
 
                 }
+
                 is ProgressAction.Close -> {
                     _events.send(ProgressViewModelAction.Close)
                 }
