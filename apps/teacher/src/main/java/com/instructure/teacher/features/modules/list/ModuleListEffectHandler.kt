@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.pandautils.utils.poll
 import com.instructure.pandautils.utils.retry
+import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.launch
@@ -224,6 +225,9 @@ class ModuleListEffectHandler(
                 return@launch
             }
 
+            if (allModules || !skipContentTags) {
+                showProgressScreen(bulkUpdateProgress.id, skipContentTags, action, allModules)
+            }
             val success = trackUpdateProgress(bulkUpdateProgress)
 
             if (success) {
@@ -271,5 +275,21 @@ class ModuleListEffectHandler(
                 consumer.accept(ModuleListEvent.ModuleItemUpdateSuccess(it, published))
             } ?: consumer.accept(ModuleListEvent.ModuleItemUpdateFailed(itemId))
         }
+    }
+
+    private fun showProgressScreen(progressId: Long, skipContentTags: Boolean, action: BulkModuleUpdateAction, allModules: Boolean) {
+        val title = when {
+            allModules && skipContentTags -> R.string.allModules
+            allModules && !skipContentTags -> R.string.allModulesAndItems
+            !allModules && !skipContentTags -> R.string.selectedModulesAndItems
+            else -> R.string.selectedModules
+        }
+
+        val progressTitle = when (action) {
+            BulkModuleUpdateAction.PUBLISH -> R.string.publishing
+            BulkModuleUpdateAction.UNPUBLISH -> R.string.unpublishing
+        }
+
+        view?.showProgressDialog(progressId, title, progressTitle, R.string.moduleBulkUpdateNote)
     }
 }

@@ -133,6 +133,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODEL
+    implementation 'androidx.compose.ui:ui-android:1.6.0'
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT
