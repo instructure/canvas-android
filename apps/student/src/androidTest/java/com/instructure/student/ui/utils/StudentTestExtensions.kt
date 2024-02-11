@@ -303,11 +303,10 @@ fun uploadTextFile(
     }
 
     // Start the Canvas file upload process
-    return FileUploadsApi.uploadFile(
+    return StudentApiManager.uploadTextFile(
             courseId,
             assignmentId,
-            file.readBytes(),
-            file.name,
             token,
-            fileUploadType)
+            fileUploadType,
+            file)
 }

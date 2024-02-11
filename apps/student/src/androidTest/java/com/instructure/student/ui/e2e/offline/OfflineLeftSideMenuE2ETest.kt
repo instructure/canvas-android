@@ -35,6 +35,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflineLeftSideMenuE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit

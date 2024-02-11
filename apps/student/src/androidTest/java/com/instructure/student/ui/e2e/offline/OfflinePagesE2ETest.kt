@@ -26,14 +26,11 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.dataseeding.api.PagesApi
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.util.Randomizer
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertOfflineIndicator
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.waitForNetworkToGoOffline
 import com.instructure.student.ui.pages.WebViewTextCheck
+import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -43,6 +40,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflinePagesE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -59,16 +57,16 @@ class OfflinePagesE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed an UNPUBLISHED page for '${course.name}' course.")
-        val pageUnpublished = createCoursePage(course, teacher, published = false, frontPage = false)
+        val pageUnpublished = StudentApiManager.createPage(course, teacher, published = false, frontPage = false)
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED page for '${course.name}' course.")
-        val pagePublished = createCoursePage(course, teacher, published = true, frontPage = false, editingRoles = "teachers,students", body = "<h1 id=\"header1\">Regular Page Text</h1>")
+        val pagePublished = StudentApiManager.createPage(course, teacher, published = true, frontPage = false, editingRoles = "teachers,students", body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED, but NOT editable page for '${course.name}' course.")
-        val pageNotEditable = createCoursePage(course, teacher, published = true, frontPage = false, body = "<h1 id=\"header1\">Regular Page Text</h1>")
+        val pageNotEditable = StudentApiManager.createPage(course, teacher, published = true, frontPage = false, body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED, FRONT page for '${course.name}' course.")
-        val pagePublishedFront = createCoursePage(course, teacher, published = true, frontPage = true, editingRoles = "public", body = "<h1 id=\"header1\">Front Page Text</h1>")
+        val pagePublishedFront = StudentApiManager.createPage(course, teacher, published = true, frontPage = true, editingRoles = "public", body = "<h1 id=\"header1\">Front Page Text</h1>")
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -167,21 +165,5 @@ class OfflinePagesE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
         turnOnConnectionViaADB()
     }
-
-    private fun createCoursePage(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel,
-        published: Boolean,
-        frontPage: Boolean,
-        editingRoles: String? = null,
-        body: String = Randomizer.randomPageBody()
-    ) = PagesApi.createCoursePage(
-        courseId = course.id,
-        published = published,
-        frontPage = frontPage,
-        editingRoles = editingRoles,
-        token = teacher.token,
-        body = body
-    )
 
 }

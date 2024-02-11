@@ -25,7 +25,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -51,7 +51,7 @@ class AnnouncementsE2ETest : StudentTest() {
         val course = data.coursesList[0]
         val announcement = data.announcementsList[0]
 
-        val lockedAnnouncement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token, locked = true)
+        val lockedAnnouncement = StudentApiManager.createAnnouncement(course, teacher, locked = true)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)

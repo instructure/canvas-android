@@ -33,6 +33,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflinePeopleE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit

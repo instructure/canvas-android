@@ -23,8 +23,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.dataseeding.api.ConversationsApi
-import com.instructure.dataseeding.api.GroupsApi
+import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -50,20 +49,17 @@ class DashboardE2ETest : StudentTest() {
         val course2 = data.coursesList[1]
 
         Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
-        ConversationsApi.createConversation(
-                token = teacher.token,
-                recipients = listOf(student.id.toString())
-        )
+        StudentApiManager.createConversation(token = teacher.token, recipients = listOf(student.id.toString()))
 
         Log.d(PREPARATION_TAG,"Seed some group info.")
-        val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
-        val groupCategory2 = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
-        val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
-        val group2 = GroupsApi.createGroup(groupCategory2.id, teacher.token)
+        val groupCategory = StudentApiManager.createCourseGroupCategory(data.coursesList[0], teacher.token)
+        val groupCategory2 = StudentApiManager.createCourseGroupCategory(data.coursesList[0], teacher.token)
+        val group = StudentApiManager.createGroup(groupCategory, teacher.token)
+        val group2 = StudentApiManager.createGroup(groupCategory2, teacher.token)
 
         Log.d(PREPARATION_TAG,"Create group membership for ${student.name} student.")
-        GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
-        GroupsApi.createGroupMembership(group2.id, student.id, teacher.token)
+        StudentApiManager.createGroupMembership(group, student, teacher.token)
+        StudentApiManager.createGroupMembership(group2, student, teacher.token)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)

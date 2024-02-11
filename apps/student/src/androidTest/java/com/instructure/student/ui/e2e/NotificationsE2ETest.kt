@@ -21,23 +21,12 @@ import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.ReleaseExclude
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
-import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.api.QuizzesApi
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
-import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.dataseeding.util.days
-import com.instructure.dataseeding.util.fromNow
-import com.instructure.dataseeding.util.iso8601
+import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -47,11 +36,11 @@ import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class NotificationsE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @ReleaseExclude("The notifications API sometimes is slow and the test is breaking because the notifications aren't show up in time.")
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
@@ -63,14 +52,14 @@ class NotificationsE2ETest : StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed an assignment for ${course.name} course.")
-        val testAssignment = createAssignment(course, teacher)
+        Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course.")
+        val testAssignment = StudentApiManager.createAssignment(course, teacher)
 
-        Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course with some questions.")
+        Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course with some questions.")
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG,"Create and publish a quiz with the previously seeded questions.")
-        QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
+        StudentApiManager.createAndPublishQuiz(course, teacher, quizQuestions)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -111,11 +100,11 @@ class NotificationsE2ETest : StudentTest() {
         run submitAndGradeRepeat@{
             repeat(10) {
                 try {
-                    Log.d(PREPARATION_TAG, "Submit ${testAssignment.name} assignment with student: ${student.name}.")
-                    submitAssignment(course, testAssignment, student)
+                    Log.d(PREPARATION_TAG, "Submit '${testAssignment.name}' assignment with student: '${student.name}'.")
+                    StudentApiManager.assignmentSingleSubmission(course, testAssignment, student)
 
-                    Log.d(PREPARATION_TAG, "Grade the submission of ${student.name} student for assignment: ${testAssignment.name}.")
-                    gradeSubmission(teacher, course, testAssignment, student)
+                    Log.d(PREPARATION_TAG, "Grade the submission of '${student.name}' student for assignment: '${testAssignment.name}'.")
+                    StudentApiManager.gradeSubmission(teacher, course, testAssignment, student, postedGrade = "13", excused = false)
 
                     Log.d(STEP_TAG, "Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
                     sleep(3000) //Let the submission api do it's job
@@ -127,36 +116,6 @@ class NotificationsE2ETest : StudentTest() {
                 }
             }
         }
-    }
-
-    private fun gradeSubmission(
-        teacher: CanvasUserApiModel,
-        course: CourseApiModel,
-        testAssignment: AssignmentApiModel,
-        student: CanvasUserApiModel
-    ) {
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = course.id,
-            assignmentId = testAssignment.id,
-            studentId = student.id,
-            postedGrade = "13",
-            excused = false
-        )
-    }
-
-    private fun submitAssignment(
-        course: CourseApiModel,
-        testAssignment: AssignmentApiModel,
-        student: CanvasUserApiModel
-    ) {
-        SubmissionsApi.submitCourseAssignment(
-            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
-            courseId = course.id,
-            assignmentId = testAssignment.id,
-            studentToken = student.token,
-            fileIds = emptyList<Long>().toMutableList()
-        )
     }
 
     private fun makeQuizQuestions() = listOf(
@@ -181,21 +140,4 @@ class NotificationsE2ETest : StudentTest() {
             )
         )
     )
-
-    private fun createAssignment(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ) : AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 15.0,
-                dueAt = 1.days.fromNow.iso8601
-            )
-        )
-    }
-
 }

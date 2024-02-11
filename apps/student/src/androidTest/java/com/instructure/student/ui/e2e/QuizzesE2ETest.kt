@@ -36,13 +36,13 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.isElementDisplayed
 import com.instructure.dataseeding.api.QuizzesApi
-import com.instructure.dataseeding.api.QuizzesApi.createAndPublishQuiz
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
+import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -57,7 +57,7 @@ class QuizzesE2ETest: StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    // Fairly basic test of webview-based quizzes.  Seeds/takes a quiz with two multiple-choice
+    // Fairly basic test of web view-based quizzes.  Seeds/takes a quiz with two multiple-choice
     // questions.
     //
     // STUBBING THIS OUT.  Usually passes locally, but I can't get a simple webClick() to work on FTL.
@@ -75,13 +75,13 @@ class QuizzesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
-        val quizUnpublished = createQuiz(course, teacher, withDescription = true, published = false)
+        val quizUnpublished = StudentApiManager.createQuiz(course, teacher, published = false)
 
         Log.d(PREPARATION_TAG,"Seed another quiz for ${course.name} with some questions.")
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG,"Publish the previously seeded quiz.")
-        val quizPublished = createAndPublishQuiz(course.id, teacher.token, quizQuestions)
+        val quizPublished = StudentApiManager.createAndPublishQuiz(course, teacher, quizQuestions)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -181,6 +181,7 @@ class QuizzesE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Select ${quizPublished.title} quiz.")
         quizListPage.selectQuiz(quizPublished)
 
+        sleep(5000)
         Log.d(STEP_TAG,"Assert (on web) that the ${quizPublished.title} quiz now has a history.")
         onWebView(withId(R.id.contentWebView))
                 .withElement(findElement(Locator.ID, "quiz-submission-version-table"))

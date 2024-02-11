@@ -35,6 +35,7 @@ import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class OfflineCourseBrowserE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit

@@ -9,20 +9,12 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
-import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.dataseeding.util.days
-import com.instructure.dataseeding.util.fromNow
-import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.R
+import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -31,6 +23,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class GradesE2ETest: StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -46,9 +39,9 @@ class GradesE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val assignment = createAssignment(course, teacher)
-        val assignment2 = createAssignment(course, teacher)
+        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        val assignment = StudentApiManager.createAssignment(course, teacher, withDescription = true, gradingType = GradingType.PERCENT)
+        val assignment2 = StudentApiManager.createAssignment(course, teacher, withDescription = true, gradingType = GradingType.PERCENT)
 
         Log.d(PREPARATION_TAG,"Create a quiz with some questions.")
         val quizQuestions = makeQuizQuestions()
@@ -60,7 +53,7 @@ class GradesE2ETest: StudentTest() {
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Select ${course.name} course.")
+        Log.d(STEP_TAG,"Select '${course.name}' course.")
         dashboardPage.selectCourse(course)
 
         Log.d(STEP_TAG,"Navigate to Grades Page.")
@@ -71,7 +64,7 @@ class GradesE2ETest: StudentTest() {
 
         val assignmentMatcher = withText(assignment.name)
         val quizMatcher = withText(quiz.title)
-        Log.d(STEP_TAG,"Refresh the page. Assert that the ${assignment.name} assignment and ${quiz.title} quiz are displayed and there is no grade for them.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the '${assignment.name}' assignment and '${quiz.title}' quiz are displayed and there is no grade for them.")
         courseGradesPage.refresh()
         courseGradesPage.assertItemDisplayed(assignmentMatcher)
         courseGradesPage.assertGradeNotDisplayed(assignmentMatcher)
@@ -81,7 +74,7 @@ class GradesE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Check in the 'What-If Score' checkbox.")
         courseGradesPage.toggleWhatIf()
 
-        Log.d(STEP_TAG,"Enter '12' as a what-if grade for ${assignment.name} assignment.")
+        Log.d(STEP_TAG,"Enter '12' as a what-if grade for '${assignment.name}' assignment.")
         courseGradesPage.enterWhatIfGrade(assignmentMatcher, "12")
 
         Log.d(STEP_TAG,"Assert that 'Total Grade' contains the score '80%'.")
@@ -94,10 +87,10 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.assertTotalGrade(withText(R.string.noGradeText))
 
         Log.d(PREPARATION_TAG,"Seed a submission for '${assignment.name}' assignment.")
-        submitAssignment(course, assignment, student)
+        StudentApiManager.assignmentSingleSubmission(course, assignment, student)
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignment.name}' assignment.")
-        gradeSubmission(teacher, course, assignment, student, "9",false)
+        StudentApiManager.gradeSubmission(teacher, course, assignment, student, "9", false)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the assignment's score is '60%'.")
         courseGradesPage.refresh()
@@ -114,10 +107,10 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("60"))
 
         Log.d(PREPARATION_TAG,"Seed a submission for '${assignment2.name}' assignment.")
-        submitAssignment(course, assignment2, student)
+        StudentApiManager.assignmentSingleSubmission(course, assignment2, student)
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignment2.name}' assignment.")
-        gradeSubmission(teacher, course, assignment2, student, "10", excused = false)
+        StudentApiManager.gradeSubmission(teacher, course, assignment2, student, "10", false)
 
         Log.d(STEP_TAG,"Assert that we can see the correct score at the '${assignment2.name}' assignment (66.67%) and at the total score as well (63.33%).")
         courseGradesPage.refresh()
@@ -128,13 +121,13 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("63.33"))
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignment.name}' assignment.")
-        gradeSubmission(teacher, course, assignment, student, excused = true)
+        StudentApiManager.gradeSubmission(teacher, course, assignment, student, excused = true)
         courseGradesPage.refresh()
 
         Log.d(STEP_TAG,"Assert that we can see the correct score (66.67%).")
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("66.67"))
 
-        gradeSubmission(teacher, course, assignment, student, "9",false)
+        StudentApiManager.gradeSubmission(teacher, course, assignment, student, "9", false)
         courseGradesPage.refresh()
 
         Log.d(STEP_TAG,"Assert that we can see the correct score (63.33%).")
@@ -194,54 +187,4 @@ class GradesE2ETest: StudentTest() {
 
         )
     )
-
-    private fun createAssignment(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ): AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = true,
-                dueAt = 1.days.fromNow.iso8601,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                teacherToken = teacher.token,
-                gradingType = GradingType.PERCENT,
-                pointsPossible = 15.0
-            )
-        )
-    }
-
-    private fun submitAssignment(
-        course: CourseApiModel,
-        assignment: AssignmentApiModel,
-        student: CanvasUserApiModel
-    ) {
-        SubmissionsApi.submitCourseAssignment(
-            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
-            courseId = course.id,
-            assignmentId = assignment.id,
-            fileIds = mutableListOf(),
-            studentToken = student.token
-        )
-    }
-
-    private fun gradeSubmission(
-        teacher: CanvasUserApiModel,
-        course: CourseApiModel,
-        assignment: AssignmentApiModel,
-        student: CanvasUserApiModel,
-        postedGrade: String? = null,
-        excused: Boolean,
-    ) {
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = course.id,
-            assignmentId = assignment.id,
-            studentId = student.id,
-            postedGrade = postedGrade,
-            excused = excused
-        )
-    }
-
 }

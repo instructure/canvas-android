@@ -39,19 +39,19 @@ object AssignmentsApi {
             = CanvasNetworkAdapter.retrofitWithToken(token).create(AssignmentsService::class.java)
 
     data class CreateAssignmentRequest(
-            val courseId : Long,
-            val withDescription: Boolean = false,
-            val lockAt: String = "",
-            val unlockAt: String = "",
-            val dueAt: String = "",
-            val submissionTypes: List<SubmissionType>,
-            val gradingType: GradingType = GradingType.POINTS,
-            val allowedExtensions: List<String>? = null,
-            val teacherToken: String,
-            val groupCategoryId: Long? = null,
-            val pointsPossible: Double? = null,
-            val importantDate: Boolean? = null,
-            val assignmentGroupId: Long? = null)
+        val courseId: Long,
+        val withDescription: Boolean = false,
+        val lockAt: String = "",
+        val unlockAt: String = "",
+        val dueAt: String = "",
+        val submissionTypes: List<SubmissionType>,
+        val gradingType: GradingType = GradingType.POINTS,
+        val allowedExtensions: List<String>? = null,
+        val teacherToken: String,
+        val groupCategoryId: Long? = null,
+        val pointsPossible: Double? = null,
+        val importantDate: Boolean? = null,
+        val assignmentGroupId: Long? = null)
 
     fun createAssignment(request: CreateAssignmentRequest): AssignmentApiModel {
         return createAssignment(

@@ -21,18 +21,16 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.toDate
-import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.pages.ElementaryDashboardPage
+import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -43,13 +41,14 @@ import java.util.*
 
 @HiltAndroidTest
 class ImportantDatesE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.IMPORTANT_DATES)
     fun importantDatesE2ETest() {
 
         Log.d(PREPARATION_TAG,"Seeding data for K5 sub-account.")
@@ -67,17 +66,17 @@ class ImportantDatesE2ETest : StudentTest() {
         val elementaryCourse3 = data.coursesList[2]
         val elementaryCourse4 = data.coursesList[3]
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for ${elementaryCourse1.name} course.")
-        val testAssignment1 = createAssignment(elementaryCourse1.id,teacher, GradingType.POINTS, 100.0, 3.days.fromNow.iso8601, importantDate = true)
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse1.name}' course.")
+        val testAssignment1 = StudentApiManager.createAssignment(elementaryCourse1, teacher, GradingType.POINTS, 100.0, 3.days.fromNow.iso8601, importantDate = true)
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for ${elementaryCourse2.name} course.")
-        val testAssignment2 = createAssignment(elementaryCourse2.id,teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse2.name}' course.")
+        val testAssignment2 = StudentApiManager.createAssignment(elementaryCourse2, teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for ${elementaryCourse3.name} course.")
-        val testAssignment3 = createAssignment(elementaryCourse3.id,teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse3.name}' course.")
+        val testAssignment3 = StudentApiManager.createAssignment(elementaryCourse3, teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' NOT IMPORTANT assignment for ${elementaryCourse4.name} course.")
-        val testNotImportantAssignment = createAssignment(elementaryCourse4.id,teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = false)
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' NOT IMPORTANT assignment for '${elementaryCourse4.name}' course.")
+        val testNotImportantAssignment = StudentApiManager.createAssignment(elementaryCourse4, teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = false)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)
@@ -87,7 +86,7 @@ class ImportantDatesE2ETest : StudentTest() {
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.IMPORTANT_DATES)
         importantDatesPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the important date assignments are displayed and the 'not' important (${testNotImportantAssignment.name}) is not displayed.")
+        Log.d(STEP_TAG, "Assert that the important date assignments are displayed and the 'not' important one, '${testNotImportantAssignment.name}' is not displayed.")
         importantDatesPage.assertItemDisplayed(testAssignment1.name)
         importantDatesPage.assertItemDisplayed(testAssignment2.name)
         importantDatesPage.assertItemDisplayed(testAssignment3.name)
@@ -107,7 +106,7 @@ class ImportantDatesE2ETest : StudentTest() {
         importantDatesPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Refresh the Important Dates page. Assert that the corresponding items" +
-                "(all the assignments, except ${testNotImportantAssignment.name} named assignment) and their labels are still displayed after the refresh.")
+                "(all the assignments, except '${testNotImportantAssignment.name}' named assignment) and their labels are still displayed after the refresh.")
         importantDatesPage.pullToRefresh()
         importantDatesPage.assertItemDisplayed(testAssignment1.name)
         importantDatesPage.assertItemDisplayed(testAssignment2.name)
@@ -118,32 +117,10 @@ class ImportantDatesE2ETest : StudentTest() {
         importantDatesPage.assertRecyclerViewItemCount(3)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment1.dueAt.toDate()))
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment2.dueAt.toDate()))
-
     }
 
     private fun generateDayString(date: Date?): String {
         return SimpleDateFormat("EEEE, MMMM dd", Locale.getDefault()).format(date)
-    }
-
-    private fun createAssignment(
-        courseId: Long,
-        teacher: CanvasUserApiModel,
-        gradingType: GradingType,
-        pointsPossible: Double,
-        dueAt: String,
-        importantDate: Boolean
-    ): AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = courseId,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = gradingType,
-                teacherToken = teacher.token,
-                pointsPossible = pointsPossible,
-                dueAt = dueAt,
-                importantDate = importantDate
-            )
-        )
     }
 }
 
