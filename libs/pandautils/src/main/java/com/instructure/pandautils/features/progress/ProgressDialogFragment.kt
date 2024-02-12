@@ -59,9 +59,6 @@ class ProgressDialogFragment : BottomSheetDialogFragment() {
                 viewModel.events.collect { action ->
                     when (action) {
                         is ProgressViewModelAction.Close -> dismiss()
-                        is ProgressViewModelAction.Dummy -> {
-                            Log.d("asdfasdfgadsfsgdh", "dummy")
-                        }
                     }
                 }
             }
