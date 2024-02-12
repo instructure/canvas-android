@@ -76,7 +76,7 @@ class InterwebsToApplication : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.interwebs_to_application)
+        setContentView(binding.root)
         loadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         loadingBinding.loadingRoute.visibility = View.VISIBLE
 
