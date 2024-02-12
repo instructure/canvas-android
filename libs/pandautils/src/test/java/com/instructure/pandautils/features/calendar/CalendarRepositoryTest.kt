@@ -103,6 +103,7 @@ class CalendarRepositoryTest {
             plannableId,
             null,
             null,
+            null,
             null
         )
         return PlannerItem(

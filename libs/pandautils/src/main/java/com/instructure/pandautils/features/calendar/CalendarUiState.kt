@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.calendar
 
 import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.PlannerItem
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
@@ -170,4 +171,5 @@ sealed class CalendarViewModelAction {
     data class OpenDiscussion(val canvasContext: CanvasContext, val discussionId: Long): CalendarViewModelAction()
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String): CalendarViewModelAction()
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
+    data class OpenToDo(val canvasContext: CanvasContext, val plannerItem: PlannerItem) : CalendarViewModelAction()
 }

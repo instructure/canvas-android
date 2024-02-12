@@ -18,9 +18,11 @@ package com.instructure.student.features.calendar
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarRouter
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.todo.details.ToDoFragment
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
@@ -51,6 +53,11 @@ class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRo
 
     override fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long) {
         val route = CalendarEventFragment.makeRoute(canvasContext, eventId)
+        RouteMatcher.route(activity, route)
+    }
+
+    override fun openToDo(plannerItem: PlannerItem) {
+        val route = ToDoFragment.makeRoute(plannerItem)
         RouteMatcher.route(activity, route)
     }
 }

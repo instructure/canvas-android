@@ -13,22 +13,12 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.calendar
+package com.instructure.pandautils.features.todo.details
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.PlannerItem
-
-interface CalendarRouter {
-
-    fun openNavigationDrawer()
-
-    fun openAssignment(canvasContext: CanvasContext, assignmentId: Long)
-
-    fun openDiscussion(canvasContext: CanvasContext, discussionId: Long)
-
-    fun openQuiz(canvasContext: CanvasContext, htmlUrl: String)
-
-    fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long)
-
-    fun openToDo(plannerItem: PlannerItem)
-}
+data class ToDoUiState(
+    val title: String = "",
+    val contextName: String? = null,
+    val contextColor: Int? = null,
+    val date: String = "",
+    val description: String = ""
+)

@@ -18,6 +18,7 @@ package com.instructure.teacher.features.calendar
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.pandautils.features.calendar.CalendarRouter
 
 class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
@@ -38,6 +39,10 @@ class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
     }
 
     override fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun openToDo(plannerItem: PlannerItem) {
         TODO("Not yet implemented")
     }
 }
