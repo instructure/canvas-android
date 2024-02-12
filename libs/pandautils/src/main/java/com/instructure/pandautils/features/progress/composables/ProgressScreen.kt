@@ -95,7 +95,7 @@ fun ProgressTopBar(
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { actionHandler(ProgressAction.Close) }) {
-                Icon(Icons.Filled.Close, contentDescription = stringResource(id = R.string.a11y_closeProgress))
+                Icon(Icons.Filled.Close, contentDescription = stringResource(id = R.string.a11y_closeProgress), tint = colorResource(id = R.color.textDarkest))
             }
             Text(
                 text = title,
