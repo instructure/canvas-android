@@ -23,12 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.Progress
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.poll
-import com.instructure.pandautils.utils.retry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +31,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.roundToLong
 
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
@@ -60,7 +54,7 @@ class ProgressViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
-    private val _events = Channel<ProgressViewModelAction>(1)
+    private val _events = Channel<ProgressViewModelAction>()
     val events = _events.receiveAsFlow()
 
     init {

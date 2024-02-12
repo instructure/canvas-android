@@ -20,6 +20,7 @@ package com.instructure.pandautils.features.progress
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,9 +32,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.features.progress.composables.ProgressScreen
-import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ProgressDialogFragment : BottomSheetDialogFragment() {
@@ -53,13 +55,17 @@ class ProgressDialogFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launch {
-            viewModel.events.collect { action ->
-                when (action) {
-                    is ProgressViewModelAction.Close -> dismiss()
+            withContext(Dispatchers.Main.immediate) {
+                viewModel.events.collect { action ->
+                    when (action) {
+                        is ProgressViewModelAction.Close -> dismiss()
+                        is ProgressViewModelAction.Dummy -> {
+                            Log.d("asdfasdfgadsfsgdh", "dummy")
+                        }
+                    }
                 }
             }
         }
-
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
