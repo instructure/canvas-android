@@ -171,5 +171,5 @@ sealed class CalendarViewModelAction {
     data class OpenDiscussion(val canvasContext: CanvasContext, val discussionId: Long): CalendarViewModelAction()
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String): CalendarViewModelAction()
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
-    data class OpenToDo(val canvasContext: CanvasContext, val plannerItem: PlannerItem) : CalendarViewModelAction()
+    data class OpenToDo(val plannerItem: PlannerItem) : CalendarViewModelAction()
 }

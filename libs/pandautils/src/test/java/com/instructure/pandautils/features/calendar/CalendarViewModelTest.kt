@@ -577,7 +577,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val expectedAction = CalendarViewModelAction.OpenToDo(Course(1), plannerItem)
+        val expectedAction = CalendarViewModelAction.OpenToDo(plannerItem)
         assertEquals(expectedAction, viewModel.events.value.peekContent())
     }
 

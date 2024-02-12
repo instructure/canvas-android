@@ -303,7 +303,7 @@ class CalendarViewModel @Inject constructor(
                 }
 
                 PlannableType.PLANNER_NOTE -> {
-                    Event(CalendarViewModelAction.OpenToDo(plannerItem.canvasContext, plannerItem))
+                    Event(CalendarViewModelAction.OpenToDo(plannerItem))
                 }
 
                 else -> Event(null)
