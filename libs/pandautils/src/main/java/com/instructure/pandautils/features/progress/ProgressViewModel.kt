@@ -35,7 +35,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
-    private val progressApi: ProgressAPI.ProgressInterface
+    private val progressApi: ProgressAPI.ProgressInterface,
+    private val progressPreferences: ProgressPreferences
 ) : ViewModel() {
 
     private val progressId = stateHandle.get<Long>("progressId") ?: -1
@@ -101,6 +102,7 @@ class ProgressViewModel @Inject constructor(
     }
 
     private suspend fun cancel() {
+        progressPreferences.cancelledProgressIds = progressPreferences.cancelledProgressIds + progressId
         val params = RestParams(isForceReadFromNetwork = true)
         progressApi.cancelProgress(progressId.toString(), params).dataOrNull
         _events.send(ProgressViewModelAction.Close)

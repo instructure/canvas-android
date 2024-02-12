@@ -276,6 +276,21 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 return Next.dispatch(setOf(effect))
             }
+
+            is ModuleListEvent.BulkUpdateCancelled -> {
+                val newModel = model.copy(
+                    isLoading = true,
+                    modules = emptyList(),
+                    pageData = ModuleListPageData(forceNetwork = true),
+                    loadingModuleItemIds = emptySet()
+                )
+                val effect = ModuleListEffect.LoadNextPage(
+                    newModel.course,
+                    newModel.pageData,
+                    newModel.scrollToItemId
+                )
+                return Next.next(newModel, setOf(effect))
+            }
         }
     }
 

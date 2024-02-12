@@ -37,10 +37,8 @@ sealed class ModuleListEvent {
     data class RemoveModuleItems(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
     data class BulkUpdateModule(val moduleId: Long, val action: BulkModuleUpdateAction, val skipContentTags: Boolean) :
         ModuleListEvent()
-
     data class BulkUpdateAllModules(val action: BulkModuleUpdateAction, val skipContentTags: Boolean) :
         ModuleListEvent()
-
     data class UpdateModuleItem(val itemId: Long, val isPublished: Boolean) : ModuleListEvent()
     data class ModuleItemUpdateSuccess(val item: ModuleItem, val published: Boolean) : ModuleListEvent()
     data class ModuleItemUpdateFailed(val itemId: Long) : ModuleListEvent()
@@ -51,8 +49,8 @@ sealed class ModuleListEvent {
     ) : ModuleListEvent()
 
     data class BulkUpdateFailed(val skipContentTags: Boolean) : ModuleListEvent()
-
     data class UpdateFileModuleItem(val fileId: Long, val contentDetails: ModuleContentDetails) : ModuleListEvent()
+    object BulkUpdateCancelled: ModuleListEvent()
 }
 
 sealed class ModuleListEffect {

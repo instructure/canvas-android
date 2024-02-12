@@ -56,6 +56,7 @@ class ProgressViewModelTests {
 
     private val stateHandle: SavedStateHandle = mockk(relaxed = true)
     private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
+    private val progressPreferences: ProgressPreferences = mockk(relaxed = true)
 
     private lateinit var viewModel: ProgressViewModel
 
@@ -168,7 +169,7 @@ class ProgressViewModelTests {
         }
     }
 
-    private fun createViewModel() = ProgressViewModel(stateHandle, progressApi)
+    private fun createViewModel() = ProgressViewModel(stateHandle, progressApi, progressPreferences)
 
 
 }

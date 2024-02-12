@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.pandautils.features.progress.ProgressPreferences
 import com.instructure.pandautils.utils.poll
 import com.instructure.pandautils.utils.retry
 import com.instructure.teacher.R
@@ -233,7 +234,12 @@ class ModuleListEffectHandler(
             if (success) {
                 consumer.accept(ModuleListEvent.BulkUpdateSuccess(skipContentTags, action, allModules))
             } else {
-                consumer.accept(ModuleListEvent.BulkUpdateFailed(skipContentTags))
+                if (ProgressPreferences.cancelledProgressIds.contains(bulkUpdateProgress.id)) {
+                    consumer.accept(ModuleListEvent.BulkUpdateCancelled)
+                    ProgressPreferences.cancelledProgressIds = ProgressPreferences.cancelledProgressIds - bulkUpdateProgress.id
+                } else {
+                    consumer.accept(ModuleListEvent.BulkUpdateFailed(skipContentTags))
+                }
             }
         }
     }

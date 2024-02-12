@@ -877,5 +877,37 @@ class ModuleListUpdateTest : Assert() {
             )
     }
 
+    @Test
+    fun `BulkUpdateCancelled emits LoadNextPage effect`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateCancelled)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
 
 }

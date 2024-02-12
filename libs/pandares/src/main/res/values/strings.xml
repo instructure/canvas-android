@@ -1561,7 +1561,7 @@
     <string name="allModulesAndAllItemsUnpublished">All Modules and all Items unpublished</string>
     <string name="inherit_from_course">Inherit from Course</string>
     <string name="course_members">Course Members</string>
-    <string name="institution_members">Institutions Members</string>
+    <string name="institution_members">Institution Members</string>
     <string name="public_title">Public</string>
     <string name="edit_permissions">Edit Permissions</string>
     <string name="update">Update</string>
