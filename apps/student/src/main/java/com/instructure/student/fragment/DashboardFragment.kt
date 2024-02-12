@@ -25,6 +25,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkInfo.State
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
@@ -98,6 +101,9 @@ class DashboardFragment : ParentFragment() {
 
     @Inject
     lateinit var workManager: WorkManager
+
+    @Inject
+    lateinit var firebaseCrashlytics: FirebaseCrashlytics
 
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
@@ -357,6 +363,10 @@ class DashboardFragment : ParentFragment() {
         addItemTouchHelperForCardReorder()
     }
 
+    fun cancelCardDrag() {
+        recyclerBinding.listView.onTouchEvent(MotionEvent.obtain(0L, 0L, ACTION_CANCEL, 0f, 0f, 0))
+    }
+
     private fun addItemTouchHelperForCardReorder() {
         val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP,
@@ -414,10 +424,17 @@ class DashboardFragment : ParentFragment() {
             ) {
                 val finishingPosition = viewHolder.bindingAdapterPosition
 
+                if (finishingPosition == RecyclerView.NO_POSITION) {
+                    itemToMove = null
+                    firebaseCrashlytics.recordException(Throwable("Failed to reorder dashboard. finishingPosition == RecyclerView.NO_POSITION"))
+                    toast(R.string.failedToUpdateDashboardOrder)
+                    return
+                }
+
                 itemToMove?.let {
                     recyclerAdapter?.moveItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, it, finishingPosition - 1)
                     recyclerAdapter?.notifyDataSetChanged()
-                    itemToMove == null
+                    itemToMove = null
                 }
 
                 val courseItems = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)
