@@ -138,22 +138,24 @@ fun ToDoScreen(
                             color = colorResource(id = R.color.textDarkest),
                             fontSize = 16.sp
                         )
-                        Spacer(modifier = Modifier.height(28.dp))
-                        Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = stringResource(id = R.string.todoDescriptionLabel),
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = colorResource(id = R.color.textDark),
-                            fontSize = 14.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = toDoUiState.description,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = colorResource(id = R.color.textDarkest),
-                            fontSize = 16.sp
-                        )
+                        if (toDoUiState.description.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(28.dp))
+                            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+                            Spacer(modifier = Modifier.height(24.dp))
+                            Text(
+                                text = stringResource(id = R.string.todoDescriptionLabel),
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                color = colorResource(id = R.color.textDark),
+                                fontSize = 14.sp
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = toDoUiState.description,
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                color = colorResource(id = R.color.textDarkest),
+                                fontSize = 16.sp
+                            )
+                        }
                     }
                 }
             }
