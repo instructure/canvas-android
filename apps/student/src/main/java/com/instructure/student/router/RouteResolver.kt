@@ -12,6 +12,7 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
+import com.instructure.pandautils.features.todo.details.ToDoFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -33,7 +34,33 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.AccountPreferencesFragment
+import com.instructure.student.fragment.AnnouncementListFragment
+import com.instructure.student.fragment.AssignmentBasicFragment
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.CalendarEventFragment
+import com.instructure.student.fragment.CourseSettingsFragment
+import com.instructure.student.fragment.CreateAnnouncementFragment
+import com.instructure.student.fragment.CreateDiscussionFragment
+import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.DiscussionsReplyFragment
+import com.instructure.student.fragment.DiscussionsUpdateFragment
+import com.instructure.student.fragment.EditPageDetailsFragment
+import com.instructure.student.fragment.InboxComposeMessageFragment
+import com.instructure.student.fragment.InboxConversationFragment
+import com.instructure.student.fragment.InboxRecipientsFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.ProfileSettingsFragment
+import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.ToDoListFragment
+import com.instructure.student.fragment.UnknownItemFragment
+import com.instructure.student.fragment.UnsupportedFeatureFragment
+import com.instructure.student.fragment.UnsupportedTabFragment
+import com.instructure.student.fragment.ViewHtmlFragment
+import com.instructure.student.fragment.ViewImageFragment
+import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
@@ -48,11 +75,9 @@ import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 
 object RouteResolver {
 
-
     fun getFragment(route: Route): Fragment? {
         return getFragment(route.canvasContext, route)
     }
-
 
     fun getFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return if (canvasContext == null && route.canvasContext == null) { // Typically areas like inbox or notifications where a canvasContext may not apply
@@ -118,6 +143,7 @@ object RouteResolver {
             cls.isA<FileListFragment>() -> FileListFragment.newInstance(route)
             cls.isA<FileSearchFragment>() -> FileSearchFragment.newInstance(route)
             cls.isA<CalendarEventFragment>() -> CalendarEventFragment.newInstance(route)
+            cls.isA<ToDoFragment>() -> ToDoFragment.newInstance(route)
             cls.isA<ComposeCalendarFragment>() -> ComposeCalendarFragment.newInstance(route)
             cls.isA<FileDetailsFragment>() -> FileDetailsFragment.newInstance(route)
             cls.isA<ViewImageFragment>() -> ViewImageFragment.newInstance(route)

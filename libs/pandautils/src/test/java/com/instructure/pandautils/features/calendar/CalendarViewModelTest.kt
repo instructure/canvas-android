@@ -569,6 +569,18 @@ class CalendarViewModelTest {
         assertEquals(expectedAction, viewModel.events.value.peekContent())
     }
 
+    @Test
+    fun `Open calendar todo when calendar todo is selected`() {
+        val plannerItem = createPlannerItem(1, 1, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12))
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(plannerItem)
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.EventSelected(1))
+
+        val expectedAction = CalendarViewModelAction.OpenToDo(plannerItem)
+        assertEquals(expectedAction, viewModel.events.value.peekContent())
+    }
+
     private fun initViewModel() {
         viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock)
     }
@@ -594,7 +606,8 @@ class CalendarViewModelTest {
             plannableId,
             date.toApiString(),
             startAt,
-            endAt
+            endAt,
+            "details"
         )
         return PlannerItem(
             courseId,

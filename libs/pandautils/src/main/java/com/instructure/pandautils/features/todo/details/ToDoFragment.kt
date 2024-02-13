@@ -13,9 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-@file:OptIn(ExperimentalFoundationApi::class)
-
-package com.instructure.pandautils.features.calendar
+package com.instructure.pandautils.features.todo.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,35 +23,28 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
-import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
+import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_TODO
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.calendar.composables.CalendarScreen
+import com.instructure.pandautils.features.todo.details.composables.ToDoScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
-@ScreenView(SCREEN_VIEW_CALENDAR)
-@PageView(url = "calendar")
-class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+@ScreenView(SCREEN_VIEW_CALENDAR_TODO)
+class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
-    private val viewModel: CalendarViewModel by viewModels()
-
-    @Inject
-    lateinit var calendarRouter: CalendarRouter
+    private val viewModel: ToDoViewModel by viewModels()
 
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
@@ -61,48 +52,26 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    event.getContentIfNotHandled()?.let {
-                        handleAction(it)
-                    }
-                }
-            }
-        }
-
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CalendarScreen(title(), uiState, actionHandler = {
-                    viewModel.handleAction(it)
-                }) {
-                    calendarRouter.openNavigationDrawer()
+                ToDoScreen(title(), uiState) {
+                    activity?.onBackPressed()
                 }
             }
-        }
-    }
-
-    private fun handleAction(action: CalendarViewModelAction) {
-        when (action) {
-            is CalendarViewModelAction.OpenAssignment -> calendarRouter.openAssignment(action.canvasContext, action.assignmentId)
-            is CalendarViewModelAction.OpenDiscussion -> calendarRouter.openDiscussion(action.canvasContext, action.discussionId)
-            is CalendarViewModelAction.OpenQuiz -> calendarRouter.openQuiz(action.canvasContext, action.htmlUrl)
-            is CalendarViewModelAction.OpenCalendarEvent -> calendarRouter.openCalendarEvent(action.canvasContext, action.eventId)
-            is CalendarViewModelAction.OpenToDo -> calendarRouter.openToDo(action.plannerItem)
         }
     }
 
     override val navigation: Navigation?
         get() = activity as? Navigation
 
-    override fun title(): String = getString(R.string.calendar)
+    override fun title(): String = getString(R.string.userCalendarToDo)
 
     override fun applyTheme() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
     }
 
-    override fun getFragment(): Fragment? {
+    override fun getFragment(): Fragment {
         return this
     }
 
@@ -111,8 +80,12 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     }
 
     companion object {
-        fun newInstance(route: Route) = ComposeCalendarFragment()
+        internal const val PLANNER_ITEM = "PLANNER_ITEM"
+        fun newInstance(route: Route) = ToDoFragment().withArgs(route.arguments)
 
-        fun makeRoute() = Route(ComposeCalendarFragment::class.java, null)
+        fun makeRoute(plannerItem: PlannerItem): Route {
+            val bundle = bundleOf(PLANNER_ITEM to plannerItem)
+            return Route(ToDoFragment::class.java, null, bundle)
+        }
     }
 }

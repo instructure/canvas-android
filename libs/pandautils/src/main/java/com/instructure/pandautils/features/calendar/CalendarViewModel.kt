@@ -302,6 +302,10 @@ class CalendarViewModel @Inject constructor(
                     Event(CalendarViewModelAction.OpenCalendarEvent(plannerItem.canvasContext, plannerItem.plannable.id))
                 }
 
+                PlannableType.PLANNER_NOTE -> {
+                    Event(CalendarViewModelAction.OpenToDo(plannerItem))
+                }
+
                 else -> Event(null)
             }
 

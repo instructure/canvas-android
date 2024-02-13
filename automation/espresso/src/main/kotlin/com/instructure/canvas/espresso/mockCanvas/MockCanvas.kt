@@ -22,7 +22,64 @@ import android.util.Log
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.AnnotationMetadata
+import com.instructure.canvasapi2.models.AnnotationUrls
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentDueDate
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.Bookmark
+import com.instructure.canvasapi2.models.CanvasColor
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.DiscussionTopicPermission
+import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.Grades
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.LockInfo
+import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Plannable
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizAnswer
+import com.instructure.canvasapi2.models.QuizQuestion
+import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.QuizSubmissionAnswer
+import com.instructure.canvasapi2.models.QuizSubmissionQuestion
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.Term
+import com.instructure.canvasapi2.models.TermsOfService
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocInkList
@@ -35,7 +92,10 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.threeten.bp.OffsetDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.UUID
 import kotlin.random.Random
 
 class MockCanvas {
@@ -2029,7 +2089,7 @@ fun MockCanvas.addSubmissionStreamItem(
     return item
 }
 
-fun MockCanvas.addTodo(name: String, userId: Long, courseId: Long? = null, date: Date? = null): PlannerItem {
+fun MockCanvas.addTodo(name: String, userId: Long, courseId: Long? = null, date: Date? = null, details: String? = null): PlannerItem {
     val todo = PlannerItem(
         courseId,
         null,
@@ -2037,7 +2097,7 @@ fun MockCanvas.addTodo(name: String, userId: Long, courseId: Long? = null, date:
         null,
         null,
         PlannableType.TODO,
-        Plannable(newItemId(), name, courseId, null, userId, null, date, null, date.toApiString(), null, null),
+        Plannable(newItemId(), name, courseId, null, userId, null, date, null, date.toApiString(), null, null, details),
         date ?: Date(),
         null,
         null,

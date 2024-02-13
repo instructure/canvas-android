@@ -1510,4 +1510,7 @@
     <string name="calendarPageError">There was an error loading your calendar</string>
     <string name="calendarPageErrorRetry">Retry</string>
     <string name="calendarRefreshFailed">Failed to refresh calendar</string>
+
+    <string name="todoDateLabel">Date</string>
+    <string name="todoDescriptionLabel">Description</string>
 </resources>
