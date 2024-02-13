@@ -98,7 +98,7 @@ class ToDoViewModelTest {
             title = "Title",
             contextName = "Context name",
             contextColor = ThemedColor(0).light,
-            date = "12 Feb 2024 at 12:00 PM",
+            date = "Feb 12 at 12:00 PM",
             description = "Description"
         )
 

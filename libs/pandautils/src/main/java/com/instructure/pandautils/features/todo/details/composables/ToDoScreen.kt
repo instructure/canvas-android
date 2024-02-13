@@ -72,6 +72,7 @@ fun ToDoScreen(
                                 }
                             ) {
                                 Text(
+                                    color = colorResource(id = R.color.textDarkest),
                                     text = stringResource(id = R.string.edit),
                                 )
                             }
@@ -81,6 +82,7 @@ fun ToDoScreen(
                                 }
                             ) {
                                 Text(
+                                    color = colorResource(id = R.color.textDarkest),
                                     text = stringResource(id = R.string.delete),
                                 )
                             }
@@ -114,7 +116,7 @@ fun ToDoScreen(
                             fontSize = 22.sp
                         )
                         if (!toDoUiState.contextName.isNullOrEmpty() && toDoUiState.contextColor != null) {
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = toDoUiState.contextName,
                                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -156,6 +158,7 @@ fun ToDoScreen(
                                 fontSize = 16.sp
                             )
                         }
+                        Spacer(modifier = Modifier.height(24.dp))
                     }
                 }
             }

@@ -51,7 +51,7 @@ class ToDoViewModel @Inject constructor(
     private fun loadData() {
         plannerItem?.let { plannerItem ->
             val dateText = plannerItem.plannable.todoDate.toDate()?.let {
-                val dateText = DateHelper.dayMonthYearFormat.format(it)
+                val dateText = DateHelper.dayMonthDateFormat.format(it)
                 val timeText = DateHelper.getFormattedTime(context, it)
                 context.getString(R.string.calendarDate, dateText, timeText)
             }
