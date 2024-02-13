@@ -276,6 +276,28 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         ).scrollTo().click()
     }
 
+    fun clickOneDayBefore() {
+        onView(
+            withText(
+                getStringFromResource(
+                    R.string.reminderBefore,
+                    getPluralFromResource(R.plurals.reminderDay, 1, 1)
+                )
+            )
+        ).scrollTo().click()
+    }
+
+    fun clickOneWeekBefore() {
+        onView(
+            withText(
+                getStringFromResource(
+                    R.string.reminderBefore,
+                    getPluralFromResource(R.plurals.reminderWeek, 1, 1)
+                )
+            )
+        ).scrollTo().click()
+    }
+
     fun assertReminderDisplayedWithText(text: String) {
         onView(withText(text)).scrollTo().assertDisplayed()
     }
@@ -305,6 +327,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun clickHoursBefore() {
         onView(withId(R.id.hours)).scrollTo().click()
+    }
+
+    fun clickDaysBefore() {
+        onView(withId(R.id.days)).scrollTo().click()
     }
 
     fun assertDoneButtonIsDisabled() {
