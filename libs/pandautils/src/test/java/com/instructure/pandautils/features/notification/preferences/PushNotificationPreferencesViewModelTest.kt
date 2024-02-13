@@ -335,6 +335,80 @@ class PushNotificationPreferencesViewModelTest {
         assertEquals(1, viewModel.data.value?.items?.size)
     }
 
+    @Test
+    fun `Notification categories filtered correctly`() {
+        val notificationResponse = NotificationPreferenceResponse(
+            notificationPreferences = listOf(
+                NotificationPreference(notification = "notification1", category = "announcement", frequency = "immediately"),
+                NotificationPreference(notification = "notification2", category = "due_date", frequency = "immediately"),
+                NotificationPreference(notification = "notification3", category = "course_content", frequency = "immediately"),
+                NotificationPreference(notification = "notification4", category = "grading_policies", frequency = "immediately"),
+                NotificationPreference(notification = "notification5", category = "grading", frequency = "immediately"),
+                NotificationPreference(notification = "notification6", category = "calendar", frequency = "immediately"),
+                NotificationPreference(notification = "notification7", category = "invitation", frequency = "immediately"),
+                NotificationPreference(notification = "notification8", category = "registration", frequency = "immediately"),
+                NotificationPreference(notification = "notification9", category = "discussion", frequency = "immediately"),
+                NotificationPreference(notification = "notification10", category = "late_grading", frequency = "immediately"),
+                NotificationPreference(notification = "notification11", category = "submission_comment", frequency = "immediately"),
+                NotificationPreference(notification = "notification12", category = "summaries", frequency = "immediately"),
+                NotificationPreference(notification = "notification13", category = "other", frequency = "immediately"),
+                NotificationPreference(notification = "notification14", category = "reminder", frequency = "immediately"),
+                NotificationPreference(notification = "notification15", category = "membership_update", frequency = "immediately"),
+                NotificationPreference(notification = "notification16", category = "discussion_entry", frequency = "immediately"),
+                NotificationPreference(notification = "notification17", category = "migration", frequency = "immediately"),
+                NotificationPreference(notification = "notification18", category = "all_submissions", frequency = "immediately"),
+                NotificationPreference(notification = "notification19", category = "conversation_message", frequency = "immediately"),
+                NotificationPreference(notification = "notification20", category = "added_to_conversation", frequency = "immediately"),
+                NotificationPreference(notification = "notification21", category = "alert", frequency = "immediately"),
+                NotificationPreference(notification = "notification22", category = "student_appointment_signups", frequency = "immediately"),
+                NotificationPreference(notification = "notification23", category = "appointment_cancelations", frequency = "immediately"),
+                NotificationPreference(notification = "notification24", category = "appointment_availability", frequency = "immediately"),
+                NotificationPreference(notification = "notification25", category = "appointment_signups", frequency = "immediately"),
+                NotificationPreference(notification = "notification26", category = "files", frequency = "immediately"),
+                NotificationPreference(notification = "notification27", category = "announcement_created_by_you", frequency = "immediately"),
+                NotificationPreference(notification = "notification28", category = "conversation_created", frequency = "immediately"),
+                NotificationPreference(notification = "notification29", category = "recording_ready", frequency = "immediately"),
+                NotificationPreference(notification = "notification30", category = "blueprint", frequency = "immediately"),
+                NotificationPreference(notification = "notification31", category = "content_link_error", frequency = "immediately"),
+                NotificationPreference(notification = "notification32", category = "account_notification", frequency = "immediately"),
+                NotificationPreference(notification = "notification33", category = "discussion_mention", frequency = "immediately"),
+                NotificationPreference(notification = "notification34", category = "reported_reply", frequency = "immediately")
+            )
+        )
+
+        every { notificationPreferencesManager.getNotificationPreferencesAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(notificationResponse)
+        }
+
+        val viewModel = createViewModel()
+
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val expected = listOf(
+            "notification2",
+            "notification3",
+            "notification1",
+            "notification5",
+            "notification7",
+            "notification11",
+            "notification9",
+            "notification16",
+            "notification19",
+            "notification22",
+            "notification23",
+            "notification24",
+            "notification6"
+        )
+
+        val actual = viewModel.data.value?.items?.flatMap { header ->
+            header.itemViewModels.map {
+                it.data.notification
+            }
+        }
+
+        assertEquals(expected, actual)
+    }
+
     private fun createViewModel(): PushNotificationPreferencesViewModel {
         return PushNotificationPreferencesViewModel(communicationChannelsManager, notificationPreferencesManager, apiPrefs, notificationPreferenceUtils, resources)
     }
