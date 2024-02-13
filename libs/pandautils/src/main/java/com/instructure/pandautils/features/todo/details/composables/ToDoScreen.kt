@@ -16,19 +16,13 @@
 package com.instructure.pandautils.features.todo.details.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -39,18 +33,17 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.todo.details.ToDoUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 @ExperimentalFoundationApi
 @Composable
-fun ToDoScreen(
+internal fun ToDoScreen(
     title: String,
     toDoUiState: ToDoUiState,
     modifier: Modifier = Modifier,
@@ -65,7 +58,7 @@ fun ToDoScreen(
                         Text(text = title)
                     },
                     actions = {
-                        OverflowMenu {
+                        OverflowMenu(modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated))) {
                             DropdownMenuItem(
                                 onClick = {
 
@@ -101,66 +94,12 @@ fun ToDoScreen(
                 )
             },
             content = { padding ->
-                Surface(
+                ToDoContent(
+                    toDoUiState = toDoUiState,
                     modifier = modifier
                         .padding(padding)
                         .fillMaxSize(),
-                    color = colorResource(id = R.color.backgroundLightest)
-                ) {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = toDoUiState.title,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = colorResource(id = R.color.textDarkest),
-                            fontSize = 22.sp
-                        )
-                        if (!toDoUiState.contextName.isNullOrEmpty() && toDoUiState.contextColor != null) {
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = toDoUiState.contextName,
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                color = Color(toDoUiState.contextColor),
-                                fontSize = 16.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(28.dp))
-                        Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = stringResource(id = R.string.todoDateLabel),
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = colorResource(id = R.color.textDark),
-                            fontSize = 14.sp
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = toDoUiState.date,
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = colorResource(id = R.color.textDarkest),
-                            fontSize = 16.sp
-                        )
-                        if (toDoUiState.description.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(28.dp))
-                            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-                            Spacer(modifier = Modifier.height(24.dp))
-                            Text(
-                                text = stringResource(id = R.string.todoDescriptionLabel),
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                color = colorResource(id = R.color.textDark),
-                                fontSize = 14.sp
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = toDoUiState.description,
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                color = colorResource(id = R.color.textDarkest),
-                                fontSize = 16.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(24.dp))
-                    }
-                }
+                )
             }
         )
     }
@@ -169,7 +108,7 @@ fun ToDoScreen(
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
-fun CalendarPreview() {
+private fun ToDoPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
     ToDoScreen(
