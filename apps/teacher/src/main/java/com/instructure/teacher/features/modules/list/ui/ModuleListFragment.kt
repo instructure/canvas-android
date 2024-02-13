@@ -22,6 +22,7 @@ import android.os.Bundle
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.features.progress.ProgressPreferences
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
@@ -37,7 +38,10 @@ class ModuleListFragment : ModuleListMobiusFragment() {
     @Inject
     lateinit var progressApi: ProgressAPI.ProgressInterface
 
-    override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi)
+    @Inject
+    lateinit var progressPreferences: ProgressPreferences
+
+    override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi, progressPreferences)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

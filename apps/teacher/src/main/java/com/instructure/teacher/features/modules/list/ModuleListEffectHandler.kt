@@ -49,6 +49,7 @@ import java.util.Date
 class ModuleListEffectHandler(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val progressApi: ProgressAPI.ProgressInterface,
+    private val progressPreferences: ProgressPreferences
 ) : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
@@ -234,9 +235,9 @@ class ModuleListEffectHandler(
             if (success) {
                 consumer.accept(ModuleListEvent.BulkUpdateSuccess(skipContentTags, action, allModules))
             } else {
-                if (ProgressPreferences.cancelledProgressIds.contains(bulkUpdateProgress.id)) {
+                if (progressPreferences.cancelledProgressIds.contains(bulkUpdateProgress.id)) {
                     consumer.accept(ModuleListEvent.BulkUpdateCancelled)
-                    ProgressPreferences.cancelledProgressIds = ProgressPreferences.cancelledProgressIds - bulkUpdateProgress.id
+                    progressPreferences.cancelledProgressIds = progressPreferences.cancelledProgressIds - bulkUpdateProgress.id
                 } else {
                     consumer.accept(ModuleListEvent.BulkUpdateFailed(skipContentTags))
                 }

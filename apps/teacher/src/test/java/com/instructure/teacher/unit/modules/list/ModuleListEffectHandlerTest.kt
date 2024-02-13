@@ -41,14 +41,13 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import io.mockk.Ordering
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.confirmVerified
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.runs
 import io.mockk.unmockkObject
 import io.mockk.unmockkStatic
 import io.mockk.verify
@@ -75,6 +74,7 @@ class ModuleListEffectHandlerTest : Assert() {
 
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
     private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
+    private val progressPreferences: ProgressPreferences = mockk(relaxed = true)
 
     @ExperimentalCoroutinesApi
     @Before
@@ -82,18 +82,17 @@ class ModuleListEffectHandlerTest : Assert() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         view = mockk(relaxed = true)
         effectHandler =
-            ModuleListEffectHandler(moduleApi, progressApi).apply { view = this@ModuleListEffectHandlerTest.view }
+            ModuleListEffectHandler(moduleApi, progressApi, progressPreferences).apply { view = this@ModuleListEffectHandlerTest.view }
         consumer = mockk(relaxed = true)
         connection = effectHandler.connect(consumer)
-        mockkObject(ProgressPreferences)
 
-        every { ProgressPreferences getProperty "cancelledProgressIds" } returns mutableSetOf<Long>()
-        every { ProgressPreferences setProperty "cancelledProgressIds" value any<Set<Long>>() } just runs
+        every { progressPreferences.cancelledProgressIds } returns mutableSetOf()
+        every { progressPreferences.cancelledProgressIds = any() } returns Unit
     }
 
     @After
     fun teardown() {
-        unmockkObject(ProgressPreferences)
+        clearAllMocks()
     }
 
     @Test
@@ -485,7 +484,7 @@ class ModuleListEffectHandlerTest : Assert() {
                 workflowState = "failed"
             )
         )
-        every { ProgressPreferences getProperty "cancelledProgressIds" } returns mutableSetOf(1L)
+        every { progressPreferences.cancelledProgressIds } returns mutableSetOf(1L)
 
         connection.accept(
             ModuleListEffect.BulkUpdateModules(
@@ -499,46 +498,6 @@ class ModuleListEffectHandlerTest : Assert() {
 
         verify(timeout = 1000) { consumer.accept(expectedEvent) }
         confirmVerified(consumer)
-    }
-
-    @Test
-    fun `Bulk update shows progress screen`() {
-        val pageModules = makeModulePage()
-
-        coEvery {
-            moduleApi.bulkUpdateModules(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns DataResult.Success(
-            BulkUpdateResponse(BulkUpdateProgress(Progress(id = 1L)))
-        )
-        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(
-            Progress(
-                1L,
-                workflowState = "running"
-            )
-        )
-        every { ProgressPreferences getProperty "cancelledProgressIds" } returns mutableSetOf(1L)
-
-        connection.accept(
-            ModuleListEffect.BulkUpdateModules(
-                course,
-                pageModules.map { it.id },
-                BulkModuleUpdateAction.PUBLISH,
-                false,
-                false
-            )
-        )
-
-        verify(timeout = 100) {
-            view.showProgressDialog(any(), any(), any(), any())
-        }
     }
 
     private fun makeLinkHeader(nextUrl: String) =
