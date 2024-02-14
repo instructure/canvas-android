@@ -30,12 +30,12 @@ import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.pages.AssignmentListPage
-import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -70,7 +70,7 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val pointsTextAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val pointsTextAssignment = ApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -99,14 +99,14 @@ class AssignmentsE2ETest: StudentTest() {
         Espresso.pressBack()
 
         Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
-        StudentApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
 
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
 
         Log.d(PREPARATION_TAG,"Grade submission: ${pointsTextAssignment.name} with 13 points.")
-        val textGrade = StudentApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "13")
+        val textGrade = ApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "13")
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the assignment ${pointsTextAssignment.name} has been graded with 13 points.")
         assignmentDetailsPage.refresh()
@@ -130,13 +130,13 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val letterGradeTextAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
+        val letterGradeTextAssignment = ApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
 
         Log.d(PREPARATION_TAG,"Submit assignment: ${letterGradeTextAssignment.name} for student: ${student.name}.")
-        StudentApiManager.assignmentMultipleSubmissions(letterGradeTextAssignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(letterGradeTextAssignment, course, student)
 
         Log.d(PREPARATION_TAG,"Grade submission: ${letterGradeTextAssignment.name} with 13 points.")
-        val submissionGrade = StudentApiManager.gradeSubmission(teacher, course, letterGradeTextAssignment, student, "13")
+        val submissionGrade = ApiManager.gradeSubmission(teacher, course, letterGradeTextAssignment, student, "13")
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -162,7 +162,7 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val percentageFileAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.PERCENT, 25.0, allowedExtensions = listOf("txt", "pdf", "jpg"), submissionType = listOf(SubmissionType.ONLINE_UPLOAD))
+        val percentageFileAssignment = ApiManager.createAssignment(course, teacher, GradingType.PERCENT, 25.0, allowedExtensions = listOf("txt", "pdf", "jpg"), submissionType = listOf(SubmissionType.ONLINE_UPLOAD))
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -187,14 +187,14 @@ class AssignmentsE2ETest: StudentTest() {
         )
 
         Log.d(PREPARATION_TAG,"Submit ${percentageFileAssignment.name} assignment for ${student.name} student.")
-        StudentApiManager.assignmentSingleSubmission(course, percentageFileAssignment, student, mutableListOf(uploadInfo.id), SubmissionType.ONLINE_UPLOAD)
+        ApiManager.assignmentSingleSubmission(course, percentageFileAssignment, student, mutableListOf(uploadInfo.id), SubmissionType.ONLINE_UPLOAD)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the ${percentageFileAssignment.name} assignment has been submitted.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertAssignmentSubmitted()
 
         Log.d(PREPARATION_TAG,"Grade ${percentageFileAssignment.name} assignment with 22 percentage.")
-        StudentApiManager.gradeSubmission(teacher, course, percentageFileAssignment, student,"22")
+        ApiManager.gradeSubmission(teacher, course, percentageFileAssignment, student,"22")
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the ${percentageFileAssignment.name} assignment has been graded with 22 percentage.")
         assignmentDetailsPage.refresh()
@@ -234,22 +234,22 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val letterGradeTextAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
+        val letterGradeTextAssignment = ApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
 
         Log.d(PREPARATION_TAG,"Submit ${letterGradeTextAssignment.name} assignment for ${student.name} student.")
-        StudentApiManager.assignmentMultipleSubmissions(letterGradeTextAssignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(letterGradeTextAssignment, course, student)
 
         Log.d(PREPARATION_TAG,"Grade ${letterGradeTextAssignment.name} assignment with 16.")
-        StudentApiManager.gradeSubmission(teacher, course, letterGradeTextAssignment, student, "16")
+        ApiManager.gradeSubmission(teacher, course, letterGradeTextAssignment, student, "16")
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val pointsTextAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val pointsTextAssignment = ApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Submit ${pointsTextAssignment.name} assignment for ${student.name} student.")
-        StudentApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
 
         Log.d(PREPARATION_TAG,"Grade ${pointsTextAssignment.name} assignment with 13 points.")
-        StudentApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "13")
+        ApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "13")
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -277,22 +277,22 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
-        val upcomingAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
+        val upcomingAssignment = ApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
-        val missingAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0, 2.days.ago.iso8601)
+        val missingAssignment = ApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0, 2.days.ago.iso8601)
 
         Log.d(PREPARATION_TAG,"Seeding a GRADED assignment for ${course.name} course.")
-        val gradedAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
+        val gradedAssignment = ApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0)
 
         Log.d(PREPARATION_TAG,"Grade the '${gradedAssignment.name}' with '11' points out of 20.")
-        StudentApiManager.gradeSubmission(teacher, course, gradedAssignment, student, "11")
+        ApiManager.gradeSubmission(teacher, course, gradedAssignment, student, "11")
 
         Log.d(PREPARATION_TAG,"Create an Assignment Group for '${course.name}' course.")
-        val assignmentGroup = StudentApiManager.createAssignmentGroup(teacher, course)
+        val assignmentGroup = ApiManager.createAssignmentGroup(teacher, course)
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
-        val otherTypeAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0, assignmentGroupId = assignmentGroup.id)
+        val otherTypeAssignment = ApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 20.0, assignmentGroupId = assignmentGroup.id)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -397,10 +397,10 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val assignment = StudentApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val assignment = ApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
-        StudentApiManager.assignmentMultipleSubmissions(assignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(assignment, course, student)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -441,10 +441,10 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for ${course.name} course.")
-        val assignment = StudentApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val assignment = ApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
-        StudentApiManager.assignmentMultipleSubmissions(assignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(assignment, course, student)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -457,7 +457,7 @@ class AssignmentsE2ETest: StudentTest() {
             token = student.token,
             fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
-        StudentApiManager.commentOnSubmission(student, course, assignment, commentUploadInfo)
+        ApiManager.commentOnSubmission(student, course, assignment, commentUploadInfo)
 
         Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
         dashboardPage.selectCourse(course)
@@ -487,7 +487,7 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
-        val pointsTextAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val pointsTextAssignment = ApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -505,7 +505,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.clickAssignment(pointsTextAssignment)
 
         Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
-        StudentApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
 
         Log.d(STEP_TAG, "Refresh the page.")
         assignmentDetailsPage.refresh()
@@ -514,7 +514,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.assertNoAttemptSpinner()
 
         Log.d(PREPARATION_TAG,"Generate another submission for assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
-        StudentApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
 
         Log.d(STEP_TAG, "Refresh the page.")
         assignmentDetailsPage.refresh()
@@ -549,7 +549,7 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val pointsTextAssignment = StudentApiManager.createAssignment(course, teacher,  GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val pointsTextAssignment = ApiManager.createAssignment(course, teacher,  GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -578,7 +578,7 @@ class AssignmentsE2ETest: StudentTest() {
         Espresso.pressBack()
 
         Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
-        StudentApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
+        ApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
 
         Log.d(STEP_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
         assignmentDetailsPage.refresh()
@@ -586,7 +586,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
 
         Log.d(PREPARATION_TAG,"Make another submission for assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
-        val secondSubmissionAttempt = StudentApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
+        val secondSubmissionAttempt = ApiManager.assignmentMultipleSubmissions(pointsTextAssignment, course, student)
 
         Log.d(STEP_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
         assignmentDetailsPage.refresh()
@@ -642,14 +642,14 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val pointsTextAssignment = StudentApiManager.createAssignment(course, teacher,  GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val pointsTextAssignment = ApiManager.createAssignment(course, teacher,  GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(PREPARATION_TAG,"Grade submission: ${pointsTextAssignment.name} with 12 points.")
-        StudentApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "12")
+        ApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "12")
 
         Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is 80%.")
         dashboardPage.refresh()
@@ -665,28 +665,28 @@ class AssignmentsE2ETest: StudentTest() {
         dashboardPage.assertCourseGrade(course.name, "B-")
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val percentageAssignment = StudentApiManager.createAssignment(course, teacher,  GradingType.PERCENT, 15.0, 1.days.fromNow.iso8601)
+        val percentageAssignment = ApiManager.createAssignment(course, teacher,  GradingType.PERCENT, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Grade submission: ${percentageAssignment.name} with 66% of the maximum points (aka. 10).")
-        StudentApiManager.gradeSubmission(teacher, course, percentageAssignment, student, "10")
+        ApiManager.gradeSubmission(teacher, course, percentageAssignment, student, "10")
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val letterGradeAssignment = StudentApiManager.createAssignment(course, teacher,  GradingType.LETTER_GRADE, 15.0, 1.days.fromNow.iso8601)
+        val letterGradeAssignment = ApiManager.createAssignment(course, teacher,  GradingType.LETTER_GRADE, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Grade submission: ${letterGradeAssignment.name} with C.")
-        StudentApiManager.gradeSubmission(teacher, course, letterGradeAssignment, student, "C")
+        ApiManager.gradeSubmission(teacher, course, letterGradeAssignment, student, "C")
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val passFailAssignment = StudentApiManager.createAssignment(course, teacher,  GradingType.PASS_FAIL, 15.0, 1.days.fromNow.iso8601)
+        val passFailAssignment = ApiManager.createAssignment(course, teacher,  GradingType.PASS_FAIL, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Grade submission: ${passFailAssignment.name} with 'Incomplete'.")
-        StudentApiManager.gradeSubmission(teacher, course, passFailAssignment, student, "Incomplete")
+        ApiManager.gradeSubmission(teacher, course, passFailAssignment, student, "Incomplete")
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
-        val gpaScaleAssignment = StudentApiManager.createAssignment(course, teacher,  GradingType.GPA_SCALE, 15.0, 1.days.fromNow.iso8601)
+        val gpaScaleAssignment = ApiManager.createAssignment(course, teacher,  GradingType.GPA_SCALE, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Grade submission: ${gpaScaleAssignment.name} with 3.7.")
-        StudentApiManager.gradeSubmission(teacher, course, gpaScaleAssignment, student, "3.7")
+        ApiManager.gradeSubmission(teacher, course, gpaScaleAssignment, student, "3.7")
 
         Log.d(STEP_TAG, "Refresh the Dashboard page to let the newly added submissions and their grades propagate.")
         dashboardPage.refresh()
@@ -798,14 +798,14 @@ class AssignmentsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
-        val pointsTextAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
+        val pointsTextAssignment = ApiManager.createAssignment(course, teacher, GradingType.POINTS, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(PREPARATION_TAG, "Grade submission: ${pointsTextAssignment.name} with 12 points.")
-        StudentApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "12")
+        ApiManager.gradeSubmission(teacher, course, pointsTextAssignment, student, "12")
 
         Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
         val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
@@ -817,28 +817,28 @@ class AssignmentsE2ETest: StudentTest() {
         dashboardPage.assertCourseGrade(course.name, "B-")
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
-        val percentageAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.PERCENT, 15.0, 1.days.fromNow.iso8601)
+        val percentageAssignment = ApiManager.createAssignment(course, teacher, GradingType.PERCENT, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Grade submission: ${percentageAssignment.name} with 66% of the maximum points (aka. 10).")
-        StudentApiManager.gradeSubmission(teacher, course, percentageAssignment, student, "10")
+        ApiManager.gradeSubmission(teacher, course, percentageAssignment, student, "10")
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
-        val letterGradeAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 15.0, 1.days.fromNow.iso8601)
+        val letterGradeAssignment = ApiManager.createAssignment(course, teacher, GradingType.LETTER_GRADE, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Grade submission: ${letterGradeAssignment.name} with C.")
-        StudentApiManager.gradeSubmission(teacher, course, letterGradeAssignment, student, "C")
+        ApiManager.gradeSubmission(teacher, course, letterGradeAssignment, student, "C")
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
-        val passFailAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.PASS_FAIL, 15.0, 1.days.fromNow.iso8601)
+        val passFailAssignment = ApiManager.createAssignment(course, teacher, GradingType.PASS_FAIL, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Grade submission: ${passFailAssignment.name} with 'Incomplete'.")
-        StudentApiManager.gradeSubmission(teacher, course, passFailAssignment, student, "Incomplete")
+        ApiManager.gradeSubmission(teacher, course, passFailAssignment, student, "Incomplete")
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
-        val gpaScaleAssignment = StudentApiManager.createAssignment(course, teacher, GradingType.GPA_SCALE, 15.0, 1.days.fromNow.iso8601)
+        val gpaScaleAssignment = ApiManager.createAssignment(course, teacher, GradingType.GPA_SCALE, 15.0, 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Grade submission: ${gpaScaleAssignment.name} with 3.7.")
-        StudentApiManager.gradeSubmission(teacher, course, gpaScaleAssignment, student, "3.7")
+        ApiManager.gradeSubmission(teacher, course, gpaScaleAssignment, student, "3.7")
 
         Log.d(STEP_TAG, "Refresh the Dashboard page to let the newly added submissions and their grades propagate.")
         dashboardPage.refresh()

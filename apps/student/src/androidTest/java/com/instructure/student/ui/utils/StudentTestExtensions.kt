@@ -31,6 +31,7 @@ import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
@@ -303,7 +304,7 @@ fun uploadTextFile(
     }
 
     // Start the Canvas file upload process
-    return StudentApiManager.uploadTextFile(
+    return ApiManager.uploadTextFile(
             courseId,
             assignmentId,
             token,

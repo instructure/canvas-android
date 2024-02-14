@@ -30,8 +30,8 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
-import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -261,15 +261,15 @@ class LoginE2ETest : StudentTest() {
         val enrollmentsService = retrofitClient.create(EnrollmentsApi.EnrollmentsService::class.java)
 
         Log.d(PREPARATION_TAG,"Create student, teacher, and a course via API.")
-        val student = StudentApiManager.createUserWithCustomService(customUserService = userService, userDomain = domain)
-        val teacher = StudentApiManager.createUserWithCustomService(customUserService = userService, userDomain = domain)
-        val course = StudentApiManager.createCourseWithCustomService(coursesService = coursesService)
+        val student = ApiManager.createUserWithCustomService(customUserService = userService, userDomain = domain)
+        val teacher = ApiManager.createUserWithCustomService(customUserService = userService, userDomain = domain)
+        val course = ApiManager.createCourseWithCustomService(coursesService = coursesService)
 
         Log.d(PREPARATION_TAG,"Enroll '${student.name}' student to '${course.name}' course.")
-        StudentApiManager.enrollUserWithCustomService(course, student, STUDENT_ENROLLMENT, enrollmentsService)
+        ApiManager.enrollUserWithCustomService(course, student, STUDENT_ENROLLMENT, enrollmentsService)
 
         Log.d(PREPARATION_TAG,"Enroll '${teacher.name}' teacher to '${course.name}' course.")
-        StudentApiManager.enrollUserWithCustomService(course, teacher, TEACHER_ENROLLMENT, enrollmentsService)
+        ApiManager.enrollUserWithCustomService(course, teacher, TEACHER_ENROLLMENT, enrollmentsService)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         loginWithUser(student)

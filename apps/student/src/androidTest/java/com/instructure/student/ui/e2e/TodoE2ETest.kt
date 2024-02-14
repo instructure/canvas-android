@@ -10,11 +10,11 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.retryWithIncreasingDelay
-import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedAssignments
 import com.instructure.student.ui.utils.seedData
@@ -42,7 +42,7 @@ class TodoE2ETest: StudentTest() {
         val favoriteCourse = data.coursesList[1]
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course with tomorrow due date.")
-        val testAssignment = StudentApiManager.createAssignment(course, teacher)
+        val testAssignment = ApiManager.createAssignment(course, teacher)
 
         Log.d(PREPARATION_TAG,"Seed another assignment for '${course.name}' course with 7 days from now due date.")
         val seededAssignments2 = seedAssignments(
@@ -54,10 +54,10 @@ class TodoE2ETest: StudentTest() {
         val borderDateAssignment = seededAssignments2[0] //We show items in the to do section which are within 7 days.
 
         Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course with tomorrow due date.")
-        val quiz = StudentApiManager.createQuiz(course, teacher)
+        val quiz = ApiManager.createQuiz(course, teacher)
 
         Log.d(PREPARATION_TAG,"Seed another quiz for '${course.name}' course with 8 days from now due date..")
-        val tooFarAwayQuiz = StudentApiManager.createQuiz(course, teacher, dueAt = 8.days.fromNow.iso8601)
+        val tooFarAwayQuiz = ApiManager.createQuiz(course, teacher, dueAt = 8.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -111,7 +111,7 @@ class TodoE2ETest: StudentTest() {
         todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${favoriteCourse.name}' course with tomorrow due date.")
-        val favoriteCourseAssignment = StudentApiManager.createAssignment(favoriteCourse, teacher)
+        val favoriteCourseAssignment = ApiManager.createAssignment(favoriteCourse, teacher)
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page. Open '${favoriteCourse.name}' course. Mark it as favorite.")
         Espresso.pressBack()

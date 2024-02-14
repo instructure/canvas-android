@@ -31,8 +31,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.Randomizer
-import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -62,7 +62,7 @@ class FilesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
-        val assignment = StudentApiManager.createAssignment(course, teacher, submissionType = listOf(SubmissionType.ONLINE_UPLOAD), allowedExtensions = listOf("txt"))
+        val assignment = ApiManager.createAssignment(course, teacher, submissionType = listOf(SubmissionType.ONLINE_UPLOAD), allowedExtensions = listOf("txt"))
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
@@ -73,7 +73,7 @@ class FilesE2ETest: StudentTest() {
         )
 
         Log.d(PREPARATION_TAG,"Submit '${assignment.name}' assignment for '${student.name}' student.")
-        StudentApiManager.assignmentSingleSubmission(course, assignment, student, mutableListOf(submissionUploadInfo.id), SubmissionType.ONLINE_UPLOAD)
+        ApiManager.assignmentSingleSubmission(course, assignment, student, mutableListOf(submissionUploadInfo.id), SubmissionType.ONLINE_UPLOAD)
 
         Log.d(STEP_TAG,"Seed a comment attachment (file) upload.")
         val commentUploadInfo = uploadTextFile(
@@ -82,10 +82,10 @@ class FilesE2ETest: StudentTest() {
                 token = student.token,
                 fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
-        StudentApiManager.commentOnSubmission(student, course, assignment, commentUploadInfo)
+        ApiManager.commentOnSubmission(student, course, assignment, commentUploadInfo)
 
         Log.d(STEP_TAG,"Seed a discussion for '${course.name}' course.")
-        val discussionTopic = StudentApiManager.createDiscussion(course, student)
+        val discussionTopic = ApiManager.createDiscussion(course, student)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)

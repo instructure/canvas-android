@@ -16,22 +16,15 @@
  */
 @file:Suppress("unused")
 
-package com.instructure.student.ui.utils
+package com.instructure.dataseeding.util
 
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.CanvasNetworkAdapter
-import com.instructure.dataseeding.util.Randomizer
-import com.instructure.dataseeding.util.days
-import com.instructure.dataseeding.util.fromNow
-import com.instructure.dataseeding.util.iso8601
 import java.io.File
 import java.util.*
 
-class StudentApiManager {
+object ApiManager {
 
-    companion object {
         fun uploadTextFile(
             courseId: Long,
             assignmentId: Long? = null,
@@ -393,5 +386,4 @@ class StudentApiManager {
         fun getCourseRootFolder(course: CourseApiModel, user: CanvasUserApiModel) = FileFolderApi.getCourseRootFolder(course.id, user.token)
 
         fun createFolder(rootFolderId: Long, folderName: String, locked: Boolean, user: CanvasUserApiModel) = FileFolderApi.createCourseFolder(rootFolderId, folderName, locked, user.token)
-    }
 }

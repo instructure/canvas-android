@@ -26,7 +26,7 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
-import com.instructure.student.ui.utils.StudentApiManager
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -53,13 +53,13 @@ class NotificationsE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course.")
-        val testAssignment = StudentApiManager.createAssignment(course, teacher)
+        val testAssignment = ApiManager.createAssignment(course, teacher)
 
         Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course with some questions.")
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG,"Create and publish a quiz with the previously seeded questions.")
-        StudentApiManager.createAndPublishQuiz(course, teacher, quizQuestions)
+        ApiManager.createAndPublishQuiz(course, teacher, quizQuestions)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -101,10 +101,10 @@ class NotificationsE2ETest : StudentTest() {
             repeat(10) {
                 try {
                     Log.d(PREPARATION_TAG, "Submit '${testAssignment.name}' assignment with student: '${student.name}'.")
-                    StudentApiManager.assignmentSingleSubmission(course, testAssignment, student)
+                    ApiManager.assignmentSingleSubmission(course, testAssignment, student)
 
                     Log.d(PREPARATION_TAG, "Grade the submission of '${student.name}' student for assignment: '${testAssignment.name}'.")
-                    StudentApiManager.gradeSubmission(teacher, course, testAssignment, student, postedGrade = "13", excused = false)
+                    ApiManager.gradeSubmission(teacher, course, testAssignment, student, postedGrade = "13", excused = false)
 
                     Log.d(STEP_TAG, "Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
                     sleep(3000) //Let the submission api do it's job

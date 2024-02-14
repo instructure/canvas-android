@@ -26,8 +26,8 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.espresso.retryWithIncreasingDelay
-import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -53,12 +53,12 @@ class InboxE2ETest: StudentTest() {
         val student2 = data.studentsList[1]
 
         Log.d(PREPARATION_TAG, "Create a course group category and a group based on that category.")
-        val groupCategory = StudentApiManager.createCourseGroupCategory(course, teacher.token)
-        val group = StudentApiManager.createGroup(groupCategory, teacher.token)
+        val groupCategory = ApiManager.createCourseGroupCategory(course, teacher.token)
+        val group = ApiManager.createGroup(groupCategory, teacher.token)
 
         Log.d(PREPARATION_TAG, "Create group membership for '${student1.name}' and '${student2.name}' students to the group: '${group.name}'.")
-        StudentApiManager.createGroupMembership(group, student1, teacher.token)
-        StudentApiManager.createGroupMembership(group, student2, teacher.token)
+        ApiManager.createGroupMembership(group, student1, teacher.token)
+        ApiManager.createGroupMembership(group, student2, teacher.token)
 
         Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId}.")
         tokenLogin(student1)
@@ -70,7 +70,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(PREPARATION_TAG,"Seed an email from the teacher to '${student1.name}' and '${student2.name}' students.")
-        val seededConversation = StudentApiManager.createConversation(teacher.token, listOf(student1.id.toString(), student2.id.toString()))[0]
+        val seededConversation = ApiManager.createConversation(teacher.token, listOf(student1.id.toString(), student2.id.toString()))[0]
 
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()
@@ -193,12 +193,12 @@ class InboxE2ETest: StudentTest() {
         val student2 = data.studentsList[1]
 
         Log.d(PREPARATION_TAG, "Create a course group category and a group based on that category.")
-        val groupCategory = StudentApiManager.createCourseGroupCategory(course, teacher.token)
-        val group = StudentApiManager.createGroup(groupCategory, teacher.token)
+        val groupCategory = ApiManager.createCourseGroupCategory(course, teacher.token)
+        val group = ApiManager.createGroup(groupCategory, teacher.token)
 
         Log.d(PREPARATION_TAG, "Create group membership for '${student1.name}' and '${student2.name}' students to the group: '${group.name}'.")
-        StudentApiManager.createGroupMembership(group, student1, teacher.token)
-        StudentApiManager.createGroupMembership(group, student2, teacher.token)
+        ApiManager.createGroupMembership(group, student1, teacher.token)
+        ApiManager.createGroupMembership(group, student2, teacher.token)
 
         Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId}.")
         tokenLogin(student1)
@@ -210,7 +210,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(PREPARATION_TAG,"Seed an email from the teacher to '${student1.name}' and '${student2.name}' students.")
-        val seededConversation = StudentApiManager.createConversation(teacher.token, listOf(student1.id.toString(), student2.id.toString()))[0]
+        val seededConversation = ApiManager.createConversation(teacher.token, listOf(student1.id.toString(), student2.id.toString()))[0]
 
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()
@@ -297,12 +297,12 @@ class InboxE2ETest: StudentTest() {
         val student2 = data.studentsList[1]
 
         Log.d(PREPARATION_TAG, "Create a course group category and a group based on that category.")
-        val groupCategory = StudentApiManager.createCourseGroupCategory(course, teacher.token)
-        val group = StudentApiManager.createGroup(groupCategory, teacher.token)
+        val groupCategory = ApiManager.createCourseGroupCategory(course, teacher.token)
+        val group = ApiManager.createGroup(groupCategory, teacher.token)
 
         Log.d(PREPARATION_TAG, "Create group membership for '${student1.name}' and '${student2.name}' students to the group: '${group.name}'.")
-        StudentApiManager.createGroupMembership(group, student1, teacher.token)
-        StudentApiManager.createGroupMembership(group, student2, teacher.token)
+        ApiManager.createGroupMembership(group, student1, teacher.token)
+        ApiManager.createGroupMembership(group, student2, teacher.token)
 
         Log.d(STEP_TAG,"Login with user: ${student1.name}, login id: ${student1.loginId}.")
         tokenLogin(student1)
@@ -314,7 +314,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(PREPARATION_TAG,"Seed an email from the teacher to '${student1.name}' and '${student2.name}' students.")
-        val seededConversation = StudentApiManager.createConversation(teacher.token, listOf(student1.id.toString(), student2.id.toString()))[0]
+        val seededConversation = ApiManager.createConversation(teacher.token, listOf(student1.id.toString(), student2.id.toString()))[0]
 
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()

@@ -25,11 +25,11 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.withAncestor
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -72,13 +72,13 @@ class ScheduleE2ETest : StudentTest() {
         val twoWeeksAfterCalendar = getCustomDateCalendar(15)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' MISSING assignment for ${nonHomeroomCourses[2].name} course.")
-        val testMissingAssignment = StudentApiManager.createAssignmentWithCalendar(nonHomeroomCourses[2], teacher, currentDateCalendar, GradingType.LETTER_GRADE,100.0)
+        val testMissingAssignment = ApiManager.createAssignmentWithCalendar(nonHomeroomCourses[2], teacher, currentDateCalendar, GradingType.LETTER_GRADE,100.0)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' Two weeks before end date assignment for ${nonHomeroomCourses[1].name} course.")
-        val testTwoWeeksBeforeAssignment = StudentApiManager.createAssignmentWithCalendar(nonHomeroomCourses[1], teacher, twoWeeksBeforeCalendar, GradingType.PERCENT,100.0)
+        val testTwoWeeksBeforeAssignment = ApiManager.createAssignmentWithCalendar(nonHomeroomCourses[1], teacher, twoWeeksBeforeCalendar, GradingType.PERCENT,100.0)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' Two weeks after end date assignment for ${nonHomeroomCourses[0].name} course.")
-        val testTwoWeeksAfterAssignment = StudentApiManager.createAssignmentWithCalendar(nonHomeroomCourses[0], teacher, twoWeeksAfterCalendar, GradingType.POINTS,25.0)
+        val testTwoWeeksAfterAssignment = ApiManager.createAssignmentWithCalendar(nonHomeroomCourses[0], teacher, twoWeeksAfterCalendar, GradingType.POINTS,25.0)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)

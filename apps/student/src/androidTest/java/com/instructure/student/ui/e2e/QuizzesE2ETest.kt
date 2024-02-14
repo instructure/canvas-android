@@ -40,9 +40,9 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -75,13 +75,13 @@ class QuizzesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
-        val quizUnpublished = StudentApiManager.createQuiz(course, teacher, published = false)
+        val quizUnpublished = ApiManager.createQuiz(course, teacher, published = false)
 
         Log.d(PREPARATION_TAG,"Seed another quiz for ${course.name} with some questions.")
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG,"Publish the previously seeded quiz.")
-        val quizPublished = StudentApiManager.createAndPublishQuiz(course, teacher, quizQuestions)
+        val quizPublished = ApiManager.createAndPublishQuiz(course, teacher, quizQuestions)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)

@@ -49,3 +49,13 @@ val Calendar.iso8601: String
         val formatted = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date(this.timeInMillis))
         return formatted.substring(0, 22) + ":" + formatted.substring(22)
     }
+
+@JvmOverloads
+fun Date?.toApiString(timeZone: TimeZone? = null): String {
+    this ?: return ""
+
+    val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+    timeZone?.let { format.timeZone = it }
+    val formatted = format.format(this)
+    return formatted.substring(0, 22) + ":" + formatted.substring(22)
+}

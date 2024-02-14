@@ -24,7 +24,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
-import com.instructure.student.ui.utils.StudentApiManager
+import com.instructure.dataseeding.util.ApiManager
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -50,7 +50,7 @@ class BookmarksE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Preparing an assignment which will be saved as a bookmark.")
-        val assignment = StudentApiManager.createAssignment(course, teacher)
+        val assignment = ApiManager.createAssignment(course, teacher)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
