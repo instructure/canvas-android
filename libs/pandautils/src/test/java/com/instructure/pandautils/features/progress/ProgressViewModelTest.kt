@@ -18,10 +18,6 @@
 
 package com.instructure.pandautils.features.progress
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.models.Progress
@@ -37,20 +33,15 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class ProgressViewModelTests {
-
-    @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
-
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+class ProgressViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
@@ -62,13 +53,17 @@ class ProgressViewModelTests {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
 
         every { stateHandle.get<Long>("progressId") } returns 1L
         every { stateHandle.get<String>("title") } returns "Title"
         every { stateHandle.get<String>("progressTitle") } returns "Publishing"
         every { stateHandle.get<String>("note") } returns "Note"
+    }
+
+    @After
+    fun teardown() {
+        Dispatchers.resetMain()
     }
 
     @Test
