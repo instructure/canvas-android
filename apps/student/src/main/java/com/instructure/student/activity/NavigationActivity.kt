@@ -132,6 +132,7 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.fragment.CalendarFragment
+import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
 import com.instructure.student.fragment.InboxRecipientsFragment
@@ -956,6 +957,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun selectBottomNavFragment(fragmentClass: Class<out Fragment>) {
         val selectedFragment = supportFragmentManager.findFragmentByTag(fragmentClass.name)
+
+        (topFragment as? DashboardFragment)?.cancelCardDrag()
 
         if (selectedFragment == null) {
             val fragment = createBottomNavFragment(fragmentClass.name)
