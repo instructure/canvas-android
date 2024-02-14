@@ -428,6 +428,7 @@ class ModuleListUpdateTest : Assert() {
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
             listOf(1L),
+            listOf(1L),
             BulkModuleUpdateAction.PUBLISH,
             true,
             false
@@ -455,6 +456,7 @@ class ModuleListUpdateTest : Assert() {
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
             listOf(1L),
+            listOf(1L, 100L),
             BulkModuleUpdateAction.PUBLISH,
             false,
             false
@@ -489,6 +491,7 @@ class ModuleListUpdateTest : Assert() {
         )
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
+            listOf(1L, 2L),
             listOf(1L, 2L),
             BulkModuleUpdateAction.UNPUBLISH,
             true,
@@ -525,6 +528,7 @@ class ModuleListUpdateTest : Assert() {
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
             listOf(1L, 2L),
+            listOf(1L, 2L, 100L, 200L, 201L),
             BulkModuleUpdateAction.UNPUBLISH,
             false,
             true

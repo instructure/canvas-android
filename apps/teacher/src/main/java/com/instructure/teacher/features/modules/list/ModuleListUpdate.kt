@@ -171,6 +171,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 val effect = ModuleListEffect.BulkUpdateModules(
                     model.course,
                     listOf(event.moduleId),
+                    affectedIds,
                     event.action,
                     event.skipContentTags,
                     false
@@ -191,6 +192,7 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 val effect = ModuleListEffect.BulkUpdateModules(
                     model.course,
                     model.modules.map { it.id },
+                    affectedIds,
                     event.action,
                     event.skipContentTags,
                     true
@@ -291,6 +293,19 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.updateCancelled)
                 return Next.next(newModel, setOf(effect, snackbarEffect))
+            }
+
+            is ModuleListEvent.BulkUpdateStarted -> {
+                val newModel = model.copy(
+                    loadingModuleItemIds = model.loadingModuleItemIds + event.affectedIds
+                )
+                val effect = ModuleListEffect.BulkUpdateStarted(
+                    event.progressId,
+                    event.allModules,
+                    event.skipContentTags,
+                    event.action
+                )
+                return Next.next(newModel, setOf(effect))
             }
         }
     }

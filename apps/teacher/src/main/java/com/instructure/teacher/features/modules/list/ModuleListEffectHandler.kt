@@ -17,7 +17,6 @@
 package com.instructure.teacher.features.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -26,17 +25,17 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Progress
-import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.isValid
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.pandautils.features.progress.ProgressPreferences
+import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
+import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
 import com.instructure.pandautils.utils.poll
 import com.instructure.pandautils.utils.retry
 import com.instructure.teacher.R
@@ -44,12 +43,12 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.util.Date
 
 class ModuleListEffectHandler(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val progressApi: ProgressAPI.ProgressInterface,
-    private val progressPreferences: ProgressPreferences
+    private val progressPreferences: ProgressPreferences,
+    private val moduleBulkProgressDao: ModuleBulkProgressDao
 ) : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
     override fun accept(effect: ModuleListEffect) {
         when (effect) {
@@ -72,6 +71,7 @@ class ModuleListEffectHandler(
             is ModuleListEffect.BulkUpdateModules -> bulkUpdateModules(
                 effect.canvasContext,
                 effect.moduleIds,
+                effect.affectedIds,
                 effect.action,
                 effect.skipContentTags,
                 allModules = effect.allModules
@@ -90,6 +90,10 @@ class ModuleListEffectHandler(
 
             is ModuleListEffect.UpdateFileModuleItem -> {
                 view?.showUpdateFileDialog(effect.fileId, effect.contentDetails)
+            }
+
+            is ModuleListEffect.BulkUpdateStarted -> {
+                handleBulkUpdate(effect.progressId, effect.allModules, effect.skipContentTags, effect.action)
             }
         }.exhaustive
     }
@@ -201,6 +205,7 @@ class ModuleListEffectHandler(
     private fun bulkUpdateModules(
         canvasContext: CanvasContext,
         moduleIds: List<Long>,
+        affectedIds: List<Long>,
         action: BulkModuleUpdateAction,
         skipContentTags: Boolean,
         async: Boolean = true,
@@ -224,20 +229,50 @@ class ModuleListEffectHandler(
             val bulkUpdateProgress = progress?.progress
             if (bulkUpdateProgress == null) {
                 consumer.accept(ModuleListEvent.BulkUpdateFailed(skipContentTags))
-                return@launch
+            } else {
+                moduleBulkProgressDao.insert(
+                    ModuleBulkProgressEntity(
+                        courseId = canvasContext.id,
+                        progressId = bulkUpdateProgress.id,
+                        action = action.toString(),
+                        skipContentTags = skipContentTags,
+                        allModules = allModules,
+                        affectedIds = affectedIds
+                    )
+                )
+                if (allModules || !skipContentTags) {
+                    showProgressScreen(bulkUpdateProgress.id, skipContentTags, action, allModules)
+                }
+                consumer.accept(
+                    ModuleListEvent.BulkUpdateStarted(
+                        canvasContext,
+                        bulkUpdateProgress.id,
+                        allModules,
+                        skipContentTags,
+                        affectedIds,
+                        action
+                    )
+                )
             }
+        }
+    }
 
-            if (allModules || !skipContentTags) {
-                showProgressScreen(bulkUpdateProgress.id, skipContentTags, action, allModules)
-            }
-            val success = trackUpdateProgress(bulkUpdateProgress)
+    private fun handleBulkUpdate(
+        progressId: Long,
+        allModules: Boolean,
+        skipContentTags: Boolean,
+        action: BulkModuleUpdateAction
+    ) {
+        launch {
+            val success = trackUpdateProgress(progressId)
+            moduleBulkProgressDao.deleteById(progressId)
 
             if (success) {
                 consumer.accept(ModuleListEvent.BulkUpdateSuccess(skipContentTags, action, allModules))
             } else {
-                if (progressPreferences.cancelledProgressIds.contains(bulkUpdateProgress.id)) {
+                if (progressPreferences.cancelledProgressIds.contains(progressId)) {
                     consumer.accept(ModuleListEvent.BulkUpdateCancelled)
-                    progressPreferences.cancelledProgressIds = progressPreferences.cancelledProgressIds - bulkUpdateProgress.id
+                    progressPreferences.cancelledProgressIds = progressPreferences.cancelledProgressIds - progressId
                 } else {
                     consumer.accept(ModuleListEvent.BulkUpdateFailed(skipContentTags))
                 }
@@ -245,7 +280,7 @@ class ModuleListEffectHandler(
         }
     }
 
-    private suspend fun trackUpdateProgress(progress: Progress): Boolean {
+    private suspend fun trackUpdateProgress(progressId: Long): Boolean {
         val params = RestParams(isForceReadFromNetwork = true)
 
         val result = poll(500, maxAttempts = -1,
@@ -255,7 +290,7 @@ class ModuleListEffectHandler(
             block = {
                 var newProgress: Progress? = null
                 retry(initialDelay = 500) {
-                    newProgress = progressApi.getProgress(progress.id.toString(), params).dataOrThrow
+                    newProgress = progressApi.getProgress(progressId.toString(), params).dataOrThrow
                 }
                 newProgress
             })
@@ -284,7 +319,12 @@ class ModuleListEffectHandler(
         }
     }
 
-    private fun showProgressScreen(progressId: Long, skipContentTags: Boolean, action: BulkModuleUpdateAction, allModules: Boolean) {
+    private fun showProgressScreen(
+        progressId: Long,
+        skipContentTags: Boolean,
+        action: BulkModuleUpdateAction,
+        allModules: Boolean
+    ) {
         val title = when {
             allModules && skipContentTags -> R.string.allModules
             allModules && !skipContentTags -> R.string.allModulesAndItems

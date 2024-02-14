@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.pandarecycler.PaginatedScrollListener
 import com.instructure.pandautils.features.progress.ProgressDialogFragment
+import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.teacher.R
@@ -259,5 +260,11 @@ class ModuleListView(
             context.getString(progressTitle),
             note?.let { context.getString(it) })
         fragment.show((activity as FragmentActivity).supportFragmentManager, "progressDialog")
+    }
+
+    fun bulkUpdateInProgress(progresses: List<ModuleBulkProgressEntity>) {
+        progresses.forEach {
+            consumer?.accept(ModuleListEvent.BulkUpdateStarted(course, it.progressId, it.allModules, it.skipContentTags, it.affectedIds, BulkModuleUpdateAction.valueOf(it.action)))
+        }
     }
 }

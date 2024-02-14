@@ -19,6 +19,8 @@
 package com.instructure.pandautils.di
 
 import com.instructure.pandautils.features.progress.ProgressPreferences
+import com.instructure.pandautils.room.appdatabase.AppDatabase
+import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,5 +36,11 @@ class ProgressModule {
     @Singleton
     fun provideProgressPreferences(): ProgressPreferences {
         return ProgressPreferences
+    }
+
+    @Provides
+    @Singleton
+    fun provideModuleBulkProgressDao(appDatabase: AppDatabase): ModuleBulkProgressDao {
+        return appDatabase.moduleBulkProgressDao()
     }
 }
