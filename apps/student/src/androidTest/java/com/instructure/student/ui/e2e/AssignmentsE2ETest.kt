@@ -105,14 +105,14 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Hour Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
         assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Hour Before' again, and assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
 
         Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder, confirm the deletion dialog and assert that the '1 Hour Before' reminder is not displayed any more.")
@@ -143,7 +143,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Week Before' and assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an assignment which ends tomorrow).")
-        assignmentDetailsPage.clickOneWeekBefore()
+        assignmentDetailsPage.selectTimeOption("1 Week Before")
         assignmentDetailsPage.assertReminderNotDisplayedWithText("1 Week Before")
         checkToastText(R.string.reminderInPast, activityRule.activity)
 
@@ -151,7 +151,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Day Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
-        assignmentDetailsPage.clickOneDayBefore()
+        assignmentDetailsPage.selectTimeOption("1 Day Before")
         assignmentDetailsPage.assertReminderDisplayedWithText("1 Day Before")
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -803,7 +803,7 @@ class AssignmentsE2ETest: StudentTest() {
         dashboardPage.assertCourseGrade(course.name, "80%")
 
         Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
-        var restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
+        val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
         restrictQuantitativeDataMap["restrict_quantitative_data"] = true
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
@@ -955,7 +955,7 @@ class AssignmentsE2ETest: StudentTest() {
         gradeSubmission(teacher, course, pointsTextAssignment.id, student, "12")
 
         Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
-        var restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
+        val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
         restrictQuantitativeDataMap["restrict_quantitative_data"] = true
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 

@@ -429,7 +429,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
 
         assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
     }
@@ -446,7 +446,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
 
         assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
 
@@ -489,7 +489,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
 
         checkToastText(R.string.reminderInPast, activityRule.activity)
     }
@@ -506,9 +506,9 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
 
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }
@@ -525,7 +525,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneWeekBefore()
+        assignmentDetailsPage.selectTimeOption("1 Week Before")
         assignmentDetailsPage.clickAddReminder()
 
         assignmentDetailsPage.clickCustom()
