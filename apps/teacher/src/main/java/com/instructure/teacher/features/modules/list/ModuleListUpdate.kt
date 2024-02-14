@@ -289,7 +289,8 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                     newModel.pageData,
                     newModel.scrollToItemId
                 )
-                return Next.next(newModel, setOf(effect))
+                val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.updateCancelled)
+                return Next.next(newModel, setOf(effect, snackbarEffect))
             }
         }
     }

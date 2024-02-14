@@ -898,13 +898,14 @@ class ModuleListUpdateTest : Assert() {
             expectedModel.pageData,
             expectedModel.scrollToItemId
         )
+        val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.updateCancelled)
         updateSpec
             .given(model)
             .whenEvent(ModuleListEvent.BulkUpdateCancelled)
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
-                    matchesEffects(expectedEffect)
+                    matchesEffects(expectedEffect, snackbarEffect)
                 )
             )
     }
