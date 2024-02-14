@@ -244,7 +244,7 @@ class ModuleListView(
 
     fun showUpdateFileDialog(fileId: Long, contentDetails: ModuleContentDetails) {
         val fragment = UpdateFileDialogFragment.newInstance(fileId, contentDetails, course)
-        fragment.show((context as FragmentActivity).supportFragmentManager, "editFileDialog")
+        fragment.show((activity as FragmentActivity).supportFragmentManager, "editFileDialog")
     }
 
     fun showProgressDialog(
@@ -258,6 +258,6 @@ class ModuleListView(
             context.getString(title),
             context.getString(progressTitle),
             note?.let { context.getString(it) })
-        fragment.show((context as FragmentActivity).supportFragmentManager, "progressDialog")
+        fragment.show((activity as FragmentActivity).supportFragmentManager, "progressDialog")
     }
 }

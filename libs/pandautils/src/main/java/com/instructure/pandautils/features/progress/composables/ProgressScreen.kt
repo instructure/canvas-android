@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -58,6 +60,7 @@ fun ProgressScreen(
 ) {
     CanvasTheme {
         Scaffold(
+            modifier = Modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 ProgressTopBar(
@@ -74,7 +77,6 @@ fun ProgressScreen(
                 color = colorResource(id = R.color.backgroundLightest)
             ) {
                 ProgressContent(
-                    modifier = Modifier.padding(16.dp, 24.dp),
                     progressTitle = progressUiState.progressTitle,
                     progress = progressUiState.progress,
                     note = progressUiState.note,
@@ -95,7 +97,11 @@ fun ProgressTopBar(
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { actionHandler(ProgressAction.Close) }) {
-                Icon(Icons.Filled.Close, contentDescription = stringResource(id = R.string.a11y_closeProgress), tint = colorResource(id = R.color.textDarkest))
+                Icon(
+                    Icons.Filled.Close,
+                    contentDescription = stringResource(id = R.string.a11y_closeProgress),
+                    tint = colorResource(id = R.color.textDarkest)
+                )
             }
             Text(
                 text = title,
@@ -119,7 +125,7 @@ fun ProgressTopBar(
                 }
             }
         }
-        Divider()
+        Divider(color = colorResource(id = R.color.backgroundMedium))
     }
 
 }
@@ -132,23 +138,28 @@ fun ProgressContent(
     note: String?,
     state: ProgressState
 ) {
-    Column {
-        ProgressIndicator(modifier = modifier, progressTitle = progressTitle, progress = progress, state = state)
-        Divider()
+    Column(modifier = modifier) {
+        ProgressIndicator(
+            modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp),
+            progressTitle = progressTitle,
+            progress = progress,
+            state = state
+        )
+        Divider(color = colorResource(id = R.color.backgroundMedium))
         Text(
             text = stringResource(R.string.progressMessage),
             modifier = Modifier.padding(16.dp),
             color = colorResource(id = R.color.textDarkest)
         )
         note?.let {
-            Note(note = it)
+            Note(modifier = Modifier.padding(16.dp), note = it)
         }
     }
 }
 
 @Composable
-fun Note(note: String) {
-    Column(modifier = Modifier.padding(16.dp)) {
+fun Note(modifier: Modifier = Modifier, note: String) {
+    Column(modifier = modifier) {
         Text(
             text = stringResource(id = R.string.noteTitle),
             color = colorResource(id = R.color.textDark),

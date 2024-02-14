@@ -78,13 +78,19 @@ class ProgressDialogFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
+
+        const val PROGRESS_ID = "progressId"
+        const val TITLE = "title"
+        const val PROGRESS_TITLE = "progressTitle"
+        const val NOTE = "note"
+
         fun newInstance(progressId: Long, title: String, progressTitle: String, note: String? = null) =
             ProgressDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putLong("progressId", progressId)
-                    putString("title", title)
-                    putString("progressTitle", progressTitle)
-                    note?.let { putString("note", it) }
+                    putLong(PROGRESS_ID, progressId)
+                    putString(TITLE, title)
+                    putString(PROGRESS_TITLE, progressTitle)
+                    note?.let { putString(NOTE, it) }
                 }
             }
     }

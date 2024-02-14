@@ -39,10 +39,10 @@ class ProgressViewModel @Inject constructor(
     private val progressPreferences: ProgressPreferences
 ) : ViewModel() {
 
-    private val progressId = stateHandle.get<Long>("progressId") ?: -1
-    private val title = stateHandle.get<String>("title") ?: ""
-    private val progressTitle = stateHandle.get<String>("progressTitle") ?: ""
-    private val note = stateHandle.get<String>("note")
+    private val progressId = stateHandle.get<Long>(ProgressDialogFragment.PROGRESS_ID) ?: -1
+    private val title = stateHandle.get<String>(ProgressDialogFragment.TITLE) ?: ""
+    private val progressTitle = stateHandle.get<String>(ProgressDialogFragment.PROGRESS_TITLE) ?: ""
+    private val note = stateHandle.get<String>(ProgressDialogFragment.NOTE)
 
     private val _uiState = MutableStateFlow(
         ProgressUiState(
