@@ -30,8 +30,12 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -54,7 +58,7 @@ class CalendarViewModelTest {
 
     private lateinit var viewModel: CalendarViewModel
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
     private val clock = Clock.fixed(Instant.parse("2023-04-20T14:00:00.00Z"), ZoneId.systemDefault())
 
@@ -504,7 +508,7 @@ class CalendarViewModelTest {
     }
 
     @Test
-    fun `Open assignment when assignment is selected`() {
+    fun `Open assignment when assignment is selected`() = runTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
             createPlannerItem(1, 1, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12)),
         )
@@ -512,12 +516,17 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 1)
-        assertEquals(expectedAction, viewModel.events.value.peekContent())
+        assertEquals(expectedAction, events.last())
     }
 
     @Test
-    fun `Open discussion when discussion is selected`() {
+    fun `Open discussion when discussion is selected`() = runTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
             createPlannerItem(1, 1, PlannableType.DISCUSSION_TOPIC, createDate(2023, 4, 20, 12)),
         )
@@ -525,25 +534,35 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         val expectedAction = CalendarViewModelAction.OpenDiscussion(Course(1), 1)
-        assertEquals(expectedAction, viewModel.events.value.peekContent())
+        assertEquals(expectedAction, events.last())
     }
 
     @Test
-    fun `Open assignment when an assignment quiz is selected`() {
+    fun `Open assignment when an assignment quiz is selected`() = runTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
             createPlannerItem(1, 1, PlannableType.QUIZ, createDate(2023, 4, 20, 12)).copy(htmlUrl = "http://quiz.com"),
         )
         initViewModel()
 
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
         val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 1)
-        assertEquals(expectedAction, viewModel.events.value.peekContent())
+        assertEquals(expectedAction, events.last())
     }
 
     @Test
-    fun `Open quiz when a quiz is selected that is not an assignment`() {
+    fun `Open quiz when a quiz is selected that is not an assignment`() = runTest {
         val plannerItem = createPlannerItem(1, 1, PlannableType.QUIZ, createDate(2023, 4, 20, 12))
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
             plannerItem.copy(htmlUrl = "http://quiz.com", plannable = plannerItem.plannable.copy(assignmentId = null))
@@ -552,12 +571,17 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         val expectedAction = CalendarViewModelAction.OpenQuiz(Course(1), "http://quiz.com")
-        assertEquals(expectedAction, viewModel.events.value.peekContent())
+        assertEquals(expectedAction, events.last())
     }
 
     @Test
-    fun `Open calendar event when calendar event is selected`() {
+    fun `Open calendar event when calendar event is selected`() = runTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
             createPlannerItem(1, 1, PlannableType.CALENDAR_EVENT, createDate(2023, 4, 20, 12)),
         )
@@ -565,20 +589,30 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         val expectedAction = CalendarViewModelAction.OpenCalendarEvent(Course(1), 1)
-        assertEquals(expectedAction, viewModel.events.value.peekContent())
+        assertEquals(expectedAction, events.last())
     }
 
     @Test
-    fun `Open calendar todo when calendar todo is selected`() {
+    fun `Open calendar todo when calendar todo is selected`() = runTest {
         val plannerItem = createPlannerItem(1, 1, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12))
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(plannerItem)
         initViewModel()
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         val expectedAction = CalendarViewModelAction.OpenToDo(plannerItem)
-        assertEquals(expectedAction, viewModel.events.value.peekContent())
+        assertEquals(expectedAction, events.last())
     }
 
     private fun initViewModel() {

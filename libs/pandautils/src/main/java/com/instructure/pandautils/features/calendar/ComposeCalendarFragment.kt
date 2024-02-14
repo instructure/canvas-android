@@ -27,9 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -41,8 +39,8 @@ import com.instructure.pandautils.features.calendar.composables.CalendarScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -61,15 +59,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    event.getContentIfNotHandled()?.let {
-                        handleAction(it)
-                    }
-                }
-            }
-        }
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {

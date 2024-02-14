@@ -33,8 +33,10 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -65,8 +67,8 @@ class CalendarViewModel @Inject constructor(
         MutableStateFlow(CalendarUiState(selectedDay, expanded, eventIndicators = emptyMap()))
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableStateFlow<Event<CalendarViewModelAction>>(Event(null))
-    val events = _events.asStateFlow()
+    private val _events = Channel<CalendarViewModelAction>()
+    val events = _events.receiveAsFlow()
 
     init {
         loadVisibleMonths()
@@ -280,36 +282,36 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             val event = when (plannerItem.plannableType) {
                 PlannableType.ASSIGNMENT -> {
-                    Event(CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id))
+                    CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id)
                 }
 
                 PlannableType.DISCUSSION_TOPIC -> {
-                    Event(CalendarViewModelAction.OpenDiscussion(plannerItem.canvasContext, plannerItem.plannable.id))
+                    CalendarViewModelAction.OpenDiscussion(plannerItem.canvasContext, plannerItem.plannable.id)
                 }
 
                 PlannableType.QUIZ -> {
                     if (plannerItem.plannable.assignmentId != null) {
                         // This is a quiz assignment, go to the assignment page
-                        Event(CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.assignmentId!!))
+                        CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.assignmentId!!)
                     } else {
                         var htmlUrl = plannerItem.htmlUrl.orEmpty()
                         if (htmlUrl.startsWith('/')) htmlUrl = apiPrefs.fullDomain + htmlUrl
-                        Event(CalendarViewModelAction.OpenQuiz(plannerItem.canvasContext, htmlUrl))
+                        CalendarViewModelAction.OpenQuiz(plannerItem.canvasContext, htmlUrl)
                     }
                 }
 
                 PlannableType.CALENDAR_EVENT -> {
-                    Event(CalendarViewModelAction.OpenCalendarEvent(plannerItem.canvasContext, plannerItem.plannable.id))
+                    CalendarViewModelAction.OpenCalendarEvent(plannerItem.canvasContext, plannerItem.plannable.id)
                 }
 
                 PlannableType.PLANNER_NOTE -> {
-                    Event(CalendarViewModelAction.OpenToDo(plannerItem))
+                    CalendarViewModelAction.OpenToDo(plannerItem)
                 }
 
-                else -> Event(null)
+                else -> null
             }
 
-            _events.emit(event)
+            event?.let { _events.send(it) }
         }
     }
 
