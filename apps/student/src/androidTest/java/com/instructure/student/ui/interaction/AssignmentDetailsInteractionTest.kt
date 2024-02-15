@@ -37,7 +37,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.util.Calendar
+import java.util.*
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {
@@ -429,7 +429,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
 
         assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
     }
@@ -446,7 +446,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
 
         assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
 
@@ -489,7 +489,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
 
         checkToastText(R.string.reminderInPast, activityRule.activity)
     }
@@ -506,9 +506,32 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
         assignmentDetailsPage.clickAddReminder()
-        assignmentDetailsPage.clickOneHourBefore()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+    }
+
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminderForTheSameTimeWithDifferentMeasureOfTimeShowsError() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 10)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.selectTimeOption("1 Week Before")
+        assignmentDetailsPage.clickAddReminder()
+
+        assignmentDetailsPage.clickCustom()
+        assignmentDetailsPage.fillQuantity("7")
+        assignmentDetailsPage.clickDaysBefore()
+        assignmentDetailsPage.clickDone()
 
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }
