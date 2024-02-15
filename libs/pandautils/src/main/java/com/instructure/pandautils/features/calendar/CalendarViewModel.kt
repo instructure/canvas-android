@@ -45,6 +45,8 @@ import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 import kotlin.math.min
 
+private const val MONTH_COUNT = 12
+
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -54,6 +56,11 @@ class CalendarViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now(clock)
+
+    // Helper fields to handle page change animations when a day in a different month is selected
+    private var pendingSelectedDay: LocalDate? = null
+    private var scrollToPageOffset: Int = 0
+
     private var expanded = true
     private var collapsing = false
 
@@ -143,7 +150,9 @@ class CalendarViewModel @Inject constructor(
                 nextPage = nextPage
             ),
             eventIndicators = eventIndicators,
-            collapsing = collapsing
+            collapsing = collapsing,
+            scrollToPageOffset = scrollToPageOffset,
+            pendingSelectedDay = pendingSelectedDay
         )
     }
 
@@ -238,21 +247,12 @@ class CalendarViewModel @Inject constructor(
 
     fun handleAction(calendarAction: CalendarAction) {
         when (calendarAction) {
-            is CalendarAction.DaySelected -> selectedDayChanged(calendarAction.selectedDay)
+            is CalendarAction.DaySelected -> selectedDayChanged(calendarAction.selectedDay, true)
             CalendarAction.ExpandChanged -> expandChanged(!expanded)
             CalendarAction.ExpandDisabled -> expandChanged(false)
             CalendarAction.TodayTapped -> selectedDayChanged(LocalDate.now(clock))
-            is CalendarAction.PageChanged -> {
-                val dateFieldToAdd = if (expanded) ChronoUnit.MONTHS else ChronoUnit.WEEKS
-                selectedDayChanged(selectedDay.plus(calendarAction.offset.toLong(), dateFieldToAdd))
-            }
-
-            is CalendarAction.EventPageChanged -> selectedDayChanged(
-                selectedDay.plusDays(
-                    calendarAction.offset.toLong()
-                )
-            )
-
+            is CalendarAction.PageChanged -> pageChanged(calendarAction.offset.toLong())
+            is CalendarAction.EventPageChanged -> selectedDayChanged(selectedDay.plusDays(calendarAction.offset.toLong()), true)
             is CalendarAction.EventSelected -> openSelectedEvent(calendarAction.id)
             is CalendarAction.RefreshDay -> refreshDay(calendarAction.date)
             CalendarAction.Retry -> loadVisibleMonths()
@@ -264,12 +264,36 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun selectedDayChanged(newDay: LocalDate) {
-        selectedDay = newDay
-        viewModelScope.launch {
-            _uiState.emit(createNewUiState())
+    // We need this animatePageChange parameter because we don't want to animate the page change again when day is selected with a page change
+    private fun selectedDayChanged(newDay: LocalDate, animatePageChange: Boolean = false) {
+        val monthOffset = (newDay.year - selectedDay.year) * MONTH_COUNT + newDay.monthValue - selectedDay.monthValue
+        if (monthOffset == 0 || !animatePageChange || !expanded) {
+            // Select day without animation
+            selectedDay = newDay
+            viewModelScope.launch {
+                _uiState.emit(createNewUiState())
+            }
+            loadVisibleMonths()
+        } else {
+            // Animate page change
+            scrollToPageOffset = monthOffset
+            pendingSelectedDay = newDay
+            viewModelScope.launch {
+                _uiState.emit(createNewUiState())
+            }
         }
-        loadVisibleMonths()
+    }
+
+    private fun pageChanged(offset: Long) {
+        if (pendingSelectedDay != null) {
+            scrollToPageOffset = 0
+            val dayToSelect = pendingSelectedDay!!
+            pendingSelectedDay = null
+            selectedDayChanged(dayToSelect)
+        } else {
+            val dateFieldToAdd = if (expanded) ChronoUnit.MONTHS else ChronoUnit.WEEKS
+            selectedDayChanged(selectedDay.plus(offset, dateFieldToAdd))
+        }
     }
 
     private fun expandChanged(expanded: Boolean) {

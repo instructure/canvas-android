@@ -96,6 +96,12 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
             }
         }
 
+        LaunchedEffect(calendarUiState.scrollToPageOffset) {
+            if (calendarUiState.scrollToPageOffset != 0) {
+                pagerState.animateScrollToPage(pagerState.currentPage + calendarUiState.scrollToPageOffset)
+            }
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
         val calendarOpen = calendarUiState.expanded && !calendarUiState.collapsing
         CalendarHeader(calendarUiState.headerUiState, calendarOpen, actionHandler)
@@ -124,7 +130,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
 
                 if (page >= settledPage - 1 && page <= settledPage + 1) {
                     CalendarBody(calendarPageUiState.calendarRows,
-                        calendarUiState.selectedDay,
+                        calendarUiState.pendingSelectedDay ?: calendarUiState.selectedDay,
                         height = height,
                         selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) })
                 } else {

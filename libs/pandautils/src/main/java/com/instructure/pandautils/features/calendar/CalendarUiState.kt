@@ -30,10 +30,13 @@ data class CalendarUiState(
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
     val eventIndicators: Map<LocalDate, Int> = emptyMap(),
     val snackbarMessage: String? = null,
-    val collapsing: Boolean = false
+    val collapsing: Boolean = false,
+    val scrollToPageOffset: Int = 0,
+    val pendingSelectedDay: LocalDate? = null // Temporary selected date when the calendar is animating to a new month
 ) {
     val headerUiState: CalendarHeaderUiState
         get() {
+            val selectedDay = pendingSelectedDay ?: selectedDay
             val month = selectedDay.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
             val year = selectedDay.year.toString()
             return CalendarHeaderUiState(month, year)
