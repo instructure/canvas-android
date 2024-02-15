@@ -173,3 +173,7 @@ sealed class CalendarViewModelAction {
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
     data class OpenToDo(val plannerItem: PlannerItem) : CalendarViewModelAction()
 }
+
+sealed class SharedCalendarAction {
+    data class RefreshDay(val date: LocalDate) : SharedCalendarAction()
+}

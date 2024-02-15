@@ -1513,4 +1513,7 @@
 
     <string name="todoDateLabel">Date</string>
     <string name="todoDescriptionLabel">Description</string>
+    <string name="todoDeleteConfirmationTitle">Delete To Do?</string>
+    <string name="todoDeleteConfirmationText">This will permanently delete your To Do item.</string>
+    <string name="todoDeleteErrorMessage">There was an error deleting this To Do. Please check your connection and try again.</string>
 </resources>

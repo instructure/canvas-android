@@ -33,6 +33,9 @@ object PlannerAPI {
         @FormUrlEncoded
         @PUT("planner/overrides/{overrideId}")
         fun updatePlannerOverride(@Path("overrideId") plannerOverrideId: Long, @Field("marked_complete") complete: Boolean): Call<PlannerOverride>
+
+        @DELETE("planner_notes/{noteId}")
+        suspend fun deletePlannerNote(@Path("noteId") noteId: Long, @Tag params: RestParams): DataResult<Unit>
     }
 
     fun getPlannerItems(adapter: RestBuilder, callback: StatusCallback<List<PlannerItem>>, params: RestParams, startDate: String? = null, endDate: String? = null) {

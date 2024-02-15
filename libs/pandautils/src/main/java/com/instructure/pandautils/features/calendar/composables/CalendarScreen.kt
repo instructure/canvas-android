@@ -124,6 +124,7 @@ fun CalendarScreen(
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(padding)
                         .padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp)),
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {

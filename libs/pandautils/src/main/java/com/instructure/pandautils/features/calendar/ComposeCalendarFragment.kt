@@ -42,7 +42,9 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,6 +53,9 @@ import javax.inject.Inject
 class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CalendarViewModel by viewModels()
+    private val sharedViewModel: CalendarSharedViewModel by viewModels(ownerProducer = {
+        requireActivity()
+    })
 
     @Inject
     lateinit var calendarRouter: CalendarRouter
@@ -78,6 +83,21 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
                     viewModel.handleAction(it)
                 }) {
                     calendarRouter.openNavigationDrawer()
+                }
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main.immediate) {
+                sharedViewModel.events.collect { action ->
+                    when (action) {
+                        is SharedCalendarAction.RefreshDay -> {
+                            viewModel.handleAction(CalendarAction.RefreshDay(action.date))
+                        }
+                    }
                 }
             }
         }
