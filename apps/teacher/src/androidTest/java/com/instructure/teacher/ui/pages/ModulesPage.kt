@@ -1,18 +1,22 @@
 package com.instructure.teacher.ui.pages
 
+import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WithDrawableViewMatcher
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
@@ -123,5 +127,45 @@ class ModulesPage : BasePage() {
     fun assertItemCountInModule(moduleTitle: String, expectedCount: Int) {
         onView(withId(R.id.recyclerView) + withDescendant(withId(R.id.moduleName) +
                 withText(moduleTitle))).waitForCheck(RecyclerViewItemCountAssertion(expectedCount + 1)) // Have to increase by one because of the module title element itself.
+    }
+
+    fun assertToolbarMenuItems() {
+        onView(withText(R.string.publishAllModulesAndItems)).assertDisplayed()
+        onView(withText(R.string.publishModulesOnly)).assertDisplayed()
+        onView(withText(R.string.unpublishAllModulesAndItems)).assertDisplayed()
+    }
+
+    fun clickItemOverflow(itemName: String) {
+        onView(withParent(withChild(withText(itemName))) + withId(R.id.overflow)).scrollTo().click()
+    }
+
+    fun assertModuleMenuItems() {
+        onView(withText(R.string.publishModuleAndItems)).assertDisplayed()
+        onView(withText(R.string.publishModuleOnly)).assertDisplayed()
+        onView(withText(R.string.unpublishModuleAndItems)).assertDisplayed()
+    }
+
+    fun assertOverflowItem(@StringRes title: Int) {
+        onView(withText(title)).assertDisplayed()
+    }
+
+    fun assertFileEditDialogVisible() {
+        onView(withText(R.string.edit_permissions)).assertDisplayed()
+    }
+
+    fun clickOnText(@StringRes title: Int) {
+        onView(withText(title)).click()
+    }
+
+    fun assertSnackbarText(@StringRes snackbarText: Int) {
+        onView(withId(com.google.android.material.R.id.snackbar_text) + withText(snackbarText)).assertDisplayed()
+    }
+
+    fun assertItemPublished(itemName: String) {
+        WithDrawableViewMatcher(R.drawable.ic_complete_solid, R.color.textSuccess).matches(withParent(withText(itemName)) + withId(R.id.moduleItemStatusIcon))
+    }
+
+    fun assertItemUnublished(itemName: String) {
+        WithDrawableViewMatcher(R.drawable.ic_no, R.color.textDark).matches(withParent(withText(itemName)) + withId(R.id.moduleItemStatusIcon))
     }
 }

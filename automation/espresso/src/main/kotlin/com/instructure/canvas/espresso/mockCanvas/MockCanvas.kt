@@ -1368,8 +1368,6 @@ fun MockCanvas.addFileToFolder(
     fileContents[fileId] = fileContent
 
     return fileId
-
-
 }
 /**
  * Creates a new file for the specified course, and records it properly in MockCanvas.

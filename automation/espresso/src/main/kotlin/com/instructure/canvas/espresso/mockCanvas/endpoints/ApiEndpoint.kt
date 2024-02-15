@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
 import okio.Buffer
+import retrofit2.http.GET
 
 /**
  * Base endpoint for the Canvas API
@@ -152,6 +153,18 @@ object ApiEndpoint : Endpoint(
             }
         ) {
             override val authModel = DontCareAuthModel
+        }
+    ),
+    Segment("progress") to Endpoint(
+        LongId(PathVars::progressId) to Endpoint {
+            GET {
+                request.successResponse(Progress(pathVars.progressId, workflowState = "completed"))
+            }
+            Segment("cancel") to Endpoint {
+                POST {
+                    request.successResponse(Progress(pathVars.progressId, workflowState = "failed"))
+                }
+            }
         }
     )
 )

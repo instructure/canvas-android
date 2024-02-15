@@ -133,6 +133,8 @@ object Randomizer {
     /** Creates a random Course Group Category name */
     fun randomCourseGroupCategoryName(): String = faker.harryPotter().character()
 
+    fun randomModuleName(): String = faker.lordOfTheRings().location()
+
     /** Creates random Group */
     fun randomGroup() = CreateGroup(name = faker.harryPotter().location(), description = faker.harryPotter().quote())
 

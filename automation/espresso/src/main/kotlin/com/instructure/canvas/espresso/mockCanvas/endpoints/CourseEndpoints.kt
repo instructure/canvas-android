@@ -21,6 +21,8 @@ import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.BulkUpdateProgress
+import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
 import com.instructure.canvasapi2.utils.globalName
 import com.instructure.canvasapi2.utils.toApiString
@@ -817,6 +819,35 @@ object CourseModuleListEndpoint : Endpoint(
                     request.unauthorizedResponse()
                 }
             }
+            PUT {
+                val moduleIds = request.url.queryParameter("module_ids[]")?.split(",")?.map { it.toLong() }
+                val event = request.url.queryParameter("event")
+                val skipContentTags = request.url.queryParameter("skip_content_tags").toBoolean()
+
+                val modules = data.courseModules[pathVars.courseId]?.filter { moduleIds?.contains(it.id) ?: false }
+
+                val updatedModules = modules?.map {
+                    val updatedItems = if (skipContentTags) {
+                        it.items
+                    } else {
+                        it.items.map { it.copy(published = event == "publish") }
+                    }
+                    it.copy(
+                        published = event == "publish",
+                        items = updatedItems
+                    )
+                }
+
+                data.courseModules[pathVars.courseId]?.replaceAll {
+                    if (moduleIds?.contains(it.id) == true) {
+                        updatedModules?.find { it.id == it.id } ?: it
+                    } else {
+                        it
+                    }
+                }
+
+                request.successResponse(BulkUpdateResponse(BulkUpdateProgress(Progress(1L, workflowState = "running"))))
+            }
         }
 )
 
@@ -865,7 +896,20 @@ object CourseModuleItemsListEndpoint : Endpoint(
                 } else {
                     request.unauthorizedResponse()
                 }
+            }
 
+            PUT {
+                val isPublished = request.url.queryParameter("module_item[published]").toBoolean()
+                val moduleList = data.courseModules[pathVars.courseId]
+                val moduleObject = moduleList?.find { it.id == pathVars.moduleId }
+                val itemList = moduleObject?.items
+                val moduleItem = itemList?.find { it.id == pathVars.moduleItemId }
+
+                if (moduleItem != null) {
+                    request.successResponse(moduleItem.copy(published = isPublished))
+                } else {
+                    request.unauthorizedResponse()
+                }
             }
         },
         response = {

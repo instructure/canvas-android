@@ -20,7 +20,9 @@ import android.os.Build
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
@@ -38,6 +40,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Test
+import java.util.Date
 
 @HiltAndroidTest
 class ModuleListRenderTest : TeacherRenderTest() {
@@ -383,6 +386,42 @@ class ModuleListRenderTest : TeacherRenderTest() {
         page.moduleItemIcon.assertNotDisplayed()
         page.moduleItemLoadingView.assertDisplayed()
         page.moduleItemRoot.check(matches(not(isEnabled())))
+    }
+
+    @Test
+    fun displaysFileModuleItemHiddenIcon() {
+        val item = moduleItemTemplate.copy(
+            iconResId = R.drawable.ic_attachment,
+            type = ModuleItem.Type.File,
+            contentDetails = ModuleContentDetails(
+                hidden = true
+            )
+        )
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemIcon.assertDisplayed()
+        page.assertStatusIcon(R.drawable.ic_eye_off, R.color.textWarning)
+    }
+
+    @Test
+    fun displaysFileModuleItemScheduledIcon() {
+        val item = moduleItemTemplate.copy(
+            iconResId = R.drawable.ic_attachment,
+            type = ModuleItem.Type.File,
+            contentDetails = ModuleContentDetails(
+                hidden = false,
+                locked = true,
+                unlockAt = Date().toApiString()
+            )
+        )
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemIcon.assertDisplayed()
+        page.assertStatusIcon(R.drawable.ic_calendar_month, R.color.textWarning)
     }
 
     private fun loadPageWithViewState(
