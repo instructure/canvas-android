@@ -29,7 +29,6 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
-import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -56,6 +55,7 @@ class CalendarViewModel @Inject constructor(
 
     private var selectedDay = LocalDate.now(clock)
     private var expanded = true
+    private var collapsing = false
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
     private val loadingDays = mutableSetOf<LocalDate>()
@@ -142,7 +142,8 @@ class CalendarViewModel @Inject constructor(
                 currentPage = currentPage,
                 nextPage = nextPage
             ),
-            eventIndicators = eventIndicators
+            eventIndicators = eventIndicators,
+            collapsing = collapsing
         )
     }
 
@@ -258,6 +259,8 @@ class CalendarViewModel @Inject constructor(
             CalendarAction.SnackbarDismissed -> viewModelScope.launch {
                 _uiState.emit(createNewUiState().copy(snackbarMessage = null))
             }
+
+            CalendarAction.HeightAnimationFinished -> heightAnimationFinished()
         }
     }
 
@@ -270,7 +273,11 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun expandChanged(expanded: Boolean) {
-        this.expanded = expanded
+        if (this.expanded && !expanded) {
+            collapsing = true
+        } else {
+            this.expanded = expanded
+        }
         viewModelScope.launch {
             _uiState.emit(createNewUiState())
         }
@@ -352,6 +359,16 @@ class CalendarViewModel @Inject constructor(
                 plannerItemsForDay.add(plannerItem)
             } else {
                 plannerItemsForDay[index] = plannerItem
+            }
+        }
+    }
+
+    private fun heightAnimationFinished() {
+        if (collapsing) {
+            collapsing = false
+            expanded = false
+            viewModelScope.launch {
+                _uiState.emit(createNewUiState())
             }
         }
     }

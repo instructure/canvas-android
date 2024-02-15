@@ -29,7 +29,8 @@ data class CalendarUiState(
     val expanded: Boolean,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
     val eventIndicators: Map<LocalDate, Int> = emptyMap(),
-    val snackbarMessage: String? = null
+    val snackbarMessage: String? = null,
+    val collapsing: Boolean = false
 ) {
     val headerUiState: CalendarHeaderUiState
         get() {
@@ -164,6 +165,7 @@ sealed class CalendarAction {
     data class RefreshDay(val date: LocalDate): CalendarAction()
     data object Retry : CalendarAction()
     data object SnackbarDismissed : CalendarAction()
+    data object HeightAnimationFinished : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {

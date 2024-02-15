@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.calendar.composables
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -96,7 +97,8 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        CalendarHeader(calendarUiState.headerUiState, calendarUiState.expanded, actionHandler)
+        val calendarOpen = calendarUiState.expanded && !calendarUiState.collapsing
+        CalendarHeader(calendarUiState.headerUiState, calendarOpen, actionHandler)
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalPager(
             state = pagerState,
@@ -115,8 +117,10 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 }
 
                 val rowsHeight =
-                    if (calendarUiState.expanded) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
-                val height = rowsHeight + HEADER_HEIGHT
+                    if (calendarUiState.expanded && !calendarUiState.collapsing) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
+                val height by animateIntAsState(targetValue = rowsHeight + HEADER_HEIGHT, label = "heightAnimation", finishedListener = {
+                    actionHandler(CalendarAction.HeightAnimationFinished)
+                })
 
                 if (page >= settledPage - 1 && page <= settledPage + 1) {
                     CalendarBody(calendarPageUiState.calendarRows,
@@ -142,7 +146,7 @@ fun CalendarHeader(
     calendarOpen: Boolean,
     actionHandler: (CalendarAction) -> Unit
 ) {
-    val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f)
+    val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f, label = "expandIconRotation")
 
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
     if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) actionHandler(CalendarAction.ExpandDisabled)
