@@ -32,7 +32,8 @@ data class CalendarUiState(
     val snackbarMessage: String? = null,
     val collapsing: Boolean = false,
     val scrollToPageOffset: Int = 0,
-    val pendingSelectedDay: LocalDate? = null // Temporary selected date when the calendar is animating to a new month
+    val pendingSelectedDay: LocalDate? = null, // Temporary selected date when the calendar is animating to a new month
+    val jumpToToday: Boolean = false
 ) {
     val headerUiState: CalendarHeaderUiState
         get() {
@@ -45,10 +46,13 @@ data class CalendarUiState(
     val bodyUiState: CalendarBodyUiState
         get() {
             val dateFieldToAdd = if (expanded) ChronoUnit.MONTHS else ChronoUnit.WEEKS
-            val previousPage =
-                createCalendarPageUiState(selectedDay.minus(1, dateFieldToAdd), expanded)
+
+            val previousPageDate = if (jumpToToday && scrollToPageOffset < 0) LocalDate.now() else selectedDay.minus(1, dateFieldToAdd)
+            val nextPageDate = if (jumpToToday && scrollToPageOffset > 0) LocalDate.now() else selectedDay.plus(1, dateFieldToAdd)
+
+            val previousPage = createCalendarPageUiState(previousPageDate, expanded)
             val currentPage = createCalendarPageUiState(selectedDay, expanded)
-            val nextPage = createCalendarPageUiState(selectedDay.plus(1, dateFieldToAdd), expanded)
+            val nextPage = createCalendarPageUiState(nextPageDate, expanded)
             return CalendarBodyUiState(previousPage, currentPage, nextPage)
         }
 

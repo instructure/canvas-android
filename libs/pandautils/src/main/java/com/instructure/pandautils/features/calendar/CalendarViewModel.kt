@@ -44,6 +44,7 @@ import org.threeten.bp.YearMonth
 import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 import kotlin.math.min
+import kotlin.math.sign
 
 private const val MONTH_COUNT = 12
 
@@ -60,6 +61,7 @@ class CalendarViewModel @Inject constructor(
     // Helper fields to handle page change animations when a day in a different month is selected
     private var pendingSelectedDay: LocalDate? = null
     private var scrollToPageOffset: Int = 0
+    private var jumpToToday = false
 
     private var expanded = true
     private var collapsing = false
@@ -152,7 +154,8 @@ class CalendarViewModel @Inject constructor(
             eventIndicators = eventIndicators,
             collapsing = collapsing,
             scrollToPageOffset = scrollToPageOffset,
-            pendingSelectedDay = pendingSelectedDay
+            pendingSelectedDay = pendingSelectedDay,
+            jumpToToday = jumpToToday
         )
     }
 
@@ -247,12 +250,15 @@ class CalendarViewModel @Inject constructor(
 
     fun handleAction(calendarAction: CalendarAction) {
         when (calendarAction) {
-            is CalendarAction.DaySelected -> selectedDayChanged(calendarAction.selectedDay, true)
+            is CalendarAction.DaySelected -> selectedDayChangedWithPageAnimation(calendarAction.selectedDay)
             CalendarAction.ExpandChanged -> expandChanged(!expanded)
             CalendarAction.ExpandDisabled -> expandChanged(false)
-            CalendarAction.TodayTapped -> selectedDayChanged(LocalDate.now(clock))
+            CalendarAction.TodayTapped -> {
+                jumpToToday = true
+                selectedDayChangedWithPageAnimation(LocalDate.now(clock))
+            }
             is CalendarAction.PageChanged -> pageChanged(calendarAction.offset.toLong())
-            is CalendarAction.EventPageChanged -> selectedDayChanged(selectedDay.plusDays(calendarAction.offset.toLong()), true)
+            is CalendarAction.EventPageChanged -> selectedDayChangedWithPageAnimation(selectedDay.plusDays(calendarAction.offset.toLong()))
             is CalendarAction.EventSelected -> openSelectedEvent(calendarAction.id)
             is CalendarAction.RefreshDay -> refreshDay(calendarAction.date)
             CalendarAction.Retry -> loadVisibleMonths()
@@ -265,18 +271,18 @@ class CalendarViewModel @Inject constructor(
     }
 
     // We need this animatePageChange parameter because we don't want to animate the page change again when day is selected with a page change
-    private fun selectedDayChanged(newDay: LocalDate, animatePageChange: Boolean = false) {
-        val monthOffset = (newDay.year - selectedDay.year) * MONTH_COUNT + newDay.monthValue - selectedDay.monthValue
-        if (monthOffset == 0 || !animatePageChange || !expanded) {
-            // Select day without animation
-            selectedDay = newDay
-            viewModelScope.launch {
-                _uiState.emit(createNewUiState())
-            }
-            loadVisibleMonths()
+    private fun selectedDayChangedWithPageAnimation(newDay: LocalDate) {
+        val offset = if (expanded) {
+            (newDay.year - selectedDay.year) * MONTH_COUNT + newDay.monthValue - selectedDay.monthValue
+        } else {
+            calculateWeekOffset(selectedDay, newDay)
+        }
+
+        if (offset == 0 || (!expanded && !jumpToToday)) {
+            selectedDayChanged(newDay)
         } else {
             // Animate page change
-            scrollToPageOffset = monthOffset
+            scrollToPageOffset = offset.sign
             pendingSelectedDay = newDay
             viewModelScope.launch {
                 _uiState.emit(createNewUiState())
@@ -284,7 +290,30 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
+    private fun calculateWeekOffset(currentDate: LocalDate, newDate: LocalDate): Int {
+        val currentDayOfWeek = currentDate.dayOfWeek
+
+        // Calculate the start and end of the current week
+        val startOfWeek = currentDate.minusDays(currentDayOfWeek.value.toLong() - 1)
+        val endOfWeek = currentDate.plusDays(7 - currentDayOfWeek.value.toLong())
+
+        return when {
+            newDate.isBefore(startOfWeek) -> -1
+            newDate.isAfter(endOfWeek) -> 1
+            else -> 0
+        }
+    }
+
+    private fun selectedDayChanged(newDay: LocalDate) {
+        selectedDay = newDay
+        viewModelScope.launch {
+            _uiState.emit(createNewUiState())
+        }
+        loadVisibleMonths()
+    }
+
     private fun pageChanged(offset: Long) {
+        jumpToToday = false
         if (pendingSelectedDay != null) {
             scrollToPageOffset = 0
             val dayToSelect = pendingSelectedDay!!
