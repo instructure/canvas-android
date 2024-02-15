@@ -168,6 +168,7 @@ object Libs {
     const val COMPOSE_MATERIAL = "androidx.compose.material:material"
     const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
     const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"
+    const val COMPOSE_UI = "androidx.compose.ui:ui-android:1.6.0"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
 }
 

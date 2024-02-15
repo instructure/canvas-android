@@ -19,13 +19,18 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import android.os.Bundle
+import android.view.View
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.features.progress.ProgressPreferences
+import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,11 +42,25 @@ class ModuleListFragment : ModuleListMobiusFragment() {
     @Inject
     lateinit var progressApi: ProgressAPI.ProgressInterface
 
-    override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi)
+    @Inject
+    lateinit var progressPreferences: ProgressPreferences
+
+    @Inject
+    lateinit var moduleBulkProgressDao: ModuleBulkProgressDao
+
+    override fun makeEffectHandler() = ModuleListEffectHandler(moduleApi, progressApi, progressPreferences, moduleBulkProgressDao)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = false
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch {
+            val progresses = moduleBulkProgressDao.findByCourseId(canvasContext.id)
+            this@ModuleListFragment.view.bulkUpdateInProgress(progresses)
+        }
     }
 
     companion object {

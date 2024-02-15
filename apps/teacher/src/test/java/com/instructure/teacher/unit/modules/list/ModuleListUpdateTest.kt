@@ -428,6 +428,7 @@ class ModuleListUpdateTest : Assert() {
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
             listOf(1L),
+            listOf(1L),
             BulkModuleUpdateAction.PUBLISH,
             true,
             false
@@ -455,6 +456,7 @@ class ModuleListUpdateTest : Assert() {
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
             listOf(1L),
+            listOf(1L, 100L),
             BulkModuleUpdateAction.PUBLISH,
             false,
             false
@@ -489,6 +491,7 @@ class ModuleListUpdateTest : Assert() {
         )
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
+            listOf(1L, 2L),
             listOf(1L, 2L),
             BulkModuleUpdateAction.UNPUBLISH,
             true,
@@ -525,6 +528,7 @@ class ModuleListUpdateTest : Assert() {
         val expectedEffect = ModuleListEffect.BulkUpdateModules(
             expectedModel.course,
             listOf(1L, 2L),
+            listOf(1L, 2L, 100L, 200L, 201L),
             BulkModuleUpdateAction.UNPUBLISH,
             false,
             true
@@ -873,6 +877,39 @@ class ModuleListUpdateTest : Assert() {
             .then(
                 assertThatNext(
                     matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateCancelled emits LoadNextPage effect`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.updateCancelled)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateCancelled)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, snackbarEffect)
                 )
             )
     }

@@ -23,7 +23,6 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.isValid
-import java.util.Date
 
 sealed class ModuleListEvent {
     object PullToRefresh : ModuleListEvent()
@@ -51,8 +50,17 @@ sealed class ModuleListEvent {
     ) : ModuleListEvent()
 
     data class BulkUpdateFailed(val skipContentTags: Boolean) : ModuleListEvent()
+    data class BulkUpdateStarted(
+        val canvasContext: CanvasContext,
+        val progressId: Long,
+        val allModules: Boolean,
+        val skipContentTags: Boolean,
+        val affectedIds: List<Long>,
+        val action: BulkModuleUpdateAction
+    ) : ModuleListEvent()
 
     data class UpdateFileModuleItem(val fileId: Long, val contentDetails: ModuleContentDetails) : ModuleListEvent()
+    object BulkUpdateCancelled : ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -79,6 +87,7 @@ sealed class ModuleListEffect {
     data class BulkUpdateModules(
         val canvasContext: CanvasContext,
         val moduleIds: List<Long>,
+        val affectedIds: List<Long>,
         val action: BulkModuleUpdateAction,
         val skipContentTags: Boolean,
         val allModules: Boolean
@@ -96,6 +105,13 @@ sealed class ModuleListEffect {
     data class UpdateFileModuleItem(
         val fileId: Long,
         val contentDetails: ModuleContentDetails
+    ) : ModuleListEffect()
+
+    data class BulkUpdateStarted(
+        val progressId: Long,
+        val allModules: Boolean,
+        val skipContentTags: Boolean,
+        val action: BulkModuleUpdateAction
     ) : ModuleListEffect()
 }
 
