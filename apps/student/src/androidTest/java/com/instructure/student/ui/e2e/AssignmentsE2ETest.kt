@@ -75,9 +75,11 @@ class AssignmentsE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val testAssignment = createAssignment(course.id, teacher, GradingType.POINTS, 15.0, 2.days.fromNow.iso8601)
-        val alreadyPastAssignment = createAssignment(course.id, teacher, GradingType.POINTS, 15.0, 2.days.ago.iso8601)
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
+        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days past due date.")
+        val alreadyPastAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = 2.days.ago.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
@@ -930,8 +932,6 @@ class AssignmentsE2ETest: StudentTest() {
         SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade = "12")
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Enable restriction for quantitative data.")
-        val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
-        Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Enable restriction for quantitative data.")
         val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
         restrictQuantitativeDataMap["restrict_quantitative_data"] = true
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
