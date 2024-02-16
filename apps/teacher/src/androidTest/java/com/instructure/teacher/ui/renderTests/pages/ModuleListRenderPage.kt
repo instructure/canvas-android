@@ -15,20 +15,18 @@
  */
 package com.instructure.teacher.ui.renderTests.pages
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.matchers.WithDrawableViewMatcher
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.SwipeRefreshLayoutMatchers
@@ -82,7 +80,7 @@ class ModuleListRenderPage : BasePage(R.id.moduleList) {
         moduleItemIndent.check(matches(ViewSizeMatcher.hasWidth(indent)))
     }
 
-    fun assertStatusIcon(@DrawableRes iconId: Int, @ColorRes tintId: Int) {
-        WithDrawableViewMatcher(iconId, tintId).matches(withId(R.id.moduleItemStatusIcon))
+    fun assertStatusIconContentDescription(@StringRes contentDescription: Int) {
+        moduleItemStatusIcon.check(matches(withContentDescription(contentDescription)))
     }
 }

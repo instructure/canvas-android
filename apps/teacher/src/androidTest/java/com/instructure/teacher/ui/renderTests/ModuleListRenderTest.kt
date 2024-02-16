@@ -16,7 +16,6 @@
 package com.instructure.teacher.ui.renderTests
 
 import android.graphics.Color
-import android.os.Build
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Course
@@ -163,7 +162,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             items = listOf(moduleItem)
         )
         loadPageWithViewState(state)
-        page.assertStatusIcon(R.drawable.ic_complete_solid, R.color.textSuccess)
+        page.assertStatusIconContentDescription(R.string.a11y_published)
     }
 
     @Test
@@ -175,7 +174,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             items = listOf(moduleItem)
         )
         loadPageWithViewState(state)
-        page.assertStatusIcon(R.drawable.ic_no, R.color.textDark)
+        page.assertStatusIconContentDescription(R.string.a11y_unpublished)
     }
 
     @Test
@@ -402,7 +401,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
         )
         loadPageWithViewState(state)
         page.moduleItemIcon.assertDisplayed()
-        page.assertStatusIcon(R.drawable.ic_eye_off, R.color.textWarning)
+        page.assertStatusIconContentDescription(R.string.a11y_hidden)
     }
 
     @Test
@@ -421,7 +420,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
         )
         loadPageWithViewState(state)
         page.moduleItemIcon.assertDisplayed()
-        page.assertStatusIcon(R.drawable.ic_calendar_month, R.color.textWarning)
+        page.assertStatusIconContentDescription(R.string.a11y_scheduled)
     }
 
     private fun loadPageWithViewState(

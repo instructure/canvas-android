@@ -820,11 +820,11 @@ object CourseModuleListEndpoint : Endpoint(
                 }
             }
             PUT {
-                val moduleIds = request.url.queryParameter("module_ids[]")?.split(",")?.map { it.toLong() }
+                val moduleIds = request.url.queryParameterValues("module_ids[]").filterNotNull().map { it.toLong() }
                 val event = request.url.queryParameter("event")
                 val skipContentTags = request.url.queryParameter("skip_content_tags").toBoolean()
 
-                val modules = data.courseModules[pathVars.courseId]?.filter { moduleIds?.contains(it.id) ?: false }
+                val modules = data.courseModules[pathVars.courseId]?.filter { moduleIds.contains(it.id) }
 
                 val updatedModules = modules?.map {
                     val updatedItems = if (skipContentTags) {
@@ -838,12 +838,12 @@ object CourseModuleListEndpoint : Endpoint(
                     )
                 }
 
-                data.courseModules[pathVars.courseId]?.replaceAll {
-                    if (moduleIds?.contains(it.id) == true) {
-                        updatedModules?.find { it.id == it.id } ?: it
-                    } else {
-                        it
-                    }
+                data.courseModules[pathVars.courseId]?.map { moduleObject ->
+                    updatedModules?.find { updatedModuleObject ->
+                        updatedModuleObject.id == moduleObject.id
+                    } ?: moduleObject
+                }?.let {
+                    data.courseModules[pathVars.courseId] = it.toMutableList()
                 }
 
                 request.successResponse(BulkUpdateResponse(BulkUpdateProgress(Progress(1L, workflowState = "running"))))
@@ -906,7 +906,29 @@ object CourseModuleItemsListEndpoint : Endpoint(
                 val moduleItem = itemList?.find { it.id == pathVars.moduleItemId }
 
                 if (moduleItem != null) {
-                    request.successResponse(moduleItem.copy(published = isPublished))
+                    val updatedItem = moduleItem.copy(published = isPublished)
+
+                    val updatedModule = moduleObject.copy(
+                        items = itemList.map {
+                            if (it.id == updatedItem.id) {
+                                updatedItem
+                            } else {
+                                it
+                            }
+                        }
+                    )
+
+                    data.courseModules[pathVars.courseId]?.map {
+                        if (it.id == updatedModule.id) {
+                            updatedModule
+                        } else {
+                            it
+                        }
+                    }?.let {
+                        data.courseModules[pathVars.courseId] = it.toMutableList()
+                    }
+
+                    request.successResponse(updatedItem)
                 } else {
                     request.unauthorizedResponse()
                 }

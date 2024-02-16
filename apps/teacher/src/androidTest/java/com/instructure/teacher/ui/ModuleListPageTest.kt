@@ -18,6 +18,9 @@
 
 package com.instructure.teacher.ui
 
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -29,15 +32,20 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.Randomizer
+import com.instructure.teacher.R
+import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.openOverflowMenu
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Rule
 import org.junit.Test
-import com.instructure.teacher.R
 
 @HiltAndroidTest
 class ModuleListPageTest : TeacherTest() {
+
+    @get:Rule(order = 2)
+    val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
     @Test
     override fun displaysPageObjects() {
@@ -137,7 +145,7 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.publish)
 
         modulesPage.assertSnackbarText(R.string.moduleItemPublished)
-        modulesPage.assertItemPublished(assignment.name.orEmpty())
+        modulesPage.assertModuleItemIsPublished(assignment.name.orEmpty())
     }
 
     @Test
@@ -159,7 +167,7 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.unpublish)
 
         modulesPage.assertSnackbarText(R.string.moduleItemUnpublished)
-        modulesPage.assertItemUnublished(assignment.name.orEmpty())
+        modulesPage.assertModuleItemNotPublished(assignment.name.orEmpty())
     }
 
     @Test
@@ -176,8 +184,128 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.publish)
 
         modulesPage.assertSnackbarText(R.string.onlyModulePublished)
-        modulesPage.assertModuleIsPublished()
-        modulesPage.assertItemUnublished(assignment.name.orEmpty())
+        modulesPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
+        modulesPage.assertModuleItemNotPublished(assignment.name.orEmpty())
+    }
+
+    @Test
+    fun publishModuleAndItems() {
+        val data = goToModulesPage(publishedModuleCount = 0, unpublishedModuleCount = 1)
+        val unpublishedModule = data.courseModules.values.first().first { it.published == false }
+        val assignment = data.addAssignment(courseId = data.courses.values.first().id)
+
+        data.addItemToModule(data.courses.values.first(), unpublishedModule.id, assignment, published = false)
+        modulesPage.refresh()
+
+        modulesPage.clickItemOverflow(unpublishedModule.name.orEmpty())
+        modulesPage.clickOnText(R.string.publishModuleAndItems)
+        modulesPage.clickOnText(R.string.publish)
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Done").performClick()
+
+        modulesPage.assertSnackbarText(R.string.moduleAndAllItemsPublished)
+        modulesPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
+        modulesPage.assertModuleItemIsPublished(assignment.name.orEmpty())
+    }
+
+    @Test
+    fun unpublishModuleAndItems() {
+        val data = goToModulesPage(publishedModuleCount = 1, unpublishedModuleCount = 0)
+        val publishedModule = data.courseModules.values.first().first { it.published == true }
+        val assignment = data.addAssignment(courseId = data.courses.values.first().id)
+
+        data.addItemToModule(data.courses.values.first(), publishedModule.id, assignment, published = true)
+        modulesPage.refresh()
+
+        modulesPage.clickItemOverflow(publishedModule.name.orEmpty())
+        modulesPage.clickOnText(R.string.unpublishModuleAndItems)
+        modulesPage.clickOnText(R.string.unpublish)
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Done").performClick()
+
+        modulesPage.assertSnackbarText(R.string.moduleAndAllItemsUnpublished)
+        modulesPage.assertModuleNotPublished(publishedModule.name.orEmpty())
+        modulesPage.assertModuleItemNotPublished(assignment.name.orEmpty())
+    }
+
+    @Test
+    fun publishModulesOnly() {
+        val data = goToModulesPage(publishedModuleCount = 0, unpublishedModuleCount = 2)
+        val unpublishedModules = data.courseModules.values.first().filter { it.published == false }
+        val assignment1 = data.addAssignment(courseId = data.courses.values.first().id)
+        val assignment2 = data.addAssignment(courseId = data.courses.values.first().id)
+
+        data.addItemToModule(data.courses.values.first(), unpublishedModules[0].id, assignment1, published = false)
+        data.addItemToModule(data.courses.values.first(), unpublishedModules[1].id, assignment2, published = false)
+
+        modulesPage.refresh()
+
+        openOverflowMenu()
+        modulesPage.clickOnText(R.string.publishModulesOnly)
+        modulesPage.clickOnText(R.string.publish)
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Done").performClick()
+
+        modulesPage.assertSnackbarText(R.string.onlyModulesPublished)
+        modulesPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
+        modulesPage.assertModuleIsPublished(unpublishedModules[1].name.orEmpty())
+        modulesPage.assertModuleItemNotPublished(assignment1.name.orEmpty())
+        modulesPage.assertModuleItemNotPublished(assignment2.name.orEmpty())
+    }
+
+    @Test
+    fun publishModulesAndItems() {
+        val data = goToModulesPage(publishedModuleCount = 0, unpublishedModuleCount = 2)
+        val unpublishedModules = data.courseModules.values.first().filter { it.published == false }
+        val assignment1 = data.addAssignment(courseId = data.courses.values.first().id)
+        val assignment2 = data.addAssignment(courseId = data.courses.values.first().id)
+
+        data.addItemToModule(data.courses.values.first(), unpublishedModules[0].id, assignment1, published = false)
+        data.addItemToModule(data.courses.values.first(), unpublishedModules[1].id, assignment2, published = false)
+
+        modulesPage.refresh()
+
+        openOverflowMenu()
+        modulesPage.clickOnText(R.string.publishAllModulesAndItems)
+        modulesPage.clickOnText(R.string.publish)
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Done").performClick()
+
+        modulesPage.assertSnackbarText(R.string.allModulesAndAllItemsPublished)
+        modulesPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
+        modulesPage.assertModuleIsPublished(unpublishedModules[1].name.orEmpty())
+        modulesPage.assertModuleItemIsPublished(assignment1.name.orEmpty())
+        modulesPage.assertModuleItemIsPublished(assignment2.name.orEmpty())
+    }
+
+    @Test
+    fun unpublishModulesAndItems() {
+        val data = goToModulesPage(publishedModuleCount = 2, unpublishedModuleCount = 0)
+        val unpublishedModules = data.courseModules.values.first().filter { it.published == true }
+        val assignment1 = data.addAssignment(courseId = data.courses.values.first().id)
+        val assignment2 = data.addAssignment(courseId = data.courses.values.first().id)
+
+        data.addItemToModule(data.courses.values.first(), unpublishedModules[0].id, assignment1, published = true)
+        data.addItemToModule(data.courses.values.first(), unpublishedModules[1].id, assignment2, published = true)
+
+        modulesPage.refresh()
+
+        openOverflowMenu()
+        modulesPage.clickOnText(R.string.unpublishAllModulesAndItems)
+        modulesPage.clickOnText(R.string.unpublish)
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Done").performClick()
+
+        modulesPage.assertSnackbarText(R.string.allModulesAndAllItemsUnpublished)
+        modulesPage.assertModuleNotPublished(unpublishedModules[0].name.orEmpty())
+        modulesPage.assertModuleNotPublished(unpublishedModules[1].name.orEmpty())
+        modulesPage.assertModuleItemNotPublished(assignment1.name.orEmpty())
+        modulesPage.assertModuleItemNotPublished(assignment2.name.orEmpty())
     }
 
     private fun goToModulesPage(publishedModuleCount: Int = 1, unpublishedModuleCount: Int = 0): MockCanvas {

@@ -880,7 +880,7 @@ fun MockCanvas.addAssignment(
     lockInfo : LockInfo? = null,
     userSubmitted: Boolean = false,
     dueAt: String? = null,
-    name: String = Randomizer.randomCourseName(),
+    name: String = Randomizer.randomAssignmentName(),
     pointsPossible: Int = 10,
     description: String = "",
     lockAt: String? = null,

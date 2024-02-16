@@ -5,9 +5,9 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasContentDescription
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.matchers.WithDrawableViewMatcher
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
@@ -46,12 +46,22 @@ class ModulesPage : BasePage() {
         onView(withId(R.id.publishedIcon)).assertNotDisplayed()
     }
 
+    fun assertModuleNotPublished(moduleTitle: String) {
+        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
+        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
+    }
+
     /**
      * Asserts that the module is published.
      */
     fun assertModuleIsPublished() {
         onView(withId(R.id.unpublishedIcon)).assertNotDisplayed()
         onView(withId(R.id.publishedIcon)).assertDisplayed()
+    }
+
+    fun assertModuleIsPublished(moduleTitle: String) {
+        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
+        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
     }
 
     /**
@@ -94,21 +104,20 @@ class ModulesPage : BasePage() {
      * @param moduleItemName The name of the module item.
      */
     fun assertModuleItemIsPublished(moduleItemName: String) {
-        val siblingChildMatcher = withChild(withId(R.id.moduleItemTitle) + withText(moduleItemName))
-        onView(withId(R.id.moduleItemStatusIcon) + hasSibling(siblingChildMatcher)).assertDisplayed()
-        onView(withId(R.id.moduleItemUnpublishedIcon) + hasSibling(siblingChildMatcher)).assertNotDisplayed()
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_published
+        )
     }
 
     /**
      * Asserts that the module item with the specified title is not published.
      *
-     * @param moduleTitle The title of the module.
      * @param moduleItemName The name of the module item.
      */
-    fun assertModuleItemNotPublished(moduleTitle: String, moduleItemName: String) {
-        val siblingChildMatcher = withChild(withId(R.id.moduleItemTitle) + withText(moduleItemName))
-        onView(withId(R.id.moduleItemUnpublishedIcon) + hasSibling(siblingChildMatcher)).assertDisplayed()
-        onView(withId(R.id.moduleItemStatusIcon) + hasSibling(siblingChildMatcher)).assertNotDisplayed()
+    fun assertModuleItemNotPublished(moduleItemName: String) {
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_unpublished
+        )
     }
 
     /**
@@ -125,8 +134,12 @@ class ModulesPage : BasePage() {
      * @param expectedCount The expected item count in the module.
      */
     fun assertItemCountInModule(moduleTitle: String, expectedCount: Int) {
-        onView(withId(R.id.recyclerView) + withDescendant(withId(R.id.moduleName) +
-                withText(moduleTitle))).waitForCheck(RecyclerViewItemCountAssertion(expectedCount + 1)) // Have to increase by one because of the module title element itself.
+        onView(
+            withId(R.id.recyclerView) + withDescendant(
+                withId(R.id.moduleName) +
+                        withText(moduleTitle)
+            )
+        ).waitForCheck(RecyclerViewItemCountAssertion(expectedCount + 1)) // Have to increase by one because of the module title element itself.
     }
 
     fun assertToolbarMenuItems() {
@@ -159,13 +172,5 @@ class ModulesPage : BasePage() {
 
     fun assertSnackbarText(@StringRes snackbarText: Int) {
         onView(withId(com.google.android.material.R.id.snackbar_text) + withText(snackbarText)).assertDisplayed()
-    }
-
-    fun assertItemPublished(itemName: String) {
-        WithDrawableViewMatcher(R.drawable.ic_complete_solid, R.color.textSuccess).matches(withParent(withText(itemName)) + withId(R.id.moduleItemStatusIcon))
-    }
-
-    fun assertItemUnublished(itemName: String) {
-        WithDrawableViewMatcher(R.drawable.ic_no, R.color.textDark).matches(withParent(withText(itemName)) + withId(R.id.moduleItemStatusIcon))
     }
 }

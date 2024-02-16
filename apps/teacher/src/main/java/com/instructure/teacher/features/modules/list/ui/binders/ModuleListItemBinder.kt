@@ -20,6 +20,7 @@ import android.view.Gravity
 import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
@@ -59,6 +60,7 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
 
             val statusIcon = getStatusIcon(item)
             moduleItemStatusIcon.apply {
+                contentDescription = context.getString(statusIcon.contentDescription)
                 setImageResource(statusIcon.icon)
                 setTint(statusIcon.tint)
                 setVisible(!item.isLoading)
@@ -82,27 +84,32 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
     private fun getStatusIcon(data: ModuleListItemData.ModuleItemData): StatusIcon {
         val icon: Int
         val tint: Int
+        val contentDescription: Int
         when (data.type) {
             ModuleItem.Type.File -> {
                 if (data.contentDetails?.hidden == true) {
                     icon = R.drawable.ic_eye_off
                     tint = R.color.textWarning
+                    contentDescription = R.string.a11y_hidden
                 } else if (data.contentDetails?.lockAt.isValid() || data.contentDetails?.unlockAt.isValid()) {
                     icon = R.drawable.ic_calendar_month
                     tint = R.color.textWarning
+                    contentDescription = R.string.a11y_scheduled
                 } else {
                     icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
                     tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
+                    contentDescription = if (data.isPublished == true) R.string.a11y_published else R.string.a11y_unpublished
                 }
             }
 
             else -> {
                 icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
                 tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
+                contentDescription = if (data.isPublished == true) R.string.a11y_published else R.string.a11y_unpublished
             }
         }
 
-        return StatusIcon(icon, tint)
+        return StatusIcon(icon, tint, contentDescription)
     }
 
     private fun showModuleItemActions(
@@ -145,5 +152,6 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
 
 data class StatusIcon(
     @DrawableRes val icon: Int,
-    @ColorRes val tint: Int
+    @ColorRes val tint: Int,
+    @StringRes val contentDescription: Int
 )
