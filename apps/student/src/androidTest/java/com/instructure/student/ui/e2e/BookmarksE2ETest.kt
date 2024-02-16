@@ -25,9 +25,6 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -58,7 +55,7 @@ class BookmarksE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Preparing an assignment which will be saved as a bookmark.")
-        val assignment = createAssignment(course, teacher)
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -108,22 +105,6 @@ class BookmarksE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Assert that empty view is displayed, so the bookmark has been deleted.")
         bookmarkPage.assertEmptyView()
-    }
-
-    private fun createAssignment(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ): AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacher.token,
-                pointsPossible = 15.0,
-                dueAt = 1.days.fromNow.iso8601
-            )
-        )
     }
 
 }

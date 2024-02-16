@@ -34,7 +34,7 @@ object AssignmentGroupsApi {
     private fun assignmentGroupsService(token: String): AssignmentGroupsService
             = CanvasNetworkAdapter.retrofitWithToken(token).create(AssignmentGroupsService::class.java)
 
-    fun createAssignmentGroup(token: String, courseId: Long, name: String, position: Int?, groupWeight: Int?, sisSourceId: Long?): AssignmentGroupApiModel {
+    fun createAssignmentGroup(token: String, courseId: Long, name: String, position: Int? = null, groupWeight: Int? = null, sisSourceId: Long? = null): AssignmentGroupApiModel {
         val assignmentGroup = CreateAssignmentGroup(name, position, groupWeight, sisSourceId)
         return assignmentGroupsService(token)
                 .createAssignmentGroup(courseId, assignmentGroup)
