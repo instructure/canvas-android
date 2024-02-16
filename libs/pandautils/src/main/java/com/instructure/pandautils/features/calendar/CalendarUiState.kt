@@ -164,6 +164,7 @@ data class EventUiState(
 sealed class CalendarAction {
     data object ExpandChanged : CalendarAction()
     data object ExpandDisabled : CalendarAction()
+    data object ExpandEnabled : CalendarAction()
     data class DaySelected(val selectedDay: LocalDate) : CalendarAction()
     data object TodayTapped : CalendarAction()
     data class PageChanged(val offset: Int) : CalendarAction()

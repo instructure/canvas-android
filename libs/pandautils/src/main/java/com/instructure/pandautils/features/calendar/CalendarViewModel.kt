@@ -53,7 +53,8 @@ class CalendarViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val calendarRepository: CalendarRepository,
     private val apiPrefs: ApiPrefs,
-    private val clock: Clock
+    private val clock: Clock,
+    private val calendarPrefs: CalendarPrefs
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now(clock)
@@ -63,7 +64,8 @@ class CalendarViewModel @Inject constructor(
     private var scrollToPageOffset: Int = 0
     private var jumpToToday = false
 
-    private var expanded = true
+    private var expandAllowed = true
+    private var expanded = calendarPrefs.calendarExpanded && expandAllowed
     private var collapsing = false
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
@@ -251,8 +253,17 @@ class CalendarViewModel @Inject constructor(
     fun handleAction(calendarAction: CalendarAction) {
         when (calendarAction) {
             is CalendarAction.DaySelected -> selectedDayChangedWithPageAnimation(calendarAction.selectedDay)
-            CalendarAction.ExpandChanged -> expandChanged(!expanded)
-            CalendarAction.ExpandDisabled -> expandChanged(false)
+            CalendarAction.ExpandChanged -> expandChangedWithAnimation(!expanded)
+            CalendarAction.ExpandDisabled -> {
+                expandAllowed = false
+                expandChanged(false, save = false)
+            }
+            CalendarAction.ExpandEnabled -> {
+                if (!expandAllowed) {
+                    expandAllowed = true
+                    expandChanged(calendarPrefs.calendarExpanded, save = false)
+                }
+            }
             CalendarAction.TodayTapped -> {
                 jumpToToday = true
                 selectedDayChangedWithPageAnimation(LocalDate.now(clock))
@@ -325,11 +336,21 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun expandChanged(expanded: Boolean) {
+    private fun expandChangedWithAnimation(expanded: Boolean) {
         if (this.expanded && !expanded) {
             collapsing = true
+            viewModelScope.launch {
+                _uiState.emit(createNewUiState())
+            }
         } else {
-            this.expanded = expanded
+            expandChanged(expanded, true)
+        }
+    }
+
+    private fun expandChanged(expanded: Boolean, save: Boolean) {
+        this.expanded = expanded
+        if (save) {
+            calendarPrefs.calendarExpanded = expanded
         }
         viewModelScope.launch {
             _uiState.emit(createNewUiState())
@@ -420,6 +441,7 @@ class CalendarViewModel @Inject constructor(
         if (collapsing) {
             collapsing = false
             expanded = false
+            calendarPrefs.calendarExpanded = false
             viewModelScope.launch {
                 _uiState.emit(createNewUiState())
             }

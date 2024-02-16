@@ -16,6 +16,7 @@
 package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import dagger.Module
 import dagger.Provides
@@ -29,5 +30,10 @@ class CalendarModule {
     @Provides
     fun provideCalendarRepository(plannerApi: PlannerAPI.PlannerInterface): CalendarRepository {
         return CalendarRepository(plannerApi)
+    }
+
+    @Provides
+    fun provideCalendarPrefs(): CalendarPrefs {
+        return CalendarPrefs
     }
 }

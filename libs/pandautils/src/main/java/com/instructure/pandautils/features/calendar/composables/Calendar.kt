@@ -103,7 +103,9 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
         }
 
         Spacer(modifier = Modifier.height(8.dp))
+
         val calendarOpen = calendarUiState.expanded && !calendarUiState.collapsing
+
         CalendarHeader(calendarUiState.headerUiState, calendarOpen, actionHandler)
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalPager(
@@ -123,7 +125,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 }
 
                 val rowsHeight =
-                    if (calendarUiState.expanded && !calendarUiState.collapsing) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
+                    if (calendarOpen) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
                 val height by animateIntAsState(targetValue = rowsHeight + HEADER_HEIGHT, label = "heightAnimation", finishedListener = {
                     actionHandler(CalendarAction.HeightAnimationFinished)
                 })
@@ -155,9 +157,13 @@ fun CalendarHeader(
     val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f, label = "expandIconRotation")
 
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
-    if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) actionHandler(CalendarAction.ExpandDisabled)
+    if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+        actionHandler(CalendarAction.ExpandDisabled)
+    } else {
+        actionHandler(CalendarAction.ExpandEnabled)
+    }
 
-    var monthRowModifier = Modifier.semantics(mergeDescendants = true){}
+    var monthRowModifier = Modifier.semantics(mergeDescendants = true) {}
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
         monthRowModifier = monthRowModifier.clickable(
             onClick = { actionHandler(CalendarAction.ExpandChanged) },
