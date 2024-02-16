@@ -59,10 +59,10 @@ class ShareExtensionE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'File upload' assignment for ${course.name} course.")
-        val testAssignmentOne = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        val testAssignmentOne = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD))
 
         Log.d(PREPARATION_TAG,"Seeding another 'File upload' assignment for ${course.name} course.")
-        AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 30.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 30.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD))
 
         Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
