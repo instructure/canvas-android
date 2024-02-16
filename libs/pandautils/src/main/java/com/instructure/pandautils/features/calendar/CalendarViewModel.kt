@@ -139,9 +139,10 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun createNewUiState(): CalendarUiState {
-        val currentPage = createEventsPageForDate(selectedDay)
-        val previousPage = createEventsPageForDate(selectedDay.minusDays(1))
-        val nextPage = createEventsPageForDate(selectedDay.plusDays(1))
+        val currentDayForEvents = pendingSelectedDay ?: selectedDay
+        val currentPage = createEventsPageForDate(currentDayForEvents)
+        val previousPage = createEventsPageForDate(currentDayForEvents.minusDays(1))
+        val nextPage = createEventsPageForDate(currentDayForEvents.plusDays(1))
 
         val eventIndicators = eventsByDay.mapValues { min(3, it.value.size) }
 
@@ -281,7 +282,6 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    // We need this animatePageChange parameter because we don't want to animate the page change again when day is selected with a page change
     private fun selectedDayChangedWithPageAnimation(newDay: LocalDate) {
         val offset = if (expanded) {
             (newDay.year - selectedDay.year) * MONTH_COUNT + newDay.monthValue - selectedDay.monthValue
@@ -289,7 +289,7 @@ class CalendarViewModel @Inject constructor(
             calculateWeekOffset(selectedDay, newDay)
         }
 
-        if (offset == 0 || (!expanded && !jumpToToday)) {
+        if (offset == 0) {
             selectedDayChanged(newDay)
         } else {
             // Animate page change
@@ -305,8 +305,9 @@ class CalendarViewModel @Inject constructor(
         val currentDayOfWeek = currentDate.dayOfWeek
 
         // Calculate the start and end of the current week
-        val startOfWeek = currentDate.minusDays(currentDayOfWeek.value.toLong() - 1)
-        val endOfWeek = currentDate.plusDays(7 - currentDayOfWeek.value.toLong())
+        // We need the modulo 7 because the first day of the week is Sunday, and it's value is 7, but should be 0 here.
+        val startOfWeek = currentDate.minusDays(currentDayOfWeek.value.toLong() % 7)
+        val endOfWeek = startOfWeek.plusDays(6)
 
         return when {
             newDate.isBefore(startOfWeek) -> -1
@@ -326,6 +327,7 @@ class CalendarViewModel @Inject constructor(
     private fun pageChanged(offset: Long) {
         jumpToToday = false
         if (pendingSelectedDay != null) {
+            // This is a page change animation triggered by an other event so we don't care about the offset
             scrollToPageOffset = 0
             val dayToSelect = pendingSelectedDay!!
             pendingSelectedDay = null
