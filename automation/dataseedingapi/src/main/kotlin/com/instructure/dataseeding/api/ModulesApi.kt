@@ -34,28 +34,28 @@ object ModulesApi {
     private fun modulesService(token: String): ModulesService
             = CanvasNetworkAdapter.retrofitWithToken(token).create(ModulesService::class.java)
 
-    fun createModule(courseId: Long, teacherToken: String, unlockAt: String?): ModuleApiModel {
+    fun createModule(courseId: Long, teacherToken: String, unlockAt: String? = null): ModuleApiModel {
         val module = CreateModuleWrapper(Randomizer.createModule(unlockAt))
         return modulesService(teacherToken).createModules(courseId, module).execute().body()!!
     }
 
     // Canvas API does not support creating a published module.
     // All modules must be created and published in separate calls.
-    fun updateModule(courseId: Long, id: Long, published: Boolean, teacherToken: String): ModuleApiModel {
+    fun updateModule(courseId: Long, teacherToken: String, moduleId: Long, published: Boolean = true): ModuleApiModel {
         val update = UpdateModuleWrapper(UpdateModule(published))
-        return modulesService(teacherToken).updateModule(courseId, id, update).execute().body()!!
+        return modulesService(teacherToken).updateModule(courseId, moduleId, update).execute().body()!!
     }
 
     fun createModuleItem(
-            courseId: Long,
-            moduleId: Long,
-            teacherToken: String,
-            title: String,
-            type: String,
-            contentId: String?,
-            pageUrl: String? = null
+        courseId: Long,
+        teacherToken: String,
+        moduleId: Long,
+        moduleItemTitle: String,
+        moduleItemType: String,
+        contentId: String? = null,
+        pageUrl: String? = null
     ): ModuleItemApiModel {
-        val newItem = CreateModuleItem(title, type, contentId, pageUrl)
+        val newItem = CreateModuleItem(moduleItemTitle, moduleItemType, contentId, pageUrl)
         val newItemWrapper = CreateModuleItemWrapper(moduleItem = newItem)
         return modulesService(teacherToken).createModuleItem(
                 courseId = courseId,

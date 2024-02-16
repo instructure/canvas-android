@@ -23,8 +23,14 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.api.ModulesApi
+import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.ModuleItemTypes
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -53,41 +59,41 @@ class ModulesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
-        val assignment1 = ApiManager.createAssignment(course, teacher, withDescription = true)
+        val assignment1 = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seeding another assignment for '${course.name}' course.")
-        val assignment2 = ApiManager.createAssignment(course, teacher, dueAt = 2.days.fromNow.iso8601, withDescription = true)
+        val assignment2 = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601, withDescription = true, gradingType = GradingType.POINTS, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Create a PUBLISHED quiz for '${course.name}' course.")
-        val quiz1 = ApiManager.createQuiz(course, teacher, dueAt = 3.days.fromNow.iso8601)
+        val quiz1 = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 3.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Create a page for '${course.name}' course.")
-        val page1 = ApiManager.createPage(course, teacher)
+        val page1 = PagesApi.createCoursePage(course.id, teacher.token)
 
         Log.d(PREPARATION_TAG,"Create a discussion topic for '${course.name}' course.")
-        val discussionTopic1 = ApiManager.createDiscussion(course, teacher)
+        val discussionTopic1 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
         //Modules start out as unpublished.
         Log.d(PREPARATION_TAG,"Create a module for '${course.name}' course.")
-        val module1 = ApiManager.createModule(course, teacher)
+        val module1 = ModulesApi.createModule(course.id, teacher.token)
 
         Log.d(PREPARATION_TAG,"Create another module for '${course.name}' course.")
-        val module2 = ApiManager.createModule(course, teacher)
+        val module2 = ModulesApi.createModule(course.id, teacher.token)
 
         Log.d(PREPARATION_TAG,"Associate '${assignment1.name}' assignment with '${module1.name}' module.")
-        ApiManager.createModuleItem(course.id, module1.id, teacher, assignment1.name, ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment1.id.toString())
+        ModulesApi.createModuleItem(course.id, teacher.token, module1.id, assignment1.name, ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment1.id.toString())
 
         Log.d(PREPARATION_TAG,"Associate '${quiz1.title}' quiz with '${module1.name}' module.")
-        ApiManager.createModuleItem(course.id, module1.id, teacher, quiz1.title, ModuleItemTypes.QUIZ.stringVal, contentId = quiz1.id.toString())
+        ModulesApi.createModuleItem(course.id, teacher.token, module1.id, quiz1.title, ModuleItemTypes.QUIZ.stringVal, contentId = quiz1.id.toString())
 
         Log.d(PREPARATION_TAG,"Associate '${assignment2.name}' assignment with '${module2.name}' module.")
-        ApiManager.createModuleItem(course.id, module2.id, teacher, assignment2.name, ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment2.id.toString())
+        ModulesApi.createModuleItem(course.id, teacher.token, module2.id, assignment2.name, ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment2.id.toString())
 
         Log.d(PREPARATION_TAG,"Associate '${page1.title}' page with '${module2.name}' module.")
-        ApiManager.createModuleItem(course.id, module2.id, teacher, page1.title, ModuleItemTypes.PAGE.stringVal, pageUrl = page1.url)
+        ModulesApi.createModuleItem(course.id, teacher.token, module2.id, page1.title, ModuleItemTypes.PAGE.stringVal, pageUrl = page1.url)
 
         Log.d(PREPARATION_TAG,"Associate '${discussionTopic1.title}' discussion topic with '${module2.name}' module.")
-        ApiManager.createModuleItem(course.id, module2.id, teacher, discussionTopic1.title, ModuleItemTypes.DISCUSSION.stringVal, contentId = discussionTopic1.id.toString())
+        ModulesApi.createModuleItem(course.id, teacher.token, module2.id, discussionTopic1.title, ModuleItemTypes.DISCUSSION.stringVal, contentId = discussionTopic1.id.toString())
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(student)
@@ -111,10 +117,10 @@ class ModulesE2ETest: StudentTest() {
         Espresso.pressBack()
 
         Log.d(PREPARATION_TAG,"Publish '${module1.name}' module.")
-        ApiManager.publishModule(course, module1, teacher)
+        ModulesApi.updateModule(course.id, teacher.token, module1.id, published = true)
 
         Log.d(PREPARATION_TAG,"Publish '${module2.name}' module.")
-        ApiManager.publishModule(course, module2, teacher)
+        ModulesApi.updateModule(course.id, teacher.token, module2.id, published = true)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the 'Modules' Tab is displayed.")
         courseBrowserPage.refresh()

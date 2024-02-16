@@ -24,8 +24,9 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
@@ -68,10 +69,10 @@ class HomeroomE2ETest : StudentTest() {
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${nonHomeroomCourses[2].name}' course.")
-        val testAssignment = ApiManager.createAssignment(nonHomeroomCourses[2], teacher, GradingType.LETTER_GRADE, 100.0, OffsetDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_DATE_TIME))
+        val testAssignment = AssignmentsApi.createAssignment(nonHomeroomCourses[2].id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 100.0, dueAt = OffsetDateTime.now().plusHours(1).format(DateTimeFormatter.ISO_DATE_TIME), submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' MISSING assignment for ${nonHomeroomCourses[2].name} course.")
-        val testAssignmentMissing = ApiManager.createAssignment(nonHomeroomCourses[2], teacher, GradingType.PERCENT, 100.0, 3.days.ago.iso8601)
+        val testAssignmentMissing = AssignmentsApi.createAssignment(nonHomeroomCourses[2].id, teacher.token, gradingType = GradingType.PERCENT, pointsPossible = 100.0, dueAt =  3.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)

@@ -6,7 +6,9 @@ import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.model.ModuleApiModel
 import org.hamcrest.CoreMatchers.instanceOf
-import org.junit.Assert.*
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -57,7 +59,7 @@ class ModulesTest {
 
         module = ModulesApi.updateModule(
                 courseId = course.id,
-                id = module.id,
+                moduleId = module.id,
                 published = true,
                 teacherToken = teacher.token
         )

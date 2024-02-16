@@ -24,8 +24,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -55,10 +59,10 @@ class ShareExtensionE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
 
         Log.d(PREPARATION_TAG,"Seeding 'File upload' assignment for ${course.name} course.")
-        val testAssignmentOne = ApiManager.createAssignment(course, teacher, submissionType = listOf(SubmissionType.ONLINE_UPLOAD))
+        val testAssignmentOne = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seeding another 'File upload' assignment for ${course.name} course.")
-        ApiManager.createAssignment(course, teacher, pointsPossible = 30.0)
+        AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 30.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

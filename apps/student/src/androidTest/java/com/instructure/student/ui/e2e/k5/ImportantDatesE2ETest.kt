@@ -25,8 +25,8 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.toDate
+import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
-import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -67,16 +67,16 @@ class ImportantDatesE2ETest : StudentTest() {
         val elementaryCourse4 = data.coursesList[3]
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse1.name}' course.")
-        val testAssignment1 = ApiManager.createAssignment(elementaryCourse1, teacher, GradingType.POINTS, 100.0, 3.days.fromNow.iso8601, importantDate = true)
+        val testAssignment1 = AssignmentsApi.createAssignment(elementaryCourse1.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 3.days.fromNow.iso8601, importantDate = true)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse2.name}' course.")
-        val testAssignment2 = ApiManager.createAssignment(elementaryCourse2, teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
+        val testAssignment2 = AssignmentsApi.createAssignment(elementaryCourse2.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 4.days.fromNow.iso8601, importantDate = true)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse3.name}' course.")
-        val testAssignment3 = ApiManager.createAssignment(elementaryCourse3, teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = true)
+        val testAssignment3 = AssignmentsApi.createAssignment(elementaryCourse3.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 4.days.fromNow.iso8601, importantDate = true)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' NOT IMPORTANT assignment for '${elementaryCourse4.name}' course.")
-        val testNotImportantAssignment = ApiManager.createAssignment(elementaryCourse4, teacher, GradingType.POINTS, 100.0, 4.days.fromNow.iso8601, importantDate = false)
+        val testNotImportantAssignment = AssignmentsApi.createAssignment(elementaryCourse4.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 4.days.fromNow.iso8601, importantDate = false)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)

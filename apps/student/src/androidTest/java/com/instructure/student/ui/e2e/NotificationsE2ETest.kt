@@ -24,9 +24,16 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -53,13 +60,13 @@ class NotificationsE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course.")
-        val testAssignment = ApiManager.createAssignment(course, teacher)
+        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course with some questions.")
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG,"Create and publish a quiz with the previously seeded questions.")
-        ApiManager.createAndPublishQuiz(course, teacher, quizQuestions)
+        QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -101,10 +108,10 @@ class NotificationsE2ETest : StudentTest() {
             repeat(10) {
                 try {
                     Log.d(PREPARATION_TAG, "Submit '${testAssignment.name}' assignment with student: '${student.name}'.")
-                    ApiManager.assignmentSingleSubmission(course, testAssignment, student)
+                    SubmissionsApi.submitCourseAssignment(course.id, student.token, testAssignment.id, SubmissionType.ONLINE_TEXT_ENTRY)
 
                     Log.d(PREPARATION_TAG, "Grade the submission of '${student.name}' student for assignment: '${testAssignment.name}'.")
-                    ApiManager.gradeSubmission(teacher, course, testAssignment, student, postedGrade = "13", excused = false)
+                    SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "13")
 
                     Log.d(STEP_TAG, "Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
                     sleep(3000) //Let the submission api do it's job

@@ -9,11 +9,16 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -40,8 +45,8 @@ class GradesE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
-        val assignment = ApiManager.createAssignment(course, teacher, withDescription = true, gradingType = GradingType.PERCENT)
-        val assignment2 = ApiManager.createAssignment(course, teacher, withDescription = true, gradingType = GradingType.PERCENT)
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, gradingType = GradingType.PERCENT, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601)
+        val assignment2 = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, gradingType = GradingType.PERCENT, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Create a quiz with some questions.")
         val quizQuestions = makeQuizQuestions()
@@ -87,10 +92,10 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.assertTotalGrade(withText(R.string.noGradeText))
 
         Log.d(PREPARATION_TAG,"Seed a submission for '${assignment.name}' assignment.")
-        ApiManager.assignmentSingleSubmission(course, assignment, student)
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, assignment.id, SubmissionType.ONLINE_TEXT_ENTRY)
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignment.name}' assignment.")
-        ApiManager.gradeSubmission(teacher, course, assignment, student, "9", false)
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment.id, student.id, postedGrade = "9")
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the assignment's score is '60%'.")
         courseGradesPage.refresh()
@@ -107,10 +112,10 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("60"))
 
         Log.d(PREPARATION_TAG,"Seed a submission for '${assignment2.name}' assignment.")
-        ApiManager.assignmentSingleSubmission(course, assignment2, student)
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, assignment2.id, SubmissionType.ONLINE_TEXT_ENTRY)
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignment2.name}' assignment.")
-        ApiManager.gradeSubmission(teacher, course, assignment2, student, "10", false)
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment2.id, student.id, postedGrade = "10")
 
         Log.d(STEP_TAG,"Assert that we can see the correct score at the '${assignment2.name}' assignment (66.67%) and at the total score as well (63.33%).")
         courseGradesPage.refresh()
@@ -121,13 +126,13 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("63.33"))
 
         Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignment.name}' assignment.")
-        ApiManager.gradeSubmission(teacher, course, assignment, student, excused = true)
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment.id, student.id, excused = true)
         courseGradesPage.refresh()
 
         Log.d(STEP_TAG,"Assert that we can see the correct score (66.67%).")
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("66.67"))
 
-        ApiManager.gradeSubmission(teacher, course, assignment, student, "9", false)
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment.id, student.id, postedGrade = "9")
         courseGradesPage.refresh()
 
         Log.d(STEP_TAG,"Assert that we can see the correct score (63.33%).")

@@ -20,12 +20,11 @@ package com.instructure.dataseeding.util
 
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
-import java.io.File
 import java.util.*
 
 object ApiManager {
 
-        fun uploadTextFile(
+        /*fun uploadTextFile(
             courseId: Long,
             assignmentId: Long? = null,
             token: String,
@@ -40,15 +39,15 @@ object ApiManager {
                 token,
                 fileUploadType
             )
-        }
+        }*/
 
         //Note: This method will use the adminCoursesService to create course.
-        fun createCourse(enrollmentTermId: Long? = null, publish: Boolean = true, syllabusBody: String? = null): CourseApiModel = CoursesApi.createCourse(enrollmentTermId = enrollmentTermId, publish = publish, syllabusBody = syllabusBody)
+        //fun createCourse(enrollmentTermId: Long? = null, publish: Boolean = true, syllabusBody: String? = null): CourseApiModel = CoursesApi.createCourse(enrollmentTermId = enrollmentTermId, publish = publish, syllabusBody = syllabusBody)
 
         //Note: This method will use a custom courses service to create course.
-        fun createCourseWithCustomService(enrollmentTermId: Long? = null, publish: Boolean = true, coursesService: CoursesApi.CoursesService, syllabusBody: String? = null): CourseApiModel =  CoursesApi.createCourse(enrollmentTermId = enrollmentTermId, publish = publish, coursesService = coursesService, syllabusBody = syllabusBody)
+     //   fun createCourseWithCustomService(enrollmentTermId: Long? = null, publish: Boolean = true, coursesService: CoursesApi.CoursesService, syllabusBody: String? = null): CourseApiModel =  CoursesApi.createCourse(enrollmentTermId = enrollmentTermId, publish = publish, coursesService = coursesService, syllabusBody = syllabusBody)
 
-        fun createAnnouncement(
+       /* fun createAnnouncement(
             course: CourseApiModel,
             user: CanvasUserApiModel,
             lockedForUser: Boolean = false,
@@ -60,17 +59,17 @@ object ApiManager {
                 lockedForUser,
                 locked
             )
-        }
+        }*/
 
-        fun createDiscussion(
+        /*fun createDiscussion(
             course: CourseApiModel,
             user: CanvasUserApiModel
         ) = DiscussionTopicsApi.createDiscussion(
             courseId = course.id,
             token = user.token
-        )
+        )*/
 
-        fun createAssignment(
+        /*fun createAssignment(
             course: CourseApiModel,
             teacher: CanvasUserApiModel,
             gradingType: GradingType = GradingType.POINTS,
@@ -96,18 +95,17 @@ object ApiManager {
                     importantDate = importantDate
                 )
             )
-        }
+        }*/
 
-        fun createAssignmentWithCalendar(
+       /* fun createAssignmentWithCalendar(
             course: CourseApiModel,
             user: CanvasUserApiModel,
-            calendar: Calendar,
+            dateString: String,
             gradingType: GradingType,
             pointsPossible: Double
-        ): AssignmentApiModel = createAssignment(course, user, gradingType, pointsPossible, dueAt = calendar.time.toApiString())
+        ): AssignmentApiModel = createAssignment(course, user, gradingType, pointsPossible, dueAt = dateString)*/
 
-
-        fun gradeSubmission(
+        /*fun gradeSubmission(
             teacher: CanvasUserApiModel,
             course: CourseApiModel,
             assignment: AssignmentApiModel,
@@ -121,28 +119,11 @@ object ApiManager {
             studentId = student.id,
             postedGrade = postedGrade,
             excused = excused
-        )
+        )*/
 
-        fun getCourseGradingPeriods(course: CourseApiModel): GradingPeriods = GradingPeriodsApi.getGradingPeriodsOfCourse(course.id)
+       // fun getCourseGradingPeriods(course: CourseApiModel): GradingPeriods = GradingPeriodsApi.getGradingPeriodsOfCourse(course.id)
 
-        private fun gradeSubmission(
-            teacher: CanvasUserApiModel,
-            courseId: Long,
-            student: CanvasUserApiModel,
-            assignmentId: Long,
-            postedGrade: String
-        ) {
-            SubmissionsApi.gradeSubmission(
-                teacherToken = teacher.token,
-                courseId = courseId,
-                assignmentId = assignmentId,
-                studentId = student.id,
-                postedGrade = postedGrade,
-                excused = false
-            )
-        }
-
-        fun createAssignmentGroup(
+      /*  fun createAssignmentGroup(
             teacher: CanvasUserApiModel,
             course: CourseApiModel
         ) = AssignmentGroupsApi.createAssignmentGroup(
@@ -152,9 +133,9 @@ object ApiManager {
             position = null,
             groupWeight = null,
             sisSourceId = null
-        )
+        )*/
 
-        fun assignmentMultipleSubmissions(
+      /*  fun assignmentMultipleSubmissions(
             assignment: AssignmentApiModel,
             course: CourseApiModel,
             student: CanvasUserApiModel,
@@ -174,9 +155,9 @@ object ApiManager {
                     )
                 )
             )
-        }
+        }*/
 
-        fun assignmentSingleSubmission(
+       /* fun assignmentSingleSubmission(
             course: CourseApiModel,
             testAssignment: AssignmentApiModel,
             student: CanvasUserApiModel,
@@ -192,8 +173,8 @@ object ApiManager {
                 fileIds = fileIds
             )
         }
-
-        fun submitCourseAssignment(
+*/
+        /*fun submitCourseAssignment(
             course: CourseApiModel,
             percentageFileAssignment: AssignmentApiModel,
             uploadInfo: AttachmentApiModel,
@@ -206,9 +187,9 @@ object ApiManager {
                 fileIds = mutableListOf(uploadInfo.id),
                 studentToken = student.token
             )
-        }
+        }*/
 
-        fun commentOnSubmission(
+       /* fun commentOnSubmission(
             user: CanvasUserApiModel,
             course: CourseApiModel,
             assignment: AssignmentApiModel,
@@ -221,8 +202,8 @@ object ApiManager {
                 fileIds = mutableListOf(commentUploadInfo.id)
             )
         }
-
-        fun createConference(
+*/
+       /* fun createConference(
             token: String,
             conferenceTitle: String,
             conferenceDescription: String,
@@ -242,8 +223,8 @@ object ApiManager {
                 userIds,
                 course.id
             )
-
-        fun createConversation(
+*/
+        /*fun createConversation(
             token: String,
             recipients: List<String>,
             subject: String = Randomizer.randomConversationSubject(),
@@ -257,8 +238,8 @@ object ApiManager {
                 body = body
             )
         }
-
-        fun createCourseGroupCategory(
+*/
+      /*  fun createCourseGroupCategory(
             course: CourseApiModel,
             token: String
         ): GroupCategoryApiModel = GroupsApi.createCourseGroupCategory(course.id, token)
@@ -271,8 +252,8 @@ object ApiManager {
             user: CanvasUserApiModel,
             token: String
         ): GroupMembershipApiModel = GroupsApi.createGroupMembership(group.id, user.id, token)
-
-        fun createQuiz(
+*/
+        /*fun createQuiz(
             course: CourseApiModel,
             teacher: CanvasUserApiModel,
             withDescription: Boolean = true,
@@ -286,11 +267,11 @@ object ApiManager {
                 token = teacher.token,
                 dueAt = dueAt
             )
-        )
+        )*/
 
-        fun createAndPublishQuiz(course: CourseApiModel, user: CanvasUserApiModel, questions: List<QuizQuestion>): QuizApiModel = QuizzesApi.createAndPublishQuiz(course.id, user.token, questions)
+       // fun createAndPublishQuiz(course: CourseApiModel, user: CanvasUserApiModel, questions: List<QuizQuestion>): QuizApiModel = QuizzesApi.createAndPublishQuiz(course.id, user.token, questions)
 
-        fun createPage(
+       /* fun createPage(
             course: CourseApiModel,
             user: CanvasUserApiModel,
             published: Boolean = true,
@@ -304,9 +285,9 @@ object ApiManager {
             editingRoles = editingRoles,
             token = user.token,
             body = body
-        )
+        )*/
 
-        fun createModule(
+      /*  fun createModule(
             course: CourseApiModel,
             teacher: CanvasUserApiModel,
             unlockAt: String? = null
@@ -323,7 +304,7 @@ object ApiManager {
           {
             ModulesApi.updateModule(
                 courseId = course.id,
-                id = module.id,
+                moduleId = module.id,
                 published = true,
                 teacherToken = user.token
             )
@@ -336,7 +317,7 @@ object ApiManager {
         {
             ModulesApi.updateModule(
                 courseId = course.id,
-                id = module.id,
+                moduleId = module.id,
                 published = false,
                 teacherToken = user.token
             )
@@ -355,21 +336,21 @@ object ApiManager {
                 courseId = courseId,
                 moduleId = moduleId,
                 teacherToken = user.token,
-                title = moduleItemTitle,
-                type = moduleItemType,
+                moduleItemTitle = moduleItemTitle,
+                moduleItemType = moduleItemType,
                 contentId = contentId,
                 pageUrl = pageUrl
             )
-        }
+        }*/
 
         //With this method not only Student user can be created, but any role Canvas user! Note that this method will use userAdminService to create user.
-        fun createUser(userDomain: String = CanvasNetworkAdapter.canvasDomain): CanvasUserApiModel = UserApi.createCanvasUser(userDomain = userDomain)
+    //    fun createUser(userDomain: String = CanvasNetworkAdapter.canvasDomain): CanvasUserApiModel = UserApi.createCanvasUser(userDomain = userDomain)
 
         //With this method not only Student user can be created, but any role Canvas user! Note that this method will use a custom user service to create user.
-        fun createUserWithCustomService(customUserService: UserApi.UserService, userDomain: String = CanvasNetworkAdapter.canvasDomain): CanvasUserApiModel = UserApi.createCanvasUser(customUserService, userDomain)
+     //   fun createUserWithCustomService(customUserService: UserApi.UserService, userDomain: String = CanvasNetworkAdapter.canvasDomain): CanvasUserApiModel = UserApi.createCanvasUser(customUserService, userDomain)
 
         //Note that this method will use admin service to enroll a user to a course.
-        fun enrollUser(
+       /* fun enrollUser(
             course: CourseApiModel,
             user: CanvasUserApiModel,
             enrollmentType: String
@@ -381,9 +362,9 @@ object ApiManager {
             user: CanvasUserApiModel,
             enrollmentType: String,
             enrollmentsService: EnrollmentsApi.EnrollmentsService
-        ): EnrollmentApiModel = EnrollmentsApi.enrollUser(courseId = course.id, userId = user.id, enrollmentType = enrollmentType, enrollmentService = enrollmentsService)
+        ): EnrollmentApiModel = EnrollmentsApi.enrollUser(courseId = course.id, userId = user.id, enrollmentType = enrollmentType, enrollmentService = enrollmentsService)*/
 
-        fun getCourseRootFolder(course: CourseApiModel, user: CanvasUserApiModel) = FileFolderApi.getCourseRootFolder(course.id, user.token)
+     //   fun getCourseRootFolder(course: CourseApiModel, user: CanvasUserApiModel) = FileFolderApi.getCourseRootFolder(course.id, user.token)
 
-        fun createFolder(rootFolderId: Long, folderName: String, locked: Boolean, user: CanvasUserApiModel) = FileFolderApi.createCourseFolder(rootFolderId, folderName, locked, user.token)
+     //   fun createFolder(rootFolderId: Long, folderName: String, locked: Boolean, user: CanvasUserApiModel) = FileFolderApi.createCourseFolder(rootFolderId, folderName, locked, user.token)
 }

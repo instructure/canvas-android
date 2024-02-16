@@ -30,7 +30,6 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
-import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
@@ -261,15 +260,15 @@ class LoginE2ETest : StudentTest() {
         val enrollmentsService = retrofitClient.create(EnrollmentsApi.EnrollmentsService::class.java)
 
         Log.d(PREPARATION_TAG,"Create student, teacher, and a course via API.")
-        val student = ApiManager.createUserWithCustomService(customUserService = userService, userDomain = domain)
-        val teacher = ApiManager.createUserWithCustomService(customUserService = userService, userDomain = domain)
-        val course = ApiManager.createCourseWithCustomService(coursesService = coursesService)
+        val student = UserApi.createCanvasUser(userService, domain)
+        val teacher = UserApi.createCanvasUser(userService, domain)
+        val course = CoursesApi.createCourse(coursesService = coursesService)
 
         Log.d(PREPARATION_TAG,"Enroll '${student.name}' student to '${course.name}' course.")
-        ApiManager.enrollUserWithCustomService(course, student, STUDENT_ENROLLMENT, enrollmentsService)
+        EnrollmentsApi.enrollUser(course.id, student.id, STUDENT_ENROLLMENT, enrollmentsService)
 
         Log.d(PREPARATION_TAG,"Enroll '${teacher.name}' teacher to '${course.name}' course.")
-        ApiManager.enrollUserWithCustomService(course, teacher, TEACHER_ENROLLMENT, enrollmentsService)
+        EnrollmentsApi.enrollUser(course.id, teacher.id, TEACHER_ENROLLMENT, enrollmentsService)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         loginWithUser(student)

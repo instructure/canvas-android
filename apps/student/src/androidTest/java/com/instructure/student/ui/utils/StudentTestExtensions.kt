@@ -31,7 +31,6 @@ import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
-import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
@@ -272,16 +271,7 @@ fun seedAssignmentSubmission(
         it.attachmentsList.addAll(fileAttachments)
     }
 
-    // Seed the submissions
-    val submissionRequest = SubmissionsApi.SubmissionSeedRequest(
-            assignmentId = assignmentId,
-            courseId = courseId,
-            studentToken = studentToken,
-            commentSeedsList = commentSeeds,
-            submissionSeedsList = submissionSeeds
-    )
-
-    return SubmissionsApi.seedAssignmentSubmission(submissionRequest)
+    return SubmissionsApi.seedAssignmentSubmission(courseId, studentToken, assignmentId, commentSeeds, submissionSeeds)
 }
 
 fun uploadTextFile(
@@ -304,10 +294,12 @@ fun uploadTextFile(
     }
 
     // Start the Canvas file upload process
-    return ApiManager.uploadTextFile(
-            courseId,
-            assignmentId,
-            token,
-            fileUploadType,
-            file)
+    return FileUploadsApi.uploadFile(
+        courseId,
+        assignmentId,
+        file.readBytes(),
+        file.name,
+        token,
+        fileUploadType
+    )
 }

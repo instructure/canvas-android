@@ -24,8 +24,8 @@ import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.dataseeding.api.FileFolderApi
 import com.instructure.dataseeding.model.FileUploadType
-import com.instructure.dataseeding.util.ApiManager
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -55,8 +55,8 @@ class OfflineFilesE2ETest : StudentTest() {
 
         val testCourseFolderName = "Goodya"
         Log.d(PREPARATION_TAG, "Create a course folder within the 'Files' tab with the name: '$testCourseFolderName'.")
-        val courseRootFolder = ApiManager.getCourseRootFolder(course, teacher)
-        val courseTestFolder = ApiManager.createFolder(courseRootFolder.id, testCourseFolderName, false, teacher)
+        val courseRootFolder = FileFolderApi.getCourseRootFolder(course.id, teacher.token)
+        val courseTestFolder = FileFolderApi.createCourseFolder(courseRootFolder.id, teacher.token, testCourseFolderName)
 
         Log.d(PREPARATION_TAG, "Create a (text) file within the root folder (so the 'Files' tab file list) of the '${course.name}' course.")
         val rootFolderTestTextFile = uploadTextFile(courseRootFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)

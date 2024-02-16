@@ -24,7 +24,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.espresso.ViewUtils
 import com.instructure.espresso.getCurrentDateInCanvasFormat
 import com.instructure.student.ui.utils.StudentTest
@@ -51,16 +51,16 @@ class DiscussionsE2ETest: StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed a discussion topic for '${course.name}' course.")
-        val topic1 = ApiManager.createDiscussion(course, teacher)
+        val topic1 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
         Log.d(PREPARATION_TAG,"Seed another discussion topic for '${course.name}' course.")
-        val topic2 = ApiManager.createDiscussion(course, teacher)
+        val topic2 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
         Log.d(STEP_TAG,"Seed an announcement for '${course.name}' course.")
-        val announcement = ApiManager.createAnnouncement(course, teacher)
+        val announcement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token)
 
         Log.d(STEP_TAG,"Seed another announcement for '${course.name}' course.")
-        val announcement2 = ApiManager.createAnnouncement(course, teacher)
+        val announcement2 = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)

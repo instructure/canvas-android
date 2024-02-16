@@ -7,7 +7,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.api.ConferencesApi
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -53,13 +53,11 @@ class ConferencesE2ETest: StudentTest() {
         val testConferenceTitle = "E2E test conference"
         val testConferenceDescription = "Nightly E2E Test conference description"
         Log.d(PREPARATION_TAG,"Create a conference with '$testConferenceTitle' title and '$testConferenceDescription' description.")
-        ApiManager.createConference(teacher.token, testConferenceTitle, testConferenceDescription, "BigBlueButton", false, 70, listOf(student.id), course)
+        ConferencesApi.createCourseConference(course.id, teacher.token, testConferenceTitle, testConferenceDescription, recipientUserIds = listOf(student.id))
 
         val testConferenceTitle2 = "E2E test conference 2"
         val testConferenceDescription2 = "Nightly E2E Test conference description 2"
-        ApiManager.createConference(teacher.token,
-            testConferenceTitle2, testConferenceDescription2,"BigBlueButton",true,120,
-            listOf(student.id), course)
+        ConferencesApi.createCourseConference(course.id, teacher.token, testConferenceTitle2, testConferenceDescription2, longRunning = true, duration = 120, recipientUserIds = listOf(student.id))
 
         Log.d(STEP_TAG,"Refresh the page. Assert that $testConferenceTitle conference is displayed on the Conference List Page with the corresponding status.")
         refresh()

@@ -8,9 +8,11 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -42,7 +44,7 @@ class TodoE2ETest: StudentTest() {
         val favoriteCourse = data.coursesList[1]
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course with tomorrow due date.")
-        val testAssignment = ApiManager.createAssignment(course, teacher)
+        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seed another assignment for '${course.name}' course with 7 days from now due date.")
         val seededAssignments2 = seedAssignments(
@@ -54,10 +56,10 @@ class TodoE2ETest: StudentTest() {
         val borderDateAssignment = seededAssignments2[0] //We show items in the to do section which are within 7 days.
 
         Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course with tomorrow due date.")
-        val quiz = ApiManager.createQuiz(course, teacher)
+        val quiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Seed another quiz for '${course.name}' course with 8 days from now due date..")
-        val tooFarAwayQuiz = ApiManager.createQuiz(course, teacher, dueAt = 8.days.fromNow.iso8601)
+        val tooFarAwayQuiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 8.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -76,15 +78,12 @@ class TodoE2ETest: StudentTest() {
         }
 
         Log.d(PREPARATION_TAG,"Submit' ${testAssignment.name}' assignment for ${student.name} student.")
-        SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
-            assignmentId = testAssignment.id,
-            courseId = course.id,
-            studentToken = student.token,
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id,
             submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(
                 amount = 1,
                 submissionType = SubmissionType.ONLINE_TEXT_ENTRY
             ))
-        ))
+        )
 
         Log.d(STEP_TAG, "Refresh the 'To Do' Page.")
         refresh()
@@ -111,7 +110,7 @@ class TodoE2ETest: StudentTest() {
         todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${favoriteCourse.name}' course with tomorrow due date.")
-        val favoriteCourseAssignment = ApiManager.createAssignment(favoriteCourse, teacher)
+        val favoriteCourseAssignment = AssignmentsApi.createAssignment(favoriteCourse.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page. Open '${favoriteCourse.name}' course. Mark it as favorite.")
         Espresso.pressBack()

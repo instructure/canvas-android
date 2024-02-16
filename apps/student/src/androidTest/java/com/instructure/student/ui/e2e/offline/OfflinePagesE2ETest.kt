@@ -26,7 +26,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.dataseeding.util.ApiManager
+import com.instructure.dataseeding.api.PagesApi
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertOfflineIndicator
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.waitForNetworkToGoOffline
@@ -57,16 +57,16 @@ class OfflinePagesE2ETest : StudentTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG,"Seed an UNPUBLISHED page for '${course.name}' course.")
-        val pageUnpublished = ApiManager.createPage(course, teacher, published = false, frontPage = false)
+        val pageUnpublished = PagesApi.createCoursePage(course.id, teacher.token, published = false)
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED page for '${course.name}' course.")
-        val pagePublished = ApiManager.createPage(course, teacher, published = true, frontPage = false, editingRoles = "teachers,students", body = "<h1 id=\"header1\">Regular Page Text</h1>")
+        val pagePublished = PagesApi.createCoursePage(course.id, teacher.token, editingRoles = "teachers,students", body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED, but NOT editable page for '${course.name}' course.")
-        val pageNotEditable = ApiManager.createPage(course, teacher, published = true, frontPage = false, body = "<h1 id=\"header1\">Regular Page Text</h1>")
+        val pageNotEditable = PagesApi.createCoursePage(course.id, teacher.token, body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED, FRONT page for '${course.name}' course.")
-        val pagePublishedFront = ApiManager.createPage(course, teacher, published = true, frontPage = true, editingRoles = "public", body = "<h1 id=\"header1\">Front Page Text</h1>")
+        val pagePublishedFront = PagesApi.createCoursePage(course.id, teacher.token, frontPage = true, editingRoles = "public", body = "<h1 id=\"header1\">Front Page Text</h1>")
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)

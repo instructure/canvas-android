@@ -22,8 +22,9 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.dataseeding.util.ApiManager
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -63,10 +64,10 @@ class SyllabusE2ETest: StudentTest() {
         syllabusPage.assertSyllabusBody("this is the syllabus body")
 
         Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course.")
-        val assignment = ApiManager.createAssignment(course, teacher, submissionType = listOf(SubmissionType.ON_PAPER), withDescription = true)
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, submissionTypes = listOf(SubmissionType.ON_PAPER), withDescription = true, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course.")
-        val quiz = ApiManager.createQuiz(course, teacher, dueAt = 2.days.fromNow.iso8601)
+        val quiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601)
 
         Log.d(STEP_TAG,"Refresh the page. Navigate to 'Summary' tab. Assert that all of the items, so '${assignment.name}' assignment and '${quiz.title}' quiz are displayed.")
         syllabusPage.refresh()
