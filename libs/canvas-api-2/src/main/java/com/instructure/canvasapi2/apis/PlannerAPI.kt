@@ -3,8 +3,10 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
@@ -36,6 +38,12 @@ object PlannerAPI {
 
         @DELETE("planner_notes/{noteId}")
         suspend fun deletePlannerNote(@Path("noteId") noteId: Long, @Tag params: RestParams): DataResult<Unit>
+
+        @POST("planner_notes")
+        suspend fun createPlannerNote(@Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
+
+        @PUT("planner_notes/{noteId}")
+        suspend fun updatePlannerNote(@Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
     }
 
     fun getPlannerItems(adapter: RestBuilder, callback: StatusCallback<List<PlannerItem>>, params: RestParams, startDate: String? = null, endDate: String? = null) {

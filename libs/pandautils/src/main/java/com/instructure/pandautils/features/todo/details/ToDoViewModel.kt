@@ -20,8 +20,6 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toDate
@@ -46,7 +44,7 @@ import javax.inject.Inject
 class ToDoViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
-    private val plannerApi: PlannerAPI.PlannerInterface
+    private val toDoRepository: ToDoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ToDoUiState())
@@ -85,7 +83,7 @@ class ToDoViewModel @Inject constructor(
         _uiState.update { it.copy(deleting = true) }
         viewModelScope.tryLaunch {
             plannerItem?.let { plannerItem ->
-                plannerApi.deletePlannerNote(plannerItem.plannable.id, RestParams()).dataOrThrow
+                toDoRepository.deletePlannerNote(plannerItem.plannable.id)
                 _uiState.update { it.copy(deleting = false) }
                 plannerItem.plannable.todoDate.toDate()?.let {
                     val calendar = Calendar.getInstance().apply {

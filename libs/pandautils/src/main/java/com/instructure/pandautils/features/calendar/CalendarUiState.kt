@@ -164,6 +164,7 @@ sealed class CalendarAction {
     data class RefreshDay(val date: LocalDate): CalendarAction()
     data object Retry : CalendarAction()
     data object SnackbarDismissed : CalendarAction()
+    data object AddToDoTapped : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {
@@ -172,8 +173,10 @@ sealed class CalendarViewModelAction {
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String): CalendarViewModelAction()
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
     data class OpenToDo(val plannerItem: PlannerItem) : CalendarViewModelAction()
+    data object OpenCreateToDo : CalendarViewModelAction()
 }
 
 sealed class SharedCalendarAction {
     data class RefreshDay(val date: LocalDate) : SharedCalendarAction()
+    data class RequestSelectedDay(val provideSelectedDate: (LocalDate) -> Unit) : SharedCalendarAction()
 }

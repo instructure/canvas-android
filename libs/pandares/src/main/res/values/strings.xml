@@ -1510,10 +1510,20 @@
     <string name="calendarPageError">There was an error loading your calendar</string>
     <string name="calendarPageErrorRetry">Retry</string>
     <string name="calendarRefreshFailed">Failed to refresh calendar</string>
+    <string name="calendarAddButtonContentDescription">New To Do</string>
 
+    <string name="todoScreenTitle">To Do</string>
     <string name="todoDateLabel">Date</string>
     <string name="todoDescriptionLabel">Description</string>
     <string name="todoDeleteConfirmationTitle">Delete To Do?</string>
     <string name="todoDeleteConfirmationText">This will permanently delete your To Do item.</string>
     <string name="todoDeleteErrorMessage">There was an error deleting this To Do. Please check your connection and try again.</string>
+    <string name="createTodoScreenTitle">New To Do</string>
+    <string name="editTodoScreenTitle">Edit To Do</string>
+    <string name="createToDoTitleLabel">Title</string>
+    <string name="createToDoDateLabel">Date</string>
+    <string name="createToDoTimeLabel">Time</string>
+    <string name="createToDoCalendarLabel">Calendar</string>
+    <string name="createToDoDetailsLabel">Details</string>
+    <string name="todoSaveErrorMessage">There was an error saving this To Do. Please check your connection and try again.</string>
 </resources>

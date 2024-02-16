@@ -256,6 +256,9 @@ class CalendarViewModel @Inject constructor(
             CalendarAction.SnackbarDismissed -> viewModelScope.launch {
                 _uiState.emit(createNewUiState().copy(snackbarMessage = null))
             }
+            is CalendarAction.AddToDoTapped -> viewModelScope.launch {
+                _events.emit(Event(CalendarViewModelAction.OpenCreateToDo))
+            }
         }
     }
 

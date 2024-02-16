@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -133,7 +135,23 @@ fun CalendarScreen(
                         CalendarEvents(calendarUiState.calendarEventsUiState, actionHandler)
                     }
                 }
-            })
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        actionHandler(CalendarAction.AddToDoTapped)
+                    },
+                    shape = CircleShape,
+                    backgroundColor = Color(ThemePrefs.brandColor)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_add),
+                        tint = Color.White,
+                        contentDescription = stringResource(id = R.string.calendarAddButtonContentDescription)
+                    )
+                }
+            }
+        )
     }
 }
 
