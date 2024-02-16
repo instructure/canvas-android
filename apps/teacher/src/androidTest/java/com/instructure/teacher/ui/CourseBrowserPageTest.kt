@@ -17,7 +17,6 @@ package com.instructure.teacher.ui
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -27,7 +26,6 @@ import org.junit.Test
 class CourseBrowserPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3108909")
     override fun displaysPageObjects() {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 3, favoriteCourseCount = 3)
         val teacher = data.teachers[0]
