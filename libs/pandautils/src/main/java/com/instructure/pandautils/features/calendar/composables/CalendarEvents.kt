@@ -76,7 +76,8 @@ import com.instructure.pandautils.utils.textAndIconColor
 @Composable
 fun CalendarEvents(
     calendarEventsUiState: CalendarEventsUiState,
-    actionHandler: (CalendarAction) -> Unit
+    actionHandler: (CalendarAction) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
     val pagerState = rememberPagerState(
@@ -96,6 +97,7 @@ fun CalendarEvents(
 
     HorizontalPager(
         state = pagerState,
+        modifier = modifier,
         beyondBoundsPageCount = 2,
         reverseLayout = false,
         pageSize = PageSize.Fill,
@@ -126,14 +128,18 @@ fun CalendarEvents(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState, actionHandler: (CalendarAction) -> Unit) {
+fun CalendarEventsPage(
+    calendarEventsPageUiState: CalendarEventsPageUiState,
+    actionHandler: (CalendarAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = calendarEventsPageUiState.refreshing,
         onRefresh = { actionHandler(CalendarAction.RefreshDay(calendarEventsPageUiState.date)) },
         refreshThreshold = PullRefreshDefaults.RefreshingOffset
     )
 
-    Box(Modifier.pullRefresh(pullRefreshState)) {
+    Box(modifier.pullRefresh(pullRefreshState)) {
         if (calendarEventsPageUiState.events.isNotEmpty()) {
             LazyColumn(
                 Modifier
@@ -141,15 +147,19 @@ fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState, act
                     .fillMaxHeight(), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
-                    CalendarEventItem(eventUiState = it) { id ->
+                    CalendarEventItem(eventUiState = it, { id ->
                         actionHandler(CalendarAction.EventSelected(id))
-                    }
+                    })
                 }
             }
         } else if (calendarEventsPageUiState.error) {
-            CalendarEventsError(actionHandler)
+            CalendarEventsError(actionHandler, Modifier
+                .fillMaxWidth()
+                .fillMaxHeight())
         } else {
-            CalendarEventsEmpty()
+            CalendarEventsEmpty(Modifier
+                .fillMaxWidth()
+                .fillMaxHeight())
         }
 
         PullRefreshIndicator(
@@ -162,14 +172,14 @@ fun CalendarEventsPage(calendarEventsPageUiState: CalendarEventsPageUiState, act
 }
 
 @Composable
-fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit) {
+fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, modifier: Modifier = Modifier) {
     val contextColor = if (eventUiState.canvasContext is User) {
         Color(ThemePrefs.brandColor)
     } else {
         Color(eventUiState.canvasContext.textAndIconColor)
     }
     Row(
-        Modifier
+        modifier
             .clickable { onEventClick(eventUiState.plannableId) }
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .fillMaxWidth()
@@ -212,12 +222,10 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit) 
 }
 
 @Composable
-fun CalendarEventsEmpty() {
+fun CalendarEventsEmpty(modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier
             .verticalScroll(rememberScrollState())
     ) {
         Icon(
@@ -249,13 +257,10 @@ fun CalendarEventsEmpty() {
 }
 
 @Composable
-fun CalendarEventsError(actionHandler: (CalendarAction) -> Unit) {
+fun CalendarEventsError(actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         Icon(
             painter = painterResource(id = R.drawable.ic_warning),
             tint = colorResource(id = R.color.textDanger),
