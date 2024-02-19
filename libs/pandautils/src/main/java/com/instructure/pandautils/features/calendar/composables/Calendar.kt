@@ -48,8 +48,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
@@ -134,10 +136,16 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                     actionHandler(CalendarAction.HeightAnimationFinished)
                 })
 
+                val rowsScaleRatio by animateFloatAsState(
+                    targetValue = if (calendarOpen) 1.0f else 0.0f,
+                    label = "animationScale"
+                )
+
                 if (page >= settledPage - 1 && page <= settledPage + 1) {
                     CalendarBody(
                         calendarPageUiState.calendarRows,
                         calendarUiState.pendingSelectedDay ?: calendarUiState.selectedDay,
+                        scaleRatio = rowsScaleRatio,
                         selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) },
                         modifier = Modifier.height(height.dp)
                     )
@@ -218,6 +226,7 @@ fun CalendarBody(
     calendarRows: List<CalendarRowUiState>,
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
+    scaleRatio: Float,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -230,7 +239,7 @@ fun CalendarBody(
                 .padding(start = 16.dp, end = 16.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        CalendarPage(calendarRows, selectedDay, selectedDayChanged)
+        CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio)
     }
 }
 
@@ -263,16 +272,22 @@ fun CalendarPage(
     calendarRows: List<CalendarRowUiState>,
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
+    scaleRatio: Float,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         calendarRows.forEach {
+            // We only scale when it's expanding/collapsing, when it's not we need to show even the rows that don't have the selected day
+            // to be able to see the neighbouring pages
+            val scale = if (it.days.any { day -> day.date == selectedDay } || calendarRows.size == 1) 1.0f else scaleRatio
             DaysOfWeekRow(
                 days = it.days, selectedDay, selectedDayChanged, modifier = Modifier
+                    .height(CALENDAR_ROW_HEIGHT.dp * scale)
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                    .scale(scaleX = 1.0f, scaleY = scale)
+                    .alpha(scale)
             )
-            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
