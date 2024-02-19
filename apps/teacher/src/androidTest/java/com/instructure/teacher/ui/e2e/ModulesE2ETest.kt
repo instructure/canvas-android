@@ -94,7 +94,7 @@ class   ModulesE2ETest : TeacherTest() {
         Log.d(PREPARATION_TAG,"Publish '${module.name}' module via API.")
         ModulesApi.updateModule(
                 courseId = course.id,
-                id = module.id,
+                moduleId = module.id,
                 published = true,
                 teacherToken = teacher.token
         )
@@ -171,7 +171,7 @@ class   ModulesE2ETest : TeacherTest() {
         Log.d(PREPARATION_TAG,"Unpublish ${module.name} module via API.")
         ModulesApi.updateModule(
             courseId = course.id,
-            id = module.id,
+            moduleId = module.id,
             published = false,
             teacherToken = teacher.token
         )
@@ -219,8 +219,8 @@ class   ModulesE2ETest : TeacherTest() {
             courseId = course.id,
             moduleId = module.id,
             teacherToken = teacher.token,
-            title = title,
-            type = moduleItemType,
+            moduleItemTitle = title,
+            moduleItemType = moduleItemType,
             contentId = contentId,
             pageUrl = pageUrl
         )

@@ -271,16 +271,7 @@ fun seedAssignmentSubmission(
         it.attachmentsList.addAll(fileAttachments)
     }
 
-    // Seed the submissions
-    val submissionRequest = SubmissionsApi.SubmissionSeedRequest(
-            assignmentId = assignmentId,
-            courseId = courseId,
-            studentToken = studentToken,
-            commentSeedsList = commentSeeds,
-            submissionSeedsList = submissionSeeds
-    )
-
-    return SubmissionsApi.seedAssignmentSubmission(submissionRequest)
+    return SubmissionsApi.seedAssignmentSubmission(courseId, studentToken, assignmentId, commentSeeds, submissionSeeds)
 }
 
 fun uploadTextFile(
@@ -304,10 +295,11 @@ fun uploadTextFile(
 
     // Start the Canvas file upload process
     return FileUploadsApi.uploadFile(
-            courseId,
-            assignmentId,
-            file.readBytes(),
-            file.name,
-            token,
-            fileUploadType)
+        courseId,
+        assignmentId,
+        file.readBytes(),
+        file.name,
+        token,
+        fileUploadType
+    )
 }

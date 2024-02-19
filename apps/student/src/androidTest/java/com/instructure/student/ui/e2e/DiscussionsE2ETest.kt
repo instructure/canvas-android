@@ -25,8 +25,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.DiscussionTopicsApi
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.ViewUtils
 import com.instructure.espresso.getCurrentDateInCanvasFormat
 import com.instructure.student.ui.utils.StudentTest
@@ -52,51 +50,51 @@ class DiscussionsE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed a discussion topic.")
-        val topic1 = createDiscussion(course, teacher)
+        Log.d(PREPARATION_TAG,"Seed a discussion topic for '${course.name}' course.")
+        val topic1 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Seed another discussion topic.")
-        val topic2 = createDiscussion(course, teacher)
+        Log.d(PREPARATION_TAG,"Seed another discussion topic for '${course.name}' course.")
+        val topic2 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
-        Log.d(STEP_TAG,"Seed an announcement for ${course.name} course.")
-        val announcement = createAnnouncement(course, teacher)
+        Log.d(STEP_TAG,"Seed an announcement for '${course.name}' course.")
+        val announcement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token)
 
-        Log.d(STEP_TAG,"Seed another announcement for ${course.name} course.")
-        val announcement2 = createAnnouncement(course, teacher)
+        Log.d(STEP_TAG,"Seed another announcement for '${course.name}' course.")
+        val announcement2 = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token)
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
-        dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Select course: ${course.name}.")
+        Log.d(STEP_TAG,"Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
+        dashboardPage.waitForRender()
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Verify that the Discussions and Announcements Tabs are both displayed on the CourseBrowser Page.")
+        Log.d(STEP_TAG,"Verify that the 'Discussions' and 'Announcements' Tabs are both displayed on the CourseBrowser Page.")
         courseBrowserPage.assertTabDisplayed("Announcements")
         courseBrowserPage.assertTabDisplayed("Discussions")
 
-        Log.d(STEP_TAG,"Navigate to Announcements Page. Assert that both ${announcement.title} and ${announcement2.title} announcements are displayed.")
+        Log.d(STEP_TAG,"Navigate to Announcements Page. Assert that both '${announcement.title}' and '${announcement2.title}' announcements are displayed.")
         courseBrowserPage.selectAnnouncements()
         discussionListPage.assertTopicDisplayed(announcement.title)
         discussionListPage.assertTopicDisplayed(announcement2.title)
 
-        Log.d(STEP_TAG,"Select ${announcement.title} announcement and assert if the details page is displayed.")
+        Log.d(STEP_TAG,"Select '${announcement.title}' announcement and assert if the Discussion Details Page is displayed.")
         discussionListPage.selectTopic(announcement.title)
         discussionDetailsPage.assertTitleText(announcement.title)
 
-        Log.d(STEP_TAG,"Navigate back.")
+        Log.d(STEP_TAG,"Navigate back to the Discussion List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Click on the 'Search' button and search for ${announcement2.title}. announcement.")
+        Log.d(STEP_TAG,"Click on the 'Search' button and search for '${announcement2.title}'. announcement.")
         discussionListPage.searchable.clickOnSearchButton()
         discussionListPage.searchable.typeToSearchBar(announcement2.title)
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the searching method is working well, so ${announcement.title} won't be displayed and ${announcement2.title} is displayed.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the searching method is working well, so '${announcement.title}' won't be displayed and '${announcement2.title}' is displayed.")
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(announcement2.title)
         discussionListPage.assertTopicNotDisplayed(announcement.title)
 
-        Log.d(STEP_TAG,"Clear the search input field and assert that both announcements, ${announcement.title} and ${announcement2.title} has been diplayed.")
+        Log.d(STEP_TAG,"Clear the search input field and assert that both announcements, '${announcement.title}' and '${announcement2.title}' has been displayed.")
         discussionListPage.searchable.clickOnClearSearchButton()
         discussionListPage.waitForDiscussionTopicToDisplay(announcement.title)
         discussionListPage.assertTopicDisplayed(announcement2.title)
@@ -107,22 +105,22 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Navigate to Discussions Page.")
         courseBrowserPage.selectDiscussions()
 
-        Log.d(STEP_TAG,"Select ${topic1.title} discussion and assert if the details page is displayed and there is no reply for the discussion yet.")
+        Log.d(STEP_TAG,"Select '${topic1.title}' discussion and assert if the details page is displayed and there is no reply for the discussion yet.")
         discussionListPage.assertTopicDisplayed(topic1.title)
         discussionListPage.selectTopic(topic1.title)
         discussionDetailsPage.assertTitleText(topic1.title)
         discussionDetailsPage.assertNoRepliesDisplayed()
 
-        Log.d(STEP_TAG,"Navigate back to Discussions Page.")
-        Espresso.pressBack() // Back to discussion list
+        Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
+        Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Select ${topic1.title} discussion and assert if the details page is displayed and there is no reply for the discussion yet.")
+        Log.d(STEP_TAG,"Select '${topic1.title}' discussion and assert if the details page is displayed and there is no reply for the discussion yet.")
         discussionListPage.assertTopicDisplayed(topic2.title)
         discussionListPage.selectTopic(topic2.title)
         discussionDetailsPage.assertTitleText(topic2.title)
         discussionDetailsPage.assertNoRepliesDisplayed()
 
-        Log.d(STEP_TAG,"Navigate back to Discussions Page.")
+        Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
         Espresso.pressBack()
 
         val newTopicName = "Do we really need discussions?"
@@ -131,11 +129,11 @@ class DiscussionsE2ETest: StudentTest() {
         discussionListPage.createDiscussionTopic(newTopicName, newTopicDescription)
         sleep(2000) // Allow some time for creation to propagate
 
-        Log.d(STEP_TAG,"Assert that $newTopicName topic has been created successfully with 0 reply count.")
+        Log.d(STEP_TAG,"Assert that '$newTopicName' topic has been created successfully with 0 reply count.")
         discussionListPage.assertTopicDisplayed(newTopicName)
         discussionListPage.assertReplyCount(newTopicName, 0)
 
-        Log.d(STEP_TAG,"Select $newTopicName topic and assert that there is no reply on the details page as well.")
+        Log.d(STEP_TAG,"Select '$newTopicName' topic and assert that there is no reply on the details page as well.")
         discussionListPage.selectTopic(newTopicName)
         discussionDetailsPage.assertNoRepliesDisplayed()
 
@@ -147,7 +145,7 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Assert the the previously sent reply ($replyMessage) is displayed on the details page.")
         discussionDetailsPage.assertRepliesDisplayed()
 
-        Log.d(STEP_TAG,"Navigate back to Discussions Page.")
+        Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the previously sent reply has been counted, and there are no unread replies.")
@@ -158,22 +156,6 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Assert that the due date is the current date (in the expected format).")
         val currentDate = getCurrentDateInCanvasFormat()
         discussionListPage.assertDueDate(newTopicName, currentDate)
-
     }
 
-    private fun createAnnouncement(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ) = DiscussionTopicsApi.createAnnouncement(
-        courseId = course.id,
-        token = teacher.token
-    )
-
-    private fun createDiscussion(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ) = DiscussionTopicsApi.createDiscussion(
-        courseId = course.id,
-        token = teacher.token
-    )
 }

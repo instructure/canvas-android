@@ -37,6 +37,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflineFilesE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -55,7 +56,7 @@ class OfflineFilesE2ETest : StudentTest() {
         val testCourseFolderName = "Goodya"
         Log.d(PREPARATION_TAG, "Create a course folder within the 'Files' tab with the name: '$testCourseFolderName'.")
         val courseRootFolder = FileFolderApi.getCourseRootFolder(course.id, teacher.token)
-        val courseTestFolder = FileFolderApi.createCourseFolder(courseRootFolder.id, testCourseFolderName, false, teacher.token)
+        val courseTestFolder = FileFolderApi.createCourseFolder(courseRootFolder.id, teacher.token, testCourseFolderName)
 
         Log.d(PREPARATION_TAG, "Create a (text) file within the root folder (so the 'Files' tab file list) of the '${course.name}' course.")
         val rootFolderTestTextFile = uploadTextFile(courseRootFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
