@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
@@ -54,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -69,6 +71,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoUiState
+import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
@@ -78,7 +81,7 @@ import java.util.Calendar
 
 @ExperimentalFoundationApi
 @Composable
-internal fun CreateUpdateToDoScreen(
+internal fun CreateUpdateToDoScreenWrapper(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,
@@ -86,41 +89,69 @@ internal fun CreateUpdateToDoScreen(
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
-        val snackbarHostState = remember { SnackbarHostState() }
-        val localCoroutineScope = rememberCoroutineScope()
-        if (uiState.errorSnack != null) {
-            LaunchedEffect(Unit) {
-                localCoroutineScope.launch {
-                    val result = snackbarHostState.showSnackbar(uiState.errorSnack)
-                    if (result == SnackbarResult.Dismissed) {
-                        actionHandler(CreateUpdateToDoAction.SnackbarDismissed)
-                    }
+        if (uiState.showCalendarSelector) {
+            SelectCalendarScreen(
+                uiState = uiState,
+                actionHandler = actionHandler,
+                navigationActionClick = {
+                    actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
+                },
+                modifier = modifier
+            )
+        } else {
+            CreateUpdateToDoScreen(
+                title = title,
+                uiState = uiState,
+                actionHandler = actionHandler,
+                navigationActionClick = navigationActionClick,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun CreateUpdateToDoScreen(
+    title: String,
+    uiState: CreateUpdateToDoUiState,
+    actionHandler: (CreateUpdateToDoAction) -> Unit,
+    navigationActionClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val localCoroutineScope = rememberCoroutineScope()
+    if (uiState.errorSnack != null) {
+        LaunchedEffect(Unit) {
+            localCoroutineScope.launch {
+                val result = snackbarHostState.showSnackbar(uiState.errorSnack)
+                if (result == SnackbarResult.Dismissed) {
+                    actionHandler(CreateUpdateToDoAction.SnackbarDismissed)
                 }
             }
         }
-
-        Scaffold(
-            backgroundColor = colorResource(id = R.color.backgroundLightest),
-            topBar = {
-                TopAppBarContent(
-                    title = title,
-                    uiState = uiState,
-                    actionHandler = actionHandler,
-                    navigationActionClick = navigationActionClick
-                )
-            },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            content = { padding ->
-                CreateUpdateToDoContent(
-                    uiState = uiState,
-                    actionHandler = actionHandler,
-                    modifier = modifier
-                        .padding(padding)
-                        .fillMaxSize()
-                )
-            }
-        )
     }
+
+    Scaffold(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        topBar = {
+            TopAppBarContent(
+                title = title,
+                uiState = uiState,
+                actionHandler = actionHandler,
+                navigationActionClick = navigationActionClick
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        content = { padding ->
+            CreateUpdateToDoContent(
+                uiState = uiState,
+                actionHandler = actionHandler,
+                modifier = modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            )
+        }
+    )
 }
 
 @Composable
@@ -247,9 +278,11 @@ private fun CreateUpdateToDoContent(
             val detailsFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
 
-            LaunchedEffect(key1 = titleFocusRequester, block = {
+            LaunchedEffect(key1 = uiState.title, block = {
                 awaitFrame()
-                titleFocusRequester.requestFocus()
+                if (uiState.title.isEmpty()) {
+                    titleFocusRequester.requestFocus()
+                }
             })
 
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
@@ -351,7 +384,12 @@ private fun CreateUpdateToDoContent(
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Row(
                 verticalAlignment = CenterVertically,
-                modifier = Modifier.height(48.dp),
+                modifier = Modifier
+                    .height(48.dp)
+                    .clickable(enabled = !uiState.loadingCourses) {
+                        focusManager.clearFocus()
+                        actionHandler(CreateUpdateToDoAction.ShowSelectCalendarScreen)
+                    },
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
@@ -362,18 +400,27 @@ private fun CreateUpdateToDoContent(
                     fontWeight = FontWeight(600)
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = "General Astrophysics",
-                    modifier = Modifier.padding(end = 16.dp),
-                    color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp
-                )
-                Icon(
-                    painter = painterResource(id = R.drawable.arrow_right),
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 16.dp),
-                    tint = colorResource(id = R.color.textDark)
-                )
+                if (uiState.loadingCourses) {
+                    CircularProgressIndicator(
+                        color = Color(ThemePrefs.buttonColor),
+                        strokeWidth = 3.dp,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                } else {
+                    Text(
+                        text = uiState.selectedCourse?.name ?: stringResource(id = R.string.noCalendarSelected),
+                        modifier = Modifier.padding(end = 16.dp),
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 14.sp
+                    )
+                    Icon(
+                        painter = painterResource(id = R.drawable.arrow_right),
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 16.dp),
+                        tint = colorResource(id = R.color.textDark)
+                    )
+                }
             }
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
@@ -424,7 +471,12 @@ private fun CreateEditToDoPreview() {
             date = LocalDate.now(),
             time = LocalTime.now(),
             selectedCourse = null,
-            details = "Details"
+            details = "Details",
+            saving = false,
+            errorSnack = null,
+            loadingCourses = false,
+            showCalendarSelector = false,
+            courses = emptyList()
         ),
         actionHandler = {},
         navigationActionClick = {}

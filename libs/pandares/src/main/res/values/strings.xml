@@ -1526,4 +1526,6 @@
     <string name="createToDoCalendarLabel">Calendar</string>
     <string name="createToDoDetailsLabel">Details</string>
     <string name="todoSaveErrorMessage">There was an error saving this To Do. Please check your connection and try again.</string>
+    <string name="selectCalendarScreenTitle">Select Calendar</string>
+    <string name="noCalendarSelected">None</string>
 </resources>

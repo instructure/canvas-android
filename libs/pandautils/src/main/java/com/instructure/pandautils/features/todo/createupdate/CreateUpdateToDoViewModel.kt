@@ -48,6 +48,10 @@ class CreateUpdateToDoViewModel @Inject constructor(
     private val _events = Channel<CreateUpdateToDoViewModelAction>()
     val events = _events.receiveAsFlow()
 
+    init {
+        loadCourses()
+    }
+
     fun handleAction(action: CreateUpdateToDoAction) {
         when (action) {
             is CreateUpdateToDoAction.UpdateTitle -> {
@@ -75,6 +79,28 @@ class CreateUpdateToDoViewModel @Inject constructor(
             is CreateUpdateToDoAction.SnackbarDismissed -> {
                 _uiState.update { it.copy(errorSnack = null) }
             }
+
+            is CreateUpdateToDoAction.ShowSelectCalendarScreen -> {
+                _uiState.update { it.copy(showCalendarSelector = true) }
+            }
+
+            is CreateUpdateToDoAction.HideSelectCalendarScreen -> {
+                _uiState.update { it.copy(showCalendarSelector = false) }
+            }
+
+            is CreateUpdateToDoAction.UpdateSelectedCourse -> {
+                _uiState.update { it.copy(selectedCourse = action.course) }
+            }
+        }
+    }
+
+    private fun loadCourses() {
+        _uiState.update { it.copy(loadingCourses = true) }
+        viewModelScope.tryLaunch {
+            val courses = repository.getCourses()
+            _uiState.update { it.copy(loadingCourses = false, courses = courses) }
+        } catch {
+            _uiState.update { it.copy(loadingCourses = false) }
         }
     }
 

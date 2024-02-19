@@ -17,12 +17,33 @@
 
 package com.instructure.pandautils.features.todo.createupdate
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
+import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.canvasapi2.utils.hasActiveEnrollment
+import com.instructure.canvasapi2.utils.isValidTerm
 
-
-class CreateUpdateToDoRepository(private val plannerApi: PlannerAPI.PlannerInterface) {
+class CreateUpdateToDoRepository(
+    private val coursesApi: CourseAPI.CoursesInterface,
+    private val plannerApi: PlannerAPI.PlannerInterface
+) {
+    suspend fun getCourses(): List<Course> {
+        val params = RestParams()
+        return coursesApi.getFirstPageCourses(params)
+            .depaginate { nextUrl ->
+                coursesApi.next(nextUrl, params)
+            }
+            .map {
+                it.filter { course ->
+                    course.isValidTerm() && course.hasActiveEnrollment()
+                }
+            }
+            .dataOrNull
+            .orEmpty()
+    }
 
     suspend fun createToDo(
         title: String,

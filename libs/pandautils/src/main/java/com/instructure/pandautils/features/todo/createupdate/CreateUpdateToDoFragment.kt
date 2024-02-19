@@ -36,7 +36,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
-import com.instructure.pandautils.features.todo.createupdate.composables.CreateUpdateToDoScreen
+import com.instructure.pandautils.features.todo.createupdate.composables.CreateUpdateToDoScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.withArgs
@@ -61,11 +61,12 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
     ) = ComposeView(requireActivity()).apply {
         setContent {
             val uiState by viewModel.uiState.collectAsState()
-            sharedViewModel.sendEvent(SharedCalendarAction.RequestSelectedDay {
-                viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(it))
-            })
-            CreateUpdateToDoScreen(title(), uiState, viewModel::handleAction, ::navigateBack)
+            CreateUpdateToDoScreenWrapper(title(), uiState, viewModel::handleAction, ::navigateBack)
         }
+
+        sharedViewModel.sendEvent(SharedCalendarAction.RequestSelectedDay {
+            viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(it))
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

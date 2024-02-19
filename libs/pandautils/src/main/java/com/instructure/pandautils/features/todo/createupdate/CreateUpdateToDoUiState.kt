@@ -31,7 +31,10 @@ data class CreateUpdateToDoUiState(
     val selectedCourse: Course? = null,
     val details: String = "",
     val saving: Boolean = false,
-    val errorSnack: String? = null
+    val errorSnack: String? = null,
+    val loadingCourses: Boolean = false,
+    val showCalendarSelector: Boolean = false,
+    val courses: List<Course> = emptyList()
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 
@@ -48,6 +51,9 @@ sealed class CreateUpdateToDoAction {
     data class UpdateDetails(val details: String) : CreateUpdateToDoAction()
     data object Save : CreateUpdateToDoAction()
     data object SnackbarDismissed : CreateUpdateToDoAction()
+    data object ShowSelectCalendarScreen : CreateUpdateToDoAction()
+    data object HideSelectCalendarScreen : CreateUpdateToDoAction()
+    data class UpdateSelectedCourse(val course: Course?) : CreateUpdateToDoAction()
 }
 
 sealed class CreateUpdateToDoViewModelAction {
