@@ -9,9 +9,12 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.withElementRepeat
+import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.espresso.ActivityHelper
+import com.instructure.espresso.ModuleItem
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.click
+import com.instructure.espresso.extractInnerTextById
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.replaceText
@@ -27,7 +30,7 @@ import org.hamcrest.Matchers.containsString
  *
  * @constructor Creates an instance of `EditPageDetailsPage`.
  */
-class EditPageDetailsPage : BasePage() {
+class EditPageDetailsPage(val moduleItem: ModuleItem) : BasePage() {
     private val contentRceView by WaitForViewWithId(R.id.rce_webView)
 
     /**
@@ -103,6 +106,16 @@ class EditPageDetailsPage : BasePage() {
     fun unableToSaveUnpublishedFrontPage() {
         savePage()
         checkToastText(R.string.frontPageUnpublishedError, ActivityHelper.currentActivity())
+    }
+
+    /**
+     * Assert that the page's body is equal to the expected
+     *
+     * @param page The page object to assert.
+     */
+    fun assertPageDetails(page: PageApiModel) {
+        val innerText = extractInnerTextById(page.body, "header1")
+        runTextChecks(WebViewTextCheck(Locator.ID, "header1", innerText!!))
     }
 }
 

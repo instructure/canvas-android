@@ -25,6 +25,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.ModuleItem
 import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
@@ -125,7 +126,7 @@ abstract class TeacherTest : CanvasTest() {
     val addMessagePage = AddMessagePage()
     val announcementsListPage = AnnouncementsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assigneeListPage = AssigneeListPage()
-    val assignmentDetailsPage = AssignmentDetailsPage()
+    val assignmentDetailsPage = AssignmentDetailsPage(ModuleItem(R.id.moduleName, R.id.next, R.id.previous))
     val assignmentDueDatesPage = AssignmentDueDatesPage()
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assignmentSubmissionListPage = AssignmentSubmissionListPage()
@@ -145,12 +146,12 @@ abstract class TeacherTest : CanvasTest() {
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
     val editProfileSettingsPage = EditProfileSettingsPage()
-    val discussionsDetailsPage = DiscussionsDetailsPage()
+    val discussionsDetailsPage = DiscussionsDetailsPage(ModuleItem(R.id.moduleName, R.id.next, R.id.previous))
     val discussionsListPage = DiscussionsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val editAnnouncementDetailsPage = EditAnnouncementDetailsPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()
     val editDiscussionsDetailsPage = EditDiscussionsDetailsPage()
-    val editPageDetailsPage = EditPageDetailsPage()
+    val editPageDetailsPage = EditPageDetailsPage(ModuleItem(R.id.moduleName, R.id.next, R.id.previous))
     val editQuizDetailsPage = EditQuizDetailsPage()
     val editSyllabusPage = EditSyllabusPage()
     val inboxMessagePage = InboxMessagePage()
@@ -158,12 +159,12 @@ abstract class TeacherTest : CanvasTest() {
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
     val loginSignInPage = LoginSignInPage()
-    val modulesPage = ModulesPage()
+    val moduleListPage = ModulesPage()
     val navDrawerPage = NavDrawerPage()
     val notATeacherPage = NotATeacherPage()
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val peopleListPage = PeopleListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val quizDetailsPage = QuizDetailsPage()
+    val quizDetailsPage = QuizDetailsPage(ModuleItem(R.id.moduleName, R.id.next, R.id.previous))
     val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.clearButton, R.id.backButton))
     val quizSubmissionListPage = QuizSubmissionListPage()
     val speedGraderCommentsPage = SpeedGraderCommentsPage()

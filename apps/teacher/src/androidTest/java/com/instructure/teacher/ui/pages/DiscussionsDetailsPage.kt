@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.pages
 
+import com.instructure.espresso.ModuleItem
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
@@ -28,7 +29,7 @@ import com.instructure.espresso.swipeDown
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
-class DiscussionsDetailsPage : BasePage() {
+class DiscussionsDetailsPage(val moduleItem: ModuleItem) : BasePage() {
 
     /**
      * Asserts that the discussion has the specified [title].
