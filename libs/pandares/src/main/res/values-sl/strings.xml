@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Povabilo sprejeto.</string>
     <string name="inviteDeclined">Povabilo zavrnjeno.</string>
     <string name="latePenalty">Kazen za zamudo (-%s)</string>
+    <string name="latePenaltyUpdated">Kazen za zamudo: – %s točk</string>
+    <string name="yourGrade">Vaša ocena: %s točk</string>
     <string name="finalGrade">Končna ocena</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d predmetov je bilo sinhroniziranih.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Dodatna vsebina predmeta</string>
+    <string name="failedToUpdateDashboardOrder">Vrstnega reda kartic nadzorne plošče ni bilo mogoče posodobiti</string>
 </resources>

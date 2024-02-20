@@ -129,9 +129,8 @@ class PageListFragment : ParentFragment(), Bookmarkable {
         super.onActivityCreated(savedInstanceState)
 
         if (isShowFrontPage) {
-            val route = PageDetailsFragment.makeRoute(
-                canvasContext,
-                Page.FRONT_PAGE_NAME
+            val route = PageDetailsFragment.makeFrontPageRoute(
+                canvasContext
             ).apply { ignoreDebounce = true}
             RouteMatcher.route(requireActivity(), route)
         }

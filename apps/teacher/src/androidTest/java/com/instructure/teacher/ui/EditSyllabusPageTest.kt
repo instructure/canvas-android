@@ -90,7 +90,7 @@ class EditSyllabusPageTest : TeacherTest() {
 
         data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             dueAt = 2.days.fromNow.iso8601,
             name = "Assignment: 1"
         )

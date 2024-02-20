@@ -22,6 +22,7 @@ import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertNoInternetConnectionDialog
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertOfflineIndicator
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.dismissNoInternetConnectionDialog
@@ -34,6 +35,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflineLeftSideMenuE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -53,12 +55,15 @@ class OfflineLeftSideMenuE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
+        OfflineTestUtils.waitForNetworkToGoOffline(device)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         assertOfflineIndicator()
 
-        Log.d(STEP_TAG, "Open Left Side Menu by clicking on the 'hamburger icon' on the Dashboard Page.")
+        Log.d(STEP_TAG, "Open Left Side Menu by clicking on the 'hamburger/kebab icon' on the Dashboard Page.")
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Assert that the offline indicator is displayed below the user info within the header.")
@@ -89,7 +94,6 @@ class OfflineLeftSideMenuE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.clickHelpMenu()
         assertNoInternetConnectionDialog()
         dismissNoInternetConnectionDialog()
-
     }
 
     @After

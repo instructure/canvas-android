@@ -18,13 +18,12 @@ package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
 import androidx.test.espresso.Espresso
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.pages.CourseBrowserPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -36,6 +35,7 @@ import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class OfflineCourseBrowserE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -49,7 +49,6 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 1)
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
@@ -64,26 +63,17 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
-        dashboardPage.waitForRender()
-        dashboardPage.waitForSyncProgressDownloadStartedNotification()
-        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
-
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
-        dashboardPage.waitForSyncProgressStartingNotification()
-        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
+        Log.d(STEP_TAG, "Wait for the 'Download Started' and 'Syncing Offline Content' dashboard notifications to be displayed, and then to disappear.")
+        dashboardPage.waitForOfflineSyncDashboardNotifications()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
-        device.waitForIdle()
-        device.waitForWindowUpdate(null, 10000)
+        OfflineTestUtils.waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
-        sleep(5000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
         dashboardPage.selectCourse(course1)
 
         Log.d(STEP_TAG, "Assert that only the 'Announcements' tab is enabled because it is the only one which has been synced, and assert that all the other, previously synced tabs are disabled, because they weren't synced now.")
@@ -95,7 +85,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.Turn back on the Wi-Fi and Mobile Data on the device, and wait for it to come online.")
         Espresso.pressBack()
         turnOnConnectionViaADB()
-        dashboardPage.waitForNetworkComeBack()
+        dashboardPage.waitForOfflineIndicatorNotDisplayed()
 
         Log.d(STEP_TAG, "Open global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
         dashboardPage.openGlobalManageOfflineContentPage()

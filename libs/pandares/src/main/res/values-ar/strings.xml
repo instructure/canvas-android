@@ -992,6 +992,8 @@
     <string name="inviteAccepted">تم قبول الدعوة!</string>
     <string name="inviteDeclined">تم رفض الدعوة.</string>
     <string name="latePenalty">عقوبة التأخير (-%s)</string>
+    <string name="latePenaltyUpdated">عقوبة التأخير: -%s نقاط</string>
+    <string name="yourGrade">الدرجة الخاصة بك: %s من النقاط</string>
     <string name="finalGrade">الدرجة النهائية</string>
 
     <string name="max_count">أكثر من 99</string>
@@ -1558,4 +1560,5 @@
         <item quantity="other">تمت مزامنة %d من المساقات.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">محتوى مساق إضافي</string>
+    <string name="failedToUpdateDashboardOrder">فشل تحديث ترتيب بطاقات لوحة المعلومات</string>
 </resources>

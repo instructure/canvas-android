@@ -25,7 +25,6 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -35,28 +34,24 @@ import org.junit.Test
 class AssignmentDueDatesPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3134131")
     override fun displaysPageObjects() {
         getToDueDatesPage()
         assignmentDueDatesPage.assertPageObjects()
     }
 
     @Test
-    @TestRail(ID = "C3134484")
     fun displaysNoDueDate() {
         getToDueDatesPage()
         assignmentDueDatesPage.assertDisplaysNoDueDate()
     }
 
     @Test
-    @TestRail(ID = "C3134485")
     fun displaysSingleDueDate() {
         getToDueDatesPage(dueAt = 7.days.fromNow.iso8601)
         assignmentDueDatesPage.assertDisplaysSingleDueDate()
     }
 
     @Test
-    @TestRail(ID = "C3134486")
     fun displaysAvailabilityDates() {
         getToDueDatesPage(lockAt = 7.days.fromNow.iso8601, unlockAt = 7.days.ago.iso8601)
         assignmentDueDatesPage.assertDisplaysAvailabilityDates()
@@ -77,7 +72,7 @@ class AssignmentDueDatesPageTest : TeacherTest() {
                 dueAt = dueAt,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         val token = data.tokenFor(teacher)!!

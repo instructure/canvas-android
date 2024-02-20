@@ -948,6 +948,8 @@
     <string name="inviteAccepted">招待が受け入れられました！</string>
     <string name="inviteDeclined">招待が拒否されました。</string>
     <string name="latePenalty">遅延ペナルティ (-%s)</string>
+    <string name="latePenaltyUpdated">遅延ペナルティ：-%s 点</string>
+    <string name="yourGrade">あなたの評定：%s 点</string>
     <string name="finalGrade">最終的な評定</string>
 
     <string name="max_count">99+</string>
@@ -1459,4 +1461,5 @@
         <item quantity="other">%dコースが同期されました。</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">追加のコースコンテンツ</string>
+    <string name="failedToUpdateDashboardOrder">ダッシュボードのカードの順番を更新できませんでした</string>
 </resources>

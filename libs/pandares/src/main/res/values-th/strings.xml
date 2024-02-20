@@ -957,6 +957,8 @@
     <string name="inviteAccepted">ตอบรับคำเชิญแล้ว!</string>
     <string name="inviteDeclined">ปฏิเสธคำเชิญแล้ว</string>
     <string name="latePenalty">โทษปรับล่าช้า (-%s)</string>
+    <string name="latePenaltyUpdated">โทษปรับล่าช้า: -%s คะแนน</string>
+    <string name="yourGrade">เกรดของคุณ: %s คะแนน</string>
     <string name="finalGrade">เกรดสรุป</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d บทเรียนได้รับการซิงค์แล้ว</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">เนื้อหาบทเรียนเพิ่มเติม</string>
+    <string name="failedToUpdateDashboardOrder">ไม่สามารถอัพเดตลำดับการ์ดแผงข้อมูล</string>
 </resources>

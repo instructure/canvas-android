@@ -50,10 +50,7 @@ class DashboardE2ETest : StudentTest() {
         val course2 = data.coursesList[1]
 
         Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
-        ConversationsApi.createConversation(
-                token = teacher.token,
-                recipients = listOf(student.id.toString())
-        )
+        ConversationsApi.createConversation(teacher.token, listOf(student.id.toString()))
 
         Log.d(PREPARATION_TAG,"Seed some group info.")
         val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)

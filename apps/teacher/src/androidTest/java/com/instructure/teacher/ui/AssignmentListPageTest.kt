@@ -22,7 +22,6 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -32,28 +31,24 @@ import org.junit.Test
 class AssignmentListPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3109578")
     override fun displaysPageObjects() {
         getToAssignmentsPage()
         assignmentListPage.assertPageObjects()
     }
 
     @Test
-    @TestRail(ID = "C3134487")
     fun displaysNoAssignmentsView() {
         getToAssignmentsPage(0)
         assignmentListPage.assertDisplaysNoAssignmentsView()
     }
 
     @Test
-    @TestRail(ID = "C3109578")
     fun displaysAssignment() {
         val assignment = getToAssignmentsPage().assignments.values.first()
         assignmentListPage.assertHasAssignment(assignment)
     }
 
     @Test
-    @TestRail(ID = "C3134488")
     fun displaysGradingPeriods() {
         getToAssignmentsPage(gradingPeriods = true)
         assignmentListPage.assertHasGradingPeriods()
@@ -89,7 +84,7 @@ class AssignmentListPageTest : TeacherTest() {
         repeat(assignments) {
             data.addAssignment(
                     courseId = course.id,
-                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                    submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                     assignmentGroupId = assignmentGroup.id)
         }
 

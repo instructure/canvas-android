@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Invite accepted!</string>
     <string name="inviteDeclined">Invite declined.</string>
     <string name="latePenalty">Late penalty (-%s)</string>
+    <string name="latePenaltyUpdated">Late Penalty: -%s pts</string>
+    <string name="yourGrade">Your Grade: %s pts</string>
     <string name="finalGrade">Final grade</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d modules have been synced.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Additional module content</string>
+    <string name="failedToUpdateDashboardOrder">Failed to update Dashboard cards order</string>
 </resources>
