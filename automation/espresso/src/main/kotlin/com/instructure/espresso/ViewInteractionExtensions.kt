@@ -162,3 +162,11 @@ fun ViewInteraction.assertChecked() {
 fun ViewInteraction.assertNotChecked() {
     check(ViewAssertions.matches(ViewMatchers.isNotChecked()))
 }
+
+fun ViewInteraction.assertEnabled() {
+    check(ViewAssertions.matches(ViewMatchers.isEnabled()))
+}
+
+fun ViewInteraction.assertDisabled() {
+    check(ViewAssertions.matches(Matchers.not(ViewMatchers.isEnabled())))
+}
