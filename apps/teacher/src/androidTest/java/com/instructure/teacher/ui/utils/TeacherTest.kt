@@ -19,7 +19,6 @@ package com.instructure.teacher.ui.utils
 import android.app.Activity
 import android.util.Log
 import android.view.View
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -72,7 +71,6 @@ import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.pages.PostSettingsPage
 import com.instructure.teacher.ui.pages.ProfileSettingsPage
-import com.instructure.teacher.ui.pages.ProgressPage
 import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage
@@ -107,9 +105,6 @@ abstract class TeacherTest : CanvasTest() {
 
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule(order = 2)
-    val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
     @Before
     fun baseSetup() {
@@ -184,7 +179,6 @@ abstract class TeacherTest : CanvasTest() {
     val webViewLoginPage = WebViewLoginPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val updateFilePermissionsPage = UpdateFilePermissionsPage()
-    val progressPage = ProgressPage(composeTestRule)
 
 }
 
