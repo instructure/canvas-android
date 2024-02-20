@@ -37,6 +37,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -157,6 +158,7 @@ fun Calendar(calendarScreenUiState: CalendarScreenUiState, actionHandler: (Calen
                 }
             }
         )
+        Divider(Modifier.fillMaxWidth(), color = colorResource(id = R.color.backgroundMedium), thickness = 0.5.dp)
     }
 }
 
@@ -336,7 +338,7 @@ fun DaysOfWeekRow(
                     Modifier
                         .height(10.dp)
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom,
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     repeat(dayState.indicatorCount) {
