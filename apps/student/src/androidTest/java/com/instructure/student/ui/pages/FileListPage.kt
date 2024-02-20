@@ -20,9 +20,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -55,6 +53,11 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
 
     fun assertItemDisplayed(itemName: String) {
         val matcher = allOf(withId(R.id.fileName), withText(itemName))
+        waitForView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertSearchItemDisplayed(itemName: String) {
+        val matcher = allOf(withId(R.id.fileName), withAncestor(R.id.fileSearchRecyclerView), withText(itemName))
         waitForView(matcher).scrollTo().assertDisplayed()
     }
 
@@ -127,14 +130,14 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
     fun assertSearchResultCount(expectedCount: Int) {
         Thread.sleep(2000)
         onView(withId(R.id.fileSearchRecyclerView) + withAncestor(R.id.container)).check(
-            ViewAssertions.matches(ViewMatchers.hasChildCount(expectedCount))
+            matches(hasChildCount(expectedCount))
         )
     }
 
     fun assertFileListCount(expectedCount: Int) {
         Thread.sleep(2000)
-        onView(withId(R.id.listView) + withAncestor(R.id.container)).check(
-            ViewAssertions.matches(ViewMatchers.hasChildCount(expectedCount))
+        onView(withId(R.id.listView) + withAncestor(R.id.fileListPage)).check(
+            matches(hasChildCount(expectedCount))
         )
     }
 

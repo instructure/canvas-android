@@ -153,7 +153,7 @@ class PdfInteractionTest : StudentTest() {
         val pdfUrlElementId = "testLinkElement"
         val assignmentDescriptionHtml = """<a id="$pdfUrlElementId" href="$url">pdf baby!!!</a>"""
 
-        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD, description = assignmentDescriptionHtml)
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD), description = assignmentDescriptionHtml)
 
         assignmentListPage.waitForPage()
         assignmentListPage.refresh()

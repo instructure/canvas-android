@@ -19,7 +19,6 @@ package com.instructure.teacher.ui
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -29,7 +28,6 @@ import org.junit.Test
 class EditDashboardPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3109572")
     override fun displaysPageObjects() {
         setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
         dashboardPage.clickEditDashboard()
@@ -37,7 +35,6 @@ class EditDashboardPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3109572")
     fun displaysCourseList() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
         val course = data.courses.values.toList()[0]
@@ -46,7 +43,6 @@ class EditDashboardPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3109574")
     fun addCourseToFavourites() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
         val courses = data.courses.values.toList()
@@ -57,7 +53,6 @@ class EditDashboardPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3109575")
     fun removeCourseFromFavourites() {
         val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 1)
         val courses = data.courses.values.toList()

@@ -21,11 +21,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.FragmentActivity
 import android.view.Window
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
@@ -34,9 +36,11 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ActivityRouteValidatorBinding
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.services.FileDownloadService
@@ -45,12 +49,14 @@ import kotlinx.coroutines.Job
 
 class RouteValidatorActivity : FragmentActivity() {
 
+    private val binding by viewBinding(ActivityRouteValidatorBinding::inflate)
+
     private var routeValidatorJob: Job? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_route_validator)
+        setContentView(binding.root)
 
         val data: Uri? = intent.data
         val url: String? = data?.toString()
@@ -82,6 +88,13 @@ class RouteValidatorActivity : FragmentActivity() {
                     }
 
                     val tokenResponse = QRLogin.performSSOLogin(data, this@RouteValidatorActivity, true)
+
+                    val authResult = apiAsync { OAuthManager.getAuthenticatedSession(ApiPrefs.fullDomain, it) }.await()
+                    if (authResult.isSuccess) {
+                        authResult.dataOrNull?.sessionUrl?.let {
+                            binding.dummyWebView.loadUrl(it)
+                        }
+                    }
 
                     // If we have a real user, this is a QR code from a masquerading web user
                     val intent = if (tokenResponse.realUser != null && tokenResponse.user != null) {

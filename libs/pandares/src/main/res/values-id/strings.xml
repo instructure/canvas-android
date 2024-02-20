@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Undangan diterima!</string>
     <string name="inviteDeclined">Undangan ditolak.</string>
     <string name="latePenalty">Penalti terlambat (%s)</string>
+    <string name="latePenaltyUpdated">Penalti Terlambat: -%s poin</string>
+    <string name="yourGrade">Nilai Anda: %s poin</string>
     <string name="finalGrade">Filter Nilai</string>
 
     <string name="max_count">99+</string>
@@ -1482,4 +1484,5 @@
         <item quantity="other">Kursus %d telah disinkronkan.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Konten kursus tambahan</string>
+    <string name="failedToUpdateDashboardOrder">Gagal memperbarui urutan kartu Dashboard</string>
 </resources>
