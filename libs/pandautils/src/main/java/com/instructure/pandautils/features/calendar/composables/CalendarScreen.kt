@@ -53,6 +53,8 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
+import com.instructure.pandautils.features.calendar.CalendarScreenUiState
+import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -64,17 +66,17 @@ import org.threeten.bp.LocalDate
 @Composable
 fun CalendarScreen(
     title: String,
-    calendarUiState: CalendarUiState,
+    calendarScreenUiState: CalendarScreenUiState,
     actionHandler: (CalendarAction) -> Unit,
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
         val localCoroutineScope = rememberCoroutineScope()
-        if (calendarUiState.snackbarMessage != null) {
+        if (calendarScreenUiState.snackbarMessage != null) {
             LaunchedEffect(Unit) {
                 localCoroutineScope.launch {
-                    val result = snackbarHostState.showSnackbar(calendarUiState.snackbarMessage)
+                    val result = snackbarHostState.showSnackbar(calendarScreenUiState.snackbarMessage)
                     if (result == SnackbarResult.Dismissed) {
                         actionHandler(CalendarAction.SnackbarDismissed)
                     }
@@ -88,7 +90,7 @@ fun CalendarScreen(
                     Text(text = title)
                 },
                     actions = {
-                        if (calendarUiState.selectedDay != LocalDate.now()) {
+                        if (calendarScreenUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
                                 .padding(horizontal = 12.dp)
                                 .clickable {
@@ -129,8 +131,8 @@ fun CalendarScreen(
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
                     Column {
-                        Calendar(calendarUiState, actionHandler, Modifier.fillMaxWidth())
-                        CalendarEvents(calendarUiState.calendarEventsUiState, actionHandler)
+                        Calendar(calendarScreenUiState, actionHandler, Modifier.fillMaxWidth())
+                        CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler)
                     }
                 }
             })
@@ -143,9 +145,14 @@ fun CalendarScreen(
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
+    val calendarStateMapper = CalendarStateMapper()
+    val calendarUiState = CalendarUiState(
+        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
+        bodyUiState = calendarStateMapper.createBodyUiState(true, false, 0, LocalDate.now(), emptyMap())
+    )
     CalendarScreen(
-        "Calendar", CalendarUiState(
-            LocalDate.now().plusDays(1), true, CalendarEventsUiState(
+        "Calendar", CalendarScreenUiState(
+            LocalDate.now(), true, calendarUiState, CalendarEventsUiState(
                 currentPage = CalendarEventsPageUiState(
                     events = listOf(
                         EventUiState(

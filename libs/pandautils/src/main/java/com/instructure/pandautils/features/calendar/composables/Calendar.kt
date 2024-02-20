@@ -67,7 +67,7 @@ import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarDayUiState
 import com.instructure.pandautils.features.calendar.CalendarHeaderUiState
 import com.instructure.pandautils.features.calendar.CalendarRowUiState
-import com.instructure.pandautils.features.calendar.CalendarUiState
+import com.instructure.pandautils.features.calendar.CalendarScreenUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
@@ -80,7 +80,7 @@ private const val CALENDAR_ROW_HEIGHT = 46
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
+fun Calendar(calendarScreenUiState: CalendarScreenUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
         val pagerState = rememberPagerState(
@@ -98,18 +98,16 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
             }
         }
 
-        LaunchedEffect(calendarUiState.scrollToPageOffset) {
-            if (calendarUiState.scrollToPageOffset != 0) {
-                pagerState.animateScrollToPage(pagerState.currentPage + calendarUiState.scrollToPageOffset)
+        LaunchedEffect(calendarScreenUiState.scrollToPageOffset) {
+            if (calendarScreenUiState.scrollToPageOffset != 0) {
+                pagerState.animateScrollToPage(pagerState.currentPage + calendarScreenUiState.scrollToPageOffset)
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        val calendarOpen = calendarUiState.expanded && !calendarUiState.collapsing
-
         CalendarHeader(
-            calendarUiState.headerUiState, calendarOpen, actionHandler, modifier = Modifier
+            calendarScreenUiState.headerUiState, calendarScreenUiState.expanded, actionHandler, modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp)
         )
@@ -123,7 +121,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 val settledPage = pagerState.settledPage
 
                 val monthOffset = page - centerIndex
-                val calendarBodyUiState = calendarUiState.bodyUiState
+                val calendarBodyUiState = calendarScreenUiState.bodyUiState
                 val calendarPageUiState = when (monthOffset) {
                     -1 -> calendarBodyUiState.previousPage
                     1 -> calendarBodyUiState.nextPage
@@ -131,20 +129,20 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 }
 
                 val rowsHeight =
-                    if (calendarOpen) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
+                    if (calendarScreenUiState.expanded) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
                 val height by animateIntAsState(targetValue = rowsHeight + HEADER_HEIGHT, label = "heightAnimation", finishedListener = {
                     actionHandler(CalendarAction.HeightAnimationFinished)
                 })
 
                 val rowsScaleRatio by animateFloatAsState(
-                    targetValue = if (calendarOpen) 1.0f else 0.0f,
+                    targetValue = if (calendarScreenUiState.expanded) 1.0f else 0.0f,
                     label = "animationScale"
                 )
 
                 if (page >= settledPage - 1 && page <= settledPage + 1) {
                     CalendarBody(
                         calendarPageUiState.calendarRows,
-                        calendarUiState.pendingSelectedDay ?: calendarUiState.selectedDay,
+                        calendarScreenUiState.pendingSelectedDay ?: calendarScreenUiState.selectedDay,
                         scaleRatio = rowsScaleRatio,
                         selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) },
                         modifier = Modifier.height(height.dp)

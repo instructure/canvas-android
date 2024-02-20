@@ -98,7 +98,7 @@ class CalendarViewModelTest {
         initViewModel()
         val initialState = viewModel.uiState.value
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -131,7 +131,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } throws Exception()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), error = true),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), error = true),
@@ -172,7 +172,7 @@ class CalendarViewModelTest {
         val expectedNextEvents = listOf(
             EventUiState(5, "Course 2 To Do", Course(2), "Plannable 5", R.drawable.ic_todo, "Apr 21 12:00 PM"),
         )
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), events = expectedPreviousEvents),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expectedCurrentEvents),
@@ -245,7 +245,7 @@ class CalendarViewModelTest {
         val expected21stEvents = listOf(
             EventUiState(5, "Course 2 To Do", Course(2), "Plannable 5", R.drawable.ic_todo, "Apr 21 12:00 PM"),
         )
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), events = expected19thEvents),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expected20thEvents),
@@ -257,7 +257,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2023, 4, 19)))
 
-        val expectedNewState = CalendarUiState(
+        val expectedNewState = CalendarScreenUiState(
             LocalDate.of(2023, 4, 19), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 18)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), events = expected19thEvents),
@@ -273,7 +273,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -295,7 +295,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -314,7 +314,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -326,7 +326,7 @@ class CalendarViewModelTest {
 
         // Select an other day
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2022, 2, 19)))
-        val newDayExpectedState = CalendarUiState(
+        val newDayExpectedState = CalendarScreenUiState(
             LocalDate.of(2022, 2, 19), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2022, 2, 18)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2022, 2, 19)),
@@ -345,7 +345,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -356,7 +356,7 @@ class CalendarViewModelTest {
         assertEquals(expectedState, viewModel.uiState.value)
 
         viewModel.handleAction(CalendarAction.PageChanged(1))
-        val newExpectedState = CalendarUiState(
+        val newExpectedState = CalendarScreenUiState(
             LocalDate.of(2023, 5, 20), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 5, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 5, 20)),
@@ -371,7 +371,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -384,7 +384,7 @@ class CalendarViewModelTest {
         viewModel.handleAction(CalendarAction.ExpandChanged)
         viewModel.handleAction(CalendarAction.PageChanged(1))
 
-        val newExpectedState = CalendarUiState(
+        val newExpectedState = CalendarScreenUiState(
             LocalDate.of(2023, 4, 27), false, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 26)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 27)),
@@ -399,7 +399,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -411,7 +411,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventPageChanged(1))
 
-        val newExpectedState = CalendarUiState(
+        val newExpectedState = CalendarScreenUiState(
             LocalDate.of(2023, 4, 21), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21)),
@@ -445,7 +445,7 @@ class CalendarViewModelTest {
         )
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -461,7 +461,7 @@ class CalendarViewModelTest {
             EventUiState(1, "Course 1", Course(1), "Plannable 1", R.drawable.ic_assignment, "Due Apr 20 12:00 PM"),
         )
 
-        val newExpectedState = CalendarUiState(
+        val newExpectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expectedEvents),
@@ -481,7 +481,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getPlannerItems(startDate!!, endDate!!, any(), any()) } throws IllegalStateException()
         initViewModel()
 
-        val expectedState = CalendarUiState(
+        val expectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
@@ -493,7 +493,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.RefreshDay(LocalDate.of(2023, 4, 20)))
 
-        val newExpectedState = CalendarUiState(
+        val newExpectedState = CalendarScreenUiState(
             LocalDate.now(clock), true, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),

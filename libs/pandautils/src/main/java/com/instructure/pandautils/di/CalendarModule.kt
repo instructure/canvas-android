@@ -18,6 +18,7 @@ package com.instructure.pandautils.di
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +36,10 @@ class CalendarModule {
     @Provides
     fun provideCalendarPrefs(): CalendarPrefs {
         return CalendarPrefs
+    }
+
+    @Provides
+    fun provideCalendarStateMapper(): CalendarStateMapper {
+        return CalendarStateMapper()
     }
 }

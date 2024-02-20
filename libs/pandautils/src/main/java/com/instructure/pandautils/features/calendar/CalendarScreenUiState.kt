@@ -24,93 +24,27 @@ import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.Locale
 
-data class CalendarUiState(
+data class CalendarScreenUiState(
     val selectedDay: LocalDate,
     val expanded: Boolean,
+    val calendarUiState: CalendarUiState,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
-    val eventIndicators: Map<LocalDate, Int> = emptyMap(),
     val snackbarMessage: String? = null,
-    val collapsing: Boolean = false,
     val scrollToPageOffset: Int = 0,
     val pendingSelectedDay: LocalDate? = null, // Temporary selected date when the calendar is animating to a new month
-    val jumpToToday: Boolean = false
 ) {
     val headerUiState: CalendarHeaderUiState
         get() {
-            val selectedDay = pendingSelectedDay ?: selectedDay
-            val month = selectedDay.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-            val year = selectedDay.year.toString()
-            return CalendarHeaderUiState(month, year)
+            return calendarUiState.headerUiState
         }
 
     val bodyUiState: CalendarBodyUiState
         get() {
-            val dateFieldToAdd = if (expanded) ChronoUnit.MONTHS else ChronoUnit.WEEKS
-
-            val previousPageDate = if (jumpToToday && scrollToPageOffset < 0) LocalDate.now() else selectedDay.minus(1, dateFieldToAdd)
-            val nextPageDate = if (jumpToToday && scrollToPageOffset > 0) LocalDate.now() else selectedDay.plus(1, dateFieldToAdd)
-
-            val previousPage = createCalendarPageUiState(previousPageDate, expanded)
-            val currentPage = createCalendarPageUiState(selectedDay, expanded)
-            val nextPage = createCalendarPageUiState(nextPageDate, expanded)
-            return CalendarBodyUiState(previousPage, currentPage, nextPage)
+            return calendarUiState.bodyUiState
         }
-
-    private fun createCalendarPageUiState(
-        date: LocalDate,
-        fullMonth: Boolean
-    ): CalendarPageUiState {
-        val daysInMonth = date.lengthOfMonth()
-        val firstDayOfMonth = date.withDayOfMonth(1)
-        val firstDayOfWeekIndex =
-            firstDayOfMonth.dayOfWeek.value % 7 // 0 for Sunday, 6 for Saturday
-
-        val calendarRows = mutableListOf<CalendarRowUiState>()
-        val currentWeek = mutableListOf<CalendarDayUiState>()
-
-        // Fill the previous month's days if the first day of the month is not Sunday
-        if (firstDayOfWeekIndex > 0) {
-            val previousMonth = date.minusMonths(1).month
-            val previousMonthYear = date.minusMonths(1).year
-            val previousMonthFirstVisibleDay =
-                firstDayOfMonth.minusDays(firstDayOfWeekIndex.toLong())
-            val previousMonthDays = previousMonthFirstVisibleDay.dayOfMonth
-            for (day in (previousMonthDays) until previousMonthDays + firstDayOfWeekIndex) {
-                val dateForDay = LocalDate.of(previousMonthYear, previousMonth, day)
-                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0))
-            }
-        }
-
-        // Fill the current month's days
-        for (day in 1..daysInMonth) {
-            val dateForDay = LocalDate.of(date.year, date.month, day)
-            val enabled =
-                dateForDay.dayOfWeek != DayOfWeek.SUNDAY && dateForDay.dayOfWeek != DayOfWeek.SATURDAY
-            currentWeek.add(CalendarDayUiState(day, dateForDay, enabled, eventIndicators[dateForDay] ?: 0))
-            if (currentWeek.size == 7) {
-                calendarRows.add(CalendarRowUiState(currentWeek.toList()))
-                currentWeek.clear()
-            }
-        }
-
-        // Fill the next month's days if the last day of the month is not Saturday
-        if (currentWeek.isNotEmpty()) {
-            val nextMonth = date.plusMonths(1).month
-            val nextMonthYear = date.plusMonths(1).year
-            val daysToAdd = 7 - currentWeek.size
-            for (day in 1..daysToAdd) {
-                val dateForDay = LocalDate.of(nextMonthYear, nextMonth, day)
-                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0))
-            }
-            calendarRows.add(CalendarRowUiState(currentWeek.toList()))
-        }
-
-        val finalCalendarRows =
-            if (fullMonth) calendarRows else calendarRows.filter { it.days.any { day -> day.date == date } }
-
-        return CalendarPageUiState(finalCalendarRows)
-    }
 }
+
+data class CalendarUiState(val headerUiState: CalendarHeaderUiState, val bodyUiState: CalendarBodyUiState)
 
 data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String)
 
