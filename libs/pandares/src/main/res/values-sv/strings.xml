@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Inbjudan accepterades!</string>
     <string name="inviteDeclined">Inbjudan avböjd.</string>
     <string name="latePenalty">Förseningsbestraffning (-%s)</string>
+    <string name="latePenaltyUpdated">Förseningsavdrag: -%s poäng</string>
+    <string name="yourGrade">Ditt omdöme: %s poäng</string>
     <string name="finalGrade">Totalt omdöme</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d-kurser har synkroniserats.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Extra kursinnehåll</string>
+    <string name="failedToUpdateDashboardOrder">Det gick inte att uppdatera översiktens kortordning</string>
 </resources>

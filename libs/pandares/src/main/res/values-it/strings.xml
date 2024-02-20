@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Invito accettato!</string>
     <string name="inviteDeclined">Invito rifiutato.</string>
     <string name="latePenalty">Penale ritardo (-%s)</string>
+    <string name="latePenaltyUpdated">Penale ritardo: -%s pt</string>
+    <string name="yourGrade">Il tuo voto: %s pt.</string>
     <string name="finalGrade">Voto finale</string>
 
     <string name="max_count">Più di 99</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d corsi sono stati sincronizzati.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Altro contenuto del corso</string>
+    <string name="failedToUpdateDashboardOrder">Impossibile aggiornare l’ordine delle schede dashboard</string>
 </resources>

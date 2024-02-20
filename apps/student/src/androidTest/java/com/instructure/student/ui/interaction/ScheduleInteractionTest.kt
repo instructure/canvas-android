@@ -49,7 +49,7 @@ class ScheduleInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowCorrectHeaderItems() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -74,7 +74,7 @@ class ScheduleInteractionTest : StudentTest() {
 
     @Test
     @StubLandscape(description = "This is intentionally stubbed on landscape mode because the item view is too narrow, but that's not a bug, it's intentional.")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowScheduledAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -83,7 +83,7 @@ class ScheduleInteractionTest : StudentTest() {
         courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate, name = "Assignment 1")
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(10)
@@ -93,7 +93,7 @@ class ScheduleInteractionTest : StudentTest() {
 
     @Test
     @StubLandscape(description = "This is intentionally stubbed on landscape mode because the item view is too narrow, but that's not a bug, it's intentional.")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowMissingAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -101,7 +101,7 @@ class ScheduleInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(12)
@@ -109,7 +109,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowToDoEvents() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -125,7 +125,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testRefresh() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -140,8 +140,8 @@ class ScheduleInteractionTest : StudentTest() {
         schedulePage.assertNoScheduleItemDisplayed()
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
-        val assignment2 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
+        val assignment2 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
 
         schedulePage.scrollToPosition(0)
         schedulePage.refresh()
@@ -154,7 +154,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testGoBack2Weeks() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -177,7 +177,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testGoForward2Weeks() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -200,7 +200,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenAssignment() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -209,7 +209,7 @@ class ScheduleInteractionTest : StudentTest() {
         courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
+        val assignment = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate, name = "Assignment 1")
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(9)
@@ -220,7 +220,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenCourse() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -228,7 +228,7 @@ class ScheduleInteractionTest : StudentTest() {
         val courses = data.courses.values.filter { !it.homeroomCourse }
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate)
+        data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate)
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(8)
@@ -239,7 +239,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testMarkAsDone() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -256,7 +256,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testTodayButton() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -265,7 +265,7 @@ class ScheduleInteractionTest : StudentTest() {
         courses[0].name = "Course 1"
 
         val currentDate = dateTimeProvider.getCalendar().time.toApiString()
-        val assignment1 = data.addAssignment(courses[0].id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY, dueAt = currentDate, name = "Assignment 1")
+        val assignment1 = data.addAssignment(courses[0].id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY), dueAt = currentDate, name = "Assignment 1")
 
         goToScheduleTab(data)
 

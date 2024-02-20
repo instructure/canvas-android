@@ -20,8 +20,10 @@ import android.content.res.Resources
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
-import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency.*
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency.IMMEDIATELY
+import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency.NEVER
 import com.instructure.canvasapi2.managers.NotificationPreferencesManager
+import com.instructure.canvasapi2.models.NotificationPreference
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
@@ -47,6 +49,8 @@ class PushNotificationPreferencesViewModel @Inject constructor(
     override fun createCategoryItemViewModel(viewData: NotificationCategoryViewData): NotificationCategoryItemViewModel {
         return PushNotificationCategoryItemViewModel(viewData, ::toggleNotification)
     }
+
+    override fun List<NotificationPreference>.filterNotificationPreferences() = filter { it.category in ALLOWED_PUSH_NOTIFICATIONS }
 
     private fun toggleNotification(enabled: Boolean, categoryName: String) {
         viewModelScope.launch {
@@ -81,4 +85,23 @@ class PushNotificationPreferencesViewModel @Inject constructor(
     private val Boolean.frequency: NotificationPreferencesFrequency
         get() = if (this) IMMEDIATELY else NEVER
 
+    companion object {
+        private val ALLOWED_PUSH_NOTIFICATIONS = listOf(
+            "announcement",
+            "appointment_availability",
+            "appointment_cancelations",
+            "calendar",
+            "conversation_message",
+            "course_content",
+            "discussion_mention",
+            "reported_reply",
+            "due_date",
+            "grading",
+            "invitation",
+            "student_appointment_signups",
+            "submission_comment",
+            "discussion",
+            "discussion_entry"
+        )
+    }
 }

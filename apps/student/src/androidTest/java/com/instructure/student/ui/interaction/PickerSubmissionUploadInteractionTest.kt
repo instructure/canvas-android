@@ -155,7 +155,7 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         // Let's set up an assignment that requires an online upload
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD)
         )
 
         // Sign in

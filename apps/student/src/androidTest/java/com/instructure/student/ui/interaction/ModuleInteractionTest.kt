@@ -81,7 +81,7 @@ class ModuleInteractionTest : StudentTest() {
         // Create an assignment and add it as a module item
         assignment = data.addAssignment(
             courseId = course1.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
         data.addItemToModule(
             course = course1,
@@ -324,7 +324,7 @@ class ModuleInteractionTest : StudentTest() {
         // Create an assignment and add it as a module item
         assignment = data.addAssignment(
             courseId = course1.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
         data.addItemToModule(
             course = course1,
@@ -385,7 +385,7 @@ class ModuleInteractionTest : StudentTest() {
         // Create an assignment and add it as a module item
         assignment = data.addAssignment(
             courseId = course1.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
         data.addItemToModule(
             course = course1,
@@ -501,7 +501,7 @@ class ModuleInteractionTest : StudentTest() {
         // And let's add an assignment to the new module
         var unavailableAssignment = data.addAssignment(
             courseId = course1.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             // Man, this is a bit hokey, but it's what I had to do to get the assignment to show
             // up as unavailable in the assignment details page
             lockInfo = LockInfo(
@@ -541,7 +541,7 @@ class ModuleInteractionTest : StudentTest() {
         // And let's create an assignment and add it to the "locked" module.
         val lockedAssignment = data.addAssignment(
             courseId = course1.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
         data.addItemToModule(
             course = course1,
@@ -568,7 +568,7 @@ class ModuleInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             pointsPossible = 10
         )
 
@@ -595,7 +595,7 @@ class ModuleInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             pointsPossible = 10
         )
 

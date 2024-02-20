@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Jemputan diterima!</string>
     <string name="inviteDeclined">Jemputan ditolak.</string>
     <string name="latePenalty">Denda lewat (-%s)</string>
+    <string name="latePenaltyUpdated">Denda Lewat: %s mata</string>
+    <string name="yourGrade">Gred Anda: %s mata</string>
     <string name="finalGrade">Gred Akhir</string>
 
     <string name="max_count">Lebih 99</string>
@@ -1485,4 +1487,5 @@
         <item quantity="other">%d Kursus telah disegerakkan.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Kandungan kursus tambahan</string>
+    <string name="failedToUpdateDashboardOrder">Gagal untuk mengemas kini susunan kad Papan Pemuka</string>
 </resources>

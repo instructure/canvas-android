@@ -33,6 +33,8 @@ interface NetworkStateProvider {
 class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
 
     private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+    private val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).orDefault()
 
     private val _isOnlineLiveData = MutableLiveData<Boolean>()
 
@@ -40,10 +42,7 @@ class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
         get() = _isOnlineLiveData
 
     init {
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).orDefault()
         _isOnlineLiveData.postValue(hasActiveNetwork)
-
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
@@ -58,6 +57,6 @@ class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
     }
 
     override fun isOnline(): Boolean {
-        return _isOnlineLiveData.value.orDefault()
+        return _isOnlineLiveData.value ?: hasActiveNetwork
     }
 }

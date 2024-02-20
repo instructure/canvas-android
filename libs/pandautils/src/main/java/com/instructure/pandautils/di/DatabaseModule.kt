@@ -59,4 +59,10 @@ class DatabaseModule {
     fun provideEnvironmentFeatureFlagsDao(appDatabase: AppDatabase): EnvironmentFeatureFlagsDao {
         return appDatabase.environmentFeatureFlagsDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideReminderDao(appDatabase: AppDatabase): ReminderDao {
+        return appDatabase.reminderDao()
+    }
 }
