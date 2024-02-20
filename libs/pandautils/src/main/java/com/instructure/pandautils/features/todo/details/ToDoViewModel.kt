@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import java.util.Calendar
 import javax.inject.Inject
@@ -111,6 +112,11 @@ class ToDoViewModel @Inject constructor(
         when (action) {
             is ToDoAction.DeleteToDo -> deleteToDo()
             is ToDoAction.SnackbarDismissed -> _uiState.update { it.copy(errorSnack = null) }
+            is ToDoAction.EditToDo -> plannerItem?.let {
+                viewModelScope.launch {
+                    _events.send(ToDoViewModelAction.OpenEditToDo(it))
+                }
+            }
         }
     }
 }

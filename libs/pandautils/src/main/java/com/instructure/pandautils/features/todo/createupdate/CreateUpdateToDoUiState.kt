@@ -26,6 +26,7 @@ import org.threeten.bp.format.DateTimeFormatter
 
 data class CreateUpdateToDoUiState(
     val title: String = "",
+    val initialDate: LocalDate = LocalDate.now(),
     val date: LocalDate = LocalDate.now(),
     val time: LocalTime = LocalTime.of(12, 0),
     val selectedCourse: Course? = null,
@@ -45,6 +46,7 @@ data class CreateUpdateToDoUiState(
 
 sealed class CreateUpdateToDoAction {
     data class UpdateTitle(val title: String) : CreateUpdateToDoAction()
+    data class SetInitialDate(val date: LocalDate) : CreateUpdateToDoAction()
     data class UpdateDate(val date: LocalDate) : CreateUpdateToDoAction()
     data class UpdateTime(val time: LocalTime) : CreateUpdateToDoAction()
     data class UpdateCourse(val course: Course) : CreateUpdateToDoAction()
@@ -54,8 +56,9 @@ sealed class CreateUpdateToDoAction {
     data object ShowSelectCalendarScreen : CreateUpdateToDoAction()
     data object HideSelectCalendarScreen : CreateUpdateToDoAction()
     data class UpdateSelectedCourse(val course: Course?) : CreateUpdateToDoAction()
+    data class CheckUnsavedChanges(val result: (Boolean) -> Unit) : CreateUpdateToDoAction()
 }
 
 sealed class CreateUpdateToDoViewModelAction {
-    data class RefreshCalendarDay(val date: LocalDate) : CreateUpdateToDoViewModelAction()
+    data class RefreshCalendarDays(val days: List<LocalDate>) : CreateUpdateToDoViewModelAction()
 }

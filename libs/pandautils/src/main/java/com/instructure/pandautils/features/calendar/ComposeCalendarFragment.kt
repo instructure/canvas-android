@@ -94,9 +94,12 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
             withContext(Dispatchers.Main.immediate) {
                 sharedViewModel.events.collect { action ->
                     when (action) {
-                        is SharedCalendarAction.RefreshDay -> {
-                            viewModel.handleAction(CalendarAction.RefreshDay(action.date))
+                        is SharedCalendarAction.RefreshDays -> {
+                            action.days.forEach {
+                                viewModel.handleAction(CalendarAction.RefreshDay(it))
+                            }
                         }
+
                         is SharedCalendarAction.RequestSelectedDay -> {
                             action.provideSelectedDate(viewModel.uiState.value.selectedDay)
                         }

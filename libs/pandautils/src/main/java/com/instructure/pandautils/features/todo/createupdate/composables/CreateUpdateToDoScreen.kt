@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.todo.createupdate.composables
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import androidx.appcompat.app.AppCompatDialog
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -48,6 +49,7 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -69,6 +71,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoUiState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -85,7 +88,7 @@ internal fun CreateUpdateToDoScreenWrapper(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,
-    navigationActionClick: () -> Unit,
+    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
@@ -103,7 +106,7 @@ internal fun CreateUpdateToDoScreenWrapper(
                 title = title,
                 uiState = uiState,
                 actionHandler = actionHandler,
-                navigationActionClick = navigationActionClick,
+                navigationAction = navigationAction,
                 modifier = modifier
             )
         }
@@ -115,7 +118,7 @@ private fun CreateUpdateToDoScreen(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,
-    navigationActionClick: () -> Unit,
+    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -138,7 +141,7 @@ private fun CreateUpdateToDoScreen(
                 title = title,
                 uiState = uiState,
                 actionHandler = actionHandler,
-                navigationActionClick = navigationActionClick
+                navigationAction = navigationAction
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -159,9 +162,25 @@ private fun TopAppBarContent(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,
-    navigationActionClick: () -> Unit,
+    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val showUnsavedChangesDialog = remember { mutableStateOf(false) }
+    if (showUnsavedChangesDialog.value) {
+        SimpleAlertDialog(
+            dialogTitle = stringResource(id = R.string.exitWithoutSavingTitle),
+            dialogText = stringResource(id = R.string.exitWithoutSavingMessage),
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.exitUnsaved),
+            onDismissRequest = {
+                showUnsavedChangesDialog.value = false
+            },
+            onConfirmation = {
+                navigationAction()
+            }
+        )
+    }
+
     TopAppBar(
         title = {
             Text(text = title, fontWeight = FontWeight(600))
@@ -184,7 +203,14 @@ private fun TopAppBarContent(
         backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
         contentColor = colorResource(id = R.color.textDarkest),
         navigationIcon = {
-            IconButton(onClick = navigationActionClick) {
+            IconButton(
+                onClick = {
+                    actionHandler(CreateUpdateToDoAction.CheckUnsavedChanges {
+                        showUnsavedChangesDialog.value = it
+                        if (!it) navigationAction()
+                    })
+                }
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = stringResource(id = R.string.close)
@@ -244,7 +270,12 @@ private fun CreateUpdateToDoContent(
         calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH),
         calendar.get(Calendar.DAY_OF_MONTH)
-    )
+    ).apply {
+        setOnShowListener {
+            getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
+        }
+    }
 
     calendar.set(Calendar.HOUR_OF_DAY, uiState.time.hour)
     calendar.set(Calendar.MINUTE, uiState.time.minute)
@@ -263,7 +294,12 @@ private fun CreateUpdateToDoContent(
         calendar.get(Calendar.HOUR_OF_DAY),
         calendar.get(Calendar.MINUTE),
         false
-    )
+    ).apply {
+        setOnShowListener {
+            getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
+        }
+    }
 
     Surface(
         modifier = modifier,
@@ -479,6 +515,6 @@ private fun CreateEditToDoPreview() {
             courses = emptyList()
         ),
         actionHandler = {},
-        navigationActionClick = {}
+        navigationAction = {}
     )
 }

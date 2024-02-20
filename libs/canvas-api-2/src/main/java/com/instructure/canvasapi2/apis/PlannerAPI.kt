@@ -43,7 +43,7 @@ object PlannerAPI {
         suspend fun createPlannerNote(@Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
 
         @PUT("planner_notes/{noteId}")
-        suspend fun updatePlannerNote(@Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
+        suspend fun updatePlannerNote(@Path("noteId") noteId: Long, @Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
     }
 
     fun getPlannerItems(adapter: RestBuilder, callback: StatusCallback<List<PlannerItem>>, params: RestParams, startDate: String? = null, endDate: String? = null) {

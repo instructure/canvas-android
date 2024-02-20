@@ -177,6 +177,6 @@ sealed class CalendarViewModelAction {
 }
 
 sealed class SharedCalendarAction {
-    data class RefreshDay(val date: LocalDate) : SharedCalendarAction()
+    data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
     data class RequestSelectedDay(val provideSelectedDate: (LocalDate) -> Unit) : SharedCalendarAction()
 }

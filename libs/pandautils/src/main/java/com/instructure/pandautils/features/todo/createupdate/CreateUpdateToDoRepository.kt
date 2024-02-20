@@ -60,4 +60,22 @@ class CreateUpdateToDoRepository(
             ), RestParams()
         ).dataOrThrow
     }
+
+    suspend fun updateToDo(
+        id: Long,
+        title: String,
+        details: String?,
+        toDoDate: String,
+        courseId: Long?
+    ) {
+        plannerApi.updatePlannerNote(
+            id,
+            PlannerNoteBody(
+                title = title,
+                details = details,
+                toDoDate = toDoDate,
+                courseId = courseId
+            ), RestParams()
+        ).dataOrThrow
+    }
 }

@@ -35,10 +35,12 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
+import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todo.createupdate.composables.CreateUpdateToDoScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -65,7 +67,7 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         }
 
         sharedViewModel.sendEvent(SharedCalendarAction.RequestSelectedDay {
-            viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(it))
+            viewModel.handleAction(CreateUpdateToDoAction.SetInitialDate(it))
         })
     }
 
@@ -75,9 +77,9 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
             withContext(Dispatchers.Main.immediate) {
                 viewModel.events.collect { action ->
                     when (action) {
-                        is CreateUpdateToDoViewModelAction.RefreshCalendarDay -> {
-                            sharedViewModel.sendEvent(SharedCalendarAction.RefreshDay(action.date))
-                            navigateBack()
+                        is CreateUpdateToDoViewModelAction.RefreshCalendarDays -> {
+                            sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
+                            activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
                         }
                     }
                 }
@@ -88,7 +90,13 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
     override val navigation: Navigation?
         get() = activity as? Navigation
 
-    override fun title(): String = getString(R.string.createTodoScreenTitle)
+    override fun title(): String = getString(
+        if (arguments?.containsKey(PLANNER_ITEM).orDefault()) {
+            R.string.editTodoScreenTitle
+        } else {
+            R.string.createTodoScreenTitle
+        }
+    )
 
     override fun applyTheme() {
         ViewStyler.setStatusBarLight(requireActivity())

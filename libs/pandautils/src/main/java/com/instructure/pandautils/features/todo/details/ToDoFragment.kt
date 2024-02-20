@@ -45,10 +45,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR_TODO)
 class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+
+    @Inject
+    lateinit var toDoRouter: ToDoRouter
 
     private val viewModel: ToDoViewModel by viewModels()
     private val sharedViewModel: CalendarSharedViewModel by viewModels(ownerProducer = {
@@ -76,8 +80,12 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 viewModel.events.collect { action ->
                     when (action) {
                         is ToDoViewModelAction.RefreshCalendarDay -> {
-                            sharedViewModel.sendEvent(SharedCalendarAction.RefreshDay(action.date))
+                            sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(listOf(action.date)))
                             navigateBack()
+                        }
+
+                        is ToDoViewModelAction.OpenEditToDo -> {
+                            toDoRouter.openEditToDo(action.plannerItem)
                         }
                     }
                 }

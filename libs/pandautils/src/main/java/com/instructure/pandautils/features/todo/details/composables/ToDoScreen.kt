@@ -145,7 +145,7 @@ private fun TopAppBarContent(
                     modifier = Modifier.size(32.dp)
                 )
             } else {
-                OverFlowMenuSegment(showDeleteConfirmationDialog)
+                OverFlowMenuSegment(actionHandler, showDeleteConfirmationDialog)
             }
         },
         backgroundColor = Color(ThemePrefs.primaryColor),
@@ -162,7 +162,10 @@ private fun TopAppBarContent(
 }
 
 @Composable
-private fun OverFlowMenuSegment(showDeleteConfirmationDialog: MutableState<Boolean>) {
+private fun OverFlowMenuSegment(
+    actionHandler: (ToDoAction) -> Unit,
+    showDeleteConfirmationDialog: MutableState<Boolean>
+) {
     val showMenu = remember { mutableStateOf(false) }
     OverflowMenu(
         modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
@@ -171,7 +174,7 @@ private fun OverFlowMenuSegment(showDeleteConfirmationDialog: MutableState<Boole
         DropdownMenuItem(
             onClick = {
                 showMenu.value = !showMenu.value
-
+                actionHandler(ToDoAction.EditToDo)
             }
         ) {
             Text(

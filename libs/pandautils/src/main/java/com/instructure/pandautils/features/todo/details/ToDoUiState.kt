@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.todo.details
 
+import com.instructure.canvasapi2.models.PlannerItem
 import org.threeten.bp.LocalDate
 
 data class ToDoUiState(
@@ -30,8 +31,10 @@ data class ToDoUiState(
 sealed class ToDoAction {
     data object DeleteToDo : ToDoAction()
     data object SnackbarDismissed : ToDoAction()
+    data object EditToDo : ToDoAction()
 }
 
 sealed class ToDoViewModelAction {
     data class RefreshCalendarDay(val date: LocalDate) : ToDoViewModelAction()
+    data class OpenEditToDo(val plannerItem: PlannerItem) : ToDoViewModelAction()
 }

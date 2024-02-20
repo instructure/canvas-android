@@ -21,6 +21,8 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun SimpleAlertDialog(
@@ -47,7 +49,10 @@ fun SimpleAlertDialog(
                     onConfirmation()
                 }
             ) {
-                Text(text = confirmationButtonText)
+                Text(
+                    text = confirmationButtonText,
+                    color = Color(ThemePrefs.textButtonColor)
+                )
             }
         },
         dismissButton = {
@@ -56,7 +61,10 @@ fun SimpleAlertDialog(
                     onDismissRequest()
                 }
             ) {
-                Text(text = dismissButtonText)
+                Text(
+                    text = dismissButtonText,
+                    color = Color(ThemePrefs.textButtonColor)
+                )
             }
         }
     )

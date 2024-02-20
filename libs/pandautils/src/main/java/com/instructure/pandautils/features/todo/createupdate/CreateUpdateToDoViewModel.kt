@@ -19,12 +19,17 @@ package com.instructure.pandautils.features.todo.createupdate
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.toLocalDate
+import com.instructure.pandautils.utils.toLocalTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -33,12 +38,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
 @SuppressLint("StaticFieldLeak")
 class CreateUpdateToDoViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    savedStateHandle: SavedStateHandle,
     private val repository: CreateUpdateToDoRepository
 ) : ViewModel() {
 
@@ -48,14 +55,21 @@ class CreateUpdateToDoViewModel @Inject constructor(
     private val _events = Channel<CreateUpdateToDoViewModelAction>()
     val events = _events.receiveAsFlow()
 
+    private val plannerItem: PlannerItem? = savedStateHandle.get<PlannerItem>(CreateUpdateToDoFragment.PLANNER_ITEM)
+
     init {
         loadCourses()
+        setInitialState()
     }
 
     fun handleAction(action: CreateUpdateToDoAction) {
         when (action) {
             is CreateUpdateToDoAction.UpdateTitle -> {
                 _uiState.update { it.copy(title = action.title) }
+            }
+
+            is CreateUpdateToDoAction.SetInitialDate -> {
+                _uiState.update { it.copy(initialDate = action.date, date = action.date) }
             }
 
             is CreateUpdateToDoAction.UpdateDate -> {
@@ -91,6 +105,24 @@ class CreateUpdateToDoViewModel @Inject constructor(
             is CreateUpdateToDoAction.UpdateSelectedCourse -> {
                 _uiState.update { it.copy(selectedCourse = action.course) }
             }
+
+            is CreateUpdateToDoAction.CheckUnsavedChanges -> {
+                action.result(checkUnsavedChanges())
+            }
+        }
+    }
+
+    private fun setInitialState() {
+        plannerItem?.let {
+            val date = it.plannable.todoDate.toDate()
+            _uiState.update { state ->
+                state.copy(
+                    title = it.plannable.title,
+                    date = date?.toLocalDate() ?: state.date,
+                    time = date?.toLocalTime() ?: state.time,
+                    details = it.plannable.details.orEmpty()
+                )
+            }
         }
     }
 
@@ -98,7 +130,15 @@ class CreateUpdateToDoViewModel @Inject constructor(
         _uiState.update { it.copy(loadingCourses = true) }
         viewModelScope.tryLaunch {
             val courses = repository.getCourses()
-            _uiState.update { it.copy(loadingCourses = false, courses = courses) }
+            _uiState.update {
+                it.copy(
+                    loadingCourses = false,
+                    courses = courses,
+                    selectedCourse = courses.firstOrNull { course ->
+                        course.id == plannerItem?.plannable?.courseId
+                    }
+                )
+            }
         } catch {
             _uiState.update { it.copy(loadingCourses = false) }
         }
@@ -107,14 +147,28 @@ class CreateUpdateToDoViewModel @Inject constructor(
     private fun saveToDo() {
         _uiState.update { it.copy(saving = true) }
         viewModelScope.tryLaunch {
-            repository.createToDo(
-                title = uiState.value.title,
-                details = uiState.value.details,
-                toDoDate = LocalDateTime.of(uiState.value.date, uiState.value.time).toApiString().orEmpty(),
-                courseId = uiState.value.selectedCourse?.id,
-            )
+            plannerItem?.let {
+                repository.updateToDo(
+                    id = it.plannable.id,
+                    title = uiState.value.title,
+                    details = uiState.value.details,
+                    toDoDate = LocalDateTime.of(uiState.value.date, uiState.value.time).toApiString().orEmpty(),
+                    courseId = uiState.value.selectedCourse?.id,
+                )
+            } ?: run {
+                repository.createToDo(
+                    title = uiState.value.title,
+                    details = uiState.value.details,
+                    toDoDate = LocalDateTime.of(uiState.value.date, uiState.value.time).toApiString().orEmpty(),
+                    courseId = uiState.value.selectedCourse?.id,
+                )
+            }
             _uiState.update { it.copy(saving = false) }
-            _events.send(CreateUpdateToDoViewModelAction.RefreshCalendarDay(uiState.value.date))
+            _events.send(
+                CreateUpdateToDoViewModelAction.RefreshCalendarDays(
+                    listOfNotNull(plannerItem?.plannableDate?.toLocalDate(), uiState.value.date)
+                )
+            )
         } catch {
             _uiState.update {
                 it.copy(
@@ -123,5 +177,28 @@ class CreateUpdateToDoViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun checkUnsavedChanges(): Boolean {
+        plannerItem?.let {
+            if (uiState.value.title != it.plannable.title ||
+                uiState.value.details != it.plannable.details.orEmpty() ||
+                uiState.value.date != it.plannable.todoDate.toDate()?.toLocalDate() ||
+                uiState.value.time != it.plannable.todoDate.toDate()?.toLocalTime() ||
+                uiState.value.selectedCourse?.id != it.plannable.courseId
+            ) {
+                return true
+            }
+        } ?: run {
+            if (uiState.value.title.isNotEmpty() ||
+                uiState.value.details.isNotEmpty() ||
+                uiState.value.selectedCourse != null ||
+                uiState.value.date != uiState.value.initialDate ||
+                uiState.value.time != LocalTime.of(12, 0)
+            ) {
+                return true
+            }
+        }
+        return false
     }
 }
