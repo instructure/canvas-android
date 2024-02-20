@@ -34,6 +34,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflineSyncProgressE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit

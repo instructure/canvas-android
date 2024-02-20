@@ -80,12 +80,13 @@ object QuizzesApi {
 
     fun createQuiz(
             courseId: Long,
-            withDescription: Boolean,
-            lockAt: String,
-            unlockAt: String,
-            dueAt: String,
-            published: Boolean,
-            token: String): QuizApiModel {
+            token: String,
+            withDescription: Boolean = true,
+            lockAt: String = "",
+            unlockAt: String = "",
+            dueAt: String = "",
+            published: Boolean = true
+            ): QuizApiModel {
         val quiz = CreateQuiz(Randomizer.randomQuiz(withDescription, lockAt, unlockAt, dueAt, published))
 
         return quizzesService(token)
@@ -178,7 +179,7 @@ object QuizzesApi {
 
         val result = QuizListApiModel(
                 quizList = (0 until numQuizzes).map {
-                    QuizzesApi.createQuiz(request)
+                    createQuiz(request)
                 }
         )
 
@@ -208,7 +209,7 @@ object QuizzesApi {
 
     // Convenience method to create and publish a quiz with questions
     fun createAndPublishQuiz(courseId: Long, teacherToken: String, questions: List<QuizQuestion>) : QuizApiModel {
-        val result = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
+        val result = createQuiz(CreateQuizRequest(
                 courseId = courseId,
                 withDescription = true,
                 published = false, // Will publish in just a bit, after we add questions
@@ -216,7 +217,7 @@ object QuizzesApi {
         ))
 
         for(question in questions) {
-            val result = QuizzesApi.createQuizQuestion(
+            val result = createQuizQuestion(
                     courseId = courseId,
                     quizId = result.id,
                     teacherToken = teacherToken,
@@ -225,7 +226,7 @@ object QuizzesApi {
             question.id = result.id // back-fill the question id
         }
 
-        QuizzesApi.publishQuiz(
+        publishQuiz(
                 courseId = courseId,
                 quizId = result.id,
                 teacherToken = teacherToken,

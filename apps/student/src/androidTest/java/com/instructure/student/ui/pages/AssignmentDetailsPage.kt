@@ -46,8 +46,6 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.getPluralFromResource
-import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
@@ -265,15 +263,8 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.reminderAdd)).scrollTo().click()
     }
 
-    fun clickOneHourBefore() {
-        onView(
-            withText(
-                getStringFromResource(
-                    R.string.reminderBefore,
-                    getPluralFromResource(R.plurals.reminderHour, 1, 1)
-                )
-            )
-        ).scrollTo().click()
+    fun selectTimeOption(timeOption: String) {
+        onView(withText(timeOption)).scrollTo().click()
     }
 
     fun assertReminderDisplayedWithText(text: String) {
@@ -305,6 +296,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun clickHoursBefore() {
         onView(withId(R.id.hours)).scrollTo().click()
+    }
+
+    fun clickDaysBefore() {
+        onView(withId(R.id.days)).scrollTo().click()
     }
 
     fun assertDoneButtonIsDisabled() {

@@ -44,7 +44,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowCalendarEvents() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -59,7 +59,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowAssignment() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -75,7 +75,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testEmptyView() {
         val data = createMockData(courseCount = 1)
 
@@ -86,7 +86,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testPullToRefresh() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -107,7 +107,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenCalendarEvent() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -127,7 +127,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenAssignment() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -147,7 +147,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowMultipleCalendarEventsOnSameDay() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -171,7 +171,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testMultipleCalendarEventsOnDifferentDays() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]

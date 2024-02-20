@@ -32,7 +32,6 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,7 +41,6 @@ import org.junit.Test
 class AssignmentDetailsPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
         getToAssignmentDetailsPage(
                 submissionTypes = listOf(ONLINE_TEXT_ENTRY),
@@ -52,35 +50,30 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3109579")
     fun displaysCorrectDetails() {
         val assignment = getToAssignmentDetailsPage()
         assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
     @Test
-    @TestRail(ID = "C3109579")
     fun displaysInstructions() {
         getToAssignmentDetailsPage(withDescription = true)
         assignmentDetailsPage.assertDisplaysInstructions()
     }
 
     @Test
-    @TestRail(ID = "C3134480")
     fun displaysNoInstructionsMessage() {
         getToAssignmentDetailsPage()
         assignmentDetailsPage.assertDisplaysNoInstructionsView()
     }
 
     @Test
-    @TestRail(ID = "C3134481")
     fun displaysClosedAvailability() {
         getToAssignmentDetailsPage(lockAt = 7.days.ago.iso8601)
         assignmentDetailsPage.assertAssignmentClosed()
     }
 
     @Test
-    @TestRail(ID = "C313448 2")
     fun displaysNoFromDate() {
         val lockAt = 7.days.fromNow.iso8601
         getToAssignmentDetailsPage(lockAt = lockAt)
@@ -88,7 +81,6 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3134483")
     fun displaysNoToDate() {
         getToAssignmentDetailsPage(unlockAt = 7.days.ago.iso8601)
         assignmentDetailsPage.assertFromFilledAndToEmpty()

@@ -306,16 +306,13 @@ class AssignmentE2ETest : TeacherTest() {
             dueAt = 1.days.fromNow.iso8601
         ))
 
-        Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
-        SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
-            assignmentId = assignment.id,
-            courseId = course.id,
-            studentToken = student.token,
+        Log.d(PREPARATION_TAG,"Submit '${assignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id,
             submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(
                 amount = 1,
                 submissionType = SubmissionType.ONLINE_TEXT_ENTRY
             ))
-        ))
+        )
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)

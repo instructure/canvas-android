@@ -51,7 +51,7 @@ class PeopleE2ETest : StudentTest() {
         tokenLogin(student1)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to ${course.name} course's People Page.")
+        Log.d(STEP_TAG,"Navigate to '${course.name}' course's People Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectPeople()
 
@@ -70,7 +70,7 @@ class PeopleE2ETest : StudentTest() {
         peopleListPage.assertPersonListed(student2)
         peopleListPage.assertPeopleCount(3)
 
-        Log.d(STEP_TAG,"Select ${student2.name} student and assert if we are landing on the Person Details Page.")
+        Log.d(STEP_TAG,"Select ${student2.name} student and assert if we are landing on the Person Details Page. Assert that the Person Details page's information (user name, role, and picture) are displayed.")
         peopleListPage.selectPerson(student2)
         personDetailsPage.assertPageObjects()
 

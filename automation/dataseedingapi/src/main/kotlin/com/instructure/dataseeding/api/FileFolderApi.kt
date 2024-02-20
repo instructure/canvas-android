@@ -48,16 +48,20 @@ object FileFolderApi {
             .body()!!
     }
 
-    fun createCourseFolder(folderId: Long, name: String, locked: Boolean, token: String): CourseFolderUploadApiModel {
+    fun createCourseFolder(
+        folderId: Long,
+        token: String,
+        name: String,
+        locked: Boolean = false
+     ): CourseFolderUploadApiModel {
         val courseFolderUploadRequestModel = CourseFolderUploadApiRequestModel(
             name = name,
             locked = locked
         )
-        val createFolderUploadApiModel: CourseFolderUploadApiModel = fileFolderService(token)
+        return fileFolderService(token)
             .createCourseFolder(folderId, courseFolderUploadRequestModel)
             .execute()
             .body()!!
-        return createFolderUploadApiModel
     }
 
 }

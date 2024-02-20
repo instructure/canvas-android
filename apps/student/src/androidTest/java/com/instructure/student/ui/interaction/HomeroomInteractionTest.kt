@@ -41,7 +41,7 @@ class HomeroomInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testAnnouncementsAndCoursesShowUpOnHomeroom() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -66,7 +66,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOnlyCoursesShowUpOnHomeroomIfNoHomeroomAnnouncement() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
 
@@ -87,7 +87,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOnlyAnnouncementShowsUpOnHomeroomIfNoCourses() {
         val data = createMockDataWithHomeroomCourse()
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -106,7 +106,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenCourse() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -127,7 +127,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testRefreshAfterEnrolledToCourses() {
         val data = createMockDataWithHomeroomCourse()
 
@@ -160,7 +160,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenHomeroomCourseAnnouncements() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3, homeroomCourseCount = 2)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -184,7 +184,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenCourseAnnouncements() {
         val data = createMockDataWithHomeroomCourse(courseCount = 1)
 
@@ -203,7 +203,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowCourseCardWithAnnouncement() {
         val data = createMockDataWithHomeroomCourse(courseCount = 3)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -224,7 +224,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testDueTodayAndMissingAssignments() {
         val data = createMockDataWithHomeroomCourse(courseCount = 1)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -249,7 +249,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenAssignments() {
         val data = createMockDataWithHomeroomCourse(courseCount = 1)
         val homeroomCourse = data.courses.values.first { it.homeroomCourse }
@@ -272,7 +272,7 @@ class HomeroomInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testEmptyState() {
         val data = createMockDataWithHomeroomCourse()
 
