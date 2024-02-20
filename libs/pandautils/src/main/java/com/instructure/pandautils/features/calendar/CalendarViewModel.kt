@@ -76,7 +76,7 @@ class CalendarViewModel @Inject constructor(
     private val loadedMonths = mutableSetOf<YearMonth>()
 
     private val _uiState =
-        MutableStateFlow(CalendarScreenUiState(selectedDay, expanded, createCalendarUiState()))
+        MutableStateFlow(CalendarScreenUiState(createCalendarUiState()))
     val uiState = _uiState.asStateFlow()
 
     private val _events = Channel<CalendarViewModelAction>()
@@ -146,24 +146,24 @@ class CalendarViewModel @Inject constructor(
         val nextPage = createEventsPageForDate(currentDayForEvents.plusDays(1))
 
         return _uiState.value.copy(
-            selectedDay = selectedDay,
-            expanded = expanded && !collapsing,
             calendarUiState = createCalendarUiState(),
             calendarEventsUiState = CalendarEventsUiState(
                 previousPage = previousPage,
                 currentPage = currentPage,
                 nextPage = nextPage
-            ),
-            scrollToPageOffset = scrollToPageOffset,
-            pendingSelectedDay = pendingSelectedDay
+            )
         )
     }
 
     private fun createCalendarUiState(): CalendarUiState {
         val eventIndicators = eventsByDay.mapValues { min(3, it.value.size) }
         return CalendarUiState(
+            selectedDay = selectedDay,
+            expanded = expanded && !collapsing,
             headerUiState = calendarStateMapper.createHeaderUiState(selectedDay, pendingSelectedDay),
-            bodyUiState = calendarStateMapper.createBodyUiState(expanded, jumpToToday, scrollToPageOffset, selectedDay, eventIndicators)
+            bodyUiState = calendarStateMapper.createBodyUiState(expanded, jumpToToday, scrollToPageOffset, selectedDay, eventIndicators),
+            scrollToPageOffset = scrollToPageOffset,
+            pendingSelectedDay = pendingSelectedDay,
         )
     }
 

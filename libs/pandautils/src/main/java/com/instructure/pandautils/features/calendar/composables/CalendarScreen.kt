@@ -90,7 +90,7 @@ fun CalendarScreen(
                     Text(text = title)
                 },
                     actions = {
-                        if (calendarScreenUiState.selectedDay != LocalDate.now()) {
+                        if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
                                 .padding(horizontal = 12.dp)
                                 .clickable {
@@ -131,7 +131,7 @@ fun CalendarScreen(
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
                     Column {
-                        Calendar(calendarScreenUiState, actionHandler, Modifier.fillMaxWidth())
+                        Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth())
                         CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler)
                     }
                 }
@@ -147,12 +147,14 @@ fun CalendarPreview() {
     AndroidThreeTen.init(LocalContext.current)
     val calendarStateMapper = CalendarStateMapper()
     val calendarUiState = CalendarUiState(
+        LocalDate.now(),
+        true,
         headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
         bodyUiState = calendarStateMapper.createBodyUiState(true, false, 0, LocalDate.now(), emptyMap())
     )
     CalendarScreen(
         "Calendar", CalendarScreenUiState(
-            LocalDate.now(), true, calendarUiState, CalendarEventsUiState(
+            calendarUiState, CalendarEventsUiState(
                 currentPage = CalendarEventsPageUiState(
                     events = listOf(
                         EventUiState(

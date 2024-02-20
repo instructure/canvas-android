@@ -18,33 +18,22 @@ package com.instructure.pandautils.features.calendar
 import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
-import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
-import org.threeten.bp.format.TextStyle
-import org.threeten.bp.temporal.ChronoUnit
-import java.util.Locale
 
 data class CalendarScreenUiState(
-    val selectedDay: LocalDate,
-    val expanded: Boolean,
     val calendarUiState: CalendarUiState,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
-    val snackbarMessage: String? = null,
+    val snackbarMessage: String? = null
+)
+
+data class CalendarUiState(
+    val selectedDay: LocalDate,
+    val expanded: Boolean,
+    val headerUiState: CalendarHeaderUiState,
+    val bodyUiState: CalendarBodyUiState,
     val scrollToPageOffset: Int = 0,
     val pendingSelectedDay: LocalDate? = null, // Temporary selected date when the calendar is animating to a new month
-) {
-    val headerUiState: CalendarHeaderUiState
-        get() {
-            return calendarUiState.headerUiState
-        }
-
-    val bodyUiState: CalendarBodyUiState
-        get() {
-            return calendarUiState.bodyUiState
-        }
-}
-
-data class CalendarUiState(val headerUiState: CalendarHeaderUiState, val bodyUiState: CalendarBodyUiState)
+)
 
 data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String)
 
