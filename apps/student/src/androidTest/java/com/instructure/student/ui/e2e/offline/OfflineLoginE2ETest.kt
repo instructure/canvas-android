@@ -36,6 +36,7 @@ import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class OfflineLoginE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -76,7 +77,7 @@ class OfflineLoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
 
-        Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that ${student1.name} and ${student2.name} students are displayed within the previous login section.")
+        Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that '${student1.name}' and '${student2.name}' students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
         loginLandingPage.assertPreviousLoginUserDisplayed(student1.name)
         loginLandingPage.assertPreviousLoginUserDisplayed(student2.name)
@@ -91,7 +92,7 @@ class OfflineLoginE2ETest : StudentTest() {
         assertNoInternetConnectionDialog()
         dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG, "Login with the previous user, ${student1.name}, with one click, by clicking on the user's name on the bottom.")
+        Log.d(STEP_TAG, "Login with the previous user, '${student1.name}', with one click, by clicking on the user's name on the bottom.")
         loginLandingPage.loginWithPreviousUser(student1)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Assert that the offline indicator is displayed to ensure we are in offline mode, and change user function is supported.")
@@ -101,7 +102,7 @@ class OfflineLoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
 
-        Log.d(STEP_TAG, "Login with the previous user, ${student2.name}, with one click, by clicking on the user's name on the bottom.")
+        Log.d(STEP_TAG, "Login with the previous user, '${student2.name}', with one click, by clicking on the user's name on the bottom.")
         loginLandingPage.loginWithPreviousUser(student2)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Assert that the offline indicator is displayed to ensure we are in offline mode, and change user function is supported.")
@@ -122,7 +123,7 @@ class OfflineLoginE2ETest : StudentTest() {
             loginLandingPage.clickFindMySchoolButton()
         }
 
-        Log.d(STEP_TAG,"Enter domain: ${user.domain}.")
+        Log.d(STEP_TAG,"Enter domain: '${user.domain}'.")
         loginFindSchoolPage.enterDomain(user.domain)
 
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")

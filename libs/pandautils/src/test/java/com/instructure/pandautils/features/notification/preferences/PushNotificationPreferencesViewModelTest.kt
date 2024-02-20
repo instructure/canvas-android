@@ -81,9 +81,9 @@ class PushNotificationPreferencesViewModelTest {
         val notificationResponse = NotificationPreferenceResponse(
                 notificationPreferences = listOf(
                         NotificationPreference(notification = "notification1", category = "due_date", frequency = "immediately"),
-                        NotificationPreference(notification = "notification2", category = "membership_update", frequency = "immediately"),
+                        NotificationPreference(notification = "notification2", category = "conversation_message", frequency = "immediately"),
                         NotificationPreference(notification = "notification3", category = "discussion", frequency = "never"),
-                        NotificationPreference(notification = "notification4", category = "announcement_created_by_you", frequency = "never")
+                        NotificationPreference(notification = "notification4", category = "announcement", frequency = "never")
                 )
         )
 
@@ -97,7 +97,7 @@ class PushNotificationPreferencesViewModelTest {
 
         val data = viewModel.data.value
 
-        assertEquals(3, viewModel.data.value?.items?.size)
+        assertEquals(3, data?.items?.size)
 
         //Course Activities
         val courseActivitiesHeader = data?.items?.get(0)
@@ -113,10 +113,10 @@ class PushNotificationPreferencesViewModelTest {
         assertEquals(1, courseActivitiesItems?.get(0)?.data?.position)
         assertEquals(true, courseActivitiesItems?.get(0)?.isChecked)
 
-        //Announcement Created By You
-        assertEquals("Announcement Created By You", courseActivitiesItems?.get(1)?.data?.title)
-        assertEquals("Get notified when you create an announcement and when somebody replies to your announcement.", courseActivitiesItems?.get(1)?.data?.description)
-        assertEquals(6, courseActivitiesItems?.get(1)?.data?.position)
+        //Announcement
+        assertEquals("Announcement", courseActivitiesItems?.get(1)?.data?.title)
+        assertEquals("Get notified when there is a new announcement in your course.", courseActivitiesItems?.get(1)?.data?.description)
+        assertEquals(5, courseActivitiesItems?.get(1)?.data?.position)
         assertEquals(false, courseActivitiesItems?.get(1)?.isChecked)
 
         //Discussions
@@ -133,19 +133,19 @@ class PushNotificationPreferencesViewModelTest {
         assertEquals(1, discussionItems?.get(0)?.data?.position)
         assertEquals(false, discussionItems?.get(0)?.isChecked)
 
-        //Groups
-        val groupsHeader = data?.items?.get(2)
-        assertEquals("Groups", groupsHeader?.data?.title)
-        assertEquals(4, groupsHeader?.data?.position)
-        assertEquals(1, groupsHeader?.itemViewModels?.size)
+        //Conversations
+        val conversationsHeader = data?.items?.get(2)
+        assertEquals("Conversations", conversationsHeader?.data?.title)
+        assertEquals(2, conversationsHeader?.data?.position)
+        assertEquals(1, conversationsHeader?.itemViewModels?.size)
 
         //Membership update
-        val groupsItems = groupsHeader?.itemViewModels as? List<PushNotificationCategoryItemViewModel>
-        assertEquals(1, groupsItems?.size)
-        assertEquals("Membership Update", groupsItems?.get(0)?.data?.title)
-        assertEquals("Admin only, pending enrollment activated. Get notified when a group enrollment is accepted or rejected.", groupsItems?.get(0)?.data?.description)
-        assertEquals(1, groupsItems?.get(0)?.data?.position)
-        assertEquals(true, groupsItems?.get(0)?.isChecked)
+        val conversationsItems = conversationsHeader?.itemViewModels as? List<PushNotificationCategoryItemViewModel>
+        assertEquals(1, conversationsItems?.size)
+        assertEquals("Conversation Message", conversationsItems?.get(0)?.data?.title)
+        assertEquals("Get notified when you have a new inbox message.", conversationsItems?.get(0)?.data?.description)
+        assertEquals(2, conversationsItems?.get(0)?.data?.position)
+        assertEquals(true, conversationsItems?.get(0)?.isChecked)
     }
 
     @Test
@@ -335,6 +335,80 @@ class PushNotificationPreferencesViewModelTest {
         assertEquals(1, viewModel.data.value?.items?.size)
     }
 
+    @Test
+    fun `Notification categories filtered correctly`() {
+        val notificationResponse = NotificationPreferenceResponse(
+            notificationPreferences = listOf(
+                NotificationPreference(notification = "notification1", category = "announcement", frequency = "immediately"),
+                NotificationPreference(notification = "notification2", category = "due_date", frequency = "immediately"),
+                NotificationPreference(notification = "notification3", category = "course_content", frequency = "immediately"),
+                NotificationPreference(notification = "notification4", category = "grading_policies", frequency = "immediately"),
+                NotificationPreference(notification = "notification5", category = "grading", frequency = "immediately"),
+                NotificationPreference(notification = "notification6", category = "calendar", frequency = "immediately"),
+                NotificationPreference(notification = "notification7", category = "invitation", frequency = "immediately"),
+                NotificationPreference(notification = "notification8", category = "registration", frequency = "immediately"),
+                NotificationPreference(notification = "notification9", category = "discussion", frequency = "immediately"),
+                NotificationPreference(notification = "notification10", category = "late_grading", frequency = "immediately"),
+                NotificationPreference(notification = "notification11", category = "submission_comment", frequency = "immediately"),
+                NotificationPreference(notification = "notification12", category = "summaries", frequency = "immediately"),
+                NotificationPreference(notification = "notification13", category = "other", frequency = "immediately"),
+                NotificationPreference(notification = "notification14", category = "reminder", frequency = "immediately"),
+                NotificationPreference(notification = "notification15", category = "membership_update", frequency = "immediately"),
+                NotificationPreference(notification = "notification16", category = "discussion_entry", frequency = "immediately"),
+                NotificationPreference(notification = "notification17", category = "migration", frequency = "immediately"),
+                NotificationPreference(notification = "notification18", category = "all_submissions", frequency = "immediately"),
+                NotificationPreference(notification = "notification19", category = "conversation_message", frequency = "immediately"),
+                NotificationPreference(notification = "notification20", category = "added_to_conversation", frequency = "immediately"),
+                NotificationPreference(notification = "notification21", category = "alert", frequency = "immediately"),
+                NotificationPreference(notification = "notification22", category = "student_appointment_signups", frequency = "immediately"),
+                NotificationPreference(notification = "notification23", category = "appointment_cancelations", frequency = "immediately"),
+                NotificationPreference(notification = "notification24", category = "appointment_availability", frequency = "immediately"),
+                NotificationPreference(notification = "notification25", category = "appointment_signups", frequency = "immediately"),
+                NotificationPreference(notification = "notification26", category = "files", frequency = "immediately"),
+                NotificationPreference(notification = "notification27", category = "announcement_created_by_you", frequency = "immediately"),
+                NotificationPreference(notification = "notification28", category = "conversation_created", frequency = "immediately"),
+                NotificationPreference(notification = "notification29", category = "recording_ready", frequency = "immediately"),
+                NotificationPreference(notification = "notification30", category = "blueprint", frequency = "immediately"),
+                NotificationPreference(notification = "notification31", category = "content_link_error", frequency = "immediately"),
+                NotificationPreference(notification = "notification32", category = "account_notification", frequency = "immediately"),
+                NotificationPreference(notification = "notification33", category = "discussion_mention", frequency = "immediately"),
+                NotificationPreference(notification = "notification34", category = "reported_reply", frequency = "immediately")
+            )
+        )
+
+        every { notificationPreferencesManager.getNotificationPreferencesAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(notificationResponse)
+        }
+
+        val viewModel = createViewModel()
+
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val expected = listOf(
+            "notification2",
+            "notification3",
+            "notification1",
+            "notification5",
+            "notification7",
+            "notification11",
+            "notification9",
+            "notification16",
+            "notification19",
+            "notification22",
+            "notification23",
+            "notification24",
+            "notification6"
+        )
+
+        val actual = viewModel.data.value?.items?.flatMap { header ->
+            header.itemViewModels.map {
+                it.data.notification
+            }
+        }
+
+        assertEquals(expected, actual)
+    }
+
     private fun createViewModel(): PushNotificationPreferencesViewModel {
         return PushNotificationPreferencesViewModel(communicationChannelsManager, notificationPreferencesManager, apiPrefs, notificationPreferenceUtils, resources)
     }
@@ -342,15 +416,15 @@ class PushNotificationPreferencesViewModelTest {
     private fun setupStrings() {
         every { resources.getString(R.string.notification_pref_due_date) } returns "Due Date"
         every { resources.getString(R.string.notification_pref_discussion) } returns "Discussion"
-        every { resources.getString(R.string.notification_pref_announcement_created_by_you) } returns "Announcement Created By You"
-        every { resources.getString(R.string.notification_pref_membership_update) } returns "Membership Update"
+        every { resources.getString(R.string.notification_pref_announcement) } returns "Announcement"
+        every { resources.getString(R.string.notification_pref_conversation_message) } returns "Conversation Message"
         every { resources.getString(R.string.notification_desc_due_date) } returns "Get notified when an assignment due date changes."
-        every { resources.getString(R.string.notification_desc_announcement_created_by_you) } returns "Get notified when you create an announcement and when somebody replies to your announcement."
+        every { resources.getString(R.string.notification_desc_announcement) } returns "Get notified when there is a new announcement in your course."
         every { resources.getString(R.string.notification_desc_discussion) } returns "Get notified when there’s a new discussion topic in your course."
-        every { resources.getString(R.string.notification_desc_membership_update) } returns "Admin only, pending enrollment activated. Get notified when a group enrollment is accepted or rejected."
+        every { resources.getString(R.string.notification_desc_conversation_message) } returns "Get notified when you have a new inbox message."
         every { resources.getString(R.string.notification_cat_course_activities) } returns "Course Activities"
         every { resources.getString(R.string.notification_cat_discussions) } returns "Discussions"
-        every { resources.getString(R.string.notification_cat_groups) } returns "Groups"
+        every { resources.getString(R.string.notification_cat_conversations) } returns "Conversations"
         every { resources.getString(R.string.errorOccurred) } returns "An unexpected error occurred."
     }
 }

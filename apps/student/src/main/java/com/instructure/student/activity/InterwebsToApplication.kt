@@ -27,11 +27,13 @@ import android.view.View
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -74,7 +76,7 @@ class InterwebsToApplication : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.interwebs_to_application)
+        setContentView(binding.root)
         loadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         loadingBinding.loadingRoute.visibility = View.VISIBLE
 
@@ -126,6 +128,13 @@ class InterwebsToApplication : AppCompatActivity() {
                     }
 
                     val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
+
+                    val authResult = apiAsync { OAuthManager.getAuthenticatedSession(ApiPrefs.fullDomain, it) }.await()
+                    if (authResult.isSuccess) {
+                        authResult.dataOrNull?.sessionUrl?.let {
+                            binding.dummyWebView.loadUrl(it)
+                        }
+                    }
 
                     val canvasForElementary = featureFlagProvider.getCanvasForElementaryFlag()
 

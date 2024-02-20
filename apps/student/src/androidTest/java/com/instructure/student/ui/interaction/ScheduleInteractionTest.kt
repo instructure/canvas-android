@@ -49,7 +49,7 @@ class ScheduleInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowCorrectHeaderItems() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -74,7 +74,7 @@ class ScheduleInteractionTest : StudentTest() {
 
     @Test
     @StubLandscape(description = "This is intentionally stubbed on landscape mode because the item view is too narrow, but that's not a bug, it's intentional.")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowScheduledAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -93,7 +93,7 @@ class ScheduleInteractionTest : StudentTest() {
 
     @Test
     @StubLandscape(description = "This is intentionally stubbed on landscape mode because the item view is too narrow, but that's not a bug, it's intentional.")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowMissingAssignments() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -109,7 +109,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowToDoEvents() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -125,7 +125,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testRefresh() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -154,7 +154,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testGoBack2Weeks() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -177,7 +177,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testGoForward2Weeks() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -200,7 +200,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenAssignment() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -220,7 +220,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenCourse() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -239,7 +239,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testMarkAsDone() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -256,7 +256,7 @@ class ScheduleInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testTodayButton() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)

@@ -28,12 +28,12 @@ import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.AssignmentOverrideApiModel
 import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.FileType
+import com.instructure.dataseeding.model.GradingType.PERCENT
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionCommentApiModel
-import com.instructure.dataseeding.model.FileType
-import com.instructure.dataseeding.model.SubmissionType.ONLINE_UPLOAD
 import com.instructure.dataseeding.model.SubmissionType.ONLINE_TEXT_ENTRY
-import com.instructure.dataseeding.model.GradingType.PERCENT
+import com.instructure.dataseeding.model.SubmissionType.ONLINE_UPLOAD
 import org.hamcrest.CoreMatchers.instanceOf
 import org.junit.Assert.*
 import org.junit.Before
@@ -112,7 +112,7 @@ class AssignmentsTest {
                 submissionTypes = listOf(ONLINE_TEXT_ENTRY),
                 teacherToken = teacher.token
         ))
-        val submission = SubmissionsApi.commentOnSubmission(student.token,course.id,assignment.id,ArrayList<Long>())
+        val submission = SubmissionsApi.commentOnSubmission(course.id,student.token,assignment.id,ArrayList())
         assertThat(submission, instanceOf(AssignmentApiModel::class.java))
         assertEquals(1, submission.submissionComments?.size ?: 0)
         val comment = submission.submissionComments?.get(0)
@@ -283,7 +283,7 @@ class AssignmentsTest {
                     studentToken = student.token,
                     submissionSeedsList = listOf(submissionSeed)
             )
-            val submissions = SubmissionsApi.seedAssignmentSubmission( request )
+            val submissions = SubmissionsApi.seedAssignmentSubmission( course.id, student.token, assignment.id, submissionSeedsList = listOf(submissionSeed))
             if(submissions.isNotEmpty()) {
                 assertThat(submissions[0], instanceOf(SubmissionApiModel::class.java))
             }

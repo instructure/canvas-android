@@ -128,6 +128,14 @@ android {
             }
         }
 
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
+        }
+
         release {
             signingConfig signingConfigs.release
             debuggable false
