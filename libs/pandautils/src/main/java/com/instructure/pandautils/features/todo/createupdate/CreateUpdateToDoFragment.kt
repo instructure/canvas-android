@@ -65,10 +65,6 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
             val uiState by viewModel.uiState.collectAsState()
             CreateUpdateToDoScreenWrapper(title(), uiState, viewModel::handleAction, ::navigateBack)
         }
-
-        sharedViewModel.sendEvent(SharedCalendarAction.RequestSelectedDay {
-            viewModel.handleAction(CreateUpdateToDoAction.SetInitialDate(it))
-        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,10 +112,14 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
 
     companion object {
         internal const val PLANNER_ITEM = "PLANNER_ITEM"
+        internal const val INITIAL_DATE = "INITIAL_DATE"
         fun newInstance(route: Route) = CreateUpdateToDoFragment().withArgs(route.arguments)
 
-        fun makeRoute(plannerItem: PlannerItem? = null): Route {
-            val bundle = bundleOf(PLANNER_ITEM to plannerItem)
+        fun makeRoute(plannerItem: PlannerItem? = null, initialDateString: String? = null): Route {
+            val bundle = bundleOf(
+                PLANNER_ITEM to plannerItem,
+                INITIAL_DATE to initialDateString
+            )
             return Route(CreateUpdateToDoFragment::class.java, null, bundle)
         }
     }

@@ -173,10 +173,9 @@ sealed class CalendarViewModelAction {
     data class OpenQuiz(val canvasContext: CanvasContext, val htmlUrl: String): CalendarViewModelAction()
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
     data class OpenToDo(val plannerItem: PlannerItem) : CalendarViewModelAction()
-    data object OpenCreateToDo : CalendarViewModelAction()
+    data class OpenCreateToDo(val initialDateString: String?) : CalendarViewModelAction()
 }
 
 sealed class SharedCalendarAction {
     data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
-    data class RequestSelectedDay(val provideSelectedDate: (LocalDate) -> Unit) : SharedCalendarAction()
 }

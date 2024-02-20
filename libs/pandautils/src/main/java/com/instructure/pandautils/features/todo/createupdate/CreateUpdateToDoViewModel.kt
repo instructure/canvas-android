@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
+import com.instructure.canvasapi2.utils.toSimpleDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import javax.inject.Inject
@@ -55,6 +57,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
     private val _events = Channel<CreateUpdateToDoViewModelAction>()
     val events = _events.receiveAsFlow()
 
+    private val initialDate = savedStateHandle.get<String>(CreateUpdateToDoFragment.INITIAL_DATE).toSimpleDate()?.toLocalDate() ?: LocalDate.now()
     private val plannerItem: PlannerItem? = savedStateHandle.get<PlannerItem>(CreateUpdateToDoFragment.PLANNER_ITEM)
 
     init {
@@ -66,10 +69,6 @@ class CreateUpdateToDoViewModel @Inject constructor(
         when (action) {
             is CreateUpdateToDoAction.UpdateTitle -> {
                 _uiState.update { it.copy(title = action.title) }
-            }
-
-            is CreateUpdateToDoAction.SetInitialDate -> {
-                _uiState.update { it.copy(initialDate = action.date, date = action.date) }
             }
 
             is CreateUpdateToDoAction.UpdateDate -> {
@@ -113,6 +112,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
     }
 
     private fun setInitialState() {
+        _uiState.update { it.copy(date = initialDate) }
         plannerItem?.let {
             val date = it.plannable.todoDate.toDate()
             _uiState.update { state ->
@@ -193,7 +193,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
             if (uiState.value.title.isNotEmpty() ||
                 uiState.value.details.isNotEmpty() ||
                 uiState.value.selectedCourse != null ||
-                uiState.value.date != uiState.value.initialDate ||
+                uiState.value.date != initialDate ||
                 uiState.value.time != LocalTime.of(12, 0)
             ) {
                 return true

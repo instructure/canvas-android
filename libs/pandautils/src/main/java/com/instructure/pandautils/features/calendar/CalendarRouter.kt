@@ -32,5 +32,5 @@ interface CalendarRouter {
 
     fun openToDo(plannerItem: PlannerItem)
 
-    fun openCreateToDo()
+    fun openCreateToDo(initialDateString: String?)
 }

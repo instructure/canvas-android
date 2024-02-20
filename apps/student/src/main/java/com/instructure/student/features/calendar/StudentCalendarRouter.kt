@@ -62,8 +62,8 @@ class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRo
         RouteMatcher.route(activity, route)
     }
 
-    override fun openCreateToDo() {
-        val route = CreateUpdateToDoFragment.makeRoute()
+    override fun openCreateToDo(initialDateString: String?) {
+        val route = CreateUpdateToDoFragment.makeRoute(initialDateString = initialDateString)
         RouteMatcher.route(activity, route)
     }
 }

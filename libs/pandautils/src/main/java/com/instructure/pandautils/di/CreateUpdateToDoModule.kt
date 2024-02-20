@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -28,7 +29,7 @@ import dagger.hilt.android.components.ViewModelComponent
 class CreateUpdateToDoModule {
 
     @Provides
-    fun provideToDoRepository(
+    fun provideCreateUpdateToDoRepository(
         coursesApi: CourseAPI.CoursesInterface,
         plannerApi: PlannerAPI.PlannerInterface
     ): CreateUpdateToDoRepository {

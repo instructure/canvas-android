@@ -15,22 +15,8 @@
  *
  */
 
-package com.instructure.teacher.di
+package com.instructure.pandautils.features.todo.createupdate
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.todo.details.ToDoRouter
-import com.instructure.teacher.features.todo.TeacherToDoRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+class CreateUpdateToDoViewModelTest {
 
-@Module
-@InstallIn(FragmentComponent::class)
-class ToDoModule {
-
-    @Provides
-    fun provideToDoRouter(activity: FragmentActivity): ToDoRouter {
-        return TeacherToDoRouter(activity)
-    }
 }

@@ -26,7 +26,6 @@ import org.threeten.bp.format.DateTimeFormatter
 
 data class CreateUpdateToDoUiState(
     val title: String = "",
-    val initialDate: LocalDate = LocalDate.now(),
     val date: LocalDate = LocalDate.now(),
     val time: LocalTime = LocalTime.of(12, 0),
     val selectedCourse: Course? = null,
@@ -46,7 +45,6 @@ data class CreateUpdateToDoUiState(
 
 sealed class CreateUpdateToDoAction {
     data class UpdateTitle(val title: String) : CreateUpdateToDoAction()
-    data class SetInitialDate(val date: LocalDate) : CreateUpdateToDoAction()
     data class UpdateDate(val date: LocalDate) : CreateUpdateToDoAction()
     data class UpdateTime(val time: LocalTime) : CreateUpdateToDoAction()
     data class UpdateCourse(val course: Course) : CreateUpdateToDoAction()

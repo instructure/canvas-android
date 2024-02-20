@@ -100,11 +100,12 @@ internal fun ToDoScreen(
             content = { padding ->
                 ToDoContent(
                     toDoUiState = toDoUiState,
-                    modifier = modifier
+                    modifier = Modifier
                         .padding(padding)
                         .fillMaxSize(),
                 )
-            }
+            },
+            modifier = modifier
         )
     }
 }
@@ -114,7 +115,8 @@ private fun TopAppBarContent(
     title: String,
     deleting: Boolean,
     actionHandler: (ToDoAction) -> Unit,
-    navigationActionClick: () -> Unit
+    navigationActionClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val showDeleteConfirmationDialog = remember { mutableStateOf(false) }
     if (showDeleteConfirmationDialog.value) {
@@ -157,18 +159,20 @@ private fun TopAppBarContent(
                     contentDescription = stringResource(id = R.string.back)
                 )
             }
-        }
+        },
+        modifier = modifier
     )
 }
 
 @Composable
 private fun OverFlowMenuSegment(
     actionHandler: (ToDoAction) -> Unit,
-    showDeleteConfirmationDialog: MutableState<Boolean>
+    showDeleteConfirmationDialog: MutableState<Boolean>,
+    modifier: Modifier = Modifier
 ) {
     val showMenu = remember { mutableStateOf(false) }
     OverflowMenu(
-        modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
+        modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
         showMenu = showMenu
     ) {
         DropdownMenuItem(

@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.todo.createupdate.composables
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatDialog
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -149,11 +150,12 @@ private fun CreateUpdateToDoScreen(
             CreateUpdateToDoContent(
                 uiState = uiState,
                 actionHandler = actionHandler,
-                modifier = modifier
+                modifier = Modifier
                     .padding(padding)
                     .fillMaxSize()
             )
-        }
+        },
+        modifier = modifier
     )
 }
 
@@ -252,53 +254,20 @@ private fun CreateUpdateToDoContent(
     actionHandler: (CreateUpdateToDoAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val calendar = Calendar.getInstance()
-    calendar.set(uiState.date.year, uiState.date.monthValue - 1, uiState.date.dayOfMonth)
-    val datePickerDialog = DatePickerDialog(
-        LocalContext.current,
-        { _, year, month, dayOfMonth ->
-            actionHandler(
-                CreateUpdateToDoAction.UpdateDate(
-                    LocalDate.of(
-                        year,
-                        month + 1,
-                        dayOfMonth
-                    )
-                )
-            )
-        },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
-    ).apply {
-        setOnShowListener {
-            getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
-            getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
-        }
+    val context = LocalContext.current
+    val datePickerDialog = remember {
+        getDatePickerDialog(
+            context = context,
+            uiState = uiState,
+            actionHandler = actionHandler
+        )
     }
-
-    calendar.set(Calendar.HOUR_OF_DAY, uiState.time.hour)
-    calendar.set(Calendar.MINUTE, uiState.time.minute)
-    val timePickerDialog = TimePickerDialog(
-        LocalContext.current,
-        { _, hourOfDay, minute ->
-            actionHandler(
-                CreateUpdateToDoAction.UpdateTime(
-                    LocalTime.of(
-                        hourOfDay,
-                        minute
-                    )
-                )
-            )
-        },
-        calendar.get(Calendar.HOUR_OF_DAY),
-        calendar.get(Calendar.MINUTE),
-        false
-    ).apply {
-        setOnShowListener {
-            getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
-            getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
-        }
+    val timePickerDialog = remember {
+        getTimePickerDialog(
+            context = context,
+            uiState = uiState,
+            actionHandler = actionHandler
+        )
     }
 
     Surface(
@@ -494,10 +463,72 @@ private fun CreateUpdateToDoContent(
     }
 }
 
+private fun getDatePickerDialog(
+    context: Context,
+    uiState: CreateUpdateToDoUiState,
+    actionHandler: (CreateUpdateToDoAction) -> Unit
+): DatePickerDialog {
+    val calendar = Calendar.getInstance()
+    calendar.set(uiState.date.year, uiState.date.monthValue - 1, uiState.date.dayOfMonth)
+    return DatePickerDialog(
+        context,
+        { _, year, month, dayOfMonth ->
+            actionHandler(
+                CreateUpdateToDoAction.UpdateDate(
+                    LocalDate.of(
+                        year,
+                        month + 1,
+                        dayOfMonth
+                    )
+                )
+            )
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    ).apply {
+        setOnShowListener {
+            getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
+        }
+    }
+}
+
+private fun getTimePickerDialog(
+    context: Context,
+    uiState: CreateUpdateToDoUiState,
+    actionHandler: (CreateUpdateToDoAction) -> Unit
+): TimePickerDialog {
+    val calendar = Calendar.getInstance()
+    calendar.set(Calendar.HOUR_OF_DAY, uiState.time.hour)
+    calendar.set(Calendar.MINUTE, uiState.time.minute)
+    return TimePickerDialog(
+        context,
+        { _, hourOfDay, minute ->
+            actionHandler(
+                CreateUpdateToDoAction.UpdateTime(
+                    LocalTime.of(
+                        hourOfDay,
+                        minute
+                    )
+                )
+            )
+        },
+        calendar.get(Calendar.HOUR_OF_DAY),
+        calendar.get(Calendar.MINUTE),
+        false
+    ).apply {
+        setOnShowListener {
+            getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
+        }
+    }
+}
+
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
-private fun CreateEditToDoPreview() {
+private fun CreateUpdateToDoPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
     CreateUpdateToDoScreen(

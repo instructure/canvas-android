@@ -257,7 +257,7 @@ class CalendarViewModel @Inject constructor(
                 _uiState.emit(createNewUiState().copy(snackbarMessage = null))
             }
             is CalendarAction.AddToDoTapped -> viewModelScope.launch {
-                _events.emit(Event(CalendarViewModelAction.OpenCreateToDo))
+                _events.emit(Event(CalendarViewModelAction.OpenCreateToDo(selectedDay.toApiString())))
             }
         }
     }

@@ -99,10 +99,6 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
                                 viewModel.handleAction(CalendarAction.RefreshDay(it))
                             }
                         }
-
-                        is SharedCalendarAction.RequestSelectedDay -> {
-                            action.provideSelectedDate(viewModel.uiState.value.selectedDay)
-                        }
                     }
                 }
             }
@@ -116,7 +112,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
             is CalendarViewModelAction.OpenQuiz -> calendarRouter.openQuiz(action.canvasContext, action.htmlUrl)
             is CalendarViewModelAction.OpenCalendarEvent -> calendarRouter.openCalendarEvent(action.canvasContext, action.eventId)
             is CalendarViewModelAction.OpenToDo -> calendarRouter.openToDo(action.plannerItem)
-            is CalendarViewModelAction.OpenCreateToDo -> calendarRouter.openCreateToDo()
+            is CalendarViewModelAction.OpenCreateToDo -> calendarRouter.openCreateToDo(action.initialDateString)
         }
     }
 

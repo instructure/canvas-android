@@ -25,7 +25,7 @@ import com.instructure.student.router.RouteMatcher
 
 class StudentToDoRouter(private val activity: FragmentActivity) : ToDoRouter {
     override fun openEditToDo(plannerItem: PlannerItem) {
-        val route = CreateUpdateToDoFragment.makeRoute(plannerItem)
+        val route = CreateUpdateToDoFragment.makeRoute(plannerItem = plannerItem)
         RouteMatcher.route(activity, route)
     }
 }
