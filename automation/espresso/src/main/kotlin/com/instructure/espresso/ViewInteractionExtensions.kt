@@ -154,3 +154,11 @@ fun ViewInteraction.waitForCheck(assertion: ViewAssertion) {
     } while (System.currentTimeMillis() < endTime)
     check(assertion)
 }
+
+fun ViewInteraction.assertChecked() {
+    check(ViewAssertions.matches(ViewMatchers.isChecked()))
+}
+
+fun ViewInteraction.assertNotChecked() {
+    check(ViewAssertions.matches(ViewMatchers.isNotChecked()))
+}

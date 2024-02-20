@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.toDate
 import okio.Buffer
 import retrofit2.http.GET
 
@@ -170,18 +171,66 @@ object ApiEndpoint : Endpoint(
 )
 
 object FileUrlEndpoint : Endpoint(
-    LongId(PathVars::fileId) to endpoint(
-        configure = {
-            GET {
-                val file = data.folderFiles.values.flatten().find { it.id == pathVars.fileId }
-                if(file != null) {
-                    request.successResponse(file)
-                } else {
-                    request.unauthorizedResponse()
-                }
+    LongId(PathVars::fileId) to Endpoint {
+        GET {
+            val file = data.folderFiles.values.flatten().find { it.id == pathVars.fileId }
+            if (file != null) {
+                request.successResponse(file)
+            } else {
+                request.unauthorizedResponse()
             }
         }
-    )
+        PUT {
+            val buffer = Buffer()
+            request.body!!.writeTo(buffer)
+            val body = buffer.readUtf8()
+            val updateFileFolder = Gson().fromJson(body, UpdateFileFolder::class.java)
+            val folderFiles = data.folderFiles.values.find { it.any { it.id == pathVars.fileId } }
+            val file = data.folderFiles.values.flatten().find { it.id == pathVars.fileId }
+            if (file == null || folderFiles == null) {
+                request.unauthorizedResponse()
+            } else {
+                val folderId = file.parentFolderId
+                val updatedFile = file.copy(
+                    lockDate = updateFileFolder.lockAt.toDate() ?: file.lockDate,
+                    unlockDate = updateFileFolder.unlockAt.toDate() ?: file.unlockDate,
+                    isLocked = updateFileFolder.locked ?: file.isLocked,
+                    isHidden = updateFileFolder.hidden ?: file.isHidden,
+                    visibilityLevel = updateFileFolder.visibilityLevel ?: file.visibilityLevel
+                )
+                val updatedFolderFiles = folderFiles.map { if (it.id == pathVars.fileId) updatedFile else it }
+                data.folderFiles[folderId] = updatedFolderFiles.toMutableList()
+
+                val affectedCourseMap = data.courseModules.filterValues { modules ->
+                    modules.any { module ->
+                        module.items.any { it.contentId == pathVars.fileId }
+                    }
+                }
+
+                affectedCourseMap.forEach { (courseId, modules) ->
+                    val updatedModules = modules.map { module ->
+                        val updatedItems = module.items.filter { it.contentId == pathVars.fileId }
+                            .associate { moduleItem ->
+                                moduleItem.id to moduleItem.copy(
+                                    published = !updatedFile.isLocked,
+                                    moduleDetails = ModuleContentDetails(
+                                        lockAt = updatedFile.lockDate?.toString(),
+                                        unlockAt = updatedFile.unlockDate?.toString(),
+                                        locked = updatedFile.isLocked,
+                                        hidden = updatedFile.isHidden
+                                    )
+                                )
+                            }
+                        module.copy(items = module.items.map { moduleItem -> updatedItems[moduleItem.id] ?: moduleItem })
+                    }
+                    data.courseModules[courseId] = updatedModules.toMutableList()
+                }
+
+                request.successResponse(updatedFile)
+            }
+
+        }
+    }
 )
 
 object CanvadocRedirectEndpoint : Endpoint(

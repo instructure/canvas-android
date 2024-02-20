@@ -18,9 +18,6 @@
 
 package com.instructure.teacher.ui
 
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -30,22 +27,18 @@ import com.instructure.canvas.espresso.mockCanvas.addModuleToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.openOverflowMenu
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
 class ModuleListPageTest : TeacherTest() {
-
-    @get:Rule(order = 2)
-    val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
     @Test
     override fun displaysPageObjects() {
@@ -110,7 +103,7 @@ class ModuleListPageTest : TeacherTest() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
         val course = data.courses.values.first()
-        val fileId = data.addFileToCourse(course.id, "Published file")
+        val fileId = data.addFileToCourse(course.id)
         val rootFolderId = data.courseRootFolders[course.id]!!.id
         val fileFolder = data.folderFiles[rootFolderId]?.find { it.id == fileId }
         data.addItemToModule(
@@ -201,8 +194,7 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.publishModuleAndItems)
         modulesPage.clickOnText(R.string.publish)
 
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Done").performClick()
+        progressPage.clickDone()
 
         modulesPage.assertSnackbarText(R.string.moduleAndAllItemsPublished)
         modulesPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
@@ -222,8 +214,7 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.unpublishModuleAndItems)
         modulesPage.clickOnText(R.string.unpublish)
 
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Done").performClick()
+        progressPage.clickDone()
 
         modulesPage.assertSnackbarText(R.string.moduleAndAllItemsUnpublished)
         modulesPage.assertModuleNotPublished(publishedModule.name.orEmpty())
@@ -246,8 +237,7 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.publishModulesOnly)
         modulesPage.clickOnText(R.string.publish)
 
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Done").performClick()
+        progressPage.clickDone()
 
         modulesPage.assertSnackbarText(R.string.onlyModulesPublished)
         modulesPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
@@ -272,8 +262,7 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.publishAllModulesAndItems)
         modulesPage.clickOnText(R.string.publish)
 
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Done").performClick()
+        progressPage.clickDone()
 
         modulesPage.assertSnackbarText(R.string.allModulesAndAllItemsPublished)
         modulesPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
@@ -298,14 +287,103 @@ class ModuleListPageTest : TeacherTest() {
         modulesPage.clickOnText(R.string.unpublishAllModulesAndItems)
         modulesPage.clickOnText(R.string.unpublish)
 
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Done").performClick()
+        progressPage.clickDone()
 
         modulesPage.assertSnackbarText(R.string.allModulesAndAllItemsUnpublished)
         modulesPage.assertModuleNotPublished(unpublishedModules[0].name.orEmpty())
         modulesPage.assertModuleNotPublished(unpublishedModules[1].name.orEmpty())
         modulesPage.assertModuleItemNotPublished(assignment1.name.orEmpty())
         modulesPage.assertModuleItemNotPublished(assignment2.name.orEmpty())
+    }
+
+    @Test
+    fun unpublishFileModuleItem() {
+        val data = goToModulesPage()
+        val module = data.courseModules.values.first().first()
+        val course = data.courses.values.first()
+        val fileId = data.addFileToCourse(course.id)
+        val rootFolderId = data.courseRootFolders[course.id]!!.id
+        val fileFolder = data.folderFiles[rootFolderId]?.find { it.id == fileId }
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = fileFolder!!,
+            contentId = fileId,
+            published = true,
+            moduleContentDetails = ModuleContentDetails(
+                hidden = false,
+                locked = false
+            )
+        )
+
+        modulesPage.refresh()
+
+        modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
+
+        updateFilePermissionsPage.clickUnpublishRadioButton()
+        updateFilePermissionsPage.clickSaveButton()
+
+        modulesPage.assertModuleItemNotPublished(fileFolder.displayName.orEmpty())
+    }
+
+    @Test
+    fun publishFileModuleItem() {
+        val data = goToModulesPage()
+        val module = data.courseModules.values.first().first()
+        val course = data.courses.values.first()
+        val fileId = data.addFileToCourse(course.id)
+        val rootFolderId = data.courseRootFolders[course.id]!!.id
+        val fileFolder = data.folderFiles[rootFolderId]?.find { it.id == fileId }
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = fileFolder!!,
+            contentId = fileId,
+            published = false,
+            moduleContentDetails = ModuleContentDetails(
+                hidden = false,
+                locked = true
+            )
+        )
+
+        modulesPage.refresh()
+
+        modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
+
+        updateFilePermissionsPage.clickPublishRadioButton()
+        updateFilePermissionsPage.clickSaveButton()
+
+        modulesPage.assertModuleItemIsPublished(fileFolder.displayName.orEmpty())
+    }
+
+    @Test
+    fun hideFileModuleItem() {
+        val data = goToModulesPage()
+        val module = data.courseModules.values.first().first()
+        val course = data.courses.values.first()
+        val fileId = data.addFileToCourse(course.id)
+        val rootFolderId = data.courseRootFolders[course.id]!!.id
+        val fileFolder = data.folderFiles[rootFolderId]?.find { it.id == fileId }
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = fileFolder!!,
+            contentId = fileId,
+            published = true,
+            moduleContentDetails = ModuleContentDetails(
+                hidden = false,
+                locked = false
+            )
+        )
+
+        modulesPage.refresh()
+
+        modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
+
+        updateFilePermissionsPage.clickHideRadioButton()
+        updateFilePermissionsPage.clickSaveButton()
+
+        modulesPage.assertModuleItemHidden(fileFolder.displayName.orEmpty())
     }
 
     private fun goToModulesPage(publishedModuleCount: Int = 1, unpublishedModuleCount: Int = 0): MockCanvas {

@@ -173,4 +173,16 @@ class ModulesPage : BasePage() {
     fun assertSnackbarText(@StringRes snackbarText: Int) {
         onView(withId(com.google.android.material.R.id.snackbar_text) + withText(snackbarText)).assertDisplayed()
     }
+
+    fun assertModuleItemHidden(moduleItemName: String) {
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_hidden
+        )
+    }
+
+    fun assertModuleItemScheduled(moduleItemName: String) {
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_scheduled
+        )
+    }
 }
