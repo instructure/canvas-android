@@ -28,7 +28,9 @@ data class DiscussionApiModel (
         @SerializedName("locked_for_user")
         val lockedForUser: Boolean,
         @SerializedName("locked")
-        val locked: Boolean
+        val locked: Boolean,
+        @SerializedName("published")
+        val published: Boolean? = true
 )
 
 data class CreateDiscussionTopic(
