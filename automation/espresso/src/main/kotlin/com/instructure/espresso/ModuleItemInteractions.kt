@@ -6,7 +6,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.espresso.page.plus
 
-class ModuleItem(private val moduleNameId: Int? = null, private val nextArrowId: Int? = null, private val previousArrowId: Int? = null) {
+class ModuleItemInteractions(private val moduleNameId: Int? = null, private val nextArrowId: Int? = null, private val previousArrowId: Int? = null) {
 
     /**
      * Assert module name displayed

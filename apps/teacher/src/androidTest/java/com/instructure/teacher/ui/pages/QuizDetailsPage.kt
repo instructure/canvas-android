@@ -18,7 +18,7 @@ package com.instructure.teacher.ui.pages
 import androidx.test.InstrumentationRegistry
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
-import com.instructure.espresso.ModuleItem
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText
@@ -48,7 +48,7 @@ import com.instructure.teacher.R
  * that can be accessed for performing assertions and interactions. The page has a specific resource ID
  * associated with it, which is R.id.quizDetailsPage.
  */
-class QuizDetailsPage(val moduleItem: ModuleItem) : BasePage(pageResId = R.id.quizDetailsPage) {
+class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(pageResId = R.id.quizDetailsPage) {
 
     private val backButton by OnViewWithContentDescription(R.string.abc_action_bar_up_description,false)
     private val toolbarTitle by OnViewWithText(R.string.quiz_details)

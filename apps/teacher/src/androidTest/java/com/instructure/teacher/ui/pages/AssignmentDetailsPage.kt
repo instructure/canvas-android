@@ -35,7 +35,7 @@ import org.hamcrest.Matchers
  * @constructor Create empty Assignment details page
  */
 @Suppress("unused")
-class AssignmentDetailsPage(val moduleItem: ModuleItem) : BasePage(pageResId = R.id.assignmentDetailsPage) {
+class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(pageResId = R.id.assignmentDetailsPage) {
 
     private val backButton by OnViewWithContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description,false)
     private val toolbarTitle by OnViewWithText(R.string.assignment_details)

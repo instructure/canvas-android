@@ -11,7 +11,7 @@ import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.espresso.ActivityHelper
-import com.instructure.espresso.ModuleItem
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.click
 import com.instructure.espresso.extractInnerTextById
@@ -30,7 +30,7 @@ import org.hamcrest.Matchers.containsString
  *
  * @constructor Creates an instance of `EditPageDetailsPage`.
  */
-class EditPageDetailsPage(val moduleItem: ModuleItem) : BasePage() {
+class EditPageDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage() {
     private val contentRceView by WaitForViewWithId(R.id.rce_webView)
 
     /**
