@@ -240,6 +240,9 @@ class CalendarViewModelTest {
         coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, emptyList(), true) }
 
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2023, 5, 19)))
+        // We also need to call this in the test because day is not selected instantly,
+        // but after the new state is created and the pager animates to the next page and signals to the view model.
+        viewModel.handleAction(CalendarAction.PageChanged(1))
 
         val newMonthStartDate = LocalDate.of(2023, 6, 1).atStartOfDay().toApiString()
         val newMonthEndDate = LocalDate.of(2023, 7, 1).atStartOfDay().toApiString()
@@ -350,6 +353,10 @@ class CalendarViewModelTest {
 
         // Select an other day
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2022, 2, 19)))
+        // We also need to call this in the test because day is not selected instantly,
+        // but after the new state is created and the pager animates to the next page and signals to the view model.
+        viewModel.handleAction(CalendarAction.PageChanged(-1))
+
         val newDayExpectedState = CalendarScreenUiState(
             baseCalendarUiState.copy(selectedDay = LocalDate.of(2022, 2, 19)), CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2022, 2, 18)),
@@ -361,6 +368,10 @@ class CalendarViewModelTest {
 
         // Tap on today
         viewModel.handleAction(CalendarAction.TodayTapped)
+        // We also need to call this in the test because day is not selected instantly,
+        // but after the new state is created and the pager animates to the next page and signals to the view model.
+        viewModel.handleAction(CalendarAction.PageChanged(1))
+
         assertEquals(expectedState, viewModel.uiState.value)
     }
 
