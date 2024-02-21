@@ -20,6 +20,7 @@ import android.util.Log
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
@@ -42,7 +43,7 @@ class OfflineLeftSideMenuE2ETest : StudentTest() {
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.LEFT_SIDE_MENU, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LEFT_SIDE_MENU, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineLeftSideMenuUnavailableFunctionsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
