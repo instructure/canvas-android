@@ -150,7 +150,7 @@ fun CalendarPreview() {
         LocalDate.now(),
         true,
         headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
-        bodyUiState = calendarStateMapper.createBodyUiState(true, false, 0, LocalDate.now(), emptyMap())
+        bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.now(), false, 0, emptyMap())
     )
     CalendarScreen(
         "Calendar", CalendarScreenUiState(

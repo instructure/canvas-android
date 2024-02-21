@@ -55,12 +55,25 @@ class CalendarViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val calendarRepository: CalendarRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val calendarPrefs: CalendarPrefs = mockk(relaxed = true)
+    private val calendarStateMapper: CalendarStateMapper = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarViewModel
 
     private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
     private val clock = Clock.fixed(Instant.parse("2023-04-20T14:00:00.00Z"), ZoneId.systemDefault())
+
+    private val baseCalendarUiState = CalendarUiState(
+        selectedDay = LocalDate.now(clock),
+        expanded = false,
+        headerUiState = CalendarHeaderUiState("2023", "April"),
+        bodyUiState = CalendarBodyUiState(
+            previousPage = CalendarPageUiState(emptyList()),
+            currentPage = CalendarPageUiState(emptyList()),
+            nextPage = CalendarPageUiState(emptyList())
+        )
+    )
 
     @Before
     fun setUp() {
@@ -86,6 +99,14 @@ class CalendarViewModelTest {
         }
 
         every { context.getString(R.string.calendarRefreshFailed) } returns "Error refreshing events"
+
+        // We don't care about these states in the tests because theses are tested in the CalendarStateMapperTest
+        every { calendarStateMapper.createHeaderUiState(any(), any()) } returns CalendarHeaderUiState("2023", "April")
+        every { calendarStateMapper.createBodyUiState(any(), any(), any(), any(), any()) } returns CalendarBodyUiState(
+            previousPage = CalendarPageUiState(emptyList()),
+            currentPage = CalendarPageUiState(emptyList()),
+            nextPage = CalendarPageUiState(emptyList())
+        )
     }
 
     @After
@@ -99,7 +120,7 @@ class CalendarViewModelTest {
         val initialState = viewModel.uiState.value
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -132,7 +153,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), error = true),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), error = true),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21), error = true)
@@ -173,11 +194,11 @@ class CalendarViewModelTest {
             EventUiState(5, "Course 2 To Do", Course(2), "Plannable 5", R.drawable.ic_todo, "Apr 21 12:00 PM"),
         )
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), events = expectedPreviousEvents),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expectedCurrentEvents),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21), events = expectedNextEvents)
-            ), eventIndicators = mapOf(LocalDate.of(2023, 4, 20) to 2, LocalDate.of(2023, 4, 19) to 2, LocalDate.of(2023, 4, 21) to 1)
+            )
         )
 
         assertEquals(expectedState, viewModel.uiState.value)
@@ -246,11 +267,11 @@ class CalendarViewModelTest {
             EventUiState(5, "Course 2 To Do", Course(2), "Plannable 5", R.drawable.ic_todo, "Apr 21 12:00 PM"),
         )
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), events = expected19thEvents),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expected20thEvents),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21), events = expected21stEvents)
-            ), eventIndicators = mapOf(LocalDate.of(2023, 4, 20) to 1, LocalDate.of(2023, 4, 19) to 1, LocalDate.of(2023, 4, 21) to 1)
+            )
         )
 
         assertEquals(expectedState, viewModel.uiState.value)
@@ -258,11 +279,11 @@ class CalendarViewModelTest {
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2023, 4, 19)))
 
         val expectedNewState = CalendarScreenUiState(
-            LocalDate.of(2023, 4, 19), true, CalendarEventsUiState(
+            baseCalendarUiState.copy(selectedDay = LocalDate.of(2023, 4, 19)), CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 18)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), events = expected19thEvents),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expected20thEvents)
-            ), eventIndicators = mapOf(LocalDate.of(2023, 4, 20) to 1, LocalDate.of(2023, 4, 19) to 1, LocalDate.of(2023, 4, 21) to 1)
+            )
         )
 
         assertEquals(expectedNewState, viewModel.uiState.value)
@@ -274,7 +295,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -284,10 +305,10 @@ class CalendarViewModelTest {
         assertEquals(expectedState, viewModel.uiState.value)
 
         viewModel.handleAction(CalendarAction.ExpandChanged)
-        assertEquals(expectedState.copy(expanded = false), viewModel.uiState.value)
+        assertEquals(expectedState.calendarUiState.copy(expanded = true), viewModel.uiState.value.calendarUiState)
 
         viewModel.handleAction(CalendarAction.ExpandChanged)
-        assertEquals(expectedState.copy(expanded = true), viewModel.uiState.value)
+        assertEquals(expectedState.calendarUiState.copy(expanded = false), viewModel.uiState.value.calendarUiState)
     }
 
     @Test
@@ -296,7 +317,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -305,8 +326,11 @@ class CalendarViewModelTest {
 
         assertEquals(expectedState, viewModel.uiState.value)
 
+        viewModel.handleAction(CalendarAction.ExpandChanged)
+        assertEquals(expectedState.calendarUiState.copy(expanded = true), viewModel.uiState.value.calendarUiState)
+
         viewModel.handleAction(CalendarAction.ExpandDisabled)
-        assertEquals(expectedState.copy(expanded = false), viewModel.uiState.value)
+        assertEquals(expectedState.calendarUiState.copy(expanded = false), viewModel.uiState.value.calendarUiState)
     }
 
     @Test
@@ -315,7 +339,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -327,7 +351,7 @@ class CalendarViewModelTest {
         // Select an other day
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2022, 2, 19)))
         val newDayExpectedState = CalendarScreenUiState(
-            LocalDate.of(2022, 2, 19), true, CalendarEventsUiState(
+            baseCalendarUiState.copy(selectedDay = LocalDate.of(2022, 2, 19)), CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2022, 2, 18)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2022, 2, 19)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2022, 2, 20))
@@ -346,7 +370,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -355,9 +379,11 @@ class CalendarViewModelTest {
 
         assertEquals(expectedState, viewModel.uiState.value)
 
+        viewModel.handleAction(CalendarAction.ExpandChanged)
         viewModel.handleAction(CalendarAction.PageChanged(1))
+
         val newExpectedState = CalendarScreenUiState(
-            LocalDate.of(2023, 5, 20), true, CalendarEventsUiState(
+            baseCalendarUiState.copy(selectedDay = LocalDate.of(2023, 5, 20), expanded = true), CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 5, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 5, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 5, 21))
@@ -372,7 +398,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -381,11 +407,10 @@ class CalendarViewModelTest {
 
         assertEquals(expectedState, viewModel.uiState.value)
 
-        viewModel.handleAction(CalendarAction.ExpandChanged)
         viewModel.handleAction(CalendarAction.PageChanged(1))
 
         val newExpectedState = CalendarScreenUiState(
-            LocalDate.of(2023, 4, 27), false, CalendarEventsUiState(
+            baseCalendarUiState.copy(selectedDay = LocalDate.of(2023, 4, 27)), CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 26)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 27)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 28))
@@ -400,7 +425,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -412,7 +437,7 @@ class CalendarViewModelTest {
         viewModel.handleAction(CalendarAction.EventPageChanged(1))
 
         val newExpectedState = CalendarScreenUiState(
-            LocalDate.of(2023, 4, 21), true, CalendarEventsUiState(
+            baseCalendarUiState.copy(selectedDay = LocalDate.of(2023, 4, 21)), CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 22))
@@ -446,7 +471,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -462,11 +487,11 @@ class CalendarViewModelTest {
         )
 
         val newExpectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expectedEvents),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
-            ), eventIndicators = mapOf(LocalDate.of(2023, 4, 20) to 1)
+            )
         )
 
         assertEquals(newExpectedState, viewModel.uiState.value)
@@ -482,7 +507,7 @@ class CalendarViewModelTest {
         initViewModel()
 
         val expectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -494,7 +519,7 @@ class CalendarViewModelTest {
         viewModel.handleAction(CalendarAction.RefreshDay(LocalDate.of(2023, 4, 20)))
 
         val newExpectedState = CalendarScreenUiState(
-            LocalDate.now(clock), true, CalendarEventsUiState(
+            baseCalendarUiState, CalendarEventsUiState(
                 previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
                 currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
                 nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
@@ -616,7 +641,7 @@ class CalendarViewModelTest {
     }
 
     private fun initViewModel() {
-        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock)
+        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper)
     }
 
     private fun createPlannerItem(

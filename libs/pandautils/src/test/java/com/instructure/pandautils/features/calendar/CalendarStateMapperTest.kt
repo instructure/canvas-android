@@ -19,21 +19,23 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.threeten.bp.LocalDate
 
-class CalendarScreenUiStateTest {
+class CalendarStateMapperTest {
+
+    private val calendarStateMapper = CalendarStateMapper()
 
     @Test
     fun `Format header UI state for selected date`() {
-        val calendarScreenUiState = CalendarScreenUiState(LocalDate.of(2023, 4, 20), expanded = false)
+        val headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.of(2023, 4, 20), null)
 
-        assertEquals("2023", calendarScreenUiState.headerUiState.yearTitle)
-        assertEquals("April", calendarScreenUiState.headerUiState.monthTitle)
+        assertEquals("2023", headerUiState.yearTitle)
+        assertEquals("April", headerUiState.monthTitle)
     }
 
     @Test
     fun `Return one row body for calendar when it's not expanded with weekends disabled`() {
-        val calendarScreenUiState = CalendarScreenUiState(LocalDate.of(2023, 4, 20), expanded = false)
+        val bodyUiState = calendarStateMapper.createBodyUiState(false, LocalDate.of(2023, 4, 20))
 
-        assertEquals(1, calendarScreenUiState.bodyUiState.currentPage.calendarRows.size)
+        assertEquals(1, bodyUiState.currentPage.calendarRows.size)
 
         val expectedCalendarRow = CalendarRowUiState(
             listOf(
@@ -47,14 +49,14 @@ class CalendarScreenUiStateTest {
             )
         )
 
-        assertEquals(expectedCalendarRow, calendarScreenUiState.bodyUiState.currentPage.calendarRows.first())
+        assertEquals(expectedCalendarRow, bodyUiState.currentPage.calendarRows.first())
     }
 
     @Test
     fun `Return all rows for the month for calendar when it's expanded with disabled days from previous month`() {
-        val calendarScreenUiState = CalendarScreenUiState(LocalDate.of(2023, 4, 20), expanded = true)
+        val bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.of(2023, 4, 20))
 
-        assertEquals(6, calendarScreenUiState.bodyUiState.currentPage.calendarRows.size)
+        assertEquals(6, bodyUiState.currentPage.calendarRows.size)
 
         val expectedFirstCalendarRow = CalendarRowUiState(
             listOf(
@@ -68,13 +70,13 @@ class CalendarScreenUiStateTest {
             )
         )
 
-        assertEquals(expectedFirstCalendarRow, calendarScreenUiState.bodyUiState.currentPage.calendarRows.first())
+        assertEquals(expectedFirstCalendarRow, bodyUiState.currentPage.calendarRows.first())
     }
 
     @Test
     fun `Add correct indicator count for days`() {
-        val calendarScreenUiState = CalendarScreenUiState(
-            LocalDate.of(2023, 4, 20), expanded = false, eventIndicators = mapOf(
+        val bodyUiState = calendarStateMapper.createBodyUiState(
+            expanded = false, LocalDate.of(2023, 4, 20), eventIndicators = mapOf(
                 LocalDate.of(2023, 4, 20) to 1,
                 LocalDate.of(2023, 4, 22) to 2,
                 LocalDate.of(2023, 4, 18) to 3,
@@ -93,6 +95,6 @@ class CalendarScreenUiStateTest {
             )
         )
 
-        assertEquals(expectedCalendarRow, calendarScreenUiState.bodyUiState.currentPage.calendarRows.first())
+        assertEquals(expectedCalendarRow, bodyUiState.currentPage.calendarRows.first())
     }
 }

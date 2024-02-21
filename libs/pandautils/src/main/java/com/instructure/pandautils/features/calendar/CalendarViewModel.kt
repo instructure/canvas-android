@@ -161,7 +161,7 @@ class CalendarViewModel @Inject constructor(
             selectedDay = selectedDay,
             expanded = expanded && !collapsing,
             headerUiState = calendarStateMapper.createHeaderUiState(selectedDay, pendingSelectedDay),
-            bodyUiState = calendarStateMapper.createBodyUiState(expanded, jumpToToday, scrollToPageOffset, selectedDay, eventIndicators),
+            bodyUiState = calendarStateMapper.createBodyUiState(expanded, selectedDay, jumpToToday, scrollToPageOffset, eventIndicators),
             scrollToPageOffset = scrollToPageOffset,
             pendingSelectedDay = pendingSelectedDay,
         )

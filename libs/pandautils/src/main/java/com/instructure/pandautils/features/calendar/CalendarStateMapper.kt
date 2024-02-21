@@ -32,10 +32,10 @@ class CalendarStateMapper {
 
     fun createBodyUiState(
         expanded: Boolean,
-        jumpToToday: Boolean,
-        scrollToPageOffset: Int,
         selectedDay: LocalDate,
-        eventIndicators: Map<LocalDate, Int>
+        jumpToToday: Boolean = false,
+        scrollToPageOffset: Int = 0,
+        eventIndicators: Map<LocalDate, Int> = emptyMap()
     ): CalendarBodyUiState {
         val dateFieldToAdd = if (expanded) ChronoUnit.MONTHS else ChronoUnit.WEEKS
 
