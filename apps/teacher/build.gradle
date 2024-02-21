@@ -111,6 +111,15 @@ android {
                 heapEnabled = true
             }
         }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
