@@ -23,9 +23,9 @@ import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.ProgressPage
 import org.junit.Rule
 
-abstract class ComposeTest : TeacherTest() {
+abstract class TeacherComposeTest : TeacherTest() {
 
-    @get:Rule(order = 2)
+    @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
     val progressPage = ProgressPage(composeTestRule)

@@ -27,6 +27,7 @@ import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -94,7 +95,7 @@ class UpdateFilePermissionsPage : BasePage() {
         val dateString = SimpleDateFormat("MMM d, YYYY").format(unlockDate)
         val timeString = SimpleDateFormat("h:mm a").format(unlockDate)
 
-        availableFromDate.assertDisplayed()
+        availableFromDate.scrollTo().assertDisplayed()
         availableFromDate.assertHasText(dateString)
         availableFromTime.assertHasText(timeString)
     }
@@ -103,7 +104,7 @@ class UpdateFilePermissionsPage : BasePage() {
         val dateString = SimpleDateFormat("MMM d, YYYY").format(lockDate)
         val timeString = SimpleDateFormat("h:mm a").format(lockDate)
 
-        availableUntilDate.assertDisplayed()
+        availableUntilDate.scrollTo().assertDisplayed()
         availableUntilDate.assertHasText(dateString)
         availableUntilTime.assertHasText(timeString)
     }
