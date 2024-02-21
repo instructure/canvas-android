@@ -18,6 +18,7 @@
 
 package com.instructure.teacher.ui
 
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -320,6 +321,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         updateFilePermissionsPage.clickUnpublishRadioButton()
         updateFilePermissionsPage.clickSaveButton()
 
@@ -350,6 +352,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         updateFilePermissionsPage.clickPublishRadioButton()
         updateFilePermissionsPage.clickSaveButton()
 
@@ -380,6 +383,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         updateFilePermissionsPage.clickHideRadioButton()
         updateFilePermissionsPage.clickSaveButton()
 
