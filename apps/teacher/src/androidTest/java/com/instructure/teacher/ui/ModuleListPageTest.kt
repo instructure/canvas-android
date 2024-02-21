@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.Randomizer
+import com.instructure.espresso.retry
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.openOverflowMenu
@@ -321,9 +322,13 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        updateFilePermissionsPage.clickUnpublishRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        retry(times = 2, catchBlock = {
+            updateFilePermissionsPage.swipeUpBottomSheet()
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        }) {
+            updateFilePermissionsPage.clickUnpublishRadioButton()
+            updateFilePermissionsPage.clickSaveButton()
+        }
 
         modulesPage.assertModuleItemNotPublished(fileFolder.displayName.orEmpty())
     }
@@ -352,9 +357,14 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        updateFilePermissionsPage.clickPublishRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        retry(times = 2, catchBlock = {
+            updateFilePermissionsPage.swipeUpBottomSheet()
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        }) {
+            updateFilePermissionsPage.clickPublishRadioButton()
+            updateFilePermissionsPage.clickSaveButton()
+
+        }
 
         modulesPage.assertModuleItemIsPublished(fileFolder.displayName.orEmpty())
     }
@@ -383,9 +393,13 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        updateFilePermissionsPage.clickHideRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        retry(times = 2, catchBlock = {
+            updateFilePermissionsPage.swipeUpBottomSheet()
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        }) {
+            updateFilePermissionsPage.clickHideRadioButton()
+            updateFilePermissionsPage.clickSaveButton()
+        }
 
         modulesPage.assertModuleItemHidden(fileFolder.displayName.orEmpty())
     }
