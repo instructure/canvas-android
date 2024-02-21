@@ -60,6 +60,7 @@ import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
+import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 
 @ExperimentalFoundationApi
@@ -145,7 +146,7 @@ fun CalendarScreen(
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
-    val calendarStateMapper = CalendarStateMapper()
+    val calendarStateMapper = CalendarStateMapper(Clock.systemDefaultZone())
     val calendarUiState = CalendarUiState(
         LocalDate.now(),
         true,

@@ -23,6 +23,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import org.threeten.bp.Clock
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -39,7 +40,7 @@ class CalendarModule {
     }
 
     @Provides
-    fun provideCalendarStateMapper(): CalendarStateMapper {
-        return CalendarStateMapper()
+    fun provideCalendarStateMapper(clock: Clock): CalendarStateMapper {
+        return CalendarStateMapper(clock)
     }
 }

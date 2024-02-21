@@ -15,13 +15,14 @@
  */
 package com.instructure.pandautils.features.calendar
 
+import org.threeten.bp.Clock
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.Locale
 
-class CalendarStateMapper {
+class CalendarStateMapper(private val clock: Clock) {
 
     fun createHeaderUiState(selectedDay: LocalDate, pendingSelectedDay: LocalDate?): CalendarHeaderUiState {
         val dayToShow = pendingSelectedDay ?: selectedDay
@@ -39,8 +40,8 @@ class CalendarStateMapper {
     ): CalendarBodyUiState {
         val dateFieldToAdd = if (expanded) ChronoUnit.MONTHS else ChronoUnit.WEEKS
 
-        val previousPageDate = if (jumpToToday && scrollToPageOffset < 0) LocalDate.now() else selectedDay.minus(1, dateFieldToAdd)
-        val nextPageDate = if (jumpToToday && scrollToPageOffset > 0) LocalDate.now() else selectedDay.plus(1, dateFieldToAdd)
+        val previousPageDate = if (jumpToToday && scrollToPageOffset < 0) LocalDate.now(clock) else selectedDay.minus(1, dateFieldToAdd)
+        val nextPageDate = if (jumpToToday && scrollToPageOffset > 0) LocalDate.now(clock) else selectedDay.plus(1, dateFieldToAdd)
 
         val previousPage = createCalendarPageUiState(previousPageDate, expanded, eventIndicators)
         val currentPage = createCalendarPageUiState(selectedDay, expanded, eventIndicators)

@@ -17,11 +17,16 @@ package com.instructure.pandautils.features.calendar
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.threeten.bp.Clock
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
 
 class CalendarStateMapperTest {
 
-    private val calendarStateMapper = CalendarStateMapper()
+    private val clock = Clock.fixed(Instant.parse("2023-04-20T14:00:00.00Z"), ZoneId.systemDefault())
+
+    private val calendarStateMapper = CalendarStateMapper(clock)
 
     @Test
     fun `Format header UI state for selected date`() {
@@ -29,6 +34,16 @@ class CalendarStateMapperTest {
 
         assertEquals("2023", headerUiState.yearTitle)
         assertEquals("April", headerUiState.monthTitle)
+    }
+
+    @Test
+    fun `Format header UI state for pending selected date when it's not null`() {
+        val headerUiState = calendarStateMapper.createHeaderUiState(
+            LocalDate.of(2023, 4, 20),
+            LocalDate.of(2024, 2, 21))
+
+        assertEquals("2024", headerUiState.yearTitle)
+        assertEquals("February", headerUiState.monthTitle)
     }
 
     @Test
@@ -96,5 +111,93 @@ class CalendarStateMapperTest {
         )
 
         assertEquals(expectedCalendarRow, bodyUiState.currentPage.calendarRows.first())
+    }
+
+    @Test
+    fun `Create previous page with today if jumping to today and today is in a previous week`() {
+        val bodyUiState = calendarStateMapper.createBodyUiState(
+            expanded = false, selectedDay = LocalDate.of(2023, 5, 20), jumpToToday = true, scrollToPageOffset = -1
+        )
+
+        val expectedCalendarRow = CalendarRowUiState(
+            listOf(
+                CalendarDayUiState(16, LocalDate.of(2023, 4, 16), false),
+                CalendarDayUiState(17, LocalDate.of(2023, 4, 17), true),
+                CalendarDayUiState(18, LocalDate.of(2023, 4, 18), true),
+                CalendarDayUiState(19, LocalDate.of(2023, 4, 19), true),
+                CalendarDayUiState(20, LocalDate.of(2023, 4, 20), true),
+                CalendarDayUiState(21, LocalDate.of(2023, 4, 21), true),
+                CalendarDayUiState(22, LocalDate.of(2023, 4, 22), false),
+            )
+        )
+
+        assertEquals(expectedCalendarRow, bodyUiState.previousPage.calendarRows.first())
+    }
+
+    @Test
+    fun `Create next page with today if jumping to today and today is in a next week`() {
+        val bodyUiState = calendarStateMapper.createBodyUiState(
+            expanded = false, selectedDay = LocalDate.of(2023, 3, 20), jumpToToday = true, scrollToPageOffset = 1
+        )
+
+        val expectedCalendarRow = CalendarRowUiState(
+            listOf(
+                CalendarDayUiState(16, LocalDate.of(2023, 4, 16), false),
+                CalendarDayUiState(17, LocalDate.of(2023, 4, 17), true),
+                CalendarDayUiState(18, LocalDate.of(2023, 4, 18), true),
+                CalendarDayUiState(19, LocalDate.of(2023, 4, 19), true),
+                CalendarDayUiState(20, LocalDate.of(2023, 4, 20), true),
+                CalendarDayUiState(21, LocalDate.of(2023, 4, 21), true),
+                CalendarDayUiState(22, LocalDate.of(2023, 4, 22), false),
+            )
+        )
+
+        assertEquals(expectedCalendarRow, bodyUiState.nextPage.calendarRows.first())
+    }
+
+    @Test
+    fun `Create previous expanded page with today if jumping to today and today is in a previous month`() {
+        val bodyUiState = calendarStateMapper.createBodyUiState(
+            expanded = true, selectedDay = LocalDate.of(2023, 5, 20), jumpToToday = true, scrollToPageOffset = -1
+        )
+
+        assertEquals(6, bodyUiState.previousPage.calendarRows.size)
+
+        val expectedFirstCalendarRow = CalendarRowUiState(
+            listOf(
+                CalendarDayUiState(26, LocalDate.of(2023, 3, 26), false),
+                CalendarDayUiState(27, LocalDate.of(2023, 3, 27), false),
+                CalendarDayUiState(28, LocalDate.of(2023, 3, 28), false),
+                CalendarDayUiState(29, LocalDate.of(2023, 3, 29), false),
+                CalendarDayUiState(30, LocalDate.of(2023, 3, 30), false),
+                CalendarDayUiState(31, LocalDate.of(2023, 3, 31), false),
+                CalendarDayUiState(1, LocalDate.of(2023, 4, 1), false),
+            )
+        )
+
+        assertEquals(expectedFirstCalendarRow, bodyUiState.previousPage.calendarRows.first())
+    }
+
+    @Test
+    fun `Create next expanded page with today if jumping to today and today is in a next month`() {
+        val bodyUiState = calendarStateMapper.createBodyUiState(
+            expanded = true, selectedDay = LocalDate.of(2023, 3, 20), jumpToToday = true, scrollToPageOffset = 1
+        )
+
+        assertEquals(6, bodyUiState.nextPage.calendarRows.size)
+
+        val expectedFirstCalendarRow = CalendarRowUiState(
+            listOf(
+                CalendarDayUiState(26, LocalDate.of(2023, 3, 26), false),
+                CalendarDayUiState(27, LocalDate.of(2023, 3, 27), false),
+                CalendarDayUiState(28, LocalDate.of(2023, 3, 28), false),
+                CalendarDayUiState(29, LocalDate.of(2023, 3, 29), false),
+                CalendarDayUiState(30, LocalDate.of(2023, 3, 30), false),
+                CalendarDayUiState(31, LocalDate.of(2023, 3, 31), false),
+                CalendarDayUiState(1, LocalDate.of(2023, 4, 1), false),
+            )
+        )
+
+        assertEquals(expectedFirstCalendarRow, bodyUiState.nextPage.calendarRows.first())
     }
 }
