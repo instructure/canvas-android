@@ -19,6 +19,8 @@
 package com.instructure.teacher.ui
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.canvas.espresso.StubLandscape
+import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -299,6 +301,8 @@ class ModuleListPageTest : TeacherComposeTest() {
     }
 
     @Test
+    @StubLandscape
+    @StubTablet
     fun unpublishFileModuleItem() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
@@ -334,6 +338,8 @@ class ModuleListPageTest : TeacherComposeTest() {
     }
 
     @Test
+    @StubLandscape
+    @StubTablet
     fun publishFileModuleItem() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
@@ -370,6 +376,8 @@ class ModuleListPageTest : TeacherComposeTest() {
     }
 
     @Test
+    @StubLandscape
+    @StubTablet
     fun hideFileModuleItem() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
