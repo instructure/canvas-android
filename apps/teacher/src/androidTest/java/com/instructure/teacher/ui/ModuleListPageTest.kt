@@ -18,9 +18,6 @@
 
 package com.instructure.teacher.ui
 
-import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.StubLandscape
-import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -33,7 +30,6 @@ import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.Randomizer
-import com.instructure.espresso.retry
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.openOverflowMenu
@@ -301,8 +297,6 @@ class ModuleListPageTest : TeacherComposeTest() {
     }
 
     @Test
-    @StubLandscape
-    @StubTablet
     fun unpublishFileModuleItem() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
@@ -326,20 +320,14 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
-        retry(times = 2, catchBlock = {
-            updateFilePermissionsPage.swipeUpBottomSheet()
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }) {
-            updateFilePermissionsPage.clickUnpublishRadioButton()
-            updateFilePermissionsPage.clickSaveButton()
-        }
+        updateFilePermissionsPage.swipeUpBottomSheet()
+        updateFilePermissionsPage.clickUnpublishRadioButton()
+        updateFilePermissionsPage.clickSaveButton()
 
         modulesPage.assertModuleItemNotPublished(fileFolder.displayName.orEmpty())
     }
 
     @Test
-    @StubLandscape
-    @StubTablet
     fun publishFileModuleItem() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
@@ -363,21 +351,14 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
-        retry(times = 2, catchBlock = {
-            updateFilePermissionsPage.swipeUpBottomSheet()
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }) {
-            updateFilePermissionsPage.clickPublishRadioButton()
-            updateFilePermissionsPage.clickSaveButton()
-
-        }
+        updateFilePermissionsPage.swipeUpBottomSheet()
+        updateFilePermissionsPage.clickPublishRadioButton()
+        updateFilePermissionsPage.clickSaveButton()
 
         modulesPage.assertModuleItemIsPublished(fileFolder.displayName.orEmpty())
     }
 
     @Test
-    @StubLandscape
-    @StubTablet
     fun hideFileModuleItem() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
@@ -401,13 +382,9 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
-        retry(times = 2, catchBlock = {
-            updateFilePermissionsPage.swipeUpBottomSheet()
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }) {
-            updateFilePermissionsPage.clickHideRadioButton()
-            updateFilePermissionsPage.clickSaveButton()
-        }
+        updateFilePermissionsPage.swipeUpBottomSheet()
+        updateFilePermissionsPage.clickHideRadioButton()
+        updateFilePermissionsPage.clickSaveButton()
 
         modulesPage.assertModuleItemHidden(fileFolder.displayName.orEmpty())
     }

@@ -18,6 +18,7 @@
 
 package com.instructure.teacher.ui.pages
 
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertChecked
 import com.instructure.espresso.assertDisabled
@@ -28,7 +29,12 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
 import com.instructure.teacher.R
@@ -75,15 +81,15 @@ class UpdateFilePermissionsPage : BasePage() {
     }
 
     fun clickPublishRadioButton() {
-        publishRadioButton.click()
+        waitForViewWithId(R.id.publish).click()
     }
 
     fun clickUnpublishRadioButton() {
-        unpublishRadioButton.click()
+        waitForViewWithId(R.id.unpublish).click()
     }
 
     fun clickHideRadioButton() {
-        hideRadioButton.click()
+        waitForViewWithId(R.id.hide).click()
     }
 
     fun assertScheduleLayoutDisplayed() {
@@ -98,7 +104,7 @@ class UpdateFilePermissionsPage : BasePage() {
         val dateString = SimpleDateFormat("MMM d, YYYY").format(unlockDate)
         val timeString = SimpleDateFormat("h:mm a").format(unlockDate)
 
-        availableFromDate.scrollTo().assertDisplayed()
+        waitForViewWithId(R.id.availableFromDate).scrollTo().assertDisplayed()
         availableFromDate.assertHasText(dateString)
         availableFromTime.assertHasText(timeString)
     }
@@ -107,7 +113,7 @@ class UpdateFilePermissionsPage : BasePage() {
         val dateString = SimpleDateFormat("MMM d, YYYY").format(lockDate)
         val timeString = SimpleDateFormat("h:mm a").format(lockDate)
 
-        availableUntilDate.scrollTo().assertDisplayed()
+        waitForViewWithId(R.id.availableUntilDate).scrollTo().assertDisplayed()
         availableUntilDate.assertHasText(dateString)
         availableUntilTime.assertHasText(timeString)
     }
@@ -127,6 +133,7 @@ class UpdateFilePermissionsPage : BasePage() {
     }
 
     fun swipeUpBottomSheet() {
-        onView(withId(R.id.title)).swipeUp()
+        onViewWithText(R.string.edit_permissions).swipeUp()
+        Thread.sleep(1000)
     }
 }
