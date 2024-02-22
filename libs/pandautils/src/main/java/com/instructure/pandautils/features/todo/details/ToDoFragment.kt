@@ -40,11 +40,9 @@ import com.instructure.pandautils.features.todo.details.composables.ToDoScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -65,6 +63,8 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
@@ -73,22 +73,15 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main.immediate) {
-                viewModel.events.collect { action ->
-                    when (action) {
-                        is ToDoViewModelAction.RefreshCalendarDay -> {
-                            sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(listOf(action.date)))
-                            navigateBack()
-                        }
+    private fun handleAction(action: ToDoViewModelAction) {
+        when (action) {
+            is ToDoViewModelAction.RefreshCalendarDay -> {
+                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(listOf(action.date)))
+                navigateBack()
+            }
 
-                        is ToDoViewModelAction.OpenEditToDo -> {
-                            toDoRouter.openEditToDo(action.plannerItem)
-                        }
-                    }
-                }
+            is ToDoViewModelAction.OpenEditToDo -> {
+                toDoRouter.openEditToDo(action.plannerItem)
             }
         }
     }

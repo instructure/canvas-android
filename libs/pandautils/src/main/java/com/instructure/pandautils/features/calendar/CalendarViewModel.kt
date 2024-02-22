@@ -284,7 +284,7 @@ class CalendarViewModel @Inject constructor(
             }
             CalendarAction.HeightAnimationFinished -> heightAnimationFinished()
             is CalendarAction.AddToDoTapped -> viewModelScope.launch {
-                _events.emit(Event(CalendarViewModelAction.OpenCreateToDo(selectedDay.toApiString())))
+                _events.send(CalendarViewModelAction.OpenCreateToDo(selectedDay.toApiString()))
             }
         }
     }

@@ -39,12 +39,10 @@ import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todo.createupdate.composables.CreateUpdateToDoScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
@@ -59,25 +57,22 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = ComposeView(requireActivity()).apply {
-        setContent {
-            val uiState by viewModel.uiState.collectAsState()
-            CreateUpdateToDoScreenWrapper(title(), uiState, viewModel::handleAction, ::navigateBack)
+    ): View {
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
+        return ComposeView(requireActivity()).apply {
+            setContent {
+                val uiState by viewModel.uiState.collectAsState()
+                CreateUpdateToDoScreenWrapper(title(), uiState, viewModel::handleAction, ::navigateBack)
+            }
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main.immediate) {
-                viewModel.events.collect { action ->
-                    when (action) {
-                        is CreateUpdateToDoViewModelAction.RefreshCalendarDays -> {
-                            sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
-                            activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
-                        }
-                    }
-                }
+    private fun handleAction(action: CreateUpdateToDoViewModelAction) {
+        when (action) {
+            is CreateUpdateToDoViewModelAction.RefreshCalendarDays -> {
+                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
+                activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
             }
         }
     }

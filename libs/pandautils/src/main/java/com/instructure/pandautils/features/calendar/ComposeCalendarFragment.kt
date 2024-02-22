@@ -41,9 +41,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -91,12 +88,10 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         }
     }
 
-    private fun handleSharedViewModelAction(action: CalendarAction) {
+    private fun handleSharedViewModelAction(action: SharedCalendarAction) {
         when (action) {
-            is SharedCalendarAction.RefreshDays -> {
-                action.days.forEach {
-                    viewModel.handleAction(CalendarAction.RefreshDay(it))
-                }
+            is SharedCalendarAction.RefreshDays -> action.days.forEach {
+                viewModel.handleAction(CalendarAction.RefreshDay(it))
             }
         }
     }
