@@ -47,7 +47,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -97,7 +96,7 @@ private fun TopAppBarContent(
 ) {
     TopAppBar(
         title = {
-            Text(text = title, fontWeight = FontWeight(600))
+            Text(text = title)
         },
         elevation = 0.dp,
         backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
@@ -159,7 +158,6 @@ private fun SelectCalendarContent(
                                 Text(
                                     text = course.name,
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight(600),
                                     color = colorResource(id = R.color.textDarkest),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,

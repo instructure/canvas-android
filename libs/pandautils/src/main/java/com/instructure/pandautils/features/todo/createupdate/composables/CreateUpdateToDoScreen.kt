@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -65,7 +66,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -185,13 +185,13 @@ private fun TopAppBarContent(
 
     TopAppBar(
         title = {
-            Text(text = title, fontWeight = FontWeight(600))
+            Text(text = title)
         },
         elevation = 0.dp,
         actions = {
             if (uiState.saving) {
                 CircularProgressIndicator(
-                    color = colorResource(id = R.color.textLightest),
+                    color = colorResource(id = R.color.textDarkest),
                     strokeWidth = 3.dp,
                     modifier = Modifier.size(32.dp)
                 )
@@ -241,7 +241,7 @@ private fun ActionsSegment(
     ) {
         Text(
             text = stringResource(id = R.string.save),
-            color = colorResource(id = R.color.textDarkest),
+            color = Color(color = ThemePrefs.buttonColor),
             fontSize = 14.sp,
             modifier = Modifier.alpha(if (saveEnabled) 1f else .4f)
         )
@@ -303,8 +303,7 @@ private fun CreateUpdateToDoContent(
                     text = stringResource(id = R.string.createToDoTitleLabel),
                     modifier = Modifier.padding(start = 16.dp),
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600)
+                    fontSize = 16.sp
                 )
                 BasicTextField(
                     value = uiState.title,
@@ -337,8 +336,7 @@ private fun CreateUpdateToDoContent(
                     text = stringResource(R.string.createToDoDateLabel),
                     modifier = Modifier.padding(start = 16.dp),
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600)
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
@@ -369,8 +367,7 @@ private fun CreateUpdateToDoContent(
                     text = stringResource(id = R.string.createToDoTimeLabel),
                     modifier = Modifier.padding(start = 16.dp),
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600)
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
@@ -401,8 +398,7 @@ private fun CreateUpdateToDoContent(
                     text = stringResource(id = R.string.createToDoCalendarLabel),
                     modifier = Modifier.padding(start = 16.dp),
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600)
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 if (uiState.loadingCourses) {
@@ -430,7 +426,7 @@ private fun CreateUpdateToDoContent(
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .defaultMinSize(minHeight = 80.dp)
                     .clickable {
                         detailsFocusRequester.requestFocus()
                     }
@@ -439,8 +435,7 @@ private fun CreateUpdateToDoContent(
                     text = stringResource(id = R.string.createToDoDetailsLabel),
                     modifier = Modifier.padding(start = 16.dp, top = 12.dp),
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(600)
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 BasicTextField(

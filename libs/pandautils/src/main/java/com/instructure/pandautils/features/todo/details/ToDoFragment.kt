@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.PlannerItem
@@ -53,9 +54,7 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     lateinit var toDoRouter: ToDoRouter
 
     private val viewModel: ToDoViewModel by viewModels()
-    private val sharedViewModel: CalendarSharedViewModel by viewModels(ownerProducer = {
-        requireActivity()
-    })
+    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
 
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(

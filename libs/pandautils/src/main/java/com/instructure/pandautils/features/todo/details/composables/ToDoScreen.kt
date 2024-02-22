@@ -142,7 +142,7 @@ private fun TopAppBarContent(
         actions = {
             if (deleting) {
                 CircularProgressIndicator(
-                    color = colorResource(id = R.color.textLightest),
+                    color = Color(color = ThemePrefs.primaryTextColor),
                     strokeWidth = 3.dp,
                     modifier = Modifier.size(32.dp)
                 )

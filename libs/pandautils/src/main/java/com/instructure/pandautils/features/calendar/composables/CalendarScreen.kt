@@ -146,7 +146,7 @@ fun CalendarScreen(
                         actionHandler(CalendarAction.AddToDoTapped)
                     },
                     shape = CircleShape,
-                    backgroundColor = Color(ThemePrefs.brandColor)
+                    backgroundColor = Color(ThemePrefs.buttonColor)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),

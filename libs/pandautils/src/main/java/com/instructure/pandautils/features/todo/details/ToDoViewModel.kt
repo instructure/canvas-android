@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.todo.details.ToDoFragment.Companion.PLANNER_ITEM
 import com.instructure.pandautils.utils.textAndIconColor
+import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -36,8 +37,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
-import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -86,16 +85,8 @@ class ToDoViewModel @Inject constructor(
             plannerItem?.let { plannerItem ->
                 toDoRepository.deletePlannerNote(plannerItem.plannable.id)
                 _uiState.update { it.copy(deleting = false) }
-                plannerItem.plannable.todoDate.toDate()?.let {
-                    val calendar = Calendar.getInstance().apply {
-                        time = it
-                    }
-                    val date = LocalDate.of(
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH) + 1,
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                    )
-                    _events.send(ToDoViewModelAction.RefreshCalendarDay(date))
+                plannerItem.plannable.todoDate.toDate()?.toLocalDate()?.let {
+                    _events.send(ToDoViewModelAction.RefreshCalendarDay(it))
                 }
             }
         } catch {

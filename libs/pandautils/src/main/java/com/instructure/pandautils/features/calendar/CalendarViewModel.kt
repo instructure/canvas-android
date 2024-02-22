@@ -116,7 +116,7 @@ class CalendarViewModel @Inject constructor(
 
             loadingDays.removeAll(daysToFetch)
 
-            storeResults(result, date)
+            storeResults(result)
             _uiState.emit(createNewUiState())
         } catch {
             loadedMonths.remove(yearMonth)
@@ -432,7 +432,7 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun storeResults(result: List<PlannerItem>, dateToClear: LocalDate) {
+    private fun storeResults(result: List<PlannerItem>, dateToClear: LocalDate? = null) {
         eventsByDay.getOrDefault(dateToClear, null)?.clear()
         result.forEach { plannerItem ->
             val plannableDate = plannerItem.plannableDate.toLocalDate()

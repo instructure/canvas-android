@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -49,9 +50,7 @@ import javax.inject.Inject
 class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CalendarViewModel by viewModels()
-    private val sharedViewModel: CalendarSharedViewModel by viewModels(ownerProducer = {
-        requireActivity()
-    })
+    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
 
     @Inject
     lateinit var calendarRouter: CalendarRouter
