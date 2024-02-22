@@ -36,7 +36,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -51,7 +50,7 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class ToDoViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
@@ -148,11 +147,6 @@ class ToDoViewModelTest {
         coEvery { toDoRepository.deletePlannerNote(any()) } throws Exception()
 
         viewModel.handleAction(ToDoAction.DeleteToDo)
-
-        val events = mutableListOf<ToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
 
         Assert.assertEquals("Error deleting to do", viewModel.uiState.value.errorSnack)
 
