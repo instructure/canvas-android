@@ -27,9 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -41,6 +39,7 @@ import com.instructure.pandautils.features.calendar.composables.CalendarScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,15 +65,8 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.events.collect { event ->
-                    event.getContentIfNotHandled()?.let {
-                        handleAction(it)
-                    }
-                }
-            }
-        }
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedViewModel.events, ::handleSharedViewModelAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {
@@ -88,23 +80,6 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main.immediate) {
-                sharedViewModel.events.collect { action ->
-                    when (action) {
-                        is SharedCalendarAction.RefreshDays -> {
-                            action.days.forEach {
-                                viewModel.handleAction(CalendarAction.RefreshDay(it))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun handleAction(action: CalendarViewModelAction) {
         when (action) {
             is CalendarViewModelAction.OpenAssignment -> calendarRouter.openAssignment(action.canvasContext, action.assignmentId)
@@ -113,6 +88,16 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
             is CalendarViewModelAction.OpenCalendarEvent -> calendarRouter.openCalendarEvent(action.canvasContext, action.eventId)
             is CalendarViewModelAction.OpenToDo -> calendarRouter.openToDo(action.plannerItem)
             is CalendarViewModelAction.OpenCreateToDo -> calendarRouter.openCreateToDo(action.initialDateString)
+        }
+    }
+
+    private fun handleSharedViewModelAction(action: CalendarAction) {
+        when (action) {
+            is SharedCalendarAction.RefreshDays -> {
+                action.days.forEach {
+                    viewModel.handleAction(CalendarAction.RefreshDay(it))
+                }
+            }
         }
     }
 

@@ -359,7 +359,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     //OfflineMethod
-    fun waitForNetworkComeBack() {
+    fun waitForOfflineIndicatorNotDisplayed() {
         assertDisplaysCourses()
         retry(times = 5, delay = 2000) {
             assertOfflineIndicatorNotDisplayed()
@@ -367,11 +367,20 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     //OfflineMethod
-    fun waitForNetworkOff() {
+    fun waitForOfflineIndicatorDisplayed() {
         assertDisplaysCourses()
         retry(times = 5, delay = 2000) {
             assertOfflineIndicatorDisplayed()
         }
+    }
+
+    //OfflineMethod
+    fun waitForOfflineSyncDashboardNotifications() {
+        waitForSyncProgressDownloadStartedNotification()
+        waitForSyncProgressDownloadStartedNotificationToDisappear()
+
+        waitForSyncProgressStartingNotification()
+        waitForSyncProgressStartingNotificationToDisappear()
     }
 
     //OfflineMethod

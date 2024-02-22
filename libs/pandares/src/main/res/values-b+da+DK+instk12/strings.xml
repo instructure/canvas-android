@@ -957,6 +957,8 @@
     <string name="inviteAccepted">Invitation accepteret!</string>
     <string name="inviteDeclined">Invitation afvist.</string>
     <string name="latePenalty">Straf for sen aflevering (-%s)</string>
+    <string name="latePenaltyUpdated">Straf for sen aflevering: -%s pt</string>
+    <string name="yourGrade">Din vurdering: %s point</string>
     <string name="finalGrade">Endelig vurdering</string>
 
     <string name="max_count">99+</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">%d fagene er blevet synkroniseret.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Yderligere fagindhold</string>
+    <string name="failedToUpdateDashboardOrder">Kunne ikke opdatere oversigtens kortordren</string>
 </resources>

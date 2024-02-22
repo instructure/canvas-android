@@ -226,7 +226,7 @@ class AssignmentListInteractionTest : StudentTest() {
         repeat(assignmentCount) {
             val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
             )
             assignmentList.add(assignment)
         }
@@ -254,7 +254,7 @@ class AssignmentListInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             gradingType = Assignment.gradingTypeToAPIString(gradingType) ?: "",
             pointsPossible = maxScore,
         )

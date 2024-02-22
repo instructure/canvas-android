@@ -40,6 +40,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <instrumentation
         android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
@@ -144,7 +145,8 @@
             android:label="@string/student_app_name"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true">
-            <intent-filter>
+            <intent-filter
+                android:autoVerify="true">
                 <data
                     android:host="*.instructure.com"
                     android:scheme="https"/>
@@ -295,6 +297,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <!--Reminder-->
+        <receiver
+            android:name=".receivers.AlarmReceiver"
+            android:exported="false" />
 
         <!-- To do widget -->
         <receiver

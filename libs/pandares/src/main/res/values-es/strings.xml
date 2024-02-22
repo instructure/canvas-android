@@ -957,6 +957,8 @@
     <string name="inviteAccepted">¡Invitación aceptada!</string>
     <string name="inviteDeclined">Invitación rechazada.</string>
     <string name="latePenalty">Sanción por presentación con atraso (-%s)</string>
+    <string name="latePenaltyUpdated">Sanción por presentación con atraso: -%s ptos.</string>
+    <string name="yourGrade">Su calificación: %s ptos.</string>
     <string name="finalGrade">Calificación final</string>
 
     <string name="max_count">99 o +</string>
@@ -1479,4 +1481,5 @@
         <item quantity="other">Se han sincronizado los cursos %d.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Contenido adicional del curso</string>
+    <string name="failedToUpdateDashboardOrder">No se pudo actualizar el orden de las tarjetas del tablero</string>
 </resources>

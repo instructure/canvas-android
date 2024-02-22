@@ -78,4 +78,10 @@ object OfflineTestUtils {
                 hasSibling(withId(R.id.topPanel) +
                         hasDescendant(withText(R.string.noInternetConnectionTitle))))).click()
     }
+
+    fun waitForNetworkToGoOffline(device: UiDevice) {
+        Thread.sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
+        device.waitForIdle()
+        device.waitForWindowUpdate(null, 10000)
+    }
 }

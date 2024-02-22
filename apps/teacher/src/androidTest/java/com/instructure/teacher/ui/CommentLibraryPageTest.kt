@@ -255,7 +255,7 @@ class CommentLibraryPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         data.addSubmissionForAssignment(

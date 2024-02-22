@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.espresso.TestRail
 import com.instructure.espresso.randomDouble
 import com.instructure.espresso.randomString
 import com.instructure.teacher.R
@@ -39,7 +38,6 @@ import org.junit.Test
 class EditAssignmentDetailsPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3109580")
     override fun displaysPageObjects() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.assertPageObjects()
@@ -55,7 +53,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3134126")
     fun editAssignmentName() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickAssignmentNameEditText()
@@ -66,7 +63,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3134126")
     fun editAssignmentPoints() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickPointsPossibleEditText()
@@ -201,14 +197,12 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
                 CanvasContextPermission() // Just need to have some sort of permissions object registered
         )
 
-
         val assignment = data.addAssignment(
                 courseId = course.id,
                 withDescription = withDescription,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionType = submissionTypes.firstOrNull()
-                        ?: Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = submissionTypes.ifEmpty { listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY) }
         )
 
         val token = data.tokenFor(teacher)!!

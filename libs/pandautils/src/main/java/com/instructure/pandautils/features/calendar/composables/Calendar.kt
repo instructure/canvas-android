@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.calendar.composables
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -47,8 +49,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
@@ -77,8 +81,8 @@ private const val CALENDAR_ROW_HEIGHT = 46
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
         var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
         val pagerState = rememberPagerState(
             initialPage = Int.MAX_VALUE / 2,
@@ -95,8 +99,19 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
             }
         }
 
+        LaunchedEffect(calendarUiState.scrollToPageOffset) {
+            if (calendarUiState.scrollToPageOffset != 0) {
+                pagerState.animateScrollToPage(pagerState.currentPage + calendarUiState.scrollToPageOffset)
+            }
+        }
+
         Spacer(modifier = Modifier.height(8.dp))
-        CalendarHeader(calendarUiState.headerUiState, calendarUiState.expanded, actionHandler)
+
+        CalendarHeader(
+            calendarUiState.headerUiState, calendarUiState.expanded, actionHandler, modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp)
+        )
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalPager(
             state = pagerState,
@@ -116,13 +131,23 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
 
                 val rowsHeight =
                     if (calendarUiState.expanded) CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size else CALENDAR_ROW_HEIGHT
-                val height = rowsHeight + HEADER_HEIGHT
+                val height by animateIntAsState(targetValue = rowsHeight + HEADER_HEIGHT, label = "heightAnimation", finishedListener = {
+                    actionHandler(CalendarAction.HeightAnimationFinished)
+                })
+
+                val rowsScaleRatio by animateFloatAsState(
+                    targetValue = if (calendarUiState.expanded) 1.0f else 0.0f,
+                    label = "animationScale"
+                )
 
                 if (page >= settledPage - 1 && page <= settledPage + 1) {
-                    CalendarBody(calendarPageUiState.calendarRows,
-                        calendarUiState.selectedDay,
-                        height = height,
-                        selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) })
+                    CalendarBody(
+                        calendarPageUiState.calendarRows,
+                        calendarUiState.pendingSelectedDay ?: calendarUiState.selectedDay,
+                        scaleRatio = rowsScaleRatio,
+                        selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) },
+                        modifier = Modifier.height(height.dp)
+                    )
                 } else {
                     Box(
                         Modifier
@@ -133,6 +158,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 }
             }
         )
+        Divider(Modifier.fillMaxWidth(), color = colorResource(id = R.color.backgroundMedium), thickness = 0.5.dp)
     }
 }
 
@@ -140,14 +166,19 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
 fun CalendarHeader(
     headerUiState: CalendarHeaderUiState,
     calendarOpen: Boolean,
-    actionHandler: (CalendarAction) -> Unit
+    actionHandler: (CalendarAction) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f)
+    val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f, label = "expandIconRotation")
 
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
-    if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) actionHandler(CalendarAction.ExpandDisabled)
+    if (screenHeightDp <= MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+        actionHandler(CalendarAction.ExpandDisabled)
+    } else {
+        actionHandler(CalendarAction.ExpandEnabled)
+    }
 
-    var monthRowModifier = Modifier.semantics(mergeDescendants = true){}
+    var monthRowModifier = Modifier.semantics(mergeDescendants = true) {}
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
         monthRowModifier = monthRowModifier.clickable(
             onClick = { actionHandler(CalendarAction.ExpandChanged) },
@@ -156,9 +187,7 @@ fun CalendarHeader(
     }
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
@@ -196,25 +225,28 @@ fun CalendarHeader(
 fun CalendarBody(
     calendarRows: List<CalendarRowUiState>,
     selectedDay: LocalDate,
-    height: Int,
-    selectedDayChanged: (LocalDate) -> Unit
+    selectedDayChanged: (LocalDate) -> Unit,
+    scaleRatio: Float,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        Modifier
+        modifier
             .background(colorResource(id = R.color.backgroundLightest))
-            .height(height.dp)) {
-        DayHeaders()
+    ) {
+        DayHeaders(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp)
+        )
         Spacer(modifier = Modifier.height(4.dp))
-        CalendarPage(calendarRows, selectedDay, selectedDayChanged)
+        CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio)
     }
 }
 
 @Composable
-fun DayHeaders() {
+fun DayHeaders(modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val daysOfWeek = DayOfWeek.values()
         // Shift the starting point to Sunday
@@ -239,12 +271,23 @@ fun DayHeaders() {
 fun CalendarPage(
     calendarRows: List<CalendarRowUiState>,
     selectedDay: LocalDate,
-    selectedDayChanged: (LocalDate) -> Unit
+    selectedDayChanged: (LocalDate) -> Unit,
+    scaleRatio: Float,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = modifier) {
         calendarRows.forEach {
-            DaysOfWeekRow(days = it.days, selectedDay, selectedDayChanged)
-            Spacer(modifier = Modifier.height(4.dp))
+            // We only scale when it's expanding/collapsing, when it's not we need to show even the rows that don't have the selected day
+            // to be able to see the neighbouring pages
+            val scale = if (it.days.any { day -> day.date == selectedDay } || calendarRows.size == 1) 1.0f else scaleRatio
+            DaysOfWeekRow(
+                days = it.days, selectedDay, selectedDayChanged, modifier = Modifier
+                    .height(CALENDAR_ROW_HEIGHT.dp * scale)
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+                    .scale(scaleX = 1.0f, scaleY = scale)
+                    .alpha(scale)
+            )
         }
     }
 }
@@ -254,11 +297,10 @@ fun DaysOfWeekRow(
     days: List<CalendarDayUiState>,
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp), horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         days.forEach { dayState ->
             val textColor = when {
@@ -296,7 +338,7 @@ fun DaysOfWeekRow(
                     Modifier
                         .height(10.dp)
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.Bottom,
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     repeat(dayState.indicatorCount) {
@@ -309,9 +351,9 @@ fun DaysOfWeekRow(
 }
 
 @Composable
-fun EventIndicator() {
+fun EventIndicator(modifier: Modifier = Modifier) {
     Box(
-        Modifier
+        modifier
             .padding(horizontal = 3.dp)
             .graphicsLayer()
             .clip(CircleShape)

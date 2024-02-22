@@ -12,13 +12,23 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
+ *
+ *
  */
+
 package com.instructure.pandautils.compose
 
 import androidx.annotation.FontRes
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
+import androidx.compose.material.ripple.LocalRippleTheme
+import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import com.instructure.pandautils.R
@@ -26,9 +36,13 @@ import com.instructure.pandautils.R
 @Composable
 fun CanvasTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        typography = typography,
-        content = content
-    )
+        typography = typography
+    ) {
+        CompositionLocalProvider(
+            LocalRippleTheme provides CanvasRippleTheme,
+            content = content
+        )
+    }
 }
 
 private val lato = FontFamily(
@@ -46,5 +60,16 @@ fun overrideComposeFonts(@FontRes fontResource: Int) {
 
     typography = Typography(
         defaultFontFamily = newFont,
+    )
+}
+
+private object CanvasRippleTheme : RippleTheme {
+    @Composable
+    override fun defaultColor(): Color = colorResource(id = R.color.backgroundDark)
+
+    @Composable
+    override fun rippleAlpha(): RippleAlpha = RippleTheme.defaultRippleAlpha(
+        Color.Black,
+        lightTheme = !isSystemInDarkTheme()
     )
 }

@@ -66,10 +66,10 @@ class SettingsE2ETest : StudentTest() {
         profileSettingsPage.assertPageObjects()
 
         val newUserName = "John Doe"
-        Log.d(STEP_TAG, "Edit username to: $newUserName. Click on 'Save' button.")
+        Log.d(STEP_TAG, "Edit username to: '$newUserName'. Click on 'Save' button.")
         profileSettingsPage.changeUserNameTo(newUserName)
 
-        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Assert that the username has been changed to $newUserName.")
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Assert that the username has been changed to '$newUserName'.")
         ViewUtils.pressBackButton(2)
         leftSideNavigationDrawerPage.assertUserLoggedIn(newUserName)
 

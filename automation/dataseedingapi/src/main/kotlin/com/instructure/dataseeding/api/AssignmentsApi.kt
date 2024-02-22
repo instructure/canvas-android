@@ -39,23 +39,24 @@ object AssignmentsApi {
             = CanvasNetworkAdapter.retrofitWithToken(token).create(AssignmentsService::class.java)
 
     data class CreateAssignmentRequest(
-            val courseId : Long,
-            val withDescription: Boolean = false,
-            val lockAt: String = "",
-            val unlockAt: String = "",
-            val dueAt: String = "",
-            val submissionTypes: List<SubmissionType>,
-            val gradingType: GradingType = GradingType.POINTS,
-            val allowedExtensions: List<String>? = null,
-            val teacherToken: String,
-            val groupCategoryId: Long? = null,
-            val pointsPossible: Double? = null,
-            val importantDate: Boolean? = null,
-            val assignmentGroupId: Long? = null)
+        val courseId: Long,
+        val withDescription: Boolean = false,
+        val lockAt: String = "",
+        val unlockAt: String = "",
+        val dueAt: String = "",
+        val submissionTypes: List<SubmissionType>,
+        val gradingType: GradingType = GradingType.POINTS,
+        val allowedExtensions: List<String>? = null,
+        val teacherToken: String,
+        val groupCategoryId: Long? = null,
+        val pointsPossible: Double? = null,
+        val importantDate: Boolean? = null,
+        val assignmentGroupId: Long? = null)
 
     fun createAssignment(request: CreateAssignmentRequest): AssignmentApiModel {
         return createAssignment(
                 request.courseId,
+                request.teacherToken,
                 request.withDescription,
                 request.lockAt,
                 request.unlockAt,
@@ -63,7 +64,6 @@ object AssignmentsApi {
                 request.submissionTypes,
                 request.gradingType,
                 request.allowedExtensions,
-                request.teacherToken,
                 request.groupCategoryId,
                 request.pointsPossible,
                 request.importantDate,
@@ -72,19 +72,19 @@ object AssignmentsApi {
     }
 
     fun createAssignment(
-            courseId: Long,
-            withDescription: Boolean,
-            lockAt: String,
-            unlockAt: String,
-            dueAt: String,
-            submissionTypes: List<SubmissionType>,
-            gradingType: GradingType,
-            allowedExtensions: List<String>?,
-            teacherToken: String,
-            groupCategoryId: Long?,
-            pointsPossible: Double?,
-            importantDate: Boolean?,
-            assignmentGroupId: Long?): AssignmentApiModel {
+        courseId: Long,
+        teacherToken: String,
+        withDescription: Boolean = false,
+        lockAt: String = "",
+        unlockAt: String = "",
+        dueAt: String = "",
+        submissionTypes: List<SubmissionType> = emptyList(),
+        gradingType: GradingType = GradingType.POINTS,
+        allowedExtensions: List<String>? = null,
+        groupCategoryId: Long? = null,
+        pointsPossible: Double? = null,
+        importantDate: Boolean? = null,
+        assignmentGroupId: Long? = null): AssignmentApiModel {
         val assignment = CreateAssignmentWrapper(Randomizer.randomAssignment(
                 withDescription,
                 lockAt,

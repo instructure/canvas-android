@@ -63,7 +63,7 @@ object UserApi {
          userAdminService.putSelfSettings(userId, requestApiModel).execute()
     }
 
-        fun createCanvasUser(
+    fun createCanvasUser(
             userService: UserService = userAdminService,
             userDomain: String = CanvasNetworkAdapter.canvasDomain
     ): CanvasUserApiModel {
