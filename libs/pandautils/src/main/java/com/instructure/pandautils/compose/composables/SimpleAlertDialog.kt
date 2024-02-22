@@ -23,6 +23,8 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
@@ -37,10 +39,16 @@ fun SimpleAlertDialog(
 ) {
     AlertDialog(
         title = {
-            Text(text = dialogTitle)
+            Text(
+                text = dialogTitle,
+                color = colorResource(id = R.color.textDarkest)
+            )
         },
         text = {
-            Text(text = dialogText)
+            Text(
+                text = dialogText,
+                color = colorResource(id = R.color.textDarkest)
+            )
         },
         onDismissRequest = {
             onDismissRequest()
@@ -69,6 +77,7 @@ fun SimpleAlertDialog(
                 )
             }
         },
+        backgroundColor = colorResource(R.color.backgroundLightestElevated),
         modifier = modifier
     )
 }

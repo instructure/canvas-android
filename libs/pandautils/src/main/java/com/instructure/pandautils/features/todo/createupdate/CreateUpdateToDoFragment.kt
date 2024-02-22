@@ -25,7 +25,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -95,7 +94,7 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
     )
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.themeStatusBar(requireActivity())
     }
 
     override fun getFragment(): Fragment {
@@ -116,10 +115,10 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         fun newInstance(route: Route) = CreateUpdateToDoFragment().withArgs(route.arguments)
 
         fun makeRoute(plannerItem: PlannerItem? = null, initialDateString: String? = null): Route {
-            val bundle = bundleOf(
-                PLANNER_ITEM to plannerItem,
-                INITIAL_DATE to initialDateString
-            )
+            val bundle = Bundle().apply {
+                if (plannerItem != null) putParcelable(PLANNER_ITEM, plannerItem)
+                if (initialDateString != null) putString(INITIAL_DATE, initialDateString)
+            }
             return Route(CreateUpdateToDoFragment::class.java, null, bundle)
         }
     }

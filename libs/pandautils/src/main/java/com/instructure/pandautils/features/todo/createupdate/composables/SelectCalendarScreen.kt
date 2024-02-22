@@ -18,7 +18,6 @@
 package com.instructure.pandautils.features.todo.createupdate.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -161,6 +160,7 @@ private fun SelectCalendarContent(
                                     text = course.name,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight(600),
+                                    color = colorResource(id = R.color.textDarkest),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.padding(start = 16.dp)
@@ -197,9 +197,10 @@ private fun CalendarSelectorItem(
             rowContent()
             if (uiState.selectedCourse?.id == course?.id) {
                 Spacer(modifier = Modifier.weight(1f))
-                Image(
+                Icon(
                     painter = painterResource(id = R.drawable.ic_checkmark),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.textDarkest)
                 )
             }
         }
