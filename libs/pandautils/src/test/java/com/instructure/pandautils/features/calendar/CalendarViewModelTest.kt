@@ -39,6 +39,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.Clock
@@ -47,6 +48,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import java.util.Calendar
 import java.util.Date
+import kotlin.math.exp
 
 
 @ExperimentalCoroutinesApi
@@ -99,6 +101,14 @@ class CalendarViewModelTest {
         }
 
         every { context.getString(R.string.calendarRefreshFailed) } returns "Error refreshing events"
+        every { context.getString(R.string.calendarEventExcused) } returns "excused"
+        every { context.getString(R.string.calendarEventMissing) } returns "missing"
+        every { context.getString(R.string.calendarEventGraded) } returns "graded"
+        every { context.getString(R.string.calendarEventSubmitted) } returns "needs grading"
+        every { context.getString(eq(R.string.calendarEventPoints), any()) } answers {
+            val args = secondArg<Array<Any>>()
+            "${args[0]} pts"
+        }
 
         // We don't care about these states in the tests because theses are tested in the CalendarStateMapperTest
         every { calendarStateMapper.createHeaderUiState(any(), any()) } returns CalendarHeaderUiState("2023", "April")
@@ -368,10 +378,49 @@ class CalendarViewModelTest {
 
         // Tap on today
         viewModel.handleAction(CalendarAction.TodayTapped)
-        // We also need to call this in the test because day is not selected instantly,
-        // but after the new state is created and the pager animates to the next page and signals to the view model.
+
+        // Assert that animation is in progress
+        assertEquals(LocalDate.now(clock), viewModel.uiState.value.calendarUiState.pendingSelectedDay)
+        assertEquals(1, viewModel.uiState.value.calendarUiState.scrollToPageOffset)
+        // Selected day remains the same until the animation is finished
+        assertEquals(LocalDate.of(2022, 2, 19), viewModel.uiState.value.calendarUiState.selectedDay)
+
+        // Simulate the animation finished
         viewModel.handleAction(CalendarAction.PageChanged(1))
 
+        assertEquals(expectedState, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Today tapped on the same page selects today`() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+        initViewModel()
+        viewModel.handleAction(CalendarAction.ExpandChanged) // Switch to month view
+
+        val expectedState = CalendarScreenUiState(
+            baseCalendarUiState.copy(expanded = true), CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            )
+        )
+
+        assertEquals(expectedState, viewModel.uiState.value)
+
+        // Select an other day
+        viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2023, 4, 10)))
+
+        val newDayExpectedState = CalendarScreenUiState(
+            baseCalendarUiState.copy(expanded = true, selectedDay = LocalDate.of(2023, 4, 10)), CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 9)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 10)),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 11))
+            )
+        )
+        assertEquals(newDayExpectedState, viewModel.uiState.value)
+
+        // Tap on today
+        viewModel.handleAction(CalendarAction.TodayTapped)
         assertEquals(expectedState, viewModel.uiState.value)
     }
 
@@ -649,6 +698,105 @@ class CalendarViewModelTest {
 
         val expectedAction = CalendarViewModelAction.OpenToDo(plannerItem)
         assertEquals(expectedAction, events.last())
+    }
+
+    @Test
+    fun `Correct strings are mapped for submission states`() = runTest {
+        val events = listOf(
+            createPlannerItem(
+                1,
+                1,
+                PlannableType.ASSIGNMENT,
+                createDate(2023, 4, 20, 12),
+                submissionState = SubmissionState(excused = true)
+            ),
+            createPlannerItem(
+                1,
+                2,
+                PlannableType.ASSIGNMENT,
+                createDate(2023, 4, 20, 12),
+                submissionState = SubmissionState(missing = true)
+            ),
+            createPlannerItem(
+                1,
+                3,
+                PlannableType.ASSIGNMENT,
+                createDate(2023, 4, 20, 12),
+                submissionState = SubmissionState(graded = true)
+            ),
+            createPlannerItem(
+                2,
+                4,
+                PlannableType.ASSIGNMENT,
+                createDate(2023, 4, 20, 12),
+                submissionState = SubmissionState(needsGrading = true)
+            ),
+            createPlannerItem(
+                2,
+                5,
+                PlannableType.ASSIGNMENT,
+                createDate(2023, 4, 20, 12),
+                pointsPossible = 10.0,
+                submissionState = SubmissionState()
+            ),
+            createPlannerItem(2, 6, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12), submissionState = SubmissionState()),
+        )
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
+        initViewModel()
+
+        val currentPageEvents = viewModel.uiState.value.calendarEventsUiState.currentPage.events
+        assertEquals("excused", currentPageEvents[0].status)
+        assertEquals("missing", currentPageEvents[1].status)
+        assertEquals("graded", currentPageEvents[2].status)
+        assertEquals("needs grading", currentPageEvents[3].status)
+        assertEquals("10 pts", currentPageEvents[4].status)
+        assertNull(currentPageEvents[5].status)
+    }
+
+    @Test
+    fun `Expanded state is dependent on preferences and is saved when changed`() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+        every { calendarPrefs.calendarExpanded } returns true
+        initViewModel()
+
+        val expectedState = CalendarScreenUiState(
+            baseCalendarUiState.copy(expanded = true), CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            )
+        )
+
+        assertEquals(expectedState, viewModel.uiState.value)
+
+        viewModel.handleAction(CalendarAction.ExpandChanged)
+        viewModel.handleAction(CalendarAction.HeightAnimationFinished) // We also need to call this to fully collapse the calendar and save the state
+
+        assertEquals(expectedState.calendarUiState.copy(expanded = false), viewModel.uiState.value.calendarUiState)
+        coVerify { calendarPrefs.calendarExpanded = false }
+    }
+
+    @Test
+    fun `Expand enabled restores expanded state from prefs`() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+        every { calendarPrefs.calendarExpanded } returns true
+        initViewModel()
+
+        val expectedState = CalendarScreenUiState(
+            baseCalendarUiState.copy(expanded = true), CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            )
+        )
+
+        assertEquals(expectedState, viewModel.uiState.value)
+
+        viewModel.handleAction(CalendarAction.ExpandDisabled)
+        assertEquals(expectedState.calendarUiState.copy(expanded = false), viewModel.uiState.value.calendarUiState)
+
+        viewModel.handleAction(CalendarAction.ExpandEnabled)
+        assertEquals(expectedState.calendarUiState.copy(expanded = true), viewModel.uiState.value.calendarUiState)
     }
 
     private fun initViewModel() {
