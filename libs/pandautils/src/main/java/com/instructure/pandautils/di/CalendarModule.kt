@@ -16,11 +16,14 @@
 package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import org.threeten.bp.Clock
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -29,5 +32,15 @@ class CalendarModule {
     @Provides
     fun provideCalendarRepository(plannerApi: PlannerAPI.PlannerInterface): CalendarRepository {
         return CalendarRepository(plannerApi)
+    }
+
+    @Provides
+    fun provideCalendarPrefs(): CalendarPrefs {
+        return CalendarPrefs
+    }
+
+    @Provides
+    fun provideCalendarStateMapper(clock: Clock): CalendarStateMapper {
+        return CalendarStateMapper(clock)
     }
 }

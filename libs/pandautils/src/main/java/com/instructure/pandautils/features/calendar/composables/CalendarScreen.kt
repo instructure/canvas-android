@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -52,28 +53,31 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
+import com.instructure.pandautils.features.calendar.CalendarScreenUiState
+import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
+import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 
 @ExperimentalFoundationApi
 @Composable
 fun CalendarScreen(
     title: String,
-    calendarUiState: CalendarUiState,
+    calendarScreenUiState: CalendarScreenUiState,
     actionHandler: (CalendarAction) -> Unit,
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
         val localCoroutineScope = rememberCoroutineScope()
-        if (calendarUiState.snackbarMessage != null) {
+        if (calendarScreenUiState.snackbarMessage != null) {
             LaunchedEffect(Unit) {
                 localCoroutineScope.launch {
-                    val result = snackbarHostState.showSnackbar(calendarUiState.snackbarMessage)
+                    val result = snackbarHostState.showSnackbar(calendarScreenUiState.snackbarMessage)
                     if (result == SnackbarResult.Dismissed) {
                         actionHandler(CalendarAction.SnackbarDismissed)
                     }
@@ -87,7 +91,7 @@ fun CalendarScreen(
                     Text(text = title)
                 },
                     actions = {
-                        if (calendarUiState.selectedDay != LocalDate.now()) {
+                        if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
                                 .padding(horizontal = 12.dp)
                                 .clickable {
@@ -128,8 +132,8 @@ fun CalendarScreen(
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
                     Column {
-                        Calendar(calendarUiState, actionHandler)
-                        CalendarEvents(calendarUiState.calendarEventsUiState, actionHandler)
+                        Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth())
+                        CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler)
                     }
                 }
             })
@@ -142,9 +146,16 @@ fun CalendarScreen(
 fun CalendarPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
+    val calendarStateMapper = CalendarStateMapper(Clock.systemDefaultZone())
+    val calendarUiState = CalendarUiState(
+        LocalDate.now(),
+        true,
+        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
+        bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.now(), false, 0, emptyMap())
+    )
     CalendarScreen(
-        "Calendar", CalendarUiState(
-            LocalDate.now().plusDays(1), true, CalendarEventsUiState(
+        "Calendar", CalendarScreenUiState(
+            calendarUiState, CalendarEventsUiState(
                 currentPage = CalendarEventsPageUiState(
                     events = listOf(
                         EventUiState(

@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.todo.details.ToDoFragment.Companion.PLANNER_ITEM
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.textAndIconColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,7 +60,7 @@ class ToDoViewModel @Inject constructor(
                 it.copy(
                     title = plannerItem.plannable.title,
                     contextName = plannerItem.contextName,
-                    contextColor = plannerItem.canvasContext.backgroundColor,
+                    contextColor = plannerItem.canvasContext.textAndIconColor,
                     date = dateText.orEmpty(),
                     description = plannerItem.plannable.details.orEmpty()
                 )
