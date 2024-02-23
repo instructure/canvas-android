@@ -43,8 +43,11 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.threeten.bp.Clock
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
+import org.threeten.bp.ZoneId
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -159,13 +162,14 @@ class CreateUpdateToDoViewModelTest {
         }
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Title"))
-        viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.of(2024, 2, 22)))
-        viewModel.handleAction(CreateUpdateToDoAction.UpdateTime(LocalTime.of(11, 0)))
+        val clock = Clock.fixed(Instant.parse("2024-02-22T11:00:00.00Z"), ZoneId.systemDefault())
+        viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.now(clock)))
+        viewModel.handleAction(CreateUpdateToDoAction.UpdateTime(LocalTime.now(clock)))
         viewModel.handleAction(CreateUpdateToDoAction.UpdateCanvasContext(Course(1)))
         viewModel.handleAction(CreateUpdateToDoAction.UpdateDetails("Details"))
         viewModel.handleAction(CreateUpdateToDoAction.Save)
 
-        coVerify(exactly = 1) { repository.createToDo("Title", "Details", "2024-02-22T10:00:00Z", 1) }
+        coVerify(exactly = 1) { repository.createToDo("Title", "Details", "2024-02-22T11:00:00Z", 1) }
 
         val expectedEvent = CreateUpdateToDoViewModelAction.RefreshCalendarDays(listOf(LocalDate.of(2024, 2, 22)))
         Assert.assertEquals(expectedEvent, events.last())
@@ -185,7 +189,8 @@ class CreateUpdateToDoViewModelTest {
         }
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
-        viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.of(2024, 2, 23)))
+        val clock = Clock.fixed(Instant.parse("2024-02-23T11:00:00.00Z"), ZoneId.systemDefault())
+        viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.now(clock)))
         viewModel.handleAction(CreateUpdateToDoAction.Save)
 
         coVerify(exactly = 1) { repository.updateToDo(1, "Updated Title", "Description", "2024-02-23T10:00:00Z", 2) }
