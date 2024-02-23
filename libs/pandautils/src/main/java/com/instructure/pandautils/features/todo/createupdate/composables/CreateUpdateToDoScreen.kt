@@ -60,6 +60,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -81,7 +82,6 @@ import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
-import java.util.Calendar
 
 @ExperimentalFoundationApi
 @Composable
@@ -187,7 +187,7 @@ private fun TopAppBarContent(
         title = {
             Text(text = title)
         },
-        elevation = 0.dp,
+        elevation = 2.dp,
         actions = {
             if (uiState.saving) {
                 CircularProgressIndicator(
@@ -290,7 +290,6 @@ private fun CreateUpdateToDoContent(
                 }
             })
 
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Row(
                 verticalAlignment = CenterVertically,
                 modifier = Modifier
@@ -314,6 +313,7 @@ private fun CreateUpdateToDoContent(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                         .focusRequester(titleFocusRequester),
+                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                     textStyle = TextStyle(
                         color = colorResource(id = R.color.textDarkest),
                         fontSize = 16.sp
@@ -388,7 +388,7 @@ private fun CreateUpdateToDoContent(
                 verticalAlignment = CenterVertically,
                 modifier = Modifier
                     .height(48.dp)
-                    .clickable(enabled = !uiState.loadingCourses) {
+                    .clickable(enabled = !uiState.loadingCanvasContexts) {
                         focusManager.clearFocus()
                         actionHandler(CreateUpdateToDoAction.ShowSelectCalendarScreen)
                     },
@@ -401,7 +401,7 @@ private fun CreateUpdateToDoContent(
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (uiState.loadingCourses) {
+                if (uiState.loadingCanvasContexts) {
                     CircularProgressIndicator(
                         color = Color(ThemePrefs.buttonColor),
                         strokeWidth = 3.dp,
@@ -410,7 +410,7 @@ private fun CreateUpdateToDoContent(
                     Spacer(modifier = Modifier.width(16.dp))
                 } else {
                     Text(
-                        text = uiState.selectedCourse?.name ?: stringResource(id = R.string.noCalendarSelected),
+                        text = uiState.selectedCanvasContext?.name.orEmpty(),
                         modifier = Modifier.padding(end = 16.dp),
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp
@@ -448,6 +448,7 @@ private fun CreateUpdateToDoContent(
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
                         .focusRequester(detailsFocusRequester),
+                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                     textStyle = TextStyle(
                         color = colorResource(id = R.color.textDarkest),
                         fontSize = 16.sp
@@ -463,8 +464,6 @@ private fun getDatePickerDialog(
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit
 ): DatePickerDialog {
-    val calendar = Calendar.getInstance()
-    calendar.set(uiState.date.year, uiState.date.monthValue - 1, uiState.date.dayOfMonth)
     return DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
@@ -478,9 +477,9 @@ private fun getDatePickerDialog(
                 )
             )
         },
-        calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
+        uiState.date.year,
+        uiState.date.monthValue - 1,
+        uiState.date.dayOfMonth
     ).apply {
         setOnShowListener {
             getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
@@ -494,9 +493,6 @@ private fun getTimePickerDialog(
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit
 ): TimePickerDialog {
-    val calendar = Calendar.getInstance()
-    calendar.set(Calendar.HOUR_OF_DAY, uiState.time.hour)
-    calendar.set(Calendar.MINUTE, uiState.time.minute)
     return TimePickerDialog(
         context,
         { _, hourOfDay, minute ->
@@ -509,8 +505,8 @@ private fun getTimePickerDialog(
                 )
             )
         },
-        calendar.get(Calendar.HOUR_OF_DAY),
-        calendar.get(Calendar.MINUTE),
+        uiState.time.hour,
+        uiState.time.minute,
         false
     ).apply {
         setOnShowListener {
@@ -532,13 +528,13 @@ private fun CreateUpdateToDoPreview() {
             title = "Title",
             date = LocalDate.now(),
             time = LocalTime.now(),
-            selectedCourse = null,
+            selectedCanvasContext = null,
             details = "Details",
             saving = false,
             errorSnack = null,
-            loadingCourses = false,
+            loadingCanvasContexts = false,
             showCalendarSelector = false,
-            courses = emptyList()
+            canvasContexts = emptyList()
         ),
         actionHandler = {},
         navigationAction = {}

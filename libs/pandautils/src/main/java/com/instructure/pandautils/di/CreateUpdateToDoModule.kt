@@ -18,11 +18,13 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import javax.inject.Named
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -31,7 +33,7 @@ class CreateUpdateToDoModule {
     @Provides
     fun provideCreateUpdateToDoRepository(
         coursesApi: CourseAPI.CoursesInterface,
-        plannerApi: PlannerAPI.PlannerInterface
+        @Named(PLANNER_API_SERIALIZE_NULLS) plannerApi: PlannerAPI.PlannerInterface
     ): CreateUpdateToDoRepository {
         return CreateUpdateToDoRepository(coursesApi, plannerApi)
     }

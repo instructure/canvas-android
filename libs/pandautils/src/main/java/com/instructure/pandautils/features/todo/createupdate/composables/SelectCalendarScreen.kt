@@ -52,10 +52,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoUiState
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDate
@@ -98,7 +100,7 @@ private fun TopAppBarContent(
         title = {
             Text(text = title)
         },
-        elevation = 0.dp,
+        elevation = 2.dp,
         backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
         contentColor = colorResource(id = R.color.textDarkest),
         navigationIcon = {
@@ -126,83 +128,58 @@ private fun SelectCalendarContent(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             LazyColumn(
                 content = {
-                    item {
-                        CalendarSelectorItem(
-                            uiState = uiState,
-                            actionHandler = actionHandler,
-                            course = null,
-                            rowContent = {
-                                Text(
-                                    text = stringResource(id = R.string.noCalendarSelected),
-                                    fontSize = 16.sp,
-                                    color = colorResource(id = R.color.textDark)
-                                )
+                    items(uiState.canvasContexts) { canvasContext ->
+                        Column(
+                            modifier = modifier.clickable {
+                                actionHandler(CreateUpdateToDoAction.UpdateCanvasContext(canvasContext))
+                                actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
                             }
-                        )
-                    }
-                    items(uiState.courses) { course ->
-                        CalendarSelectorItem(
-                            uiState = uiState,
-                            actionHandler = actionHandler,
-                            course = course,
-                            rowContent = {
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .height(48.dp)
+                                    .padding(horizontal = 16.dp)
+                            ) {
                                 Box(
                                     modifier = Modifier
                                         .size(24.dp)
                                         .clip(CircleShape)
-                                        .background(color = Color(course.backgroundColor))
+                                        .background(
+                                            color = Color(
+                                                if (canvasContext is User) {
+                                                    ThemePrefs.brandColor
+                                                } else {
+                                                    canvasContext.backgroundColor
+                                                }
+                                            )
+                                        )
                                 )
                                 Text(
-                                    text = course.name,
+                                    text = canvasContext.name.orEmpty(),
                                     fontSize = 16.sp,
                                     color = colorResource(id = R.color.textDarkest),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.padding(start = 16.dp)
                                 )
+                                if (uiState.selectedCanvasContext?.id == canvasContext.id) {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_checkmark),
+                                        contentDescription = null,
+                                        tint = colorResource(id = R.color.textDarkest)
+                                    )
+                                }
                             }
-                        )
+                            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+                        }
                     }
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun CalendarSelectorItem(
-    uiState: CreateUpdateToDoUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
-    course: Course?,
-    rowContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.clickable {
-            actionHandler(CreateUpdateToDoAction.UpdateSelectedCourse(course))
-            actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
-        }
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .height(48.dp)
-                .padding(horizontal = 16.dp)
-        ) {
-            rowContent()
-            if (uiState.selectedCourse?.id == course?.id) {
-                Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_checkmark),
-                    contentDescription = null,
-                    tint = colorResource(id = R.color.textDarkest)
-                )
-            }
-        }
-        Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
     }
 }
 
@@ -217,9 +194,9 @@ private fun SelectCalendarPreview() {
             title = "Title",
             date = LocalDate.now(),
             time = LocalTime.now(),
-            selectedCourse = Course(id = 2),
+            selectedCanvasContext = Course(id = 2),
             details = "Details",
-            courses = listOf(
+            canvasContexts = listOf(
                 Course(id = 1, name = "Black Holes"),
                 Course(id = 2, name = "Cosmology"),
                 Course(id = 3, name = "Life in the Universe"),

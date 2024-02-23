@@ -18,7 +18,7 @@
 package com.instructure.pandautils.features.todo.createupdate
 
 import android.content.Context
-import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.DateHelper
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -28,13 +28,13 @@ data class CreateUpdateToDoUiState(
     val title: String = "",
     val date: LocalDate = LocalDate.now(),
     val time: LocalTime = LocalTime.of(12, 0),
-    val selectedCourse: Course? = null,
+    val selectedCanvasContext: CanvasContext? = null,
     val details: String = "",
     val saving: Boolean = false,
     val errorSnack: String? = null,
-    val loadingCourses: Boolean = false,
+    val loadingCanvasContexts: Boolean = false,
     val showCalendarSelector: Boolean = false,
-    val courses: List<Course> = emptyList()
+    val canvasContexts: List<CanvasContext> = emptyList()
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 
@@ -47,13 +47,12 @@ sealed class CreateUpdateToDoAction {
     data class UpdateTitle(val title: String) : CreateUpdateToDoAction()
     data class UpdateDate(val date: LocalDate) : CreateUpdateToDoAction()
     data class UpdateTime(val time: LocalTime) : CreateUpdateToDoAction()
-    data class UpdateCourse(val course: Course) : CreateUpdateToDoAction()
+    data class UpdateCanvasContext(val canvasContext: CanvasContext) : CreateUpdateToDoAction()
     data class UpdateDetails(val details: String) : CreateUpdateToDoAction()
     data object Save : CreateUpdateToDoAction()
     data object SnackbarDismissed : CreateUpdateToDoAction()
     data object ShowSelectCalendarScreen : CreateUpdateToDoAction()
     data object HideSelectCalendarScreen : CreateUpdateToDoAction()
-    data class UpdateSelectedCourse(val course: Course?) : CreateUpdateToDoAction()
     data class CheckUnsavedChanges(val result: (Boolean) -> Unit) : CreateUpdateToDoAction()
 }
 
