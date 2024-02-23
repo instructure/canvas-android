@@ -134,8 +134,8 @@ class ModuleListPageTest : TeacherComposeTest() {
         modulesPage.refresh()
 
         modulesPage.clickItemOverflow(assignment.name.orEmpty())
-        modulesPage.clickOnText(R.string.publish)
-        modulesPage.clickOnText(R.string.publish)
+        modulesPage.clickOnText(R.string.publishModuleItemAction)
+        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
 
         modulesPage.assertSnackbarText(R.string.moduleItemPublished)
         modulesPage.assertModuleItemIsPublished(assignment.name.orEmpty())
@@ -156,8 +156,8 @@ class ModuleListPageTest : TeacherComposeTest() {
         modulesPage.refresh()
 
         modulesPage.clickItemOverflow(assignment.name.orEmpty())
-        modulesPage.clickOnText(R.string.unpublish)
-        modulesPage.clickOnText(R.string.unpublish)
+        modulesPage.clickOnText(R.string.unpublishModuleItemAction)
+        modulesPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
         modulesPage.assertSnackbarText(R.string.moduleItemUnpublished)
         modulesPage.assertModuleItemNotPublished(assignment.name.orEmpty())
@@ -174,7 +174,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(unpublishedModule.name.orEmpty())
         modulesPage.clickOnText(R.string.publishModuleOnly)
-        modulesPage.clickOnText(R.string.publish)
+        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
 
         modulesPage.assertSnackbarText(R.string.onlyModulePublished)
         modulesPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
@@ -192,7 +192,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(unpublishedModule.name.orEmpty())
         modulesPage.clickOnText(R.string.publishModuleAndItems)
-        modulesPage.clickOnText(R.string.publish)
+        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
 
         progressPage.clickDone()
 
@@ -212,7 +212,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         modulesPage.clickItemOverflow(publishedModule.name.orEmpty())
         modulesPage.clickOnText(R.string.unpublishModuleAndItems)
-        modulesPage.clickOnText(R.string.unpublish)
+        modulesPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
         progressPage.clickDone()
 
@@ -235,7 +235,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         openOverflowMenu()
         modulesPage.clickOnText(R.string.publishModulesOnly)
-        modulesPage.clickOnText(R.string.publish)
+        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
 
         progressPage.clickDone()
 
@@ -260,7 +260,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         openOverflowMenu()
         modulesPage.clickOnText(R.string.publishAllModulesAndItems)
-        modulesPage.clickOnText(R.string.publish)
+        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
 
         progressPage.clickDone()
 
@@ -285,7 +285,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         openOverflowMenu()
         modulesPage.clickOnText(R.string.unpublishAllModulesAndItems)
-        modulesPage.clickOnText(R.string.unpublish)
+        modulesPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
         progressPage.clickDone()
 

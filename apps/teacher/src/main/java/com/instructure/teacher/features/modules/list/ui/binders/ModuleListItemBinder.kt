@@ -121,11 +121,11 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
         val menu = popup.menu
 
         when (item.isPublished) {
-            true -> menu.add(0, 0, 0, R.string.unpublish)
-            false -> menu.add(0, 1, 1, R.string.publish)
+            true -> menu.add(0, 0, 0, R.string.unpublishModuleItemAction)
+            false -> menu.add(0, 1, 1, R.string.publishModuleItemAction)
             else -> {
-                menu.add(0, 0, 0, R.string.unpublish)
-                menu.add(0, 1, 1, R.string.publish)
+                menu.add(0, 0, 0, R.string.unpublishModuleItemAction)
+                menu.add(0, 1, 1, R.string.publishModuleItemAction)
             }
         }
 

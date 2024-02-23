@@ -1595,4 +1595,8 @@
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>
     </plurals>
+    <string name="publishModuleItemAction">Publish</string>
+    <string name="unpublishModuleItemAction">Unpublish</string>
+    <string name="publishDialogPositiveButton">Publish</string>
+    <string name="unpublishDialogPositiveButton">Unpublish</string>
 </resources>
