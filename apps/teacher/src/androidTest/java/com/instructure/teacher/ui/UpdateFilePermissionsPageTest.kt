@@ -44,19 +44,19 @@ class UpdateFilePermissionsPageTest : TeacherTest() {
     @Test
     fun assertFilePublished() {
         goToPage(fileAvailability = "published")
-        updateFilePermissionsPage.assertFileAvailability("published")
+        updateFilePermissionsPage.assertFilePublished()
     }
 
     @Test
     fun assertFileUnpublished() {
         goToPage(fileAvailability = "unpublished")
-        updateFilePermissionsPage.assertFileAvailability("unpublished")
+        updateFilePermissionsPage.assertFileUnpublished()
     }
 
     @Test
     fun assertFileHidden() {
         goToPage(fileAvailability = "hidden")
-        updateFilePermissionsPage.assertFileAvailability("hidden")
+        updateFilePermissionsPage.assertFileHidden()
     }
 
     @Test
@@ -65,31 +65,31 @@ class UpdateFilePermissionsPageTest : TeacherTest() {
         val unlockDate = calendar.time
         val lockDate = calendar.apply { add(Calendar.MONTH, 1) }.time
         goToPage(fileAvailability = "scheduled", unlockDate = unlockDate, lockDate = lockDate)
-        updateFilePermissionsPage.assertFileAvailability("scheduled")
+        updateFilePermissionsPage.assertFileScheduled()
     }
 
     @Test
     fun assertFileVisibilityInherit() {
         goToPage(fileVisibility = "inherit", fileAvailability = "published")
-        updateFilePermissionsPage.assertFileVisibility("inherit")
+        updateFilePermissionsPage.assertFileVisibilityInherit()
     }
 
     @Test
     fun assertFileVisibilityContext() {
         goToPage(fileVisibility = "context", fileAvailability = "published")
-        updateFilePermissionsPage.assertFileVisibility("context")
+        updateFilePermissionsPage.assertFileVisibilityContext()
     }
 
     @Test
     fun assertFileVisibilityInstitution() {
         goToPage(fileVisibility = "institution", fileAvailability = "published")
-        updateFilePermissionsPage.assertFileVisibility("institution")
+        updateFilePermissionsPage.assertFileVisibilityInstitution()
     }
 
     @Test
     fun assertFileVisibilityPublic() {
         goToPage(fileVisibility = "public", fileAvailability = "published")
-        updateFilePermissionsPage.assertFileVisibility("public")
+        updateFilePermissionsPage.assertFileVisibilityPublic()
     }
 
     @Test
@@ -137,7 +137,7 @@ class UpdateFilePermissionsPageTest : TeacherTest() {
         updateFilePermissionsPage.assertVisibilityEnabled()
     }
 
-    private fun goToPage(fileVisibility: String = "inherit", fileAvailability: String, unlockDate: Date? = null, lockDate: Date? = null) : MockCanvas {
+    private fun goToPage(fileVisibility: String = "inherit", fileAvailability: String = "published", unlockDate: Date? = null, lockDate: Date? = null) : MockCanvas {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val course = data.courses.values.first()
 

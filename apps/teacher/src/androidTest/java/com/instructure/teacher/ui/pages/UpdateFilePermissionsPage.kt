@@ -18,7 +18,6 @@
 
 package com.instructure.teacher.ui.pages
 
-import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertChecked
 import com.instructure.espresso.assertDisabled
@@ -28,13 +27,8 @@ import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
 import com.instructure.teacher.R
@@ -58,22 +52,36 @@ class UpdateFilePermissionsPage : BasePage() {
     private val availableUntilDate by OnViewWithId(R.id.availableUntilDate)
     private val availableUntilTime by OnViewWithId(R.id.availableUntilTime)
 
-    fun assertFileAvailability(fileAvailability: String) {
-        when (fileAvailability) {
-            "published" -> publishRadioButton.assertChecked()
-            "unpublished" -> unpublishRadioButton.assertChecked()
-            "hidden" -> hideRadioButton.assertChecked()
-            "scheduled" -> scheduleRadioButton.assertChecked()
-        }
+    fun assertFilePublished() {
+        publishRadioButton.assertChecked()
     }
 
-    fun assertFileVisibility(fileVisibility: String) {
-        when (fileVisibility) {
-            "inherit" -> inheritRadioButton.assertChecked()
-            "context" -> contextRadioButton.assertChecked()
-            "institution" -> institutionRadioButton.assertChecked()
-            "public" -> publicRadioButton.assertChecked()
-        }
+    fun assertFileUnpublished() {
+        unpublishRadioButton.assertChecked()
+    }
+
+    fun assertFileHidden() {
+        hideRadioButton.assertChecked()
+    }
+
+    fun assertFileScheduled() {
+        scheduleRadioButton.assertChecked()
+    }
+
+    fun assertFileVisibilityInherit() {
+        inheritRadioButton.assertChecked()
+    }
+
+    fun assertFileVisibilityContext() {
+        contextRadioButton.assertChecked()
+    }
+
+    fun assertFileVisibilityInstitution() {
+        institutionRadioButton.assertChecked()
+    }
+
+    fun assertFileVisibilityPublic() {
+        publicRadioButton.assertChecked()
     }
 
     fun clickSaveButton() {
