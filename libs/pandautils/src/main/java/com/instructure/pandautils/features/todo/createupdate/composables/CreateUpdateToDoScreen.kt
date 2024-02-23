@@ -241,7 +241,7 @@ private fun ActionsSegment(
     ) {
         Text(
             text = stringResource(id = R.string.save),
-            color = Color(color = ThemePrefs.buttonColor),
+            color = Color(color = ThemePrefs.textButtonColor),
             fontSize = 14.sp,
             modifier = Modifier.alpha(if (saveEnabled) 1f else .4f)
         )
