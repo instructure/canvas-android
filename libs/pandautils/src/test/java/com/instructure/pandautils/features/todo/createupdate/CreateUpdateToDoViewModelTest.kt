@@ -46,6 +46,7 @@ import org.junit.Test
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
 import java.util.Date
@@ -61,6 +62,8 @@ class CreateUpdateToDoViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private lateinit var viewModel: CreateUpdateToDoViewModel
+
+    private val clock = Clock.fixed(Instant.parse("2024-02-22T11:00:00.00Z"), ZoneId.systemDefault())
 
     private val plannerItem = PlannerItem(
         courseId = null,
@@ -78,7 +81,7 @@ class CreateUpdateToDoViewModelTest {
             pointsPossible = null,
             dueAt = null,
             assignmentId = null,
-            todoDate = LocalDate.of(2024, 2, 22).atTime(11, 0).toApiString(),
+            todoDate = LocalDateTime.now(clock).toApiString(),
             startAt = null,
             endAt = null,
             details = "Description"
@@ -127,8 +130,8 @@ class CreateUpdateToDoViewModelTest {
 
         val expectedState = CreateUpdateToDoUiState(
             title = "Title",
-            date = LocalDate.of(2024, 2, 22),
-            time = LocalTime.of(11, 0),
+            date = LocalDate.now(clock),
+            time = LocalTime.now(clock),
             details = "Description",
             selectedCanvasContext = User(1),
             canvasContexts = listOf(User(1))
@@ -162,7 +165,6 @@ class CreateUpdateToDoViewModelTest {
         }
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Title"))
-        val clock = Clock.fixed(Instant.parse("2024-02-22T11:00:00.00Z"), ZoneId.systemDefault())
         viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.now(clock)))
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTime(LocalTime.now(clock)))
         viewModel.handleAction(CreateUpdateToDoAction.UpdateCanvasContext(Course(1)))
@@ -189,11 +191,10 @@ class CreateUpdateToDoViewModelTest {
         }
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
-        val clock = Clock.fixed(Instant.parse("2024-02-23T11:00:00.00Z"), ZoneId.systemDefault())
-        viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.now(clock)))
+        viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.now(clock).plusDays(1)))
         viewModel.handleAction(CreateUpdateToDoAction.Save)
 
-        coVerify(exactly = 1) { repository.updateToDo(1, "Updated Title", "Description", "2024-02-23T10:00:00Z", 2) }
+        coVerify(exactly = 1) { repository.updateToDo(1, "Updated Title", "Description", "2024-02-23T11:00:00Z", 2) }
 
         val expectedEvent = CreateUpdateToDoViewModelAction.RefreshCalendarDays(
             listOf(
