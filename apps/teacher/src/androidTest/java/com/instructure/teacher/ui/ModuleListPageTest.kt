@@ -43,14 +43,14 @@ class ModuleListPageTest : TeacherComposeTest() {
     @Test
     override fun displaysPageObjects() {
         goToModulesPage()
-        modulesPage.assertPageObjects()
+        moduleListPage.assertPageObjects()
     }
 
     @Test
     fun assertDisplaysMenuItems() {
         goToModulesPage()
         openOverflowMenu()
-        modulesPage.assertToolbarMenuItems()
+        moduleListPage.assertToolbarMenuItems()
     }
 
     @Test
@@ -58,8 +58,8 @@ class ModuleListPageTest : TeacherComposeTest() {
         val data = goToModulesPage()
         val module = data.courseModules.values.first().first()
 
-        modulesPage.clickItemOverflow(module.name.orEmpty())
-        modulesPage.assertModuleMenuItems()
+        moduleListPage.clickItemOverflow(module.name.orEmpty())
+        moduleListPage.assertModuleMenuItems()
     }
 
     @Test
@@ -74,10 +74,10 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         data.addItemToModule(data.courses.values.first(), module.id, assignment, published = true)
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(assignment.name.orEmpty())
-        modulesPage.assertOverflowItem(R.string.unpublish)
+        moduleListPage.clickItemOverflow(assignment.name.orEmpty())
+        moduleListPage.assertOverflowItem(R.string.unpublish)
     }
 
     @Test
@@ -92,10 +92,10 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         data.addItemToModule(data.courses.values.first(), module.id, assignment, published = false)
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(assignment.name.orEmpty())
-        modulesPage.assertOverflowItem(R.string.publish)
+        moduleListPage.clickItemOverflow(assignment.name.orEmpty())
+        moduleListPage.assertOverflowItem(R.string.publish)
     }
 
     @Test
@@ -112,11 +112,11 @@ class ModuleListPageTest : TeacherComposeTest() {
             item = fileFolder!!
         )
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
+        moduleListPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
-        modulesPage.assertFileEditDialogVisible()
+        moduleListPage.assertFileEditDialogVisible()
     }
 
     @Test
@@ -131,14 +131,14 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         data.addItemToModule(data.courses.values.first(), module.id, assignment, published = false)
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(assignment.name.orEmpty())
-        modulesPage.clickOnText(R.string.publishModuleItemAction)
-        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
+        moduleListPage.clickItemOverflow(assignment.name.orEmpty())
+        moduleListPage.clickOnText(R.string.publishModuleItemAction)
+        moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        modulesPage.assertSnackbarText(R.string.moduleItemPublished)
-        modulesPage.assertModuleItemIsPublished(assignment.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
+        moduleListPage.assertModuleItemIsPublished(assignment.name.orEmpty())
     }
 
     @Test
@@ -153,14 +153,14 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         data.addItemToModule(data.courses.values.first(), module.id, assignment, published = true)
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(assignment.name.orEmpty())
-        modulesPage.clickOnText(R.string.unpublishModuleItemAction)
-        modulesPage.clickOnText(R.string.unpublishDialogPositiveButton)
+        moduleListPage.clickItemOverflow(assignment.name.orEmpty())
+        moduleListPage.clickOnText(R.string.unpublishModuleItemAction)
+        moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
-        modulesPage.assertSnackbarText(R.string.moduleItemUnpublished)
-        modulesPage.assertModuleItemNotPublished(assignment.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
+        moduleListPage.assertModuleItemNotPublished(assignment.name.orEmpty())
     }
 
     @Test
@@ -170,15 +170,15 @@ class ModuleListPageTest : TeacherComposeTest() {
         val assignment = data.addAssignment(courseId = data.courses.values.first().id)
 
         data.addItemToModule(data.courses.values.first(), unpublishedModule.id, assignment, published = false)
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(unpublishedModule.name.orEmpty())
-        modulesPage.clickOnText(R.string.publishModuleOnly)
-        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
+        moduleListPage.clickItemOverflow(unpublishedModule.name.orEmpty())
+        moduleListPage.clickOnText(R.string.publishModuleOnly)
+        moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        modulesPage.assertSnackbarText(R.string.onlyModulePublished)
-        modulesPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
-        modulesPage.assertModuleItemNotPublished(assignment.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.onlyModulePublished)
+        moduleListPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
+        moduleListPage.assertModuleItemNotPublished(assignment.name.orEmpty())
     }
 
     @Test
@@ -188,17 +188,17 @@ class ModuleListPageTest : TeacherComposeTest() {
         val assignment = data.addAssignment(courseId = data.courses.values.first().id)
 
         data.addItemToModule(data.courses.values.first(), unpublishedModule.id, assignment, published = false)
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(unpublishedModule.name.orEmpty())
-        modulesPage.clickOnText(R.string.publishModuleAndItems)
-        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
+        moduleListPage.clickItemOverflow(unpublishedModule.name.orEmpty())
+        moduleListPage.clickOnText(R.string.publishModuleAndItems)
+        moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
         progressPage.clickDone()
 
-        modulesPage.assertSnackbarText(R.string.moduleAndAllItemsPublished)
-        modulesPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
-        modulesPage.assertModuleItemIsPublished(assignment.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.moduleAndAllItemsPublished)
+        moduleListPage.assertModuleIsPublished(unpublishedModule.name.orEmpty())
+        moduleListPage.assertModuleItemIsPublished(assignment.name.orEmpty())
     }
 
     @Test
@@ -208,17 +208,17 @@ class ModuleListPageTest : TeacherComposeTest() {
         val assignment = data.addAssignment(courseId = data.courses.values.first().id)
 
         data.addItemToModule(data.courses.values.first(), publishedModule.id, assignment, published = true)
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(publishedModule.name.orEmpty())
-        modulesPage.clickOnText(R.string.unpublishModuleAndItems)
-        modulesPage.clickOnText(R.string.unpublishDialogPositiveButton)
+        moduleListPage.clickItemOverflow(publishedModule.name.orEmpty())
+        moduleListPage.clickOnText(R.string.unpublishModuleAndItems)
+        moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
         progressPage.clickDone()
 
-        modulesPage.assertSnackbarText(R.string.moduleAndAllItemsUnpublished)
-        modulesPage.assertModuleNotPublished(publishedModule.name.orEmpty())
-        modulesPage.assertModuleItemNotPublished(assignment.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.moduleAndAllItemsUnpublished)
+        moduleListPage.assertModuleNotPublished(publishedModule.name.orEmpty())
+        moduleListPage.assertModuleItemNotPublished(assignment.name.orEmpty())
     }
 
     @Test
@@ -231,19 +231,19 @@ class ModuleListPageTest : TeacherComposeTest() {
         data.addItemToModule(data.courses.values.first(), unpublishedModules[0].id, assignment1, published = false)
         data.addItemToModule(data.courses.values.first(), unpublishedModules[1].id, assignment2, published = false)
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
         openOverflowMenu()
-        modulesPage.clickOnText(R.string.publishModulesOnly)
-        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
+        moduleListPage.clickOnText(R.string.publishModulesOnly)
+        moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
         progressPage.clickDone()
 
-        modulesPage.assertSnackbarText(R.string.onlyModulesPublished)
-        modulesPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
-        modulesPage.assertModuleIsPublished(unpublishedModules[1].name.orEmpty())
-        modulesPage.assertModuleItemNotPublished(assignment1.name.orEmpty())
-        modulesPage.assertModuleItemNotPublished(assignment2.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.onlyModulesPublished)
+        moduleListPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
+        moduleListPage.assertModuleIsPublished(unpublishedModules[1].name.orEmpty())
+        moduleListPage.assertModuleItemNotPublished(assignment1.name.orEmpty())
+        moduleListPage.assertModuleItemNotPublished(assignment2.name.orEmpty())
     }
 
     @Test
@@ -256,19 +256,19 @@ class ModuleListPageTest : TeacherComposeTest() {
         data.addItemToModule(data.courses.values.first(), unpublishedModules[0].id, assignment1, published = false)
         data.addItemToModule(data.courses.values.first(), unpublishedModules[1].id, assignment2, published = false)
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
         openOverflowMenu()
-        modulesPage.clickOnText(R.string.publishAllModulesAndItems)
-        modulesPage.clickOnText(R.string.publishDialogPositiveButton)
+        moduleListPage.clickOnText(R.string.publishAllModulesAndItems)
+        moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
         progressPage.clickDone()
 
-        modulesPage.assertSnackbarText(R.string.allModulesAndAllItemsPublished)
-        modulesPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
-        modulesPage.assertModuleIsPublished(unpublishedModules[1].name.orEmpty())
-        modulesPage.assertModuleItemIsPublished(assignment1.name.orEmpty())
-        modulesPage.assertModuleItemIsPublished(assignment2.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.allModulesAndAllItemsPublished)
+        moduleListPage.assertModuleIsPublished(unpublishedModules[0].name.orEmpty())
+        moduleListPage.assertModuleIsPublished(unpublishedModules[1].name.orEmpty())
+        moduleListPage.assertModuleItemIsPublished(assignment1.name.orEmpty())
+        moduleListPage.assertModuleItemIsPublished(assignment2.name.orEmpty())
     }
 
     @Test
@@ -281,19 +281,19 @@ class ModuleListPageTest : TeacherComposeTest() {
         data.addItemToModule(data.courses.values.first(), unpublishedModules[0].id, assignment1, published = true)
         data.addItemToModule(data.courses.values.first(), unpublishedModules[1].id, assignment2, published = true)
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
         openOverflowMenu()
-        modulesPage.clickOnText(R.string.unpublishAllModulesAndItems)
-        modulesPage.clickOnText(R.string.unpublishDialogPositiveButton)
+        moduleListPage.clickOnText(R.string.unpublishAllModulesAndItems)
+        moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
         progressPage.clickDone()
 
-        modulesPage.assertSnackbarText(R.string.allModulesAndAllItemsUnpublished)
-        modulesPage.assertModuleNotPublished(unpublishedModules[0].name.orEmpty())
-        modulesPage.assertModuleNotPublished(unpublishedModules[1].name.orEmpty())
-        modulesPage.assertModuleItemNotPublished(assignment1.name.orEmpty())
-        modulesPage.assertModuleItemNotPublished(assignment2.name.orEmpty())
+        moduleListPage.assertSnackbarText(R.string.allModulesAndAllItemsUnpublished)
+        moduleListPage.assertModuleNotPublished(unpublishedModules[0].name.orEmpty())
+        moduleListPage.assertModuleNotPublished(unpublishedModules[1].name.orEmpty())
+        moduleListPage.assertModuleItemNotPublished(assignment1.name.orEmpty())
+        moduleListPage.assertModuleItemNotPublished(assignment2.name.orEmpty())
     }
 
     @Test
@@ -316,15 +316,15 @@ class ModuleListPageTest : TeacherComposeTest() {
             )
         )
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
+        moduleListPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickUnpublishRadioButton()
         updateFilePermissionsPage.clickSaveButton()
 
-        modulesPage.assertModuleItemNotPublished(fileFolder.displayName.orEmpty())
+        moduleListPage.assertModuleItemNotPublished(fileFolder.displayName.orEmpty())
     }
 
     @Test
@@ -347,15 +347,15 @@ class ModuleListPageTest : TeacherComposeTest() {
             )
         )
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
+        moduleListPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickPublishRadioButton()
         updateFilePermissionsPage.clickSaveButton()
 
-        modulesPage.assertModuleItemIsPublished(fileFolder.displayName.orEmpty())
+        moduleListPage.assertModuleItemIsPublished(fileFolder.displayName.orEmpty())
     }
 
     @Test
@@ -378,15 +378,15 @@ class ModuleListPageTest : TeacherComposeTest() {
             )
         )
 
-        modulesPage.refresh()
+        moduleListPage.refresh()
 
-        modulesPage.clickItemOverflow(fileFolder.displayName.orEmpty())
+        moduleListPage.clickItemOverflow(fileFolder.displayName.orEmpty())
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickHideRadioButton()
         updateFilePermissionsPage.clickSaveButton()
 
-        modulesPage.assertModuleItemHidden(fileFolder.displayName.orEmpty())
+        moduleListPage.assertModuleItemHidden(fileFolder.displayName.orEmpty())
     }
 
     private fun goToModulesPage(publishedModuleCount: Int = 1, unpublishedModuleCount: Int = 0): MockCanvas {
