@@ -12,6 +12,7 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
+import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.todo.details.ToDoFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
@@ -144,6 +145,7 @@ object RouteResolver {
             cls.isA<FileSearchFragment>() -> FileSearchFragment.newInstance(route)
             cls.isA<CalendarEventFragment>() -> CalendarEventFragment.newInstance(route)
             cls.isA<ToDoFragment>() -> ToDoFragment.newInstance(route)
+            cls.isA<CreateUpdateToDoFragment>() -> CreateUpdateToDoFragment.newInstance(route)
             cls.isA<ComposeCalendarFragment>() -> ComposeCalendarFragment.newInstance(route)
             cls.isA<FileDetailsFragment>() -> FileDetailsFragment.newInstance(route)
             cls.isA<ViewImageFragment>() -> ViewImageFragment.newInstance(route)

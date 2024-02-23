@@ -25,7 +25,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -33,18 +35,26 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_TODO
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todo.details.composables.ToDoScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR_TODO)
 class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
+    @Inject
+    lateinit var toDoRouter: ToDoRouter
+
     private val viewModel: ToDoViewModel by viewModels()
+    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
 
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
@@ -52,12 +62,25 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                ToDoScreen(title(), uiState) {
-                    activity?.onBackPressed()
-                }
+                ToDoScreen(title(), uiState, viewModel::handleAction, ::navigateBack)
+            }
+        }
+    }
+
+    private fun handleAction(action: ToDoViewModelAction) {
+        when (action) {
+            is ToDoViewModelAction.RefreshCalendarDay -> {
+                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(listOf(action.date)))
+                navigateBack()
+            }
+
+            is ToDoViewModelAction.OpenEditToDo -> {
+                toDoRouter.openEditToDo(action.plannerItem)
             }
         }
     }
@@ -77,6 +100,10 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     override fun onHandleBackPressed(): Boolean {
         return false
+    }
+
+    private fun navigateBack() {
+        activity?.onBackPressed()
     }
 
     companion object {

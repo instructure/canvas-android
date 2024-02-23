@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -49,6 +50,7 @@ import javax.inject.Inject
 class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CalendarViewModel by viewModels()
+    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
 
     @Inject
     lateinit var calendarRouter: CalendarRouter
@@ -60,6 +62,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         savedInstanceState: Bundle?
     ): View {
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedViewModel.events, ::handleSharedViewModelAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {
@@ -80,6 +83,15 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
             is CalendarViewModelAction.OpenQuiz -> calendarRouter.openQuiz(action.canvasContext, action.htmlUrl)
             is CalendarViewModelAction.OpenCalendarEvent -> calendarRouter.openCalendarEvent(action.canvasContext, action.eventId)
             is CalendarViewModelAction.OpenToDo -> calendarRouter.openToDo(action.plannerItem)
+            is CalendarViewModelAction.OpenCreateToDo -> calendarRouter.openCreateToDo(action.initialDateString)
+        }
+    }
+
+    private fun handleSharedViewModelAction(action: SharedCalendarAction) {
+        when (action) {
+            is SharedCalendarAction.RefreshDays -> action.days.forEach {
+                viewModel.handleAction(CalendarAction.RefreshDay(it))
+            }
         }
     }
 

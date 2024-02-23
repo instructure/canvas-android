@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -128,6 +130,7 @@ fun CalendarScreen(
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(padding)
                         .padding(PaddingValues(0.dp, 8.dp, 0.dp, 0.dp)),
                     color = colorResource(id = R.color.backgroundLightest),
                 ) {
@@ -136,7 +139,23 @@ fun CalendarScreen(
                         CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler)
                     }
                 }
-            })
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        actionHandler(CalendarAction.AddToDoTapped)
+                    },
+                    shape = CircleShape,
+                    backgroundColor = Color(ThemePrefs.buttonColor)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_add),
+                        tint = Color.White,
+                        contentDescription = stringResource(id = R.string.calendarAddButtonContentDescription)
+                    )
+                }
+            }
+        )
     }
 }
 

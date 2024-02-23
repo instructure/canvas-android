@@ -282,8 +282,10 @@ class CalendarViewModel @Inject constructor(
             CalendarAction.SnackbarDismissed -> viewModelScope.launch {
                 _uiState.emit(createNewUiState().copy(snackbarMessage = null))
             }
-
             CalendarAction.HeightAnimationFinished -> heightAnimationFinished()
+            is CalendarAction.AddToDoTapped -> viewModelScope.launch {
+                _events.send(CalendarViewModelAction.OpenCreateToDo(selectedDay.toApiString()))
+            }
         }
     }
 
@@ -420,7 +422,7 @@ class CalendarViewModel @Inject constructor(
 
             refreshingDays.remove(date)
 
-            storeResults(result)
+            storeResults(result, date)
             _uiState.emit(createNewUiState())
         } catch {
             refreshingDays.remove(date)
@@ -430,7 +432,8 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun storeResults(result: List<PlannerItem>) {
+    private fun storeResults(result: List<PlannerItem>, dateToClear: LocalDate? = null) {
+        eventsByDay.getOrDefault(dateToClear, null)?.clear()
         result.forEach { plannerItem ->
             val plannableDate = plannerItem.plannableDate.toLocalDate()
             val plannerItemsForDay = eventsByDay.getOrPut(plannableDate) { mutableListOf() }
