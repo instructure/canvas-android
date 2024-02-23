@@ -170,6 +170,8 @@ object Libs {
     const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"
     const val COMPOSE_UI = "androidx.compose.ui:ui-android:1.6.0"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
+    const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.6.1"
+    const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest:1.6.1"
 }
 
 object Plugins {

@@ -1587,8 +1587,16 @@
     <string name="success">Success!</string>
     <string name="updateFailed">Update failed</string>
     <string name="updateCancelled">Update cancelled</string>
+    <string name="a11y_hidden">Hidden</string>
+    <string name="a11y_scheduled">Scheduled</string>
+    <string name="a11y_published">Published</string>
+    <string name="a11y_unpublished">Unpublished</string>
     <plurals name="moduleItemPoints">
         <item quantity="one">%.0f pt</item>
         <item quantity="other">%.0f pts</item>
     </plurals>
+    <string name="publishModuleItemAction">Publish</string>
+    <string name="unpublishModuleItemAction">Unpublish</string>
+    <string name="publishDialogPositiveButton">Publish</string>
+    <string name="unpublishDialogPositiveButton">Unpublish</string>
 </resources>

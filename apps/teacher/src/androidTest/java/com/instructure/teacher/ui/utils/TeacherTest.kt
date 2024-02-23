@@ -84,6 +84,7 @@ import com.instructure.teacher.ui.pages.SpeedGraderQuizSubmissionPage
 import com.instructure.teacher.ui.pages.StudentContextPage
 import com.instructure.teacher.ui.pages.SyllabusPage
 import com.instructure.teacher.ui.pages.TodoPage
+import com.instructure.teacher.ui.pages.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.WebViewLoginPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
@@ -177,6 +178,7 @@ abstract class TeacherTest : CanvasTest() {
     val todoPage = TodoPage()
     val webViewLoginPage = WebViewLoginPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
+    val updateFilePermissionsPage = UpdateFilePermissionsPage()
 
 }
 

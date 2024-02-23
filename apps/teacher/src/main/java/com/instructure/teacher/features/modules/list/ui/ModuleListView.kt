@@ -77,7 +77,7 @@ class ModuleListView(
             showConfirmationDialog(
                 R.string.publishDialogTitle,
                 R.string.publishModuleDialogMessage,
-                R.string.publish,
+                R.string.publishDialogPositiveButton,
                 R.string.cancel
             ) {
                 consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.PUBLISH, true))
@@ -88,7 +88,7 @@ class ModuleListView(
             showConfirmationDialog(
                 R.string.publishDialogTitle,
                 R.string.publishModuleAndItemsDialogMessage,
-                R.string.publish,
+                R.string.publishDialogPositiveButton,
                 R.string.cancel
             ) {
                 consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.PUBLISH, false))
@@ -99,7 +99,7 @@ class ModuleListView(
             showConfirmationDialog(
                 R.string.unpublishDialogTitle,
                 R.string.unpublishModuleAndItemsDialogMessage,
-                R.string.unpublish,
+                R.string.unpublishDialogPositiveButton,
                 R.string.cancel
             ) {
                 consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.UNPUBLISH, false))
@@ -119,7 +119,7 @@ class ModuleListView(
             val title = if (isPublished) R.string.publishDialogTitle else R.string.unpublishDialogTitle
             val message =
                 if (isPublished) R.string.publishModuleItemDialogMessage else R.string.unpublishModuleItemDialogMessage
-            val positiveButton = if (isPublished) R.string.publish else R.string.unpublish
+            val positiveButton = if (isPublished) R.string.publishDialogPositiveButton else R.string.unpublishDialogPositiveButton
 
             showConfirmationDialog(title, message, positiveButton, R.string.cancel) {
                 consumer?.accept(ModuleListEvent.UpdateModuleItem(itemId, isPublished))
@@ -140,7 +140,7 @@ class ModuleListView(
                         showConfirmationDialog(
                             R.string.publishDialogTitle,
                             R.string.publishModulesAndItemsDialogMessage,
-                            R.string.publish,
+                            R.string.publishDialogPositiveButton,
                             R.string.cancel
                         ) {
                             consumer?.accept(
@@ -157,7 +157,7 @@ class ModuleListView(
                         showConfirmationDialog(
                             R.string.publishDialogTitle,
                             R.string.publishModulesDialogMessage,
-                            R.string.publish,
+                            R.string.publishDialogPositiveButton,
                             R.string.cancel
                         ) {
                             consumer?.accept(ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.PUBLISH, true))
@@ -169,7 +169,7 @@ class ModuleListView(
                         showConfirmationDialog(
                             R.string.unpublishDialogTitle,
                             R.string.unpublishModulesAndItemsDialogMessage,
-                            R.string.unpublish,
+                            R.string.unpublishDialogPositiveButton,
                             R.string.cancel
                         ) {
                             consumer?.accept(
