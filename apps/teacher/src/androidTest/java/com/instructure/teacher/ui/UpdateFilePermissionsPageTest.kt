@@ -177,7 +177,7 @@ class UpdateFilePermissionsPageTest : TeacherTest() {
 
         dashboardPage.openCourse(course)
         courseBrowserPage.openModulesTab()
-        modulesPage.clickItemOverflow(fileFolder.name.orEmpty())
+        moduleListPage.clickItemOverflow(fileFolder.name.orEmpty())
         updateFilePermissionsPage.swipeUpBottomSheet()
         return data
     }
