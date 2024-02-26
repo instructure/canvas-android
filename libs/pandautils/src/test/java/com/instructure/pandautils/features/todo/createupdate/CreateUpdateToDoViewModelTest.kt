@@ -114,8 +114,10 @@ class CreateUpdateToDoViewModelTest {
 
         val expectedState = CreateUpdateToDoUiState(
             date = LocalDate.of(2024, 2, 22),
-            selectedCanvasContext = User(1),
-            canvasContexts = listOf(User(1))
+            selectCalendarUiState = SelectCalendarUiState(
+                selectedCanvasContext = User(1),
+                canvasContexts = listOf(User(1))
+            )
         )
 
         Assert.assertEquals(expectedState, state)
@@ -133,8 +135,10 @@ class CreateUpdateToDoViewModelTest {
             date = LocalDate.now(clock),
             time = LocalTime.now(clock),
             details = "Description",
-            selectedCanvasContext = User(1),
-            canvasContexts = listOf(User(1))
+            selectCalendarUiState = SelectCalendarUiState(
+                selectedCanvasContext = User(1),
+                canvasContexts = listOf(User(1))
+            )
         )
 
         Assert.assertEquals(expectedState, state)
@@ -149,8 +153,8 @@ class CreateUpdateToDoViewModelTest {
         createViewModel()
 
         coVerify(exactly = 1) { repository.getCourses() }
-        Assert.assertEquals(listOf(apiPrefs.user) + courses, viewModel.uiState.value.canvasContexts)
-        Assert.assertEquals(courses.last(), viewModel.uiState.value.selectedCanvasContext)
+        Assert.assertEquals(listOf(apiPrefs.user) + courses, viewModel.uiState.value.selectCalendarUiState.canvasContexts)
+        Assert.assertEquals(courses.last(), viewModel.uiState.value.selectCalendarUiState.selectedCanvasContext)
     }
 
     @Test

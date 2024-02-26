@@ -83,7 +83,10 @@ class CreateUpdateToDoViewModel @Inject constructor(
             }
 
             is CreateUpdateToDoAction.UpdateCanvasContext -> {
-                _uiState.update { it.copy(selectedCanvasContext = action.canvasContext) }
+                _uiState.update {
+                    val selectCalendarUiState = it.selectCalendarUiState.copy(selectedCanvasContext = action.canvasContext)
+                    it.copy(selectCalendarUiState = selectCalendarUiState)
+                }
             }
 
             is CreateUpdateToDoAction.UpdateDetails -> {
@@ -97,11 +100,17 @@ class CreateUpdateToDoViewModel @Inject constructor(
             }
 
             is CreateUpdateToDoAction.ShowSelectCalendarScreen -> {
-                _uiState.update { it.copy(showCalendarSelector = true) }
+                _uiState.update {
+                    val selectCalendarUiState = it.selectCalendarUiState.copy(show = true)
+                    it.copy(selectCalendarUiState = selectCalendarUiState)
+                }
             }
 
             is CreateUpdateToDoAction.HideSelectCalendarScreen -> {
-                _uiState.update { it.copy(showCalendarSelector = false) }
+                _uiState.update {
+                    val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
+                    it.copy(selectCalendarUiState = selectCalendarUiState)
+                }
             }
 
             is CreateUpdateToDoAction.CheckUnsavedChanges -> {
@@ -133,18 +142,22 @@ class CreateUpdateToDoViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     loadingCanvasContexts = false,
-                    canvasContexts = userList + courses,
-                    selectedCanvasContext = courses.firstOrNull { course ->
-                        course.id == plannerItem?.plannable?.courseId
-                    } ?: apiPrefs.user
+                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                        canvasContexts = userList + courses,
+                        selectedCanvasContext = courses.firstOrNull { course ->
+                            course.id == plannerItem?.plannable?.courseId
+                        } ?: apiPrefs.user
+                    )
                 )
             }
         } catch {
             _uiState.update {
                 it.copy(
                     loadingCanvasContexts = false,
-                    canvasContexts = userList,
-                    selectedCanvasContext = apiPrefs.user
+                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                        canvasContexts = userList,
+                        selectedCanvasContext = apiPrefs.user
+                    )
                 )
             }
         }
@@ -159,14 +172,14 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     title = uiState.value.title,
                     details = uiState.value.details,
                     toDoDate = LocalDateTime.of(uiState.value.date, uiState.value.time).toApiString().orEmpty(),
-                    courseId = uiState.value.selectedCanvasContext.takeIf { it is Course }?.id,
+                    courseId = uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id,
                 )
             } ?: run {
                 repository.createToDo(
                     title = uiState.value.title,
                     details = uiState.value.details,
                     toDoDate = LocalDateTime.of(uiState.value.date, uiState.value.time).toApiString().orEmpty(),
-                    courseId = uiState.value.selectedCanvasContext.takeIf { it is Course }?.id,
+                    courseId = uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id,
                 )
             }
             _uiState.update { it.copy(saving = false) }
@@ -191,11 +204,11 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     uiState.value.details != plannerItem.plannable.details.orEmpty() ||
                     uiState.value.date != plannerItem.plannable.todoDate.toDate()?.toLocalDate() ||
                     uiState.value.time != plannerItem.plannable.todoDate.toDate()?.toLocalTime() ||
-                    uiState.value.selectedCanvasContext.takeIf { it is Course }?.id != plannerItem.plannable.courseId
+                    uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id != plannerItem.plannable.courseId
         } ?: run {
             uiState.value.title.isNotEmpty() ||
                     uiState.value.details.isNotEmpty() ||
-                    uiState.value.selectedCanvasContext != apiPrefs.user ||
+                    uiState.value.selectCalendarUiState.selectedCanvasContext != apiPrefs.user ||
                     uiState.value.date != initialDate ||
                     uiState.value.time != LocalTime.of(12, 0)
         }

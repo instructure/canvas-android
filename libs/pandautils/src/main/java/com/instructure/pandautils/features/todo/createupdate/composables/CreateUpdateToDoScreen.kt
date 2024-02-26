@@ -70,12 +70,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoUiState
+import com.instructure.pandautils.features.todo.createupdate.SelectCalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.android.awaitFrame
@@ -93,7 +95,7 @@ internal fun CreateUpdateToDoScreenWrapper(
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
-        if (uiState.showCalendarSelector) {
+        if (uiState.selectCalendarUiState.show) {
             SelectCalendarScreen(
                 uiState = uiState,
                 actionHandler = actionHandler,
@@ -410,7 +412,7 @@ private fun CreateUpdateToDoContent(
                     Spacer(modifier = Modifier.width(16.dp))
                 } else {
                     Text(
-                        text = uiState.selectedCanvasContext?.name.orEmpty(),
+                        text = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
                         modifier = Modifier.padding(end = 16.dp),
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp
@@ -528,13 +530,13 @@ private fun CreateUpdateToDoPreview() {
             title = "Title",
             date = LocalDate.now(),
             time = LocalTime.now(),
-            selectedCanvasContext = null,
             details = "Details",
             saving = false,
             errorSnack = null,
             loadingCanvasContexts = false,
-            showCalendarSelector = false,
-            canvasContexts = emptyList()
+            selectCalendarUiState = SelectCalendarUiState(
+                selectedCanvasContext = Course(name = "Course")
+            )
         ),
         actionHandler = {},
         navigationAction = {}

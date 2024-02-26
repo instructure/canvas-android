@@ -57,6 +57,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoUiState
+import com.instructure.pandautils.features.todo.createupdate.SelectCalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -130,7 +131,7 @@ private fun SelectCalendarContent(
         ) {
             LazyColumn(
                 content = {
-                    items(uiState.canvasContexts) { canvasContext ->
+                    items(uiState.selectCalendarUiState.canvasContexts) { canvasContext ->
                         Column(
                             modifier = modifier.clickable {
                                 actionHandler(CreateUpdateToDoAction.UpdateCanvasContext(canvasContext))
@@ -165,7 +166,7 @@ private fun SelectCalendarContent(
                                     overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.padding(start = 16.dp)
                                 )
-                                if (uiState.selectedCanvasContext?.id == canvasContext.id) {
+                                if (uiState.selectCalendarUiState.selectedCanvasContext?.id == canvasContext.id) {
                                     Spacer(modifier = Modifier.weight(1f))
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_checkmark),
@@ -194,13 +195,16 @@ private fun SelectCalendarPreview() {
             title = "Title",
             date = LocalDate.now(),
             time = LocalTime.now(),
-            selectedCanvasContext = Course(id = 2),
             details = "Details",
-            canvasContexts = listOf(
-                Course(id = 1, name = "Black Holes"),
-                Course(id = 2, name = "Cosmology"),
-                Course(id = 3, name = "Life in the Universe"),
-            ),
+            selectCalendarUiState = SelectCalendarUiState(
+                show = true,
+                selectedCanvasContext = Course(id = 2),
+                canvasContexts = listOf(
+                    Course(id = 1, name = "Black Holes"),
+                    Course(id = 2, name = "Cosmology"),
+                    Course(id = 3, name = "Life in the Universe"),
+                )
+            )
         ),
         actionHandler = {},
         navigationActionClick = {}

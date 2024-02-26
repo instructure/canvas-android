@@ -28,13 +28,11 @@ data class CreateUpdateToDoUiState(
     val title: String = "",
     val date: LocalDate = LocalDate.now(),
     val time: LocalTime = LocalTime.of(12, 0),
-    val selectedCanvasContext: CanvasContext? = null,
     val details: String = "",
     val saving: Boolean = false,
     val errorSnack: String? = null,
     val loadingCanvasContexts: Boolean = false,
-    val showCalendarSelector: Boolean = false,
-    val canvasContexts: List<CanvasContext> = emptyList()
+    val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState()
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 
@@ -42,6 +40,12 @@ data class CreateUpdateToDoUiState(
         DateTimeFormatter.ofPattern(DateHelper.getPreferredTimeFormat(context).toPattern())
     ).orEmpty()
 }
+
+data class SelectCalendarUiState(
+    val show: Boolean = false,
+    val selectedCanvasContext: CanvasContext? = null,
+    val canvasContexts: List<CanvasContext> = emptyList()
+)
 
 sealed class CreateUpdateToDoAction {
     data class UpdateTitle(val title: String) : CreateUpdateToDoAction()
