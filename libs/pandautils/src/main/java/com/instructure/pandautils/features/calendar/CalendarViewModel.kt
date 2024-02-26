@@ -78,7 +78,8 @@ class CalendarViewModel @Inject constructor(
     private val loadedMonths = mutableSetOf<YearMonth>()
 
     private var canvasContexts = emptyMap<CanvasContext.Type, List<CanvasContext>>()
-    private val contextFilter = mutableSetOf<CanvasContext>()
+    private val contextIdFilter = calendarPrefs.contextIdFilter.toMutableSet()
+
     private var filtersOpen = false
 
     private val _uiState =
@@ -98,7 +99,11 @@ class CalendarViewModel @Inject constructor(
             val result = calendarRepository.getCanvasContexts()
             if (result is DataResult.Success) {
                 canvasContexts = result.data
-                contextFilter.addAll(canvasContexts.values.flatten())
+                if (calendarPrefs.firstStart) {
+                    calendarPrefs.firstStart = false
+                    contextIdFilter.addAll(canvasContexts.values.flatten().map { it.contextId })
+                    calendarPrefs.contextIdFilter = contextIdFilter
+                }
             }
         }
     }
@@ -179,11 +184,14 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun createFilterItemsUiState(type: CanvasContext.Type) = canvasContexts[type]?.map {
-        CalendarFilterItemUiState(it.contextId, it.name.orEmpty(), contextFilter.contains(it))
+        CalendarFilterItemUiState(it.contextId, it.name.orEmpty(), contextIdFilter.contains(it.contextId))
     } ?: emptyList()
 
     private fun createCalendarUiState(): CalendarUiState {
-        val eventIndicators = eventsByDay.mapValues { min(3, it.value.size) }
+        val eventIndicators = eventsByDay
+            .mapValues { min(3, it.value.filter { plannerItem ->
+                contextIdFilter.isEmpty() || contextIdFilter.contains(plannerItem.canvasContext.contextId) }.size)
+             }
         return CalendarUiState(
             selectedDay = selectedDay,
             expanded = expanded && !collapsing,
@@ -195,7 +203,10 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
-        val eventUiStates = eventsByDay[date]?.map {
+        val eventUiStates = eventsByDay[date]
+            ?.filter { plannerItem ->
+                contextIdFilter.isEmpty() || contextIdFilter.contains(plannerItem.canvasContext.contextId) }
+            ?.map {
             EventUiState(
                 it.plannable.id,
                 contextName = getContextNameForPlannerItem(it),
@@ -516,12 +527,12 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun toggleFilter(calendarAction: CalendarAction.ToggleFilterItem) {
-        val context = canvasContexts.values.flatten().find { it.contextId == calendarAction.contextId } ?: return
-        if (contextFilter.contains(context)) {
-            contextFilter.remove(context)
+        if (contextIdFilter.contains(calendarAction.contextId)) {
+            contextIdFilter.remove(calendarAction.contextId)
         } else {
-            contextFilter.add(context)
+            contextIdFilter.add(calendarAction.contextId)
         }
+        calendarPrefs.contextIdFilter = contextIdFilter
         viewModelScope.launch {
             _uiState.emit(createNewUiState())
         }

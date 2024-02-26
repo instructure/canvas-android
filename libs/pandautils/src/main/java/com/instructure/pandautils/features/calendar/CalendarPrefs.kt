@@ -18,8 +18,14 @@ package com.instructure.pandautils.features.calendar
 
 import com.instructure.canvasapi2.utils.BooleanPref
 import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.canvasapi2.utils.StringSetPref
 
 object CalendarPrefs : PrefManager("calendar") {
 
     var calendarExpanded by BooleanPref(false)
+
+    var contextIdFilter by StringSetPref(setOf())
+
+    // When we first start the new calendar we won't have saved filters so we will save all filters as selected
+    var firstStart by BooleanPref(true)
 }
