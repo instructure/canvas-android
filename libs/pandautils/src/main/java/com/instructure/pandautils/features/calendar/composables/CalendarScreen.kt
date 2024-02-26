@@ -162,7 +162,7 @@ fun CalendarScreen(
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
-fun CalendarPreview() {
+fun CalendarScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
     val calendarStateMapper = CalendarStateMapper(Clock.systemDefaultZone())

@@ -19,9 +19,11 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -75,6 +77,10 @@ class CalendarViewModel @Inject constructor(
     private val refreshingDays = mutableSetOf<LocalDate>()
     private val loadedMonths = mutableSetOf<YearMonth>()
 
+    private var canvasContexts = emptyMap<CanvasContext.Type, List<CanvasContext>>()
+    private val contextFilter = mutableSetOf<CanvasContext>()
+    private var filtersOpen = false
+
     private val _uiState =
         MutableStateFlow(CalendarScreenUiState(createCalendarUiState()))
     val uiState = _uiState.asStateFlow()
@@ -83,7 +89,18 @@ class CalendarViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
+        loadCanvasContexts()
         loadVisibleMonths()
+    }
+
+    private fun loadCanvasContexts() {
+        viewModelScope.launch {
+            val result = calendarRepository.getCanvasContexts()
+            if (result is DataResult.Success) {
+                canvasContexts = result.data
+                contextFilter.addAll(canvasContexts.values.flatten())
+            }
+        }
     }
 
     private fun loadVisibleMonths() {
@@ -151,9 +168,19 @@ class CalendarViewModel @Inject constructor(
                 previousPage = previousPage,
                 currentPage = currentPage,
                 nextPage = nextPage
+            ),
+            calendarFilterUiState = CalendarFilterUiState(
+                filtersOpen,
+                createFilterItemsUiState(CanvasContext.Type.USER),
+                createFilterItemsUiState(CanvasContext.Type.COURSE),
+                createFilterItemsUiState(CanvasContext.Type.GROUP)
             )
         )
     }
+
+    private fun createFilterItemsUiState(type: CanvasContext.Type) = canvasContexts[type]?.map {
+        CalendarFilterItemUiState(it.contextId, it.name.orEmpty(), contextFilter.contains(it))
+    } ?: emptyList()
 
     private fun createCalendarUiState(): CalendarUiState {
         val eventIndicators = eventsByDay.mapValues { min(3, it.value.size) }
@@ -282,10 +309,14 @@ class CalendarViewModel @Inject constructor(
             CalendarAction.SnackbarDismissed -> viewModelScope.launch {
                 _uiState.emit(createNewUiState().copy(snackbarMessage = null))
             }
+
             CalendarAction.HeightAnimationFinished -> heightAnimationFinished()
             is CalendarAction.AddToDoTapped -> viewModelScope.launch {
                 _events.send(CalendarViewModelAction.OpenCreateToDo(selectedDay.toApiString()))
             }
+            CalendarAction.FilterTapped -> showFilters()
+            is CalendarAction.ToggleFilterItem -> toggleFilter(calendarAction)
+            CalendarAction.FilterScreenClosed -> hideFilters()
         }
     }
 
@@ -455,6 +486,44 @@ class CalendarViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.emit(createNewUiState())
             }
+        }
+    }
+
+    private fun showFilters() {
+        filtersOpen = true
+        viewModelScope.launch {
+            _uiState.emit(createNewUiState())
+        }
+    }
+
+    private fun hideFilters() {
+        filtersOpen = false
+        viewModelScope.launch {
+            _uiState.emit(createNewUiState())
+        }
+    }
+
+    fun handleBackPress(): Boolean {
+        return if (filtersOpen) {
+            viewModelScope.launch {
+                filtersOpen = false
+                _uiState.emit(createNewUiState())
+            }
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun toggleFilter(calendarAction: CalendarAction.ToggleFilterItem) {
+        val context = canvasContexts.values.flatten().find { it.contextId == calendarAction.contextId } ?: return
+        if (contextFilter.contains(context)) {
+            contextFilter.remove(context)
+        } else {
+            contextFilter.add(context)
+        }
+        viewModelScope.launch {
+            _uiState.emit(createNewUiState())
         }
     }
 }

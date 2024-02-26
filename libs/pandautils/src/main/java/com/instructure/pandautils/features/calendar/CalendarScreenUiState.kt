@@ -23,6 +23,7 @@ import org.threeten.bp.LocalDate
 data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
+    val calendarFilterUiState: CalendarFilterUiState = CalendarFilterUiState(),
     val snackbarMessage: String? = null
 )
 
@@ -84,6 +85,19 @@ data class EventUiState(
     val status: String? = null
 )
 
+data class CalendarFilterUiState(
+    val showing: Boolean = false,
+    val users: List<CalendarFilterItemUiState> = emptyList(),
+    val courses: List<CalendarFilterItemUiState> = emptyList(),
+    val groups: List<CalendarFilterItemUiState> = emptyList(),
+)
+
+data class CalendarFilterItemUiState(
+    val contextId: String,
+    val name: String,
+    val selected: Boolean
+)
+
 sealed class CalendarAction {
     data object ExpandChanged : CalendarAction()
     data object ExpandDisabled : CalendarAction()
@@ -98,6 +112,9 @@ sealed class CalendarAction {
     data object SnackbarDismissed : CalendarAction()
     data object HeightAnimationFinished : CalendarAction()
     data object AddToDoTapped : CalendarAction()
+    data object FilterTapped : CalendarAction()
+    data class ToggleFilterItem(val contextId: String) : CalendarAction()
+    data object FilterScreenClosed : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {

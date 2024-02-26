@@ -36,6 +36,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.calendar.composables.CalendarFilters
 import com.instructure.pandautils.features.calendar.composables.CalendarScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
@@ -67,10 +68,15 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CalendarScreen(title(), uiState, actionHandler = {
-                    viewModel.handleAction(it)
-                }) {
-                    calendarRouter.openNavigationDrawer()
+                val actionHandler = { action: CalendarAction -> viewModel.handleAction(action) }
+                if (uiState.calendarFilterUiState.showing) {
+                    CalendarFilters(uiState.calendarFilterUiState, actionHandler, {
+                        actionHandler(CalendarAction.FilterScreenClosed)
+                    }) // TODO Move this to bottom sheet?
+                } else {
+                    CalendarScreen(title(), uiState, actionHandler) {
+                        calendarRouter.openNavigationDrawer()
+                    }
                 }
             }
         }
@@ -109,7 +115,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     }
 
     override fun onHandleBackPressed(): Boolean {
-        return false
+        return viewModel.handleBackPress()
     }
 
     companion object {
