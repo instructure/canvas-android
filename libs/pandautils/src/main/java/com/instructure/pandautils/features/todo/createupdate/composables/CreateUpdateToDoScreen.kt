@@ -97,7 +97,7 @@ internal fun CreateUpdateToDoScreenWrapper(
     CanvasTheme {
         if (uiState.selectCalendarUiState.show) {
             SelectCalendarScreen(
-                uiState = uiState,
+                uiState = uiState.selectCalendarUiState,
                 actionHandler = actionHandler,
                 navigationActionClick = {
                     actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
