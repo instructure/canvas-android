@@ -13,16 +13,16 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+package com.instructure.pandautils.room.calendar.entities
 
-package com.instructure.pandautils.features.calendar
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.PrefManager
-
-object CalendarPrefs : PrefManager("calendar") {
-
-    var calendarExpanded by BooleanPref(false)
-
-    // When we first start the new calendar we won't have saved filters for groups so we will add all groups
-    var firstStart by BooleanPref(true)
-}
+@Entity(tableName = "calendar_filter")
+class CalendarFilterEntity(
+    @ColumnInfo(name = "_id") @PrimaryKey(autoGenerate = true) val id: Long?,
+    @ColumnInfo(name = "user_domain") val userDomain: String,
+    @ColumnInfo(name = "user_id") val userId: String,
+    val filters: String
+)

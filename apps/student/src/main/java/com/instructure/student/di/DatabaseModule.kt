@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.appDatabaseMigrations
+import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
@@ -31,4 +32,12 @@ class DatabaseModule {
     fun provideSqlDelightDatabase(@ApplicationContext context: Context): StudentDb {
         return Db.getInstance(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideCalendarDatabase(@ApplicationContext context: Context): CalendarFilterDatabase {
+        return Room.databaseBuilder(context, CalendarFilterDatabase::class.java, "canvas_student_flutter.db")
+            .build()
+    }
+    // TODO Create this for Teacher when doing the Teacher integration
 }
