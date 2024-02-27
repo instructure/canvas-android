@@ -31,6 +31,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
@@ -405,7 +406,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     //OfflineMethod
     fun waitForSyncProgressDownloadStartedNotification() {
-        waitForView(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting)).assertDisplayed()
+        waitForMatcherWithSleeps(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting)).assertDisplayed()
+  //      waitForView(withText(com.instructure.pandautils.R.string.syncProgress_downloadStarting)).assertDisplayed()
     }
 
     //OfflineMethod
