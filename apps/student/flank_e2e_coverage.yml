@@ -19,7 +19,7 @@ gcloud:
   directories-to-pull:
     - /sdcard/
   test-targets:
-  - annotation com.instructure.canvas.espresso.E2E
+  - annotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.OfflineE2E
   - notAnnotation com.instructure.canvas.espresso.Stub
   device:
   - model: Pixel2.arm
