@@ -26,14 +26,15 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
-import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -112,6 +113,8 @@ class UserFilesInteractionTest : StudentTest() {
 
         // Now press the "Upload" button and verify that the file shows up in our list
         fileUploadPage.clickUpload()
+
+        Thread.sleep(2000) //Allow the upload to propagate
         // Should be on file list page now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed("sample.jpg")
@@ -153,6 +156,8 @@ class UserFilesInteractionTest : StudentTest() {
 
         // Now upload our new image and verify that it now shows up in the file list.
         fileUploadPage.clickUpload()
+
+        Thread.sleep(2000) //Allow the upload to propagate
         // Should be on fileListPage by now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed(fileName!!)
@@ -183,6 +188,8 @@ class UserFilesInteractionTest : StudentTest() {
 
         // Now upload our file and verify that it shows up in the file list
         fileUploadPage.clickUpload()
+
+        Thread.sleep(2000) //Allow the upload to propagate
         // Should be on file list page now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed("sample.jpg")
@@ -222,6 +229,9 @@ class UserFilesInteractionTest : StudentTest() {
     // Set up some rudimentary mock data, navigate to the file list page, then
     // initiate a file upload
     private fun goToFilePicker() : MockCanvas {
+
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+
         val data = MockCanvas.init(
                 courseCount = 1,
                 favoriteCourseCount = 1,
