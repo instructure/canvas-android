@@ -109,9 +109,6 @@ abstract class TeacherTest : CanvasTest() {
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
-    @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<LoginActivity>()
-
     @Before
     fun baseSetup() {
         try {
@@ -185,7 +182,6 @@ abstract class TeacherTest : CanvasTest() {
     val webViewLoginPage = WebViewLoginPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val updateFilePermissionsPage = UpdateFilePermissionsPage()
-    val progressPage = ProgressPage(composeTestRule)
 
 }
 

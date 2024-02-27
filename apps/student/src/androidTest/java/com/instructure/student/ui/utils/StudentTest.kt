@@ -127,9 +127,6 @@ abstract class StudentTest : CanvasTest() {
     @get:Rule(order = 0)
     var hiltRule = HiltAndroidRule(this)
 
-    @get:Rule(order = 1)
-    val composeTestRule = createAndroidComposeRule<LoginActivity>()
-
     // Sometimes activityRule.activity can get nulled out over time, probably as we
     // navigate away from the original login screen.  Capture the activity here so
     // that we can reference it safely later.
