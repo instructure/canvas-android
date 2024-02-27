@@ -15,7 +15,7 @@ gcloud:
     - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
   device:
     - model: Pixel2.arm
-      version: 29
+      version: 33
       locale: en_US
       orientation: landscape
 
