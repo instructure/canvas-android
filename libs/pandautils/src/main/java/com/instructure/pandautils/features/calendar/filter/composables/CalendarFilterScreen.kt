@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.calendar.filter.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -27,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +45,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
@@ -64,12 +67,28 @@ fun CalendarFiltersScreen(
                 )
             },
             content = { padding ->
-                CalendarFiltersContent(
-                    uiState, actionHandler, modifier = Modifier
-                        .padding(padding)
+                if (uiState.error) {
+                    ErrorContent(errorMessage = stringResource(id = R.string.calendarFiltersFailed), retryClick = {
+                        actionHandler(CalendarFilterAction.Retry)
+                    }, modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
-                )
+                        .fillMaxHeight())
+                } else if (uiState.loading) {
+                    Box(
+                        Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(), contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
+                    }
+                } else {
+                    CalendarFiltersContent(
+                        uiState, actionHandler, modifier = Modifier
+                            .padding(padding)
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                    )
+                }
             }
         )
     }

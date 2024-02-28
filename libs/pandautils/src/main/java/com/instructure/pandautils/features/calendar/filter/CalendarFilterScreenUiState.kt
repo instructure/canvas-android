@@ -19,6 +19,8 @@ data class CalendarFilterScreenUiState(
     val users: List<CalendarFilterItemUiState> = emptyList(),
     val courses: List<CalendarFilterItemUiState> = emptyList(),
     val groups: List<CalendarFilterItemUiState> = emptyList(),
+    val error: Boolean = false,
+    val loading: Boolean = false
 )
 
 data class CalendarFilterItemUiState(
@@ -29,4 +31,5 @@ data class CalendarFilterItemUiState(
 
 sealed class CalendarFilterAction {
     data class ToggleFilter(val contextId: String) : CalendarFilterAction()
+    data object Retry : CalendarFilterAction()
 }

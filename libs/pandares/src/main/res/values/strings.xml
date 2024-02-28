@@ -1545,7 +1545,6 @@
     <string name="calendarAtDateTime">%1$s at %2$s</string>
     <string name="calendarFromTo">%1$s from %2$s to %3$s</string>
     <string name="calendarPageError">There was an error loading your calendar</string>
-    <string name="calendarPageErrorRetry">Retry</string>
     <string name="calendarRefreshFailed">Failed to refresh calendar</string>
     <string name="calendarAddButtonContentDescription">New To Do</string>
     <string name="calendarFilterCalendars">Calendars</string>
@@ -1554,6 +1553,7 @@
     <string name="calendarFilterGroup">Groups</string>
     <string name="calendarFilterExplanation">Tap to select the calendars you want to see.</string>
     <string name="calendarFilterTitle">Calendars</string>
+    <string name="calendarFiltersFailed">Failed to load filters</string>
 
     <string name="todoScreenTitle">To Do</string>
     <string name="todoDateLabel">Date</string>
@@ -1570,4 +1570,6 @@
     <string name="createToDoDetailsLabel">Details</string>
     <string name="todoSaveErrorMessage">There was an error saving this To Do. Please check your connection and try again.</string>
     <string name="selectCalendarScreenTitle">Select Calendar</string>
+
+    <string name="errorContentRetryButton">Retry</string>
 </resources>

@@ -27,6 +27,7 @@ import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,6 +51,7 @@ class CalendarFilterViewModel @Inject constructor(
 
     private fun loadFilters() {
         viewModelScope.launch {
+            _uiState.value = createNewUiState(loading = true)
             val result = calendarRepository.getCanvasContexts()
             if (result is DataResult.Success) {
                 canvasContexts = result.data
@@ -62,15 +64,18 @@ class CalendarFilterViewModel @Inject constructor(
                 }
 
                 _uiState.value = createNewUiState()
+            } else {
+                _uiState.value = createNewUiState(error = true)
             }
         }
     }
 
-    private fun createNewUiState(): CalendarFilterScreenUiState {
+    private fun createNewUiState(error: Boolean = false, loading: Boolean = false): CalendarFilterScreenUiState {
         return CalendarFilterScreenUiState(
             createFilterItemsUiState(CanvasContext.Type.USER),
             createFilterItemsUiState(CanvasContext.Type.COURSE),
-            createFilterItemsUiState(CanvasContext.Type.GROUP)
+            createFilterItemsUiState(CanvasContext.Type.GROUP),
+            error, loading
         )
     }
 
@@ -81,6 +86,7 @@ class CalendarFilterViewModel @Inject constructor(
     fun handleAction(calendarFilterAction: CalendarFilterAction) {
         when (calendarFilterAction) {
             is CalendarFilterAction.ToggleFilter -> toggleFilter(calendarFilterAction.contextId)
+            CalendarFilterAction.Retry -> loadFilters()
         }
     }
 

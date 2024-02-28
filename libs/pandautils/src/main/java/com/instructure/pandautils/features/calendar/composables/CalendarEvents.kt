@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
@@ -153,13 +154,18 @@ fun CalendarEventsPage(
                 }
             }
         } else if (calendarEventsPageUiState.error) {
-            CalendarEventsError(actionHandler, Modifier
-                .fillMaxWidth()
-                .fillMaxHeight())
+            ErrorContent(
+                stringResource(id = R.string.calendarPageError), retryClick = {
+                    actionHandler(CalendarAction.Retry)
+                }, modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            )
         } else {
-            CalendarEventsEmpty(Modifier
-                .fillMaxWidth()
-                .fillMaxHeight())
+            CalendarEventsEmpty(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight())
         }
 
         PullRefreshIndicator(
@@ -253,46 +259,5 @@ fun CalendarEventsEmpty(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-    }
-}
-
-@Composable
-fun CalendarEventsError(actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_warning),
-            tint = colorResource(id = R.color.textDanger),
-            contentDescription = null,
-            modifier = Modifier.size(40.dp)
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = stringResource(id = R.string.calendarPageError),
-            fontSize = 16.sp,
-            color = colorResource(
-                id = R.color.textDark
-            ),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        OutlinedButton(
-            onClick = { actionHandler(CalendarAction.Retry) },
-            border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
-            shape = RoundedCornerShape(4.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundLightest))
-        ) {
-            Text(
-                text = stringResource(id = R.string.calendarPageErrorRetry),
-                fontSize = 16.sp,
-                color = colorResource(
-                    id = R.color.textDark
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-        }
     }
 }
