@@ -40,7 +40,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -48,7 +47,6 @@ import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -73,6 +71,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoUiState
@@ -183,11 +182,8 @@ private fun TopAppBarContent(
         )
     }
 
-    TopAppBar(
-        title = {
-            Text(text = title)
-        },
-        elevation = 2.dp,
+    CanvasAppBar(
+        title = title,
         actions = {
             if (uiState.saving) {
                 CircularProgressIndicator(
@@ -202,22 +198,11 @@ private fun TopAppBarContent(
                 )
             }
         },
-        backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-        contentColor = colorResource(id = R.color.textDarkest),
-        navigationIcon = {
-            IconButton(
-                onClick = {
-                    actionHandler(CreateUpdateToDoAction.CheckUnsavedChanges {
-                        showUnsavedChangesDialog.value = it
-                        if (!it) navigationAction()
-                    })
-                }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = stringResource(id = R.string.close)
-                )
-            }
+        navigationActionClick = {
+            actionHandler(CreateUpdateToDoAction.CheckUnsavedChanges {
+                showUnsavedChangesDialog.value = it
+                if (!it) navigationAction()
+            })
         },
         modifier = modifier
     )

@@ -27,18 +27,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
@@ -61,7 +58,7 @@ fun CalendarFiltersScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                TopAppBarContent(
+                CanvasAppBar(
                     title = stringResource(id = R.string.calendarFilterTitle),
                     navigationActionClick = navigationActionClick
                 )
@@ -76,31 +73,6 @@ fun CalendarFiltersScreen(
             }
         )
     }
-}
-
-@Composable
-private fun TopAppBarContent(
-    title: String,
-    navigationActionClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = {
-            Text(text = title)
-        },
-        elevation = 2.dp,
-        backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-        contentColor = colorResource(id = R.color.textDarkest),
-        navigationIcon = {
-            IconButton(onClick = navigationActionClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_close),
-                    contentDescription = stringResource(id = R.string.back)
-                )
-            }
-        },
-        modifier = modifier
-    )
 }
 
 @Composable
@@ -165,7 +137,7 @@ private fun CalendarFiltersContent(
 }
 
 @Composable
-fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler: (CalendarFilterAction) -> Unit, modifier: Modifier = Modifier) {
+private fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler: (CalendarFilterAction) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = 54.dp)

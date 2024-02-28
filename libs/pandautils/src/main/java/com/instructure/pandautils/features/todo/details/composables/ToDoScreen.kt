@@ -28,15 +28,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -47,7 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.todo.details.ToDoAction
@@ -135,10 +132,8 @@ private fun TopAppBarContent(
         )
     }
 
-    TopAppBar(
-        title = {
-            Text(text = title)
-        },
+    CanvasThemedAppBar(
+        title = title,
         actions = {
             if (deleting) {
                 CircularProgressIndicator(
@@ -150,16 +145,7 @@ private fun TopAppBarContent(
                 OverFlowMenuSegment(actionHandler, showDeleteConfirmationDialog)
             }
         },
-        backgroundColor = Color(ThemePrefs.primaryColor),
-        contentColor = Color(ThemePrefs.primaryTextColor),
-        navigationIcon = {
-            IconButton(onClick = navigationActionClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_back_arrow),
-                    contentDescription = stringResource(id = R.string.back)
-                )
-            }
-        },
+        navigationActionClick = navigationActionClick,
         modifier = modifier
     )
 }

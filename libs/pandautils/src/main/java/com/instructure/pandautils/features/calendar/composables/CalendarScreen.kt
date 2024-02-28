@@ -26,14 +26,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -52,6 +50,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
@@ -89,9 +88,7 @@ fun CalendarScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                TopAppBar(title = {
-                    Text(text = title)
-                },
+                CanvasThemedAppBar(title = title,
                     actions = {
                         if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
@@ -113,17 +110,9 @@ fun CalendarScreen(
                             }
                         }
                     },
-                    backgroundColor = Color(ThemePrefs.primaryColor),
-                    contentColor = Color(ThemePrefs.primaryTextColor),
-                    navigationIcon = {
-                        IconButton(onClick = navigationActionClick) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_hamburger),
-                                contentDescription = stringResource(id = R.string.navigation_drawer_open)
-                            )
-                        }
-
-                    })
+                    navigationActionClick = navigationActionClick,
+                    navIconRes = R.drawable.ic_hamburger,
+                    navIconContentDescription = stringResource(id = R.string.navigation_drawer_open))
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
