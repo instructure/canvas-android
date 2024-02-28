@@ -218,10 +218,11 @@ class CalendarViewModel @Inject constructor(
 
     private fun createCalendarUiState(): CalendarUiState {
         val eventIndicators = eventsByDay
-            .mapValues { min(3, it.value.filter { plannerItem ->
-                contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
-            }.size)
-             }
+            .mapValues {
+                min(3, it.value.filter { plannerItem ->
+                    contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
+                }.size)
+            }
         return CalendarUiState(
             selectedDay = selectedDay,
             expanded = expanded && !collapsing,
@@ -287,14 +288,22 @@ class CalendarViewModel @Inject constructor(
             plannerItem.plannable.todoDate.toDate()?.let {
                 val dateText = DateHelper.dayMonthDateFormat.format(it)
                 val timeText = DateHelper.getFormattedTime(context, it)
-                context.getString(R.string.calendarDate, dateText, timeText)
+                context.getString(R.string.calendarAtDateTime, dateText, timeText)
             }
         } else if (plannerItem.plannableType == PlannableType.CALENDAR_EVENT) {
-            if (plannerItem.plannable.startAt != null && plannerItem.plannable.endAt != null) {
-                val dateText = DateHelper.dayMonthDateFormat.format(plannerItem.plannable.startAt!!)
-                val startText = DateHelper.getFormattedTime(context, plannerItem.plannable.startAt)
-                val endText = DateHelper.getFormattedTime(context, plannerItem.plannable.endAt)
-                context.getString(R.string.calendarEventDate, dateText, startText, endText)
+            val startDate = plannerItem.plannable.startAt
+            val endDate = plannerItem.plannable.endAt
+            if (startDate != null && endDate != null) {
+                val dateText = DateHelper.dayMonthDateFormat.format(startDate)
+                val startText = DateHelper.getFormattedTime(context, startDate)
+                val endText = DateHelper.getFormattedTime(context, endDate)
+                if (plannerItem.plannable.allDay == true) {
+                    dateText
+                } else if (startDate == endDate) {
+                    context.getString(R.string.calendarAtDateTime, dateText, startText)
+                } else {
+                    context.getString(R.string.calendarFromTo, dateText, startText, endText)
+                }
             } else null
         } else  {
             plannerItem.plannable.dueAt?.let {

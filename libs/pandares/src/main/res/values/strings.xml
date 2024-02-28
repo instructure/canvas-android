@@ -1542,8 +1542,8 @@
     <string name="calendarEventSubmitted">Submitted</string>
     <string name="calendarEventPoints">%s pts</string>
     <string name="calendarDueDate">Due %1$s at %2$s</string>
-    <string name="calendarDate">%1$s at %2$s</string>
-    <string name="calendarEventDate">%1$s from %2$s to %3$s</string>
+    <string name="calendarAtDateTime">%1$s at %2$s</string>
+    <string name="calendarFromTo">%1$s from %2$s to %3$s</string>
     <string name="calendarPageError">There was an error loading your calendar</string>
     <string name="calendarPageErrorRetry">Retry</string>
     <string name="calendarRefreshFailed">Failed to refresh calendar</string>

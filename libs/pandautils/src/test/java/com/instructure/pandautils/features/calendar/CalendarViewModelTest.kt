@@ -48,7 +48,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import java.util.Calendar
 import java.util.Date
-import kotlin.math.exp
 
 
 @ExperimentalCoroutinesApi
@@ -85,12 +84,12 @@ class CalendarViewModelTest {
             "Due ${args[0]} ${args[1]}"
         }
 
-        every { context.getString(eq(R.string.calendarDate), any(), any()) } answers {
+        every { context.getString(eq(R.string.calendarAtDateTime), any(), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} ${args[1]}"
         }
 
-        every { context.getString(eq(R.string.calendarEventDate), any(), any(), any()) } answers {
+        every { context.getString(eq(R.string.calendarFromTo), any(), any(), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} ${args[1]} - ${args[2]}"
         }

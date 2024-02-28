@@ -64,7 +64,7 @@ class ToDoViewModel @Inject constructor(
             val dateText = plannerItem.plannable.todoDate.toDate()?.let {
                 val dateText = DateHelper.dayMonthDateFormat.format(it)
                 val timeText = DateHelper.getFormattedTime(context, it)
-                context.getString(R.string.calendarDate, dateText, timeText)
+                context.getString(R.string.calendarAtDateTime, dateText, timeText)
             }
 
             _uiState.update {
