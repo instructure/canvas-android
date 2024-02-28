@@ -28,7 +28,7 @@ import com.instructure.pandautils.room.common.Converters
         CalendarFilterEntity::class
     ], version = 2
 )
-@TypeConverters(Converters::class)
+@TypeConverters(CalendarFilterConverters::class)
 abstract class CalendarFilterDatabase : RoomDatabase() {
 
     abstract fun calendarFilterDao(): CalendarFilterDao

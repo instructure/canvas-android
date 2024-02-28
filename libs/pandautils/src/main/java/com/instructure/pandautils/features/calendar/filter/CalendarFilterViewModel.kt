@@ -39,7 +39,7 @@ class CalendarFilterViewModel @Inject constructor(
 
     private var canvasContexts = emptyMap<CanvasContext.Type, List<CanvasContext>>()
     private val contextIdFilters = mutableSetOf<String>()
-    private var filterForCurrentUser: CalendarFilterEntity? = null
+    private var filterEntityForCurrentUser: CalendarFilterEntity? = null
 
     private val _uiState = MutableStateFlow(CalendarFilterScreenUiState())
     val uiState = _uiState.asStateFlow()
@@ -56,10 +56,9 @@ class CalendarFilterViewModel @Inject constructor(
 
                 val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
                 if (filters.isNotEmpty()) {
-                    val filter = filters[0]
-                    filterForCurrentUser = filter
-                    val filtersSplit = filter.filters.split("|")
-                    contextIdFilters.addAll(filtersSplit)
+                    val filterEntity = filters[0]
+                    filterEntityForCurrentUser = filterEntity
+                    contextIdFilters.addAll(filterEntity.filters)
                 }
 
                 _uiState.value = createNewUiState()
@@ -92,8 +91,8 @@ class CalendarFilterViewModel @Inject constructor(
             contextIdFilters.add(contextId)
         }
         viewModelScope.launch {
-            filterForCurrentUser?.let {
-                val newFilter = it.copy(filters = contextIdFilters.joinToString("|"))
+            filterEntityForCurrentUser?.let {
+                val newFilter = it.copy(filters = contextIdFilters)
                 calendarFilterDao.insertOrUpdate(newFilter)
             }
             _uiState.emit(createNewUiState())

@@ -13,17 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.room.calendar.entities
+package com.instructure.pandautils.room.calendar
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.TypeConverter
 
-// We need to use the same name as the table in the Flutter version to keep the users settings
-@Entity(tableName = "calendar_filter")
-data class CalendarFilterEntity(
-    @ColumnInfo(name = "_id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "user_domain") val userDomain: String,
-    @ColumnInfo(name = "user_id") val userId: String,
-    val filters: Set<String>
-)
+class CalendarFilterConverters {
+    @TypeConverter
+    fun fromStringSet(set: Set<String>): String {
+        return set.joinToString("|")
+    }
+
+    @TypeConverter
+    fun fromStringToStringSet(s: String): Set<String> {
+        return s.takeIf { it.isNotEmpty() }?.split("|")?.toSet().orEmpty()
+    }
+}
