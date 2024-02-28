@@ -20,7 +20,7 @@ gcloud:
     - /sdcard/
   test-targets:
   - annotation com.instructure.canvas.espresso.E2E
-  - notAnnotation com.instructure.canvas.espresso.Stub
+  - notAnnotation com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.StubCoverage
   device:
   - model: Pixel2.arm
     version: 29

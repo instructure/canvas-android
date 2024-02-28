@@ -31,6 +31,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.StubCoverage
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -92,6 +93,7 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the user's device
     // Mocks the result from the expected intent, then uploads it.
     @Test
+    @StubCoverage("Cannot init FileUploadWorker and OfflineSyncWorker")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testUpload_deviceFile() {
         goToFilePicker()
@@ -123,6 +125,7 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the camera
     // Mocks the result from the expected intent, then uploads it.
     @Test
+    @StubCoverage("Cannot init FileUploadWorker and OfflineSyncWorker")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testUpload_fileFromCamera() {
 
@@ -166,6 +169,7 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the user's photo gallery
     // Mocks the result from the expected intent, then uploads it.
     @Test
+    @StubCoverage("Cannot init FileUploadWorker and OfflineSyncWorker")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testUpload_gallery() {
         goToFilePicker()
