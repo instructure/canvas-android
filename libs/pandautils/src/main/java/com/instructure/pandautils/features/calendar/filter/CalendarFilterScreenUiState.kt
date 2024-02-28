@@ -13,17 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.room.calendar.entities
+package com.instructure.pandautils.features.calendar.filter
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-// We need to use the same name as the table in the Flutter version to keep the users settings
-@Entity(tableName = "calendar_filter")
-data class CalendarFilterEntity(
-    @ColumnInfo(name = "_id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "user_domain") val userDomain: String,
-    @ColumnInfo(name = "user_id") val userId: String,
-    val filters: String
+data class CalendarFilterScreenUiState(
+    val users: List<CalendarFilterItemUiState> = emptyList(),
+    val courses: List<CalendarFilterItemUiState> = emptyList(),
+    val groups: List<CalendarFilterItemUiState> = emptyList(),
 )
+
+data class CalendarFilterItemUiState(
+    val contextId: String,
+    val name: String,
+    val selected: Boolean
+)
+
+sealed class CalendarFilterAction {
+    data class ToggleFilter(val contextId: String) : CalendarFilterAction()
+}

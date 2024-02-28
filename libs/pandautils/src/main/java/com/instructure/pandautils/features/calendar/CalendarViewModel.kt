@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -81,7 +82,7 @@ class CalendarViewModel @Inject constructor(
     private val loadedMonths = mutableSetOf<YearMonth>()
 
     private var canvasContexts = emptyMap<CanvasContext.Type, List<CanvasContext>>()
-    private val contextIdFilter = mutableSetOf<String>()
+    private val contextIdFilters = mutableSetOf<String>()
 
     private var filtersOpen = false
 
@@ -93,38 +94,57 @@ class CalendarViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
-        loadCanvasContexts()
+        loadFilters()
         loadVisibleMonths()
     }
 
-    private fun loadCanvasContexts() {
+    private fun loadFilters() {
         viewModelScope.launch {
-            val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
-            if (filters.isNotEmpty()) {
-                val filter = filters[0]
-                val filtersSplit = filter.filters.split("|")
-                contextIdFilter.addAll(filtersSplit)
-            }
+            val filters = initFiltersFromDb()
 
             val result = calendarRepository.getCanvasContexts()
             if (result is DataResult.Success) {
                 canvasContexts = result.data
+                val userIds = canvasContexts[CanvasContext.Type.USER]?.map { it.contextId } ?: emptyList()
+                val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
+                val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
+
+                if (filters.isEmpty() && apiPrefs.user?.id != null) {
+                    contextIdFilters.addAll(userIds)
+                    contextIdFilters.addAll(courseIds)
+                    contextIdFilters.addAll(groupIds)
+                    val filter = CalendarFilterEntity(
+                        userDomain = apiPrefs.fullDomain,
+                        userId = apiPrefs.user!!.id.toString(),
+                        filters = contextIdFilters.joinToString("|")
+                    )
+                    calendarFilterDao.insert(filter)
+                }
+
                 if (calendarPrefs.firstStart) {
                     calendarPrefs.firstStart = false
-                    val userIds = canvasContexts[CanvasContext.Type.USER]?.map { it.contextId } ?: emptyList()
-                    val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
-                    val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
-                    if (contextIdFilter.isEmpty()) {
-                        contextIdFilter.addAll(userIds)
-                        contextIdFilter.addAll(courseIds)
-                        contextIdFilter.addAll(groupIds)
-                    } else if (contextIdFilter.containsAll(userIds) && contextIdFilter.containsAll(courseIds)) {
+                    if (contextIdFilters.isEmpty()) {
+                        contextIdFilters.addAll(userIds)
+                        contextIdFilters.addAll(courseIds)
+                        contextIdFilters.addAll(groupIds)
+                    } else if (contextIdFilters.containsAll(userIds) && contextIdFilters.containsAll(courseIds)) {
                         // This is the case where previously all filters were selected, but groups were not supported so we should add those.
-                        contextIdFilter.addAll(canvasContexts.values.flatten().map { it.contextId })
+                        contextIdFilters.addAll(canvasContexts.values.flatten().map { it.contextId })
                     }
                 }
             }
         }
+    }
+
+    private suspend fun initFiltersFromDb(): List<CalendarFilterEntity> {
+        val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+        if (filters.isNotEmpty()) {
+            val filter = filters[0]
+            val filtersSplit = filter.filters.split("|")
+            contextIdFilters.clear()
+            contextIdFilters.addAll(filtersSplit)
+        }
+        return filters
     }
 
     private fun loadVisibleMonths() {
@@ -192,24 +212,15 @@ class CalendarViewModel @Inject constructor(
                 previousPage = previousPage,
                 currentPage = currentPage,
                 nextPage = nextPage
-            ),
-            calendarFilterUiState = CalendarFilterUiState(
-                filtersOpen,
-                createFilterItemsUiState(CanvasContext.Type.USER),
-                createFilterItemsUiState(CanvasContext.Type.COURSE),
-                createFilterItemsUiState(CanvasContext.Type.GROUP)
             )
         )
     }
 
-    private fun createFilterItemsUiState(type: CanvasContext.Type) = canvasContexts[type]?.map {
-        CalendarFilterItemUiState(it.contextId, it.name.orEmpty(), contextIdFilter.contains(it.contextId))
-    } ?: emptyList()
-
     private fun createCalendarUiState(): CalendarUiState {
         val eventIndicators = eventsByDay
             .mapValues { min(3, it.value.filter { plannerItem ->
-                contextIdFilter.isEmpty() || contextIdFilter.contains(plannerItem.canvasContext.contextId) }.size)
+                contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
+            }.size)
              }
         return CalendarUiState(
             selectedDay = selectedDay,
@@ -224,7 +235,8 @@ class CalendarViewModel @Inject constructor(
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
         val eventUiStates = eventsByDay[date]
             ?.filter { plannerItem ->
-                contextIdFilter.isEmpty() || contextIdFilter.contains(plannerItem.canvasContext.contextId) }
+                contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
+            }
             ?.map {
             EventUiState(
                 it.plannable.id,
@@ -344,9 +356,14 @@ class CalendarViewModel @Inject constructor(
             is CalendarAction.AddToDoTapped -> viewModelScope.launch {
                 _events.send(CalendarViewModelAction.OpenCreateToDo(selectedDay.toApiString()))
             }
+
             CalendarAction.FilterTapped -> showFilters()
-            is CalendarAction.ToggleFilterItem -> toggleFilter(calendarAction)
-            CalendarAction.FilterScreenClosed -> hideFilters()
+            CalendarAction.FiltersRefreshed -> {
+                viewModelScope.launch {
+                    initFiltersFromDb()
+                    _uiState.emit(createNewUiState())
+                }
+            }
         }
     }
 
@@ -520,39 +537,8 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun showFilters() {
-        filtersOpen = true
         viewModelScope.launch {
-            _uiState.emit(createNewUiState())
-        }
-    }
-
-    private fun hideFilters() {
-        filtersOpen = false
-        viewModelScope.launch {
-            _uiState.emit(createNewUiState())
-        }
-    }
-
-    fun handleBackPress(): Boolean {
-        return if (filtersOpen) {
-            viewModelScope.launch {
-                filtersOpen = false
-                _uiState.emit(createNewUiState())
-            }
-            true
-        } else {
-            false
-        }
-    }
-
-    private fun toggleFilter(calendarAction: CalendarAction.ToggleFilterItem) {
-        if (contextIdFilter.contains(calendarAction.contextId)) {
-            contextIdFilter.remove(calendarAction.contextId)
-        } else {
-            contextIdFilter.add(calendarAction.contextId)
-        }
-        viewModelScope.launch {
-            _uiState.emit(createNewUiState())
+            _events.send(CalendarViewModelAction.OpenFilters)
         }
     }
 }

@@ -23,7 +23,6 @@ import org.threeten.bp.LocalDate
 data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
-    val calendarFilterUiState: CalendarFilterUiState = CalendarFilterUiState(),
     val snackbarMessage: String? = null
 )
 
@@ -85,19 +84,6 @@ data class EventUiState(
     val status: String? = null
 )
 
-data class CalendarFilterUiState(
-    val showing: Boolean = false,
-    val users: List<CalendarFilterItemUiState> = emptyList(),
-    val courses: List<CalendarFilterItemUiState> = emptyList(),
-    val groups: List<CalendarFilterItemUiState> = emptyList(),
-)
-
-data class CalendarFilterItemUiState(
-    val contextId: String,
-    val name: String,
-    val selected: Boolean
-)
-
 sealed class CalendarAction {
     data object ExpandChanged : CalendarAction()
     data object ExpandDisabled : CalendarAction()
@@ -113,8 +99,7 @@ sealed class CalendarAction {
     data object HeightAnimationFinished : CalendarAction()
     data object AddToDoTapped : CalendarAction()
     data object FilterTapped : CalendarAction()
-    data class ToggleFilterItem(val contextId: String) : CalendarAction()
-    data object FilterScreenClosed : CalendarAction()
+    data object FiltersRefreshed : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {
@@ -124,8 +109,10 @@ sealed class CalendarViewModelAction {
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
     data class OpenToDo(val plannerItem: PlannerItem) : CalendarViewModelAction()
     data class OpenCreateToDo(val initialDateString: String?) : CalendarViewModelAction()
+    data object OpenFilters : CalendarViewModelAction()
 }
 
 sealed class SharedCalendarAction {
     data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
+    data object FilterDialogClosed : SharedCalendarAction()
 }

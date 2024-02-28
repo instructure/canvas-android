@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.calendar.composables
+package com.instructure.pandautils.features.calendar.filter.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -46,84 +46,33 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.features.calendar.CalendarAction
-import com.instructure.pandautils.features.calendar.CalendarFilterItemUiState
-import com.instructure.pandautils.features.calendar.CalendarFilterUiState
+import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
+import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
+import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
 import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
-fun CalendarFilters(
-    uiState: CalendarFilterUiState,
-    actionHandler: (CalendarAction) -> Unit,
-    navigationActionClick: () -> Unit,
-    modifier: Modifier = Modifier
+fun CalendarFiltersScreen(
+    uiState: CalendarFilterScreenUiState,
+    actionHandler: (CalendarFilterAction) -> Unit,
+    navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 TopAppBarContent(
-                    title = stringResource(id = R.string.selectCalendarScreenTitle),
+                    title = stringResource(id = R.string.calendarFilterTitle),
                     navigationActionClick = navigationActionClick
                 )
             },
             content = { padding ->
-                LazyColumn(
-                    modifier = modifier
+                CalendarFiltersContent(
+                    uiState, actionHandler, modifier = Modifier
                         .padding(padding)
                         .fillMaxWidth()
                         .fillMaxHeight()
-                ) {
-                    item {
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = stringResource(id = R.string.calendarFilterExplanation),
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.textDarkest),
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        )
-                        Spacer(modifier = Modifier.height(24.dp))
-                    }
-                    item {
-                        if (uiState.users.isNotEmpty()) {
-                            Text(
-                                stringResource(id = R.string.calendarFilterUser),
-                                fontSize = 14.sp,
-                                color = colorResource(id = R.color.textDark),
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                            )
-                        }
-                    }
-                    items(uiState.users) { user ->
-                        CalendarFilterItem(user, actionHandler, Modifier.fillMaxWidth())
-                    }
-                    item {
-                        if (uiState.courses.isNotEmpty()) {
-                            Text(
-                                stringResource(id = R.string.calendarFilterCourse),
-                                fontSize = 14.sp,
-                                color = colorResource(id = R.color.textDark),
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                            )
-                        }
-                    }
-                    items(uiState.courses) { course ->
-                        CalendarFilterItem(course, actionHandler, Modifier.fillMaxWidth())
-                    }
-                    item {
-                        if (uiState.groups.isNotEmpty()) {
-                            Text(
-                                stringResource(id = R.string.calendarFilterGroup),
-                                fontSize = 14.sp,
-                                color = colorResource(id = R.color.textDark),
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                            )
-                        }
-                    }
-                    items(uiState.groups) { group ->
-                        CalendarFilterItem(group, actionHandler, Modifier.fillMaxWidth())
-                    }
-                }
+                )
             }
         )
     }
@@ -155,18 +104,79 @@ private fun TopAppBarContent(
 }
 
 @Composable
-fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
+private fun CalendarFiltersContent(
+    uiState: CalendarFilterScreenUiState,
+    actionHandler: (CalendarFilterAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = stringResource(id = R.string.calendarFilterExplanation),
+                fontSize = 16.sp,
+                color = colorResource(id = R.color.textDarkest),
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+        item {
+            if (uiState.users.isNotEmpty()) {
+                Text(
+                    stringResource(id = R.string.calendarFilterUser),
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.textDark),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                )
+            }
+        }
+        items(uiState.users) { user ->
+            CalendarFilterItem(user, actionHandler, Modifier.fillMaxWidth())
+        }
+        item {
+            if (uiState.courses.isNotEmpty()) {
+                Text(
+                    stringResource(id = R.string.calendarFilterCourse),
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.textDark),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                )
+            }
+        }
+        items(uiState.courses) { course ->
+            CalendarFilterItem(course, actionHandler, Modifier.fillMaxWidth())
+        }
+        item {
+            if (uiState.groups.isNotEmpty()) {
+                Text(
+                    stringResource(id = R.string.calendarFilterGroup),
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.textDark),
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                )
+            }
+        }
+        items(uiState.groups) { group ->
+            CalendarFilterItem(group, actionHandler, Modifier.fillMaxWidth())
+        }
+    }
+}
+
+@Composable
+fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler: (CalendarFilterAction) -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = 54.dp)
             .clickable {
-                actionHandler(CalendarAction.ToggleFilterItem(uiState.contextId))
+                actionHandler(CalendarFilterAction.ToggleFilter(uiState.contextId))
             }
             .padding(start = 8.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = uiState.selected, onCheckedChange = {
-                actionHandler(CalendarAction.ToggleFilterItem(uiState.contextId))
+                actionHandler(CalendarFilterAction.ToggleFilter(uiState.contextId))
             }, colors = CheckboxDefaults.colors(
                 checkedColor = Color(ThemePrefs.brandColor),
                 uncheckedColor = colorResource(id = R.color.textDarkest),
@@ -181,8 +191,8 @@ fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler: (Calen
 @Composable
 fun CalendarFiltersPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val uiState = CalendarFilterUiState(
-        showing = true, users = listOf(
+    val uiState = CalendarFilterScreenUiState(
+        users = listOf(
             CalendarFilterItemUiState("user_1", "User 1", true),
         ), courses = listOf(
             CalendarFilterItemUiState("course_1", "Course 1", true),
@@ -192,5 +202,5 @@ fun CalendarFiltersPreview() {
             CalendarFilterItemUiState("group_1", "Group 1", true),
         )
     )
-    CalendarFilters(uiState, {}, {})
+    CalendarFiltersScreen(uiState, {}, {})
 }
