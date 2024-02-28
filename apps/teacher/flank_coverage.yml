@@ -27,8 +27,6 @@ gcloud:
     orientation: portrait
 
 flank:
-  testShards: 16
+  testShards: 10
   testRuns: 1
-  files-to-download:
-  - .*\.ec$
 

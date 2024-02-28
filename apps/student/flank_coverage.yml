@@ -29,6 +29,4 @@ gcloud:
 flank:
   testShards: 10
   testRuns: 1
-  files-to-download:
-  - .*\.ec$
 
