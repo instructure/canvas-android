@@ -115,8 +115,6 @@ class UserFilesInteractionTest : StudentTest() {
 
         // Now press the "Upload" button and verify that the file shows up in our list
         fileUploadPage.clickUpload()
-
-        Thread.sleep(2000) //Allow the upload to propagate
         // Should be on file list page now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed("sample.jpg")
@@ -159,8 +157,6 @@ class UserFilesInteractionTest : StudentTest() {
 
         // Now upload our new image and verify that it now shows up in the file list.
         fileUploadPage.clickUpload()
-
-        Thread.sleep(2000) //Allow the upload to propagate
         // Should be on fileListPage by now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed(fileName!!)
@@ -192,8 +188,6 @@ class UserFilesInteractionTest : StudentTest() {
 
         // Now upload our file and verify that it shows up in the file list
         fileUploadPage.clickUpload()
-
-        Thread.sleep(2000) //Allow the upload to propagate
         // Should be on file list page now
         fileListPage.refresh()
         fileListPage.assertItemDisplayed("sample.jpg")
