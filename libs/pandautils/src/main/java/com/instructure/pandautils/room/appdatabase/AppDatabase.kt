@@ -9,6 +9,7 @@ import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
 import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
@@ -18,6 +19,7 @@ import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadE
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
@@ -33,8 +35,9 @@ import com.instructure.pandautils.room.common.Converters
         SubmissionCommentEntity::class,
         PendingSubmissionCommentEntity::class,
         DashboardFileUploadEntity::class,
-        ReminderEntity::class
-    ], version = 9
+        ReminderEntity::class,
+        ModuleBulkProgressEntity::class
+    ], version = 10
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -56,4 +59,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun environmentFeatureFlagsDao(): EnvironmentFeatureFlagsDao
 
     abstract fun reminderDao(): ReminderDao
+
+    abstract fun moduleBulkProgressDao(): ModuleBulkProgressDao
 }

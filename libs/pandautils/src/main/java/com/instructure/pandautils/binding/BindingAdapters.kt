@@ -99,7 +99,7 @@ private fun handleErrorState(emptyView: EmptyView, error: ViewState.Error) {
         emptyView.setGone()
     } else {
         emptyView.setVisible()
-        emptyView.setError(error.errorMessage)
+        emptyView.setError(error.errorMessage, error.errorImage)
     }
 }
 

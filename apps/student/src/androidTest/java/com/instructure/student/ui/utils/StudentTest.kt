@@ -23,6 +23,7 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.view.View
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.core.content.FileProvider
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.Espresso
