@@ -19,6 +19,7 @@ package com.instructure.teacher.ui.utils
 import android.app.Activity
 import android.util.Log
 import android.view.View
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -72,6 +73,7 @@ import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.pages.PostSettingsPage
 import com.instructure.teacher.ui.pages.ProfileSettingsPage
+import com.instructure.teacher.ui.pages.ProgressPage
 import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage
@@ -85,6 +87,7 @@ import com.instructure.teacher.ui.pages.SpeedGraderQuizSubmissionPage
 import com.instructure.teacher.ui.pages.StudentContextPage
 import com.instructure.teacher.ui.pages.SyllabusPage
 import com.instructure.teacher.ui.pages.TodoPage
+import com.instructure.teacher.ui.pages.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.WebViewLoginPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
@@ -178,6 +181,7 @@ abstract class TeacherTest : CanvasTest() {
     val todoPage = TodoPage()
     val webViewLoginPage = WebViewLoginPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
+    val updateFilePermissionsPage = UpdateFilePermissionsPage()
 
 }
 

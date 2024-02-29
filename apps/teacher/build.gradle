@@ -320,6 +320,8 @@ dependencies {
     implementation Libs.ROOM_COROUTINES
 
     testImplementation Libs.HAMCREST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }
 
 apply plugin: 'com.google.gms.google-services'

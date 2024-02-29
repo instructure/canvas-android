@@ -359,6 +359,8 @@ dependencies {
     implementation Libs.ROOM_COROUTINES
 
     testImplementation Libs.HAMCREST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }
 
 // Comment out this line if the reporting logic starts going wonky.

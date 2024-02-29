@@ -89,7 +89,7 @@ class   ModulesE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Assert that '${testPage.title}' page is present as a module item, but it's not published.")
         moduleListPage.assertModuleItemIsDisplayed(testPage.title)
-        moduleListPage.assertModuleItemNotPublished(module.name, testPage.title)
+        moduleListPage.assertModuleItemNotPublished(testPage.title)
 
         Log.d(PREPARATION_TAG,"Publish '${module.name}' module via API.")
         ModulesApi.updateModule(
@@ -181,11 +181,11 @@ class   ModulesE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Assert that ${assignment.name} assignment and ${quiz.title} quiz and ${testPage.title} page are present as module items, and they are NOT published since their module is unpublished.")
         moduleListPage.assertModuleItemIsDisplayed(assignment.name)
-        moduleListPage.assertModuleItemNotPublished(module.name, assignment.name)
+        moduleListPage.assertModuleItemNotPublished(assignment.name)
         moduleListPage.assertModuleItemIsDisplayed(quiz.title)
-        moduleListPage.assertModuleItemNotPublished(module.name, quiz.title)
+        moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemIsDisplayed(testPage.title)
-        moduleListPage.assertModuleItemNotPublished(module.name, testPage.title)
+        moduleListPage.assertModuleItemNotPublished(testPage.title)
 
         Log.d(STEP_TAG, "Open the '${assignment.name}' assignment module item and assert that the Assignment Details Page is displayed")
         moduleListPage.clickOnModuleItem(assignment.name)

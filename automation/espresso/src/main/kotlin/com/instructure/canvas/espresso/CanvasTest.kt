@@ -80,7 +80,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
     val connectivityManager = InstrumentationRegistry.getInstrumentation().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    @Rule(order = 1)
+    @Rule(order = 2)
     override fun chain(): TestRule {
         return RuleChain
                 .outerRule(ScreenshotTestRule())

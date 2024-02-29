@@ -880,7 +880,7 @@ fun MockCanvas.addAssignment(
     lockInfo : LockInfo? = null,
     userSubmitted: Boolean = false,
     dueAt: String? = null,
-    name: String = Randomizer.randomCourseName(),
+    name: String = Randomizer.randomAssignmentName(),
     pointsPossible: Int = 10,
     description: String = "",
     lockAt: String? = null,
@@ -1338,7 +1338,8 @@ fun MockCanvas.addFileToFolder(
         fileContent: String = Randomizer.randomPageBody(),
         contentType: String = "text/plain",
         url: String = "",
-        fileId: Long = newItemId()
+        fileId: Long = newItemId(),
+        visibilityLevel: String = "inherit"
 ) : Long {
     if(courseId == null && folderId == null) {
         throw Exception("Either courseId or folderId must be non-null")
@@ -1352,7 +1353,8 @@ fun MockCanvas.addFileToFolder(
             size = fileContent.length.toLong(),
             displayName = displayName,
             contentType = contentType,
-            url = if(url.isEmpty()) "https://mock-data.instructure.com/files/$fileId/preview" else url
+            url = if(url.isEmpty()) "https://mock-data.instructure.com/files/$fileId/preview" else url,
+            visibilityLevel = visibilityLevel
     )
 
     // And record it for the folder
@@ -1368,8 +1370,6 @@ fun MockCanvas.addFileToFolder(
     fileContents[fileId] = fileContent
 
     return fileId
-
-
 }
 /**
  * Creates a new file for the specified course, and records it properly in MockCanvas.
@@ -1378,12 +1378,13 @@ fun MockCanvas.addFileToFolder(
  */
 fun MockCanvas.addFileToCourse(
         courseId: Long,
-        displayName: String,
+        displayName: String = Randomizer.randomPageTitle(),
         fileContent: String = Randomizer.randomPageBody(),
         contentType: String = "text/plain",
         groupId: Long? = null,
         url: String = "",
-        fileId: Long = newItemId()
+        fileId: Long = newItemId(),
+        visibilityLevel: String = "inherit"
 ): Long {
     val rootFolder = getRootFolder(courseId = courseId, groupId = groupId)
     return addFileToFolder(
@@ -1392,7 +1393,8 @@ fun MockCanvas.addFileToCourse(
             fileContent = fileContent,
             contentType = contentType,
             url = url,
-            fileId = fileId
+            fileId = fileId,
+            visibilityLevel = visibilityLevel
     )
 }
 
@@ -1535,6 +1537,7 @@ fun MockCanvas.addItemToModule(
         course: Course,
         moduleId: Long,
         item: Any,
+        contentId: Long = 0,
         published: Boolean = true,
         moduleContentDetails: ModuleContentDetails? = null
 ) : ModuleItem {
@@ -1599,6 +1602,7 @@ fun MockCanvas.addItemToModule(
             // htmlUrl populated in order to get external url module items to work.
             url = itemUrl,
             htmlUrl = itemUrl,
+            contentId = contentId,
             moduleDetails = moduleContentDetails
     )
 

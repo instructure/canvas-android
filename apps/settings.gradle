@@ -1,7 +1,20 @@
+pluginManagement {
+    buildscript {
+        repositories {
+            mavenCentral()
+            maven {
+                url = uri("https://storage.googleapis.com/r8-releases/raw")
+            }
+        }
+        dependencies {
+            classpath("com.android.tools:r8:8.2.47")
+        }
+    }
+}
+
 /* Top-level project modules */
 include ':student'
 include ':teacher'
-
 /* Flutter embed modules */
 setBinding(new Binding([gradle: this]))
 
