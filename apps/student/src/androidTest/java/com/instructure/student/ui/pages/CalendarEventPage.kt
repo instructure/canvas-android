@@ -16,19 +16,28 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.sugar.Web.onWebView
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.getText
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.withId
+import com.instructure.pandautils.R
+import org.hamcrest.Matchers
 
-class CalendarEventPage : BasePage() {
-
-    //TODO compose tests
+class CalendarEventPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun verifyTitle(title: String) {
-        //onView(allOf(withParent(withId(R.id.toolbar)), containsTextCaseInsensitive(title))).assertDisplayed()
+        composeTestRule.onNodeWithText(title).assertIsDisplayed()
     }
 
     fun verifyDescription(description: String) {
-        /*onWebView(withId(R.id.contentWebView) + withAncestor(R.id.calendarEventWebViewWrapper))
+        onWebView(withId(R.id.contentWebView))
             .withElement(findElement(Locator.ID, "content"))
-            .check(webMatches(getText(), Matchers.comparesEqualTo(description)))*/
+            .check(webMatches(getText(), Matchers.comparesEqualTo(description)))
     }
 }
