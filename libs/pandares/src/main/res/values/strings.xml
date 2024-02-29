@@ -1564,4 +1564,9 @@
     <string name="createToDoDetailsLabel">Details</string>
     <string name="todoSaveErrorMessage">There was an error saving this To Do. Please check your connection and try again.</string>
     <string name="selectCalendarScreenTitle">Select Calendar</string>
+
+    <string name="eventLocationLabel">Location</string>
+    <string name="eventAddressLabel">Address</string>
+    <string name="eventDetailsLabel">Details</string>
+    <string name="errorLoadingEvent">There was a problem loading this event. Please check your connection and try again.</string>
 </resources>
