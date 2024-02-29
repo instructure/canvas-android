@@ -81,7 +81,6 @@ class CalendarViewModel @Inject constructor(
     private val refreshingDays = mutableSetOf<LocalDate>()
     private val loadedMonths = mutableSetOf<YearMonth>()
 
-    private var canvasContexts = emptyMap<CanvasContext.Type, List<CanvasContext>>()
     private val contextIdFilters = mutableSetOf<String>()
 
     private val _uiState =
@@ -102,7 +101,7 @@ class CalendarViewModel @Inject constructor(
 
             val result = calendarRepository.getCanvasContexts()
             if (result is DataResult.Success) {
-                canvasContexts = result.data
+                val canvasContexts = result.data
                 val userIds = canvasContexts[CanvasContext.Type.USER]?.map { it.contextId } ?: emptyList()
                 val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
                 val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()

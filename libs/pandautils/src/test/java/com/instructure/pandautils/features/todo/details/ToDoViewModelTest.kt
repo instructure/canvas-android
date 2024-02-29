@@ -75,7 +75,8 @@ class ToDoViewModelTest {
             todoDate = LocalDate.of(2024, 2, 12).atTime(12, 0).toApiString(),
             startAt = null,
             endAt = null,
-            details = "Description"
+            details = "Description",
+            null
         ),
         plannableDate = Date(),
         htmlUrl = null,
