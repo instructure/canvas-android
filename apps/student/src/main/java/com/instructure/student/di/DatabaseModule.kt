@@ -36,8 +36,11 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideCalendarDatabase(@ApplicationContext context: Context): CalendarFilterDatabase {
-        return Room.databaseBuilder(context, CalendarFilterDatabase::class.java, "canvas_student_flutter.db")
+        return Room.databaseBuilder(
+            context,
+            CalendarFilterDatabase::class.java,
+            "canvas_student_flutter.db"
+        ) // We need to have the same db name as in the Flutter calendar
             .build()
     }
-    // TODO Create this for Teacher when doing the Teacher integration
 }
