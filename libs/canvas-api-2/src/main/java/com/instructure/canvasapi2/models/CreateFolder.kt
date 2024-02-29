@@ -33,7 +33,9 @@ data class UpdateFileFolder(
         @SerializedName("parent_folder_id")
         var parentFolderId: Long? = null,   // Used for Files
         @SerializedName("on_duplicate")
-        var onDuplicate: String? = null     // Used for files - "overwrite" or "rename"
+        var onDuplicate: String? = null,     // Used for files - "overwrite" or "rename"
+        @SerializedName("visibility_level")
+        val visibilityLevel: String? = null
 )
 
 

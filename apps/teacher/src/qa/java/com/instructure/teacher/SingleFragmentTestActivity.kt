@@ -23,7 +23,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.teacher.databinding.ActivitySingleFragmentTestBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SingleFragmentTestActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivitySingleFragmentTestBinding::inflate)

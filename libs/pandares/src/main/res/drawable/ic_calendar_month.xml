@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="1920"
+    android:viewportHeight="1920">
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M1411.8,0c31.2,0 56.5,25.3 56.5,56.5v56.5h169.4c93.4,0 169.4,76 169.4,169.4L1807.1,1920L113,1920L113,282.4c0,-93.4 76,-169.4 169.4,-169.4h169.4v-56.5c0,-31.2 25.3,-56.5 56.5,-56.5s56.5,25.3 56.5,56.5v56.5h790.6v-56.5c0,-31.2 25.3,-56.5 56.5,-56.5ZM1694.2,564.7L225.9,564.7v1242.4h1468.2L1694.2,564.7ZM677.7,1242.4v338.8L338.9,1581.2v-338.8h338.8ZM1129.5,1242.4v338.8L790.6,1581.2v-338.8h338.8ZM1581.2,1242.4v338.8h-338.8v-338.8h338.8ZM564.8,1355.3L451.8,1355.3v112.9h112.9v-112.9ZM1016.5,1355.3L903.6,1355.3v112.9h112.9v-112.9ZM1468.3,1355.3h-112.9v112.9h112.9v-112.9ZM677.7,790.6v338.8L338.9,1129.4L338.9,790.6h338.8ZM1129.5,790.6v338.8L790.6,1129.4L790.6,790.6h338.8ZM1581.2,790.6v338.8h-338.8L1242.4,790.6h338.8ZM564.8,903.5L451.8,903.5v112.9h112.9L564.8,903.5ZM1016.5,903.5L903.6,903.5v112.9h112.9L1016.5,903.5ZM1468.3,903.5h-112.9v112.9h112.9L1468.3,903.5ZM451.8,225.9L282.4,225.9c-31.1,0 -56.5,25.3 -56.5,56.5v169.4h1468.2L1694.2,282.4c0,-31.2 -25.4,-56.5 -56.5,-56.5h-169.4v56.5c0,31.2 -25.3,56.5 -56.5,56.5 -31.2,0 -56.5,-25.3 -56.5,-56.5v-56.5L564.8,225.9v56.5c0,31.2 -25.3,56.5 -56.5,56.5 -31.2,0 -56.5,-25.3 -56.5,-56.5v-56.5Z"
+      android:fillType="evenOdd"/>
+</vector>
