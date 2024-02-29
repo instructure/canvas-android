@@ -2137,7 +2137,7 @@ fun MockCanvas.addTodo(name: String, userId: Long, courseId: Long? = null, date:
         null,
         null,
         PlannableType.TODO,
-        Plannable(newItemId(), name, courseId, null, userId, null, date, null, date.toApiString(), null, null, details),
+        Plannable(newItemId(), name, courseId, null, userId, null, date, null, date.toApiString(), null, null, details, null),
         date ?: Date(),
         null,
         null,
