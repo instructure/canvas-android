@@ -16,8 +16,9 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.InstrumentationRegistry
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText
@@ -34,6 +35,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.swipeDown
 import com.instructure.teacher.R
 
@@ -46,7 +48,7 @@ import com.instructure.teacher.R
  * that can be accessed for performing assertions and interactions. The page has a specific resource ID
  * associated with it, which is R.id.quizDetailsPage.
  */
-class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
+class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(pageResId = R.id.quizDetailsPage) {
 
     private val backButton by OnViewWithContentDescription(R.string.abc_action_bar_up_description,false)
     private val toolbarTitle by OnViewWithText(R.string.quiz_details)
@@ -113,8 +115,27 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
      * @param quiz The Quiz object representing the quiz details.
      */
     fun assertQuizDetails(quiz: Quiz) {
-        quizTitleTextView.assertHasText(quiz.title!!)
-        if (quiz.published) {
+        assertQuizDetails(quiz.title!!, quiz.published)
+    }
+
+    /**
+     * Asserts the quiz details such as title and publish status.
+     *
+     * @param quiz The Quiz object representing the quiz details.
+     */
+    fun assertQuizDetails(quiz: QuizApiModel) {
+        assertQuizDetails(quiz.title, quiz.published)
+    }
+
+    /**
+     * Assert quiz details
+     * Private method used for overloading.
+     * @param quizTitle The quiz's title
+     * @param published The quiz's published status
+     */
+    private fun assertQuizDetails(quizTitle: String, published: Boolean) {
+        quizTitleTextView.assertHasText(quizTitle)
+        if (published) {
             publishStatusTextView.assertHasText(R.string.published)
         } else {
             publishStatusTextView.assertHasText(R.string.not_published)

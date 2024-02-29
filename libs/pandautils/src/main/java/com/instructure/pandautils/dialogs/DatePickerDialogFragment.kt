@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DATE_PICKER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.utils.NullableSerializableArg
 import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.dismissExisting
@@ -34,19 +35,23 @@ import kotlin.properties.Delegates
 @ScreenView(SCREEN_VIEW_DATE_PICKER)
 class DatePickerDialogFragment : AppCompatDialogFragment(), DatePickerDialog.OnDateSetListener {
 
-    var mCallback: (year: Int, month: Int, dayOfMonth: Int) -> Unit by Delegates.notNull()
-    var mDefaultDate by SerializableArg(Date())
+    var callback: (year: Int, month: Int, dayOfMonth: Int) -> Unit by Delegates.notNull()
+    var defaultDate by SerializableArg(Date())
+    var minDate by NullableSerializableArg<Date>()
+    var maxDate by NullableSerializableArg<Date>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // Setup default date
         val c = Calendar.getInstance()
-        c.time = mDefaultDate
+        c.time = defaultDate
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
 
 
         val dialog = DatePickerDialog(requireContext(), this, year, month, day)
+        minDate?.let { dialog.datePicker.minDate = it.time }
+        maxDate?.let { dialog.datePicker.maxDate = it.time }
 
         dialog.setOnShowListener {
             dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
@@ -57,15 +62,17 @@ class DatePickerDialogFragment : AppCompatDialogFragment(), DatePickerDialog.OnD
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        mCallback(year, month, dayOfMonth)
+        callback(year, month, dayOfMonth)
     }
 
     companion object {
-        fun getInstance(manager: FragmentManager, defaultDate: Date? = null, callback: (Int, Int, Int) -> Unit) : DatePickerDialogFragment {
+        fun getInstance(manager: FragmentManager, defaultDate: Date? = null, minDate: Date? = null, maxDate: Date? = null, callback: (Int, Int, Int) -> Unit) : DatePickerDialogFragment {
             manager.dismissExisting<DatePickerDialogFragment>()
             val dialog = DatePickerDialogFragment()
-            dialog.mCallback = callback
-            defaultDate?.let { dialog.mDefaultDate = it }
+            dialog.callback = callback
+            defaultDate?.let { dialog.defaultDate = it }
+            minDate?.let { dialog.minDate = it }
+            maxDate?.let { dialog.maxDate = it }
             return dialog
         }
     }

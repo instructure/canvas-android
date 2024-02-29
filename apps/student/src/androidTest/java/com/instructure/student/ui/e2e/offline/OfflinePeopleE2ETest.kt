@@ -21,6 +21,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
@@ -40,7 +41,7 @@ class OfflinePeopleE2ETest : StudentTest() {
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.PEOPLE, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.PEOPLE, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflinePeopleE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -57,7 +58,7 @@ class OfflinePeopleE2ETest : StudentTest() {
         dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
 
         manageOfflineContentPage.expandCollapseItem(course.name)
-        Log.d(STEP_TAG, "Select the entire '${course.name}' course for sync. Click on the 'Sync' button.")
+        Log.d(STEP_TAG, "Select the 'People' of '${course.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState("People")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 

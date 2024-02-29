@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -81,6 +82,15 @@ object ModuleAPI {
 
         @GET("{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
         fun getModuleItem(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ModuleItem>
+
+        @GET("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
+        suspend fun getModuleItem(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Tag params: RestParams) : DataResult<ModuleItem>
+
+        @PUT("{contextType}/{contextId}/modules")
+        suspend fun bulkUpdateModules(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Query("module_ids[]") moduleIds: List<Long>, @Query("event") event: String, @Query("skip_content_tags") skipContentTags: Boolean, @Query("async") async: Boolean, @Tag params: RestParams): DataResult<BulkUpdateResponse>
+
+        @PUT("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}")
+        suspend fun publishModuleItem(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Query("module_item[published]") publish: Boolean, @Tag params: RestParams): DataResult<ModuleItem>
     }
 
 

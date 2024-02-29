@@ -91,7 +91,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper)).scrollTo()
     }
 
-    private fun clickReply() {
+    fun clickReply() {
         replyButton.click()
     }
 
@@ -118,9 +118,13 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     fun sendReply(replyMessage: String) {
         clickReply()
         waitForViewWithId(R.id.rce_webView).perform(TypeInRCETextEditor(replyMessage))
-        onView(withId(R.id.menu_send)).click()
+        clickOnSendReplyButton()
 
         sleep(3000) // wait out the toast message
+    }
+
+    private fun clickOnSendReplyButton() {
+        onView(withId(R.id.menu_send)).click()
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry, refreshesAllowed: Int = 0) {

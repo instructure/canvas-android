@@ -37,6 +37,7 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
@@ -119,8 +120,7 @@ class CourseBrowserPage : BasePage() {
      * Opens the pages tab in the course browser.
      */
     fun openPagesTab() {
-        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
-        waitForViewWithText(R.string.tab_pages).click()
+        waitForViewWithText(R.string.tab_pages).scrollTo().click()
     }
 
     /**
