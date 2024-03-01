@@ -50,7 +50,7 @@ import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
-import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 
 
@@ -73,8 +73,8 @@ class EventViewModelTest {
         contextName = "Context name",
         contextCode = "user_1",
         title = "Title",
-        startAt = OffsetDateTime.now(clock).minusHours(1).toApiString(),
-        endAt = OffsetDateTime.now(clock).toApiString(),
+        startAt = LocalDateTime.now(clock).minusHours(1).toApiString(),
+        endAt = LocalDateTime.now(clock).toApiString(),
         isAllDay = false,
         seriesNaturalLanguage = "Every day",
         locationName = "Location",
@@ -183,8 +183,8 @@ class EventViewModelTest {
     @Test
     fun `Date text when time interval event`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = OffsetDateTime.now(clock).minusHours(1).toApiString(),
-            endAt = OffsetDateTime.now(clock).toApiString()
+            startAt = LocalDateTime.now(clock).minusHours(1).toApiString(),
+            endAt = LocalDateTime.now(clock).toApiString()
         )
 
         createViewModel()
@@ -207,8 +207,8 @@ class EventViewModelTest {
     @Test
     fun `Date text when not interval event`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = OffsetDateTime.now(clock).toApiString(),
-            endAt = OffsetDateTime.now(clock).toApiString()
+            startAt = LocalDateTime.now(clock).toApiString(),
+            endAt = LocalDateTime.now(clock).toApiString()
         )
 
         createViewModel()
@@ -231,7 +231,7 @@ class EventViewModelTest {
     @Test
     fun `Date text without end date`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = OffsetDateTime.now(clock).toApiString(),
+            startAt = LocalDateTime.now(clock).toApiString(),
             endAt = null
         )
 
