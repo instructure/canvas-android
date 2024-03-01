@@ -25,6 +25,8 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.pandautils.R
 import org.hamcrest.Matchers
@@ -36,7 +38,7 @@ class CalendarEventPage(private val composeTestRule: ComposeTestRule) : BasePage
     }
 
     fun verifyDescription(description: String) {
-        onWebView(withId(R.id.contentWebView))
+        onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
             .withElement(findElement(Locator.ID, "content"))
             .check(webMatches(getText(), Matchers.comparesEqualTo(description)))
     }

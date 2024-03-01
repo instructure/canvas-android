@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -47,6 +48,10 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.threeten.bp.Clock
+import org.threeten.bp.Instant
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneId
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -62,12 +67,14 @@ class EventViewModelTest {
 
     private lateinit var viewModel: EventViewModel
 
+    private val clock = Clock.fixed(Instant.parse("2024-02-22T11:00:00.00Z"), ZoneId.systemDefault())
+
     private val scheduleItem = ScheduleItem(
         contextName = "Context name",
         contextCode = "user_1",
         title = "Title",
-        startAt = "2024-02-12T12:00:00Z",
-        endAt = "2024-02-12T13:00:00Z",
+        startAt = OffsetDateTime.now(clock).minusHours(1).toApiString(),
+        endAt = OffsetDateTime.now(clock).toApiString(),
         isAllDay = false,
         seriesNaturalLanguage = "Every day",
         locationName = "Location",
@@ -118,7 +125,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 12 1:00 PM - 2:00 PM",
+            date = "Feb 22 11:00 AM - 12:00 PM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -141,7 +148,7 @@ class EventViewModelTest {
             modifyAllowed = true,
             loading = false,
             title = "Title",
-            date = "Feb 12 1:00 PM - 2:00 PM",
+            date = "Feb 22 11:00 AM - 12:00 PM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -163,7 +170,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 12 - All Day Event",
+            date = "Feb 22 - All Day Event",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -176,8 +183,8 @@ class EventViewModelTest {
     @Test
     fun `Date text when time interval event`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = "2024-02-12T12:00:00Z",
-            endAt = "2024-02-12T13:00:00Z"
+            startAt = OffsetDateTime.now(clock).minusHours(1).toApiString(),
+            endAt = OffsetDateTime.now(clock).toApiString()
         )
 
         createViewModel()
@@ -187,7 +194,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 12 1:00 PM - 2:00 PM",
+            date = "Feb 22 11:00 AM - 12:00 PM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -200,8 +207,8 @@ class EventViewModelTest {
     @Test
     fun `Date text when not interval event`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = "2024-02-12T12:00:00Z",
-            endAt = "2024-02-12T12:00:00Z"
+            startAt = OffsetDateTime.now(clock).toApiString(),
+            endAt = OffsetDateTime.now(clock).toApiString()
         )
 
         createViewModel()
@@ -211,7 +218,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 12 1:00 PM",
+            date = "Feb 22 12:00 PM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -224,7 +231,7 @@ class EventViewModelTest {
     @Test
     fun `Date text without end date`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = "2024-02-12T12:00:00Z",
+            startAt = OffsetDateTime.now(clock).toApiString(),
             endAt = null
         )
 
@@ -235,7 +242,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 12",
+            date = "Feb 22",
             recurrence = "Every day",
             location = "Location",
             address = "Address",

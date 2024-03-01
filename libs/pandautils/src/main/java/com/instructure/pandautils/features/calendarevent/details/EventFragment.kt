@@ -83,6 +83,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {
+            id = R.id.eventFragment
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 EventScreen(
