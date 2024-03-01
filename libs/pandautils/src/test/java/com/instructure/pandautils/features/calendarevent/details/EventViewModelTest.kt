@@ -48,10 +48,7 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.threeten.bp.Clock
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
+import org.threeten.bp.LocalDate
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -67,14 +64,12 @@ class EventViewModelTest {
 
     private lateinit var viewModel: EventViewModel
 
-    private val clock = Clock.fixed(Instant.parse("2024-02-22T11:00:00.00Z"), ZoneId.systemDefault())
-
     private val scheduleItem = ScheduleItem(
         contextName = "Context name",
         contextCode = "user_1",
         title = "Title",
-        startAt = LocalDateTime.now(clock).minusHours(1).toApiString(),
-        endAt = LocalDateTime.now(clock).toApiString(),
+        startAt = LocalDate.of(2024, 3, 1).atTime(11, 0).toApiString(),
+        endAt = LocalDate.of(2024, 3, 1).atTime(12, 0).toApiString(),
         isAllDay = false,
         seriesNaturalLanguage = "Every day",
         locationName = "Location",
@@ -125,7 +120,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 22 11:00 AM - 12:00 PM",
+            date = "Mar 1 11:00 AM - 12:00 PM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -148,7 +143,7 @@ class EventViewModelTest {
             modifyAllowed = true,
             loading = false,
             title = "Title",
-            date = "Feb 22 11:00 AM - 12:00 PM",
+            date = "Mar 1 11:00 AM - 12:00 PM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -170,7 +165,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 22 - All Day Event",
+            date = "Mar 1 - All Day Event",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -183,8 +178,8 @@ class EventViewModelTest {
     @Test
     fun `Date text when time interval event`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = LocalDateTime.now(clock).minusHours(1).toApiString(),
-            endAt = LocalDateTime.now(clock).toApiString()
+            startAt = LocalDate.of(2024, 3, 1).atTime(11, 0).toApiString(),
+            endAt = LocalDate.of(2024, 3, 1).atTime(12, 0).toApiString()
         )
 
         createViewModel()
@@ -194,7 +189,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 22 11:00 AM - 12:00 PM",
+            date = "Mar 1 11:00 AM - 12:00 PM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -207,8 +202,8 @@ class EventViewModelTest {
     @Test
     fun `Date text when not interval event`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = LocalDateTime.now(clock).toApiString(),
-            endAt = LocalDateTime.now(clock).toApiString()
+            startAt = LocalDate.of(2024, 3, 1).atTime(11, 0).toApiString(),
+            endAt = LocalDate.of(2024, 3, 1).atTime(11, 0).toApiString()
         )
 
         createViewModel()
@@ -218,7 +213,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 22 12:00 PM",
+            date = "Mar 1 11:00 AM",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
@@ -231,7 +226,7 @@ class EventViewModelTest {
     @Test
     fun `Date text without end date`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
-            startAt = LocalDateTime.now(clock).toApiString(),
+            startAt = LocalDate.of(2024, 3, 1).atTime(11, 0).toApiString(),
             endAt = null
         )
 
@@ -242,7 +237,7 @@ class EventViewModelTest {
             modifyAllowed = false,
             loading = false,
             title = "Title",
-            date = "Feb 22",
+            date = "Mar 1",
             recurrence = "Every day",
             location = "Location",
             address = "Address",
