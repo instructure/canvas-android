@@ -103,7 +103,7 @@ class EventViewModel @Inject constructor(
                 title = scheduleItem.title.orEmpty(),
                 date = getDateString(scheduleItem.isAllDay, scheduleItem.startDate, scheduleItem.endDate),
                 recurrence = scheduleItem.seriesNaturalLanguage.orEmpty(),
-                location = scheduleItem.locationName.orEmpty().ifEmpty { context.getString(R.string.noLocation) },
+                location = scheduleItem.locationName.orEmpty(),
                 address = scheduleItem.locationAddress.orEmpty(),
                 formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty())
             )
@@ -111,7 +111,7 @@ class EventViewModel @Inject constructor(
     }
 
     private fun getDateString(isAllDay: Boolean, startDate: Date?, endDate: Date?): String {
-        val dateText = endDate?.let { DateHelper.dayMonthDateFormat.format(it) }.orEmpty()
+        val dateText = DateHelper.getFormattedDate(context, endDate).orEmpty()
 
         if (isAllDay) {
             return "$dateText - ${context.getString(R.string.allDayEvent)}"
@@ -127,7 +127,7 @@ class EventViewModel @Inject constructor(
             }
         }
 
-        return startDate?.let { DateHelper.dayMonthDateFormat.format(it) }.orEmpty()
+        return DateHelper.getFormattedDate(context, startDate).orEmpty()
     }
 
     fun handleAction(action: EventAction) {

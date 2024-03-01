@@ -214,20 +214,22 @@ private fun EventContent(
                 }
                 Spacer(modifier = Modifier.height(28.dp))
                 Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = stringResource(id = R.string.eventLocationLabel),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = uiState.location,
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                )
+                if (uiState.location.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = stringResource(id = R.string.eventLocationLabel),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 14.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = uiState.location,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        color = colorResource(id = R.color.textDarkest),
+                        fontSize = 16.sp
+                    )
+                }
                 if (uiState.address.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(

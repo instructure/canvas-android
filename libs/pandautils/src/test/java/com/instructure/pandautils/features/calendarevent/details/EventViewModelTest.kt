@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
@@ -90,6 +91,9 @@ class EventViewModelTest {
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } answers { firstArg() }
 
         every { savedStateHandle.get<Any>(any()) } returns null
+
+        mockkObject(DateHelper)
+        every { DateHelper.getPreferredDateFormat(any()) } returns DateHelper.dayMonthDateFormat
     }
 
     @After

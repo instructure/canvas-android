@@ -43,7 +43,7 @@ fun CanvasWebViewWrapper(
             }
         },
         update = {
-            it.webView.loadHtml(html, title)
+            it.loadHtml(html, title)
 
             if (onLtiButtonPressed != null) {
                 it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
