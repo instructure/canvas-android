@@ -259,7 +259,7 @@ class CalendarViewModel @Inject constructor(
     fun handleAction(calendarAction: CalendarAction) {
         when (calendarAction) {
             is CalendarAction.DaySelected -> selectedDayChangedWithPageAnimation(calendarAction.selectedDay)
-            CalendarAction.ExpandChanged -> expandChangedWithAnimation(!expanded)
+            is CalendarAction.ExpandChanged -> expandChangedWithAnimation(calendarAction.isExpanded)
             CalendarAction.ExpandDisabled -> {
                 expandAllowed = false
                 expandChanged(false, save = false)
