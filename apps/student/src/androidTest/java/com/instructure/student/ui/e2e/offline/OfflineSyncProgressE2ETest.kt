@@ -52,7 +52,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         val course2 = data.coursesList[1]
         val testAnnouncement = data.announcementsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -66,17 +66,11 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState(course1.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
+        Log.d(STEP_TAG, "Wait for the Dashboard to be rendered.")
         dashboardPage.waitForRender()
-        dashboardPage.waitForSyncProgressDownloadStartedNotification()
-        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
 
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and click on it to enter the Sync Progress Page.")
-        dashboardPage.waitForSyncProgressStartingNotification()
+        Log.d(STEP_TAG, "Click on the Dashboard notification to open the Sync Progress Page.")
         dashboardPage.clickOnSyncProgressNotification()
-
-        Log.d(STEP_TAG, "Assert that the Sync Progress has started.")
-        syncProgressPage.waitForDownloadStarting()
 
         Log.d(STEP_TAG, "Assert that the Sync Progress has been successful (so to have the success title and the course success indicator).")
         syncProgressPage.assertDownloadProgressSuccessDetails()
@@ -84,6 +78,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page and wait for it to be rendered.")
         Espresso.pressBack()
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()

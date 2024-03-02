@@ -68,7 +68,7 @@ class OfflinePagesE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG,"Seed a PUBLISHED, FRONT page for '${course.name}' course.")
         val pagePublishedFront = PagesApi.createCoursePage(course.id, teacher.token, frontPage = true, editingRoles = "public", body = "<h1 id=\"header1\">Front Page Text</h1>")
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -83,8 +83,9 @@ class OfflinePagesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Pages")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' and 'Syncing Offline Content' dashboard notifications to be displayed, and then to disappear.")
-        dashboardPage.waitForOfflineSyncDashboardNotifications()
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
