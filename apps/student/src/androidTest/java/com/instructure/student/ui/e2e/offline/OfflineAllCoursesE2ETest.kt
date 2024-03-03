@@ -79,9 +79,8 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState(course2.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon is displayed on the (both of the) synced courses' course card.")
+        Log.d(STEP_TAG, "Assert that the offline sync icon is displayed on the synced  (and favorited) course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
-        dashboardPage.assertCourseOfflineSyncIconVisible(course2.name)
         device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
@@ -89,7 +88,6 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered, and assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
-        dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertCourseNotDisplayed(course2)
         dashboardPage.assertCourseNotDisplayed(course3)
