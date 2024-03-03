@@ -46,11 +46,12 @@ class OfflineSyncProgressE2ETest : StudentTest() {
     fun testOfflineGlobalCourseSyncProgressE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 3, announcements = 3, discussions = 5, syllabusBody = "Syllabus body")
+        val data = seedData(students = 1, teachers = 1, courses = 4, announcements = 3, discussions = 5, syllabusBody = "Syllabus body")
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
         val course3 = data.coursesList[2]
+        val course4 = data.coursesList[3]
         val testAnnouncement = data.announcementsList[0]
 
         Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
@@ -66,6 +67,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Select the entire '${course1.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState(course1.name)
         manageOfflineContentPage.changeItemSelectionState(course2.name)
+        manageOfflineContentPage.changeItemSelectionState(course3.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(STEP_TAG, "Wait for the Dashboard to be rendered.")
@@ -78,9 +80,10 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         syncProgressPage.assertDownloadProgressSuccessDetails()
         syncProgressPage.assertCourseSyncedSuccessfully(course1.name)
         syncProgressPage.assertCourseSyncedSuccessfully(course2.name)
+        syncProgressPage.assertCourseSyncedSuccessfully(course3.name)
 
-        Log.d(STEP_TAG, "Get the sum of '${course1.name}' and '${course2.name}' courses' sizes and assert that the sum number is displayed under the progress bar.")
-        val sumOfSyncedCourseSizes = syncProgressPage.getCourseSize(course1.name) + syncProgressPage.getCourseSize(course2.name)
+        Log.d(STEP_TAG, "Get the sum of '${course1.name}', '${course2.name}' and '${course3.name}' courses' sizes and assert that the sum number is displayed under the progress bar.")
+        val sumOfSyncedCourseSizes = syncProgressPage.getCourseSize(course1.name) + syncProgressPage.getCourseSize(course2.name) + syncProgressPage.getCourseSize(course3.name)
         syncProgressPage.assertSumOfCourseSizes(sumOfSyncedCourseSizes)
 
         Log.d(STEP_TAG, "Expand '${course1.name}' course and assert a few tabs (for example) to ensure they synced well and the success indicator is displayed in their rows.")
@@ -110,7 +113,8 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced courses' course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
         dashboardPage.assertCourseOfflineSyncIconVisible(course2.name)
-        dashboardPage.assertCourseOfflineSyncIconGone(course3.name)
+        dashboardPage.assertCourseOfflineSyncIconVisible(course3.name)
+        dashboardPage.assertCourseOfflineSyncIconGone(course4.name)
 
         Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course1)
