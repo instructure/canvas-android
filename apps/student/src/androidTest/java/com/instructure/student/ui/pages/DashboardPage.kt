@@ -395,7 +395,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     //OfflineMethod
     fun clickOnSyncProgressNotification() {
-        waitForView(anyOf(withText(R.string.syncProgress_syncQueued),withText(R.string.syncProgress_downloadStarting), withText(R.string.syncProgress_syncingOfflineContent))).click()
+        Thread.sleep(2500)
+        onView(anyOf(withText(R.string.syncProgress_syncQueued),withText(R.string.syncProgress_downloadStarting), withText(R.string.syncProgress_syncingOfflineContent))).click()
     }
 
     //OfflineMethod
