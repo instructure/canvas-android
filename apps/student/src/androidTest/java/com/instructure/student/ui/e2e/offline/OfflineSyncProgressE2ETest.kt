@@ -46,7 +46,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
     fun testOfflineGlobalCourseSyncProgressE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 3, announcements = 3)
+        val data = seedData(students = 1, teachers = 1, courses = 3, announcements = 3, discussions = 5, syllabusBody = "Syllabus body")
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
