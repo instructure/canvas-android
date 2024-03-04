@@ -23,7 +23,10 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
 
@@ -79,5 +82,19 @@ fun SimpleAlertDialog(
         },
         backgroundColor = colorResource(R.color.backgroundLightestElevated),
         modifier = modifier
+    )
+}
+
+@Preview
+@Composable
+fun SimpleAlertDialogPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    SimpleAlertDialog(
+        dialogTitle = "Hello There!",
+        dialogText = "General Kenobi!",
+        dismissButtonText = "Dismiss",
+        confirmationButtonText = "Confirm",
+        onDismissRequest = {},
+        onConfirmation = {}
     )
 }

@@ -21,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
@@ -36,4 +39,11 @@ fun Loading(
             color = color
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Loading()
 }
