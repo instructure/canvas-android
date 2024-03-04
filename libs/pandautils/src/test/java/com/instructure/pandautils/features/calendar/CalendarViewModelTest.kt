@@ -372,10 +372,10 @@ class CalendarViewModelTest {
 
         assertEquals(expectedState, viewModel.uiState.value)
 
-        viewModel.handleAction(CalendarAction.ExpandChanged)
+        viewModel.handleAction(CalendarAction.ExpandChanged(true))
         assertEquals(expectedState.calendarUiState.copy(expanded = true), viewModel.uiState.value.calendarUiState)
 
-        viewModel.handleAction(CalendarAction.ExpandChanged)
+        viewModel.handleAction(CalendarAction.ExpandChanged(false))
         assertEquals(expectedState.calendarUiState.copy(expanded = false), viewModel.uiState.value.calendarUiState)
     }
 
@@ -394,7 +394,7 @@ class CalendarViewModelTest {
 
         assertEquals(expectedState, viewModel.uiState.value)
 
-        viewModel.handleAction(CalendarAction.ExpandChanged)
+        viewModel.handleAction(CalendarAction.ExpandChanged(true))
         assertEquals(expectedState.calendarUiState.copy(expanded = true), viewModel.uiState.value.calendarUiState)
 
         viewModel.handleAction(CalendarAction.ExpandDisabled)
@@ -450,7 +450,7 @@ class CalendarViewModelTest {
     fun `Today tapped on the same page selects today`() = runTest {
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
         initViewModel()
-        viewModel.handleAction(CalendarAction.ExpandChanged) // Switch to month view
+        viewModel.handleAction(CalendarAction.ExpandChanged(true)) // Switch to month view
 
         val expectedState = CalendarScreenUiState(
             baseCalendarUiState.copy(expanded = true), CalendarEventsUiState(
@@ -494,7 +494,7 @@ class CalendarViewModelTest {
 
         assertEquals(expectedState, viewModel.uiState.value)
 
-        viewModel.handleAction(CalendarAction.ExpandChanged)
+        viewModel.handleAction(CalendarAction.ExpandChanged(true))
         viewModel.handleAction(CalendarAction.PageChanged(1))
 
         val newExpectedState = CalendarScreenUiState(
@@ -824,7 +824,7 @@ class CalendarViewModelTest {
 
         assertEquals(expectedState, viewModel.uiState.value)
 
-        viewModel.handleAction(CalendarAction.ExpandChanged)
+        viewModel.handleAction(CalendarAction.ExpandChanged(false))
         viewModel.handleAction(CalendarAction.HeightAnimationFinished) // We also need to call this to fully collapse the calendar and save the state
 
         assertEquals(expectedState.calendarUiState.copy(expanded = false), viewModel.uiState.value.calendarUiState)
