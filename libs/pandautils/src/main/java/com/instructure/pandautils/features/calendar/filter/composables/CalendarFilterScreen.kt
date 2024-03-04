@@ -132,7 +132,7 @@ private fun CalendarFiltersContent(
                     stringResource(id = R.string.calendarFilterCourse),
                     fontSize = 14.sp,
                     color = colorResource(id = R.color.textDark),
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
@@ -145,7 +145,7 @@ private fun CalendarFiltersContent(
                     stringResource(id = R.string.calendarFilterGroup),
                     fontSize = 14.sp,
                     color = colorResource(id = R.color.textDark),
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
