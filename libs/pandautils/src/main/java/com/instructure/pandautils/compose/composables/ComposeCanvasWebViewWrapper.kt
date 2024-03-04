@@ -29,7 +29,7 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 
 @Composable
-fun CanvasWebViewWrapper(
+fun ComposeCanvasWebViewWrapper(
     html: String,
     modifier: Modifier = Modifier,
     title: String? = null,

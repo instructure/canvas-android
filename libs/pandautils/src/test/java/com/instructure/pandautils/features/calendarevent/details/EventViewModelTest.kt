@@ -110,7 +110,7 @@ class EventViewModelTest {
 
         createViewModel()
 
-        Assert.assertEquals(canvasContext.backgroundColor, viewModel.uiState.value.toolbarColor)
+        Assert.assertEquals(canvasContext.backgroundColor, viewModel.uiState.value.toolbarUiState.toolbarColor)
     }
 
     @Test
@@ -120,8 +120,11 @@ class EventViewModelTest {
         createViewModel()
 
         val expectedState = EventUiState(
-            calendar = "Context name",
-            modifyAllowed = false,
+            toolbarUiState = ToolbarUiState(
+                toolbarColor = 1,
+                subtitle = "Context name",
+                modifyAllowed = false
+            ),
             loading = false,
             title = "Title",
             date = "Mar 1 11:00 AM - 12:00 PM",
@@ -143,8 +146,11 @@ class EventViewModelTest {
         createViewModel()
 
         val expectedState = EventUiState(
-            calendar = "Context name",
-            modifyAllowed = true,
+            toolbarUiState = ToolbarUiState(
+                toolbarColor = 1,
+                subtitle = "Context name",
+                modifyAllowed = true
+            ),
             loading = false,
             title = "Title",
             date = "Mar 1 11:00 AM - 12:00 PM",
@@ -165,8 +171,11 @@ class EventViewModelTest {
         createViewModel()
 
         val expectedState = EventUiState(
-            calendar = "Context name",
-            modifyAllowed = false,
+            toolbarUiState = ToolbarUiState(
+                toolbarColor = 1,
+                subtitle = "Context name",
+                modifyAllowed = false
+            ),
             loading = false,
             title = "Title",
             date = "Mar 1 - All Day Event",
@@ -189,8 +198,11 @@ class EventViewModelTest {
         createViewModel()
 
         val expectedState = EventUiState(
-            calendar = "Context name",
-            modifyAllowed = false,
+            toolbarUiState = ToolbarUiState(
+                toolbarColor = 1,
+                subtitle = "Context name",
+                modifyAllowed = false
+            ),
             loading = false,
             title = "Title",
             date = "Mar 1 11:00 AM - 12:00 PM",
@@ -213,8 +225,11 @@ class EventViewModelTest {
         createViewModel()
 
         val expectedState = EventUiState(
-            calendar = "Context name",
-            modifyAllowed = false,
+            toolbarUiState = ToolbarUiState(
+                toolbarColor = 1,
+                subtitle = "Context name",
+                modifyAllowed = false
+            ),
             loading = false,
             title = "Title",
             date = "Mar 1 11:00 AM",
@@ -237,8 +252,11 @@ class EventViewModelTest {
         createViewModel()
 
         val expectedState = EventUiState(
-            calendar = "Context name",
-            modifyAllowed = false,
+            toolbarUiState = ToolbarUiState(
+                toolbarColor = 1,
+                subtitle = "Context name",
+                modifyAllowed = false
+            ),
             loading = false,
             title = "Title",
             date = "Mar 1",

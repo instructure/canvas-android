@@ -38,6 +38,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.calendarevent.details.composables.EventScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -54,6 +55,9 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     @Inject
     lateinit var eventRouter: EventRouter
 
+    @Inject
+    lateinit var webViewRouter: WebViewRouter
+
     private val viewModel: EventViewModel by viewModels()
 
     private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
@@ -63,16 +67,15 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     }
 
     private val webViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-        override fun openMediaFromWebView(mime: String, url: String, filename: String) =
-            eventRouter.openMediaFromWebView(mime, url, filename, viewModel.canvasContext)
+        override fun openMediaFromWebView(mime: String, url: String, filename: String) = webViewRouter.openMedia(url)
 
         override fun onPageStartedCallback(webView: WebView, url: String) = Unit
 
         override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
 
-        override fun canRouteInternallyDelegate(url: String) = eventRouter.canRouteInternallyDelegate(url)
+        override fun canRouteInternallyDelegate(url: String) = webViewRouter.canRouteInternally(url)
 
-        override fun routeInternallyCallback(url: String) = eventRouter.routeInternallyCallback(url)
+        override fun routeInternallyCallback(url: String) = webViewRouter.routeInternally(url)
     }
 
     override fun onCreateView(
@@ -125,8 +128,8 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     private fun handleAction(action: EventViewModelAction) {
         when (action) {
             is EventViewModelAction.OpenLtiScreen -> eventRouter.openLtiScreen(viewModel.canvasContext, action.url)
-            is EventViewModelAction.OpenEditEvent -> TODO()
-            is EventViewModelAction.RefreshCalendarDay -> TODO()
+            is EventViewModelAction.OpenEditEvent -> eventRouter.openEditEvent(action.scheduleItem)
+            is EventViewModelAction.RefreshCalendarDay -> Unit
         }
     }
 

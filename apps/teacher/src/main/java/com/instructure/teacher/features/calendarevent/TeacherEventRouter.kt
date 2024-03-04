@@ -20,28 +20,15 @@ package com.instructure.teacher.features.calendarevent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
 
-class TeacherEventRouter(private val activity: FragmentActivity, private val apiPrefs: ApiPrefs) : EventRouter {
+class TeacherEventRouter(private val activity: FragmentActivity) : EventRouter {
 
     override fun openLtiScreen(canvasContext: CanvasContext?, url: String) {
         TODO("Not yet implemented")
     }
 
     override fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun openMediaFromWebView(mime: String, url: String, filename: String, canvasContext: CanvasContext?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun canRouteInternallyDelegate(url: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun routeInternallyCallback(url: String) {
         TODO("Not yet implemented")
     }
 

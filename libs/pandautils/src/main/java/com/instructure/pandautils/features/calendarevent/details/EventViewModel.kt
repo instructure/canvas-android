@@ -61,8 +61,10 @@ class EventViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     val canvasContext: CanvasContext? = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT)
-    private val scheduleItem: ScheduleItem? = savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM)
+    private val scheduleItemArg: ScheduleItem? = savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM)
     private val scheduleItemId: Long? = savedStateHandle.get<Long>(EventFragment.SCHEDULE_ITEM_ID)
+
+    private var scheduleItem: ScheduleItem? = null
 
     init {
         loadData()
@@ -72,10 +74,12 @@ class EventViewModel @Inject constructor(
         setToolbarColor()
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loading = true) }
-            if (scheduleItem != null) {
-                updateUiStateWithData(scheduleItem)
+            if (scheduleItemArg != null) {
+                scheduleItem = scheduleItemArg
+                updateUiStateWithData(scheduleItemArg)
             } else {
                 val scheduleItem = eventRepository.getCalendarEvent(scheduleItemId.orDefault())
+                this@EventViewModel.scheduleItem = scheduleItem
                 updateUiStateWithData(scheduleItem)
             }
         } catch {
@@ -90,15 +94,17 @@ class EventViewModel @Inject constructor(
 
     private fun setToolbarColor() {
         canvasContext?.backgroundColor?.let { color ->
-            _uiState.update { it.copy(toolbarColor = color) }
+            _uiState.update { it.copy(toolbarUiState = it.toolbarUiState.copy(toolbarColor = color)) }
         }
     }
 
     private suspend fun updateUiStateWithData(scheduleItem: ScheduleItem) {
         _uiState.update {
             it.copy(
-                calendar = scheduleItem.contextName.orEmpty(),
-                modifyAllowed = scheduleItem.contextId == apiPrefs.user?.id,
+                toolbarUiState = it.toolbarUiState.copy(
+                    subtitle = scheduleItem.contextName.orEmpty(),
+                    modifyAllowed = scheduleItem.contextId == apiPrefs.user?.id
+                ),
                 loading = false,
                 title = scheduleItem.title.orEmpty(),
                 date = getDateString(scheduleItem.isAllDay, scheduleItem.startDate, scheduleItem.endDate),
@@ -136,8 +142,13 @@ class EventViewModel @Inject constructor(
                 _events.send(EventViewModelAction.OpenLtiScreen(action.url))
             }
 
-            is EventAction.DeleteEvent -> {}
-            is EventAction.EditEvent -> {}
+            is EventAction.DeleteEvent -> Unit
+
+            is EventAction.EditEvent -> viewModelScope.launch {
+                scheduleItem?.let {
+                    _events.send(EventViewModelAction.OpenEditEvent(it))
+                }
+            }
         }
     }
 }

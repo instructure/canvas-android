@@ -28,12 +28,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,12 +46,15 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.compose.composables.CanvasWebViewWrapper
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.FullScreenError
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
+import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.calendarevent.details.EventAction
 import com.instructure.pandautils.features.calendarevent.details.EventUiState
+import com.instructure.pandautils.features.calendarevent.details.ToolbarUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.views.CanvasWebView
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -73,7 +72,7 @@ internal fun EventScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                TopAppBarContent(
+                EventTopAppBar(
                     title = title,
                     uiState = eventUiState,
                     actionHandler = actionHandler,
@@ -96,7 +95,7 @@ internal fun EventScreen(
 }
 
 @Composable
-private fun TopAppBarContent(
+private fun EventTopAppBar(
     title: String,
     uiState: EventUiState,
     actionHandler: (EventAction) -> Unit,
@@ -104,36 +103,37 @@ private fun TopAppBarContent(
     modifier: Modifier = Modifier
 ) {
     val showDeleteConfirmationDialog = remember { mutableStateOf(false) }
-
-    TopAppBar(
-        title = {
-            Column {
-                Text(text = title)
-                if (uiState.calendar.isNotEmpty()) {
-                    Text(
-                        text = uiState.calendar,
-                        fontSize = 12.sp
-                    )
-                }
+    if (showDeleteConfirmationDialog.value) {
+        SimpleAlertDialog(
+            dialogTitle = stringResource(id = R.string.eventDeleteConfirmationTitle),
+            dialogText = stringResource(id = R.string.eventDeleteConfirmationText),
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.delete),
+            onDismissRequest = {
+                showDeleteConfirmationDialog.value = false
+            },
+            onConfirmation = {
+                showDeleteConfirmationDialog.value = false
+                actionHandler(EventAction.DeleteEvent)
             }
-        },
+        )
+    }
+
+    CanvasThemedAppBar(
+        title = title,
+        subtitle = uiState.toolbarUiState.subtitle,
         actions = {
-            if (uiState.modifyAllowed) {
+            if (uiState.toolbarUiState.modifyAllowed) {
                 OverFlowMenuSegment(
                     actionHandler = actionHandler,
                     showDeleteConfirmationDialog = showDeleteConfirmationDialog
                 )
             }
         },
-        backgroundColor = Color(uiState.toolbarColor),
+        backgroundColor = Color(uiState.toolbarUiState.toolbarColor),
         contentColor = Color.White,
-        navigationIcon = {
-            IconButton(onClick = navigationAction) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_back_arrow),
-                    contentDescription = stringResource(id = R.string.back)
-                )
-            }
+        navigationActionClick = {
+            navigationAction()
         },
         modifier = modifier
     )
@@ -254,7 +254,7 @@ private fun EventContent(
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp
                     )
-                    CanvasWebViewWrapper(
+                    ComposeCanvasWebViewWrapper(
                         html = uiState.formattedDescription,
                         modifier = Modifier.padding(horizontal = 8.dp),
                         onLtiButtonPressed = {
@@ -277,9 +277,11 @@ private fun EventPreview() {
     EventScreen(
         title = "Event",
         eventUiState = EventUiState(
-            toolbarColor = ThemePrefs.primaryColor,
-            calendar = "Calendar",
-            modifyAllowed = true,
+            toolbarUiState = ToolbarUiState(
+                toolbarColor = ThemePrefs.primaryColor,
+                subtitle = "Subtitle",
+                modifyAllowed = true
+            ),
             loading = false,
             title = "Creative Machines and Innovative Instrumentation Conference",
             date = "2023. March 31. 12:00 PM - 1:00 PM",

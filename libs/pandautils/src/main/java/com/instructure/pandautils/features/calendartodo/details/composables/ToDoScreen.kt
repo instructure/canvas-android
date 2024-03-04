@@ -86,7 +86,7 @@ internal fun ToDoScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                TopAppBarContent(
+                ToDoTopAppBar(
                     title = title,
                     deleting = toDoUiState.deleting,
                     actionHandler = actionHandler,
@@ -108,7 +108,7 @@ internal fun ToDoScreen(
 }
 
 @Composable
-private fun TopAppBarContent(
+private fun ToDoTopAppBar(
     title: String,
     deleting: Boolean,
     actionHandler: (ToDoAction) -> Unit,

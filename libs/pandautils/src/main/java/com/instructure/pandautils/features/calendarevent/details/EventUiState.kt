@@ -5,9 +5,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 
 
 data class EventUiState(
-    val toolbarColor: Int = ThemePrefs.primaryColor,
-    val calendar: String = "",
-    val modifyAllowed: Boolean = false,
+    val toolbarUiState: ToolbarUiState = ToolbarUiState(),
     val loading: Boolean = false,
     val loadError: String? = null,
     val title: String = "",
@@ -16,6 +14,12 @@ data class EventUiState(
     val location: String = "",
     val address: String = "",
     val formattedDescription: String = "",
+)
+
+data class ToolbarUiState(
+    val toolbarColor: Int = ThemePrefs.primaryColor,
+    val subtitle: String = "",
+    val modifyAllowed: Boolean = false
 )
 
 sealed class EventAction {

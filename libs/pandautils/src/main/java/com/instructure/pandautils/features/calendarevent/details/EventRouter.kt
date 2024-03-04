@@ -26,11 +26,5 @@ interface EventRouter {
 
     fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?)
 
-    fun openMediaFromWebView(mime: String, url: String, filename: String, canvasContext: CanvasContext?)
-
-    fun canRouteInternallyDelegate(url: String): Boolean
-
-    fun routeInternallyCallback(url: String)
-
     fun openEditEvent(scheduleItem: ScheduleItem)
 }

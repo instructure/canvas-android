@@ -139,7 +139,7 @@ private fun CreateUpdateToDoScreen(
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
-            TopAppBarContent(
+            CreateUpdateToDoTopAppBar(
                 title = title,
                 uiState = uiState,
                 actionHandler = actionHandler,
@@ -161,7 +161,7 @@ private fun CreateUpdateToDoScreen(
 }
 
 @Composable
-private fun TopAppBarContent(
+private fun CreateUpdateToDoTopAppBar(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,

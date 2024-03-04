@@ -18,7 +18,6 @@
 package com.instructure.student.di.feature
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
 import com.instructure.student.features.calendarevent.StudentEventRouter
 import dagger.Module
@@ -31,7 +30,7 @@ import dagger.hilt.android.components.FragmentComponent
 class EventModule {
 
     @Provides
-    fun provideEventRouter(activity: FragmentActivity, apiPrefs: ApiPrefs): EventRouter {
-        return StudentEventRouter(activity, apiPrefs)
+    fun provideEventRouter(activity: FragmentActivity): EventRouter {
+        return StudentEventRouter(activity)
     }
 }
