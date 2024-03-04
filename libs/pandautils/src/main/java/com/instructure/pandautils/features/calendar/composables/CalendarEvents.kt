@@ -15,7 +15,6 @@
  */
 package com.instructure.pandautils.features.calendar.composables
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,13 +35,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshDefaults
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -144,8 +141,7 @@ fun CalendarEventsPage(
         if (calendarEventsPageUiState.events.isNotEmpty()) {
             LazyColumn(
                 Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(), verticalArrangement = Arrangement.Top
+                    .fillMaxSize(), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
                     CalendarEventItem(eventUiState = it, { id ->
@@ -158,14 +154,13 @@ fun CalendarEventsPage(
                 stringResource(id = R.string.calendarPageError), retryClick = {
                     actionHandler(CalendarAction.Retry)
                 }, modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
+                    .fillMaxSize()
             )
         } else {
             CalendarEventsEmpty(
                 Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight())
+                    .fillMaxSize()
+            )
         }
 
         PullRefreshIndicator(

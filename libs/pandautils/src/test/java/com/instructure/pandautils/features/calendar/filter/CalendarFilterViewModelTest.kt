@@ -77,12 +77,10 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.USER to listOf(User(5, name = "User"))
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns listOf(
-            CalendarFilterEntity(
-                userId = "1",
-                userDomain = "domain.com",
-                filters = setOf("course_1", "group_3")
-            )
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            userId = "1",
+            userDomain = "domain.com",
+            filters = setOf("course_1", "group_3")
         )
 
         createViewModel()
@@ -100,12 +98,10 @@ class CalendarFilterViewModelTest {
     @Test
     fun `Retry loads filters again`() {
         coEvery { calendarRepository.getCanvasContexts() } returns DataResult.Fail()
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns listOf(
-            CalendarFilterEntity(
-                userId = "1",
-                userDomain = "domain.com",
-                filters = setOf("course_1", "group_3")
-            )
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            userId = "1",
+            userDomain = "domain.com",
+            filters = setOf("course_1", "group_3")
         )
 
         createViewModel()
@@ -141,12 +137,10 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.USER to listOf(User(5, name = "User"))
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns listOf(
-            CalendarFilterEntity(
-                userId = "1",
-                userDomain = "domain.com",
-                filters = setOf("course_1", "group_3")
-            )
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            userId = "1",
+            userDomain = "domain.com",
+            filters = setOf("course_1", "group_3")
         )
 
         createViewModel()

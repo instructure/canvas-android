@@ -886,8 +886,11 @@ class CalendarViewModelTest {
             createPlannerItem(null, 7, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12), userId = 6),
         )
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns listOf(
-            CalendarFilterEntity(1, "", "1", filters = setOf("course_1", "group_3", "user_5")),
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            1,
+            "",
+            "1",
+            filters = setOf("course_1", "group_3", "user_5")
         )
         initViewModel()
 
@@ -925,6 +928,7 @@ class CalendarViewModelTest {
                 createPlannerItem(null, 7, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12), userId = 6),
             )
             every { apiPrefs.user } returns User(5)
+            coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns null
             coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
             coEvery { calendarRepository.getCanvasContexts() } returns DataResult.Success(
                 mapOf(
@@ -968,8 +972,11 @@ class CalendarViewModelTest {
             createPlannerItem(null, 7, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12), userId = 6),
         )
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns listOf(
-            CalendarFilterEntity(1, "", "1", filters = setOf("course_1", "group_3", "user_5")),
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            1,
+            "",
+            "1",
+            filters = setOf("course_1", "group_3", "user_5")
         )
         initViewModel()
 
@@ -989,8 +996,11 @@ class CalendarViewModelTest {
         assertEquals(expectedState, viewModel.uiState.value)
 
         // Change filters
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns listOf(
-            CalendarFilterEntity(1, "", "1", filters = setOf("course_2")),
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            1,
+            "",
+            "1",
+            filters = setOf("course_2")
         )
 
         viewModel.handleAction(CalendarAction.FiltersRefreshed)

@@ -24,7 +24,7 @@ import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -59,10 +59,9 @@ class CalendarFilterDaoTest {
         calendarFilterDao.insert(calendarFilterEntity)
         calendarFilterDao.insert(calendarFilterEntity2)
 
-        val foundEntities = calendarFilterDao.findByUserIdAndDomain(1, "domain.com")
+        val foundEntity = calendarFilterDao.findByUserIdAndDomain(1, "domain.com")
 
-        Assert.assertEquals(1, foundEntities.size)
-        Assert.assertEquals(calendarFilterEntity.copy(id = 1), foundEntities[0])
+        assertEquals(calendarFilterEntity.copy(id = 1), foundEntity)
     }
 
     @Test
@@ -76,12 +75,12 @@ class CalendarFilterDaoTest {
         calendarFilterDao.insert(calendarFilterEntity)
         calendarFilterDao.insert(calendarFilterEntity2)
 
-        val foundEntities = calendarFilterDao.findByUserIdAndDomain(1, "domain.com")
+        val foundEntity = calendarFilterDao.findByUserIdAndDomain(1, "domain.com")
 
-        Assert.assertEquals(0, foundEntities.size)
+        assertNull(foundEntity)
 
-        val foundEntities2 = calendarFilterDao.findByUserIdAndDomain(2, "domain2.com")
-        Assert.assertEquals(calendarFilterEntity2.copy(id = 1), foundEntities2[0])
+        val foundEntity2 = calendarFilterDao.findByUserIdAndDomain(2, "domain2.com")
+        assertEquals(calendarFilterEntity2.copy(id = 1), foundEntity2)
     }
 
     @Test
@@ -95,11 +94,11 @@ class CalendarFilterDaoTest {
         calendarFilterDao.insertOrUpdate(calendarFilterEntity)
         calendarFilterDao.insertOrUpdate(calendarFilterEntity2)
 
-        val foundEntities = calendarFilterDao.findByUserIdAndDomain(1, "domain.com")
+        val foundEntity = calendarFilterDao.findByUserIdAndDomain(1, "domain.com")
 
-        Assert.assertEquals(0, foundEntities.size)
+        assertNull(foundEntity)
 
-        val foundEntities2 = calendarFilterDao.findByUserIdAndDomain(2, "domain2.com")
-        Assert.assertEquals(calendarFilterEntity2.copy(id = 1), foundEntities2[0])
+        val foundEntity2 = calendarFilterDao.findByUserIdAndDomain(2, "domain2.com")
+        assertEquals(calendarFilterEntity2.copy(id = 1), foundEntity2)
     }
 }

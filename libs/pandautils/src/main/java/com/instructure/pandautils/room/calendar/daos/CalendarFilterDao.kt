@@ -40,5 +40,5 @@ interface CalendarFilterDao {
     suspend fun update(entity: CalendarFilterEntity)
 
     @Query("SELECT * FROM calendar_filter WHERE user_id = :userId AND user_domain = :domain")
-    suspend fun findByUserIdAndDomain(userId: Long, domain: String): List<CalendarFilterEntity>
+    suspend fun findByUserIdAndDomain(userId: Long, domain: String): CalendarFilterEntity?
 }

@@ -27,7 +27,6 @@ import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -57,10 +56,9 @@ class CalendarFilterViewModel @Inject constructor(
                 canvasContexts = result.data
 
                 val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
-                if (filters.isNotEmpty()) {
-                    val filterEntity = filters[0]
-                    filterEntityForCurrentUser = filterEntity
-                    contextIdFilters.addAll(filterEntity.filters)
+                if (filters != null) {
+                    filterEntityForCurrentUser = filters
+                    contextIdFilters.addAll(filters.filters)
                 }
 
                 _uiState.value = createNewUiState()

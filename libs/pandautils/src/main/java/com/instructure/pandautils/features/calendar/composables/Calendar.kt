@@ -116,7 +116,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
         CalendarHeader(
             calendarUiState.headerUiState, calendarUiState.expanded, actionHandler, modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, end = 8.dp)
+                .padding(horizontal = 8.dp)
         )
         Spacer(modifier = Modifier.height(6.dp))
         HorizontalPager(

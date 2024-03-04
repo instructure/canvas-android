@@ -106,7 +106,7 @@ class CalendarViewModel @Inject constructor(
                 val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
                 val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
 
-                if (filters.isEmpty() && apiPrefs.user?.id != null) {
+                if (filters == null && apiPrefs.user?.id != null) {
                     contextIdFilters.addAll(userIds)
                     contextIdFilters.addAll(courseIds)
                     contextIdFilters.addAll(groupIds)
@@ -133,12 +133,11 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private suspend fun initFiltersFromDb(): List<CalendarFilterEntity> {
+    private suspend fun initFiltersFromDb(): CalendarFilterEntity? {
         val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
-        if (filters.isNotEmpty()) {
-            val filterEntity = filters[0]
+        if (filters != null) {
             contextIdFilters.clear()
-            contextIdFilters.addAll(filterEntity.filters)
+            contextIdFilters.addAll(filters.filters)
         }
         return filters
     }
