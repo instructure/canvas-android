@@ -19,9 +19,11 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -29,6 +31,9 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -55,7 +60,8 @@ class CalendarViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val clock: Clock,
     private val calendarPrefs: CalendarPrefs,
-    private val calendarStateMapper: CalendarStateMapper
+    private val calendarStateMapper: CalendarStateMapper,
+    private val calendarFilterDao: CalendarFilterDao
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now(clock)
@@ -75,6 +81,8 @@ class CalendarViewModel @Inject constructor(
     private val refreshingDays = mutableSetOf<LocalDate>()
     private val loadedMonths = mutableSetOf<YearMonth>()
 
+    private val contextIdFilters = mutableSetOf<String>()
+
     private val _uiState =
         MutableStateFlow(CalendarScreenUiState(createCalendarUiState()))
     val uiState = _uiState.asStateFlow()
@@ -83,7 +91,55 @@ class CalendarViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
+        loadFilters()
         loadVisibleMonths()
+    }
+
+    private fun loadFilters() {
+        viewModelScope.launch {
+            val filters = initFiltersFromDb()
+
+            val result = calendarRepository.getCanvasContexts()
+            if (result is DataResult.Success) {
+                val canvasContexts = result.data
+                val userIds = canvasContexts[CanvasContext.Type.USER]?.map { it.contextId } ?: emptyList()
+                val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
+                val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
+
+                if (filters == null && apiPrefs.user?.id != null) {
+                    contextIdFilters.addAll(userIds)
+                    contextIdFilters.addAll(courseIds)
+                    contextIdFilters.addAll(groupIds)
+                    val filter = CalendarFilterEntity(
+                        userDomain = apiPrefs.fullDomain,
+                        userId = apiPrefs.user!!.id.toString(),
+                        filters = contextIdFilters
+                    )
+                    calendarFilterDao.insert(filter)
+                }
+
+                if (calendarPrefs.firstStart) {
+                    calendarPrefs.firstStart = false
+                    if (contextIdFilters.isEmpty()) {
+                        contextIdFilters.addAll(userIds)
+                        contextIdFilters.addAll(courseIds)
+                        contextIdFilters.addAll(groupIds)
+                    } else if (contextIdFilters.containsAll(userIds) && contextIdFilters.containsAll(courseIds)) {
+                        // This is the case where previously all filters were selected, but groups were not supported so we should add those.
+                        contextIdFilters.addAll(canvasContexts.values.flatten().map { it.contextId })
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun initFiltersFromDb(): CalendarFilterEntity? {
+        val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+        if (filters != null) {
+            contextIdFilters.clear()
+            contextIdFilters.addAll(filters.filters)
+        }
+        return filters
     }
 
     private fun loadVisibleMonths() {
@@ -156,7 +212,12 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun createCalendarUiState(): CalendarUiState {
-        val eventIndicators = eventsByDay.mapValues { min(3, it.value.size) }
+        val eventIndicators = eventsByDay
+            .mapValues {
+                min(3, it.value.filter { plannerItem ->
+                    contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
+                }.size)
+            }
         return CalendarUiState(
             selectedDay = selectedDay,
             expanded = expanded && !collapsing,
@@ -168,7 +229,11 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
-        val eventUiStates = eventsByDay[date]?.map {
+        val eventUiStates = eventsByDay[date]
+            ?.filter { plannerItem ->
+                contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
+            }
+            ?.map {
             EventUiState(
                 it.plannable.id,
                 contextName = getContextNameForPlannerItem(it),
@@ -218,14 +283,22 @@ class CalendarViewModel @Inject constructor(
             plannerItem.plannable.todoDate.toDate()?.let {
                 val dateText = DateHelper.dayMonthDateFormat.format(it)
                 val timeText = DateHelper.getFormattedTime(context, it)
-                context.getString(R.string.calendarDate, dateText, timeText)
+                context.getString(R.string.calendarAtDateTime, dateText, timeText)
             }
         } else if (plannerItem.plannableType == PlannableType.CALENDAR_EVENT) {
-            if (plannerItem.plannable.startAt != null && plannerItem.plannable.endAt != null) {
-                val dateText = DateHelper.dayMonthDateFormat.format(plannerItem.plannable.startAt!!)
-                val startText = DateHelper.getFormattedTime(context, plannerItem.plannable.startAt)
-                val endText = DateHelper.getFormattedTime(context, plannerItem.plannable.endAt)
-                context.getString(R.string.calendarEventDate, dateText, startText, endText)
+            val startDate = plannerItem.plannable.startAt
+            val endDate = plannerItem.plannable.endAt
+            if (startDate != null && endDate != null) {
+                val dateText = DateHelper.dayMonthDateFormat.format(startDate)
+                val startText = DateHelper.getFormattedTime(context, startDate)
+                val endText = DateHelper.getFormattedTime(context, endDate)
+                if (plannerItem.plannable.allDay == true) {
+                    dateText
+                } else if (startDate == endDate) {
+                    context.getString(R.string.calendarAtDateTime, dateText, startText)
+                } else {
+                    context.getString(R.string.calendarFromTo, dateText, startText, endText)
+                }
             } else null
         } else  {
             plannerItem.plannable.dueAt?.let {
@@ -282,9 +355,18 @@ class CalendarViewModel @Inject constructor(
             CalendarAction.SnackbarDismissed -> viewModelScope.launch {
                 _uiState.emit(createNewUiState().copy(snackbarMessage = null))
             }
+
             CalendarAction.HeightAnimationFinished -> heightAnimationFinished()
             is CalendarAction.AddToDoTapped -> viewModelScope.launch {
                 _events.send(CalendarViewModelAction.OpenCreateToDo(selectedDay.toApiString()))
+            }
+
+            CalendarAction.FilterTapped -> showFilters()
+            CalendarAction.FiltersRefreshed -> {
+                viewModelScope.launch {
+                    initFiltersFromDb()
+                    _uiState.emit(createNewUiState())
+                }
             }
         }
     }
@@ -455,6 +537,12 @@ class CalendarViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.emit(createNewUiState())
             }
+        }
+    }
+
+    private fun showFilters() {
+        viewModelScope.launch {
+            _events.send(CalendarViewModelAction.OpenFilters)
         }
     }
 }

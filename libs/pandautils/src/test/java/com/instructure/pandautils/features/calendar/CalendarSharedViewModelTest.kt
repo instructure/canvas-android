@@ -27,7 +27,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.LocalDate
@@ -62,6 +62,19 @@ class CalendarSharedViewModelTest {
         }
 
         val expectedEvent = SharedCalendarAction.RefreshDays(dates)
-        Assert.assertEquals(expectedEvent, events.last())
+        assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Send event when filter dialog is closed`() = runTest {
+        viewModel.filterDialogClosed()
+
+        val events = mutableListOf<SharedCalendarAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val expectedEvent = SharedCalendarAction.FilterDialogClosed
+        assertEquals(expectedEvent, events.last())
     }
 }

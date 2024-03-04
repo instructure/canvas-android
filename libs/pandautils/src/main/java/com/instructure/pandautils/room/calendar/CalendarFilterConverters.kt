@@ -13,16 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+package com.instructure.pandautils.room.calendar
 
-package com.instructure.pandautils.features.calendar
+import androidx.room.TypeConverter
 
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.PrefManager
+class CalendarFilterConverters {
+    @TypeConverter
+    fun fromStringSet(set: Set<String>): String {
+        return set.joinToString("|")
+    }
 
-object CalendarPrefs : PrefManager("calendar") {
-
-    var calendarExpanded by BooleanPref(false)
-
-    // When we first start the new calendar we won't have saved filters for groups so we will add all groups
-    var firstStart by BooleanPref(true)
+    @TypeConverter
+    fun fromStringToStringSet(s: String): Set<String> {
+        return s.takeIf { it.isNotEmpty() }?.split("|")?.toSet().orEmpty()
+    }
 }

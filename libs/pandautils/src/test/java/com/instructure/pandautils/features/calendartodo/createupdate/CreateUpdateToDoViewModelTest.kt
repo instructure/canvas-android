@@ -84,7 +84,8 @@ class CreateUpdateToDoViewModelTest {
             todoDate = LocalDateTime.now(clock).toApiString(),
             startAt = null,
             endAt = null,
-            details = "Description"
+            details = "Description",
+            null
         ),
         plannableDate = Date(),
         htmlUrl = null,

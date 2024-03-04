@@ -54,5 +54,8 @@ data class Plannable(
     @SerializedName("end_at")
     val endAt: Date?,
 
-    val details: String?
+    val details: String?,
+
+    @SerializedName("all_day")
+    val allDay: Boolean?,
 ) : Parcelable

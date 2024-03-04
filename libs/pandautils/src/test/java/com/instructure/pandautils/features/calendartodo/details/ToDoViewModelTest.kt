@@ -75,7 +75,8 @@ class ToDoViewModelTest {
             todoDate = LocalDate.of(2024, 2, 12).atTime(12, 0).toApiString(),
             startAt = null,
             endAt = null,
-            details = "Description"
+            details = "Description",
+            null
         ),
         plannableDate = Date(),
         htmlUrl = null,
@@ -92,7 +93,7 @@ class ToDoViewModelTest {
 
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
 
-        every { context.getString(eq(R.string.calendarDate), any(), any()) } answers {
+        every { context.getString(eq(R.string.calendarAtDateTime), any(), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} at ${args[1]}"
         }

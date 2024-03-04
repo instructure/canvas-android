@@ -33,11 +33,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,6 +53,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.calendartodo.createupdate.SelectCalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -71,9 +70,11 @@ fun SelectCalendarScreen(
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
-            TopAppBarContent(
+            CanvasAppBar(
                 title = stringResource(id = R.string.selectCalendarScreenTitle),
-                navigationActionClick = navigationActionClick
+                navigationActionClick = navigationActionClick,
+                navIconRes = R.drawable.ic_back_arrow,
+                navIconContentDescription = stringResource(id = R.string.back)
             )
         },
         content = { padding ->
@@ -85,31 +86,6 @@ fun SelectCalendarScreen(
                     .fillMaxSize()
             )
         }
-    )
-}
-
-@Composable
-private fun TopAppBarContent(
-    title: String,
-    navigationActionClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        title = {
-            Text(text = title)
-        },
-        elevation = 2.dp,
-        backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-        contentColor = colorResource(id = R.color.textDarkest),
-        navigationIcon = {
-            IconButton(onClick = navigationActionClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_back_arrow),
-                    contentDescription = stringResource(id = R.string.back)
-                )
-            }
-        },
-        modifier = modifier
     )
 }
 

@@ -13,16 +13,23 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+package com.instructure.pandautils.features.calendar.filter
 
-package com.instructure.pandautils.features.calendar
+data class CalendarFilterScreenUiState(
+    val users: List<CalendarFilterItemUiState> = emptyList(),
+    val courses: List<CalendarFilterItemUiState> = emptyList(),
+    val groups: List<CalendarFilterItemUiState> = emptyList(),
+    val error: Boolean = false,
+    val loading: Boolean = false
+)
 
-import com.instructure.canvasapi2.utils.BooleanPref
-import com.instructure.canvasapi2.utils.PrefManager
+data class CalendarFilterItemUiState(
+    val contextId: String,
+    val name: String,
+    val selected: Boolean
+)
 
-object CalendarPrefs : PrefManager("calendar") {
-
-    var calendarExpanded by BooleanPref(false)
-
-    // When we first start the new calendar we won't have saved filters for groups so we will add all groups
-    var firstStart by BooleanPref(true)
+sealed class CalendarFilterAction {
+    data class ToggleFilter(val contextId: String) : CalendarFilterAction()
+    data object Retry : CalendarFilterAction()
 }

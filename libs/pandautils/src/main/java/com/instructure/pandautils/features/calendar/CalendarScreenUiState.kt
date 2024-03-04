@@ -98,6 +98,8 @@ sealed class CalendarAction {
     data object SnackbarDismissed : CalendarAction()
     data object HeightAnimationFinished : CalendarAction()
     data object AddToDoTapped : CalendarAction()
+    data object FilterTapped : CalendarAction()
+    data object FiltersRefreshed : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {
@@ -107,8 +109,10 @@ sealed class CalendarViewModelAction {
     data class OpenCalendarEvent(val canvasContext: CanvasContext, val eventId: Long): CalendarViewModelAction()
     data class OpenToDo(val plannerItem: PlannerItem) : CalendarViewModelAction()
     data class OpenCreateToDo(val initialDateString: String?) : CalendarViewModelAction()
+    data object OpenFilters : CalendarViewModelAction()
 }
 
 sealed class SharedCalendarAction {
     data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
+    data object FilterDialogClosed : SharedCalendarAction()
 }
