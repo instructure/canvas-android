@@ -36,7 +36,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -67,6 +66,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarDayUiState
 import com.instructure.pandautils.features.calendar.CalendarHeaderUiState
@@ -155,12 +155,11 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                         modifier = Modifier.height(height.dp)
                     )
                 } else {
-                    Box(
-                        Modifier
+                    Loading(
+                        modifier = Modifier
                             .height(height.dp)
-                            .fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
-                    }
+                            .fillMaxWidth()
+                    )
                 }
             }
         )
@@ -186,10 +185,11 @@ fun CalendarHeader(
 
     var monthRowModifier = Modifier.semantics(mergeDescendants = true) {}
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
-        monthRowModifier = monthRowModifier.clickable(
-            onClick = { actionHandler(CalendarAction.ExpandChanged) },
-            onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
-        )
+        monthRowModifier = monthRowModifier
+            .clickable(
+                onClick = { actionHandler(CalendarAction.ExpandChanged) },
+                onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
+            )
             .padding(8.dp)
     }
 
@@ -229,9 +229,11 @@ fun CalendarHeader(
             text = stringResource(id = R.string.calendarFilterCalendars),
             fontSize = 16.sp,
             color = Color(ThemePrefs.textButtonColor),
-            modifier = Modifier.clickable {
-                actionHandler(CalendarAction.FilterTapped)
-            }.padding(horizontal = 8.dp, vertical = 12.dp))
+            modifier = Modifier
+                .clickable {
+                    actionHandler(CalendarAction.FilterTapped)
+                }
+                .padding(horizontal = 8.dp, vertical = 12.dp))
     }
 }
 

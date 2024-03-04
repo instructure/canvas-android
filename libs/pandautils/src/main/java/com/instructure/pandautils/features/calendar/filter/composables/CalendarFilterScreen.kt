@@ -16,7 +16,6 @@
 package com.instructure.pandautils.features.calendar.filter.composables
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -29,7 +28,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +45,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
@@ -75,13 +74,7 @@ fun CalendarFiltersScreen(
                         .fillMaxWidth()
                         .fillMaxHeight())
                 } else if (uiState.loading) {
-                    Box(
-                        Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(), contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
-                    }
+                    Loading(modifier = Modifier.fillMaxSize())
                 } else {
                     CalendarFiltersContent(
                         uiState, actionHandler, modifier = Modifier

@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +35,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -63,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
@@ -112,13 +111,7 @@ fun CalendarEvents(
             if (page >= settledPage - 1 && page <= settledPage + 1 && !calendarEventsPageUiState.loading) {
                 CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState, actionHandler)
             } else {
-                Box(
-                    Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(), contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
-                }
+                Loading(modifier = Modifier.fillMaxSize())
             }
         }
     )
