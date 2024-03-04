@@ -24,8 +24,11 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
 
@@ -55,4 +58,11 @@ fun CanvasThemedAppBar(
         },
         modifier = modifier
     )
+}
+
+@Preview
+@Composable
+fun CanvasThemedAppBarPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasThemedAppBar(title = "Title", navigationActionClick = {})
 }

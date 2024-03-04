@@ -52,13 +52,17 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -68,6 +72,7 @@ import com.instructure.pandautils.features.calendar.CalendarEventsUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.textAndIconColor
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 @ExperimentalFoundationApi
 @Composable
@@ -248,4 +253,35 @@ fun CalendarEventsEmpty(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Preview(showBackground = true)
+@Composable
+fun CalendarEventsPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AndroidThreeTen.init(LocalContext.current)
+    CalendarEvents(
+        calendarEventsUiState = CalendarEventsUiState(
+            currentPage = CalendarEventsPageUiState(
+                events = listOf(
+                    EventUiState(
+                        1L,
+                        "Course To Do",
+                        CanvasContext.defaultCanvasContext(),
+                        "Todo 1",
+                        R.drawable.ic_assignment
+                    ),
+                    EventUiState(
+                        2L,
+                        "Course",
+                        CanvasContext.defaultCanvasContext(),
+                        "Assignment 1",
+                        R.drawable.ic_assignment,
+                        "Due Jan 9 at 8:00 AM",
+                        "Missing"
+                    )
+                )
+            )
+        ), actionHandler = {})
 }
