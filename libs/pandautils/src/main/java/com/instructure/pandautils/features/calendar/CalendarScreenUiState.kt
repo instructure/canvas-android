@@ -85,7 +85,7 @@ data class EventUiState(
 )
 
 sealed class CalendarAction {
-    data object ExpandChanged : CalendarAction()
+    data class ExpandChanged(val isExpanded: Boolean) : CalendarAction()
     data object ExpandDisabled : CalendarAction()
     data object ExpandEnabled : CalendarAction()
     data class DaySelected(val selectedDay: LocalDate) : CalendarAction()

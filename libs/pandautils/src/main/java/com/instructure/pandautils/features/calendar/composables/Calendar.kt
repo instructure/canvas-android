@@ -20,6 +20,7 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,11 +39,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.rememberSwipeableState
+import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -79,7 +85,7 @@ private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
 private const val HEADER_HEIGHT = 20
 private const val CALENDAR_ROW_HEIGHT = 46
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
@@ -90,6 +96,9 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
         ) {
             Int.MAX_VALUE
         }
+
+        val calendarBodyUiState = calendarUiState.bodyUiState
+        val maxHeight = CALENDAR_ROW_HEIGHT + CALENDAR_ROW_HEIGHT * calendarBodyUiState.currentPage.calendarRows.size - 1
 
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.settledPage }.collect { page ->
@@ -114,6 +123,15 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
         )
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalPager(
+            modifier = Modifier.swipeable(
+                state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
+                    actionHandler(CalendarAction.ExpandChanged(it == 1f))
+                    true
+                }),
+                orientation = Orientation.Vertical,
+                anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
+                thresholds = { _, _ -> FractionalThreshold(0.5f) },
+            ),
             state = pagerState,
             beyondBoundsPageCount = 2,
             reverseLayout = false,
@@ -122,7 +140,6 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 val settledPage = pagerState.settledPage
 
                 val monthOffset = page - centerIndex
-                val calendarBodyUiState = calendarUiState.bodyUiState
                 val calendarPageUiState = when (monthOffset) {
                     -1 -> calendarBodyUiState.previousPage
                     1 -> calendarBodyUiState.nextPage
@@ -181,7 +198,7 @@ fun CalendarHeader(
     var monthRowModifier = Modifier.semantics(mergeDescendants = true) {}
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
         monthRowModifier = monthRowModifier.clickable(
-            onClick = { actionHandler(CalendarAction.ExpandChanged) },
+            onClick = { actionHandler(CalendarAction.ExpandChanged(!calendarOpen)) },
             onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
         )
     }
