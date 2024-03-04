@@ -88,7 +88,8 @@ object DateHelper {
 
 
     fun getFormattedTime(context: Context?, date: Date?): String? {
-        return context?.let { getPreferredTimeFormat(it).format(date) }
+        if (context == null || date == null) return null
+        return getPreferredTimeFormat(context).format(date)
     }
 
     fun createPrefixedDateString(context: Context?, prefix: String, date: Date?): String? {

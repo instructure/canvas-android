@@ -48,6 +48,7 @@ class PathVars {
     var annotationid: String by map
     var bookmarkId: Long by map
     var enrollmentId: Long by map
+    var progressId: Long by map
 }
 
 /**

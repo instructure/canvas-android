@@ -17,6 +17,7 @@ package com.instructure.teacher.ui.pages
 
 
 import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
@@ -34,7 +35,7 @@ import org.hamcrest.Matchers
  * @constructor Create empty Assignment details page
  */
 @Suppress("unused")
-class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
+class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(pageResId = R.id.assignmentDetailsPage) {
 
     private val backButton by OnViewWithContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description,false)
     private val toolbarTitle by OnViewWithText(R.string.assignment_details)
@@ -132,7 +133,7 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
      * @param assignment
      */
     fun assertAssignmentDetails(assignment: Assignment) {
-        assertAssignmentDetails(assignment.name!!, assignment.published)
+        assertAssignmentDetails(assignmentNameTextView, assignment.name!!, assignment.published)
     }
 
     /**
@@ -141,7 +142,7 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
      * @param assignment
      */
     fun assertAssignmentDetails(assignment: AssignmentApiModel) {
-        assertAssignmentDetails(assignment.name, assignment.published)
+        assertAssignmentDetails(assignmentNameTextView, assignment.name, assignment.published)
     }
 
     /**
@@ -333,13 +334,13 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     }
 
     /**
-     * Assert assignment details
+     * Assert module item details
      *
-     * @param assignmentName
+     * @param moduleItemName
      * @param published
      */
-    private fun assertAssignmentDetails(assignmentName: String, published: Boolean) {
-        assignmentNameTextView.assertHasText(assignmentName)
+    private fun assertAssignmentDetails(viewInteraction: ViewInteraction, moduleItemName: String, published: Boolean) {
+        viewInteraction.assertHasText(moduleItemName)
         assertPublishedStatus(published)
     }
 }

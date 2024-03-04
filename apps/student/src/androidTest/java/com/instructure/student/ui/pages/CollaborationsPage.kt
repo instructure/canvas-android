@@ -47,18 +47,18 @@ object CollaborationsPage {
                 .checkRepeat(webMatches(getText(), containsString("Start a New Collaboration") ), 30)
     }
 
-    fun assertGoogleDocsChoicePresent() {
+    fun assertGoogleDocsChoicePresentAsDefaultOption() {
         Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.ID, "collaboration_collaboration_type"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .check(webMatches(getText(), containsString("Google Docs") ))
     }
 
-    fun assertGoogleDocsExplanationPresent() {
+    fun assertGoogleDocsWarningDescriptionPresent() {
         Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.ID, "google_docs_description"))
                 .perform(DriverAtoms.webScrollIntoView())
-                .check(webMatches(getText(), containsString("Google Docs is a great place to collaborate") ))
+                .check(webMatches(getText(), containsString("Warning:") ))
     }
 
 }

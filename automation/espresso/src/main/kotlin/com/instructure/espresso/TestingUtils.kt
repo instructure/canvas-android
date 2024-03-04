@@ -92,3 +92,9 @@ fun retryWithIncreasingDelay(
     }
     block()
 }
+
+fun extractInnerTextById(html: String, id: String): String? {
+    val pattern = "<[^>]*?\\bid=\"$id\"[^>]*?>(.*?)</[^>]*?>".toRegex(RegexOption.DOT_MATCHES_ALL)
+    val matchResult = pattern.find(html)
+    return matchResult?.groupValues?.getOrNull(1)
+}

@@ -210,6 +210,7 @@ dependencies {
     implementation Libs.COMPOSE_PREVIEW
     debugImplementation Libs.COMPOSE_TOOLING
     implementation Libs.COMPOSE_VIEW_MODEL
+    implementation Libs.COMPOSE_UI
 
     implementation Libs.FLEXBOX_LAYOUT
 
@@ -226,4 +227,7 @@ dependencies {
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     androidTestImplementation Libs.ANDROIDX_CORE_TESTING
     androidTestImplementation Libs.ROOM_TEST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
+    debugImplementation Libs.COMPOSE_UI_TEST_MANIFEST
 }

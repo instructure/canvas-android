@@ -1,9 +1,11 @@
 package com.instructure.teacher.ui.pages
 
+import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasContentDescription
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -12,7 +14,9 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
@@ -42,12 +46,22 @@ class ModulesPage : BasePage() {
         onView(withId(R.id.publishedIcon)).assertNotDisplayed()
     }
 
+    fun assertModuleNotPublished(moduleTitle: String) {
+        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
+        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
+    }
+
     /**
      * Asserts that the module is published.
      */
     fun assertModuleIsPublished() {
         onView(withId(R.id.unpublishedIcon)).assertNotDisplayed()
         onView(withId(R.id.publishedIcon)).assertDisplayed()
+    }
+
+    fun assertModuleIsPublished(moduleTitle: String) {
+        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
+        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
     }
 
     /**
@@ -90,21 +104,20 @@ class ModulesPage : BasePage() {
      * @param moduleItemName The name of the module item.
      */
     fun assertModuleItemIsPublished(moduleItemName: String) {
-        val siblingChildMatcher = withChild(withId(R.id.moduleItemTitle) + withText(moduleItemName))
-        onView(withId(R.id.moduleItemPublishedIcon) + hasSibling(siblingChildMatcher)).assertDisplayed()
-        onView(withId(R.id.moduleItemUnpublishedIcon) + hasSibling(siblingChildMatcher)).assertNotDisplayed()
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_published
+        )
     }
 
     /**
      * Asserts that the module item with the specified title is not published.
      *
-     * @param moduleTitle The title of the module.
      * @param moduleItemName The name of the module item.
      */
-    fun assertModuleItemNotPublished(moduleTitle: String, moduleItemName: String) {
-        val siblingChildMatcher = withChild(withId(R.id.moduleItemTitle) + withText(moduleItemName))
-        onView(withId(R.id.moduleItemUnpublishedIcon) + hasSibling(siblingChildMatcher)).assertDisplayed()
-        onView(withId(R.id.moduleItemPublishedIcon) + hasSibling(siblingChildMatcher)).assertNotDisplayed()
+    fun assertModuleItemNotPublished(moduleItemName: String) {
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_unpublished
+        )
     }
 
     /**
@@ -121,7 +134,55 @@ class ModulesPage : BasePage() {
      * @param expectedCount The expected item count in the module.
      */
     fun assertItemCountInModule(moduleTitle: String, expectedCount: Int) {
-        onView(withId(R.id.recyclerView) + withDescendant(withId(R.id.moduleName) +
-                withText(moduleTitle))).waitForCheck(RecyclerViewItemCountAssertion(expectedCount + 1)) // Have to increase by one because of the module title element itself.
+        onView(
+            withId(R.id.recyclerView) + withDescendant(
+                withId(R.id.moduleName) +
+                        withText(moduleTitle)
+            )
+        ).waitForCheck(RecyclerViewItemCountAssertion(expectedCount + 1)) // Have to increase by one because of the module title element itself.
+    }
+
+    fun assertToolbarMenuItems() {
+        onView(withText(R.string.publishAllModulesAndItems)).assertDisplayed()
+        onView(withText(R.string.publishModulesOnly)).assertDisplayed()
+        onView(withText(R.string.unpublishAllModulesAndItems)).assertDisplayed()
+    }
+
+    fun clickItemOverflow(itemName: String) {
+        onView(withParent(withChild(withText(itemName))) + withId(R.id.overflow)).scrollTo().click()
+    }
+
+    fun assertModuleMenuItems() {
+        onView(withText(R.string.publishModuleAndItems)).assertDisplayed()
+        onView(withText(R.string.publishModuleOnly)).assertDisplayed()
+        onView(withText(R.string.unpublishModuleAndItems)).assertDisplayed()
+    }
+
+    fun assertOverflowItem(@StringRes title: Int) {
+        onView(withText(title)).assertDisplayed()
+    }
+
+    fun assertFileEditDialogVisible() {
+        onView(withText(R.string.edit_permissions)).assertDisplayed()
+    }
+
+    fun clickOnText(@StringRes title: Int) {
+        onView(withText(title)).click()
+    }
+
+    fun assertSnackbarText(@StringRes snackbarText: Int) {
+        onView(withId(com.google.android.material.R.id.snackbar_text) + withText(snackbarText)).assertDisplayed()
+    }
+
+    fun assertModuleItemHidden(moduleItemName: String) {
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_hidden
+        )
+    }
+
+    fun assertModuleItemScheduled(moduleItemName: String) {
+        onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
+            R.string.a11y_scheduled
+        )
     }
 }

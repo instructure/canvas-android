@@ -25,6 +25,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -172,11 +173,16 @@ class EmptyView @JvmOverloads constructor(
         }
     }
 
-    fun setError(errorMessage: String) = with(binding) {
+    fun setError(errorMessage: String, @DrawableRes errorImage: Int?) = with(binding) {
         title.setVisible()
-        image.setGone()
+        if (errorImage != null) {
+            image.setImageResource(errorImage)
+            image.setVisible()
+        } else {
+            centerTitle()
+            image.setGone()
+        }
         loading.root.setGone()
-        centerTitle()
         titleText = errorMessage
         messageText = ""
 
