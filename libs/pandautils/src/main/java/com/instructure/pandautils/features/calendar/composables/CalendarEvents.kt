@@ -15,7 +15,6 @@
  */
 package com.instructure.pandautils.features.calendar.composables
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +22,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -35,13 +34,9 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshDefaults
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -57,20 +52,27 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.textAndIconColor
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 @ExperimentalFoundationApi
 @Composable
@@ -114,13 +116,7 @@ fun CalendarEvents(
             if (page >= settledPage - 1 && page <= settledPage + 1 && !calendarEventsPageUiState.loading) {
                 CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState, actionHandler)
             } else {
-                Box(
-                    Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(), contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
-                }
+                Loading(modifier = Modifier.fillMaxSize())
             }
         }
     )
@@ -143,8 +139,7 @@ fun CalendarEventsPage(
         if (calendarEventsPageUiState.events.isNotEmpty()) {
             LazyColumn(
                 Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(), verticalArrangement = Arrangement.Top
+                    .fillMaxSize(), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
                     CalendarEventItem(eventUiState = it, { id ->
@@ -153,13 +148,17 @@ fun CalendarEventsPage(
                 }
             }
         } else if (calendarEventsPageUiState.error) {
-            CalendarEventsError(actionHandler, Modifier
-                .fillMaxWidth()
-                .fillMaxHeight())
+            ErrorContent(
+                stringResource(id = R.string.calendarPageError), retryClick = {
+                    actionHandler(CalendarAction.Retry)
+                }, modifier = Modifier
+                    .fillMaxSize()
+            )
         } else {
-            CalendarEventsEmpty(Modifier
-                .fillMaxWidth()
-                .fillMaxHeight())
+            CalendarEventsEmpty(
+                Modifier
+                    .fillMaxSize()
+            )
         }
 
         PullRefreshIndicator(
@@ -256,43 +255,33 @@ fun CalendarEventsEmpty(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Preview(showBackground = true)
 @Composable
-fun CalendarEventsError(actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_warning),
-            tint = colorResource(id = R.color.textDanger),
-            contentDescription = null,
-            modifier = Modifier.size(40.dp)
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = stringResource(id = R.string.calendarPageError),
-            fontSize = 16.sp,
-            color = colorResource(
-                id = R.color.textDark
-            ),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        OutlinedButton(
-            onClick = { actionHandler(CalendarAction.Retry) },
-            border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
-            shape = RoundedCornerShape(4.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundLightest))
-        ) {
-            Text(
-                text = stringResource(id = R.string.calendarPageErrorRetry),
-                fontSize = 16.sp,
-                color = colorResource(
-                    id = R.color.textDark
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+fun CalendarEventsPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AndroidThreeTen.init(LocalContext.current)
+    CalendarEvents(
+        calendarEventsUiState = CalendarEventsUiState(
+            currentPage = CalendarEventsPageUiState(
+                events = listOf(
+                    EventUiState(
+                        1L,
+                        "Course To Do",
+                        CanvasContext.defaultCanvasContext(),
+                        "Todo 1",
+                        R.drawable.ic_assignment
+                    ),
+                    EventUiState(
+                        2L,
+                        "Course",
+                        CanvasContext.defaultCanvasContext(),
+                        "Assignment 1",
+                        R.drawable.ic_assignment,
+                        "Due Jan 9 at 8:00 AM",
+                        "Missing"
+                    )
+                )
             )
-        }
-    }
+        ), actionHandler = {})
 }

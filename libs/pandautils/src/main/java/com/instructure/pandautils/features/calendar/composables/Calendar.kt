@@ -37,7 +37,6 @@ import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
@@ -62,20 +61,27 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarDayUiState
 import com.instructure.pandautils.features.calendar.CalendarHeaderUiState
 import com.instructure.pandautils.features.calendar.CalendarRowUiState
+import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import com.jakewharton.threetenabp.AndroidThreeTen
+import org.threeten.bp.Clock
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
@@ -119,9 +125,9 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
         CalendarHeader(
             calendarUiState.headerUiState, calendarUiState.expanded, actionHandler, modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
+                .padding(horizontal = 8.dp)
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(6.dp))
         HorizontalPager(
             modifier = Modifier.swipeable(
                 state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
@@ -166,12 +172,11 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                         modifier = Modifier.height(height.dp)
                     )
                 } else {
-                    Box(
-                        Modifier
+                    Loading(
+                        modifier = Modifier
                             .height(height.dp)
-                            .fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Color(ThemePrefs.buttonColor))
-                    }
+                            .fillMaxWidth()
+                    )
                 }
             }
         )
@@ -197,10 +202,12 @@ fun CalendarHeader(
 
     var monthRowModifier = Modifier.semantics(mergeDescendants = true) {}
     if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
-        monthRowModifier = monthRowModifier.clickable(
-            onClick = { actionHandler(CalendarAction.ExpandChanged(!calendarOpen)) },
-            onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
-        )
+        monthRowModifier = monthRowModifier
+            .clickable(
+                onClick = { actionHandler(CalendarAction.ExpandChanged(!calendarOpen)) },
+                onClickLabel = stringResource(id = if (calendarOpen) R.string.a11y_calendarSwitchToWeekView else R.string.a11y_calendarSwitchToMonthView)
+            )
+            .padding(8.dp)
     }
 
     Row(
@@ -235,6 +242,15 @@ fun CalendarHeader(
                 }
             }
         }
+        Text(
+            text = stringResource(id = R.string.calendarFilterCalendars),
+            fontSize = 16.sp,
+            color = Color(ThemePrefs.textButtonColor),
+            modifier = Modifier
+                .clickable {
+                    actionHandler(CalendarAction.FilterTapped)
+                }
+                .padding(horizontal = 8.dp, vertical = 12.dp))
     }
 }
 
@@ -377,4 +393,20 @@ fun EventIndicator(modifier: Modifier = Modifier) {
             .size(4.dp)
             .background(Color(ThemePrefs.buttonColor))
     )
+}
+
+@ExperimentalFoundationApi
+@Preview(showBackground = true)
+@Composable
+fun CalendarPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AndroidThreeTen.init(LocalContext.current)
+    val calendarStateMapper = CalendarStateMapper(Clock.systemDefaultZone())
+    val calendarUiState = CalendarUiState(
+        LocalDate.now(),
+        true,
+        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
+        bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.now(), false, 0, emptyMap())
+    )
+    Calendar(calendarUiState = calendarUiState, actionHandler = {})
 }

@@ -35,4 +35,8 @@ class CalendarSharedViewModel @Inject constructor() : ViewModel() {
             _events.send(event)
         }
     }
+
+    fun filterDialogClosed() {
+        sendEvent(SharedCalendarAction.FilterDialogClosed)
+    }
 }

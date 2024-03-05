@@ -37,6 +37,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.calendar.composables.CalendarScreen
+import com.instructure.pandautils.features.calendar.filter.CalendarFilterFragment
+import com.instructure.pandautils.features.inbox.list.filter.ContextFilterFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -67,9 +69,8 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CalendarScreen(title(), uiState, actionHandler = {
-                    viewModel.handleAction(it)
-                }) {
+                val actionHandler = { action: CalendarAction -> viewModel.handleAction(action) }
+                CalendarScreen(title(), uiState, actionHandler) {
                     calendarRouter.openNavigationDrawer()
                 }
             }
@@ -84,6 +85,10 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
             is CalendarViewModelAction.OpenCalendarEvent -> calendarRouter.openCalendarEvent(action.canvasContext, action.eventId)
             is CalendarViewModelAction.OpenToDo -> calendarRouter.openToDo(action.plannerItem)
             is CalendarViewModelAction.OpenCreateToDo -> calendarRouter.openCreateToDo(action.initialDateString)
+            CalendarViewModelAction.OpenFilters -> {
+                val calendarFilterFragment = CalendarFilterFragment.newInstance()
+                calendarFilterFragment.show(requireActivity().supportFragmentManager, ContextFilterFragment::javaClass.name)
+            }
         }
     }
 
@@ -91,6 +96,11 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
         when (action) {
             is SharedCalendarAction.RefreshDays -> action.days.forEach {
                 viewModel.handleAction(CalendarAction.RefreshDay(it))
+            }
+
+            SharedCalendarAction.FilterDialogClosed -> {
+                applyTheme()
+                viewModel.handleAction(CalendarAction.FiltersRefreshed)
             }
         }
     }
