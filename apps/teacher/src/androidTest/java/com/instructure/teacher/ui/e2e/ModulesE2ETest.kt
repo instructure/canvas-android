@@ -27,6 +27,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class   ModulesE2ETest : TeacherComposeTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -161,7 +162,7 @@ class   ModulesE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate back to Module List Page.")
         Espresso.pressBack()
 
-        Log.d(PREPARATION_TAG,"Unpublish ${module.name} module via API.")
+        Log.d(PREPARATION_TAG,"Unpublish '${module.name}' module via API.")
         ModulesApi.updateModule(courseId = course.id, moduleId = module.id, published = false, teacherToken = teacher.token)
 
         Log.d(STEP_TAG, "Refresh the Module List Page.")
@@ -205,46 +206,46 @@ class   ModulesE2ETest : TeacherComposeTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val assignment = createAssignment(course, teacher)
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seeding another 'Text Entry' assignment for '${course.name}' course.")
-        val assignment2 = createAssignment(course, teacher)
+        val assignment2 = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seeding quiz for '${course.name}' course.")
-        val quiz = createQuiz(course, teacher)
+        val quiz =  QuizzesApi.createQuiz(course.id, teacher.token, withDescription = true, dueAt = 3.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Create an unpublished page for course: '${course.name}'.")
-        val testPage = createCoursePage(course, teacher, published = false, frontPage = false, body = "<h1 id=\"header1\">Test Page Text</h1>")
+        val testPage = PagesApi.createCoursePage(course.id, teacher.token, published = false, body = "<h1 id=\"header1\">Test Page Text</h1>")
 
         Log.d(PREPARATION_TAG, "Create another unpublished page for course: '${course.name}'.")
-        val testPage2 = createCoursePage(course, teacher, published = true, frontPage = false, body = "<h1 id=\"header1\">This is another test page</h1>")
+        val testPage2 = PagesApi.createCoursePage(course.id, teacher.token, published = true, frontPage = false, body = "<h1 id=\"header1\">This is another test page</h1>")
 
         Log.d(PREPARATION_TAG, "Create a discussion topic for '${course.name}' course.")
-        val discussionTopic = createDiscussion(course, teacher)
+        val discussionTopic = DiscussionTopicsApi.createDiscussion(courseId = course.id, token = teacher.token)
 
         Log.d(PREPARATION_TAG, "Seeding a module for '${course.name}' course. It starts as unpublished.")
-        val module = createModule(course, teacher)
+        val module = ModulesApi.createModule(course.id, teacher.token)
 
         Log.d(PREPARATION_TAG, "Seeding another module for '${course.name}' course. It starts as unpublished.")
-        val module2 = createModule(course, teacher)
+        val module2 = ModulesApi.createModule(course.id, teacher.token)
 
-        Log.d(PREPARATION_TAG, "Associate '${assignment.name}' assignment (and the quiz within it) with module: '${module.id}'.")
-        createModuleItem(course, module, teacher, assignment.name, ModuleItemTypes.ASSIGNMENT.stringVal, assignment.id.toString())
+        Log.d(PREPARATION_TAG,"Associate '${assignment.name}' assignment with module: '${module.id}'.")
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = assignment.name, moduleItemType = ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment.id.toString())
 
-        Log.d(PREPARATION_TAG, "Associate '${quiz.title}' quiz with module: '${module.id}'.")
-        createModuleItem(course, module, teacher, quiz.title, ModuleItemTypes.QUIZ.stringVal, quiz.id.toString())
+        Log.d(PREPARATION_TAG,"Associate '${quiz.title}' quiz with module: '${module.id}'.")
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = quiz.title, moduleItemType = ModuleItemTypes.QUIZ.stringVal, contentId = quiz.id.toString())
 
-        Log.d(PREPARATION_TAG, "Associate '${testPage.title}' page with module: '${module.id}'.")
-        createModuleItem(course, module, teacher, testPage.title, ModuleItemTypes.PAGE.stringVal, null, pageUrl = testPage.url)
+        Log.d(PREPARATION_TAG,"Associate '${testPage.title}' page with module: '${module.id}'.")
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = testPage.title, moduleItemType = ModuleItemTypes.PAGE.stringVal, contentId = null, pageUrl = testPage.url)
 
-        Log.d(PREPARATION_TAG, "Associate '${discussionTopic.title}' discussion with module: '${module.id}'.")
-        createModuleItem(course, module, teacher, discussionTopic.title, ModuleItemTypes.DISCUSSION.stringVal, discussionTopic.id.toString())
+        Log.d(PREPARATION_TAG,"Associate '${discussionTopic.title}' discussion with module: '${module.id}'.")
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = discussionTopic.title, moduleItemType = ModuleItemTypes.DISCUSSION.stringVal, contentId = discussionTopic.id.toString())
 
         Log.d(PREPARATION_TAG, "Associate '${assignment2.name}' assignment with module: '${module2.id}'.")
-        createModuleItem(course, module2, teacher, assignment2.name, ModuleItemTypes.ASSIGNMENT.stringVal, assignment2.id.toString())
+        ModulesApi.createModuleItem(course.id, teacher.token, module2.id , assignment2.name, ModuleItemTypes.ASSIGNMENT.stringVal, assignment2.id.toString())
 
         Log.d(PREPARATION_TAG, "Associate '${testPage2.title}' page with module: '${module2.id}'.")
-        createModuleItem(course, module2, teacher, testPage2.title, ModuleItemTypes.PAGE.stringVal, null, pageUrl = testPage2.url)
+        ModulesApi.createModuleItem(course.id, teacher.token, module2.id, testPage2.title, ModuleItemTypes.PAGE.stringVal, null, pageUrl = testPage2.url)
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'. Assert that '${course.name}' course is displayed on the Dashboard.")
         tokenLogin(teacher)
@@ -468,90 +469,5 @@ class   ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
     }
-
-        private fun createModuleItem(
-        course: CourseApiModel,
-        module: ModuleApiModel,
-        teacher: CanvasUserApiModel,
-        title: String,
-        moduleItemType: String,
-        contentId: String?,
-        pageUrl: String? = null
-    ) {
-        ModulesApi.createModuleItem(
-            courseId = course.id,
-            moduleId = module.id,
-            teacherToken = teacher.token,
-            moduleItemTitle = title,
-            moduleItemType = moduleItemType,
-            contentId = contentId,
-            pageUrl = pageUrl
-        )
-    }
-
-    private fun createModule(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ): ModuleApiModel {
-        return ModulesApi.createModule(
-            courseId = course.id,
-            teacherToken = teacher.token,
-            unlockAt = null
-        )
-    }
-
-    private fun createQuiz(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ): QuizApiModel {
-        return QuizzesApi.createQuiz(
-            QuizzesApi.CreateQuizRequest(
-                courseId = course.id,
-                withDescription = true,
-                dueAt = 3.days.fromNow.iso8601,
-                token = teacher.token,
-                published = true
-            )
-        )
-    }
-
-    private fun createAssignment(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ): AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = true,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                teacherToken = teacher.token,
-                dueAt = 1.days.fromNow.iso8601
-            )
-        )
-    }
-
-    private fun createCoursePage(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel,
-        published: Boolean = true,
-        frontPage: Boolean = false,
-        body: String = ""
-    ): PageApiModel {
-        return PagesApi.createCoursePage(
-            courseId = course.id,
-            published = published,
-            frontPage = frontPage,
-            token = teacher.token,
-            body = body
-        )
-    }
-
-    private fun createDiscussion(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ) = DiscussionTopicsApi.createDiscussion(
-        courseId = course.id,
-        token = teacher.token
-    )
 
 }
