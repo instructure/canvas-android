@@ -38,14 +38,6 @@ class ModulesPage : BasePage() {
         onView(allOf(withId(R.id.moduleListEmptyView), withAncestor(R.id.moduleList))).assertDisplayed()
     }
 
-    /**
-     * Asserts that the module is not published.
-     */
-    fun assertModuleNotPublished() {
-        onView(withId(R.id.unpublishedIcon)).assertDisplayed()
-        onView(withId(R.id.publishedIcon)).assertNotDisplayed()
-    }
-
     fun assertModuleNotPublished(moduleTitle: String) {
         onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
         onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()

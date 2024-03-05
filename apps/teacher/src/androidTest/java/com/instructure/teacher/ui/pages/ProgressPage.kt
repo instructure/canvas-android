@@ -18,15 +18,32 @@
 
 package com.instructure.teacher.ui.pages
 
+import androidx.annotation.StringRes
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 
+@OptIn(ExperimentalTestApi::class)
 class ProgressPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun clickDone() {
         composeTestRule.waitForIdle()
+        composeTestRule.waitUntilExactlyOneExists(hasText("Done"), 10000)
         composeTestRule.onNodeWithText("Done").performClick()
+    }
+
+   fun assertProgressPageTitle(@StringRes title: Int) {
+        composeTestRule.waitUntilExactlyOneExists(hasText(getStringFromResource(title)), 10000)
+        composeTestRule.onNodeWithText(getStringFromResource(title)).assertIsDisplayed()
+    }
+
+    fun assertProgressPageNote(@StringRes note: Int) {
+        composeTestRule.waitUntilExactlyOneExists(hasText(getStringFromResource(note)), 10000)
+        composeTestRule.onNodeWithText(getStringFromResource(note)).assertIsDisplayed()
     }
 }
