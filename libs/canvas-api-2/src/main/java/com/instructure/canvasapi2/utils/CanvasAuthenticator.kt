@@ -19,7 +19,10 @@ import android.os.Bundle
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
-import okhttp3.*
+import okhttp3.Authenticator
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.Route
 import org.greenrobot.eventbus.EventBus
 
 private const val AUTH_HEADER = "Authorization"
@@ -51,7 +54,6 @@ class CanvasAuthenticator : Authenticator {
         refreshTokenResponse.onSuccess {
             refreshTokenResponse.dataOrNull?.accessToken?.let {
                 ApiPrefs.accessToken = it
-                EventBus.getDefault().post(CanvasTokenRefreshedEvent())
             }
 
             return response.request.newBuilder()
@@ -78,6 +80,3 @@ class CanvasAuthenticator : Authenticator {
         Analytics.logEvent(eventString, bundle)
     }
 }
-
-/** An event sent via the event bus whenever the user's Canvas authentication token has been refreshed */
-class CanvasTokenRefreshedEvent

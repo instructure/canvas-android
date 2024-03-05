@@ -87,9 +87,6 @@ android {
 
     lintOptions {
         abortOnError false
-        // Work around for AGP issue related to release mode, see:
-        // https://github.com/flutter/flutter/issues/58247#issuecomment-636253593
-        checkReleaseBuilds false
     }
 
     signingConfigs {
@@ -226,8 +223,7 @@ android {
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
-                    new LocaleTransformer(project),
-                    new FlutterA11yOffsetTransformer()
+                    new LocaleTransformer(project)
             )
     )
 
@@ -262,12 +258,6 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
     implementation project(path: ':DocumentScanner')
-
-    /* Flutter embed */
-    implementation (project(path: ':flutter-student-embed')) {
-        exclude group: 'com.google.firebase'
-        exclude group: 'com.google.android.gms'
-    }
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

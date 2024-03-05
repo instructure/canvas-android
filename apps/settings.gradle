@@ -15,12 +15,6 @@ pluginManagement {
 /* Top-level project modules */
 include ':student'
 include ':teacher'
-/* Flutter embed modules */
-setBinding(new Binding([gradle: this]))
-
-evaluate(new File(settingsDir.parentFile, 'libs/flutter_student_embed/include_student_embed.groovy'))
-include ':flutter_student_embed'
-project(':flutter_student_embed').projectDir = new File(rootProject.projectDir, '/../libs/flutter_student_embed')
 
 /* Library modules */
 include ':annotations'

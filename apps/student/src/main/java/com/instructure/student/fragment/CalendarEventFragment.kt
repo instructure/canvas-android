@@ -41,7 +41,6 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentCalendarEventBinding
-import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.router.RouteMatcher
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
@@ -260,9 +259,6 @@ class CalendarEventFragment : ParentFragment() {
                 }
 
                 toast(R.string.eventSuccessfulDeletion)
-                response.body()?.let {
-                    FlutterComm.updateCalendarDates(listOf(it.allDayDate, it.startDate, it.endDate))
-                }
                 requireActivity().onBackPressed()
             }
         }

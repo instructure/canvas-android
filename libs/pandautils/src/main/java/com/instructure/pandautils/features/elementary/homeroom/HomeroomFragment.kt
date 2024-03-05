@@ -126,7 +126,6 @@ class HomeroomFragment : Fragment() {
             is HomeroomAction.OpenCourse -> homeroomRouter.openCourse(action.course)
             is HomeroomAction.OpenAssignments -> openAssignments(action.course)
             is HomeroomAction.OpenAnnouncementDetails -> homeroomRouter.openAnnouncementDetails(action.course, action.announcement)
-            HomeroomAction.UpdateColors -> homeroomRouter.updateColors()
         }
     }
 

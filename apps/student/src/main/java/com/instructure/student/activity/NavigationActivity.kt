@@ -129,10 +129,8 @@ import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
-import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.fragment.CalendarEventFragment
-import com.instructure.student.fragment.CalendarFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
@@ -344,8 +342,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             finish()
         }
 
-        FlutterComm.updateDarkMode(this)
-
         binding.bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
 
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
@@ -440,10 +436,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun initialCoreDataLoadingComplete() {
-        // Send updated info to Flutter
-        FlutterComm.sendUpdatedLogin()
-        FlutterComm.sendUpdatedTheme()
-
         // We are ready to load our UI
         if (currentFragment == null) {
             loadLandingPage(true)
@@ -1216,18 +1208,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         } else {
             // Don't set the badge or display it, remove any badge
             bottomBar.removeBadge(menuItemId)
-        }
-    }
-
-    /** Handles status bar color change events posted by FlutterComm */
-    @Subscribe
-    fun updateStatusBarColor(event: StatusBarColorChangeEvent) {
-        event.get { color ->
-            if (color == Color.WHITE) {
-                ViewStyler.setStatusBarLight(this)
-            } else {
-                ViewStyler.setStatusBarDark(this, color)
-            }
         }
     }
 
