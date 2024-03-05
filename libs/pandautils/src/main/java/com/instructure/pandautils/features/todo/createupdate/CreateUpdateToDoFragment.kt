@@ -35,7 +35,7 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todo.createupdate.composables.CreateUpdateToDoScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -71,7 +71,7 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         when (action) {
             is CreateUpdateToDoViewModelAction.RefreshCalendarDays -> {
                 sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
-                activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
+                activity?.supportFragmentManager?.popBackStack(CalendarFragment::class.java.name, 0)
             }
         }
     }

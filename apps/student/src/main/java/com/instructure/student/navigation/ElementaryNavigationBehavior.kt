@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.R
 import com.instructure.student.fragment.NotificationListFragment
@@ -32,7 +32,7 @@ class ElementaryNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationB
 
     override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
         ElementaryDashboardFragment::class.java,
-        ComposeCalendarFragment::class.java,
+        CalendarFragment::class.java,
         ToDoListFragment::class.java,
         NotificationListFragment::class.java,
         getInboxBottomBarFragment(apiPrefs)

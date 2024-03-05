@@ -36,7 +36,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
@@ -305,8 +305,8 @@ object RouteMatcher : BaseRouteMatcher() {
         )
 
         // Calendar
-        routes.add(Route("/calendar", ComposeCalendarFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/calendar_events/:${RouterParams.EVENT_ID}"), ComposeCalendarFragment::class.java))
+        routes.add(Route("/calendar", CalendarFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/calendar_events/:${RouterParams.EVENT_ID}"), CalendarFragment::class.java))
 
         // Syllabus
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusRepositoryFragment::class.java))
@@ -330,7 +330,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(
             Route(
                 courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
-                ComposeCalendarFragment::class.java,
+                CalendarFragment::class.java,
                 CourseModuleProgressionFragment::class.java
             )
         )
@@ -351,7 +351,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(
             Route(
                 courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
-                ComposeCalendarFragment::class.java,
+                CalendarFragment::class.java,
                 AssignmentDetailsFragment::class.java
             )
         )
