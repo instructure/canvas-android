@@ -61,7 +61,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     private val viewModel: EventViewModel by viewModels()
 
     private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-        override fun launchInternalWebViewFragment(url: String) = eventRouter.launchInternalWebViewFragment(url, viewModel.canvasContext)
+        override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, viewModel.canvasContext)
 
         override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
     }
@@ -127,7 +127,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private fun handleAction(action: EventViewModelAction) {
         when (action) {
-            is EventViewModelAction.OpenLtiScreen -> eventRouter.openLtiScreen(viewModel.canvasContext, action.url)
+            is EventViewModelAction.OpenLtiScreen -> webViewRouter.openLtiScreen(viewModel.canvasContext, action.url)
             is EventViewModelAction.OpenEditEvent -> eventRouter.openEditEvent(action.scheduleItem)
             is EventViewModelAction.RefreshCalendarDay -> Unit
         }

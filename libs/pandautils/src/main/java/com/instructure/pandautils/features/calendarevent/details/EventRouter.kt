@@ -17,14 +17,9 @@
 
 package com.instructure.pandautils.features.calendarevent.details
 
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 
 interface EventRouter {
-
-    fun openLtiScreen(canvasContext: CanvasContext?, url: String)
-
-    fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?)
 
     fun openEditEvent(scheduleItem: ScheduleItem)
 }
