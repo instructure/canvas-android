@@ -47,10 +47,10 @@ class OfflineLeftSideMenuE2ETest : StudentTest() {
     fun testOfflineLeftSideMenuUnavailableFunctionsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
+        val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

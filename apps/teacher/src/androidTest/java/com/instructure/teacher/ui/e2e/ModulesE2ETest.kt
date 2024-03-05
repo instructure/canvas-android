@@ -12,13 +12,7 @@ import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.model.ModuleApiModel
 import com.instructure.dataseeding.model.ModuleItemTypes
-import com.instructure.dataseeding.model.PageApiModel
-import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -60,29 +54,31 @@ class   ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertEmptyView()
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val assignment = createAssignment(course, teacher)
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Seeding quiz for '${course.name}' course.")
-        val quiz = createQuiz(course, teacher)
+        val quiz = QuizzesApi.createQuiz(course.id, teacher.token, withDescription = true, dueAt = 3.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG,"Create an unpublished page for course: '${course.name}'.")
-        val testPage = createCoursePage(course, teacher, published = false, frontPage = false, body = "<h1 id=\"header1\">Test Page Text</h1>")
+        val testPage = PagesApi.createCoursePage(course.id, teacher.token, published = false, body = "<h1 id=\"header1\">Test Page Text</h1>")
 
         Log.d(PREPARATION_TAG,"Create a discussion topic for '${course.name}' course.")
-        val discussionTopic = createDiscussion(course, teacher)
+        val discussionTopic = DiscussionTopicsApi.createDiscussion(courseId = course.id, token = teacher.token)
 
         Log.d(PREPARATION_TAG,"Seeding a module for '${course.name}' course. It starts as unpublished.")
-        val module = createModule(course, teacher)
+        val module = ModulesApi.createModule(course.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Associate '${assignment.name}' assignment (and the quiz within it) with module: '${module.id}'.")
-        createModuleItem(course, module, teacher, assignment.name, ModuleItemTypes.ASSIGNMENT.stringVal, assignment.id.toString())
-        createModuleItem(course, module, teacher, quiz.title, ModuleItemTypes.QUIZ.stringVal, quiz.id.toString())
+        Log.d(PREPARATION_TAG,"Associate '${assignment.name}' assignment with module: '${module.id}'.")
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = assignment.name, moduleItemType = ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment.id.toString())
+
+        Log.d(PREPARATION_TAG,"Associate '${quiz.title}' quiz with module: '${module.id}'.")
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = quiz.title, moduleItemType = ModuleItemTypes.QUIZ.stringVal, contentId = quiz.id.toString())
 
         Log.d(PREPARATION_TAG,"Associate '${testPage.title}' page with module: '${module.id}'.")
-        createModuleItem(course, module, teacher, testPage.title, ModuleItemTypes.PAGE.stringVal, null, pageUrl = testPage.url)
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = testPage.title, moduleItemType = ModuleItemTypes.PAGE.stringVal, contentId = null, pageUrl = testPage.url)
 
         Log.d(PREPARATION_TAG,"Associate '${discussionTopic.title}' discussion with module: '${module.id}'.")
-        createModuleItem(course, module, teacher, discussionTopic.title, ModuleItemTypes.DISCUSSION.stringVal, discussionTopic.id.toString())
+        ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = discussionTopic.title, moduleItemType = ModuleItemTypes.DISCUSSION.stringVal, contentId = discussionTopic.id.toString())
 
         Log.d(STEP_TAG,"Refresh the page. Assert that '${module.name}' module is displayed and it is unpublished by default.")
         moduleListPage.refresh()
@@ -94,12 +90,7 @@ class   ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleItemNotPublished(testPage.title)
 
         Log.d(PREPARATION_TAG,"Publish '${module.name}' module via API.")
-        ModulesApi.updateModule(
-                courseId = course.id,
-                moduleId = module.id,
-                published = true,
-                teacherToken = teacher.token
-        )
+        ModulesApi.updateModule(courseId = course.id, moduleId = module.id, published = true, teacherToken = teacher.token)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that '${module.name}' module is displayed and it is published.")
         moduleListPage.refresh()
@@ -171,17 +162,12 @@ class   ModulesE2ETest : TeacherComposeTest() {
         Espresso.pressBack()
 
         Log.d(PREPARATION_TAG,"Unpublish ${module.name} module via API.")
-        ModulesApi.updateModule(
-            courseId = course.id,
-            moduleId = module.id,
-            published = false,
-            teacherToken = teacher.token
-        )
+        ModulesApi.updateModule(courseId = course.id, moduleId = module.id, published = false, teacherToken = teacher.token)
 
-        Log.d(STEP_TAG, "Refresh the Modules Page.")
+        Log.d(STEP_TAG, "Refresh the Module List Page.")
         moduleListPage.refresh()
 
-        Log.d(STEP_TAG,"Assert that ${assignment.name} assignment and ${quiz.title} quiz and ${testPage.title} page are present as module items, and they are NOT published since their module is unpublished.")
+        Log.d(STEP_TAG,"Assert that '${assignment.name}' assignment and '${quiz.title}' quiz and '${testPage.title}' page are present as module items, and they are NOT published since their module is unpublished.")
         moduleListPage.assertModuleItemIsDisplayed(assignment.name)
         moduleListPage.assertModuleItemNotPublished(assignment.name)
         moduleListPage.assertModuleItemIsDisplayed(quiz.title)

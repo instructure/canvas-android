@@ -48,7 +48,7 @@ class OfflineSyncSettingsE2ETest : StudentTest() {
         val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -112,13 +112,13 @@ class OfflineSyncSettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: ${student.domain}.")
+        Log.d(STEP_TAG, "Enter domain: '${student.domain}'.")
         loginFindSchoolPage.enterDomain(student.domain)
 
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         loginSignInPage.loginAs(student)
         dashboardPage.waitForRender()
 

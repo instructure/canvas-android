@@ -27,7 +27,6 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -43,6 +42,7 @@ import com.instructure.espresso.page.*
 import com.instructure.student.R
 import com.instructure.student.ui.utils.ViewUtils
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.anyOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
@@ -395,7 +395,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     //OfflineMethod
     fun clickOnSyncProgressNotification() {
-        waitForView(ViewMatchers.withText(com.instructure.pandautils.R.string.syncProgress_syncingOfflineContent)).click()
+        Thread.sleep(2500)
+        onView(anyOf(withText(R.string.syncProgress_syncQueued),withText(R.string.syncProgress_downloadStarting), withText(R.string.syncProgress_syncingOfflineContent))).click()
     }
 
     //OfflineMethod
