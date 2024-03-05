@@ -51,6 +51,14 @@ import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiS
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
 import com.instructure.pandautils.utils.ThemePrefs
 
+private const val USER_KEY = "user"
+private const val COURSES_KEY = "courses"
+private const val GROUPS_KEY = "groups"
+private const val EXPLANATION_KEY = "explanation"
+private const val HEADER_CONTENT_TYPE = "header"
+private const val FILTER_ITEM_CONTENT_TYPE = "filter_item"
+private const val EXPLANATION_CONTENT_TYPE = "explanation"
+
 @Composable
 fun CalendarFiltersScreen(
     uiState: CalendarFilterScreenUiState,
@@ -96,7 +104,7 @@ private fun CalendarFiltersContent(
     LazyColumn(
         modifier = modifier
     ) {
-        item {
+        item(key = EXPLANATION_KEY, contentType = EXPLANATION_CONTENT_TYPE) {
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = stringResource(id = R.string.calendarFilterExplanation),
@@ -106,44 +114,29 @@ private fun CalendarFiltersContent(
             )
             Spacer(modifier = Modifier.height(24.dp))
         }
-        item {
-            if (uiState.users.isNotEmpty()) {
-                Text(
-                    stringResource(id = R.string.calendarFilterUser),
-                    fontSize = 14.sp,
-                    color = colorResource(id = R.color.textDark),
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
-                )
+        if (uiState.users.isNotEmpty()) {
+            item(key = USER_KEY, contentType = HEADER_CONTENT_TYPE) {
+                HeaderItem(text = stringResource(id = R.string.calendarFilterUser), modifier = Modifier.padding(bottom = 8.dp))
+            }
+            items(uiState.users, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { user ->
+                CalendarFilterItem(user, actionHandler, Modifier.fillMaxWidth())
             }
         }
-        items(uiState.users) { user ->
-            CalendarFilterItem(user, actionHandler, Modifier.fillMaxWidth())
-        }
-        item {
-            if (uiState.courses.isNotEmpty()) {
-                Text(
-                    stringResource(id = R.string.calendarFilterCourse),
-                    fontSize = 14.sp,
-                    color = colorResource(id = R.color.textDark),
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
+        if (uiState.courses.isNotEmpty()) {
+            item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
+                HeaderItem(text = stringResource(id = R.string.calendarFilterCourse), modifier = Modifier.padding(vertical = 8.dp))
+            }
+            items(uiState.courses, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
+                CalendarFilterItem(course, actionHandler, Modifier.fillMaxWidth())
             }
         }
-        items(uiState.courses) { course ->
-            CalendarFilterItem(course, actionHandler, Modifier.fillMaxWidth())
-        }
-        item {
-            if (uiState.groups.isNotEmpty()) {
-                Text(
-                    stringResource(id = R.string.calendarFilterGroup),
-                    fontSize = 14.sp,
-                    color = colorResource(id = R.color.textDark),
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
+        if (uiState.groups.isNotEmpty()) {
+            item(key = GROUPS_KEY, contentType = HEADER_CONTENT_TYPE) {
+                HeaderItem(text = stringResource(id = R.string.calendarFilterGroup), modifier = Modifier.padding(vertical = 8.dp))
             }
-        }
-        items(uiState.groups) { group ->
-            CalendarFilterItem(group, actionHandler, Modifier.fillMaxWidth())
+            items(uiState.groups, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { group ->
+                CalendarFilterItem(group, actionHandler, Modifier.fillMaxWidth())
+            }
         }
     }
 }
@@ -169,6 +162,16 @@ private fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler
         )
         Text(uiState.name, color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
     }
+}
+
+@Composable
+private fun HeaderItem(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text,
+        fontSize = 14.sp,
+        color = colorResource(id = R.color.textDark),
+        modifier = modifier.padding(horizontal = 16.dp)
+    )
 }
 
 @Preview
