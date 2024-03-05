@@ -30,13 +30,13 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SyllabusInteractionTest : StudentTest() {
+class SyllabusInteractionTest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 

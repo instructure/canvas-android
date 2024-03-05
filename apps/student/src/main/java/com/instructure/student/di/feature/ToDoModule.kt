@@ -18,8 +18,8 @@
 package com.instructure.student.di.feature
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.todo.details.ToDoRouter
-import com.instructure.student.features.todo.StudentToDoRouter
+import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import com.instructure.student.features.calendartodo.StudentToDoRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

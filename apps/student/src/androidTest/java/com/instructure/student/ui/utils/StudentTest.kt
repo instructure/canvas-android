@@ -23,7 +23,6 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.view.View
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.core.content.FileProvider
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.Espresso
@@ -50,7 +49,6 @@ import com.instructure.student.ui.pages.AnnouncementListPage
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.pages.BookmarkPage
-import com.instructure.student.ui.pages.CalendarEventPage
 import com.instructure.student.ui.pages.CanvasWebViewPage
 import com.instructure.student.ui.pages.ConferenceDetailsPage
 import com.instructure.student.ui.pages.ConferenceListPage
@@ -154,7 +152,6 @@ abstract class StudentTest : CanvasTest() {
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()
-    val calendarEventPage = CalendarEventPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
     val groupBrowserPage = GroupBrowserPage()

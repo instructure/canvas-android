@@ -3,6 +3,9 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
@@ -12,8 +15,6 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
-import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoFragment
-import com.instructure.pandautils.features.todo.details.ToDoFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -39,7 +40,6 @@ import com.instructure.student.fragment.AccountPreferencesFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.AssignmentBasicFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.fragment.CourseSettingsFragment
 import com.instructure.student.fragment.CreateAnnouncementFragment
 import com.instructure.student.fragment.CreateDiscussionFragment
@@ -143,9 +143,9 @@ object RouteResolver {
             cls.isA<PeopleDetailsFragment>() -> PeopleDetailsFragment.newInstance(route)
             cls.isA<FileListFragment>() -> FileListFragment.newInstance(route)
             cls.isA<FileSearchFragment>() -> FileSearchFragment.newInstance(route)
-            cls.isA<CalendarEventFragment>() -> CalendarEventFragment.newInstance(route)
             cls.isA<ToDoFragment>() -> ToDoFragment.newInstance(route)
             cls.isA<CreateUpdateToDoFragment>() -> CreateUpdateToDoFragment.newInstance(route)
+            cls.isA<EventFragment>() -> EventFragment.newInstance(route)
             cls.isA<CalendarFragment>() -> CalendarFragment.newInstance(route)
             cls.isA<FileDetailsFragment>() -> FileDetailsFragment.newInstance(route)
             cls.isA<ViewImageFragment>() -> ViewImageFragment.newInstance(route)

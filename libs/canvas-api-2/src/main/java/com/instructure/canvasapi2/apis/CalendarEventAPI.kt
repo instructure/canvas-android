@@ -61,6 +61,9 @@ object CalendarEventAPI {
         @GET("calendar_events/{eventId}")
         fun getCalendarEvent(@Path("eventId") eventId: Long): Call<ScheduleItem>
 
+        @GET("calendar_events/{eventId}?include[]=series_natural_language")
+        suspend fun getCalendarEvent(@Path("eventId") eventId: Long, @Tag restParams: RestParams): DataResult<ScheduleItem>
+
         @DELETE("calendar_events/{eventId}")
         fun deleteCalendarEvent(@Path("eventId") eventId: Long, @Query("cancel_reason") cancelReason: String): Call<ScheduleItem>
 

@@ -78,6 +78,7 @@ import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -128,7 +129,6 @@ import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.fragment.BookmarksFragment
-import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
 import com.instructure.student.fragment.InboxConversationFragment
@@ -814,7 +814,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         when(fragment) {
             //Calendar
             is CalendarFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
-            is CalendarEventFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
+            is EventFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
             //To-do
             is ToDoListFragment -> setBottomBarItemSelected(R.id.bottomNavigationToDo)
             //Notifications

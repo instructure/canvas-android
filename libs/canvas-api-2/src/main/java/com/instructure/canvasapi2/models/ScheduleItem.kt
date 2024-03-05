@@ -49,6 +49,8 @@ data class ScheduleItem(
         val htmlUrl: String? = null,
         @SerializedName("context_code")
         val contextCode: String? = null,
+        @SerializedName("context_name")
+        val contextName: String? = null,
         @SerializedName("effective_context_code")
         val effectiveContextCode: String? = null,
         @SerializedName("hidden")
@@ -58,6 +60,8 @@ data class ScheduleItem(
         @SerializedName("important_dates")
         val importantDates: Boolean = false,
         val type: String = "",
+        @SerializedName("series_natural_language")
+        val seriesNaturalLanguage: String? = null,
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
