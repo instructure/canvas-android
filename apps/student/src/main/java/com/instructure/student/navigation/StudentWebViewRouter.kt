@@ -17,9 +17,12 @@
 package com.instructure.student.navigation
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
@@ -32,11 +35,23 @@ class StudentWebViewRouter(val activity: FragmentActivity) : WebViewRouter {
         RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)
     }
 
-    override fun openMedia(url: String) {
-        RouteMatcher.openMedia(activity, url)
+    override fun openMedia(url: String, mime: String, filename: String, canvasContext: CanvasContext?) {
+        if (canvasContext != null && activity is BaseRouterActivity) {
+            activity.openMedia(canvasContext, mime, url, filename)
+        } else {
+            RouteMatcher.openMedia(activity, url)
+        }
     }
 
     override fun routeExternally(url: String) {
         RouteMatcher.route(activity, InternalWebviewFragment.makeRoute(url, url, false, ""))
+    }
+
+    override fun openLtiScreen(canvasContext: CanvasContext?, url: String) {
+        LtiLaunchFragment.routeLtiLaunchFragment(activity, canvasContext, url)
+    }
+
+    override fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?) {
+        canvasContext?.let { RouteMatcher.route(activity, InternalWebviewFragment.makeRoute(it, url, false)) }
     }
 }

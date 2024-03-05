@@ -159,14 +159,18 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     init {
-        initSettings()
-        setDownloadListener { url, _, contentDisposition, mimetype, _ ->
-            if (contentDisposition != null) {
-                val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
-                canvasWebViewClientCallback?.openMediaFromWebView(mimetype, url, fileName)
+        if (isInEditMode) {
+            loadHtml("This is a preview of the CanvasWebView", "CanvasWebView")
+        } else {
+            initSettings()
+            setDownloadListener { url, _, contentDisposition, mimetype, _ ->
+                if (contentDisposition != null) {
+                    val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
+                    canvasWebViewClientCallback?.openMediaFromWebView(mimetype, url, fileName)
+                }
             }
+            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
         }
-        CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
     }
 
     @SuppressLint("SetJavaScriptEnabled")

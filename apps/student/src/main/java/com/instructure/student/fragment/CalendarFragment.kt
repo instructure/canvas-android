@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -99,7 +100,7 @@ class CalendarFragment : ParentFragment() {
                 }
             }
             PlannableType.CALENDAR_EVENT -> {
-                CalendarEventFragment.makeRoute(item.canvasContext, item.plannable.id)
+                EventFragment.makeRoute(item.canvasContext, item.plannable.id)
             }
             else -> {
                 // This is a type that we don't handle - do nothing

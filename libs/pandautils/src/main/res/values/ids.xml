@@ -23,4 +23,5 @@
     <item type="id" name="primaryIcon" />
     <item type="id" name="circle" />
     <item type="id" name="checkMark" />
+    <item type="id" name="eventFragment" />
 </resources>

@@ -17,7 +17,7 @@
 package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.pandautils.features.todo.details.ToDoRepository
+import com.instructure.pandautils.features.calendartodo.details.ToDoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

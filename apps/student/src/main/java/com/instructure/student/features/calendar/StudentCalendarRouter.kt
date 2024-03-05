@@ -21,13 +21,13 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoFragment
-import com.instructure.pandautils.features.todo.details.ToDoFragment
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRouter {
@@ -53,7 +53,7 @@ class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRo
     }
 
     override fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long) {
-        val route = CalendarEventFragment.makeRoute(canvasContext, eventId)
+        val route = EventFragment.makeRoute(canvasContext, eventId)
         RouteMatcher.route(activity, route)
     }
 
@@ -63,7 +63,7 @@ class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRo
     }
 
     override fun openCreateToDo(initialDateString: String?) {
-        val route = CreateUpdateToDoFragment.makeRoute(initialDateString = initialDateString)
+        val route = CreateUpdateToDoFragment.makeRoute(initialDateString)
         RouteMatcher.route(activity, route)
     }
 }

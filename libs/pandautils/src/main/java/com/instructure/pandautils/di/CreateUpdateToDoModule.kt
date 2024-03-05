@@ -19,7 +19,7 @@ package com.instructure.pandautils.di
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
-import com.instructure.pandautils.features.todo.createupdate.CreateUpdateToDoRepository
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
