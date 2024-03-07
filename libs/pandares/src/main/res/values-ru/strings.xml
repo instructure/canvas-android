@@ -70,6 +70,51 @@
     <string name="missingSubmissionLabel">Отсутствует</string>
     <string name="gradedSubmissionLabel">С оценкой</string>
 
+    <string name="reminderTitle">Напоминание</string>
+    <string name="reminderDescription">Добавьте уведомления с напоминанием о сроках выполнения этого задания на этом устройстве.</string>
+    <string name="a11y_addReminder">Добавить напоминание</string>
+    <string name="a11y_removeReminder">Удалить напоминание</string>
+    <string name="reminderBefore">%s До</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 минута</item>
+        <item quantity="few">%d минут</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 час</item>
+        <item quantity="few">%d часов</item>
+        <item quantity="many">%d часов</item>
+        <item quantity="other">%d часов</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 день</item>
+        <item quantity="few">%d дней</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дней</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 неделя</item>
+        <item quantity="few">%d недели (недель)</item>
+        <item quantity="many">%d недели (недель)</item>
+        <item quantity="other">%d недели (недель)</item>
+    </plurals>
+    <string name="reminderCustom">Пользовательская</string>
+    <string name="customReminderTitle">Пользовательское напоминание</string>
+    <string name="customReminderQuantityHint">Количество</string>
+    <string name="customReminderMinutes">Минут(ы) до</string>
+    <string name="customReminderHours">Часа(ов) до</string>
+    <string name="customReminderDays">Дня(ей) до</string>
+    <string name="customReminderWeeks">Недель(и) до</string>
+    <string name="reminderNotificationChannelName">Уведомления с напоминанием</string>
+    <string name="reminderNotificationChannelDescription">Уведомления Canvas для напоминаний о тестировании.</string>
+    <string name="reminderNotificationTitle">Напоминание о сроке выполнения</string>
+    <string name="reminderNotificationDescription">Данное задание необходимо выполнить через %s: %s</string>
+    <string name="reminderInPast">Выберите время в будущем для напоминания!</string>
+    <string name="reminderAlreadySet">Вы уже установили напоминание на это время</string>
+    <string name="deleteReminderTitle">Удалить напоминание</string>
+    <string name="deleteReminderMessage">Вы действительно хотите удалить это напоминание?</string>
+    <string name="reminderPermissionNotGrantedError">Для этого действия необходимо включить разрешение на точное оповещение</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Предпросмотр для URL-адресов с использованием \'http://\' недоступен</string>
     <string name="submissionUrlNotAUrlError">Введите действительный URL-адрес</string>

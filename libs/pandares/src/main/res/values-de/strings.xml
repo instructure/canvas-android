@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Fehlt</string>
     <string name="gradedSubmissionLabel">Benotet</string>
 
+    <string name="reminderTitle">Erinnerung</string>
+    <string name="reminderDescription">Fügen Sie Erinnerungsbenachrichtigungen zu dieser Aufgabe auf diesem Gerät hinzu.</string>
+    <string name="a11y_addReminder">Erinnerung hinzufügen</string>
+    <string name="a11y_removeReminder">Erinnerung entfernen</string>
+    <string name="reminderBefore">%s Vor</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minute</item>
+        <item quantity="other">%d Minuten</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Stunde</item>
+        <item quantity="other">%d Stunden</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Tag</item>
+        <item quantity="other">%d Tage</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Woche</item>
+        <item quantity="other">%d Wochen</item>
+    </plurals>
+    <string name="reminderCustom">Angepasst</string>
+    <string name="customReminderTitle">Benutzerdefinierte Erinnerung</string>
+    <string name="customReminderQuantityHint">Menge</string>
+    <string name="customReminderMinutes">Minuten vorher</string>
+    <string name="customReminderHours">Stunden vorher</string>
+    <string name="customReminderDays">Tage vorher</string>
+    <string name="customReminderWeeks">Wochen vorher</string>
+    <string name="reminderNotificationChannelName">Erinnerungsbenachrichtigungen</string>
+    <string name="reminderNotificationChannelDescription">Canvas-Benachrichtigungen für Aufgabenerinnerungen.</string>
+    <string name="reminderNotificationTitle">Fälligkeitserinnerung</string>
+    <string name="reminderNotificationDescription">Diese Aufgabe ist fällig in %s: %s</string>
+    <string name="reminderInPast">Bitte wählen Sie eine zukünftige Zeit für Ihre Erinnerung!</string>
+    <string name="reminderAlreadySet">Sie haben bereits eine Erinnerung für diese Zeit eingestellt</string>
+    <string name="deleteReminderTitle">Erinnerung löschen</string>
+    <string name="deleteReminderMessage">Sind Sie sicher, dass Sie diese Erinnerung löschen möchten?</string>
+    <string name="reminderPermissionNotGrantedError">Sie müssen für diese Aktion die genaue Alarmberechtigung aktivieren</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Für URLs, die \'http://\' verwenden, ist keine Vorschau verfügbar.</string>
     <string name="submissionUrlNotAUrlError">Geben Sie bitte eine gültige URL ein.</string>

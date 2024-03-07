@@ -1599,4 +1599,5 @@
     <string name="unpublishModuleItemAction">Unpublish</string>
     <string name="publishDialogPositiveButton">Publish</string>
     <string name="unpublishDialogPositiveButton">Unpublish</string>
+    <string name="discussionMenuRefresh">Refresh</string>
 </resources>

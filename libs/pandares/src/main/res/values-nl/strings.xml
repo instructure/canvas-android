@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Ontbrekend</string>
     <string name="gradedSubmissionLabel">Beoordeeld</string>
 
+    <string name="reminderTitle">Herinnering</string>
+    <string name="reminderDescription">Voeg herinneringsmeldingen voor inleverdatum over deze opdracht toe op dit apparaat.</string>
+    <string name="a11y_addReminder">Herinnering toevoegen</string>
+    <string name="a11y_removeReminder">Herinnering verwijderen</string>
+    <string name="reminderBefore">%s vóór</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minuut</item>
+        <item quantity="other">%d minuten</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 uur</item>
+        <item quantity="other">%d uur</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dag</item>
+        <item quantity="other">%d dagen</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 week</item>
+        <item quantity="other">%d weken</item>
+    </plurals>
+    <string name="reminderCustom">Aangepast</string>
+    <string name="customReminderTitle">Aangepaste herinnering</string>
+    <string name="customReminderQuantityHint">Hoeveelheid</string>
+    <string name="customReminderMinutes">Minuten vóór</string>
+    <string name="customReminderHours">Uur vóór</string>
+    <string name="customReminderDays">Dagen vóór</string>
+    <string name="customReminderWeeks">Weken vóór</string>
+    <string name="reminderNotificationChannelName">Herinneringsmeldingen</string>
+    <string name="reminderNotificationChannelDescription">Canvas-meldingen voor opdrachtherinneringen.</string>
+    <string name="reminderNotificationTitle">Herinnering voor inleverdatum</string>
+    <string name="reminderNotificationDescription">Deze opdracht moet uiterlijk worden ingeleverd op %s %s</string>
+    <string name="reminderInPast">Kies een toekomstige tijd voor je herinnering!</string>
+    <string name="reminderAlreadySet">Je hebt al een herinnering voor deze tijd ingesteld</string>
+    <string name="deleteReminderTitle">Herinnering verwijderen</string>
+    <string name="deleteReminderMessage">Weet je zeker dat je deze herinnering wilt verwijderen?</string>
+    <string name="reminderPermissionNotGrantedError">Je moet exacte alarmmachtiging inschakelen voor deze actie</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Geen voorbeeld beschikbaar voor URL\'s die \'http://\' gebruiken</string>
     <string name="submissionUrlNotAUrlError">Voer een geldige URL in</string>
