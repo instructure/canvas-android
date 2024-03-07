@@ -87,9 +87,6 @@ android {
 
     lintOptions {
         abortOnError false
-        // Work around for AGP issue related to release mode, see:
-        // https://github.com/flutter/flutter/issues/58247#issuecomment-636253593
-        checkReleaseBuilds false
     }
 
     signingConfigs {
@@ -114,11 +111,6 @@ android {
 
             firebaseCrashlytics {
                 mappingFileUploadEnabled false
-            }
-
-            ndk {
-                // Filter for architectures supported by Flutter. Include x86 in debug builds so we don't crash on FTL.
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64', 'x86'
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
@@ -148,11 +140,6 @@ android {
                 nativeSymbolUploadEnabled true
                 strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
                 unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
-            }
-
-            ndk {
-                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
@@ -226,8 +213,7 @@ android {
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
-                    new LocaleTransformer(project),
-                    new FlutterA11yOffsetTransformer()
+                    new LocaleTransformer(project)
             )
     )
 
@@ -262,12 +248,6 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
     implementation project(path: ':DocumentScanner')
-
-    /* Flutter embed */
-    implementation (project(path: ':flutter-student-embed')) {
-        exclude group: 'com.google.firebase'
-        exclude group: 'com.google.android.gms'
-    }
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

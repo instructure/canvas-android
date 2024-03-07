@@ -21,7 +21,6 @@ import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.work.Configuration
-import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
@@ -37,15 +36,11 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
-import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.service.StudentPageViewService
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import com.zynksoftware.documentscanner.ui.DocumentScanner
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.embedding.engine.FlutterEngineCache
-import io.flutter.embedding.engine.dart.DartExecutor
 
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling, Configuration.Provider {
 
@@ -93,26 +88,10 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
 
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)
 
-        initFlutterEngine()
-
         val options = Options()
         options.disableTracking()
         Heap.init(this, BuildConfig.HEAP_APP_ID, options)
     }
-
-    private fun initFlutterEngine() {
-        flutterEngine = FlutterEngine(this)
-
-        FlutterComm.init(flutterEngine, applicationContext)
-
-        // Execute the 'main' entrypoint
-        flutterEngine.dartExecutor.executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault())
-
-        // Cache the FlutterEngine
-        FlutterEngineCache.getInstance().put(FLUTTER_ENGINE_ID, flutterEngine)
-    }
-
-    override fun onCanvasTokenRefreshed() = FlutterComm.sendUpdatedLogin()
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
 
@@ -159,10 +138,4 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
     override fun performLogoutOnAuthError() = Unit
 
     abstract fun getWorkManagerFactory(): WorkerFactory
-
-    companion object {
-        private const val FLUTTER_ENGINE_ID = "flutter_engine_embed"
-
-        lateinit var flutterEngine: FlutterEngine
-    }
 }

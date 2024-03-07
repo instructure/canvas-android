@@ -45,5 +45,4 @@ sealed class HomeroomAction {
     data class OpenAnnouncementDetails(val course: Course, val announcement: DiscussionTopicHeader) : HomeroomAction()
     data class OpenCourse(val course: Course) : HomeroomAction()
     data class OpenAssignments(val course: Course) : HomeroomAction()
-    object UpdateColors : HomeroomAction()
 }

@@ -49,7 +49,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_CALENDAR)
 @PageView(url = "calendar")
-class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
+class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CalendarViewModel by viewModels()
     private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
@@ -123,8 +123,8 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
     }
 
     companion object {
-        fun newInstance(route: Route) = ComposeCalendarFragment()
+        fun newInstance(route: Route) = CalendarFragment()
 
-        fun makeRoute() = Route(ComposeCalendarFragment::class.java, null)
+        fun makeRoute() = Route(CalendarFragment::class.java, null)
     }
 }

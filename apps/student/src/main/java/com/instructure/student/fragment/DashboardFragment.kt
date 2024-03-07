@@ -69,7 +69,6 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.dashboard.DashboardRepository
-import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.holders.CourseViewHolder
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
@@ -215,7 +214,6 @@ class DashboardFragment : ParentFragment() {
                     tryWeave {
                         awaitApi<CanvasColor> { UserManager.setColors(it, course.contextId, color) }
                         ColorKeeper.addToCache(course.contextId, color)
-                        FlutterComm.sendUpdatedTheme()
                         recyclerAdapter?.notifyDataSetChanged()
                     } catch {
                         toast(R.string.colorPickerError)
