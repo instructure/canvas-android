@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Mancante</string>
     <string name="gradedSubmissionLabel">Valutato</string>
 
+    <string name="reminderTitle">Promemoria</string>
+    <string name="reminderDescription">Aggiungi notifiche di promemoria della data di scadenza su questo compito su questo dispositivo.</string>
+    <string name="a11y_addReminder">Aggiungi promemoria</string>
+    <string name="a11y_removeReminder">Rimuovi promemoria</string>
+    <string name="reminderBefore">%s Prima</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minuto</item>
+        <item quantity="other">%d minuti</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 ora</item>
+        <item quantity="other">%d ore</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 giorno</item>
+        <item quantity="other">%d giorni</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 settimana</item>
+        <item quantity="other">%d settimane</item>
+    </plurals>
+    <string name="reminderCustom">Personalizzato</string>
+    <string name="customReminderTitle">Promemoria personalizzato</string>
+    <string name="customReminderQuantityHint">Quantità</string>
+    <string name="customReminderMinutes">Minuti prima</string>
+    <string name="customReminderHours">Ore prima</string>
+    <string name="customReminderDays">Giorni prima</string>
+    <string name="customReminderWeeks">Settimane prima</string>
+    <string name="reminderNotificationChannelName">Notifiche promemoria</string>
+    <string name="reminderNotificationChannelDescription">Notifica Canvas per promemoria compito.</string>
+    <string name="reminderNotificationTitle">Promemoria data di scadenza</string>
+    <string name="reminderNotificationDescription">Questo compito scade in %s: %s</string>
+    <string name="reminderInPast">Scegliere un periodo futuro per il promemoria!</string>
+    <string name="reminderAlreadySet">Hai già impostato un promemoria per questo periodo</string>
+    <string name="deleteReminderTitle">Elimina promemoria</string>
+    <string name="deleteReminderMessage">Vuoi eliminare questo promemoria?</string>
+    <string name="reminderPermissionNotGrantedError">Devi abilitare l’autorizzazione di allarme esatto per questa operazione</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Nessuna anteprima disponibile per gli URL che utilizzano \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Inserisci un URL valido</string>

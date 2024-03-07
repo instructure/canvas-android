@@ -154,7 +154,7 @@
     <string name="noQuizzes">小テストなし</string>
     <string name="noQuizzesSubtext">すみません、まだ小テストは存在しません。</string>
     <string name="noQuizzesTeacher">表示する公開されている小テストはありません。</string>
-    <string name="noAnnouncements">アナウンスメントなし</string>
+    <string name="noAnnouncements">現在、アナウンスメントはありません</string>
     <string name="noAnnouncementsSubtext">まだなにもアナウンスされていません</string>
     <string name="noCourses">コースなし</string>
     <string name="noCoursesSubtext">このアカウントに関連付けられているコースはないようです。今日コースを作成するには、ウェブをご覧ください。</string>
@@ -332,7 +332,7 @@
     <string name="utils_lockAfterUnlockError">ロック日をロック解除日より前にすることはできません</string>
     <string name="utils_assigneeBlankError">課題対象者を空白にすることはできません</string>
     <string name="utils_assignTo">～へ割り当てられました</string>
-    <string name="utils_availableFrom">次から使用可能</string>
+    <string name="utils_availableFrom">開始日時</string>
     <string name="utils_availableTo">利用できる人</string>
     <string name="utils_availableFromDate">利用可能期間の開始日付</string>
     <string name="utils_availableFromTime">利用可能期間の開始時間</string>
