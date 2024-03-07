@@ -62,6 +62,7 @@ data class ScheduleItem(
         val type: String = "",
         @SerializedName("series_natural_language")
         val seriesNaturalLanguage: String? = null,
+        val rrule: String? = null,
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
@@ -121,6 +122,9 @@ data class ScheduleItem(
 
     @IgnoredOnParcel
     val startDate: Date? get() = startAt?.toDate()
+
+    @IgnoredOnParcel
+    val isRecurring: Boolean get() = rrule != null
 
     val contextId: Long
         get() {

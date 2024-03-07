@@ -1651,4 +1651,9 @@
     <string name="eventDeleteConfirmationTitle">Delete Event?</string>
     <string name="eventDeleteConfirmationText">This will permanently delete your event.</string>
     <string name="eventDeleteErrorMessage">There was an error deleting this event. Please check your connection and try again.</string>
+    <string name="eventDeleteRecurringConfirmationTitle">Confirm Deletion</string>
+    <string name="eventDeleteScopeOne">One</string>
+    <string name="eventDeleteScopeAll">All</string>
+    <string name="eventDeleteScopeFollowing">Following</string>
+
 </resources>

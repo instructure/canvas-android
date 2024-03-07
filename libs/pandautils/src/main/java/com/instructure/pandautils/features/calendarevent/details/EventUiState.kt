@@ -1,7 +1,9 @@
 package com.instructure.pandautils.features.calendarevent.details
 
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.utils.ThemePrefs
+import org.threeten.bp.LocalDate
 
 
 data class EventUiState(
@@ -14,22 +16,27 @@ data class EventUiState(
     val location: String = "",
     val address: String = "",
     val formattedDescription: String = "",
+    val isSeriesEvent: Boolean = false,
+    val errorSnack: String? = null
 )
 
 data class ToolbarUiState(
     val toolbarColor: Int = ThemePrefs.primaryColor,
     val subtitle: String = "",
-    val modifyAllowed: Boolean = false
+    val modifyAllowed: Boolean = false,
+    val deleting: Boolean = false
 )
 
 sealed class EventAction {
     data class OnLtiClicked(val url: String) : EventAction()
-    data object DeleteEvent : EventAction()
+    data class DeleteEvent(val deleteScope: CalendarEventAPI.EventDeleteScope) : EventAction()
     data object EditEvent : EventAction()
+
+    data object SnackbarDismissed : EventAction()
 }
 
 sealed class EventViewModelAction {
     data class OpenLtiScreen(val url: String) : EventViewModelAction()
-    data class RefreshCalendarDay(val date: String) : EventViewModelAction()
+    data class RefreshCalendarDays(val days: List<LocalDate>) : EventViewModelAction()
     data class OpenEditEvent(val scheduleItem: ScheduleItem) : EventViewModelAction()
 }

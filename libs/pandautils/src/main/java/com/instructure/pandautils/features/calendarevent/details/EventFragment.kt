@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -36,6 +37,9 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
+import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.details.composables.EventScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.navigation.WebViewRouter
@@ -59,6 +63,8 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     lateinit var webViewRouter: WebViewRouter
 
     private val viewModel: EventViewModel by viewModels()
+
+    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
 
     private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
         override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, viewModel.canvasContext)
@@ -129,7 +135,10 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         when (action) {
             is EventViewModelAction.OpenLtiScreen -> webViewRouter.openLtiScreen(viewModel.canvasContext, action.url)
             is EventViewModelAction.OpenEditEvent -> eventRouter.openEditEvent(action.scheduleItem)
-            is EventViewModelAction.RefreshCalendarDay -> Unit
+            is EventViewModelAction.RefreshCalendarDays -> {
+                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
+                activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
+            }
         }
     }
 

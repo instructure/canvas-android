@@ -19,9 +19,23 @@ package com.instructure.pandautils.features.calendarevent.details
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.ScheduleItem
 
 class EventRepository(
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface
 ) {
     suspend fun getCalendarEvent(eventId: Long) = calendarEventApi.getCalendarEvent(eventId, RestParams()).dataOrThrow
+
+    suspend fun deleteCalendarEvent(
+        eventId: Long
+    ): ScheduleItem {
+        return calendarEventApi.deleteCalendarEvent(eventId, RestParams()).dataOrThrow
+    }
+
+    suspend fun deleteRecurringCalendarEvent(
+        eventId: Long,
+        eventDeleteScope: CalendarEventAPI.EventDeleteScope
+    ): List<ScheduleItem> {
+        return calendarEventApi.deleteRecurringCalendarEvent(eventId, eventDeleteScope.apiName, RestParams()).dataOrThrow
+    }
 }

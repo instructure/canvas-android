@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -33,6 +34,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -111,7 +113,8 @@ class EventViewModel @Inject constructor(
                 recurrence = scheduleItem.seriesNaturalLanguage.orEmpty(),
                 location = scheduleItem.locationName.orEmpty(),
                 address = scheduleItem.locationAddress.orEmpty(),
-                formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty())
+                formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty()),
+                isSeriesEvent = scheduleItem.isRecurring
             )
         }
     }
@@ -136,13 +139,37 @@ class EventViewModel @Inject constructor(
         return DateHelper.getFormattedDate(context, startDate).orEmpty()
     }
 
+    private fun deleteEvent(deleteScope: CalendarEventAPI.EventDeleteScope) {
+        viewModelScope.tryLaunch {
+            scheduleItem?.let { scheduleItem ->
+                _uiState.update { it.copy(toolbarUiState = it.toolbarUiState.copy(deleting = true)) }
+                if (scheduleItem.isRecurring) {
+                    val removedEvents = eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, deleteScope)
+                    _events.send(EventViewModelAction.RefreshCalendarDays(removedEvents.mapNotNull { it.startDate?.toLocalDate() }))
+                } else {
+                    val removedEvent = eventRepository.deleteCalendarEvent(scheduleItem.id)
+                    _events.send(EventViewModelAction.RefreshCalendarDays(listOfNotNull(removedEvent.startDate?.toLocalDate())))
+                }
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    errorSnack = context.getString(R.string.eventDeleteErrorMessage),
+                    toolbarUiState = it.toolbarUiState.copy(deleting = false)
+                )
+            }
+        }
+    }
+
     fun handleAction(action: EventAction) {
         when (action) {
+            is EventAction.SnackbarDismissed -> _uiState.update { it.copy(errorSnack = null) }
+
             is EventAction.OnLtiClicked -> viewModelScope.launch {
                 _events.send(EventViewModelAction.OpenLtiScreen(action.url))
             }
 
-            is EventAction.DeleteEvent -> Unit
+            is EventAction.DeleteEvent -> deleteEvent(action.deleteScope)
 
             is EventAction.EditEvent -> viewModelScope.launch {
                 scheduleItem?.let {

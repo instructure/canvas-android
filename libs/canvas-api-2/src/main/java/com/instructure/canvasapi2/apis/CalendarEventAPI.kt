@@ -17,6 +17,8 @@
 
 package com.instructure.canvasapi2.apis
 
+import androidx.annotation.StringRes
+import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
@@ -67,6 +69,19 @@ object CalendarEventAPI {
         @DELETE("calendar_events/{eventId}")
         fun deleteCalendarEvent(@Path("eventId") eventId: Long, @Query("cancel_reason") cancelReason: String): Call<ScheduleItem>
 
+        @DELETE("calendar_events/{eventId}")
+        suspend fun deleteRecurringCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Query("which") deleteScope: String,
+            @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
+        @DELETE("calendar_events/{eventId}")
+        suspend fun deleteCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
+
         @POST("calendar_events/")
         fun createCalendarEvent(
                 @Query("calendar_event[context_code]") contextCode: String,
@@ -89,6 +104,12 @@ object CalendarEventAPI {
     enum class CalendarEventType(val apiName: String) {
         CALENDAR("event"),
         ASSIGNMENT("assignment")
+    }
+
+    enum class EventDeleteScope(val apiName: String, @StringRes val stringRes: Int) {
+        ONE("one", R.string.eventDeleteScopeOne),
+        ALL("all", R.string.eventDeleteScopeAll),
+        FOLLOWING("following", R.string.eventDeleteScopeFollowing)
     }
 
     fun getCalendarEvent(

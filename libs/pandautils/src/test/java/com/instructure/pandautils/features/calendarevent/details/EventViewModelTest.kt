@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.calendarevent.details
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
@@ -33,6 +34,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.backgroundColor
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -164,6 +166,21 @@ class EventViewModelTest {
     }
 
     @Test
+    fun `Event loading failed`() {
+        every { savedStateHandle.get<Long>(EventFragment.SCHEDULE_ITEM_ID) } returns 1
+        every { context.getString(R.string.errorLoadingEvent) } returns "Error loading event"
+        coEvery { eventRepository.getCalendarEvent(1) } throws Exception()
+
+        createViewModel()
+
+        val expectedState = EventUiState(
+            loadError = "Error loading event"
+        )
+
+        Assert.assertEquals(expectedState, viewModel.uiState.value)
+    }
+
+    @Test
     fun `Date text when all day event`() {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(isAllDay = true)
         every { context.getString(R.string.allDayEvent) } returns "All Day Event"
@@ -282,6 +299,91 @@ class EventViewModelTest {
 
         val expectedEvent = EventViewModelAction.OpenLtiScreen("url")
         Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Edit event button tapped`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.EditEvent)
+
+        val expectedEvent = EventViewModelAction.OpenEditEvent(scheduleItem)
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Delete event`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        coEvery { eventRepository.deleteCalendarEvent(scheduleItem.id) } returns scheduleItem
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.ONE))
+
+        coVerify {
+            eventRepository.deleteCalendarEvent(scheduleItem.id)
+        }
+
+        val expectedEvent = EventViewModelAction.RefreshCalendarDays(listOf(LocalDate.of(2024, 3, 1)))
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Delete recurring event`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(rrule = "FREQ=DAILY;INTERVAL=1;COUNT=5")
+        coEvery { eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.EventDeleteScope.ALL) } returns listOf(
+            scheduleItem,
+            scheduleItem.copy(startAt = LocalDate.of(2024, 3, 2).atTime(11, 0).toApiString())
+        )
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.ALL))
+
+        coVerify {
+            eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.EventDeleteScope.ALL)
+        }
+
+        val expectedEvent = EventViewModelAction.RefreshCalendarDays(
+            listOf(
+                LocalDate.of(2024, 3, 1),
+                LocalDate.of(2024, 3, 2)
+            )
+        )
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Delete event failed`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { context.getString(R.string.eventDeleteErrorMessage) } returns "Error message"
+        coEvery { eventRepository.deleteCalendarEvent(scheduleItem.id) } throws Exception()
+
+        createViewModel()
+
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.ONE))
+
+        Assert.assertEquals("Error message", viewModel.uiState.value.errorSnack)
+
+        viewModel.handleAction(EventAction.SnackbarDismissed)
+        Assert.assertNull(viewModel.uiState.value.errorSnack)
     }
 
     private fun createViewModel() {
