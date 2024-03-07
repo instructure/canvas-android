@@ -67,6 +67,39 @@
     <string name="missingSubmissionLabel">缺失</string>
     <string name="gradedSubmissionLabel">已评分</string>
 
+    <string name="reminderTitle">提醒</string>
+    <string name="reminderDescription">在本设备上添加关于此作业的截止日期提醒通知。</string>
+    <string name="a11y_addReminder">添加提醒</string>
+    <string name="a11y_removeReminder">删除提醒</string>
+    <string name="reminderBefore">提前的%s</string>
+    <plurals name="reminderMinute">
+        <item quantity="other">%d 分钟</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="other">%d 小时</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="other">%d 周</item>
+    </plurals>
+    <string name="reminderCustom">自定义</string>
+    <string name="customReminderTitle">自定义提醒</string>
+    <string name="customReminderQuantityHint">数量</string>
+    <string name="customReminderMinutes">提前的分钟数</string>
+    <string name="customReminderHours">提前的小时数</string>
+    <string name="customReminderDays">提前的天数</string>
+    <string name="customReminderWeeks">提前的周数</string>
+    <string name="reminderNotificationChannelName">提醒通知</string>
+    <string name="reminderNotificationChannelDescription">Canvas 作业提醒通知。</string>
+    <string name="reminderNotificationTitle">截止日期提醒</string>
+    <string name="reminderNotificationDescription">此作业在%s后截止：%s</string>
+    <string name="reminderInPast">请选择未来的提醒日期！</string>
+    <string name="reminderAlreadySet">您已经为该时间设置提醒</string>
+    <string name="deleteReminderTitle">删除提醒</string>
+    <string name="deleteReminderMessage">是否确实要删除此提醒？</string>
+    <string name="reminderPermissionNotGrantedError">您需要为此操作启用精确警报许可</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">使用“http://”的 URL 无可用预览</string>
     <string name="submissionUrlNotAUrlError">请输入有效的 URL</string>

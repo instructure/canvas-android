@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Manke</string>
     <string name="gradedSubmissionLabel">Klase</string>
 
+    <string name="reminderTitle">Rapèl</string>
+    <string name="reminderDescription">Ajoute notifikasyon rapèl delè pou devwa sa a sou aparèy sa a.</string>
+    <string name="a11y_addReminder">Ajoute rapèl</string>
+    <string name="a11y_removeReminder">Elimine rapèl</string>
+    <string name="reminderBefore">%s Anvan</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minit</item>
+        <item quantity="other">%d Minit</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 èdtan</item>
+        <item quantity="other">%d Èdtan</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Jou</item>
+        <item quantity="other">%d Jou</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Semèn</item>
+        <item quantity="other">%d Semèn</item>
+    </plurals>
+    <string name="reminderCustom">Pèsonalize</string>
+    <string name="customReminderTitle">Rapèl Pèsonalize</string>
+    <string name="customReminderQuantityHint">Kantite</string>
+    <string name="customReminderMinutes">Minit Anvan</string>
+    <string name="customReminderHours">Èdtan Anvan</string>
+    <string name="customReminderDays">Jou Anvan</string>
+    <string name="customReminderWeeks">Semèn Anvan</string>
+    <string name="reminderNotificationChannelName">Notifikasyon Rapèl</string>
+    <string name="reminderNotificationChannelDescription">Notifikasyon Canvas pou rapèl devwa yo.</string>
+    <string name="reminderNotificationTitle">Rapèl Delè</string>
+    <string name="reminderNotificationDescription">Devwa sa a dwe remèt %s: %s</string>
+    <string name="reminderInPast">Chwazi yon dat apre pou rapèl ou a!</string>
+    <string name="reminderAlreadySet">Ou gentan fikse yon rapèl pou lè sa a</string>
+    <string name="deleteReminderTitle">Elimine Rapèl</string>
+    <string name="deleteReminderMessage">Èske w sèten ou vle elimine rapèl sa a?</string>
+    <string name="reminderPermissionNotGrantedError">Ou dwe aktive otorizasyon alam egzat la pou aksyon sa a</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Okenn apèsi disponib pou URL ki itilize \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Tanpri antre yon URL ki valid</string>

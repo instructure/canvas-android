@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Mangler</string>
     <string name="gradedSubmissionLabel">Bedømt</string>
 
+    <string name="reminderTitle">Påmindelse</string>
+    <string name="reminderDescription">Tilføj påmindelser om afleveringsdato for denne opgave på denne enhed.</string>
+    <string name="a11y_addReminder">Tilføj påmindelse</string>
+    <string name="a11y_removeReminder">Fjern påmindelse</string>
+    <string name="reminderBefore">%s før</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minut</item>
+        <item quantity="other">%d minutter</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 time</item>
+        <item quantity="other">%d timer</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dag</item>
+        <item quantity="other">%d dage</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 uge</item>
+        <item quantity="other">%d uger</item>
+    </plurals>
+    <string name="reminderCustom">Brugerdefineret</string>
+    <string name="customReminderTitle">Brugerdefineret påmindelse</string>
+    <string name="customReminderQuantityHint">Antal</string>
+    <string name="customReminderMinutes">Minutter før</string>
+    <string name="customReminderHours">Timer før</string>
+    <string name="customReminderDays">Dage før</string>
+    <string name="customReminderWeeks">Uger før</string>
+    <string name="reminderNotificationChannelName">Påmindelsesmeddelelser</string>
+    <string name="reminderNotificationChannelDescription">Canvas-meddelelser for opgavepåmindelser.</string>
+    <string name="reminderNotificationTitle">Påmindelse om afleveringsdato</string>
+    <string name="reminderNotificationDescription">Denne opgave skal afleveres om %s: %s</string>
+    <string name="reminderInPast">Vælg et fremtidigt tidspunkt for din påmindelse!</string>
+    <string name="reminderAlreadySet">Du har allerede indstillet en påmindelse for dette tidspunkt</string>
+    <string name="deleteReminderTitle">Slet påmindelse</string>
+    <string name="deleteReminderMessage">Er du sikker på, at du vil slette denne påmindelse?</string>
+    <string name="reminderPermissionNotGrantedError">Du skal aktivere nøjagtig alarmtilladelse for denne handling</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Der findes ingen forhåndsvisning for URL’er, der bruger \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Indtast venligst en gyldig URL</string>

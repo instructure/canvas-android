@@ -67,6 +67,39 @@
     <string name="missingSubmissionLabel">欠如</string>
     <string name="gradedSubmissionLabel">採点済み</string>
 
+    <string name="reminderTitle">事前通知</string>
+    <string name="reminderDescription">このデバイスにこの課題に関する期限リマインダ通知を追加します。</string>
+    <string name="a11y_addReminder">リマインダを追加する</string>
+    <string name="a11y_removeReminder">リマインダを削除する</string>
+    <string name="reminderBefore">%s前</string>
+    <plurals name="reminderMinute">
+        <item quantity="other">%d 分</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="other">%d時間</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="other">%d 日</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="other">%d 週間</item>
+    </plurals>
+    <string name="reminderCustom">カスタム</string>
+    <string name="customReminderTitle">カスタムリマインダ</string>
+    <string name="customReminderQuantityHint">数量</string>
+    <string name="customReminderMinutes">分前</string>
+    <string name="customReminderHours">時間前</string>
+    <string name="customReminderDays">日前</string>
+    <string name="customReminderWeeks">週前</string>
+    <string name="reminderNotificationChannelName">リマインダ通知</string>
+    <string name="reminderNotificationChannelDescription">Canvasの課題に関する通知</string>
+    <string name="reminderNotificationTitle">期日のリマインダ</string>
+    <string name="reminderNotificationDescription">この課題の提出期限は%s以内：%s</string>
+    <string name="reminderInPast">リマインダの時間には未来の時間を選択してください！</string>
+    <string name="reminderAlreadySet">あなたはすでにこの時間にリマインダを設定しています</string>
+    <string name="deleteReminderTitle">リマインダを削除する</string>
+    <string name="deleteReminderMessage">このリマインダ本当に削除しますか？</string>
+    <string name="reminderPermissionNotGrantedError">この操作を行うには、正確なアラーム許可を有効にする必要があります。</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">URL を \'http://\' でプレビューすることはできません</string>
     <string name="submissionUrlNotAUrlError">有効なURLを入力してください</string>
@@ -1319,7 +1352,7 @@
     <string name="unpublish_assignment_error">受講者の提出がある場合は課題を取り消すことはできません。</string>
     <string name="subscribeToCalendar">カレンダーフィードを購読する</string>
     <string name="subscribeToCalendarMessage">このダイアログで「定期購読」ボタンをクリックすると、CanvasカレンダーをGoogleカレンダーアカウントに同期させることができます。その後、デバイスのGoogleカレンダーアプリで、新しいカレンダーの設定で同期を有効にする必要があります。</string>
-    <string name="subscribeButton">定期購読</string>
+    <string name="subscribeButton">常に通知</string>
     <string name="switchToLightMode">ライトモードに切り替える</string>
     <string name="switchToDarkMode">ダークモードに切り替える</string>
     <string name="acceptableUsePolicyDescription">あなたは新しいユーザーであるか、最後に同意して以降、許可される使用ポリシーが変更されています。続行する前に許可される使用ポリシーに同意してください。</string>
@@ -1331,7 +1364,7 @@
     <string name="attempt">%d 試行</string>
     <string name="quizQuestions">質問:%d</string>
     <string name="quizTimeLimit">時間制限:%s</string>
-    <string name="allowedAttempts">試行許可数：%s</string>
+    <string name="allowedAttempts">試行許可回数：%s</string>
     <string name="usedAttempts">試行した回数：%d</string>
     <string name="generalUnexpectedError">予期しないエラーが発生しました。</string>
 
