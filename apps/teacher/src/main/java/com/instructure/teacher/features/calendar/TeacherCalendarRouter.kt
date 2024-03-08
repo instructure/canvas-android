@@ -49,4 +49,8 @@ class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
     override fun openCreateToDo(initialDateString: String?) {
         TODO("Not yet implemented")
     }
+
+    override fun openCreateEvent(initialDateString: String?) {
+        TODO("Not yet implemented")
+    }
 }

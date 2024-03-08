@@ -89,6 +89,7 @@ class ComposeCalendarFragment : Fragment(), NavigationCallbacks, FragmentInterac
                 val calendarFilterFragment = CalendarFilterFragment.newInstance()
                 calendarFilterFragment.show(requireActivity().supportFragmentManager, ContextFilterFragment::javaClass.name)
             }
+            is CalendarViewModelAction.OpenCreateEvent -> calendarRouter.openCreateEvent(action.initialDateString)
         }
     }
 

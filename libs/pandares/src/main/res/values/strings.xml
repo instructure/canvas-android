@@ -1617,7 +1617,7 @@
     <string name="calendarFromTo">%1$s from %2$s to %3$s</string>
     <string name="calendarPageError">There was an error loading your calendar</string>
     <string name="calendarRefreshFailed">Failed to refresh calendar</string>
-    <string name="calendarAddButtonContentDescription">New To Do</string>
+    <string name="calendarAddButtonContentDescription">Add new</string>
     <string name="calendarFilterCalendars">Calendars</string>
     <string name="calendarFilterUser">User</string>
     <string name="calendarFilterCourse">Courses</string>
@@ -1655,5 +1655,10 @@
     <string name="eventDeleteScopeOne">One</string>
     <string name="eventDeleteScopeAll">All</string>
     <string name="eventDeleteScopeFollowing">Following</string>
+    <string name="calendarAddToDo">Add To Do</string>
+    <string name="calendarAddEvent">Add Event</string>
+
+    <string name="createEventScreenTitle">New Event</string>
+    <string name="editEventScreenTitle">Edit Event</string>
 
 </resources>

@@ -100,6 +100,7 @@ sealed class CalendarAction {
     data object AddToDoTapped : CalendarAction()
     data object FilterTapped : CalendarAction()
     data object FiltersRefreshed : CalendarAction()
+    data object AddEventTapped : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {
@@ -110,6 +111,7 @@ sealed class CalendarViewModelAction {
     data class OpenToDo(val plannerItem: PlannerItem) : CalendarViewModelAction()
     data class OpenCreateToDo(val initialDateString: String?) : CalendarViewModelAction()
     data object OpenFilters : CalendarViewModelAction()
+    data class OpenCreateEvent(val initialDateString: String?) : CalendarViewModelAction()
 }
 
 sealed class SharedCalendarAction {

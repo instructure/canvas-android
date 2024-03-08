@@ -368,6 +368,9 @@ class CalendarViewModel @Inject constructor(
                     _uiState.emit(createNewUiState())
                 }
             }
+            is CalendarAction.AddEventTapped -> viewModelScope.launch {
+                _events.send(CalendarViewModelAction.OpenCreateEvent(selectedDay.toApiString()))
+            }
         }
     }
 

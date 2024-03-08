@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.calendartodo.createupdate.composables
+package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -49,13 +49,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.CanvasAppBar
-import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoAction
-import com.instructure.pandautils.features.calendartodo.createupdate.SelectCalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -63,7 +61,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 @Composable
 fun SelectCalendarScreen(
     uiState: SelectCalendarUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
+    onCalendarSelected: (CanvasContext) -> Unit,
     navigationActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +78,7 @@ fun SelectCalendarScreen(
         content = { padding ->
             SelectCalendarContent(
                 uiState = uiState,
-                actionHandler = actionHandler,
+                onCalendarSelected = onCalendarSelected,
                 modifier = modifier
                     .padding(padding)
                     .fillMaxSize()
@@ -92,7 +90,7 @@ fun SelectCalendarScreen(
 @Composable
 private fun SelectCalendarContent(
     uiState: SelectCalendarUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
+    onCalendarSelected: (CanvasContext) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -107,8 +105,7 @@ private fun SelectCalendarContent(
                     items(uiState.canvasContexts) { canvasContext ->
                         Column(
                             modifier = modifier.clickable {
-                                actionHandler(CreateUpdateToDoAction.UpdateCanvasContext(canvasContext))
-                                actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
+                                onCalendarSelected(canvasContext)
                             }
                         ) {
                             Row(
@@ -157,6 +154,12 @@ private fun SelectCalendarContent(
     }
 }
 
+data class SelectCalendarUiState(
+    val show: Boolean = false,
+    val selectedCanvasContext: CanvasContext? = null,
+    val canvasContexts: List<CanvasContext> = emptyList()
+)
+
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
@@ -173,7 +176,7 @@ private fun SelectCalendarPreview() {
                 Course(id = 3, name = "Life in the Universe"),
             )
         ),
-        actionHandler = {},
+        onCalendarSelected = {},
         navigationActionClick = {}
     )
 }

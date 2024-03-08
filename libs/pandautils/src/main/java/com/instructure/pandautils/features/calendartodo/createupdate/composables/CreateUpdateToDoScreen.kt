@@ -73,10 +73,11 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.SelectCalendarScreen
+import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoUiState
-import com.instructure.pandautils.features.calendartodo.createupdate.SelectCalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.android.awaitFrame
@@ -97,7 +98,10 @@ internal fun CreateUpdateToDoScreenWrapper(
         if (uiState.selectCalendarUiState.show) {
             SelectCalendarScreen(
                 uiState = uiState.selectCalendarUiState,
-                actionHandler = actionHandler,
+                onCalendarSelected = {
+                    actionHandler(CreateUpdateToDoAction.UpdateCanvasContext(it))
+                    actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
+                },
                 navigationActionClick = {
                     actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
                 },
