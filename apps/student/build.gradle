@@ -361,6 +361,10 @@ dependencies {
     testImplementation Libs.HAMCREST
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation platform("com.aallam.openai:openai-client-bom:3.7.0")
+    implementation "com.aallam.openai:openai-client"
+    runtimeOnly "io.ktor:ktor-client-okhttp"
 }
 
 // Comment out this line if the reporting logic starts going wonky.

@@ -25,4 +25,15 @@
         android:visible="true"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/menu_page_summary"
+        android:title="@string/summary"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_page_quiz"
+        android:title="@string/viewQuiz"
+        android:visible="false"
+        app:showAsAction="never" />
 </menu>

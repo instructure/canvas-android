@@ -21,16 +21,27 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import androidx.lifecycle.lifecycleScope
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.OpenAI
+import com.google.gson.Gson
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -38,10 +49,20 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getModuleItemId
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withRequireNetwork
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.events.PageUpdatedEvent
+import com.instructure.student.features.ai.model.PageSummary
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
@@ -49,9 +70,10 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
-import java.util.*
-import java.util.regex.*
+import java.util.Locale
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
@@ -61,6 +83,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: PageDetailsRepository
+
+    @Inject
+    lateinit var openAi: OpenAI
 
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
@@ -129,6 +154,48 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 }
             }
         }
+    }
+
+    private fun createOpenAiRequest() {
+        lifecycleScope.launch {
+
+            val request = ChatCompletionRequest(
+                model = ModelId("gpt-3.5-turbo"),
+                messages = listOf(
+                    ChatMessage(
+                        role = ChatRole.System,
+                        content = "You're a helpful assistant."
+                    ),
+                    ChatMessage(
+                        role = ChatRole.User,
+                        content = "Can you create a tl;dr summary and at least 4 quiz questions with 2 possible choices of this text: '${page.body}'. The result should be in the form of a JSON object." +
+                                "{\"summary\":String\n" +
+                                "\"questions\":[]\n" +
+                                "}\n" +
+                                "where the questions array is an array of objects with the following properties:\n" +
+                                "{\"question\":String\n" +
+                                "\"choices\":[String, String]\n" +
+                                "\"answer\":String\n" +
+                                "}\n"
+                    )
+                )
+            )
+            val completion = openAi.chatCompletion(request)
+            completion.choices.firstOrNull()?.message?.content?.let {
+                val summary = Gson().fromJson(it, PageSummary::class.java)
+                showButtons(summary)
+            }
+        }
+    }
+
+    private fun showButtons(summary: PageSummary?) {
+        if (summary == null) return
+
+        binding.toolbar.menu.apply {
+            findItem(R.id.menu_page_summary).isVisible = true
+            findItem(R.id.menu_page_quiz).isVisible = true
+        }
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -219,6 +286,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         toolbar.title = title()
 
         checkCanEdit()
+
+        createOpenAiRequest()
     }
 
     /**
