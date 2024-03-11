@@ -5,6 +5,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
@@ -17,7 +20,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
-import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
@@ -185,8 +187,12 @@ object RouteResolver {
             fragment = SyllabusFragment.newInstance(canvasContext ?: route.canvasContext)
         } else if (EditSyllabusFragment::class.java.isAssignableFrom(cls)) {
             fragment = EditSyllabusFragment.newInstance(route.arguments)
-        } else if (CalendarEventFragment::class.java.isAssignableFrom(cls)) {
-            fragment = CalendarEventFragment.newInstance(route.arguments)
+        } else if (EventFragment::class.java.isAssignableFrom(cls)) {
+            fragment = EventFragment.newInstance(route)
+        } else if (ToDoFragment::class.java.isAssignableFrom(cls)) {
+            fragment = ToDoFragment.newInstance(route)
+        } else if (CreateUpdateToDoFragment::class.java.isAssignableFrom(cls)) {
+            fragment = CreateUpdateToDoFragment.newInstance(route)
         } else if (ModuleProgressionFragment::class.java.isAssignableFrom(cls)) {
             fragment = ModuleProgressionFragment.newInstance(route.copy(canvasContext = canvasContext))
         } else if (FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls)) {

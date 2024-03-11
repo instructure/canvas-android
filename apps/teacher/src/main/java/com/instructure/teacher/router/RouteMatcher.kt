@@ -39,6 +39,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
@@ -202,6 +204,8 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(EditDashboardFragment::class.java)
         fullscreenFragments.add(CourseBrowserFragment::class.java)
         fullscreenFragments.add(ModuleProgressionFragment::class.java)
+        fullscreenFragments.add(ToDoFragment::class.java)
+        fullscreenFragments.add(EventFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)

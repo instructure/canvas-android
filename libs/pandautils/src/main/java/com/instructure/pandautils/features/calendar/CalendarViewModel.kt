@@ -91,22 +91,20 @@ class CalendarViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
-        loadFilters()
         loadVisibleMonths()
     }
 
-    private fun loadFilters() {
-        viewModelScope.launch {
-            val filters = initFiltersFromDb()
+    private suspend fun loadFilters() {
+        val filters = initFiltersFromDb()
 
-            val result = calendarRepository.getCanvasContexts()
-            if (result is DataResult.Success) {
-                val canvasContexts = result.data
-                val userIds = canvasContexts[CanvasContext.Type.USER]?.map { it.contextId } ?: emptyList()
-                val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
-                val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
+        val result = calendarRepository.getCanvasContexts()
+        if (result is DataResult.Success) {
+            val canvasContexts = result.data
+            val userIds = canvasContexts[CanvasContext.Type.USER]?.map { it.contextId } ?: emptyList()
+            val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
+            val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
 
-                if (filters == null && apiPrefs.user?.id != null) {
+            if (filters == null && apiPrefs.user?.id != null) {
                     contextIdFilters.addAll(userIds)
                     contextIdFilters.addAll(courseIds)
                     contextIdFilters.addAll(groupIds)
@@ -130,7 +128,6 @@ class CalendarViewModel @Inject constructor(
                     }
                 }
             }
-        }
     }
 
     private suspend fun initFiltersFromDb(): CalendarFilterEntity? {
@@ -159,6 +156,7 @@ class CalendarViewModel @Inject constructor(
 
         val daysToFetch = daysBetweenDates(startDate, endDate)
         viewModelScope.tryLaunch {
+            loadFilters()
             errorDays.removeAll(daysToFetch)
             loadingDays.addAll(daysToFetch)
             _uiState.emit(createNewUiState())
@@ -166,7 +164,7 @@ class CalendarViewModel @Inject constructor(
             val result = calendarRepository.getPlannerItems(
                 startDate.toApiString() ?: "",
                 endDate.toApiString() ?: "",
-                emptyList(),
+                contextIdFilters.toList(),
                 true
             )
 
@@ -498,7 +496,7 @@ class CalendarViewModel @Inject constructor(
             val result = calendarRepository.getPlannerItems(
                 startDate.toApiString() ?: "",
                 endDate.toApiString() ?: "",
-                emptyList(),
+                contextIdFilters.toList(),
                 true
             )
 
