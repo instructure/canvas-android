@@ -63,6 +63,8 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.features.ai.model.PageSummary
+import com.instructure.student.features.ai.model.SummaryQuestions
+import com.instructure.student.features.ai.quiz.QuizSummaryFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LtiLaunchFragment
@@ -156,6 +158,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         }
     }
 
+    private var questions = listOf<SummaryQuestions>()
+
     private fun createOpenAiRequest() {
         lifecycleScope.launch {
 
@@ -184,6 +188,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             completion.choices.firstOrNull()?.message?.content?.let {
                 val summary = Gson().fromJson(it, PageSummary::class.java)
                 showButtons(summary)
+                questions = summary.questions
             }
         }
     }
@@ -201,6 +206,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_edit -> activity?.withRequireNetwork { openEditPage(page) }
+            R.id.menu_page_quiz -> RouteMatcher.route(requireActivity(), QuizSummaryFragment.makeRoute(questions))
         }
         return super.onOptionsItemSelected(item)
     }

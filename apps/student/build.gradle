@@ -20,6 +20,7 @@ import com.instructure.android.buildtools.transform.*
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -243,12 +244,17 @@ android {
     buildFeatures {
         dataBinding true
         viewBinding true
+        compose true
     }
 
     hilt {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
 }
 
@@ -365,6 +371,18 @@ dependencies {
     implementation platform("com.aallam.openai:openai-client-bom:3.7.0")
     implementation "com.aallam.openai:openai-client"
     runtimeOnly "io.ktor:ktor-client-okhttp"
+
+    /* Compose */
+    def composeBom = platform(Libs.COMPOSE_BOM)
+    implementation composeBom
+    androidTestImplementation composeBom
+
+    implementation Libs.COMPOSE_BOM
+    implementation Libs.COMPOSE_MATERIAL
+    implementation Libs.COMPOSE_PREVIEW
+    debugImplementation Libs.COMPOSE_TOOLING
+    implementation Libs.COMPOSE_VIEW_MODEL
+    implementation Libs.COMPOSE_UI
 }
 
 // Comment out this line if the reporting logic starts going wonky.

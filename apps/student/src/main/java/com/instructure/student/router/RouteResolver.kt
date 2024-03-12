@@ -14,6 +14,7 @@ import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFra
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.features.ai.quiz.QuizSummaryFragment
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
@@ -32,7 +33,34 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.AccountPreferencesFragment
+import com.instructure.student.fragment.AnnouncementListFragment
+import com.instructure.student.fragment.AssignmentBasicFragment
+import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.CalendarEventFragment
+import com.instructure.student.fragment.CalendarFragment
+import com.instructure.student.fragment.CourseSettingsFragment
+import com.instructure.student.fragment.CreateAnnouncementFragment
+import com.instructure.student.fragment.CreateDiscussionFragment
+import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.DiscussionsReplyFragment
+import com.instructure.student.fragment.DiscussionsUpdateFragment
+import com.instructure.student.fragment.EditPageDetailsFragment
+import com.instructure.student.fragment.InboxComposeMessageFragment
+import com.instructure.student.fragment.InboxConversationFragment
+import com.instructure.student.fragment.InboxRecipientsFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.ProfileSettingsFragment
+import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.ToDoListFragment
+import com.instructure.student.fragment.UnknownItemFragment
+import com.instructure.student.fragment.UnsupportedFeatureFragment
+import com.instructure.student.fragment.UnsupportedTabFragment
+import com.instructure.student.fragment.ViewHtmlFragment
+import com.instructure.student.fragment.ViewImageFragment
+import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submission.annnotation.AnnotationSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
@@ -147,6 +175,7 @@ object RouteResolver {
             cls.isA<DiscussionRouterFragment>() -> DiscussionRouterFragment.newInstance(route.canvasContext!!, route)
             cls.isA<OfflineContentFragment>() -> OfflineContentFragment.newInstance(route)
             cls.isA<SyncProgressFragment>() -> SyncProgressFragment.newInstance()
+            cls.isA<QuizSummaryFragment>() -> QuizSummaryFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }
