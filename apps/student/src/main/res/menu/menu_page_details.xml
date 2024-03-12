@@ -27,13 +27,13 @@
 
     <item
         android:id="@+id/menu_page_summary"
-        android:title="@string/summary"
+        android:title="@string/tldr"
         android:visible="false"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_page_quiz"
-        android:title="@string/viewQuiz"
+        android:title="@string/quiz_me"
         android:visible="false"
         app:showAsAction="never" />
 </menu>

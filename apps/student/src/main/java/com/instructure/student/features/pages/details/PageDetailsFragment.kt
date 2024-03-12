@@ -49,6 +49,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.page.summary.PageSummaryFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -88,6 +89,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @Inject
     lateinit var openAi: OpenAI
+
+    private var pageSummary: PageSummary? = null
 
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
@@ -136,33 +139,33 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getCanvasWebView()?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-            override fun launchInternalWebViewFragment(url: String) = loadInternalWebView(activity, makeRoute(canvasContext, url, isLTITool))
-        }
+        getCanvasWebView()?.canvasEmbeddedWebViewCallback =
+            object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
+                override fun launchInternalWebViewFragment(url: String) =
+                    loadInternalWebView(activity, makeRoute(canvasContext, url, isLTITool))
+            }
 
         // Add to the webview client for clearing webview history after an update to prevent going back to old data
         val callback = getCanvasWebView()?.canvasWebViewClientCallback
         callback?.let {
-            getCanvasWebView()?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by it {
-                override fun onPageFinishedCallback(webView: WebView, url: String) {
-                    it.onPageFinishedCallback(webView, url)
-                    // Only clear history after an update
-                    if (isUpdated) getCanvasWebView()?.clearHistory()
-                }
+            getCanvasWebView()?.canvasWebViewClientCallback =
+                object : CanvasWebView.CanvasWebViewClientCallback by it {
+                    override fun onPageFinishedCallback(webView: WebView, url: String) {
+                        it.onPageFinishedCallback(webView, url)
+                        // Only clear history after an update
+                        if (isUpdated) getCanvasWebView()?.clearHistory()
+                    }
 
-                override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                    RouteMatcher.openMedia(activity, url)
+                    override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                        RouteMatcher.openMedia(activity, url)
+                    }
                 }
-            }
         }
     }
 
-    private var questions = listOf<SummaryQuestions>()
-
     private fun createOpenAiRequest() {
-        lifecycleScope.launch {
-
+        lifecycleScope.tryLaunch {
             val request = ChatCompletionRequest(
                 model = ModelId("gpt-3.5-turbo"),
                 messages = listOf(
@@ -180,21 +183,23 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                                 "{\"question\":String\n" +
                                 "\"choices\":[String, String]\n" +
                                 "\"answer\":String\n" +
+                                "\"excerpt\":String\n" +
                                 "}\n"
                     )
                 )
             )
             val completion = openAi.chatCompletion(request)
             completion.choices.firstOrNull()?.message?.content?.let {
-                val summary = Gson().fromJson(it, PageSummary::class.java)
-                showButtons(summary)
-                questions = summary.questions
+                pageSummary = Gson().fromJson(it, PageSummary::class.java)
+                showButtons()
             }
+        } catch {
+            it.printStackTrace()
         }
     }
 
-    private fun showButtons(summary: PageSummary?) {
-        if (summary == null) return
+    private fun showButtons() {
+        if (pageSummary == null) return
 
         binding.toolbar.menu.apply {
             findItem(R.id.menu_page_summary).isVisible = true
@@ -206,7 +211,18 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_edit -> activity?.withRequireNetwork { openEditPage(page) }
-            R.id.menu_page_quiz -> RouteMatcher.route(requireActivity(), QuizSummaryFragment.makeRoute(questions))
+            R.id.menu_page_summary -> {
+                pageSummary?.let {
+                    PageSummaryFragment.newInstance(page.title.orEmpty(), it.summary).show(
+                        childFragmentManager,
+                        PageSummaryFragment::class.java.simpleName
+                    )
+                }
+            }
+
+            R.id.menu_page_quiz -> pageSummary?.let {
+                RouteMatcher.route(requireActivity(), QuizSummaryFragment.makeRoute(it.questions))
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -265,7 +281,12 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         setPageObject(page)
 
         page.lockInfo?.let {
-            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(it, requireContext(), R.string.lockedPageDesc, !navigatedFromModules)
+            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(
+                it,
+                requireContext(),
+                R.string.lockedPageDesc,
+                !navigatedFromModules
+            )
             populateWebView(lockedMessage, getString(R.string.pages))
             return
         }
@@ -277,7 +298,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             }
 
             // Some pages need to know the course ID, so we set it on window.ENV.COURSE.id (See MBL-14324)
-            val body = """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + page.body.orEmpty()
+            val body =
+                """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + page.body.orEmpty()
 
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
@@ -314,7 +336,12 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 val srcMatcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
                 if (srcMatcher.find()) {
                     sourceUrl = srcMatcher.group(1)
-                    val authenticatedUrl = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(sourceUrl, it) }.sessionUrl
+                    val authenticatedUrl = awaitApi<AuthenticatedSession> {
+                        OAuthManager.getAuthenticatedSession(
+                            sourceUrl,
+                            it
+                        )
+                    }.sessionUrl
                     val newIframe = iframe.replace(sourceUrl, authenticatedUrl)
 
                     newHtml = newHtml.replace(iframe, newIframe)
@@ -339,7 +366,12 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             // We want it to be lowercase.
             context = context.lowercase(Locale.getDefault())
 
-            loadHtml(resources.getString(R.string.noPagesInContext) + " " + context, "text/html", "utf-8", null)
+            loadHtml(
+                resources.getString(R.string.noPagesInContext) + " " + context,
+                "text/html",
+                "utf-8",
+                null
+            )
         } else {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
         }
@@ -360,7 +392,10 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override val bookmark: Bookmarker
         get() = Bookmarker(true, canvasContext)
-            .withParam(RouterParams.PAGE_ID, if (Page.FRONT_PAGE_NAME == pageName) Page.FRONT_PAGE_NAME else pageName!!)
+            .withParam(
+                RouterParams.PAGE_ID,
+                if (Page.FRONT_PAGE_NAME == pageName) Page.FRONT_PAGE_NAME else pageName!!
+            )
 
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
@@ -395,7 +430,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     fun onUpdatePage(event: PageUpdatedEvent) {
         event.once(page.id.toString()) {
             isUpdated = true
-            page = Page(title = page.title) // Reset to empty page (except for title) so getPageDetails() will pull from the network
+            page =
+                Page(title = page.title) // Reset to empty page (except for title) so getPageDetails() will pull from the network
             getPageDetails()
         }
     }
@@ -414,7 +450,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 arguments = route.arguments
                 with(nonNullArgs) {
                     if (containsKey(PAGE_NAME)) pageName = getString(PAGE_NAME)
-                    if (route.paramsHash.containsKey(RouterParams.PAGE_ID)) pageName = route.paramsHash[RouterParams.PAGE_ID]
+                    if (route.paramsHash.containsKey(RouterParams.PAGE_ID)) pageName =
+                        route.paramsHash[RouterParams.PAGE_ID]
                 }
             } else null
         }
@@ -427,23 +464,43 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         }
 
         fun makeFrontPageRoute(canvasContext: CanvasContext): Route {
-            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
-                putBoolean(FRONT_PAGE, true)
-            }))
+            return Route(
+                null,
+                PageDetailsFragment::class.java,
+                canvasContext,
+                canvasContext.makeBundle(Bundle().apply {
+                    putBoolean(FRONT_PAGE, true)
+                })
+            )
         }
 
-        fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?, navigatedFromModules: Boolean): Route {
-            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
-                putBoolean(NAVIGATED_FROM_MODULES, navigatedFromModules)
-                if (pageName != null)
-                    putString(PAGE_NAME, pageName)
-                if (pageUrl != null)
-                    putString(PAGE_URL, pageUrl)
-            }))
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            pageName: String?,
+            pageUrl: String?,
+            navigatedFromModules: Boolean
+        ): Route {
+            return Route(
+                null,
+                PageDetailsFragment::class.java,
+                canvasContext,
+                canvasContext.makeBundle(Bundle().apply {
+                    putBoolean(NAVIGATED_FROM_MODULES, navigatedFromModules)
+                    if (pageName != null)
+                        putString(PAGE_NAME, pageName)
+                    if (pageUrl != null)
+                        putString(PAGE_URL, pageUrl)
+                })
+            )
         }
 
         fun makeRoute(canvasContext: CanvasContext, page: Page): Route {
-            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { putParcelable(PAGE, page) }))
+            return Route(
+                null,
+                PageDetailsFragment::class.java,
+                canvasContext,
+                canvasContext.makeBundle(Bundle().apply { putParcelable(PAGE, page) })
+            )
         }
     }
 }

@@ -1600,4 +1600,6 @@
     <string name="publishDialogPositiveButton">Publish</string>
     <string name="unpublishDialogPositiveButton">Unpublish</string>
     <string name="discussionMenuRefresh">Refresh</string>
+    <string name="tldr">tl;dr</string>
+    <string name="quiz_me">Quiz me!</string>
 </resources>

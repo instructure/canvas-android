@@ -8,5 +8,6 @@ data class SummaryQuestions(
     val question: String,
     val choices: List<String>,
     val answer: String,
-    val userAnswer: String? = null
-) : Parcelable
+    val userAnswer: String? = null,
+    val excerpt: String
+): Parcelable
