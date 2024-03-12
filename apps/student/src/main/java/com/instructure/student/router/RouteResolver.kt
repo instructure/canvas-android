@@ -14,6 +14,7 @@ import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFra
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.features.ai.quiz.QuizFragment
 import com.instructure.student.features.ai.quiz.QuizSummaryFragment
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.assignments.list.AssignmentListFragment
@@ -175,6 +176,7 @@ object RouteResolver {
             cls.isA<DiscussionRouterFragment>() -> DiscussionRouterFragment.newInstance(route.canvasContext!!, route)
             cls.isA<OfflineContentFragment>() -> OfflineContentFragment.newInstance(route)
             cls.isA<SyncProgressFragment>() -> SyncProgressFragment.newInstance()
+            cls.isA<QuizFragment>() -> QuizFragment.newInstance(route)
             cls.isA<QuizSummaryFragment>() -> QuizSummaryFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
