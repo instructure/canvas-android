@@ -30,7 +30,12 @@ import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.progress.ProgressViewModelAction
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.features.ai.model.SummaryQuestions
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,15 +48,18 @@ class QuizFragment : Fragment() {
 
     private val viewModel: QuizViewModel by viewModels()
 
+    private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                QuizScreen(uiState, viewModel::handleAction, ThemePrefs.primaryColor)
+                QuizScreen(uiState, viewModel::handleAction, ThemePrefs.darker(canvasContext.backgroundColor))
             }
         }
     }
@@ -78,7 +86,9 @@ class QuizFragment : Fragment() {
         fun newInstance(route: Route) = QuizFragment().withArgs(route.arguments)
 
         fun makeRoute(questions: List<SummaryQuestions>, canvasContext: CanvasContext): Route {
-            val bundle = bundleOf(QUESTIONS to questions.toTypedArray())
+            val bundle = canvasContext.makeBundle {
+                putParcelableArray(QuizSummaryFragment.QUESTIONS, questions.toTypedArray())
+            }
             return Route(QuizFragment::class.java, null, bundle)
         }
     }
