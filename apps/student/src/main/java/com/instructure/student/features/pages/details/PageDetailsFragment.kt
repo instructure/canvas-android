@@ -64,7 +64,6 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.events.PageUpdatedEvent
 import com.instructure.student.features.ai.model.PageSummary
-import com.instructure.student.features.ai.model.SummaryQuestions
 import com.instructure.student.features.ai.quiz.QuizSummaryFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
@@ -73,7 +72,6 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import java.util.Locale
 import java.util.regex.Pattern
@@ -221,7 +219,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             }
 
             R.id.menu_page_quiz -> pageSummary?.let {
-                RouteMatcher.route(requireActivity(), QuizSummaryFragment.makeRoute(it.questions))
+                RouteMatcher.route(requireActivity(), QuizSummaryFragment.makeRoute(it.questions, canvasContext))
             }
         }
         return super.onOptionsItemSelected(item)

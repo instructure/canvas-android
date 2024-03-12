@@ -44,7 +44,7 @@ class QuizSummaryViewModel @Inject constructor(
                     question = it.question,
                     answers = it.choices,
                     answer = it.answer,
-                    explanation = it.answer,
+                    explanation = it.excerpt,
                     correct = it.answer == it.userAnswer
                 )
             }
