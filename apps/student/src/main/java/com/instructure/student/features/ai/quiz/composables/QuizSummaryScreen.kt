@@ -120,7 +120,7 @@ private fun QuizSummaryItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        color = colorResource(getAnswerColor(uiState.answers.first() == uiState.answer, uiState.correct)),
+                        color = colorResource(getAnswerColor(uiState.answers.last() == uiState.answer, uiState.correct)),
                         shape = RoundedCornerShape(8.dp)
                     )
                     .padding(8.dp)
