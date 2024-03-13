@@ -16,6 +16,7 @@
 package com.instructure.student.features.ai.quiz
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +44,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -108,7 +111,7 @@ fun QuizScreen(
                                         },
                                             onDragEnd = {
                                                 dragging = false
-                                                val targetOffset = if (offsetX.value.absoluteValue > screenWidth / 2) {
+                                                val targetOffset = if (offsetX.value.absoluteValue > screenWidth / 3) {
                                                     offsetX.value.sign * screenWidth
                                                 } else {
                                                     0f
@@ -173,60 +176,25 @@ fun QuizScreen(
                         }
                     }
                     Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.height(IntrinsicSize.Max)) {
-                        Card(
+                        val selectionRatio = (offsetX.value.absoluteValue / (screenWidth)).coerceAtLeast(0.0f).coerceAtMost(1.0f)
+                        QuizAnswerCard(
+                            questionId = currentQuestion!!.questionId,
+                            answer = currentQuestion.answers.first(),
+                            actionHandler = actionHandler,
                             modifier = Modifier
                                 .padding(start = 24.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
-                                .weight(0.5f)
-                                .clickable {
-                                    actionHandler(
-                                        QuizAction.AnswerQuestion(
-                                            currentQuestion!!.questionId,
-                                            currentQuestion.answers.first()
-                                        )
-                                    )
-                                },
-                            backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-                            elevation = 4.dp
-                        ) {
-                            Text(
-                                text = currentQuestion!!.answers.first(),
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .heightIn(min = 80.dp)
-                                    .fillMaxHeight()
-                                    .wrapContentHeight(align = Alignment.CenterVertically),
-                                color = colorResource(id = R.color.textDarkest),
-                                fontSize = 20.sp,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                        Card(
+                                .weight(0.5f),
+                            selectionRatio = if (offsetX.value < 0) selectionRatio / 6 else 0f
+                        )
+                        QuizAnswerCard(
+                            questionId = currentQuestion.questionId,
+                            answer = currentQuestion.answers.last(),
+                            actionHandler = actionHandler,
                             modifier = Modifier
                                 .padding(start = 16.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
-                                .weight(0.5f)
-                                .clickable {
-                                    actionHandler(
-                                        QuizAction.AnswerQuestion(
-                                            currentQuestion!!.questionId,
-                                            currentQuestion.answers.last()
-                                        )
-                                    )
-                                },
-                            backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-                            elevation = 4.dp
-                        ) {
-                            Text(
-                                text = currentQuestion!!.answers.last(),
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .heightIn(min = 80.dp)
-                                    .fillMaxHeight()
-                                    .wrapContentHeight(align = Alignment.CenterVertically),
-                                color = colorResource(id = R.color.textDarkest),
-                                fontSize = 20.sp,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
+                                .weight(0.5f),
+                            selectionRatio = if (offsetX.value > 0) selectionRatio / 6 else 0f
+                        )
                     }
                 }
             }
@@ -254,6 +222,50 @@ fun TopAppBar(
 }
 
 @Composable
+fun QuizAnswerCard(
+    questionId: Int,
+    answer: String,
+    actionHandler: (QuizAction) -> Unit,
+    modifier: Modifier = Modifier,
+    selectionRatio: Float = 0.5f
+) {
+    Card(
+        modifier = modifier
+            .scale(selectionRatio + 1)
+            .clickable {
+                actionHandler(
+                    QuizAction.AnswerQuestion(
+                        questionId,
+                        answer
+                    )
+                )
+            },
+        backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
+        elevation = 4.dp
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(brush = SolidColor(colorResource(id = R.color.backgroundDark)), alpha = selectionRatio),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = answer,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp, vertical = 16.dp)
+                    .heightIn(min = 80.dp)
+                    .fillMaxHeight()
+                    .wrapContentHeight(align = Alignment.CenterVertically),
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                maxLines = 3
+            )
+        }
+    }
+}
+
+@Composable
 @Preview
 fun QuizScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
@@ -268,7 +280,7 @@ fun QuizScreenPreview() {
                 QuizQuestionUiState(
                     questionId = 2,
                     question = "What is the capital of Germany?",
-                    answers = listOf("Berlin Long 2 rows  3 rows long text ada", "Madrid"),
+                    answers = listOf("Berlin", "Madrid"),
                 ),
                 QuizQuestionUiState(
                     questionId = 3,
