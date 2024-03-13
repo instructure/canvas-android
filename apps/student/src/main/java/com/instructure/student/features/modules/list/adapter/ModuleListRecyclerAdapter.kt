@@ -54,6 +54,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.Locale
+import java.util.Random
 import java.util.UUID
 
 open class ModuleListRecyclerAdapter(
@@ -265,8 +266,6 @@ open class ModuleListRecyclerAdapter(
                     val nextPageResult = repository.getNextPageModuleItems(nextItemsURL, true)
                     handleModuleItemResponse(nextPageResult, moduleObject, isNotifyGroupChange)
                 }
-            } else {
-                addOrUpdateItem(moduleObject, ModuleItem(type = ModuleItem.Type.PracticeQuiz.toString(), position = Int.MAX_VALUE))
             }
 
             if (resultIsFromApiOrDb) {
@@ -337,6 +336,7 @@ open class ModuleListRecyclerAdapter(
             val collapsedItems = CollapsedModulesStore.getCollapsedModuleIds(courseContext)
             moduleObjects.toTypedArray().forEach {
                 addOrUpdateGroup(it)
+                addOrUpdateItem(it, ModuleItem(id = Random().nextLong(), type = ModuleItem.Type.PracticeQuiz.toString(), position = Int.MAX_VALUE))
                 if (!collapsedItems.contains(it.id)) {
                     lifecycleScope.launch {
                         val itemsResult = repository.getFirstPageModuleItems(courseContext, it.id, true)
