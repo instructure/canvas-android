@@ -17,11 +17,11 @@ package com.instructure.student.features.ai.quiz
 
 import com.instructure.student.features.ai.model.SummaryQuestions
 
-class QuizUiState(
+data class QuizUiState(
     val questions: List<QuizQuestionUiState>
 )
 
-class QuizQuestionUiState(
+data class QuizQuestionUiState(
     val questionId: Int,
     val question: String,
     val answers: List<String>,

@@ -56,11 +56,14 @@ class QuizFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
+        val color = ThemePrefs.darker(canvasContext.backgroundColor)
+        ViewStyler.setStatusBarDark(requireActivity(), color)
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                QuizScreen(uiState, viewModel::handleAction, ThemePrefs.darker(canvasContext.backgroundColor))
+                QuizScreen(uiState, viewModel::handleAction, ThemePrefs.darker(color)) {
+                    requireActivity().onBackPressed()
+                }
             }
         }
     }
