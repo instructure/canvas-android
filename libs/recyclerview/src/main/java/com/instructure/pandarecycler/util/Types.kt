@@ -21,4 +21,5 @@ object Types {
     const val TYPE_HEADER = 101
     const val TYPE_ITEM = 102
     const val TYPE_SUB_HEADER = 103
+    const val TYPE_PRACTICE_QUIZ = 104
 }

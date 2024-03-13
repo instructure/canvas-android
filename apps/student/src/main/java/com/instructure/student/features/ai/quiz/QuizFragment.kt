@@ -38,6 +38,7 @@ import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.features.ai.model.SummaryQuestions
+import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,6 +73,9 @@ class QuizFragment : Fragment() {
                 viewModel.events.collect { action ->
                     when (action) {
                         is QuizViewModelAction.QuizFinished -> {
+                            QuizSummaryFragment.makeRoute(action.questions, canvasContext).let {
+                                RouteMatcher.route(requireActivity(), it)
+                            }
                             Log.d("asdasd", "Quiz finished, ${action.questions}")
                         }
                     }

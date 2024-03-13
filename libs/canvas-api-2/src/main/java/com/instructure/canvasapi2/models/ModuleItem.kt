@@ -54,7 +54,7 @@ data class ModuleItem(
     override val comparisonString get() = title
 
     enum class Type {
-        Assignment, Discussion, File, Page, SubHeader, Quiz, ExternalUrl, ExternalTool, Locked, ChooseAssignmentGroup
+        Assignment, Discussion, File, Page, SubHeader, Quiz, ExternalUrl, ExternalTool, Locked, ChooseAssignmentGroup, PracticeQuiz
     }
 
     companion object {

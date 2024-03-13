@@ -100,22 +100,34 @@ open class ModuleListRecyclerAdapter(
             Types.TYPE_HEADER -> ModuleHeaderViewHolder(v)
             Types.TYPE_SUB_HEADER -> ModuleSubHeaderViewHolder(v)
             Types.TYPE_EMPTY_CELL -> ModuleEmptyViewHolder(v)
+            Types.TYPE_PRACTICE_QUIZ -> ModulePracticeQuizViewHolder(v)
             else -> ModuleViewHolder(v)
         }
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, moduleObject: ModuleObject, moduleItem: ModuleItem) {
-        if (holder is ModuleSubHeaderViewHolder) {
-            val groupItemCount = getGroupItemCount(moduleObject)
-            val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
-            holder.bind(moduleItem, itemPosition == 0, itemPosition == groupItemCount - 1)
-        } else {
-            val courseColor = courseContext.textAndIconColor
-            val groupItemCount = getGroupItemCount(moduleObject)
-            val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
+        when(holder) {
+            is ModuleSubHeaderViewHolder -> {
+                val groupItemCount = getGroupItemCount(moduleObject)
+                val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
+                holder.bind(moduleItem, itemPosition == 0, itemPosition == groupItemCount - 1)
+            }
+            is ModulePracticeQuizViewHolder -> {
+                val courseColor = courseContext.textAndIconColor
+                val groupItemCount = getGroupItemCount(moduleObject)
+                val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
 
-            (holder as ModuleViewHolder).bind(moduleObject, moduleItem, context, adapterToFragmentCallback, courseColor,
+                holder.bind(moduleObject, moduleItem, context, adapterToFragmentCallback, courseColor,
+                        itemPosition == 0, itemPosition == groupItemCount - 1, courseSettings?.restrictQuantitativeData)
+            }
+            else -> {
+                val courseColor = courseContext.textAndIconColor
+                val groupItemCount = getGroupItemCount(moduleObject)
+                val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
+
+                (holder as ModuleViewHolder).bind(moduleObject, moduleItem, context, adapterToFragmentCallback, courseColor,
                     itemPosition == 0, itemPosition == groupItemCount - 1, courseSettings?.restrictQuantitativeData.orDefault())
+            }
         }
     }
 
@@ -139,6 +151,7 @@ open class ModuleListRecyclerAdapter(
             Types.TYPE_HEADER -> ModuleHeaderViewHolder.HOLDER_RES_ID
             Types.TYPE_SUB_HEADER -> ModuleSubHeaderViewHolder.HOLDER_RES_ID
             Types.TYPE_EMPTY_CELL -> ModuleEmptyViewHolder.HOLDER_RES_ID
+            Types.TYPE_PRACTICE_QUIZ -> ModulePracticeQuizViewHolder.HOLDER_RES_ID
             else -> ModuleViewHolder.HOLDER_RES_ID
         }
     }
@@ -174,9 +187,11 @@ open class ModuleListRecyclerAdapter(
             override fun areItemsTheSame(item1: ModuleItem, item2: ModuleItem): Boolean = item1.id == item2.id
 
             override fun getChildType(group: ModuleObject, item: ModuleItem): Int {
-                return if (item.type == ModuleItem.Type.SubHeader.toString()) {
-                    Types.TYPE_SUB_HEADER
-                } else Types.TYPE_ITEM
+                return when (item.type) {
+                    ModuleItem.Type.SubHeader.toString() -> Types.TYPE_SUB_HEADER
+                    ModuleItem.Type.PracticeQuiz.toString() -> Types.TYPE_PRACTICE_QUIZ
+                    else -> Types.TYPE_ITEM
+                }
             }
 
             override fun getUniqueItemId(item: ModuleItem): Long = item.id
@@ -247,6 +262,8 @@ open class ModuleListRecyclerAdapter(
                     val nextPageResult = repository.getNextPageModuleItems(nextItemsURL, true)
                     handleModuleItemResponse(nextPageResult, moduleObject, isNotifyGroupChange)
                 }
+            } else {
+                addOrUpdateItem(moduleObject, ModuleItem(type = ModuleItem.Type.PracticeQuiz.toString(), position = Int.MAX_VALUE))
             }
 
             if (resultIsFromApiOrDb) {

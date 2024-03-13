@@ -1,13 +1,18 @@
 package com.instructure.pandautils.features.page.summary
 
+import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -21,25 +26,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.progress.ProgressAction
 import com.instructure.pandautils.features.progress.ProgressState
 import com.instructure.pandautils.features.progress.composables.ProgressContent
 import com.instructure.pandautils.features.progress.composables.ProgressTopBar
+import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun SummaryScreen(pageName: String, summary: String, onBackClicked: () -> Unit) {
     CanvasTheme {
         Scaffold(
             modifier = Modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
-            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
             topBar = {
                 SummaryAppBar(title = "tl;dr", pageName = pageName, onBackClicked = onBackClicked)
             }
@@ -48,7 +57,7 @@ fun SummaryScreen(pageName: String, summary: String, onBackClicked: () -> Unit) 
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(padding),
-                color = colorResource(id = R.color.backgroundLightest)
+                color = colorResource(id = R.color.backgroundLightestElevated)
             ) {
                 Column {
                     Text(
@@ -60,7 +69,11 @@ fun SummaryScreen(pageName: String, summary: String, onBackClicked: () -> Unit) 
 
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        onClick = {  }) {
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(ThemePrefs.buttonColor),
+                            contentColor = Color(ThemePrefs.buttonTextColor)
+                        ),
+                        onClick = { }) {
                         Text(text = "Quiz me on this!")
                     }
                 }
@@ -77,7 +90,7 @@ fun SummaryAppBar(
     onBackClicked: () -> Unit
 ) {
     Column(modifier = modifier) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.height(56.dp), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { onBackClicked() }) {
                 Icon(
                     Icons.Filled.Close,
@@ -109,6 +122,7 @@ fun SummaryAppBar(
 @Preview
 @Composable
 fun SummaryScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
     SummaryScreen(
         "Page Name",
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tortor massa, consectetur eu orci ut, dignissim vulputate elit. Praesent a lectus dui. Vivamus ac augue vitae arcu eleifend feugiat ut sit amet mauris. Integer id blandit nibh, vehicula vestibulum orci. Quisque elementum tortor et mauris bibendum, eget lacinia turpis sodales. Praesent feugiat ligula magna, eu commodo velit ullamcorper non. Aenean pharetra eros nec justo dignissim, efficitur lobortis urna aliquet. Vestibulum quis diam ut eros luctus tincidunt vitae dictum sapien. Vestibulum dictum aliquam metus ut porta. Nunc ullamcorper interdum arcu, vel sollicitudin leo ullamcorper non. Nunc ac faucibus orci. Mauris efficitur in eros in lacinia. Sed non libero venenatis, mollis leo fermentum, ornare diam."

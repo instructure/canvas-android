@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AdapterItem"
+    android:background="@color/backgroundLightestElevated"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Space
+            android:id="@+id/moduleItemIndent"
+            android:layout_width="0dp"
+            android:layout_height="0dp" />
+
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/AdapterItemIcon"
+            android:importantForAccessibility="no"
+            android:tint="@color/textDarkest"
+            app:srcCompat="@drawable/ic_ai" />
+
+        <LinearLayout
+            android:id="@+id/textContainer"
+            style="@style/AdapterItemTextContainer"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/AdapterItemTitleText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Practice quiz" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/AdapterItemDescriptionText"
+                android:text="An AI generated quiz to help you practice your skills" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/shadowTop"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/shadow_bottom_top"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/shadowBottom"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shadow_bottom_top"
+        android:visibility="invisible" />
+
+</RelativeLayout>
