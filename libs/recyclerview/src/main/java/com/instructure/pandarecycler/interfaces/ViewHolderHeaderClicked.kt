@@ -20,4 +20,6 @@ import android.view.View
 
 interface ViewHolderHeaderClicked<HEADER> {
     fun viewClicked(view: View?, header: HEADER)
+
+    fun summaryClicked(view: View?, header: HEADER) = Unit
 }

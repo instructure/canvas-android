@@ -83,6 +83,10 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 ContextCompat.getDrawable(context, drawable)!!
             )
         )
+
+        summaryButton.setOnClickListener {
+            viewHolderHeaderClicked.summaryClicked(it, moduleObject)
+        }
     }
 
     companion object {

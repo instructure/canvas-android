@@ -89,6 +89,9 @@ open class ModuleListRecyclerAdapter(
                 }
             }
 
+            override fun summaryClicked(view: View?, header: ModuleObject) {
+                adapterToFragmentCallback?.onModuleSummaryClicked(header)
+            }
         }
         isExpandedByDefault = false
         isDisplayEmptyCell = true

@@ -46,6 +46,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MODULE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.page.summary.PageSummaryFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentModuleListBinding
@@ -225,9 +226,24 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                     }, 1000)
                 }
             }
+
+            override fun onModuleSummaryClicked(moduleObject: ModuleObject) {
+                showAiSummary(moduleObject.id, moduleObject.name.orEmpty())
+            }
         })
         recyclerAdapter?.let {
             configureRecyclerView(requireView(), requireContext(), it, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        }
+    }
+
+    private fun showAiSummary(moduleId: Long, moduleName: String) {
+        lifecycleScope.launch {
+            val pageSummary = pageSummaryMap[moduleId] ?: getAiSummary(moduleId)
+            pageSummary?.let {
+                recyclerBinding.listView.setVisible()
+                recyclerBinding.emptyView.setGone()
+                PageSummaryFragment.newInstance(moduleName, it.summary).show(requireActivity().supportFragmentManager, "PageSummary")
+            }
         }
     }
 
