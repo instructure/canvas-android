@@ -44,6 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -112,7 +113,7 @@ fun QuizScreen(
                                             onDragEnd = {
                                                 dragging = false
                                                 val targetOffset = if (offsetX.value.absoluteValue > screenWidth / 3) {
-                                                    offsetX.value.sign * screenWidth
+                                                    offsetX.value.sign * screenWidth * 1.2f // Add some extra room because of rotation
                                                 } else {
                                                     0f
                                                 }
@@ -156,6 +157,7 @@ fun QuizScreen(
                                         offsetX.value.dp,
                                         offsetY.value.dp
                                     )
+                                    .rotate((offsetX.value / screenWidth) * 15)
                             }
                             Card(
                                 modifier = modifier,
@@ -182,7 +184,7 @@ fun QuizScreen(
                             answer = currentQuestion.answers.first(),
                             actionHandler = actionHandler,
                             modifier = Modifier
-                                .padding(start = 24.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
+                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
                                 .weight(0.5f),
                             selectionRatio = if (offsetX.value < 0) selectionRatio / 6 else 0f
                         )
@@ -191,7 +193,7 @@ fun QuizScreen(
                             answer = currentQuestion.answers.last(),
                             actionHandler = actionHandler,
                             modifier = Modifier
-                                .padding(start = 16.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
+                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
                                 .weight(0.5f),
                             selectionRatio = if (offsetX.value > 0) selectionRatio / 6 else 0f
                         )
