@@ -31,9 +31,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,11 +59,15 @@ import com.instructure.student.features.ai.quiz.QuizSummaryUiState
 @Composable
 fun QuizSummaryScreen(
     @ColorInt backgroundColor: Int,
-    uiState: QuizSummaryUiState
+    uiState: QuizSummaryUiState,
+    onBackClicked: () -> Unit
 ) {
     CanvasTheme {
         Scaffold(
-            backgroundColor = Color(backgroundColor)
+            backgroundColor = Color(backgroundColor),
+            topBar = {
+                TopAppBar(onBackClicked = onBackClicked)
+            }
         ) { padding ->
             LazyColumn(
                 modifier = Modifier.padding(padding)
@@ -74,7 +80,7 @@ fun QuizSummaryScreen(
                         textAlign = Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 4.dp)
                     )
                 }
                 items(uiState.questions) {
@@ -88,22 +94,39 @@ fun QuizSummaryScreen(
 }
 
 @Composable
+fun TopAppBar(
+    modifier: Modifier = Modifier,
+    onBackClicked: () -> Unit
+) {
+    Column(modifier = modifier.padding(start = 8.dp, top = 8.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = { onBackClicked() }) {
+                Icon(
+                    painterResource(id = R.drawable.ic_close),
+                    contentDescription = stringResource(id = R.string.a11y_closeProgress),
+                    tint = colorResource(id = R.color.white)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun QuizSummaryItem(
     uiState: QuizSummaryQuestionUiState,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    Card(
+        backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
+        elevation = 4.dp,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .background(
-                color = colorResource(id = R.color.backgroundLightestElevated),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(16.dp)
     ) {
         Column(
-            modifier = Modifier.background(colorResource(id = R.color.backgroundLightestElevated))
+            modifier = Modifier
+                .background(colorResource(id = R.color.backgroundLightestElevated))
+                .padding(16.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -215,6 +238,7 @@ fun QuizSummaryScreenPreview() {
                     correct = false
                 ),
             )
-        )
+        ),
+        onBackClicked = {}
     )
 }

@@ -26,12 +26,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.airbnb.lottie.LottieAnimationView
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.interactions.FragmentInteractions
-import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
@@ -44,7 +44,7 @@ import com.instructure.student.features.ai.quiz.composables.QuizSummaryScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class QuizSummaryFragment : Fragment(), FragmentInteractions {
+class QuizSummaryFragment : Fragment(), NavigationCallbacks {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
@@ -55,13 +55,15 @@ class QuizSummaryFragment : Fragment(), FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val color = ThemePrefs.darker(canvasContext.backgroundColor)
+        ViewStyler.setStatusBarDark(requireActivity(), color)
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 if (uiState.questions.count { it.correct }.toFloat() / uiState.questions.count().toFloat() > 0.8f) {
                     showConfetti()
                 }
-                QuizSummaryScreen(ThemePrefs.darker(canvasContext.backgroundColor), uiState)
+                QuizSummaryScreen(ThemePrefs.darker(color), uiState, ::onBackClicked)
             }
         }
     }
@@ -85,16 +87,14 @@ class QuizSummaryFragment : Fragment(), FragmentInteractions {
         }
     }
 
-    override val navigation: Navigation?
-        get() = activity as? Navigation
-
-    override fun title(): String = ""
-
-    override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), canvasContext.backgroundColor)
+    override fun onHandleBackPressed(): Boolean {
+        onBackClicked()
+        return true
     }
 
-    override fun getFragment() = this
+    private fun onBackClicked() {
+        activity?.supportFragmentManager?.popBackStack(QuizFragment::class.java.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    }
 
     companion object {
         internal const val QUESTIONS = "QUESTIONS"

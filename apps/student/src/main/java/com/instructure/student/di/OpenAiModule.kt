@@ -17,7 +17,7 @@ class OpenAiModule {
     @Singleton
     fun provideOpenAi(): OpenAI {
         return OpenAI(
-            token = "your-api-key-here",
+            token = "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",
             timeout = Timeout(socket = 60.seconds)
         )
     }
