@@ -21,11 +21,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.airbnb.lottie.LottieAnimationView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -56,8 +58,30 @@ class QuizSummaryFragment : Fragment(), FragmentInteractions {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
+                if (uiState.questions.count { it.correct }.toFloat() / uiState.questions.count().toFloat() > 0.8f) {
+                    showConfetti()
+                }
                 QuizSummaryScreen(ThemePrefs.darker(canvasContext.backgroundColor), uiState)
             }
+        }
+    }
+
+    private fun showConfetti() {
+        requireActivity().runOnUiThread {
+            val root = requireActivity().window.decorView.rootView as ViewGroup
+            val animation = LottieAnimationView(requireContext()).apply {
+                setAnimation("confetti.json")
+                scaleType = ImageView.ScaleType.CENTER_CROP;
+            }
+            animation.addAnimatorUpdateListener {
+                if (it.animatedFraction >= 1.0) root.removeView(animation)
+            }
+            root.addView(
+                animation,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            animation.playAnimation()
         }
     }
 
