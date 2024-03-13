@@ -18,6 +18,7 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
@@ -42,8 +43,8 @@ class ModuleListModule {
     }
 
     @Provides
-    fun provideModuleListNetworkDataSource(moduleApi: ModuleAPI.ModuleInterface, tabApi: TabAPI.TabsInterface, courseApi: CourseAPI.CoursesInterface): ModuleListNetworkDataSource {
-        return ModuleListNetworkDataSource(moduleApi, tabApi, courseApi)
+    fun provideModuleListNetworkDataSource(moduleApi: ModuleAPI.ModuleInterface, tabApi: TabAPI.TabsInterface, courseApi: CourseAPI.CoursesInterface, pageApi: PageAPI.PagesInterface): ModuleListNetworkDataSource {
+        return ModuleListNetworkDataSource(moduleApi, tabApi, courseApi, pageApi)
     }
 
     @Provides

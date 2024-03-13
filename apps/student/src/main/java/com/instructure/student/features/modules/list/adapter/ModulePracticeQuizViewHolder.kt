@@ -23,6 +23,9 @@ class ModulePracticeQuizViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
     ) = with(ViewholderModulePracticeQuizBinding.bind(itemView)) {
         val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.ic_ai, courseColor)
         icon.setImageDrawable(drawable)
+        root.setOnClickListener {
+            adapterToFragmentCallback?.onRowClicked(moduleObject, moduleItem, adapterPosition, true)
+        }
     }
 
     companion object {

@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
@@ -73,5 +74,9 @@ class ModuleListRepository(
 
     suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
         return networkDataSource.getNextPageModuleItems(nextUrl, forceNetwork)
+    }
+
+    suspend fun getPageDetails(courseId: Long, pageUrl: String): DataResult<Page> {
+        return networkDataSource.getPageDetails(courseId, pageUrl)
     }
 }

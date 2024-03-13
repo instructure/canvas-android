@@ -19,16 +19,26 @@ package com.instructure.student.features.modules.list
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aallam.openai.api.chat.ChatCompletionRequest
+import com.aallam.openai.api.chat.ChatMessage
+import com.aallam.openai.api.chat.ChatRole
+import com.aallam.openai.api.model.ModelId
+import com.aallam.openai.client.OpenAI
+import com.google.gson.Gson
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -41,6 +51,8 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentModuleListBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
 import com.instructure.student.events.ModuleUpdatedEvent
+import com.instructure.student.features.ai.model.PageSummary
+import com.instructure.student.features.ai.quiz.QuizFragment
 import com.instructure.student.features.modules.list.adapter.ModuleAdapterToFragmentCallback
 import com.instructure.student.features.modules.list.adapter.ModuleListRecyclerAdapter
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
@@ -50,9 +62,11 @@ import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.CourseModulesStore
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.Exception
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_MODULE_LIST)
@@ -68,6 +82,11 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: ModuleListRepository
+
+    @Inject
+    lateinit var openAi: OpenAI
+
+    private val pageSummaryMap = mutableMapOf<Long, PageSummary>()
 
     val tabId: String
         get() = Tab.MODULES_ID
@@ -151,6 +170,10 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, requireContext(), navigatingToSpecificModule, repository, lifecycleScope, object :
             ModuleAdapterToFragmentCallback {
             override fun onRowClicked(moduleObject: ModuleObject, moduleItem: ModuleItem, position: Int, isOpenDetail: Boolean) {
+                if (moduleItem.type == ModuleItem.Type.PracticeQuiz.toString()) {
+                    showAiQuiz(moduleObject.id)
+                    return
+                }
                 if (moduleItem.type != null && moduleItem.type == ModuleObject.State.UnlockRequirements.apiString) return
 
                 // Don't do anything with headers if the user selects it
@@ -205,6 +228,82 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         })
         recyclerAdapter?.let {
             configureRecyclerView(requireView(), requireContext(), it, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        }
+    }
+
+    private fun showAiQuiz(moduleId: Long) {
+        lifecycleScope.launch {
+            val pageSummary = pageSummaryMap[moduleId] ?: getAiSummary(moduleId)
+            pageSummary?.let {
+                RouteMatcher.route(
+                    requireActivity(),
+                    QuizFragment.makeRoute(it.questions, canvasContext)
+                )
+                recyclerBinding.listView.setVisible()
+                recyclerBinding.emptyView.setGone()
+            }
+        }
+    }
+
+    private suspend fun getAiSummary(moduleId: Long): PageSummary? {
+        try {
+            recyclerBinding.emptyView.setLoadingWithAnimation(
+                com.instructure.pandautils.R.string.offline_content_sync_loading_title,
+                com.instructure.pandautils.R.string.offline_content_sync_loading_message,
+                com.instructure.pandautils.R.raw.snail
+            )
+            recyclerBinding.emptyView.setVisible()
+            recyclerBinding.listView.setGone()
+            val pagesBodies = repository.getFirstPageModuleItems(canvasContext, moduleId, false)
+                .depaginate {
+                    repository.getNextPageModuleItems(it, false)
+                }.dataOrNull
+                ?.filter { it.type == ModuleItem.Type.Page.toString() }
+                ?.filter { it.pageUrl != null }
+                ?.map { repository.getPageDetails(canvasContext.id, it.pageUrl!!) }
+                ?.map { it.dataOrNull }
+                ?.filterNotNull()
+                ?.map { it.body }
+                ?.joinToString("\n")
+
+            val request = ChatCompletionRequest(
+                model = ModelId("gpt-3.5-turbo"),
+                messages = listOf(
+                    ChatMessage(
+                        role = ChatRole.System,
+                        content = "You're a helpful assistant."
+                    ),
+                    ChatMessage(
+                        role = ChatRole.User,
+                        content = "Can you create a tl;dr summary and at least 10 quiz questions with 2 possible choices of this text: '${pagesBodies}'. The result should be in the form of a JSON object. We are only expecting a json object, so exclude anything that is not the json itself." +
+                                "{\"summary\":String\n" +
+                                "\"questions\":[]\n" +
+                                "}\n" +
+                                "where the questions array is an array of objects with the following properties:\n" +
+                                "{\"question\":String\n" +
+                                "\"choices\":[String, String]\n" +
+                                "\"answer\":String\n" +
+                                "\"excerpt\":String\n" +
+                                "}\n"
+                    )
+                )
+            )
+            val completion = openAi.chatCompletion(request)
+            val message = completion.choices.firstOrNull()?.message?.content
+            val pageSummary =
+                message?.substring(message.indexOf("{"), message.lastIndexOf("}") + 1)?.let {
+                    Gson().fromJson(it, PageSummary::class.java)
+                }
+            if (pageSummary != null) {
+                pageSummaryMap[moduleId] = pageSummary
+            }
+            return pageSummary
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            recyclerBinding.listView.setVisible()
+            recyclerBinding.emptyView.setGone()
+            return null
         }
     }
 
