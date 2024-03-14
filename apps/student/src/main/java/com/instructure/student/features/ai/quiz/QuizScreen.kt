@@ -42,6 +42,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -56,6 +57,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -70,13 +72,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.utils.toDp
 import com.instructure.student.features.ai.quiz.composables.QuizSummaryContent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun QuizScreen(
     uiState: QuizScreenUiState,
@@ -86,6 +88,7 @@ fun QuizScreen(
     showConfetti: () -> Unit
 ) {
     CanvasTheme {
+        val listState = rememberLazyListState()
         Scaffold(
             backgroundColor = Color(backgroundColor),
             topBar = {
@@ -99,20 +102,24 @@ fun QuizScreen(
                 if (successRatio >= 0.8f) {
                     showConfetti()
                 }
+                val scaleModifier = if (listState.firstVisibleItemIndex > 0) 0f else {
+                    1 - (listState.firstVisibleItemScrollOffset.toDp / 48f).coerceAtLeast(0.0f).coerceAtMost(1.0f)
+                }
                 TopAppBar(
                     onBackClicked = { closeClicked() },
                     progress = progress,
-                    successRatio = successRatio
+                    successRatio = successRatio,
+                    scaleModifier = scaleModifier
                 )
             }
         ) { padding ->
-        AnimatedContent(targetState = uiState.quizSummaryUiState, transitionSpec = {
+            AnimatedContent(targetState = uiState.quizSummaryUiState, transitionSpec = {
                 slideInVertically(animationSpec = tween(durationMillis = 600, easing = LinearOutSlowInEasing)) { fullHeight -> fullHeight }.togetherWith(fadeOut()).using(SizeTransform(clip = false))
             } ) {
                 if (it == null) {
                     QuizContent(uiState = uiState.quizUiState, actionHandler = actionHandler, modifier = Modifier.padding(padding))
                 } else {
-                    QuizSummaryContent(uiState = it, modifier = Modifier.padding(padding))
+                    QuizSummaryContent(uiState = it, modifier = Modifier.padding(padding), listState)
                 }
             }
         }
@@ -124,9 +131,14 @@ fun TopAppBar(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
     progress: Float = 0f,
-    successRatio: Float = 0f
+    successRatio: Float = 0f,
+    scaleModifier: Float = 1f
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.padding(start = 8.dp, top = 8.dp)) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier
+        .padding(start = 8.dp, top = 8.dp)
+        .height(48.dp * scaleModifier)
+        .scale(scaleX = 1f, scaleY = scaleModifier)
+        .alpha(scaleModifier)) {
         IconButton(onClick = { onBackClicked() }) {
             Icon(
                 painterResource(id = R.drawable.ic_close),

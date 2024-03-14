@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -112,9 +113,10 @@ fun TopAppBar(
 }
 
 @Composable
-fun QuizSummaryContent(uiState: QuizSummaryUiState, modifier: Modifier = Modifier) {
+fun QuizSummaryContent(uiState: QuizSummaryUiState, modifier: Modifier = Modifier, scrollState: LazyListState) {
     LazyColumn(
-        modifier = modifier
+        modifier = modifier,
+        state = scrollState
     ) {
         items(uiState.questions, key = { it.hashCode() }) {
             QuizSummaryItem(
