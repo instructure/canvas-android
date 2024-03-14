@@ -30,6 +30,7 @@ data class QuizQuestionUiState(
 
 sealed class QuizAction {
     data class AnswerQuestion(val questionId: Int, val answer: String) : QuizAction()
+    data object ProgressCompleted : QuizAction()
 }
 
 sealed class QuizViewModelAction {

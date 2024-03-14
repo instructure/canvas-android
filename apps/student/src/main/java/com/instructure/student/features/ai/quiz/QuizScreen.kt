@@ -85,7 +85,11 @@ fun QuizScreen(
             backgroundColor = Color(backgroundColor),
             topBar = {
                 val progressRatio = uiState.questions.filter { it.userAnswer != null }.size.toFloat() / uiState.questions.size.toFloat()
-                val progress by animateFloatAsState(targetValue = progressRatio)
+                val progress by animateFloatAsState(targetValue = progressRatio, finishedListener = {
+                    if (it == 1f) {
+                        actionHandler(QuizAction.ProgressCompleted)
+                    }
+                })
                 TopAppBar(
                     onBackClicked = { closeClicked() },
                     progress = progress

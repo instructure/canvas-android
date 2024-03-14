@@ -45,9 +45,17 @@ class QuizViewModel @Inject constructor(
         createNewUiState()
     }
 
-    fun handleAction(action: QuizAction) = when (action) {
-        is QuizAction.AnswerQuestion -> {
-            answerQuestion(action)
+    fun handleAction(action: QuizAction) {
+        when (action) {
+            is QuizAction.AnswerQuestion -> {
+                answerQuestion(action)
+            }
+
+            QuizAction.ProgressCompleted -> {
+                viewModelScope.launch {
+                    _events.send(QuizViewModelAction.QuizFinished(questions))
+                }
+            }
         }
     }
 
@@ -55,12 +63,6 @@ class QuizViewModel @Inject constructor(
         val question = questions[action.questionId]
         questions[action.questionId] = question.copy(userAnswer = action.answer)
         createNewUiState()
-
-        if (questions.all { it.userAnswer != null }) {
-            viewModelScope.launch {
-                _events.send(QuizViewModelAction.QuizFinished(questions))
-            }
-        }
     }
 
     private fun createNewUiState() {
