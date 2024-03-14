@@ -54,18 +54,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.student.features.ai.quiz.composables.QuizSummaryContent
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -73,143 +70,33 @@ import kotlin.math.sign
 
 @Composable
 fun QuizScreen(
-    uiState: QuizUiState,
+    uiState: QuizScreenUiState,
     actionHandler: (QuizAction) -> Unit,
     backgroundColor: Int,
     closeClicked: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-
     CanvasTheme {
         Scaffold(
             backgroundColor = Color(backgroundColor),
             topBar = {
-                val progressRatio = uiState.questions.filter { it.userAnswer != null }.size.toFloat() / uiState.questions.size.toFloat()
+                val progressRatio = uiState.quizUiState.questions.filter { it.userAnswer != null }.size.toFloat() / uiState.quizUiState.questions.size.toFloat()
                 val progress by animateFloatAsState(targetValue = progressRatio, finishedListener = {
                     if (it == 1f) {
                         actionHandler(QuizAction.ProgressCompleted)
                     }
                 })
+                val successRatio by animateFloatAsState(targetValue = uiState.quizSummaryUiState?.correctRatio ?: 0f)
                 TopAppBar(
                     onBackClicked = { closeClicked() },
-                    progress = progress
+                    progress = progress,
+                    successRatio = successRatio
                 )
             }
         ) { padding ->
-            val unansweredQuestions = uiState.questions.filter { it.userAnswer == null }
-            val currentQuestion = unansweredQuestions.lastOrNull()
-
-            val screenWidth = LocalConfiguration.current.screenWidthDp
-            val offsetX = remember { Animatable(0f) }
-            val offsetY = remember { Animatable(0f) }
-            var dragging by remember { mutableStateOf(false) }
-
-            if (unansweredQuestions.isNotEmpty()) {
-                Column {
-                    Box(
-                        Modifier
-                            .padding(padding)
-                            .weight(1f)
-                    ) {
-                        unansweredQuestions.forEach {
-                            var modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp)
-                            if (it == currentQuestion) {
-                                modifier = modifier
-                                    .pointerInput(Unit) {
-                                        detectDragGestures(onDragStart = {
-                                            dragging = true
-                                        },
-                                            onDragEnd = {
-                                                dragging = false
-                                                val targetOffset = if (offsetX.value.absoluteValue > screenWidth / 3) {
-                                                    offsetX.value.sign * screenWidth * 1.2f // Add some extra room because of rotation
-                                                } else {
-                                                    0f
-                                                }
-                                                scope.launch {
-                                                    async {
-                                                        offsetX.animateTo(targetOffset)
-                                                        if (targetOffset.sign == -1.0f) {
-                                                            actionHandler(
-                                                                QuizAction.AnswerQuestion(
-                                                                    currentQuestion.questionId,
-                                                                    currentQuestion.answers.first()
-                                                                )
-                                                            )
-                                                            offsetX.snapTo(0f)
-                                                        } else if (targetOffset.sign == 1.0f) {
-                                                            actionHandler(
-                                                                QuizAction.AnswerQuestion(
-                                                                    currentQuestion.questionId,
-                                                                    currentQuestion.answers.last()
-                                                                )
-                                                            )
-                                                            offsetX.snapTo(0f)
-                                                            offsetY.snapTo(0f)
-                                                        }
-                                                    }
-                                                    async {
-                                                        val newY = if (targetOffset == 0f) 0f else offsetY.value * 2
-                                                        offsetY.animateTo(newY)
-                                                        offsetY.snapTo(0f)
-                                                    }
-                                                }
-                                            }) { change, dragAmount ->
-                                            change.consume()
-                                            scope.launch {
-                                                offsetX.snapTo(offsetX.value + dragAmount.x.toDp().value)
-                                                offsetY.snapTo(offsetY.value + dragAmount.y.toDp().value)
-                                            }
-                                        }
-                                    }
-                                    .offset(
-                                        offsetX.value.dp,
-                                        offsetY.value.dp
-                                    )
-                                    .rotate((offsetX.value / screenWidth) * 15)
-                            }
-                            Card(
-                                modifier = modifier,
-                                backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
-                                elevation = 4.dp
-                            ) {
-                                Text(
-                                    text = it.question,
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxSize()
-                                        .wrapContentHeight(align = Alignment.CenterVertically),
-                                    color = colorResource(id = R.color.textDarkest),
-                                    fontSize = 28.sp,
-                                    textAlign = TextAlign.Center,
-                                )
-                            }
-                        }
-                    }
-                    Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.height(IntrinsicSize.Max)) {
-                        val selectionRatio = (offsetX.value.absoluteValue / (screenWidth)).coerceAtLeast(0.0f).coerceAtMost(1.0f)
-                        QuizAnswerCard(
-                            questionId = currentQuestion!!.questionId,
-                            answer = currentQuestion.answers.first(),
-                            actionHandler = actionHandler,
-                            modifier = Modifier
-                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
-                                .weight(0.5f),
-                            selectionRatio = if (offsetX.value < 0) selectionRatio / 6 else 0f
-                        )
-                        QuizAnswerCard(
-                            questionId = currentQuestion.questionId,
-                            answer = currentQuestion.answers.last(),
-                            actionHandler = actionHandler,
-                            modifier = Modifier
-                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
-                                .weight(0.5f),
-                            selectionRatio = if (offsetX.value > 0) selectionRatio / 6 else 0f
-                        )
-                    }
-                }
+            if (uiState.quizSummaryUiState == null) {
+                QuizContent(uiState = uiState.quizUiState, actionHandler = actionHandler, modifier = Modifier.padding(padding))
+            } else {
+                QuizSummaryContent(uiState = uiState.quizSummaryUiState, modifier = Modifier.padding(padding))
             }
         }
     }
@@ -219,7 +106,8 @@ fun QuizScreen(
 fun TopAppBar(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    progress: Float = 0f
+    progress: Float = 0f,
+    successRatio: Float = 0f
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.padding(start = 8.dp, top = 8.dp)) {
         IconButton(onClick = { onBackClicked() }) {
@@ -246,6 +134,136 @@ fun TopAppBar(
                     .height(12.dp)
                     .background(colorResource(id = R.color.white), shape = RoundedCornerShape(100.dp))
             )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(successRatio)
+                    .height(12.dp)
+                    .background(colorResource(id = R.color.backgroundSuccess), shape = RoundedCornerShape(100.dp))
+            )
+        }
+    }
+}
+
+@Composable
+fun QuizContent(
+    uiState: QuizUiState,
+    actionHandler: (QuizAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scope = rememberCoroutineScope()
+
+    val unansweredQuestions = uiState.questions.filter { it.userAnswer == null }
+    val currentQuestion = unansweredQuestions.lastOrNull()
+
+    val screenWidth = LocalConfiguration.current.screenWidthDp
+    val offsetX = remember { Animatable(0f) }
+    val offsetY = remember { Animatable(0f) }
+    var dragging by remember { mutableStateOf(false) }
+
+    if (unansweredQuestions.isNotEmpty()) {
+        Column(modifier = modifier.fillMaxSize()) {
+            Box(
+                Modifier
+                    .weight(1f)
+            ) {
+                unansweredQuestions.forEach {
+                    var cardModifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                    if (it == currentQuestion) {
+                        cardModifier = cardModifier
+                            .pointerInput(Unit) {
+                                detectDragGestures(onDragStart = {
+                                    dragging = true
+                                },
+                                    onDragEnd = {
+                                        dragging = false
+                                        val targetOffset = if (offsetX.value.absoluteValue > screenWidth / 3) {
+                                            offsetX.value.sign * screenWidth * 1.2f // Add some extra room because of rotation
+                                        } else {
+                                            0f
+                                        }
+                                        scope.launch {
+                                            async {
+                                                offsetX.animateTo(targetOffset)
+                                                if (targetOffset.sign == -1.0f) {
+                                                    actionHandler(
+                                                        QuizAction.AnswerQuestion(
+                                                            currentQuestion.questionId,
+                                                            currentQuestion.answers.first()
+                                                        )
+                                                    )
+                                                    offsetX.snapTo(0f)
+                                                } else if (targetOffset.sign == 1.0f) {
+                                                    actionHandler(
+                                                        QuizAction.AnswerQuestion(
+                                                            currentQuestion.questionId,
+                                                            currentQuestion.answers.last()
+                                                        )
+                                                    )
+                                                    offsetX.snapTo(0f)
+                                                    offsetY.snapTo(0f)
+                                                }
+                                            }
+                                            async {
+                                                val newY = if (targetOffset == 0f) 0f else offsetY.value * 2
+                                                offsetY.animateTo(newY)
+                                                offsetY.snapTo(0f)
+                                            }
+                                        }
+                                    }) { change, dragAmount ->
+                                    change.consume()
+                                    scope.launch {
+                                        offsetX.snapTo(offsetX.value + dragAmount.x.toDp().value)
+                                        offsetY.snapTo(offsetY.value + dragAmount.y.toDp().value)
+                                    }
+                                }
+                            }
+                            .offset(
+                                offsetX.value.dp,
+                                offsetY.value.dp
+                            )
+                            .rotate((offsetX.value / screenWidth) * 15)
+                    }
+                    Card(
+                        modifier = cardModifier,
+                        backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
+                        elevation = 4.dp
+                    ) {
+                        Text(
+                            text = it.question,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxSize()
+                                .wrapContentHeight(align = Alignment.CenterVertically),
+                            color = colorResource(id = R.color.textDarkest),
+                            fontSize = 28.sp,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
+            Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.height(IntrinsicSize.Max)) {
+                val selectionRatio = (offsetX.value.absoluteValue / (screenWidth)).coerceAtLeast(0.0f).coerceAtMost(1.0f)
+                QuizAnswerCard(
+                    questionId = currentQuestion!!.questionId,
+                    answer = currentQuestion.answers.first(),
+                    actionHandler = actionHandler,
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
+                        .weight(0.5f),
+                    selectionRatio = if (offsetX.value < 0) selectionRatio / 6 else 0f
+                )
+                QuizAnswerCard(
+                    questionId = currentQuestion.questionId,
+                    answer = currentQuestion.answers.last(),
+                    actionHandler = actionHandler,
+                    modifier = Modifier
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 24.dp)
+                        .weight(0.5f),
+                    selectionRatio = if (offsetX.value > 0) selectionRatio / 6 else 0f
+                )
+            }
         }
     }
 }
@@ -294,36 +312,36 @@ fun QuizAnswerCard(
     }
 }
 
-@Composable
-@Preview
-fun QuizScreenPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    QuizScreen(
-        uiState = QuizUiState(
-            questions = listOf(
-                QuizQuestionUiState(
-                    questionId = 1,
-                    question = "What is the capital of France?",
-                    answers = listOf("Paris", "London"),
-                ),
-                QuizQuestionUiState(
-                    questionId = 2,
-                    question = "What is the capital of Germany?",
-                    answers = listOf("Berlin", "Madrid"),
-                ),
-                QuizQuestionUiState(
-                    questionId = 3,
-                    question = "What is the capital of Italy?",
-                    answers = listOf("Rome", "Athens"),
-                    userAnswer = "Rome"
-                ),
-                QuizQuestionUiState(
-                    questionId = 4,
-                    question = "What is the capital of Spain?",
-                    answers = listOf("Madrid", "Lisbon"),
-                    userAnswer = "Madrid"
-                )
-            )
-        ), {}, ThemePrefs.primaryColor, {}
-    )
-}
+//@Composable
+//@Preview
+//fun QuizScreenPreview() {
+//    ContextKeeper.appContext = LocalContext.current
+//    QuizScreen(
+//        uiState = QuizUiState(
+//            questions = listOf(
+//                QuizQuestionUiState(
+//                    questionId = 1,
+//                    question = "What is the capital of France?",
+//                    answers = listOf("Paris", "London"),
+//                ),
+//                QuizQuestionUiState(
+//                    questionId = 2,
+//                    question = "What is the capital of Germany?",
+//                    answers = listOf("Berlin", "Madrid"),
+//                ),
+//                QuizQuestionUiState(
+//                    questionId = 3,
+//                    question = "What is the capital of Italy?",
+//                    answers = listOf("Rome", "Athens"),
+//                    userAnswer = "Rome"
+//                ),
+//                QuizQuestionUiState(
+//                    questionId = 4,
+//                    question = "What is the capital of Spain?",
+//                    answers = listOf("Madrid", "Lisbon"),
+//                    userAnswer = "Madrid"
+//                )
+//            )
+//        ), {}, ThemePrefs.primaryColor, {}
+//    )
+//}

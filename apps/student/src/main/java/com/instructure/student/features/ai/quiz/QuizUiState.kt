@@ -17,6 +17,10 @@ package com.instructure.student.features.ai.quiz
 
 import com.instructure.student.features.ai.model.SummaryQuestions
 
+data class QuizScreenUiState(
+    val quizUiState: QuizUiState,
+    val quizSummaryUiState: QuizSummaryUiState? = null
+)
 data class QuizUiState(
     val questions: List<QuizQuestionUiState>
 )

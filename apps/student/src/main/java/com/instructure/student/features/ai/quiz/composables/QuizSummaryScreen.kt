@@ -112,6 +112,19 @@ fun TopAppBar(
 }
 
 @Composable
+fun QuizSummaryContent(uiState: QuizSummaryUiState, modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier
+    ) {
+        items(uiState.questions, key = { it.hashCode() }) {
+            QuizSummaryItem(
+                uiState = it
+            )
+        }
+    }
+}
+
+@Composable
 private fun QuizSummaryItem(
     uiState: QuizSummaryQuestionUiState,
     modifier: Modifier = Modifier

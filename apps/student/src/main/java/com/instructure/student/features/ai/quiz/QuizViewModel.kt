@@ -35,7 +35,7 @@ class QuizViewModel @Inject constructor(
 
     private val questions = savedStateHandle.get<Array<Parcelable>>(QuizFragment.QUESTIONS).orEmpty().filterIsInstance<SummaryQuestions>().toMutableList()
 
-    private val _uiState = MutableStateFlow(QuizUiState(emptyList()))
+    private val _uiState = MutableStateFlow(QuizScreenUiState(QuizUiState(emptyList())))
     val uiState = _uiState.asStateFlow()
 
     private val _events = Channel<QuizViewModelAction>()
@@ -53,7 +53,18 @@ class QuizViewModel @Inject constructor(
 
             QuizAction.ProgressCompleted -> {
                 viewModelScope.launch {
-                    _events.send(QuizViewModelAction.QuizFinished(questions))
+                    val quizSummaryUiState = QuizSummaryUiState(
+                        questions = questions.map {
+                            QuizSummaryQuestionUiState(
+                                question = it.question,
+                                answers = it.choices,
+                                answer = it.answer,
+                                explanation = it.excerpt,
+                                correct = it.answer == it.userAnswer
+                            )
+                        }
+                    )
+                    _uiState.value = _uiState.value.copy(quizSummaryUiState = quizSummaryUiState)
                 }
             }
         }
@@ -66,7 +77,7 @@ class QuizViewModel @Inject constructor(
     }
 
     private fun createNewUiState() {
-        _uiState.value = QuizUiState(
+        val quizUiState = QuizUiState(
             questions = questions.mapIndexed { index, question ->
                 QuizQuestionUiState(
                     questionId = index,
@@ -76,5 +87,6 @@ class QuizViewModel @Inject constructor(
                 )
             }
         )
+        _uiState.value = _uiState.value.copy(quizUiState = quizUiState)
     }
 }

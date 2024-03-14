@@ -20,7 +20,10 @@ package com.instructure.student.features.ai.quiz
 
 data class QuizSummaryUiState(
     val questions: List<QuizSummaryQuestionUiState> = emptyList()
-)
+) {
+    val correctRatio: Float
+        get() = questions.count { it.correct }.toFloat() / questions.size
+}
 
 data class QuizSummaryQuestionUiState(
     val question: String,
