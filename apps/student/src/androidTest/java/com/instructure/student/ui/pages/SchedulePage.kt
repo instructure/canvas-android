@@ -101,12 +101,22 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         waitForView(withAncestor(R.id.plannerItems) + withText(scheduleItemName)).assertDisplayed()
     }
 
-    fun assertMissingItemDisplayed(itemName: String, courseName: String, pointsPossible: String) {
+    fun assertMissingItemDisplayedOnPlannerItem(itemName: String, courseName: String, pointsPossible: String) {
         val titleMatcher = withId(R.id.title) + withText(itemName)
         val courseNameMatcher = withId(R.id.scheduleCourseHeaderText) + withText(courseName)
         val pointsPossibleMatcher = withId(R.id.points) + withText(pointsPossible)
 
         onView(withId(R.id.plannerItems) + hasSibling(courseNameMatcher) + withDescendant(titleMatcher)  + withDescendant(pointsPossibleMatcher) + withDescendant(withText(R.string.missingAssignment)))
+            .scrollTo()
+            .assertDisplayed()
+    }
+
+    fun assertMissingItemDisplayedInMissingItemSummary(itemName: String, courseName: String, pointsPossible: String) {
+        val titleMatcher = withId(R.id.title) + withText(itemName)
+        val courseNameMatcher = withId(R.id.courseName) + withText(courseName)
+        val pointsPossibleMatcher = withId(R.id.points) + withText(pointsPossible)
+
+        onView(withId(R.id.missingItemLayout) + withDescendant(courseNameMatcher) + withDescendant(titleMatcher)  + withDescendant(pointsPossibleMatcher))
             .scrollTo()
             .assertDisplayed()
     }
