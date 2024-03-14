@@ -20,6 +20,7 @@ import android.view.View
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.pandautils.binding.BindableViewHolder
@@ -102,14 +103,10 @@ class SchedulePage : BasePage(R.id.schedulePage) {
 
     fun assertMissingItemDisplayed(itemName: String, courseName: String, pointsPossible: String) {
         val titleMatcher = withId(R.id.title) + withText(itemName)
-        val courseNameMatcher = withId(R.id.courseName) + withText(courseName)
+        val courseNameMatcher = withId(R.id.scheduleCourseHeaderText) + withText(courseName)
         val pointsPossibleMatcher = withId(R.id.points) + withText(pointsPossible)
 
-        onView(
-            withId(R.id.missingItemLayout) + withDescendant(titleMatcher) + withDescendant(
-                courseNameMatcher
-            ) + withDescendant(pointsPossibleMatcher)
-        )
+        onView(withId(R.id.plannerItems) + hasSibling(courseNameMatcher) + withDescendant(titleMatcher)  + withDescendant(pointsPossibleMatcher) + withDescendant(withText(R.string.missingAssignment)))
             .scrollTo()
             .assertDisplayed()
     }

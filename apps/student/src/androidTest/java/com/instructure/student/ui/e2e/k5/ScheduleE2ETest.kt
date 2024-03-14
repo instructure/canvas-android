@@ -107,7 +107,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
 
         Log.d(STEP_TAG, "Scroll to 'Missing Items' section  and verify that a missing assignment (${testMissingAssignment.name}) is displayed there with 100 points.")
-        schedulePage.scrollToItem(R.id.missingItemLayout, testMissingAssignment.name)
+        schedulePage.scrollToItem(R.id.metaLayout, testMissingAssignment.name)
         schedulePage.assertMissingItemDisplayed(testMissingAssignment.name, nonHomeroomCourses[2].name, "100 pts")
 
         Log.d(STEP_TAG, "Refresh the Schedule Page. Assert that the items are still displayed correctly.")
