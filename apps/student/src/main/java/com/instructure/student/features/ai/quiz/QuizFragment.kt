@@ -20,6 +20,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -27,6 +28,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.lottie.LottieAnimationView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.progress.ProgressViewModelAction
@@ -61,9 +63,9 @@ class QuizFragment : Fragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                QuizScreen(uiState, viewModel::handleAction, ThemePrefs.darker(color)) {
+                QuizScreen(uiState, viewModel::handleAction, ThemePrefs.darker(color), {
                     requireActivity().onBackPressed()
-                }
+                }, ::showConfetti)
             }
         }
     }
@@ -84,6 +86,25 @@ class QuizFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun showConfetti() {
+        requireActivity().runOnUiThread {
+            val root = requireActivity().window.decorView.rootView as ViewGroup
+            val animation = LottieAnimationView(requireContext()).apply {
+                setAnimation("confetti.json")
+                scaleType = ImageView.ScaleType.CENTER_CROP;
+            }
+            animation.addAnimatorUpdateListener {
+                if (it.animatedFraction >= 1.0) root.removeView(animation)
+            }
+            root.addView(
+                animation,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            animation.playAnimation()
         }
     }
 

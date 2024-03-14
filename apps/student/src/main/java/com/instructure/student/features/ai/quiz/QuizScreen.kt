@@ -73,7 +73,8 @@ fun QuizScreen(
     uiState: QuizScreenUiState,
     actionHandler: (QuizAction) -> Unit,
     backgroundColor: Int,
-    closeClicked: () -> Unit
+    closeClicked: () -> Unit,
+    showConfetti: () -> Unit
 ) {
     CanvasTheme {
         Scaffold(
@@ -86,6 +87,9 @@ fun QuizScreen(
                     }
                 })
                 val successRatio by animateFloatAsState(targetValue = uiState.quizSummaryUiState?.correctRatio ?: 0f)
+                if (successRatio >= 0.8f) {
+                    showConfetti()
+                }
                 TopAppBar(
                     onBackClicked = { closeClicked() },
                     progress = progress,
