@@ -15,8 +15,16 @@
  */
 package com.instructure.student.features.ai.quiz
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -68,6 +76,7 @@ import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun QuizScreen(
     uiState: QuizScreenUiState,
@@ -86,7 +95,7 @@ fun QuizScreen(
                         actionHandler(QuizAction.ProgressCompleted)
                     }
                 })
-                val successRatio by animateFloatAsState(targetValue = uiState.quizSummaryUiState?.correctRatio ?: 0f)
+                val successRatio by animateFloatAsState(targetValue = uiState.quizSummaryUiState?.correctRatio ?: 0f, animationSpec = tween(durationMillis = 600, easing = LinearOutSlowInEasing))
                 if (successRatio >= 0.8f) {
                     showConfetti()
                 }
@@ -97,10 +106,14 @@ fun QuizScreen(
                 )
             }
         ) { padding ->
-            if (uiState.quizSummaryUiState == null) {
-                QuizContent(uiState = uiState.quizUiState, actionHandler = actionHandler, modifier = Modifier.padding(padding))
-            } else {
-                QuizSummaryContent(uiState = uiState.quizSummaryUiState, modifier = Modifier.padding(padding))
+        AnimatedContent(targetState = uiState.quizSummaryUiState, transitionSpec = {
+                slideInVertically(animationSpec = tween(durationMillis = 600, easing = LinearOutSlowInEasing)) { fullHeight -> fullHeight }.togetherWith(fadeOut()).using(SizeTransform(clip = false))
+            } ) {
+                if (it == null) {
+                    QuizContent(uiState = uiState.quizUiState, actionHandler = actionHandler, modifier = Modifier.padding(padding))
+                } else {
+                    QuizSummaryContent(uiState = it, modifier = Modifier.padding(padding))
+                }
             }
         }
     }
