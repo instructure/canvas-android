@@ -16,7 +16,9 @@
 package com.instructure.student.features.ai.quiz
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -26,11 +28,13 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -80,8 +84,11 @@ fun QuizScreen(
         Scaffold(
             backgroundColor = Color(backgroundColor),
             topBar = {
+                val progressRatio = uiState.questions.filter { it.userAnswer != null }.size.toFloat() / uiState.questions.size.toFloat()
+                val progress by animateFloatAsState(targetValue = progressRatio)
                 TopAppBar(
-                    onBackClicked = { closeClicked() }
+                    onBackClicked = { closeClicked() },
+                    progress = progress
                 )
             }
         ) { padding ->
@@ -206,19 +213,35 @@ fun QuizScreen(
 
 @Composable
 fun TopAppBar(
+    onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    onBackClicked: () -> Unit
+    progress: Float = 0f
 ) {
-    Column(modifier = modifier.padding(start = 8.dp, top = 8.dp)) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { onBackClicked() }) {
-                Icon(
-                    painterResource(id = R.drawable.ic_close),
-                    contentDescription = stringResource(id = R.string.a11y_closeProgress),
-                    tint = colorResource(id = R.color.white)
-                )
-            }
-
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.padding(start = 8.dp, top = 8.dp)) {
+        IconButton(onClick = { onBackClicked() }) {
+            Icon(
+                painterResource(id = R.drawable.ic_close),
+                contentDescription = stringResource(id = R.string.a11y_closeProgress),
+                tint = colorResource(id = R.color.white)
+            )
+        }
+        Box(Modifier.padding(end = 16.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(12.dp)
+                    .border(
+                        width = 1.dp,
+                        color = colorResource(id = R.color.white),
+                        shape = RoundedCornerShape(100.dp)
+                    )
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(progress)
+                    .height(12.dp)
+                    .background(colorResource(id = R.color.white), shape = RoundedCornerShape(100.dp))
+            )
         }
     }
 }
