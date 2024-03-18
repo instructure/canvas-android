@@ -105,7 +105,7 @@ class ScheduleInteractionTest : StudentTest() {
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(12)
-        schedulePage.assertMissingItemDisplayed(assignment1.name!!, courses[0].name, "10 pts")
+        schedulePage.assertMissingItemDisplayedInMissingItemSummary(assignment1.name!!, courses[0].name, "10 pts")
     }
 
     @Test
