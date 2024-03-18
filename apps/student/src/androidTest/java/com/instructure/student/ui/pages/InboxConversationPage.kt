@@ -126,7 +126,7 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun assertNoSubjectDisplayed() {
-        onView(withId(R.id.subjectView) + withText(R.string.noSubject)).assertDisplayed()
+        onView(withId(R.id.subjectView) + withParent(withId(R.id.header)) + withText(R.string.noSubject)).assertDisplayed()
     }
 
     fun refresh() {
