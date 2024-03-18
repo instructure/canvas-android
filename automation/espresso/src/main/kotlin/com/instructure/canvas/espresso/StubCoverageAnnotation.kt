@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.utils
+package com.instructure.canvas.espresso
 
-enum class FontFamily(val fontPath: String) {
-    REGULAR("fonts/lato_regular.ttf"),
-    K5("fonts/balsamiq_regular.ttf")
-}
+// When applied to a test method, denotes that the test is stubbed out from the coverage workflow.
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class StubCoverage(val description: String = "")

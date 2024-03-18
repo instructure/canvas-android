@@ -29,6 +29,7 @@ import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
@@ -39,7 +40,8 @@ class StudentLogoutTask(
     uri: Uri? = null,
     canvasForElementaryFeatureFlag: Boolean = false,
     typefaceBehavior: TypefaceBehavior? = null,
-    private val databaseProvider: DatabaseProvider? = null
+    private val databaseProvider: DatabaseProvider? = null,
+    private val alarmScheduler: AlarmScheduler? = null
 ) : LogoutTask(type, uri, canvasForElementaryFeatureFlag, typefaceBehavior) {
 
     override fun onCleanup() {
@@ -81,5 +83,9 @@ class StudentLogoutTask(
             cancelAllWorkByTag(OfflineSyncWorker.PERIODIC_TAG)
             cancelAllWorkByTag(OfflineSyncWorker.ONE_TIME_TAG)
         }
+    }
+
+    override suspend fun cancelAlarms() {
+        alarmScheduler?.cancelAllAlarmsForCurrentUser()
     }
 }

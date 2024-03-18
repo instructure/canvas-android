@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Faltante</string>
     <string name="gradedSubmissionLabel">Avaliado</string>
 
+    <string name="reminderTitle">Lembrete</string>
+    <string name="reminderDescription">Adicione notificações de lembrete de data de vencimento sobre essa tarefa nesse dispositivo.</string>
+    <string name="a11y_addReminder">Adicionar lembrete</string>
+    <string name="a11y_removeReminder">Remover lembrete</string>
+    <string name="reminderBefore">%s antes</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minuto</item>
+        <item quantity="other">%d Minutos</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Hora</item>
+        <item quantity="other">%d Horas</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dia</item>
+        <item quantity="other">%d dias</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 semana</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
+    <string name="reminderCustom">Personalizar</string>
+    <string name="customReminderTitle">Lembrete personalizado</string>
+    <string name="customReminderQuantityHint">Quantidade</string>
+    <string name="customReminderMinutes">Minutos antes</string>
+    <string name="customReminderHours">Horas antes</string>
+    <string name="customReminderDays">Dias antes</string>
+    <string name="customReminderWeeks">Semanas antes</string>
+    <string name="reminderNotificationChannelName">Notificações de lembrete</string>
+    <string name="reminderNotificationChannelDescription">Notificações do Canvas para lembretes de tarefas.</string>
+    <string name="reminderNotificationTitle">Lembrete de data de vencimento</string>
+    <string name="reminderNotificationDescription">Esta tarefa deve ser entregue em %s: %s</string>
+    <string name="reminderInPast">Escolha um horário futuro para seu lembrete!</string>
+    <string name="reminderAlreadySet">Você já definiu um lembrete para esse horário</string>
+    <string name="deleteReminderTitle">Excluir lembrete</string>
+    <string name="deleteReminderMessage">Tem certeza de que deseja excluir esse lembrete?</string>
+    <string name="reminderPermissionNotGrantedError">Você precisa ativar a permissão exata de alarme para essa ação</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Nenhuma pré-visualização disponível para URLs usando \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Por favor, insira uma URL válida</string>
@@ -1481,4 +1518,5 @@
         <item quantity="other">%d cursos foram sincronizados.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Conteúdo adicional do curso</string>
+    <string name="failedToUpdateDashboardOrder">Falha ao atualizar a ordem dos cartões do Painel</string>
 </resources>

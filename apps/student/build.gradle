@@ -50,8 +50,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 259
-        versionName = '7.1.0'
+        versionCode = 260
+        versionName = '7.2.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -126,6 +126,14 @@ android {
             ext {
                 heapEnabled = true
             }
+        }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
         }
 
         release {
@@ -240,6 +248,7 @@ android {
     hilt {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
     }
 }
 
@@ -350,6 +359,8 @@ dependencies {
     implementation Libs.ROOM_COROUTINES
 
     testImplementation Libs.HAMCREST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }
 
 // Comment out this line if the reporting logic starts going wonky.

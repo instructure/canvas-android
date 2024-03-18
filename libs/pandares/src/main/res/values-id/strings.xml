@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Tidak Ada</string>
     <string name="gradedSubmissionLabel">Dinilai</string>
 
+    <string name="reminderTitle">Pengingat</string>
+    <string name="reminderDescription">Tambah notifikasi pengingat tanggal batas waktu tentang tugas ini pada perangkat ini.</string>
+    <string name="a11y_addReminder">Tambah pengingat</string>
+    <string name="a11y_removeReminder">Hapus pengingat</string>
+    <string name="reminderBefore">%s Sebelum</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Menit</item>
+        <item quantity="other">%d Menit</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Jam</item>
+        <item quantity="other">%d Jam</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Hari</item>
+        <item quantity="other">%d Hari</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Minggu</item>
+        <item quantity="other">%d Minggu</item>
+    </plurals>
+    <string name="reminderCustom">Khusus</string>
+    <string name="customReminderTitle">Pengingat Kustom</string>
+    <string name="customReminderQuantityHint">Jumlah</string>
+    <string name="customReminderMinutes">Menit Sebelum</string>
+    <string name="customReminderHours">Jam Sebelum</string>
+    <string name="customReminderDays">Hari Sebelum</string>
+    <string name="customReminderWeeks">Minggu Sebelum</string>
+    <string name="reminderNotificationChannelName">Notifikasi Pengingat</string>
+    <string name="reminderNotificationChannelDescription">Notifikasi Canvas untuk pengingat tugas.</string>
+    <string name="reminderNotificationTitle">Pengingat Tanggal Batas Waktu</string>
+    <string name="reminderNotificationDescription">Tugas ini jatuh tempo dalam %s: %s</string>
+    <string name="reminderInPast">Silakan pilih waktu di masa depan untuk pengingat Anda!</string>
+    <string name="reminderAlreadySet">Anda sudah mengatur pengingat untuk waktu ini</string>
+    <string name="deleteReminderTitle">Hapus Pengingat</string>
+    <string name="deleteReminderMessage">Anda yakin mau menghapus pengingat ini?</string>
+    <string name="reminderPermissionNotGrantedError">Anda harus mampu menetapkan izin alarm untuk tindakan ini</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Pratinjau tidak tersedia untuk URL yang menggunakan \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Masukkan URL yang valid.</string>
@@ -1484,4 +1521,5 @@
         <item quantity="other">Kursus %d telah disinkronkan.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Konten kursus tambahan</string>
+    <string name="failedToUpdateDashboardOrder">Gagal memperbarui urutan kartu Dashboard</string>
 </resources>

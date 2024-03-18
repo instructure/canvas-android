@@ -70,6 +70,51 @@
     <string name="missingSubmissionLabel">Brak</string>
     <string name="gradedSubmissionLabel">Oceniono</string>
 
+    <string name="reminderTitle">Przypomnienie</string>
+    <string name="reminderDescription">Dodaj przypomnienie o terminie dla tego zadania, na tym urządzeniu.</string>
+    <string name="a11y_addReminder">Dodaj przypomnienie</string>
+    <string name="a11y_removeReminder">Usuń przypomnienie</string>
+    <string name="reminderBefore">%s do</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 min</item>
+        <item quantity="few">%d min</item>
+        <item quantity="many">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 godz.</item>
+        <item quantity="few">%d godz.</item>
+        <item quantity="many">%d godz.</item>
+        <item quantity="other">%d godz.</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dzień</item>
+        <item quantity="few">%d dni</item>
+        <item quantity="many">%d dni</item>
+        <item quantity="other">%d dni</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 tyg.</item>
+        <item quantity="few">%d tyg.</item>
+        <item quantity="many">%d tyg.</item>
+        <item quantity="other">%d tyg.</item>
+    </plurals>
+    <string name="reminderCustom">Niestandardowe</string>
+    <string name="customReminderTitle">Niestandardowe przypomnienie</string>
+    <string name="customReminderQuantityHint">Ilość</string>
+    <string name="customReminderMinutes">min. do</string>
+    <string name="customReminderHours">godz. do</string>
+    <string name="customReminderDays">dni do</string>
+    <string name="customReminderWeeks">tyg. do</string>
+    <string name="reminderNotificationChannelName">Przypomnienia</string>
+    <string name="reminderNotificationChannelDescription">Powiadomienia Canvas dotyczące przypomnień o zadaniach.</string>
+    <string name="reminderNotificationTitle">Przypomnienie o terminie</string>
+    <string name="reminderNotificationDescription">Termin przesłania tego zadania upłynie za %s: %s</string>
+    <string name="reminderInPast">Wybierz przyszły termin dla przypomnienia!</string>
+    <string name="reminderAlreadySet">Ustawiono już przypomnienie dla tego terminu</string>
+    <string name="deleteReminderTitle">Usuń przypomnienie</string>
+    <string name="deleteReminderMessage">Czy na pewno chcesz usunąć to przypomnienie?</string>
+    <string name="reminderPermissionNotGrantedError">Aby użyć tego działania, należy włączyć uprawnienia alertów.</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Brak podglądu dla adresu URL z użyciem \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Wpisz prawidłowy adres URL</string>
@@ -1521,4 +1566,5 @@
         <item quantity="other">Kursy %d zostały zsynchronizowane.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Dodatkowa zawartość kursu</string>
+    <string name="failedToUpdateDashboardOrder">Nie udało się zaktualizować kolejności kart pulpitu nawigacyjnego</string>
 </resources>

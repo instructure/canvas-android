@@ -15,15 +15,24 @@
  */
 package com.instructure.teacher.unit.modules.list
 
+import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.managers.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.models.postmodels.BulkUpdateProgress
+import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.pandautils.features.progress.ProgressPreferences
+import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
+import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.CollapsedModulesStore
 import com.instructure.teacher.features.modules.list.ModuleListEffect
 import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
@@ -33,6 +42,7 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import io.mockk.Ordering
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -48,6 +58,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import okhttp3.Headers.Companion.toHeaders
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -62,14 +73,31 @@ class ModuleListEffectHandlerTest : Assert() {
     private lateinit var connection: Connection<ModuleListEffect>
     private val course: CanvasContext = Course()
 
+    private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
+    private val progressApi: ProgressAPI.ProgressInterface = mockk(relaxed = true)
+    private val progressPreferences: ProgressPreferences = mockk(relaxed = true)
+    private val moduleBulkProgressDao: ModuleBulkProgressDao = mockk(relaxed = true)
+
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         view = mockk(relaxed = true)
-        effectHandler = ModuleListEffectHandler().apply { view = this@ModuleListEffectHandlerTest.view }
+        effectHandler =
+            ModuleListEffectHandler(moduleApi, progressApi, progressPreferences, moduleBulkProgressDao).apply {
+                view = this@ModuleListEffectHandlerTest.view
+            }
         consumer = mockk(relaxed = true)
         connection = effectHandler.connect(consumer)
+
+        every { progressPreferences.cancelledProgressIds } returns mutableSetOf()
+        every { progressPreferences.cancelledProgressIds = any() } returns Unit
+        coEvery { moduleBulkProgressDao.findByCourseId(any()) } returns emptyList()
+    }
+
+    @After
+    fun teardown() {
+        clearAllMocks()
     }
 
     @Test
@@ -191,7 +219,8 @@ class ModuleListEffectHandlerTest : Assert() {
         val nextUrl1 = "fake_next_url_1"
         val nextUrl2 = "fake_next_url_2"
         val firstPageModules = makeModulePage(pageNumber = 0)
-        val secondPageModules = listOf(ModuleObject(id = moduleId, itemCount = 1, items = listOf(ModuleItem(scrollToItemId))))
+        val secondPageModules =
+            listOf(ModuleObject(id = moduleId, itemCount = 1, items = listOf(ModuleItem(scrollToItemId))))
         val thirdPageModules = makeModulePage(pageNumber = 1)
 
         val expectedEvent = ModuleListEvent.PageLoaded(
@@ -281,6 +310,240 @@ class ModuleListEffectHandlerTest : Assert() {
         unmockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
     }
 
+    @Test
+    fun `BulkUpdateStarted results in correct success event`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateSuccess(false, BulkModuleUpdateAction.PUBLISH, false)
+
+        coEvery {
+            moduleApi.bulkUpdateModules(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(mockk(relaxed = true))
+        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(
+            Progress(
+                1L,
+                workflowState = "completed"
+            )
+        )
+
+        connection.accept(
+            ModuleListEffect.BulkUpdateStarted(
+                1L,
+                false,
+                false,
+                BulkModuleUpdateAction.PUBLISH
+            )
+        )
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `BulkUpdateModules results in correct failed event when call fails`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed(false)
+
+        coEvery {
+            moduleApi.bulkUpdateModules(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Fail()
+
+        connection.accept(
+            ModuleListEffect.BulkUpdateModules(
+                course,
+                pageModules.map { it.id },
+                pageModules.map { it.id } + pageModules.flatMap { it.items.map { it.id } },
+                BulkModuleUpdateAction.PUBLISH,
+                false,
+                false
+            )
+        )
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `BulkUpdateStarted results in correct failed event when progress fails`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateFailed(false)
+
+        coEvery {
+            moduleApi.bulkUpdateModules(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(mockk(relaxed = true))
+        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(
+            Progress(
+                1L,
+                workflowState = "failed"
+            )
+        )
+
+        connection.accept(
+            ModuleListEffect.BulkUpdateStarted(
+                1L,
+                false,
+                false,
+                BulkModuleUpdateAction.PUBLISH
+            )
+        )
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `UpdateModuleItem results in correct success event`() {
+        val moduleId = 1L
+        val itemId = 2L
+        val expectedEvent = ModuleListEvent.ModuleItemUpdateSuccess(
+            ModuleItem(id = itemId, moduleId = moduleId, published = true),
+            true
+        )
+
+        coEvery { moduleApi.publishModuleItem(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(
+            ModuleItem(2L, 1L, published = true)
+        )
+
+        connection.accept(ModuleListEffect.UpdateModuleItem(course, moduleId, itemId, true))
+
+        verify(timeout = 100) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `UpdateModuleItem results in correct failed event`() {
+        val moduleId = 1L
+        val itemId = 2L
+        val expectedEvent = ModuleListEvent.ModuleItemUpdateFailed(itemId)
+
+        coEvery { moduleApi.publishModuleItem(any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
+
+        connection.accept(ModuleListEffect.UpdateModuleItem(course, moduleId, itemId, true))
+
+        verify(timeout = 100) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `ShowSnackbar calls showSnackbar on view`() {
+        val message = 123
+        connection.accept(ModuleListEffect.ShowSnackbar(message))
+        verify(timeout = 100) { view.showSnackbar(message) }
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `UpdateFileModuleItem calls showUpdateFileDialog on view`() {
+        val fileId = 123L
+        val contentDetails = ModuleContentDetails()
+        connection.accept(ModuleListEffect.UpdateFileModuleItem(fileId, contentDetails))
+        verify(timeout = 100) { view.showUpdateFileDialog(fileId, contentDetails) }
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `Bulk update cancel emits correct event`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateCancelled
+
+        coEvery {
+            moduleApi.bulkUpdateModules(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(
+            BulkUpdateResponse(BulkUpdateProgress(Progress(id = 1L)))
+        )
+        coEvery { progressApi.getProgress(any(), any()) } returns DataResult.Success(
+            Progress(
+                1L,
+                workflowState = "failed"
+            )
+        )
+        every { progressPreferences.cancelledProgressIds } returns mutableSetOf(1L)
+
+        connection.accept(
+            ModuleListEffect.BulkUpdateStarted(
+                1L,
+                false,
+                false,
+                BulkModuleUpdateAction.PUBLISH
+            )
+        )
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `BulkUpdateModules result in correct event`() {
+        val pageModules = makeModulePage()
+        val expectedEvent = ModuleListEvent.BulkUpdateStarted(
+            course,
+            0L,
+            true,
+            false,
+            pageModules.map { it.id } + pageModules.flatMap { it.items.map { it.id } },
+            BulkModuleUpdateAction.PUBLISH)
+
+        coEvery {
+            moduleApi.bulkUpdateModules(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(mockk(relaxed = true))
+
+        connection.accept(
+            ModuleListEffect.BulkUpdateModules(
+                course,
+                pageModules.map { it.id },
+                pageModules.map { it.id } + pageModules.flatMap { it.items.map { it.id } },
+                BulkModuleUpdateAction.PUBLISH,
+                false,
+                true
+            )
+        )
+
+        verify(timeout = 1000) { consumer.accept(expectedEvent) }
+        confirmVerified(consumer)
+    }
+
+    private fun makeLinkHeader(nextUrl: String) =
+        mapOf("Link" to """<$nextUrl>; rel="next"""").toHeaders()
+
     private fun makeModulePage(
         moduleCount: Int = 3,
         itemsPerModule: Int = 3,
@@ -295,9 +558,5 @@ class ModuleListEffectHandlerTest : Assert() {
             )
         }
     }
-
-
-    private fun makeLinkHeader(nextUrl: String) =
-        mapOf("Link" to """<$nextUrl>; rel="next"""").toHeaders()
 
 }

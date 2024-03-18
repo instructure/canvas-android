@@ -53,5 +53,13 @@ val appDatabaseMigrations = arrayOf(
 
     createMigration(7, 8) { database ->
         database.execSQL("CREATE TABLE IF NOT EXISTS EnvironmentFeatureFlags (userId INTEGER NOT NULL, featureFlags TEXT NOT NULL, PRIMARY KEY(userId))")
+    },
+
+    createMigration(8, 9) { database ->
+        database.execSQL("CREATE TABLE IF NOT EXISTS ReminderEntity (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userId INTEGER NOT NULL, assignmentId INTEGER NOT NULL, htmlUrl TEXT NOT NULL, name TEXT NOT NULL, text TEXT NOT NULL, time INTEGER NOT NULL)")
+    },
+
+    createMigration(9, 10) { database ->
+        database.execSQL("CREATE TABLE IF NOT EXISTS `ModuleBulkProgressEntity` (`progressId` INTEGER NOT NULL, `allModules` INTEGER NOT NULL, `skipContentTags` INTEGER NOT NULL, `action` TEXT NOT NULL, `courseId` INTEGER NOT NULL, `affectedIds` TEXT NOT NULL, PRIMARY KEY(`progressId`))")
     }
 )

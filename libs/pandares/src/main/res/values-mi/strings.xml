@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Ngaro</string>
     <string name="gradedSubmissionLabel">kōekehia</string>
 
+    <string name="reminderTitle">Whakamaumahara</string>
+    <string name="reminderDescription">Tāpirihia nga whakamohiotanga whakamaumahara mo te ra tika mo tenei taumahi i runga i tenei taputapu.</string>
+    <string name="a11y_addReminder">Tāpiri whakamaumahara</string>
+    <string name="a11y_removeReminder">Tango whakamaumahara</string>
+    <string name="reminderBefore">%s I mua</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 meneti</item>
+        <item quantity="other">%d meneti</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Haora</item>
+        <item quantity="other">%d Ngā Haora</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Ra</item>
+        <item quantity="other">%d Ngā Ra</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Wiki</item>
+        <item quantity="other">%d Nga wiki</item>
+    </plurals>
+    <string name="reminderCustom">Tikanga</string>
+    <string name="customReminderTitle">Whakamaumahara Ritenga</string>
+    <string name="customReminderQuantityHint">Te nui</string>
+    <string name="customReminderMinutes">Nga meneti o mua</string>
+    <string name="customReminderHours">Nga haora i mua</string>
+    <string name="customReminderDays">Nga ra o mua</string>
+    <string name="customReminderWeeks">Nga wiki o mua</string>
+    <string name="reminderNotificationChannelName">Panui Whakamaumahara</string>
+    <string name="reminderNotificationChannelDescription">Whakamōhiotanga Canvas mō ngā whakamaumahara taumahi.</string>
+    <string name="reminderNotificationTitle">Whakamaumahara ki te Ra Whakatau</string>
+    <string name="reminderNotificationDescription">Ka tika tenei taumahi i roto %s: %s</string>
+    <string name="reminderInPast">Tena koa whiriwhiria he wa kei te heke mai mo to whakamaumahara!</string>
+    <string name="reminderAlreadySet">Kua tautuhia e koe he whakamaumahara mo tenei wa</string>
+    <string name="deleteReminderTitle">Muku Whakamaumahara</string>
+    <string name="deleteReminderMessage">E tino hiahia ana koe ki te muku i tenei whakamaumahara?</string>
+    <string name="reminderPermissionNotGrantedError">Me whakaahei koe i te whakaaetanga whakaoho mo tenei mahi</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Kaore e wātea he arokite mo ngā  URL e mahi ana http//</string>
     <string name="submissionUrlNotAUrlError">Tēnā koa whakauru he URL whaimana</string>
@@ -1481,4 +1518,5 @@
         <item quantity="other">%d kua tukutahia nga akoranga.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Ihirangi akoranga taapiri</string>
+    <string name="failedToUpdateDashboardOrder">I rahua te whakahōu i te raupapa kāri Papatohu</string>
 </resources>

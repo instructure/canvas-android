@@ -48,10 +48,10 @@ class CourseSettingsE2ETest : TeacherTest() {
         val firstCourse = data.coursesList[0]
         val secondCourse = data.coursesList[1]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG, "Open ${firstCourse.name} course and click on Course Settings button.")
+        Log.d(STEP_TAG, "Open '${firstCourse.name}' course and click on Course Settings button.")
         dashboardPage.waitForRender()
         dashboardPage.openCourse(firstCourse)
         courseBrowserPage.clickSettingsButton()
@@ -63,7 +63,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         courseSettingsPage.assertHomePageChanged(newCourseHomePage)
 
         val newCourseName = "New Course Name"
-        Log.d(STEP_TAG, "Click on 'Course Name' menu and edit course's name to be $newCourseName. Assert that the course's name has been changed.")
+        Log.d(STEP_TAG, "Click on 'Course Name' menu and edit course's name to be '$newCourseName'. Assert that the course's name has been changed.")
         courseSettingsPage.clickCourseName()
         courseSettingsPage.editCourseName(newCourseName)
         courseSettingsPage.assertCourseNameChanged(newCourseName)
@@ -78,7 +78,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(newCourseName)
 
-        Log.d(STEP_TAG, "Open ${secondCourse.name} course and click on Course Settings button.")
+        Log.d(STEP_TAG, "Open '${secondCourse.name}' course and click on Course Settings button.")
         dashboardPage.waitForRender()
         dashboardPage.openCourse(secondCourse)
         courseBrowserPage.clickSettingsButton()

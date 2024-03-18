@@ -1,4 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2023 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -281,6 +296,77 @@
                         android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/dueLabel" />
 
+                    <View
+                        android:id="@+id/reminderTopDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:layout_marginTop="32dp"
+                        android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.showReminders ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/dueDateTextView" />
+
+                    <TextView
+                        android:id="@+id/reminderTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/reminderTitle"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp"
+                        android:visibility="@{viewModel.data.showReminders ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/reminderTopDivider" />
+
+                    <TextView
+                        android:id="@+id/reminderDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4dp"
+                        android:text="@string/reminderDescription"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        android:visibility="@{viewModel.data.showReminders ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintEnd_toStartOf="@id/reminderAdd"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/reminderTitle" />
+
+                    <ImageView
+                        android:id="@+id/reminderAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@string/a11y_addReminder"
+                        android:onClick="@{()-> viewModel.onAddReminderClicked()}"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_add_lined"
+                        android:visibility="@{viewModel.data.showReminders ? View.VISIBLE : View.GONE}"
+                        app:accessibleTouchTarget="@{true}"
+                        app:layout_constraintBottom_toBottomOf="@id/reminderDescription"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/reminderTitle"
+                        app:tint="@color/textDarkest" />
+
+                    <LinearLayout
+                        android:id="@+id/reminderList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="32dp"
+                        android:orientation="vertical"
+                        android:visibility="@{viewModel.data.showReminders ? View.VISIBLE : View.GONE}"
+                        app:itemViewModels="@{viewModel.data.reminders}"
+                        app:layout_constraintTop_toBottomOf="@id/reminderDescription" />
+
+                    <View
+                        android:id="@+id/reminderBottomDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height=".5dp"
+                        android:background="@color/borderMedium"
+                        android:visibility="@{viewModel.data.showReminders ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintTop_toBottomOf="@id/reminderList" />
+
                     <TextView
                         android:id="@+id/submissionTypesLabel"
                         android:layout_width="match_parent"
@@ -291,7 +377,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.submissionTypes.empty ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/dueDateTextView" />
+                        app:layout_constraintTop_toBottomOf="@id/reminderBottomDivider" />
 
                     <TextView
                         android:id="@+id/submissionTypesTextView"

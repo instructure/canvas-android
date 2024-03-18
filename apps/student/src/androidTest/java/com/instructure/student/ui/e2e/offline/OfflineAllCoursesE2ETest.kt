@@ -19,8 +19,6 @@ package com.instructure.student.ui.e2e.offline
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
@@ -28,16 +26,17 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.waitForNetworkToGoOffline
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Test
-import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class OfflineAllCoursesE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -54,10 +53,7 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         val course2 = data.coursesList[1]
         val course3 = data.coursesList[2]
 
-        Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -83,23 +79,15 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState(course2.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
-        dashboardPage.waitForRender()
-        dashboardPage.waitForSyncProgressDownloadStartedNotification()
-        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
-
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
-        dashboardPage.waitForSyncProgressStartingNotification()
-        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
+        Log.d(STEP_TAG, "Assert that the offline sync icon is displayed on the synced  (and favorited) course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
-        device.waitForIdle()
-        device.waitForWindowUpdate(null, 10000)
+        waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered, and assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
-        dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertCourseNotDisplayed(course2)
         dashboardPage.assertCourseNotDisplayed(course3)
@@ -136,7 +124,6 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on '${course1.name}' course and assert if it will navigate the user to the CourseBrowser Page.")
         allCoursesPage.openCourse(course1.name)
         courseBrowserPage.assertTitleCorrect(course1)
-
     }
 
     @After

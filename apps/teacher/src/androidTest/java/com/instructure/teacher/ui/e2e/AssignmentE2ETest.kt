@@ -25,10 +25,6 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.AttachmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
@@ -181,8 +177,8 @@ class AssignmentE2ETest : TeacherTest() {
         assignmentDetailsPage.assertNotSubmitted(1,3)
         assignmentDetailsPage.assertNeedsGrading(2,3)
 
-        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
-        gradeSubmission(teacher, course, assignment, gradedStudent)
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${gradedStudent.name}' student.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment[0].id, gradedStudent.id, postedGrade = "15")
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the number of 'Graded' is increased and the number of 'Not Submitted' and 'Needs Grading' are decreased.")
         assignmentDetailsPage.refresh()
@@ -306,16 +302,13 @@ class AssignmentE2ETest : TeacherTest() {
             dueAt = 1.days.fromNow.iso8601
         ))
 
-        Log.d(PREPARATION_TAG,"Submit ${assignment.name} assignment for ${student.name} student.")
-        SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
-            assignmentId = assignment.id,
-            courseId = course.id,
-            studentToken = student.token,
+        Log.d(PREPARATION_TAG,"Submit '${assignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id,
             submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(
                 amount = 1,
                 submissionType = SubmissionType.ONLINE_TEXT_ENTRY
             ))
-        ))
+        )
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -363,7 +356,7 @@ class AssignmentE2ETest : TeacherTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seed a text assignment/file/submission.")
-        val assignment = createAssignment(course, teacher)
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD), allowedExtensions = listOf("txt"))
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
@@ -373,8 +366,8 @@ class AssignmentE2ETest : TeacherTest() {
             fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
         )
 
-        Log.d(PREPARATION_TAG, "Submit the ${assignment.name} assignment.")
-        submitCourseAssignment(course, assignment, submissionUploadInfo, student)
+        Log.d(PREPARATION_TAG, "Submit the '${assignment.name}' assignment.")
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, assignment.id, submissionType = SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(submissionUploadInfo.id))
 
         Log.d(PREPARATION_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
@@ -384,7 +377,8 @@ class AssignmentE2ETest : TeacherTest() {
             fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
 
-        commentOnSubmission(student, course, assignment, commentUploadInfo)
+        Log.d(PREPARATION_TAG, "Comment a text file as a teacher to the '${student.name}' student's submission of the '${assignment.name}' assignment.")
+        SubmissionsApi.commentOnSubmission(course.id, student.token, assignment.id, fileIds = mutableListOf(commentUploadInfo.id))
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -404,66 +398,6 @@ class AssignmentE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that ${submissionUploadInfo.fileName} file. Navigate to Comments Tab and ${commentUploadInfo.fileName} comment attachment is displayed.")
         speedGraderPage.selectCommentsTab()
         assignmentSubmissionListPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
-    }
-
-    private fun gradeSubmission(
-        teacher: CanvasUserApiModel,
-        course: CourseApiModel,
-        assignment: List<AssignmentApiModel>,
-        gradedStudent: CanvasUserApiModel
-    ) {
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = course.id,
-            assignmentId = assignment[0].id,
-            studentId = gradedStudent.id,
-            postedGrade = "15",
-            excused = false
-        )
-    }
-
-    private fun createAssignment(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ): AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = false,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                allowedExtensions = listOf("txt"),
-                teacherToken = teacher.token
-            )
-        )
-    }
-
-    private fun submitCourseAssignment(
-        course: CourseApiModel,
-        assignment: AssignmentApiModel,
-        submissionUploadInfo: AttachmentApiModel,
-        student: CanvasUserApiModel
-    ) {
-        SubmissionsApi.submitCourseAssignment(
-            submissionType = SubmissionType.ONLINE_UPLOAD,
-            courseId = course.id,
-            assignmentId = assignment.id,
-            fileIds = mutableListOf(submissionUploadInfo.id),
-            studentToken = student.token
-        )
-    }
-
-    private fun commentOnSubmission(
-        student: CanvasUserApiModel,
-        course: CourseApiModel,
-        assignment: AssignmentApiModel,
-        commentUploadInfo: AttachmentApiModel
-    ) {
-        SubmissionsApi.commentOnSubmission(
-            studentToken = student.token,
-            courseId = course.id,
-            assignmentId = assignment.id,
-            fileIds = mutableListOf(commentUploadInfo.id)
-        )
     }
 
 }

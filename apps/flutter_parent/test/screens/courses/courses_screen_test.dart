@@ -41,7 +41,6 @@ import 'package:provider/provider.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
-import '../../utils/test_helpers/mock_helpers.dart';
 import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
@@ -163,6 +162,48 @@ void main() {
             [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A')],
           ),
         ),
+      );
+
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('A');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('shows grade and score if there is a current grade and score', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A', computedCurrentScore: 75)],
+          ),
+        ),
+      );
+
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('A 75%');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('shows grade only if there is a current grade and score and restricted', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A', computedCurrentScore: 75)],
+          ),
+        ).rebuild((b) => b..settings = (b.settings..restrictQuantitativeData = true)),
       );
 
       _setupLocator(_MockedCoursesInteractor(courses: courses));

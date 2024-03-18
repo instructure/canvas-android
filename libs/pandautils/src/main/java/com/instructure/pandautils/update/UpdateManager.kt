@@ -76,7 +76,9 @@ class UpdateManager(private val appUpdateManager: AppUpdateManager,
                                 .build(),
                         IMMEDIATE_UPDATE_REQUEST_CODE
                 )
-            } else if (appUpdateInfo.updatePriority() >= FLEXIBLE_THRESHOLD && appUpdateInfo.clientVersionStalenessDays() ?: 0 >= DAYS_FOR_FLEXIBLE_UPDATE) {
+            } else if (appUpdateInfo.updatePriority() >= FLEXIBLE_THRESHOLD && (appUpdateInfo.clientVersionStalenessDays()
+                    ?: 0) >= DAYS_FOR_FLEXIBLE_UPDATE
+            ) {
                 val listener = InstallStateUpdatedListener {
                     if (it.installStatus() == InstallStatus.DOWNLOADED) {
                         registerNotificationChannel(activity)

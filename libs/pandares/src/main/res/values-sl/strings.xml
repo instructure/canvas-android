@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Manjkajoče</string>
     <string name="gradedSubmissionLabel">Ocenjeno</string>
 
+    <string name="reminderTitle">Opomnik</string>
+    <string name="reminderDescription">Dodajte obvestila za opomnik o roku za to nalogo na tej napravi.</string>
+    <string name="a11y_addReminder">Dodaj opomnik</string>
+    <string name="a11y_removeReminder">Odstrani opomnik</string>
+    <string name="reminderBefore">%s pred</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minuta</item>
+        <item quantity="other">%d minut</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 ura</item>
+        <item quantity="other">%d ur</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dan</item>
+        <item quantity="other">%d dni(-evi)</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 teden</item>
+        <item quantity="other">%d tednov</item>
+    </plurals>
+    <string name="reminderCustom">Po meri</string>
+    <string name="customReminderTitle">Opomnik po meri</string>
+    <string name="customReminderQuantityHint">Količina</string>
+    <string name="customReminderMinutes">Minut pred</string>
+    <string name="customReminderHours">Ur pred</string>
+    <string name="customReminderDays">Dni pred</string>
+    <string name="customReminderWeeks">Tednov pred</string>
+    <string name="reminderNotificationChannelName">Obvestila za opomnik</string>
+    <string name="reminderNotificationChannelDescription">Obvestila Canvas za opomnike za naloge</string>
+    <string name="reminderNotificationTitle">Opomnik za rok</string>
+    <string name="reminderNotificationDescription">Ta naloga ima rok čez %s: %s</string>
+    <string name="reminderInPast">Za opomnik izberite čas v prihodnosti!</string>
+    <string name="reminderAlreadySet">Za ta čas ste že nastavili opomnik</string>
+    <string name="deleteReminderTitle">Odstrani opomnik</string>
+    <string name="deleteReminderMessage">Ali ste prepričani, da želite ta opomnik odstraniti?</string>
+    <string name="reminderPermissionNotGrantedError">Za to dejanje morate omogočiti natančno dovoljenje za alarm</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Za naslove URL, ki uporabljajo »http://«, predogled ni na voljo.</string>
     <string name="submissionUrlNotAUrlError">Vnesite veljaven naslov URL.</string>
@@ -1481,4 +1518,5 @@
         <item quantity="other">%d predmetov je bilo sinhroniziranih.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Dodatna vsebina predmeta</string>
+    <string name="failedToUpdateDashboardOrder">Vrstnega reda kartic nadzorne plošče ni bilo mogoče posodobiti</string>
 </resources>

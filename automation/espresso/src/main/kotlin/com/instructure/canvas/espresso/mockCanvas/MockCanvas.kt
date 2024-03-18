@@ -375,7 +375,7 @@ fun MockCanvas.Companion.init(
                     totalStudents = studentUsers.count()
             )
         }
-        val course = data.addCourse(
+        data.addCourse(
                 isFavorite = it < favoriteCourseCount,
                 id = courseId,
                 section = section,
@@ -827,24 +827,24 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
 
     for (i in 0 until assignmentCountPerGroup) {
 
-        val overdueAssignment = addAssignment(
+        addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL),
                 name = Randomizer.randomAssignmentName(),
                 dueAt = pastDueDate,
                 assignmentGroupId = overdueAssignmentGroup.id
         )
-        val upcomingAssignment = addAssignment(
+        addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL),
                 name = Randomizer.randomAssignmentName(),
                 dueAt = futureDueDate,
                 assignmentGroupId = upcomingAssignmentGroup.id
         )
 
-        val undatedAssignment = addAssignment(
+        addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL),
                 name = Randomizer.randomAssignmentName(),
                 dueAt = null,
                 assignmentGroupId = undatedAssignmentGroup.id
@@ -852,12 +852,12 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
 
         val pastAssignment = addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL),
                 name = Randomizer.randomAssignmentName(),
                 dueAt = pastDueDate,
                 assignmentGroupId = pastAssignmentGroup.id
         )
-        val pastSubmission = addSubmissionForAssignment(
+        addSubmissionForAssignment(
                 assignmentId = pastAssignment.id,
                 userId = users.values.first().id,
                 type = Assignment.SubmissionType.ONLINE_URL.apiString,
@@ -874,13 +874,13 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
  */
 fun MockCanvas.addAssignment(
     courseId: Long,
-    submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+    submissionTypeList: List<Assignment.SubmissionType> = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
     assignmentGroupId: Long = newItemId(),
     isQuizzesNext: Boolean = false,
     lockInfo : LockInfo? = null,
     userSubmitted: Boolean = false,
     dueAt: String? = null,
-    name: String = Randomizer.randomCourseName(),
+    name: String = Randomizer.randomAssignmentName(),
     pointsPossible: Int = 10,
     description: String = "",
     lockAt: String? = null,
@@ -889,12 +889,13 @@ fun MockCanvas.addAssignment(
     gradingType: String = "percent"
 ) : Assignment {
     val assignmentId = newItemId()
+    val submissionTypeListRawStrings = submissionTypeList.map { it.apiString }
     var assignment = Assignment(
             id = assignmentId,
             assignmentGroupId = assignmentGroupId,
             courseId = courseId,
             name = name,
-            submissionTypesRaw = listOf(submissionType.apiString),
+            submissionTypesRaw = submissionTypeListRawStrings,
             lockInfo = lockInfo,
             lockedForUser = lockInfo != null,
             userSubmitted = userSubmitted,
@@ -921,7 +922,7 @@ fun MockCanvas.addAssignment(
         assignmentGroups[courseId] = assignmentGroupList
     }
 
-    var group = assignmentGroupList.find { it.id == assignmentGroupId }
+    val group = assignmentGroupList.find { it.id == assignmentGroupId }
     if (group == null) {
         assignmentGroupList.add(AssignmentGroup(id = assignmentGroupId, assignments = listOf(assignment)))
     } else {
@@ -941,6 +942,45 @@ fun MockCanvas.addAssignment(
     return assignment
 }
 
+/**
+ * Adds multiple (type) submissions to the assignment submission map.
+ */
+fun MockCanvas.addSubmissionsForAssignment(
+    assignmentId: Long,
+    userId: Long,
+    types: List<String>,
+    body: String? = null,
+    url: String? = null,
+    attachment: Attachment? = null,
+    comment: SubmissionComment? = null,
+    state: String = "submitted",
+    grade: String? = null,
+    attempt: Long = 1,
+    score: Double? = null,
+    excused: Boolean = false): MutableList<Submission> {
+
+    val submissionList = mutableListOf<Submission>()
+    types.forEach { type ->
+        val submission = addSubmissionForAssignment(
+            assignmentId,
+            userId,
+            type,
+            body,
+            url,
+            attachment,
+            comment,
+            state,
+            grade,
+            attempt,
+            score,
+            excused
+        )
+        submissionList.add(submission)
+    }
+
+    return submissionList
+
+}
 /**
  * Adds a submission to the assignment submission map.
  */
@@ -1253,7 +1293,7 @@ fun MockCanvas.addFolderToCourse(
         groupId: Long? = null
 ) : Long {
     // Find your root folder
-    var rootFolder = getRootFolder(courseId = courseId, groupId = groupId)
+    val rootFolder = getRootFolder(courseId = courseId, groupId = groupId)
 
     // Now create our folder metadata
     val newFolderId = newItemId()
@@ -1298,12 +1338,13 @@ fun MockCanvas.addFileToFolder(
         fileContent: String = Randomizer.randomPageBody(),
         contentType: String = "text/plain",
         url: String = "",
-        fileId: Long = newItemId()
+        fileId: Long = newItemId(),
+        visibilityLevel: String = "inherit"
 ) : Long {
     if(courseId == null && folderId == null) {
         throw Exception("Either courseId or folderId must be non-null")
     }
-    var rootFolder = getRootFolder(courseId = courseId, folderId = folderId)
+    val rootFolder = getRootFolder(courseId = courseId, folderId = folderId)
 
     // Now create our file metadata
     val fileMetadataItem = FileFolder(
@@ -1312,7 +1353,8 @@ fun MockCanvas.addFileToFolder(
             size = fileContent.length.toLong(),
             displayName = displayName,
             contentType = contentType,
-            url = if(url.isEmpty()) "https://mock-data.instructure.com/files/$fileId/preview" else url
+            url = if(url.isEmpty()) "https://mock-data.instructure.com/files/$fileId/preview" else url,
+            visibilityLevel = visibilityLevel
     )
 
     // And record it for the folder
@@ -1328,8 +1370,6 @@ fun MockCanvas.addFileToFolder(
     fileContents[fileId] = fileContent
 
     return fileId
-
-
 }
 /**
  * Creates a new file for the specified course, and records it properly in MockCanvas.
@@ -1338,21 +1378,23 @@ fun MockCanvas.addFileToFolder(
  */
 fun MockCanvas.addFileToCourse(
         courseId: Long,
-        displayName: String,
+        displayName: String = Randomizer.randomPageTitle(),
         fileContent: String = Randomizer.randomPageBody(),
         contentType: String = "text/plain",
         groupId: Long? = null,
         url: String = "",
-        fileId: Long = newItemId()
+        fileId: Long = newItemId(),
+        visibilityLevel: String = "inherit"
 ): Long {
-    var rootFolder = getRootFolder(courseId = courseId, groupId = groupId)
+    val rootFolder = getRootFolder(courseId = courseId, groupId = groupId)
     return addFileToFolder(
             folderId = rootFolder.id,
             displayName = displayName,
             fileContent = fileContent,
             contentType = contentType,
             url = url,
-            fileId = fileId
+            fileId = fileId,
+            visibilityLevel = visibilityLevel
     )
 }
 
@@ -1495,6 +1537,7 @@ fun MockCanvas.addItemToModule(
         course: Course,
         moduleId: Long,
         item: Any,
+        contentId: Long = 0,
         published: Boolean = true,
         moduleContentDetails: ModuleContentDetails? = null
 ) : ModuleItem {
@@ -1559,11 +1602,12 @@ fun MockCanvas.addItemToModule(
             // htmlUrl populated in order to get external url module items to work.
             url = itemUrl,
             htmlUrl = itemUrl,
+            contentId = contentId,
             moduleDetails = moduleContentDetails
     )
 
     // Copy/update/replace the module
-    var newItemList = module.items.toMutableList()
+    val newItemList = module.items.toMutableList()
     newItemList.add(result)
     val changedModule = module.copy(
             items = newItemList
@@ -1697,7 +1741,7 @@ fun MockCanvas.addQuestionToQuiz(
 fun MockCanvas.addQuizSubmission(quiz: Quiz, user: User, state: String = "untaken", grade: String? = null) : QuizSubmission {
 
     val now = Calendar.getInstance().time.time // ms
-    var quizSubmission = QuizSubmission(
+    val quizSubmission = QuizSubmission(
             id = newItemId(),
             quizId = quiz.id,
             userId = user.id,
@@ -1710,7 +1754,7 @@ fun MockCanvas.addQuizSubmission(quiz: Quiz, user: User, state: String = "untake
 
     // Don't forget to add some sort of submission to the related assignment
     if(quiz.assignmentId != 0L) {
-        val assignment = assignments[quiz.assignmentId]
+        assignments[quiz.assignmentId]
         this.addSubmissionForAssignment(assignmentId = quiz.assignmentId, userId = user.id, type = "online_quiz", state = state, grade = grade)
     }
 

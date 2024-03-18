@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Ar goll</string>
     <string name="gradedSubmissionLabel">Wedi graddio</string>
 
+    <string name="reminderTitle">Nodyn atgoffa</string>
+    <string name="reminderDescription">Ychwanegu hysbysiad atgoffa o ddyddiad erbyn am yr aseiniad hwn ar y ddyfais hon.</string>
+    <string name="a11y_addReminder">Ychwanegu nodyn atgoffa</string>
+    <string name="a11y_removeReminder">Tynnu nodyn atgoffa</string>
+    <string name="reminderBefore">%s Cyn</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 munud</item>
+        <item quantity="other">%d Munud</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 awr</item>
+        <item quantity="other">%d Awr</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 diwrnod</item>
+        <item quantity="other">%d Diwrnod</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Wythnos</item>
+        <item quantity="other">%d Wythnos</item>
+    </plurals>
+    <string name="reminderCustom">Personol</string>
+    <string name="customReminderTitle">Nodyn Atgoffa Personol</string>
+    <string name="customReminderQuantityHint">Swm</string>
+    <string name="customReminderMinutes">Munud Cyn</string>
+    <string name="customReminderHours">Awr Cyn</string>
+    <string name="customReminderDays">Diwrnod Cyn</string>
+    <string name="customReminderWeeks">Wythnos Cyn</string>
+    <string name="reminderNotificationChannelName">Hysbysiadau Atgoffa</string>
+    <string name="reminderNotificationChannelDescription">Hysbysiadau Canvas ar gyfer nodiadau atgoffa o aseiniad</string>
+    <string name="reminderNotificationTitle">Nodyn Atgoffa o Ddyddiad Erbyn</string>
+    <string name="reminderNotificationDescription">Mae’r aseiniad hwn angen ei gyflwyno erbyn mewn %s: %s</string>
+    <string name="reminderInPast">Dewiswch amser yn y dyfodol ar gyfer eich nodyn atgoffa!</string>
+    <string name="reminderAlreadySet">Rydych chi eisoes wedi gosod nodyn atgoffa ar gyfer yr amser hwn</string>
+    <string name="deleteReminderTitle">Dileu Nodyn Atgoffa</string>
+    <string name="deleteReminderMessage">Ydych chi’n siŵr eich bod am ddileu’r nodyn atgoffa hwn?</string>
+    <string name="reminderPermissionNotGrantedError">Mae angen i chi alluogi hawl larwm penodol ar gyfer y cam gweithredu hwn</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Does dim rhagolwg ar gael ar gyfer URL sy\'n defnyddio \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Rhowch URL dilys</string>
@@ -1481,4 +1518,5 @@
         <item quantity="other">%d cwrs wedi cael eu cysoni.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Cynnwys cwrs ychwanegol</string>
+    <string name="failedToUpdateDashboardOrder">Wedi methu diweddaru trefn cardiau’r Dangosfwrdd</string>
 </resources>

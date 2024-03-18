@@ -20,6 +20,7 @@ import android.util.Log
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.pandautils.R
@@ -33,20 +34,21 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflineSyncSettingsE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.OFFLINE_CONTENT, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.OFFLINE_CONTENT, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun offlineSyncSettingsE2ETest() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -110,13 +112,13 @@ class OfflineSyncSettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: ${student.domain}.")
+        Log.d(STEP_TAG, "Enter domain: '${student.domain}'.")
         loginFindSchoolPage.enterDomain(student.domain)
 
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         loginSignInPage.loginAs(student)
         dashboardPage.waitForRender()
 

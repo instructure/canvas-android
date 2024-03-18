@@ -101,7 +101,7 @@ abstract class NotificationPreferencesViewModel (
 
         val categories = hashMapOf<NotificationCategoryHeaderViewData, ArrayList<NotificationCategoryItemViewModel>>()
 
-        for ((categoryName, prefs) in items.groupBy { it.category }) {
+        for ((categoryName, prefs) in items.filterNotificationPreferences().groupBy { it.category }) {
             val categoryHelper = categoryHelperMap[categoryName] ?: continue
             val header = groupHeaderMap[categoryHelper.categoryGroup] ?: continue
 
@@ -131,4 +131,6 @@ abstract class NotificationPreferencesViewModel (
     }
 
     abstract fun createCategoryItemViewModel(viewData: NotificationCategoryViewData): NotificationCategoryItemViewModel
+
+    open fun List<NotificationPreference>.filterNotificationPreferences(): List<NotificationPreference> = this
 }

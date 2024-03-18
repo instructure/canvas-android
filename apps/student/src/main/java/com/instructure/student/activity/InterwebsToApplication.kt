@@ -27,11 +27,13 @@ import android.view.View
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -45,6 +47,7 @@ import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
@@ -65,12 +68,15 @@ class InterwebsToApplication : AppCompatActivity() {
     @Inject
     lateinit var typefaceBehavior: TypefaceBehavior
 
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
     private var loadingJob: Job? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.interwebs_to_application)
+        setContentView(binding.root)
         loadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         loadingBinding.loadingRoute.visibility = View.VISIBLE
 
@@ -106,7 +112,13 @@ class InterwebsToApplication : AppCompatActivity() {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if(signedIn) { // If the user is already signed in, use the QR Switch
-                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data, canvasForElementaryFeatureFlag = featureFlagProvider.getCanvasForElementaryFlag(), typefaceBehavior = typefaceBehavior).execute()
+                        StudentLogoutTask(
+                            type = LogoutTask.Type.QR_CODE_SWITCH,
+                            uri = data,
+                            canvasForElementaryFeatureFlag = featureFlagProvider.getCanvasForElementaryFlag(),
+                            typefaceBehavior = typefaceBehavior,
+                            alarmScheduler = alarmScheduler
+                        ).execute()
                         finish()
                         return@tryWeave
                     }
@@ -116,6 +128,13 @@ class InterwebsToApplication : AppCompatActivity() {
                     }
 
                     val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
+
+                    val authResult = apiAsync { OAuthManager.getAuthenticatedSession(ApiPrefs.fullDomain, it) }.await()
+                    if (authResult.isSuccess) {
+                        authResult.dataOrNull?.sessionUrl?.let {
+                            binding.dummyWebView.loadUrl(it)
+                        }
+                    }
 
                     val canvasForElementary = featureFlagProvider.getCanvasForElementaryFlag()
 

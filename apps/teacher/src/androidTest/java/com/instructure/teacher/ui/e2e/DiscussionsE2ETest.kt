@@ -31,6 +31,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DiscussionsE2ETest : TeacherTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -47,11 +48,11 @@ class DiscussionsE2ETest : TeacherTest() {
         val discussion = data.discussionsList[0]
         val discussion2 = data.discussionsList[1]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open ${course.name} course.")
+        Log.d(STEP_TAG,"Open '${course.name}' course.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.waitForRender()
 
@@ -90,7 +91,7 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertGroupDisplayed("Pinned")
         discussionsListPage.assertDiscussionInGroup("Pinned", discussion2.title)
 
-        Log.d(STEP_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discusssions are displayed.")
+        Log.d(STEP_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discussions are displayed.")
         discussionsListPage.assertHasDiscussion(newTitle)
         discussionsListPage.assertHasDiscussion(discussion2)
 

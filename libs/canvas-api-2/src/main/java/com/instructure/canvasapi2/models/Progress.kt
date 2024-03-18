@@ -33,7 +33,7 @@ data class Progress(
         @SerializedName("workflow_state")
         private val workflowState: String = "", // One of 'queued', 'running', 'completed', 'failed'
         val tag: String = "", // The type of operation
-        val completion: Long = 0, // Percent completed
+        val completion: Float = 0f, // Percent completed
         val message: String? = null // Optional details about the job
 ) : CanvasModel<Progress>() {
     val isQueued: Boolean get() = workflowState == "queued"

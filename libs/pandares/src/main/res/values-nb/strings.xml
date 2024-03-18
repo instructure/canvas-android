@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Mangler</string>
     <string name="gradedSubmissionLabel">Vurdert</string>
 
+    <string name="reminderTitle">Påminnelse</string>
+    <string name="reminderDescription">Legg til varsler for påminnelse om forfallsdato for oppgaven på denne enheten.</string>
+    <string name="a11y_addReminder">Legg til påminnelse</string>
+    <string name="a11y_removeReminder">Fjern påminnelse</string>
+    <string name="reminderBefore">%s før</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minutt</item>
+        <item quantity="other">%d minutter</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 time</item>
+        <item quantity="other">%d timer</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dag</item>
+        <item quantity="other">%d dager</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 uke</item>
+        <item quantity="other">%d uker</item>
+    </plurals>
+    <string name="reminderCustom">Tilpasset</string>
+    <string name="customReminderTitle">Tilpasset påminnelse</string>
+    <string name="customReminderQuantityHint">Antall</string>
+    <string name="customReminderMinutes">Minutter før</string>
+    <string name="customReminderHours">Timer før</string>
+    <string name="customReminderDays">Dager før</string>
+    <string name="customReminderWeeks">Uker før</string>
+    <string name="reminderNotificationChannelName">Påminnelsesvarslinger</string>
+    <string name="reminderNotificationChannelDescription">Canvas-varslinger for oppgavepåminnelser.</string>
+    <string name="reminderNotificationTitle">Påminnelse om forfallsdato</string>
+    <string name="reminderNotificationDescription">Denne oppgaven har frist om %s: %s</string>
+    <string name="reminderInPast">Velg en fremtidig forfallsdato for påminnelsen din!</string>
+    <string name="reminderAlreadySet">Du har allerede angitt en påminnelse for dette tidspunktet</string>
+    <string name="deleteReminderTitle">Slett påminnelse</string>
+    <string name="deleteReminderMessage">Er du sikker på at du vil slette denne påminnelsen?</string>
+    <string name="reminderPermissionNotGrantedError">Du må aktivere nøyaktig alarmtillatelse for denne handlingen.</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Det er ingen forhåndsvisnings-URL ved bruk av \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Skriv inn gyldig URL</string>
@@ -1482,4 +1519,5 @@
         <item quantity="other">%d emner er synkronisert.</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Ytterligere emneinnhold</string>
+    <string name="failedToUpdateDashboardOrder">Kunne ikke oppdatere rekkefølge på Dashbord-kort</string>
 </resources>

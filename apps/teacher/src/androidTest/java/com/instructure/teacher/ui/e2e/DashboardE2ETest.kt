@@ -86,7 +86,7 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertDisplaysCourse(course2)
         dashboardPage.assertCourseNotDisplayed(course1)
 
-        Log.d(STEP_TAG,"Opens ${course2.name} course and assert if Course Details Page has been opened. Navigate back to Dashboard Page.")
+        Log.d(STEP_TAG,"Opens '${course2.name}' course and assert if Course Details Page has been opened. Navigate back to Dashboard Page.")
         dashboardPage.assertOpensCourse(course2)
         Espresso.pressBack()
 
@@ -146,11 +146,12 @@ class DashboardE2ETest : TeacherTest() {
     @Test
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testHelpMenuE2E() {
+
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
