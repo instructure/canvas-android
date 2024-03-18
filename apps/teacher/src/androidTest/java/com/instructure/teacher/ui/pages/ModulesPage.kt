@@ -3,6 +3,7 @@ package com.instructure.teacher.ui.pages
 import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasContentDescription
@@ -164,6 +165,10 @@ class ModulesPage : BasePage() {
 
     fun assertSnackbarText(@StringRes snackbarText: Int) {
         onView(withId(com.google.android.material.R.id.snackbar_text) + withText(snackbarText)).assertDisplayed()
+    }
+
+    fun assertSnackbarContainsText(snackbarText: String) {
+        onView(withId(com.google.android.material.R.id.snackbar_text) + containsTextCaseInsensitive(snackbarText)).assertDisplayed()
     }
 
     fun assertModuleItemHidden(moduleItemName: String) {

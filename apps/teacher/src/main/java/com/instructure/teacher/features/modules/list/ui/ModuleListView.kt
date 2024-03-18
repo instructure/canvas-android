@@ -243,7 +243,7 @@ class ModuleListView(
             .showThemed()
     }
 
-    fun showSnackbar(@StringRes message: Int, params: Array<Any>) {
+    fun showSnackbar(@StringRes message: Int, params: Array<Any> = emptyArray()) {
         Snackbar.make(binding.root, context.getString(message, *params), Snackbar.LENGTH_SHORT).show()
     }
 
