@@ -541,6 +541,15 @@ class ModuleListEffectHandlerTest : Assert() {
         confirmVerified(consumer)
     }
 
+    @Test
+    fun `ShowSnackbar with params calls showSnackbar on view`() {
+        val message = 123
+        val params = arrayOf<Any>("param1", "param2")
+        connection.accept(ModuleListEffect.ShowSnackbar(message, params))
+        verify(timeout = 100) { view.showSnackbar(message, params) }
+        confirmVerified(view)
+    }
+
     private fun makeLinkHeader(nextUrl: String) =
         mapOf("Link" to """<$nextUrl>; rel="next"""").toHeaders()
 
