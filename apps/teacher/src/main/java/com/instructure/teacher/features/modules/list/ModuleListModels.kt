@@ -61,6 +61,7 @@ sealed class ModuleListEvent {
 
     data class UpdateFileModuleItem(val fileId: Long, val contentDetails: ModuleContentDetails) : ModuleListEvent()
     object BulkUpdateCancelled : ModuleListEvent()
+    data class ShowSnackbar(@StringRes val message: Int, val params: Array<Any>): ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -100,7 +101,7 @@ sealed class ModuleListEffect {
         val published: Boolean
     ) : ModuleListEffect()
 
-    data class ShowSnackbar(@StringRes val message: Int) : ModuleListEffect()
+    data class ShowSnackbar(@StringRes val message: Int, val params: Array<Any> = emptyArray()) : ModuleListEffect()
 
     data class UpdateFileModuleItem(
         val fileId: Long,

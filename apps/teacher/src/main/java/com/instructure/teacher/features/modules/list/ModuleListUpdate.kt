@@ -307,6 +307,11 @@ class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleList
                 )
                 return Next.next(newModel, setOf(effect))
             }
+
+            is ModuleListEvent.ShowSnackbar -> {
+            val effect = ModuleListEffect.ShowSnackbar(event.message, event.params)
+                return Next.dispatch(setOf(effect))
+            }
         }
     }
 

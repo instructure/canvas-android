@@ -17,8 +17,6 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 
@@ -96,7 +94,9 @@ sealed class ModuleListItemData {
 
         val contentDetails: ModuleContentDetails? = null,
 
-        val contentId: Long? = null
+        val contentId: Long? = null,
+
+        val unpublishable: Boolean = true
     ) : ModuleListItemData()
 
 }

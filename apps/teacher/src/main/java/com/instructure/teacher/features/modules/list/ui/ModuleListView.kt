@@ -115,6 +115,10 @@ class ModuleListView(
             )
         }
 
+        override fun showSnackbar(@StringRes message: Int, params: Array<Any>) {
+            consumer?.accept(ModuleListEvent.ShowSnackbar(message, params))
+        }
+
         override fun updateModuleItem(itemId: Long, isPublished: Boolean) {
             val title = if (isPublished) R.string.publishDialogTitle else R.string.unpublishDialogTitle
             val message =
@@ -239,8 +243,8 @@ class ModuleListView(
             .showThemed()
     }
 
-    fun showSnackbar(@StringRes message: Int) {
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    fun showSnackbar(@StringRes message: Int, params: Array<Any>) {
+        Snackbar.make(binding.root, context.getString(message, *params), Snackbar.LENGTH_SHORT).show()
     }
 
     fun showUpdateFileDialog(fileId: Long, contentDetails: ModuleContentDetails) {

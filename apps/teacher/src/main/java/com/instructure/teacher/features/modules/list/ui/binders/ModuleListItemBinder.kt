@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.binding.setTint
-import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
@@ -35,9 +34,9 @@ import com.instructure.teacher.adapters.ListItemBinder
 import com.instructure.teacher.databinding.AdapterModuleItemBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
-import com.instructure.teacher.features.modules.list.ui.file.UpdateFileDialogFragment
 
-class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, ModuleListCallback>() {
+class ModuleListItemBinder :
+    ListItemBinder<ModuleListItemData.ModuleItemData, ModuleListCallback>() {
 
     override val layoutResId = R.layout.adapter_module_item
 
@@ -64,16 +63,27 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
                 setImageResource(statusIcon.icon)
                 setTint(statusIcon.tint)
                 setVisible(!item.isLoading)
+                alpha = if (item.unpublishable || item.type == ModuleItem.Type.File) 1f else 0.5f
             }
             moduleItemLoadingView.setVisible(item.isLoading)
 
             overflow.onClickWithRequireNetwork {
                 if (item.type == ModuleItem.Type.File) {
                     item.contentId?.let {
-                        callback.updateFileModuleItem(item.contentId, item.contentDetails ?: ModuleContentDetails())
+                        callback.updateFileModuleItem(
+                            item.contentId,
+                            item.contentDetails ?: ModuleContentDetails()
+                        )
                     }
                 } else {
-                    showModuleItemActions(it, item, callback)
+                    if (!item.unpublishable) {
+                        callback.showSnackbar(
+                            R.string.error_unpublishable_module_item,
+                            arrayOf(item.title.orEmpty())
+                        )
+                    } else {
+                        showModuleItemActions(it, item, callback)
+                    }
                 }
             }
 
@@ -96,16 +106,20 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
                     tint = R.color.textWarning
                     contentDescription = R.string.a11y_scheduled
                 } else {
-                    icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
+                    icon =
+                        if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
                     tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
-                    contentDescription = if (data.isPublished == true) R.string.a11y_published else R.string.a11y_unpublished
+                    contentDescription =
+                        if (data.isPublished == true) R.string.a11y_published else R.string.a11y_unpublished
                 }
             }
 
             else -> {
-                icon = if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
+                icon =
+                    if (data.isPublished == true) R.drawable.ic_complete_solid else R.drawable.ic_no
                 tint = if (data.isPublished == true) R.color.textSuccess else R.color.textDark
-                contentDescription = if (data.isPublished == true) R.string.a11y_published else R.string.a11y_unpublished
+                contentDescription =
+                    if (data.isPublished == true) R.string.a11y_published else R.string.a11y_unpublished
             }
         }
 
@@ -145,7 +159,8 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             }
         }
 
-        view.contentDescription = view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
+        view.contentDescription =
+            view.context.getString(R.string.a11y_contentDescription_moduleOptions, item.title)
         popup.show()
     }
 }
