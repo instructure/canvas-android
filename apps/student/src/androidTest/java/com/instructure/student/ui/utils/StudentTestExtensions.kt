@@ -23,6 +23,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import androidx.fragment.app.FragmentActivity
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -56,6 +57,10 @@ fun StudentTest.slowLogIn(enrollmentType: String = EnrollmentTypes.STUDENT_ENROL
     loginFindSchoolPage.clickToolbarNextMenuItem()
     loginSignInPage.loginAs(user)
     return user
+}
+
+fun StudentTest.openOverflowMenu() {
+    Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
 }
 
 fun seedDataForK5(
