@@ -20,6 +20,7 @@ import android.view.View
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.pandautils.binding.BindableViewHolder
@@ -81,13 +82,13 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         var i: Int = 0
         while (true) {
             scrollToPosition(i)
-            Thread.sleep(500)
+            Thread.sleep(300)
             try {
                 if(target == null) onView(withParent(itemId) + withText(itemName)).scrollTo()
                 else onView(target + withText(itemName)).scrollTo()
                 break
             } catch(e: NoMatchingViewException) {
-                i++
+                i+=2
             }
         }
     }
@@ -100,16 +101,22 @@ class SchedulePage : BasePage(R.id.schedulePage) {
         waitForView(withAncestor(R.id.plannerItems) + withText(scheduleItemName)).assertDisplayed()
     }
 
-    fun assertMissingItemDisplayed(itemName: String, courseName: String, pointsPossible: String) {
+    fun assertMissingItemDisplayedOnPlannerItem(itemName: String, courseName: String, pointsPossible: String) {
+        val titleMatcher = withId(R.id.title) + withText(itemName)
+        val courseNameMatcher = withId(R.id.scheduleCourseHeaderText) + withText(courseName)
+        val pointsPossibleMatcher = withId(R.id.points) + withText(pointsPossible)
+
+        onView(withId(R.id.plannerItems) + hasSibling(courseNameMatcher) + withDescendant(titleMatcher)  + withDescendant(pointsPossibleMatcher) + withDescendant(withText(R.string.missingAssignment)))
+            .scrollTo()
+            .assertDisplayed()
+    }
+
+    fun assertMissingItemDisplayedInMissingItemSummary(itemName: String, courseName: String, pointsPossible: String) {
         val titleMatcher = withId(R.id.title) + withText(itemName)
         val courseNameMatcher = withId(R.id.courseName) + withText(courseName)
         val pointsPossibleMatcher = withId(R.id.points) + withText(pointsPossible)
 
-        onView(
-            withId(R.id.missingItemLayout) + withDescendant(titleMatcher) + withDescendant(
-                courseNameMatcher
-            ) + withDescendant(pointsPossibleMatcher)
-        )
+        onView(withId(R.id.missingItemLayout) + withDescendant(courseNameMatcher) + withDescendant(titleMatcher)  + withDescendant(pointsPossibleMatcher))
             .scrollTo()
             .assertDisplayed()
     }
