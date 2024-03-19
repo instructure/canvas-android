@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -94,9 +95,7 @@ class CalendarViewModel @Inject constructor(
         loadVisibleMonths()
     }
 
-    private suspend fun loadFilters() {
-        val filters = initFiltersFromDb()
-
+    private suspend fun loadFilters(filtersFromDb: CalendarFilterEntity?) {
         val result = calendarRepository.getCanvasContexts()
         if (result is DataResult.Success) {
             val canvasContexts = result.data
@@ -104,7 +103,7 @@ class CalendarViewModel @Inject constructor(
             val courseIds = canvasContexts[CanvasContext.Type.COURSE]?.map { it.contextId } ?: emptyList()
             val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
 
-            if (filters == null && apiPrefs.user?.id != null) {
+            if (filtersFromDb == null && apiPrefs.user?.id != null) {
                     contextIdFilters.addAll(userIds)
                     contextIdFilters.addAll(courseIds)
                     contextIdFilters.addAll(groupIds)
@@ -140,12 +139,24 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun loadVisibleMonths() {
-        loadEventsForMonth(selectedDay)
-        loadEventsForMonth(selectedDay.plusMonths(1))
-        loadEventsForMonth(selectedDay.minusMonths(1))
+        viewModelScope.launch {
+            if (contextIdFilters.isEmpty()) {
+                val filters = initFiltersFromDb()
+                if (filters == null) {
+                    loadFilters(filters)
+                } else {
+                    // If we already have filters in the DB we can do this async
+                    async { loadFilters(filters) }
+                }
+            }
+
+            async { loadEventsForMonth(selectedDay) }
+            async { loadEventsForMonth(selectedDay.plusMonths(1)) }
+            async { loadEventsForMonth(selectedDay.minusMonths(1)) }
+        }
     }
 
-    private fun loadEventsForMonth(date: LocalDate) {
+    private suspend fun loadEventsForMonth(date: LocalDate) {
         val yearMonth = YearMonth.from(date)
         if (loadedMonths.contains(yearMonth)) return
 
@@ -155,8 +166,7 @@ class CalendarViewModel @Inject constructor(
         val endDate = date.plusMonths(1).withDayOfMonth(1).atStartOfDay()
 
         val daysToFetch = daysBetweenDates(startDate, endDate)
-        viewModelScope.tryLaunch {
-            loadFilters()
+        try {
             errorDays.removeAll(daysToFetch)
             loadingDays.addAll(daysToFetch)
             _uiState.emit(createNewUiState())
@@ -172,7 +182,7 @@ class CalendarViewModel @Inject constructor(
 
             storeResults(result)
             _uiState.emit(createNewUiState())
-        } catch {
+        } catch (e: Exception) {
             loadedMonths.remove(yearMonth)
             loadingDays.removeAll(daysToFetch)
             errorDays.addAll(daysToFetch)
