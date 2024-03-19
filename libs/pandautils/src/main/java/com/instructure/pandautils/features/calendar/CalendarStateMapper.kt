@@ -71,7 +71,7 @@ class CalendarStateMapper(private val clock: Clock) {
             val previousMonthDays = previousMonthFirstVisibleDay.dayOfMonth
             for (day in (previousMonthDays) until previousMonthDays + firstDayOfWeekIndex) {
                 val dateForDay = LocalDate.of(previousMonthYear, previousMonth, day)
-                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0))
+                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0, getContentDescriptionForDate(dateForDay)))
             }
         }
 
@@ -80,7 +80,7 @@ class CalendarStateMapper(private val clock: Clock) {
             val dateForDay = LocalDate.of(date.year, date.month, day)
             val enabled =
                 dateForDay.dayOfWeek != DayOfWeek.SUNDAY && dateForDay.dayOfWeek != DayOfWeek.SATURDAY
-            currentWeek.add(CalendarDayUiState(day, dateForDay, enabled, eventIndicators[dateForDay] ?: 0))
+            currentWeek.add(CalendarDayUiState(day, dateForDay, enabled, eventIndicators[dateForDay] ?: 0, getContentDescriptionForDate(dateForDay)))
             if (currentWeek.size == 7) {
                 calendarRows.add(CalendarRowUiState(currentWeek.toList()))
                 currentWeek.clear()
@@ -94,7 +94,7 @@ class CalendarStateMapper(private val clock: Clock) {
             val daysToAdd = 7 - currentWeek.size
             for (day in 1..daysToAdd) {
                 val dateForDay = LocalDate.of(nextMonthYear, nextMonth, day)
-                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0))
+                currentWeek.add(CalendarDayUiState(day, dateForDay, enabled = false, eventIndicators[dateForDay] ?: 0, getContentDescriptionForDate(dateForDay)))
             }
             calendarRows.add(CalendarRowUiState(currentWeek.toList()))
         }
@@ -103,5 +103,12 @@ class CalendarStateMapper(private val clock: Clock) {
             if (fullMonth) calendarRows else calendarRows.filter { it.days.any { day -> day.date == date } }
 
         return CalendarPageUiState(finalCalendarRows)
+    }
+
+    private fun getContentDescriptionForDate(localDate: LocalDate): String {
+        val dayOfWeek = localDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val month = localDate.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val day = localDate.dayOfMonth
+        return "$dayOfWeek, $month $day"
     }
 }

@@ -51,7 +51,8 @@ data class CalendarDayUiState(
     val dayNumber: Int,
     val date: LocalDate = LocalDate.now(),
     val enabled: Boolean = true,
-    val indicatorCount: Int = 0
+    val indicatorCount: Int = 0,
+    val contentDescription: String
 ) {
     val today: Boolean
         get() {

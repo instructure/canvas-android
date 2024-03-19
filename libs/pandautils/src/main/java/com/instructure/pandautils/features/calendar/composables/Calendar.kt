@@ -47,7 +47,6 @@ import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,7 +63,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -279,7 +281,7 @@ fun CalendarBody(
 @Composable
 fun DayHeaders(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.clearAndSetSemantics {  }, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val daysOfWeek = DayOfWeek.values()
         // Shift the starting point to Sunday
@@ -360,17 +362,26 @@ fun DaysOfWeekRow(
                     .width(32.dp)
                     .wrapContentHeight()
             ) {
+                val dayContentDescription =
+                    dayState.contentDescription + " " + pluralStringResource(
+                        id = R.plurals.a11y_calendar_day_event_count,
+                        dayState.indicatorCount,
+                        dayState.indicatorCount
+                    )
                 Text(
                     text = dayState.dayNumber.toString(),
                     fontSize = 16.sp,
                     color = textColor,
-                    modifier = dayModifier,
-                    textAlign = TextAlign.Center
+                    modifier = dayModifier.semantics {
+                        contentDescription = dayContentDescription
+                    },
+                    textAlign = TextAlign.Center,
                 )
                 Row(
                     Modifier
                         .height(10.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clearAndSetSemantics { },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
