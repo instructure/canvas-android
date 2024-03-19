@@ -17,16 +17,20 @@
 
 package com.instructure.pandautils.features.calendarevent.createupdate
 
+import android.content.Context
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
+import org.threeten.bp.format.DateTimeFormatter
 
 
 data class CreateUpdateEventUiState(
     val title: String = "",
     val date: LocalDate = LocalDate.now(),
-    val startTime: LocalTime = LocalTime.of(12, 0),
-    val endTime: LocalTime = LocalTime.of(12, 0),
+    val startTime: LocalTime? = null,
+    val endTime: LocalTime? = null,
     val frequency: String = "",
     val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState(),
     val location: String = "",
@@ -35,12 +39,32 @@ data class CreateUpdateEventUiState(
     val saving: Boolean = false,
     val errorSnack: String? = null,
     val loadingCanvasContexts: Boolean = false,
-)
+) {
+    val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
+
+    fun formattedTime(context: Context, time: LocalTime) = time.format(
+        DateTimeFormatter.ofPattern(DateHelper.getPreferredTimeFormat(context).toPattern())
+    ).orEmpty()
+}
 
 sealed class CreateUpdateEventAction {
+    data class UpdateTitle(val title: String) : CreateUpdateEventAction()
+    data class UpdateDate(val date: LocalDate) : CreateUpdateEventAction()
+    data class UpdateStartTime(val time: LocalTime) : CreateUpdateEventAction()
+    data class UpdateEndTime(val time: LocalTime) : CreateUpdateEventAction()
+    data class UpdateFrequency(val frequency: String) : CreateUpdateEventAction()
+    data class UpdateCanvasContext(val canvasContext: CanvasContext) : CreateUpdateEventAction()
+    data class UpdateLocation(val location: String) : CreateUpdateEventAction()
+    data class UpdateAddress(val address: String) : CreateUpdateEventAction()
+    data class UpdateDetails(val details: String) : CreateUpdateEventAction()
+    data object Save : CreateUpdateEventAction()
+    data object SnackbarDismissed : CreateUpdateEventAction()
+    data object ShowSelectCalendarScreen : CreateUpdateEventAction()
+    data object HideSelectCalendarScreen : CreateUpdateEventAction()
+    data class CheckUnsavedChanges(val result: (Boolean) -> Unit) : CreateUpdateEventAction()
 
 }
 
 sealed class CreateUpdateEventViewModelAction {
-
+    data class RefreshCalendarDays(val days: List<LocalDate>) : CreateUpdateEventViewModelAction()
 }

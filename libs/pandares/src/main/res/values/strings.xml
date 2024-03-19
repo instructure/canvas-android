@@ -1660,5 +1660,14 @@
 
     <string name="createEventScreenTitle">New Event</string>
     <string name="editEventScreenTitle">Edit Event</string>
-
+    <string name="createEventTitleLabel">Title</string>
+    <string name="createEventDateLabel">Date</string>
+    <string name="createEventStartTimeLabel">From</string>
+    <string name="createEventEndTimeLabel">To</string>
+    <string name="createEventFrequencyLabel">Frequency</string>
+    <string name="createEventCalendarLabel">Calendar</string>
+    <string name="createEventLocationLabel">Location</string>
+    <string name="createEventAddressLabel">Address</string>
+    <string name="createEventDetailsLabel">Details</string>
+    <string name="eventSaveErrorMessage">There was an error saving this Event. Please check your connection and try again.</string>
 </resources>

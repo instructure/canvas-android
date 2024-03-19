@@ -92,6 +92,19 @@ object CalendarEventAPI {
                 @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
                 @Body body: String): Call<ScheduleItem>
 
+        @POST("calendar_events/")
+        suspend fun createCalendarEvent(
+            @Query(value = "calendar_event[context_code]") contextCode: String,
+            @Query(value = "calendar_event[title]", encoded = true) title: String,
+            @Query(value = "calendar_event[description]", encoded = true) description: String,
+            @Query(value = "calendar_event[start_at]") startDate: String,
+            @Query(value = "calendar_event[end_at]") endDate: String,
+            @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
+            @Query(value = "calendar_event[location_address]", encoded = true) locationAddress: String,
+            @Body body: String,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
+
         @GET("calendar_events/")
         fun getImportantDates(
                 @Query("start_date") startDate: String?,

@@ -17,12 +17,70 @@
 
 package com.instructure.pandautils.features.calendarevent.createupdate.composables
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.SelectCalendarScreen
+import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import com.instructure.pandautils.compose.composables.SimpleAlertDialog
+import com.instructure.pandautils.compose.getDatePickerDialog
+import com.instructure.pandautils.compose.getTimePickerDialog
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventAction
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventUiState
+import com.instructure.pandautils.utils.ThemePrefs
+import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
 
 
 @Composable
@@ -38,10 +96,11 @@ internal fun CreateUpdateEventScreenWrapper(
             SelectCalendarScreen(
                 uiState = uiState.selectCalendarUiState,
                 onCalendarSelected = {
-
+                    actionHandler(CreateUpdateEventAction.UpdateCanvasContext(it))
+                    actionHandler(CreateUpdateEventAction.HideSelectCalendarScreen)
                 },
                 navigationActionClick = {
-
+                    actionHandler(CreateUpdateEventAction.HideSelectCalendarScreen)
                 },
                 modifier = modifier
             )
@@ -65,5 +124,367 @@ internal fun CreateUpdateEventScreen(
     navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    
+    val snackbarHostState = remember { SnackbarHostState() }
+    val localCoroutineScope = rememberCoroutineScope()
+    if (uiState.errorSnack != null) {
+        LaunchedEffect(Unit) {
+            localCoroutineScope.launch {
+                val result = snackbarHostState.showSnackbar(uiState.errorSnack)
+                if (result == SnackbarResult.Dismissed) {
+                    actionHandler(CreateUpdateEventAction.SnackbarDismissed)
+                }
+            }
+        }
+    }
+
+    Scaffold(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
+        topBar = {
+            CreateUpdateEventTopAppBar(
+                title = title,
+                uiState = uiState,
+                actionHandler = actionHandler,
+                navigationAction = navigationAction
+            )
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        content = { padding ->
+            CreateUpdateEventContent(
+                uiState = uiState,
+                actionHandler = actionHandler,
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+            )
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun CreateUpdateEventTopAppBar(
+    title: String,
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
+    navigationAction: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val showUnsavedChangesDialog = remember { mutableStateOf(false) }
+    if (showUnsavedChangesDialog.value) {
+        SimpleAlertDialog(
+            dialogTitle = stringResource(id = R.string.exitWithoutSavingTitle),
+            dialogText = stringResource(id = R.string.exitWithoutSavingMessage),
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.exitUnsaved),
+            onDismissRequest = {
+                showUnsavedChangesDialog.value = false
+            },
+            onConfirmation = {
+                navigationAction()
+            }
+        )
+    }
+
+    CanvasAppBar(
+        title = title,
+        actions = {
+            if (uiState.saving) {
+                CircularProgressIndicator(
+                    color = colorResource(id = R.color.textDarkest),
+                    strokeWidth = 3.dp,
+                    modifier = Modifier.size(32.dp)
+                )
+            } else {
+                ActionsSegment(
+                    uiState = uiState,
+                    actionHandler = actionHandler
+                )
+            }
+        },
+        navigationActionClick = {
+            actionHandler(CreateUpdateEventAction.CheckUnsavedChanges {
+                showUnsavedChangesDialog.value = it
+                if (!it) navigationAction()
+            })
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ActionsSegment(
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val saveEnabled = uiState.title.isNotEmpty()
+    val focusManager = LocalFocusManager.current
+    TextButton(
+        onClick = {
+            focusManager.clearFocus()
+            actionHandler(CreateUpdateEventAction.Save)
+        },
+        enabled = saveEnabled,
+        modifier = modifier
+    ) {
+        Text(
+            text = stringResource(id = R.string.save),
+            color = Color(color = ThemePrefs.textButtonColor),
+            fontSize = 14.sp,
+            modifier = Modifier.alpha(if (saveEnabled) 1f else .4f)
+        )
+    }
+}
+
+@Composable
+private fun CreateUpdateEventContent(
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val datePickerDialog = remember {
+        getDatePickerDialog(
+            context = context,
+            date = uiState.date,
+            onDateSelected = {
+                actionHandler(CreateUpdateEventAction.UpdateDate(it))
+            }
+        )
+    }
+    val startTimePickerDialog = remember {
+        getTimePickerDialog(
+            context = context,
+            time = uiState.startTime ?: LocalTime.of(0, 0),
+            onTimeSelected = {
+                actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
+            }
+        )
+    }
+    val endTimePickerDialog = remember {
+        getTimePickerDialog(
+            context = context,
+            time = uiState.endTime ?: LocalTime.of(0, 0),
+            onTimeSelected = {
+                actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
+            }
+        )
+    }
+
+    Surface(
+        modifier = modifier,
+        color = colorResource(id = R.color.backgroundLightest)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            val titleFocusRequester = remember { FocusRequester() }
+            val focusManager = LocalFocusManager.current
+
+            LaunchedEffect(key1 = uiState.title, block = {
+                awaitFrame()
+                if (uiState.title.isEmpty()) {
+                    titleFocusRequester.requestFocus()
+                }
+            })
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .height(48.dp)
+                    .clickable {
+                        titleFocusRequester.requestFocus()
+                    }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.createEventTitleLabel),
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 16.sp
+                )
+                BasicTextField(
+                    value = uiState.title,
+                    onValueChange = {
+                        actionHandler(CreateUpdateEventAction.UpdateTitle(it))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .focusRequester(titleFocusRequester),
+                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+                    textStyle = TextStyle(
+                        color = colorResource(id = R.color.textDarkest),
+                        fontSize = 16.sp
+                    ),
+                    singleLine = true
+                )
+            }
+            LabelValueRow(
+                label = stringResource(R.string.createEventDateLabel),
+                value = uiState.formattedDate,
+                onClick = {
+                    focusManager.clearFocus()
+                    datePickerDialog.show()
+                }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createEventStartTimeLabel),
+                value = uiState.startTime?.let { uiState.formattedTime(context, it) }.orEmpty(),
+                onClick = {
+                    focusManager.clearFocus()
+                    startTimePickerDialog.show()
+                }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createEventEndTimeLabel),
+                value = uiState.endTime?.let { uiState.formattedTime(context, it) }.orEmpty(),
+                onClick = {
+                    focusManager.clearFocus()
+                    endTimePickerDialog.show()
+                }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createEventFrequencyLabel),
+                value = uiState.frequency,
+                onClick = {
+                    focusManager.clearFocus()
+
+                }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createEventCalendarLabel),
+                value = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
+                onClick = {
+                    focusManager.clearFocus()
+                    actionHandler(CreateUpdateEventAction.ShowSelectCalendarScreen)
+                }
+            )
+            LabeledTextField(
+                label = stringResource(id = R.string.createEventLocationLabel),
+                value = uiState.location,
+                onValueChange = {
+                    actionHandler(CreateUpdateEventAction.UpdateLocation(it))
+                }
+            )
+            LabeledTextField(
+                label = stringResource(id = R.string.createEventAddressLabel),
+                value = uiState.address,
+                onValueChange = {
+                    actionHandler(CreateUpdateEventAction.UpdateAddress(it))
+                }
+            )
+            LabeledTextField(
+                label = stringResource(id = R.string.createEventDetailsLabel),
+                value = uiState.details,
+                onValueChange = {
+                    actionHandler(CreateUpdateEventAction.UpdateDetails(it))
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun LabelValueRow(
+    label: String,
+    value: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
+        modifier = modifier
+            .height(48.dp)
+            .clickable(onClick = onClick)
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(start = 16.dp),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = value,
+            modifier = Modifier.padding(end = 16.dp),
+            color = colorResource(id = R.color.textDark),
+            fontSize = 14.sp
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.arrow_right),
+            contentDescription = null,
+            modifier = Modifier.padding(end = 16.dp),
+            tint = colorResource(id = R.color.textDark)
+        )
+    }
+}
+
+@Composable
+private fun LabeledTextField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val focusRequester = remember { FocusRequester() }
+    Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+    Column(
+        modifier = modifier
+            .defaultMinSize(minHeight = 80.dp)
+            .clickable {
+                focusRequester.requestFocus()
+            }
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        BasicTextField(
+            singleLine = false,
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .focusRequester(focusRequester),
+            cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+            textStyle = TextStyle(
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 16.sp
+            )
+        )
+    }
+}
+
+@ExperimentalFoundationApi
+@Preview(showBackground = true)
+@Composable
+private fun CreateUpdateEventPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AndroidThreeTen.init(LocalContext.current)
+    CreateUpdateEventScreen(
+        title = "New Event",
+        uiState = CreateUpdateEventUiState(
+            title = "Title",
+            date = LocalDate.now(),
+            startTime = LocalTime.now(),
+            endTime = LocalTime.now(),
+            details = "Details",
+            saving = false,
+            errorSnack = null,
+            loadingCanvasContexts = false,
+            selectCalendarUiState = SelectCalendarUiState(
+                selectedCanvasContext = Course(name = "Course")
+            )
+        ),
+        actionHandler = {},
+        navigationAction = {}
+    )
 }

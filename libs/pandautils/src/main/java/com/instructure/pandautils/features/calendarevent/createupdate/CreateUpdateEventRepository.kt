@@ -18,10 +18,33 @@
 package com.instructure.pandautils.features.calendarevent.createupdate
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.builders.RestParams
 
 
 class CreateUpdateEventRepository(
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface
 ) {
 
+    suspend fun createEvent(
+        title: String,
+        startDate: String,
+        endDate: String,
+        //Frequency
+        contextCode: String,
+        locationName: String,
+        locationAddress: String,
+        description: String
+    ) {
+        calendarEventApi.createCalendarEvent(
+            contextCode = contextCode,
+            title = title,
+            description = description,
+            startDate = startDate,
+            endDate = endDate,
+            locationName = locationName,
+            locationAddress = locationAddress,
+            body = "",
+            restParams = RestParams()
+        ).dataOrThrow
+    }
 }

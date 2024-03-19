@@ -26,12 +26,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
+import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.createupdate.composables.CreateUpdateEventScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
@@ -44,6 +48,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CreateUpdateEventViewModel by viewModels()
+    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +66,12 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
     }
 
     private fun handleAction(action: CreateUpdateEventViewModelAction) {
-
+        when (action) {
+            is CreateUpdateEventViewModelAction.RefreshCalendarDays -> {
+                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
+                activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
+            }
+        }
     }
 
     override val navigation: Navigation?
