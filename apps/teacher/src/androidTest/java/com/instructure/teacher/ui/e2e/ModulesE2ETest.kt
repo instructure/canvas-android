@@ -12,6 +12,7 @@ import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.ModuleItemTypes
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -203,10 +204,14 @@ class   ModulesE2ETest : TeacherComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Submit '${assignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
         Log.d(PREPARATION_TAG, "Seeding another 'Text Entry' assignment for '${course.name}' course.")
         val assignment2 = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
@@ -261,6 +266,7 @@ class   ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleIsDisplayed(module2.name)
         moduleListPage.assertModuleNotPublished(module2.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
+        moduleListPage.assertModuleStatusIconAlpha(assignment.name, 0.5f)
         moduleListPage.assertModuleItemIsPublished(quiz.title)
         moduleListPage.assertModuleItemIsPublished(discussionTopic.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
@@ -303,13 +309,15 @@ class   ModulesE2ETest : TeacherComposeTest() {
         progressPage.assertProgressPageTitle(R.string.allModulesAndItems)
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became unpublished.")
+        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment)  became unpublished.")
         moduleListPage.assertSnackbarText(R.string.allModulesAndAllItemsUnpublished)
         moduleListPage.assertModuleNotPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
+
+        Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Assert that '${module2.name}' module and all of it's items became unpublished.")
         moduleListPage.assertModuleNotPublished(module2.name)
@@ -330,7 +338,7 @@ class   ModulesE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and only the '${module.name}' module became published, but it's items remaining unpublished.")
         moduleListPage.assertSnackbarText(R.string.onlyModulesPublished)
         moduleListPage.assertModuleIsPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
@@ -373,13 +381,15 @@ class   ModulesE2ETest : TeacherComposeTest() {
         progressPage.assertProgressPageTitle(R.string.selectedModulesAndItems)
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became unpublished.")
+        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment) became unpublished.")
         moduleListPage.assertSnackbarText(R.string.moduleAndAllItemsUnpublished)
         moduleListPage.assertModuleNotPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
+
+        Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Click on '${module.name}' module overflow.")
         moduleListPage.clickItemOverflow(module.name)
@@ -390,23 +400,14 @@ class   ModulesE2ETest : TeacherComposeTest() {
         device.waitForWindowUpdate(null, 3000)
         device.waitForIdle()
 
-        Log.d(STEP_TAG, "Assert that only the '${module.name}' module became published, but it's items remaining unpublished.")
+        Log.d(STEP_TAG, "Assert that only the '${module.name}' module became published, but it's items (except '${assignment.name}' assignment) remaining unpublished.")
         moduleListPage.assertModuleIsPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
 
         //Bottom layer - One module item
-
-        Log.d(STEP_TAG, "Click on '${assignment.name}' assignment's overflow menu and publish it. Confirm the publish via the publish dialog.")
-        moduleListPage.clickItemOverflow(assignment.name)
-        moduleListPage.clickOnText(R.string.publishModuleItemAction)
-        moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
-
-        Log.d(STEP_TAG, "Assert that the 'Item published' snack bar has displayed and the '${assignment.name}' assignment became published.")
-        moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
-        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Click on '${quiz.title}' quiz's overflow menu and publish it. Confirm the publish via the publish dialog.")
         moduleListPage.clickItemOverflow(quiz.title)
@@ -435,14 +436,10 @@ class   ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
         moduleListPage.assertModuleItemIsPublished(discussionTopic.title)
 
-        Log.d(STEP_TAG, "Click on '${assignment.name}' assignment's overflow menu and unpublish it. Confirm the unpublish via the unpublish dialog.")
+        Log.d(STEP_TAG, "Try to click on '${assignment.name}' assignment's overflow menu (in order to unpublish it). Assert that a snack bar with a proper text will be displayed that it cannot be unpublished since it has student submissions.")
         moduleListPage.clickItemOverflow(assignment.name)
-        moduleListPage.clickOnText(R.string.unpublishModuleItemAction)
-        moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
-
-        Log.d(STEP_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${assignment.name}' assignment became unpublished.")
-        moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
+        moduleListPage.assertSnackbarContainsText(assignment.name)
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Click on '${quiz.title}' quiz's overflow menu and unpublish it. Confirm the unpublish via the unpublish dialog.")
         moduleListPage.clickItemOverflow(quiz.title)
