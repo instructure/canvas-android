@@ -45,7 +45,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -89,7 +88,6 @@ internal fun CreateUpdateToDoScreenWrapper(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,
-    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
@@ -110,7 +108,6 @@ internal fun CreateUpdateToDoScreenWrapper(
                 title = title,
                 uiState = uiState,
                 actionHandler = actionHandler,
-                navigationAction = navigationAction,
                 modifier = modifier
             )
         }
@@ -122,7 +119,6 @@ private fun CreateUpdateToDoScreen(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,
-    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -145,7 +141,6 @@ private fun CreateUpdateToDoScreen(
                 title = title,
                 uiState = uiState,
                 actionHandler = actionHandler,
-                navigationAction = navigationAction
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -167,21 +162,19 @@ private fun CreateUpdateToDoTopAppBar(
     title: String,
     uiState: CreateUpdateToDoUiState,
     actionHandler: (CreateUpdateToDoAction) -> Unit,
-    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val showUnsavedChangesDialog = remember { mutableStateOf(false) }
-    if (showUnsavedChangesDialog.value) {
+    if (uiState.showUnsavedChangesDialog) {
         SimpleAlertDialog(
             dialogTitle = stringResource(id = R.string.exitWithoutSavingTitle),
             dialogText = stringResource(id = R.string.exitWithoutSavingMessage),
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.exitUnsaved),
             onDismissRequest = {
-                showUnsavedChangesDialog.value = false
+                actionHandler(CreateUpdateToDoAction.HideUnsavedChangesDialog)
             },
             onConfirmation = {
-                navigationAction()
+                actionHandler(CreateUpdateToDoAction.NavigateBack)
             }
         )
     }
@@ -203,10 +196,7 @@ private fun CreateUpdateToDoTopAppBar(
             }
         },
         navigationActionClick = {
-            actionHandler(CreateUpdateToDoAction.CheckUnsavedChanges {
-                showUnsavedChangesDialog.value = it
-                if (!it) navigationAction()
-            })
+            actionHandler(CreateUpdateToDoAction.CheckUnsavedChanges)
         },
         modifier = modifier
     )
@@ -472,7 +462,6 @@ private fun CreateUpdateToDoPreview() {
                 selectedCanvasContext = Course(name = "Course")
             )
         ),
-        actionHandler = {},
-        navigationAction = {}
+        actionHandler = {}
     )
 }

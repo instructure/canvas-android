@@ -33,7 +33,9 @@ data class CreateUpdateToDoUiState(
     val saving: Boolean = false,
     val errorSnack: String? = null,
     val loadingCanvasContexts: Boolean = false,
-    val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState()
+    val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState(),
+    val showUnsavedChangesDialog: Boolean = false,
+    val canGoBack: Boolean = false
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 
@@ -52,9 +54,12 @@ sealed class CreateUpdateToDoAction {
     data object SnackbarDismissed : CreateUpdateToDoAction()
     data object ShowSelectCalendarScreen : CreateUpdateToDoAction()
     data object HideSelectCalendarScreen : CreateUpdateToDoAction()
-    data class CheckUnsavedChanges(val result: (Boolean) -> Unit) : CreateUpdateToDoAction()
+    data object CheckUnsavedChanges : CreateUpdateToDoAction()
+    data object HideUnsavedChangesDialog : CreateUpdateToDoAction()
+    data object NavigateBack : CreateUpdateToDoAction()
 }
 
 sealed class CreateUpdateToDoViewModelAction {
     data class RefreshCalendarDays(val days: List<LocalDate>) : CreateUpdateToDoViewModelAction()
+    data object NavigateBack : CreateUpdateToDoViewModelAction()
 }

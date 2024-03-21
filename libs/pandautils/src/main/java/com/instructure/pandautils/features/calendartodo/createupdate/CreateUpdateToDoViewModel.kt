@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
@@ -111,7 +112,23 @@ class CreateUpdateToDoViewModel @Inject constructor(
             }
 
             is CreateUpdateToDoAction.CheckUnsavedChanges -> {
-                action.result(checkUnsavedChanges())
+                val hasUnsavedChanges = checkUnsavedChanges()
+                if (hasUnsavedChanges) {
+                    _uiState.update { it.copy(showUnsavedChangesDialog = true) }
+                } else {
+                    handleAction(CreateUpdateToDoAction.NavigateBack)
+                }
+            }
+
+            is CreateUpdateToDoAction.HideUnsavedChangesDialog -> {
+                _uiState.update { it.copy(showUnsavedChangesDialog = false) }
+            }
+
+            is CreateUpdateToDoAction.NavigateBack -> {
+                viewModelScope.launch {
+                    _uiState.update { it.copy(canGoBack = true) }
+                    _events.send(CreateUpdateToDoViewModelAction.NavigateBack)
+                }
             }
         }
     }

@@ -90,6 +90,10 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
     }
 
     override fun onHandleBackPressed(): Boolean {
+        if (viewModel.uiState.value.selectCalendarUiState.show) {
+            viewModel.handleAction(CreateUpdateEventAction.HideSelectCalendarScreen)
+            return true
+        }
         return false
     }
 

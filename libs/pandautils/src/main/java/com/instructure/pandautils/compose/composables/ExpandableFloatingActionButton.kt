@@ -19,9 +19,10 @@ package com.instructure.pandautils.compose.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,8 +79,14 @@ fun ExpandableFloatingActionButton(
     ) {
         AnimatedVisibility(
             visible = expanded.value,
-            enter = expandVertically(expandFrom = Alignment.Bottom),
-            exit = shrinkVertically(shrinkTowards = Alignment.Bottom),
+            enter = slideInVertically(
+                initialOffsetY = { fullHeight -> fullHeight },
+                animationSpec = TweenSpec(400)
+            ),
+            exit = slideOutVertically(
+                targetOffsetY = { fullHeight -> fullHeight },
+                animationSpec = TweenSpec(400)
+            ),
             modifier = Modifier
                 .padding(top = 16.dp)
                 .animateContentSize()

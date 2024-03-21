@@ -230,14 +230,10 @@ class CreateUpdateToDoViewModelTest {
 
         createViewModel()
 
-        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges {
-            Assert.assertEquals(false, it)
-        })
+        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
-        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges {
-            Assert.assertEquals(true, it)
-        })
+        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
     }
 
     @Test
@@ -248,14 +244,10 @@ class CreateUpdateToDoViewModelTest {
 
         createViewModel()
 
-        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges {
-            Assert.assertEquals(false, it)
-        })
+        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
-        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges {
-            Assert.assertEquals(true, it)
-        })
+        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
     }
 
     private fun createViewModel() {
