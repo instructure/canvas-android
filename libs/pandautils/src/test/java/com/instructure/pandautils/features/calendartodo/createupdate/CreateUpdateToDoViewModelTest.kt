@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -225,29 +226,61 @@ class CreateUpdateToDoViewModelTest {
     }
 
     @Test
-    fun `Check unsaved changes when creating`() {
+    fun `Check unsaved changes when creating`() = runTest {
         every { savedStateHandle.get<String>(CreateUpdateToDoFragment.INITIAL_DATE) } returns "2024-02-22"
 
         createViewModel()
-
-        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
+        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
+
         viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
+        Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
+
+        viewModel.handleAction(CreateUpdateToDoAction.NavigateBack)
+        Assert.assertTrue(viewModel.uiState.value.canGoBack)
+        Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
     }
 
     @Test
-    fun `Check unsaved changes when editing`() {
+    fun `Check unsaved changes when editing`() = runTest {
         val courses = listOf(Course(1), Course(2))
         coEvery { repository.getCourses() } returns courses
         every { savedStateHandle.get<PlannerItem>(CreateUpdateToDoFragment.PLANNER_ITEM) } returns plannerItem
 
         createViewModel()
-
-        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
+        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
+
         viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
+        Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
+
+        viewModel.handleAction(CreateUpdateToDoAction.NavigateBack)
+        Assert.assertTrue(viewModel.uiState.value.canGoBack)
+        Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
+    }
+
+    @Test
+    fun `Check unsaved changes when no changes`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateToDoFragment.INITIAL_DATE) } returns "2024-02-22"
+
+        createViewModel()
+        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
+        Assert.assertFalse(viewModel.uiState.value.showUnsavedChangesDialog)
+        Assert.assertTrue(viewModel.uiState.value.canGoBack)
+        Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
     }
 
     private fun createViewModel() {
