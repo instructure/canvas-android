@@ -1651,6 +1651,10 @@
     <string name="eventDeleteConfirmationTitle">Delete Event?</string>
     <string name="eventDeleteConfirmationText">This will permanently delete your event.</string>
     <string name="eventDeleteErrorMessage">There was an error deleting this event. Please check your connection and try again.</string>
+    <string name="a11y_calendarPreviousMonth">Show previous month</string>
+    <string name="a11y_calendarPreviousWeek">Show previous week</string>
+    <string name="a11y_calendarNextMonth">Show next month</string>
+    <string name="a11y_calendarNextWeek">Show next week</string>
     <plurals name="a11y_calendar_day_event_count">
         <item quantity="one">%d event</item>
         <item quantity="other">%d events</item>
