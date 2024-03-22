@@ -40,8 +40,8 @@ class ModulesPage : BasePage() {
     }
 
     fun assertModuleNotPublished(moduleTitle: String) {
-        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
-        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
+        onView(withId(R.id.unpublishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertDisplayed()
+        onView(withId(R.id.publishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertNotDisplayed()
     }
 
     /**
@@ -53,8 +53,8 @@ class ModulesPage : BasePage() {
     }
 
     fun assertModuleIsPublished(moduleTitle: String) {
-        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
-        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
+        onView(withId(R.id.unpublishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertNotDisplayed()
+        onView(withId(R.id.publishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertDisplayed()
     }
 
     /**
@@ -142,7 +142,7 @@ class ModulesPage : BasePage() {
     }
 
     fun clickItemOverflow(itemName: String) {
-        onView(withParent(withChild(withText(itemName))) + withId(R.id.overflow)).scrollTo().click()
+        onView(withParent(withChild(withText(itemName))) + withId(R.id.publishActions)).scrollTo().click()
     }
 
     fun assertModuleMenuItems() {
