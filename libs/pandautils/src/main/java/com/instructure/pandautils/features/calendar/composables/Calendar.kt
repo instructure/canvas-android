@@ -139,9 +139,14 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
             calendarUiState.headerUiState, calendarUiState.expanded, actionHandler, modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),
-            pagerState = pagerState
         )
         Spacer(modifier = Modifier.height(6.dp))
+        AccessibilityButtons(
+            previousContentDescription = calendarUiState.bodyUiState.previousPage.buttonContentDescription,
+            nextContentDescription = calendarUiState.bodyUiState.nextPage.buttonContentDescription,
+            pagerState = pagerState,
+            expanded = calendarUiState.expanded
+        )
         HorizontalPager(
             modifier = Modifier.swipeable(
                 state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
@@ -203,34 +208,8 @@ fun CalendarHeader(
     headerUiState: CalendarHeaderUiState,
     calendarOpen: Boolean,
     actionHandler: (CalendarAction) -> Unit,
-    modifier: Modifier = Modifier,
-    pagerState: PagerState
+    modifier: Modifier = Modifier
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
-    val context = LocalContext.current
-    var isAccessibilityEnabled by remember { mutableStateOf(false) }
-    val accessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-
-    LaunchedEffect(Unit) {
-        isAccessibilityEnabled = isAccessibilityEnabled(context)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            accessibilityManager.addAccessibilityServicesStateChangeListener {
-                isAccessibilityEnabled = it.isEnabled
-            }
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                accessibilityManager.removeAccessibilityServicesStateChangeListener { }
-            }
-        }
-    }
-
-
     val iconRotation: Float by animateFloatAsState(targetValue = if (calendarOpen) 0f else 180f, label = "expandIconRotation")
 
     val screenHeightDp = LocalConfiguration.current.screenHeightDp
@@ -292,45 +271,6 @@ fun CalendarHeader(
                         actionHandler(CalendarAction.FilterTapped)
                     }
                     .padding(horizontal = 8.dp, vertical = 12.dp))
-        }
-        if (isAccessibilityEnabled) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                IconButton(onClick = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(pagerState.currentPage - 1)
-                    }
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back_arrow),
-                        contentDescription = stringResource(
-                            id = if (calendarOpen) {
-                                R.string.a11y_calendarPreviousMonth
-                            } else {
-                                R.string.a11y_calendarPreviousWeek
-                            }
-                        )
-                    )
-                }
-                IconButton(onClick = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(pagerState.currentPage + 1)
-                    }
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_forward_arrow),
-                        contentDescription = stringResource(
-                            id = if (calendarOpen) {
-                                R.string.a11y_calendarNextMonth
-                            } else {
-                                R.string.a11y_calendarNextWeek
-                            }
-                        )
-                    )
-                }
-            }
         }
     }
 }
@@ -483,6 +423,72 @@ fun EventIndicator(modifier: Modifier = Modifier) {
             .size(4.dp)
             .background(Color(ThemePrefs.buttonColor))
     )
+}
+
+@Composable
+fun AccessibilityButtons(
+    previousContentDescription: String,
+    nextContentDescription: String,
+    pagerState: PagerState,
+    expanded: Boolean
+) {
+    var isAccessibilityEnabled by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val accessibilityManager =
+        context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    val a11yListener: (AccessibilityManager) -> Unit = { manager ->
+        isAccessibilityEnabled = manager.isEnabled
+    }
+
+    LaunchedEffect(Unit) {
+        isAccessibilityEnabled = isAccessibilityEnabled(context)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            accessibilityManager.addAccessibilityServicesStateChangeListener(a11yListener)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                accessibilityManager.removeAccessibilityServicesStateChangeListener(a11yListener)
+            }
+        }
+    }
+    if (isAccessibilityEnabled) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconButton(onClick = {
+                coroutineScope.launch {
+                    pagerState.scrollToPage(pagerState.currentPage - 1)
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back_arrow),
+                    contentDescription = stringResource(
+                        id = if (expanded) R.string.a11y_calendarPreviousMonth else R.string.a11y_calendarPreviousWeek,
+                        previousContentDescription
+                    )
+                )
+            }
+            IconButton(onClick = {
+                coroutineScope.launch {
+                    pagerState.scrollToPage(pagerState.currentPage + 1)
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_forward_arrow),
+                    contentDescription = stringResource(
+                        id = if (expanded) R.string.a11y_calendarNextMonth else R.string.a11y_calendarNextWeek,
+                        nextContentDescription
+                    )
+                )
+            }
+        }
+    }
 }
 
 @ExperimentalFoundationApi

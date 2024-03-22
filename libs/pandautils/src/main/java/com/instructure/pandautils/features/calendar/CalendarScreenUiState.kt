@@ -43,7 +43,10 @@ data class CalendarBodyUiState(
     val nextPage: CalendarPageUiState
 )
 
-data class CalendarPageUiState(val calendarRows: List<CalendarRowUiState>)
+data class CalendarPageUiState(
+    val calendarRows: List<CalendarRowUiState>,
+    val buttonContentDescription: String
+)
 
 data class CalendarRowUiState(val days: List<CalendarDayUiState>)
 

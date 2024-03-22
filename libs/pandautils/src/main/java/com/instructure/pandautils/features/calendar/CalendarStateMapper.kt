@@ -102,7 +102,16 @@ class CalendarStateMapper(private val clock: Clock) {
         val finalCalendarRows =
             if (fullMonth) calendarRows else calendarRows.filter { it.days.any { day -> day.date == date } }
 
-        return CalendarPageUiState(finalCalendarRows)
+        val contentDescription = if (fullMonth) {
+            val month = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+            val year = date.year
+            "$month $year"
+        } else {
+            val firstDay = finalCalendarRows.first().days.first().date
+            getContentDescriptionForDate(firstDay)
+        }
+
+        return CalendarPageUiState(finalCalendarRows, contentDescription)
     }
 
     private fun getContentDescriptionForDate(localDate: LocalDate): String {
