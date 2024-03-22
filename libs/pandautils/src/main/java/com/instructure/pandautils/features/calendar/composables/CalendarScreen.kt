@@ -43,6 +43,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -93,6 +95,7 @@ fun CalendarScreen(
                         if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
                                 .padding(horizontal = 12.dp)
+                                .semantics(mergeDescendants = true) {  }
                                 .clickable {
                                     actionHandler(CalendarAction.TodayTapped)
                                 }) {
@@ -104,7 +107,7 @@ fun CalendarScreen(
                                 Text(
                                     text = LocalDate.now().dayOfMonth.toString(),
                                     fontSize = 9.sp,
-                                    modifier = Modifier.padding(top = 4.dp),
+                                    modifier = Modifier.padding(top = 4.dp).clearAndSetSemantics {  },
                                     color = Color(ThemePrefs.primaryTextColor),
                                 )
                             }
