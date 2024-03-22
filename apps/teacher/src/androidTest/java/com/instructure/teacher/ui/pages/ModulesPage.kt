@@ -142,7 +142,7 @@ class ModulesPage : BasePage() {
     }
 
     fun clickItemOverflow(itemName: String) {
-        onView(withParent(withChild(withText(itemName))) + withId(R.id.overflow)).scrollTo().click()
+        onView(withParent(withChild(withText(itemName))) + withId(R.id.publishActions)).scrollTo().click()
     }
 
     fun assertModuleMenuItems() {
