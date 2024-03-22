@@ -50,10 +50,26 @@ class ModuleListSubHeaderBinder : ListItemBinder<ModuleListItemData.SubHeader, M
 
                 when (item.published) {
                     true -> menu.add(0, 0, 0, R.string.unpublish)
-                    false -> menu.add(0, 0, 0, R.string.publish)
+                    false -> menu.add(0, 1, 1, R.string.publish)
                     else -> {
                         menu.add(0, 0, 0, R.string.unpublish)
                         menu.add(0, 1, 1, R.string.publish)
+                    }
+                }
+
+                popup.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        0 -> {
+                            callback.updateModuleItem(item.id, false)
+                            true
+                        }
+
+                        1 -> {
+                            callback.updateModuleItem(item.id, true)
+                            true
+                        }
+
+                        else -> false
                     }
                 }
 
