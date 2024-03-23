@@ -121,7 +121,7 @@ class ModulesPage : BasePage() {
      * @param expectedAlphaValue The expected alpha (float) value.
      */
     fun assertModuleStatusIconAlpha(moduleItemName: String, expectedAlphaValue: Float) {
-        onView(withId(R.id.moduleItemStatusIcon) + withParent(withId(R.id.statusWrapper) + hasSibling(withId(R.id.moduleItemTitle) + withText(moduleItemName)))).check(ViewAlphaAssertion(expectedAlphaValue))
+        onView(withId(R.id.moduleItemStatusIcon) + withParent(withId(R.id.publishActions) + hasSibling(withId(R.id.moduleItemTitle) + withText(moduleItemName)))).check(ViewAlphaAssertion(expectedAlphaValue))
     }
 
     /**
