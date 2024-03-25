@@ -19,6 +19,8 @@ import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.TextStyle
+import java.util.Locale
 
 data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
@@ -55,13 +57,19 @@ data class CalendarDayUiState(
     val date: LocalDate = LocalDate.now(),
     val enabled: Boolean = true,
     val indicatorCount: Int = 0,
-    val contentDescription: String
 ) {
     val today: Boolean
         get() {
             val today = LocalDate.now()
             return date.isEqual(today)
         }
+
+    val contentDescription: String = date.let {
+        val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val month = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val day = date.dayOfMonth
+        "$dayOfWeek, $month $day"
+    }
 }
 
 data class CalendarEventsUiState(

@@ -77,9 +77,9 @@ class CalendarViewModelTest {
         expanded = false,
         headerUiState = CalendarHeaderUiState("2023", "April"),
         bodyUiState = CalendarBodyUiState(
-            previousPage = CalendarPageUiState(emptyList()),
-            currentPage = CalendarPageUiState(emptyList()),
-            nextPage = CalendarPageUiState(emptyList())
+            previousPage = CalendarPageUiState(emptyList(), ""),
+            currentPage = CalendarPageUiState(emptyList(), ""),
+            nextPage = CalendarPageUiState(emptyList(), "")
         )
     )
 
@@ -120,9 +120,9 @@ class CalendarViewModelTest {
         // We don't care about these states in the tests because theses are tested in the CalendarStateMapperTest
         every { calendarStateMapper.createHeaderUiState(any(), any()) } returns CalendarHeaderUiState("2023", "April")
         every { calendarStateMapper.createBodyUiState(any(), any(), any(), any(), any()) } returns CalendarBodyUiState(
-            previousPage = CalendarPageUiState(emptyList()),
-            currentPage = CalendarPageUiState(emptyList()),
-            nextPage = CalendarPageUiState(emptyList())
+            previousPage = CalendarPageUiState(emptyList(), ""),
+            currentPage = CalendarPageUiState(emptyList(), ""),
+            nextPage = CalendarPageUiState(emptyList(), "")
         )
     }
 
