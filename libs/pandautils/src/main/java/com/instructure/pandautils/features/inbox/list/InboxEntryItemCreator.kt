@@ -40,7 +40,7 @@ class InboxEntryItemCreator(private val context: Context, private val apiPrefs: 
             conversation.id,
             createAvatarData(conversation),
             createMessageTitle(conversation),
-            conversation.subject ?: "",
+            conversation.subject.takeIf { it?.isNotBlank() == true } ?: context.getString(R.string.noSubject),
             conversation.lastMessagePreview ?: "",
             createDateText(conversation),
             conversation.workflowState == Conversation.WorkflowState.UNREAD,

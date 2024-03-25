@@ -17,9 +17,11 @@ package com.instructure.teacher.unit.modules.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.ModuleListEffect
 import com.instructure.teacher.features.modules.list.ModuleListEvent
 import com.instructure.teacher.features.modules.list.ModuleListModel
@@ -41,6 +43,7 @@ import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import org.junit.Assert
 import org.junit.Test
+import com.instructure.teacher.R
 
 class ModuleListUpdateTest : Assert() {
 
@@ -196,7 +199,7 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             modules = listOf(ModuleObject(items = items))
         )
-        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id in 1L..3L}
+        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id in 1L..3L }
         val expectedEffect = ModuleListEffect.UpdateModuleItems(model.course, listOf(items[1]))
         updateSpec
             .given(model)
@@ -218,7 +221,7 @@ class ModuleListUpdateTest : Assert() {
         val model = initModel.copy(
             modules = listOf(ModuleObject(items = items))
         )
-        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id == 3L}
+        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id == 3L }
         updateSpec
             .given(model)
             .whenEvent(event)
@@ -413,5 +416,526 @@ class ModuleListUpdateTest : Assert() {
                 )
             )
     }
+
+    @Test
+    fun `BulkUpdateModule sets loading for module`() {
+        val module = ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L)))
+        val event = ModuleListEvent.BulkUpdateModule(1L, BulkModuleUpdateAction.PUBLISH, true)
+        val model = initModel.copy(modules = listOf(module))
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L),
+            listOf(1L),
+            BulkModuleUpdateAction.PUBLISH,
+            true,
+            false
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateModule sets loading for module and items`() {
+        val module = ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L)))
+        val event = ModuleListEvent.BulkUpdateModule(1L, BulkModuleUpdateAction.PUBLISH, false)
+        val model = initModel.copy(modules = listOf(module))
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L, 100L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L),
+            listOf(1L, 100L),
+            BulkModuleUpdateAction.PUBLISH,
+            false,
+            false
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateAllModules sets loading for modules`() {
+        val modules = listOf(
+            ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L))),
+            ModuleObject(
+                id = 2L, items = listOf(
+                    ModuleItem(id = 200L, moduleId = 2L),
+                    ModuleItem(id = 201L, moduleId = 2L)
+                )
+            )
+        )
+        val event = ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.UNPUBLISH, true)
+        val model = initModel.copy(modules = modules)
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L, 2L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L, 2L),
+            listOf(1L, 2L),
+            BulkModuleUpdateAction.UNPUBLISH,
+            true,
+            true
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateAllModules sets loading for modules and items`() {
+        val modules = listOf(
+            ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L))),
+            ModuleObject(
+                id = 2L, items = listOf(
+                    ModuleItem(id = 200L, moduleId = 2L),
+                    ModuleItem(id = 201L, moduleId = 2L)
+                )
+            )
+        )
+        val event = ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.UNPUBLISH, false)
+        val model = initModel.copy(modules = modules)
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(1L, 100L, 2L, 200L, 201L)
+        )
+        val expectedEffect = ModuleListEffect.BulkUpdateModules(
+            expectedModel.course,
+            listOf(1L, 2L),
+            listOf(1L, 2L, 100L, 200L, 201L),
+            BulkModuleUpdateAction.UNPUBLISH,
+            false,
+            true
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess emits refresh effect and clears loading`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(ModuleObject(1L)),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.onlyModulesPublished)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess(true, BulkModuleUpdateAction.PUBLISH, true))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess publish all modules and items displays correct snackbar`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L, 100L, 2L, 200L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.allModulesAndAllItemsPublished)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess(false, BulkModuleUpdateAction.PUBLISH, true))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess unpublish all modules and items displays correct snackbar`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L, 100L, 2L, 200L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.allModulesAndAllItemsUnpublished)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess(false, BulkModuleUpdateAction.UNPUBLISH, true))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess publish all modules displays correct snackbar`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L, 2L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.onlyModulesPublished)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess(true, BulkModuleUpdateAction.PUBLISH, true))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess publish single module with all items displays correct snackbar`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L, 100L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.moduleAndAllItemsPublished)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess(false, BulkModuleUpdateAction.PUBLISH, false))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess unpublish single module with all items displays correct snackbar`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L, 100L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.moduleAndAllItemsUnpublished)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess(false, BulkModuleUpdateAction.UNPUBLISH, false))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateSuccess publish single module displays correct snackbar`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.onlyModulePublished)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateSuccess(true, BulkModuleUpdateAction.PUBLISH, false))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateFailed clears loading`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L)),
+            loadingModuleItemIds = setOf(1L)
+        )
+
+        val expectedModel = model.copy(
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedSnackbarEffect = ModuleListEffect.ShowSnackbar(R.string.errorOccurred)
+
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateFailed(false))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedSnackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `UpdateModuleItem emits UpdateModuleItem effect`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L)))),
+        )
+        val expectedModel = model.copy(
+            loadingModuleItemIds = setOf(100L)
+        )
+        val expectedEffect = ModuleListEffect.UpdateModuleItem(
+            model.course,
+            1L,
+            100L,
+            true
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.UpdateModuleItem(100L, true))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `ModuleItemUpdateSuccess replaces module item`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = false)))),
+            loadingModuleItemIds = setOf(100L)
+        )
+        val expectedModel = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = true)))),
+            loadingModuleItemIds = emptySet()
+        )
+        val event = ModuleListEvent.ModuleItemUpdateSuccess(ModuleItem(100L, 1L, published = true), true)
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `ModuleItemUpdateFailed clears loading`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = false)))),
+            loadingModuleItemIds = setOf(100L)
+        )
+        val expectedModel = model.copy(
+            loadingModuleItemIds = emptySet()
+        )
+        val event = ModuleListEvent.ModuleItemUpdateFailed(100L)
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `UpdateFileModuleItem emits UpdateFileModuleItem effect`() {
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(1L, items = listOf(ModuleItem(100L, 1L, published = false)))),
+        )
+        val expectedEffect = ModuleListEffect.UpdateFileModuleItem(
+            100L,
+            ModuleContentDetails()
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.UpdateFileModuleItem(100L, ModuleContentDetails()))
+            .then(
+                assertThatNext(
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `BulkUpdateCancelled emits LoadNextPage effect`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val expectedModel = initModel.copy(
+            isLoading = true,
+            pageData = ModuleListPageData(forceNetwork = true),
+            loadingModuleItemIds = emptySet()
+        )
+        val expectedEffect = ModuleListEffect.LoadNextPage(
+            expectedModel.course,
+            expectedModel.pageData,
+            expectedModel.scrollToItemId
+        )
+        val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.updateCancelled)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.BulkUpdateCancelled)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect, snackbarEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `ShowSnackbar event emits ShowSnackbar effect`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val params = arrayOf<Any>("param")
+        val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.error_unpublishable_module_item, params)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.ShowSnackbar(R.string.error_unpublishable_module_item, params))
+            .then(
+                assertThatNext(
+                    matchesEffects(snackbarEffect)
+                )
+            )
+    }
+
 
 }

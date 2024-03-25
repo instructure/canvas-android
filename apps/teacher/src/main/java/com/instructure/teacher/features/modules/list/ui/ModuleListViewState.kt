@@ -17,6 +17,8 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import androidx.annotation.ColorInt
+import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.ModuleItem
 
 data class ModuleListViewState(
     val showRefreshing: Boolean = false,
@@ -36,11 +38,21 @@ sealed class ModuleListItemData {
 
     data class InlineError(val buttonColor: Int): ModuleListItemData()
 
+    data class SubHeader(
+        val id: Long,
+        val title: String?,
+        val indent: Int,
+        val enabled: Boolean,
+        val published: Boolean?,
+        val isLoading: Boolean
+    ) : ModuleListItemData()
+
     data class ModuleData(
         val id: Long,
         val name: String,
         val isPublished: Boolean?,
-        val moduleItems: List<ModuleListItemData>
+        val moduleItems: List<ModuleListItemData>,
+        val isLoading: Boolean
     ): ModuleListItemData()
 
     data class ModuleItemData(
@@ -52,6 +64,9 @@ sealed class ModuleListItemData {
 
         /** The subtitle. If null, the subtitle should be hidden. */
         val subtitle: String?,
+
+        /** The second line of subtitle. If null, it should be hidden. */
+        val subtitle2: String?,
 
         /** The resource ID of the icon to show for this item. If null, the icon should be hidden. */
         val iconResId: Int?,
@@ -73,7 +88,15 @@ sealed class ModuleListItemData {
          * Whether additional data is being loaded for this item, either for the purpose of routing or for the purpose
          * of refreshing this item after it has been updated elsewhere in the app.
          */
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+
+        val type: ModuleItem.Type,
+
+        val contentDetails: ModuleContentDetails? = null,
+
+        val contentId: Long? = null,
+
+        val unpublishable: Boolean = true
     ) : ModuleListItemData()
 
 }

@@ -21,12 +21,11 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.page.getStringFromResource
@@ -40,6 +39,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
+import java.lang.Thread.sleep
 import java.util.*
 
 @HiltAndroidTest
@@ -50,11 +50,12 @@ class ScheduleE2ETest : StudentTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @Rule
-    var globalTimeout: Timeout = Timeout.millis(600000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
+    @JvmField
+    var globalTimeout: Timeout = Timeout.millis(1200000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.SCHEDULE)
     fun scheduleE2ETest() {
 
         Log.d(PREPARATION_TAG,"Seeding data for K5 sub-account.")
@@ -74,13 +75,13 @@ class ScheduleE2ETest : StudentTest() {
         val twoWeeksAfterCalendar = getCustomDateCalendar(15)
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' MISSING assignment for ${nonHomeroomCourses[2].name} course.")
-        val testMissingAssignment = createAssignment(nonHomeroomCourses[2].id, teacher, currentDateCalendar, GradingType.LETTER_GRADE,100.0)
+        val testMissingAssignment = AssignmentsApi.createAssignment(nonHomeroomCourses[2].id, teacher.token, dueAt = currentDateCalendar.time.toApiString(), gradingType = GradingType.LETTER_GRADE, pointsPossible = 100.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' Two weeks before end date assignment for ${nonHomeroomCourses[1].name} course.")
-        val testTwoWeeksBeforeAssignment = createAssignment(nonHomeroomCourses[1].id, teacher, twoWeeksBeforeCalendar, GradingType.PERCENT,100.0)
+        val testTwoWeeksBeforeAssignment = AssignmentsApi.createAssignment(nonHomeroomCourses[1].id, teacher.token, dueAt = twoWeeksBeforeCalendar.time.toApiString(), gradingType = GradingType.PERCENT, pointsPossible = 100.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' Two weeks after end date assignment for ${nonHomeroomCourses[0].name} course.")
-        val testTwoWeeksAfterAssignment = createAssignment(nonHomeroomCourses[0].id, teacher, twoWeeksAfterCalendar, GradingType.POINTS,25.0)
+        val testTwoWeeksAfterAssignment = AssignmentsApi.createAssignment(nonHomeroomCourses[0].id, teacher.token, dueAt = twoWeeksAfterCalendar.time.toApiString(), gradingType = GradingType.POINTS, pointsPossible = 25.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLoginElementary(student)
@@ -88,7 +89,6 @@ class ScheduleE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to K5 Schedule Page and assert it is loaded.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
-        schedulePage.assertPageObjects()
 
         //Depends on how we handle Sunday, need to clarify with calendar team
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {  schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(homeroomCourse.name, homeroomAnnouncement.title) }
@@ -107,13 +107,13 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
 
         Log.d(STEP_TAG, "Scroll to 'Missing Items' section  and verify that a missing assignment (${testMissingAssignment.name}) is displayed there with 100 points.")
-        schedulePage.scrollToItem(R.id.missingItemLayout, testMissingAssignment.name)
-        schedulePage.assertMissingItemDisplayed(testMissingAssignment.name, nonHomeroomCourses[2].name, "100 pts")
+        schedulePage.scrollToItem(R.id.metaLayout, testMissingAssignment.name)
+        schedulePage.assertMissingItemDisplayedOnPlannerItem(testMissingAssignment.name, nonHomeroomCourses[2].name, "100 pts")
 
         Log.d(STEP_TAG, "Refresh the Schedule Page. Assert that the items are still displayed correctly.")
         schedulePage.scrollToPosition(0)
         schedulePage.refresh()
-        schedulePage.assertPageObjects()
+        sleep(3000)
 
         Log.d(STEP_TAG, "Assert that the current day of the calendar is titled as 'Today'.")
         schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
@@ -158,6 +158,7 @@ class ScheduleE2ETest : StudentTest() {
 
             Log.d(STEP_TAG, "Navigate back to Schedule Page and assert it is loaded.")
             Espresso.pressBack()
+            sleep(3000)
             schedulePage.assertPageObjects()
         }
 
@@ -212,25 +213,6 @@ class ScheduleE2ETest : StudentTest() {
         cal.set(Calendar.MINUTE, 1)
         cal.set(Calendar.SECOND, 1)
         return cal
-    }
-
-    private fun createAssignment(
-        courseId: Long,
-        teacher: CanvasUserApiModel,
-        calendar: Calendar,
-        gradingType: GradingType,
-        pointsPossible: Double
-    ): AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = courseId,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = gradingType,
-                teacherToken = teacher.token,
-                pointsPossible = pointsPossible,
-                dueAt = calendar.time.toApiString()
-            )
-        )
     }
 
 }

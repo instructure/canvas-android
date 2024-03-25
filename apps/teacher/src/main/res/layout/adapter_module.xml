@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2019 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,54 +14,102 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:gravity="center_vertical"
-    android:minHeight="48dp"
-    android:orientation="horizontal"
-    android:paddingStart="16dp"
-    android:paddingTop="8dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="8dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/moduleName"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="@color/textDarkest"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:text="This is for week 1: Origin of the Earth and the Problem with Complexity and Diversity"/>
+        android:background="@color/backgroundLight"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="8dp">
 
-    <ImageView
-        android:id="@+id/collapseIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_collapse_group"
-        android:tint="@color/textDarkest"/>
+        <ImageView
+            android:id="@+id/collapseIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:importantForAccessibility="no"
+            android:rotation="180"
+            android:src="@drawable/ic_arrow_down"
+            android:tint="@color/textDarkest" />
 
-    <ImageView
-        android:id="@+id/publishedIcon"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_gravity="center_vertical"
-        android:contentDescription="@string/published"
-        android:src="@drawable/ic_complete_solid"
-        android:tint="@color/textSuccess"/>
+        <TextView
+            android:id="@+id/moduleName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/textDarkest"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="This is for week 1: Origin of the Earth and the Problem with Complexity and Diversity" />
 
-    <ImageView
-        android:id="@+id/unpublishedIcon"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_gravity="center_vertical"
-        android:contentDescription="@string/not_published"
-        android:src="@drawable/ic_no"
-        android:tint="@color/textDark"/>
+        <LinearLayout
+            android:id="@+id/publishActions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:paddingStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/moduleOptions"
+            android:orientation="horizontal">
 
+            <ProgressBar
+                android:id="@+id/loadingView"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/publishedIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/published"
+                android:src="@drawable/ic_complete_solid"
+                android:tint="@color/textSuccess" />
+
+            <ImageView
+                android:id="@+id/unpublishedIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/not_published"
+                android:src="@drawable/ic_no"
+                android:tint="@color/textDark"
+                tools:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/overflow"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:paddingStart="14dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="14dp"
+                android:paddingBottom="14dp"
+                android:importantForAccessibility="no"
+                android:tint="@color/textDark"
+                app:srcCompat="@drawable/ic_overflow_white_18dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.login
 
 import android.content.Intent
+import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.LoginNavigation
@@ -34,6 +35,8 @@ class TeacherLoginNavigation(private val activity: FragmentActivity) : LoginNavi
 
     override fun initMainActivityIntent(): Intent {
         PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
+
+        CookieManager.getInstance().flush()
 
         return SplashActivity.createIntent(activity, activity.intent?.extras)
     }

@@ -52,9 +52,23 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.StorageQuotaExceededError
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Navigation
@@ -77,21 +91,54 @@ import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ActivityResult
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.OnBackStackChangedEvent
+import com.instructure.pandautils.utils.PermissionReceiver
+import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
 import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.post
+import com.instructure.pandautils.utils.postSticky
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityNavigationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
 import com.instructure.student.databinding.NavigationDrawerBinding
 import com.instructure.student.dialog.BookmarkCreationDialog
-import com.instructure.student.events.*
+import com.instructure.student.events.CoreDataFinishedLoading
+import com.instructure.student.events.CourseColorOverlayToggledEvent
+import com.instructure.student.events.ShowConfettiEvent
+import com.instructure.student.events.ShowGradesToggledEvent
+import com.instructure.student.events.StatusBarColorChangeEvent
+import com.instructure.student.events.UserUpdatedEvent
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.flutterChannels.FlutterComm
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.BookmarksFragment
+import com.instructure.student.fragment.CalendarEventFragment
+import com.instructure.student.fragment.CalendarFragment
+import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.InboxComposeMessageFragment
+import com.instructure.student.fragment.InboxConversationFragment
+import com.instructure.student.fragment.InboxRecipientsFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.navigation.AccountMenuItem
@@ -105,11 +152,16 @@ import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.ArrayDeque
+import java.util.Deque
 import javax.inject.Inject
 
 private const val BOTTOM_NAV_SCREEN = "bottomNavScreen"
@@ -154,6 +206,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var firebaseCrashlytics: FirebaseCrashlytics
+
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -204,7 +259,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     StudentLogoutTask(
                         if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS,
                         typefaceBehavior = typefaceBehavior,
-                        databaseProvider = databaseProvider
+                        databaseProvider = databaseProvider,
+                        alarmScheduler = alarmScheduler
                     ).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
@@ -214,7 +270,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                                 StudentLogoutTask(
                                     LogoutTask.Type.LOGOUT,
                                     typefaceBehavior = typefaceBehavior,
-                                    databaseProvider = databaseProvider
+                                    databaseProvider = databaseProvider,
+                                    alarmScheduler = alarmScheduler
                                 ).execute()
                             }
                             .setNegativeButton(android.R.string.cancel, null)
@@ -325,6 +382,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         } catch {
             firebaseCrashlytics.recordException(it)
         }
+
+        scheduleAlarms()
     }
 
     private fun handleTokenCheck(online: Boolean?) {
@@ -334,7 +393,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             lifecycleScope.launch {
                 val isTokenValid = repository.isTokenValid()
                 if (!isTokenValid) {
-                    StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
+                    StudentLogoutTask(
+                        LogoutTask.Type.LOGOUT,
+                        typefaceBehavior = typefaceBehavior,
+                        databaseProvider = databaseProvider,
+                        alarmScheduler = alarmScheduler
+                    ).execute()
                 }
             }
         }
@@ -387,7 +451,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
-            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider).execute()
+            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
         }
 
         setupBottomNavigation()
@@ -664,7 +728,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun overrideFont() {
         super.overrideFont()
-        typefaceBehavior.overrideFont(navigationBehavior.fontFamily.fontPath)
+        typefaceBehavior.overrideFont(navigationBehavior.canvasFont)
     }
 
     //endregion
@@ -893,6 +957,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun selectBottomNavFragment(fragmentClass: Class<out Fragment>) {
         val selectedFragment = supportFragmentManager.findFragmentByTag(fragmentClass.name)
+
+        (topFragment as? DashboardFragment)?.cancelCardDrag()
 
         if (selectedFragment == null) {
             val fragment = createBottomNavFragment(fragmentClass.name)
@@ -1212,6 +1278,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
             NothingToSeeHereFragment::class.java.name -> NothingToSeeHereFragment.newInstance()
             else -> null
+        }
+    }
+
+    private fun scheduleAlarms() {
+        lifecycleScope.launch {
+            alarmScheduler.scheduleAllAlarmsForCurrentUser()
         }
     }
 

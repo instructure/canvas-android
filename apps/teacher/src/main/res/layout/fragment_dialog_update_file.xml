@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.instructure.teacher.features.modules.list.ui.file.FileAvailability" />
+
+        <import type="com.instructure.teacher.features.modules.list.ui.file.FileVisibility" />
+
+        <import type="com.instructure.pandautils.mvvm.ViewState" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.instructure.teacher.features.modules.list.ui.file.UpdateFileViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/updateFileLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <ImageView
+                android:id="@+id/closeButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:background="?selectableItemBackground"
+                android:contentDescription="@string/close"
+                android:onClick="@{() -> viewModel.close()}"
+                android:padding="12dp"
+                android:src="@drawable/ic_close"
+                android:tint="@color/textDarkest"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/edit_permissions"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/closeButton"
+                app:layout_constraintEnd_toStartOf="@+id/updateButton"
+                app:layout_constraintStart_toEndOf="@id/closeButton"
+                app:layout_constraintTop_toTopOf="@id/closeButton" />
+
+            <TextView
+                android:id="@+id/updateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="?selectableItemBackground"
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:onClick="@{() -> viewModel.update()}"
+                android:paddingHorizontal="12dp"
+                android:text="@string/update"
+                android:textColor="@color/textInfo"
+                app:layout_constraintBottom_toBottomOf="@id/closeButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/closeButton" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/toolbarDivider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintTop_toBottomOf="@id/closeButton" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:nestedScrollingEnabled="true"
+            android:visibility="@{viewModel.state instanceof ViewState.Success ? View.VISIBLE : View.GONE}">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true">
+
+                <TextView
+                    android:id="@+id/availabilityTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/availability_title"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="22sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/availabilityRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/availabilityTitle">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/publish"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedAvailability == FileAvailability.PUBLISHED}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.PUBLISHED) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/publish"
+                        android:textColor="@color/textDarkest" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/unpublish"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedAvailability == FileAvailability.UNPUBLISHED}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.UNPUBLISHED) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/unpublish"
+                        android:textColor="@color/textDarkest"
+                        tools:checked="true" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/hide"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedAvailability == FileAvailability.HIDDEN}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.HIDDEN) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/only_available_with_link"
+                        android:textColor="@color/textDarkest" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/schedule"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedAvailability == FileAvailability.SCHEDULED}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onAvailabilityChanged(FileAvailability.SCHEDULED) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/schedule_availability"
+                        android:textColor="@color/textDarkest" />
+                </RadioGroup>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/scheduleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="12dp"
+                    android:orientation="vertical"
+                    android:visibility="@{viewModel.data.selectedAvailability == FileAvailability.SCHEDULED ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintTop_toBottomOf="@id/availabilityRadioGroup"
+                    tools:visibility="visible">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/titleGuideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.15"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/dateGuideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.55"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/actionGuideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.87"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/availableFromTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:text="@string/from"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toStartOf="@+id/titleGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/availableUntilTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:minHeight="48dp"
+                        android:text="@string/until"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/titleGuideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/availableFromTitle" />
+
+                    <TextView
+                        android:id="@+id/availableFromDate"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="@drawable/bg_rounded_rectangle"
+                        android:foreground="?selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.updateUnlockAt()}"
+                        android:paddingHorizontal="12dp"
+                        android:text="@{viewModel.data.unlockAtDateString == null ? @string/date : viewModel.data.unlockAtDateString}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="14sp"
+                        app:accessibleTouchTarget="@{true}"
+                        app:layout_constraintBottom_toBottomOf="@id/availableFromTitle"
+                        app:layout_constraintEnd_toStartOf="@+id/dateGuideline"
+                        app:layout_constraintStart_toEndOf="@id/titleGuideline"
+                        app:layout_constraintTop_toTopOf="@id/availableFromTitle"
+                        tools:text="@string/date" />
+
+                    <TextView
+                        android:id="@+id/availableUntilDate"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:background="@drawable/bg_rounded_rectangle"
+                        android:foreground="?selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.updateLockAt()}"
+                        android:paddingHorizontal="12dp"
+                        android:text="@{viewModel.data.lockAtDateString == null ? @string/date : viewModel.data.lockAtDateString}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="14sp"
+                        app:accessibleTouchTarget="@{true}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/dateGuideline"
+                        app:layout_constraintStart_toEndOf="@id/titleGuideline"
+                        app:layout_constraintTop_toTopOf="@id/availableUntilTitle"
+                        tools:text="Aug 12, 2024" />
+
+                    <TextView
+                        android:id="@+id/availableFromTime"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:alpha="@{viewModel.data.unlockAt != null ? 1f : 0.6f}"
+                        android:background="@drawable/bg_rounded_rectangle"
+                        android:enabled="@{viewModel.data.unlockAt != null}"
+                        android:foreground="?selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.updateUnlockTime()}"
+                        android:paddingHorizontal="12dp"
+                        android:text="@{viewModel.data.unlockAtTimeString == null ? @string/time : viewModel.data.unlockAtTimeString}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="14sp"
+                        app:accessibleTouchTarget="@{true}"
+                        app:layout_constraintBottom_toBottomOf="@id/availableFromTitle"
+                        app:layout_constraintEnd_toStartOf="@+id/actionGuideline"
+                        app:layout_constraintStart_toEndOf="@id/dateGuideline"
+                        app:layout_constraintTop_toTopOf="@id/availableFromTitle"
+                        tools:enabled="false"
+                        tools:text="@string/time" />
+
+                    <TextView
+                        android:id="@+id/availableUntilTime"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_marginHorizontal="4dp"
+                        android:alpha="@{viewModel.data.lockAt != null ? 1f : 0.6f}"
+                        android:background="@drawable/bg_rounded_rectangle"
+                        android:enabled="@{viewModel.data.lockAt != null}"
+                        android:foreground="?selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:onClick="@{() -> viewModel.updateLockTime()}"
+                        android:paddingHorizontal="12dp"
+                        android:text="@{viewModel.data.lockAtTimeString == null ? @string/time : viewModel.data.lockAtTimeString}"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="14sp"
+                        app:accessibleTouchTarget="@{true}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/actionGuideline"
+                        app:layout_constraintStart_toEndOf="@id/dateGuideline"
+                        app:layout_constraintTop_toTopOf="@id/availableUntilTitle"
+                        tools:text="8:00 AM" />
+
+
+                    <ImageView
+                        android:id="@+id/clearFromDate"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:alpha="@{viewModel.data.unlockAt != null ? 1f : 0.6f}"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/a11y_contentDescription_clearAvailableFromDate"
+                        android:onClick="@{() -> viewModel.data.unlockAt != null ? viewModel.clearUnlockDate() : null}"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_close"
+                        android:tint="@color/textDarkest"
+                        app:layout_constraintBottom_toBottomOf="@id/availableFromTitle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/actionGuideline"
+                        app:layout_constraintTop_toTopOf="@id/availableFromTitle" />
+
+                    <ImageView
+                        android:id="@+id/clearUntilDate"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:alpha="@{viewModel.data.lockAt != null ? 1f : 0.6f}"
+                        android:background="?selectableItemBackground"
+                        android:contentDescription="@string/a11y_contentDescription_clearAvailableFromDate"
+                        android:onClick="@{() -> viewModel.data.lockAt != null ? viewModel.clearLockDate() : null}"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_close"
+                        android:tint="@color/textDarkest"
+                        app:layout_constraintBottom_toBottomOf="@id/availableUntilTitle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/actionGuideline"
+                        app:layout_constraintTop_toTopOf="@id/availableUntilTitle" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/scheduleLayout" />
+
+                <TextView
+                    android:id="@+id/visibilityTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/visibility_title"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="22sp"
+                    app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                <RadioGroup
+                    android:id="@+id/visibilityRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="8dp"
+                    android:alpha="@{viewModel.data.selectedAvailability != FileAvailability.UNPUBLISHED ? 1f : 0.6f}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/visibilityTitle">
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/visibilityInherit"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedVisibility == FileVisibility.INHERIT}"
+                        android:enabled="@{viewModel.data.selectedAvailability != FileAvailability.UNPUBLISHED}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.INHERIT) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/inherit_from_course"
+                        android:textColor="@color/textDarkest" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/visibilityContext"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedVisibility == FileVisibility.CONTEXT}"
+                        android:enabled="@{viewModel.data.selectedAvailability != FileAvailability.UNPUBLISHED}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.CONTEXT) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/course_members"
+                        android:textColor="@color/textDarkest"
+                        tools:checked="true" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/visibilityInstitution"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedVisibility == FileVisibility.INSTITUTION}"
+                        android:enabled="@{viewModel.data.selectedAvailability != FileAvailability.UNPUBLISHED}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.INSTITUTION) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/institution_members"
+                        android:textColor="@color/textDarkest" />
+
+                    <androidx.appcompat.widget.AppCompatRadioButton
+                        android:id="@+id/visibilityPublic"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:checked="@{viewModel.data.selectedVisibility == FileVisibility.PUBLIC}"
+                        android:enabled="@{viewModel.data.selectedAvailability != FileAvailability.UNPUBLISHED}"
+                        android:onCheckedChanged="@{(view, isChecked) -> isChecked ? viewModel.onVisibilityChanged(FileVisibility.PUBLIC) : null}"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/public_title"
+                        android:textColor="@color/textDarkest" />
+                </RadioGroup>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyViewState="@{viewModel.state}"
+            tools:visibility="gone" />
+    </LinearLayout>
+</layout>

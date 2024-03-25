@@ -30,9 +30,6 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -49,6 +46,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class SpeedGraderE2ETest : TeacherTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -66,7 +64,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         val gradedStudent = data.studentsList[1]
         val noSubStudent = data.studentsList[2]
 
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for ${course.name} course.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val assignment = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -75,7 +73,7 @@ class SpeedGraderE2ETest : TeacherTest() {
                 pointsPossible = 15.0
         )
 
-        Log.d(PREPARATION_TAG,"Seed a submission for ${assignment[0].name} assignment with ${student.name} student.")
+        Log.d(PREPARATION_TAG,"Seed a submission for '${assignment[0].name}' assignment with '${student.name}' student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -86,7 +84,7 @@ class SpeedGraderE2ETest : TeacherTest() {
                 studentToken = student.token
         )
 
-        Log.d(PREPARATION_TAG,"Seed a submission for ${assignment[0].name} assignment with ${gradedStudent.name} student.")
+        Log.d(PREPARATION_TAG,"Seed a submission for '${assignment[0].name}' assignment with '${gradedStudent.name}' student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -97,32 +95,32 @@ class SpeedGraderE2ETest : TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
-        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${gradedStudent.name} student.")
-        gradeSubmission(teacher, course, assignment, gradedStudent)
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${gradedStudent.name}' student.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment[0].id, gradedStudent.id, postedGrade = "15")
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to Assignments Page.")
+        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to Assignments Page.")
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
 
-        Log.d(STEP_TAG,"Click on ${assignment[0].name} assignment and assert that that there is one 'Needs Grading' submission (for ${noSubStudent.name} student) and one 'Not Submitted' submission (for ${student.name} student. ")
+        Log.d(STEP_TAG,"Click on '${assignment[0].name}' assignment and assert that that there is one 'Needs Grading' submission for '${noSubStudent.name}' student and one 'Not Submitted' submission for '${student.name}' student.")
         assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.assertNeedsGrading(actual = 1, outOf = 3)
         assignmentDetailsPage.assertNotSubmitted(actual = 1, outOf = 3)
 
-        Log.d(STEP_TAG,"Open 'Not Submitted' submissions and assert that the submission of ${noSubStudent.name} student is displayed. Navigate back.")
+        Log.d(STEP_TAG,"Open 'Not Submitted' submissions and assert that the submission of '${noSubStudent.name}' student is displayed. Navigate back.")
         assignmentDetailsPage.openNotSubmittedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(noSubStudent)
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Open 'Graded' submissions and assert that the submission of ${gradedStudent.name} student is displayed. Navigate back.")
+        Log.d(STEP_TAG,"Open 'Graded' submissions and assert that the submission of '${gradedStudent.name}' student is displayed. Navigate back.")
         assignmentDetailsPage.openGradedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(gradedStudent)
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of ${student.name} student is displayed.")
+        Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of '${student.name}' student is displayed.")
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
@@ -132,7 +130,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         speedGraderGradePage.openGradeDialog()
         val grade = "10"
 
-        Log.d(STEP_TAG,"Enter $grade as the new grade and assert that it has applied. Navigate back and refresh the page.")
+        Log.d(STEP_TAG,"Enter '$grade' as the new grade and assert that it has applied. Navigate back and refresh the page.")
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
         Espresso.pressBack()
@@ -165,7 +163,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Navigate back assignment's details page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of ${student.name} student is displayed.")
+        Log.d(STEP_TAG,"Open (all) submissions and assert that the submission of '${student.name}' student is displayed.")
         assignmentDetailsPage.openSubmissionsPage()
         
         Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
@@ -191,19 +189,4 @@ class SpeedGraderE2ETest : TeacherTest() {
         assignmentSubmissionListPage.assertGradesHidden(student.name)
     }
 
-    private fun gradeSubmission(
-        teacher: CanvasUserApiModel,
-        course: CourseApiModel,
-        assignment: List<AssignmentApiModel>,
-        gradedStudent: CanvasUserApiModel
-    ) {
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = course.id,
-            assignmentId = assignment[0].id,
-            studentId = gradedStudent.id,
-            postedGrade = "15",
-            excused = false
-        )
-    }
 }

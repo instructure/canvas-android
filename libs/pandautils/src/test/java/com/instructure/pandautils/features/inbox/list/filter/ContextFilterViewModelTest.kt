@@ -80,12 +80,12 @@ class ContextFilterViewModelTest {
 
     @Test
     fun `Clicking items sends event with id`() {
-        val canvasContext = listOf<CanvasContext>(Course(id = 1, name = "Course"))
+        val canvasContext = listOf<CanvasContext>(Course(id = 1L, name = "Course"))
         viewModel.setFilterItems(canvasContext)
 
         val listItems = viewModel.itemViewModels.value ?: emptyList()
         (listItems[1] as ContextFilterItemViewModel).onClicked()
 
-        assertEquals(1, viewModel.events.value!!.peekContent())
+        assertEquals(1L, viewModel.events.value!!.peekContent())
     }
 }

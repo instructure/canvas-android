@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
+import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.tasks.StudentLogoutTask
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -39,15 +40,28 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var databaseProvider: DatabaseProvider
 
+    @Inject
+    lateinit var alarmScheduler: AlarmScheduler
+
     override fun onCreate() {
         super.onCreate()
         MasqueradeHelper.masqueradeLogoutTask = Runnable {
-            StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
+            StudentLogoutTask(
+                LogoutTask.Type.LOGOUT,
+                typefaceBehavior = typefaceBehavior,
+                databaseProvider = databaseProvider,
+                alarmScheduler = alarmScheduler
+            ).execute()
         }
     }
 
     override fun performLogoutOnAuthError() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior, databaseProvider = databaseProvider).execute()
+        StudentLogoutTask(
+            LogoutTask.Type.LOGOUT,
+            typefaceBehavior = typefaceBehavior,
+            databaseProvider = databaseProvider,
+            alarmScheduler = alarmScheduler
+        ).execute()
     }
 
     override fun getWorkManagerFactory(): WorkerFactory = workerFactory

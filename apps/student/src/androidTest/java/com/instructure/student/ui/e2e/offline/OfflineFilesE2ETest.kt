@@ -22,10 +22,12 @@ import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.FileFolderApi
 import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -36,13 +38,14 @@ import org.junit.Test
 
 @HiltAndroidTest
 class OfflineFilesE2ETest : StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @OfflineE2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineFilesE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -54,7 +57,7 @@ class OfflineFilesE2ETest : StudentTest() {
         val testCourseFolderName = "Goodya"
         Log.d(PREPARATION_TAG, "Create a course folder within the 'Files' tab with the name: '$testCourseFolderName'.")
         val courseRootFolder = FileFolderApi.getCourseRootFolder(course.id, teacher.token)
-        val courseTestFolder = FileFolderApi.createCourseFolder(courseRootFolder.id, testCourseFolderName, false, teacher.token)
+        val courseTestFolder = FileFolderApi.createCourseFolder(courseRootFolder.id, teacher.token, testCourseFolderName)
 
         Log.d(PREPARATION_TAG, "Create a (text) file within the root folder (so the 'Files' tab file list) of the '${course.name}' course.")
         val rootFolderTestTextFile = uploadTextFile(courseRootFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
@@ -62,7 +65,7 @@ class OfflineFilesE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG, "Create a (text) file within the '${courseTestFolder.name}' folder of the '${course.name}' course.")
         val courseTestFolderTextFile = uploadTextFile(courseTestFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -77,20 +80,13 @@ class OfflineFilesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Files")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
-        dashboardPage.waitForRender()
-        dashboardPage.waitForSyncProgressDownloadStartedNotification()
-        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
-
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and the to disappear. (It should be displayed after the 'Download Started' notification immediately.)")
-        dashboardPage.waitForSyncProgressStartingNotification()
-        dashboardPage.waitForSyncProgressStartingNotificationToDisappear()
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        Thread.sleep(10000) //Need to wait a bit here because of a UI glitch that when network state change, the dashboard page 'pops' a bit and it can confuse the automation script.
-        device.waitForIdle()
-        device.waitForWindowUpdate(null, 10000)
+        OfflineTestUtils.waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()

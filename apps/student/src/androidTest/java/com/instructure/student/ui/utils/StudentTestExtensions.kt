@@ -23,6 +23,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import androidx.fragment.app.FragmentActivity
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -56,6 +57,10 @@ fun StudentTest.slowLogIn(enrollmentType: String = EnrollmentTypes.STUDENT_ENROL
     loginFindSchoolPage.clickToolbarNextMenuItem()
     loginSignInPage.loginAs(user)
     return user
+}
+
+fun StudentTest.openOverflowMenu() {
+    Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
 }
 
 fun seedDataForK5(
@@ -271,16 +276,7 @@ fun seedAssignmentSubmission(
         it.attachmentsList.addAll(fileAttachments)
     }
 
-    // Seed the submissions
-    val submissionRequest = SubmissionsApi.SubmissionSeedRequest(
-            assignmentId = assignmentId,
-            courseId = courseId,
-            studentToken = studentToken,
-            commentSeedsList = commentSeeds,
-            submissionSeedsList = submissionSeeds
-    )
-
-    return SubmissionsApi.seedAssignmentSubmission(submissionRequest)
+    return SubmissionsApi.seedAssignmentSubmission(courseId, studentToken, assignmentId, commentSeeds, submissionSeeds)
 }
 
 fun uploadTextFile(
@@ -304,10 +300,11 @@ fun uploadTextFile(
 
     // Start the Canvas file upload process
     return FileUploadsApi.uploadFile(
-            courseId,
-            assignmentId,
-            file.readBytes(),
-            file.name,
-            token,
-            fileUploadType)
+        courseId,
+        assignmentId,
+        file.readBytes(),
+        file.name,
+        token,
+        fileUploadType
+    )
 }

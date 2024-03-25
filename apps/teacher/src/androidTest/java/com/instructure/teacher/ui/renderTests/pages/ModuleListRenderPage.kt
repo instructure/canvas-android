@@ -15,10 +15,12 @@
  */
 package com.instructure.teacher.ui.renderTests.pages
 
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
@@ -51,6 +53,7 @@ class ModuleListRenderPage : BasePage(R.id.moduleList) {
     val moduleItemTitle by OnViewWithId(R.id.moduleItemTitle)
     val moduleItemIndent by OnViewWithId(R.id.moduleItemIndent)
     val moduleItemSubtitle by OnViewWithId(R.id.moduleItemSubtitle)
+    val moduleItemStatusIcon by OnViewWithId(R.id.moduleItemStatusIcon)
     val moduleItemPublishedIcon by OnViewWithId(R.id.moduleItemPublishedIcon)
     val moduleItemUnpublishedIcon by OnViewWithId(R.id.moduleItemUnpublishedIcon)
     val moduleItemLoadingView by OnViewWithId(R.id.moduleItemLoadingView)
@@ -75,5 +78,9 @@ class ModuleListRenderPage : BasePage(R.id.moduleList) {
 
     fun assertHasItemIndent(indent: Int) {
         moduleItemIndent.check(matches(ViewSizeMatcher.hasWidth(indent)))
+    }
+
+    fun assertStatusIconContentDescription(@StringRes contentDescription: Int) {
+        moduleItemStatusIcon.check(matches(withContentDescription(contentDescription)))
     }
 }
