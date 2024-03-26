@@ -60,7 +60,7 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CreateUpdateEventScreenWrapper(title(), uiState, viewModel::handleAction, ::navigateBack)
+                CreateUpdateEventScreenWrapper(title(), uiState, viewModel::handleAction)
             }
         }
     }
@@ -71,6 +71,8 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
                 sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
                 activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
             }
+
+            is CreateUpdateEventViewModelAction.NavigateBack -> navigateBack()
         }
     }
 
@@ -92,6 +94,9 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
     override fun onHandleBackPressed(): Boolean {
         if (viewModel.uiState.value.selectCalendarUiState.show) {
             viewModel.handleAction(CreateUpdateEventAction.HideSelectCalendarScreen)
+            return true
+        } else if (!viewModel.uiState.value.canNavigateBack) {
+            viewModel.handleAction(CreateUpdateEventAction.CheckUnsavedChanges)
             return true
         }
         return false

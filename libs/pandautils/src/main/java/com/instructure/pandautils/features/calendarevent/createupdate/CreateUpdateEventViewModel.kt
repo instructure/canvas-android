@@ -22,6 +22,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toSimpleDate
 import com.instructure.canvasapi2.utils.weave.catch
@@ -35,8 +36,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.TextStyle
+import org.threeten.bp.temporal.TemporalAdjusters
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -56,6 +62,8 @@ class CreateUpdateEventViewModel @Inject constructor(
 
     private val initialDate = savedStateHandle.get<String>(INITIAL_DATE).toSimpleDate()?.toLocalDate() ?: LocalDate.now()
 
+    private var frequencyMap = mapOf<String, String?>()
+
     init {
         loadCanvasContexts()
         setInitialState()
@@ -68,7 +76,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             is CreateUpdateEventAction.UpdateDate -> {
-                _uiState.update { it.copy(date = action.date) }
+                _uiState.update { it.copy(date = action.date, frequencyDialogUiState = getFrequencyDialogUiState(action.date)) }
             }
 
             is CreateUpdateEventAction.UpdateStartTime -> {
@@ -80,7 +88,10 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             is CreateUpdateEventAction.UpdateFrequency -> {
-                _uiState.update { it.copy(frequency = action.frequency) }
+                _uiState.update {
+                    val frequencyDialogUiState = it.frequencyDialogUiState.copy(selectedFrequency = action.frequency)
+                    it.copy(frequencyDialogUiState = frequencyDialogUiState)
+                }
             }
 
             is CreateUpdateEventAction.UpdateCanvasContext -> {
@@ -123,13 +134,33 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             is CreateUpdateEventAction.CheckUnsavedChanges -> {
-                action.result(checkUnsavedChanges())
+                if (checkUnsavedChanges()) {
+                    _uiState.update { it.copy(showUnsavedChangesDialog = true) }
+                } else {
+                    handleAction(CreateUpdateEventAction.NavigateBack)
+                }
+            }
+
+            is CreateUpdateEventAction.HideUnsavedChangesDialog -> {
+                _uiState.update { it.copy(showUnsavedChangesDialog = false) }
+            }
+
+            is CreateUpdateEventAction.NavigateBack -> {
+                viewModelScope.launch {
+                    _uiState.update { it.copy(canNavigateBack = true) }
+                    _events.send(CreateUpdateEventViewModelAction.NavigateBack)
+                }
             }
         }
     }
 
     private fun setInitialState() {
-        _uiState.update { it.copy(date = initialDate) }
+        _uiState.update {
+            it.copy(
+                date = initialDate,
+                frequencyDialogUiState = getFrequencyDialogUiState(initialDate)
+            )
+        }
         // TODO
     }
 
@@ -150,6 +181,54 @@ class CreateUpdateEventViewModel @Inject constructor(
         }
     }
 
+    private fun getFrequencyDialogUiState(date: LocalDate): FrequencyDialogUiState {
+        val dayOfWeek = date.dayOfWeek
+        val dayOfMonthOrdinal = (date.dayOfMonth - 1) / 7 + 1
+        val isLastDayOfWeekInMonth = date.with(TemporalAdjusters.lastInMonth(dayOfWeek)) == date
+        val dayOfWeekText = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val dateText = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern()))
+        val dayAbbreviation = date.dayOfWeek.name.substring(0, 2)
+        val ordinal = when {
+            isLastDayOfWeekInMonth -> resources.getString(R.string.eventFrequencyMonthlyLast)
+            else -> when (dayOfMonthOrdinal) {
+                1 -> resources.getString(R.string.eventFrequencyMonthlyFirst)
+                2 -> resources.getString(R.string.eventFrequencyMonthlySecond)
+                3 -> resources.getString(R.string.eventFrequencyMonthlyThird)
+                4 -> resources.getString(R.string.eventFrequencyMonthlyFourth)
+                else -> resources.getString(R.string.eventFrequencyMonthlyLast)
+            }
+        }
+
+        frequencyMap = mapOf(
+            resources.getString(
+                R.string.eventFrequencyDoesNotRepeat
+            ) to null,
+            resources.getString(
+                R.string.eventFrequencyDaily
+            ) to "FREQ=DAILY;INTERVAL=1;COUNT=365",
+            resources.getString(
+                R.string.eventFrequencyWeekly, dayOfWeekText
+            ) to "FREQ=WEEKLY;BYDAY=$dayAbbreviation;INTERVAL=1;COUNT=52",
+            resources.getString(
+                R.string.eventFrequencyMonthly, ordinal, dayOfWeekText
+            ) to "FREQ=MONTHLY;BYSETPOS=${if (isLastDayOfWeekInMonth) -1 else dayOfMonthOrdinal};BYDAY=$dayAbbreviation;INTERVAL=1;COUNT=12",
+            resources.getString(
+                R.string.eventFrequencyAnnually, dateText
+            ) to "FREQ=YEARLY;BYMONTH=${date.monthValue};BYMONTHDAY=${date.dayOfMonth};INTERVAL=1;COUNT=5",
+            resources.getString(
+                R.string.eventFrequencyWeekdays
+            ) to "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1;COUNT=260",
+            resources.getString(
+                R.string.eventFrequencyCustom
+            ) to ""
+        )
+
+        return FrequencyDialogUiState(
+            selectedFrequency = frequencyMap.keys.first(),
+            frequencies = frequencyMap.keys.toList()
+        )
+    }
+
     private fun saveEvent() {
         _uiState.update { it.copy(saving = true) }
         viewModelScope.tryLaunch {
@@ -160,10 +239,11 @@ class CreateUpdateEventViewModel @Inject constructor(
                 LocalDateTime.of(uiState.value.date, it).toApiString()
             } ?: uiState.value.date.toApiString()
 
-            repository.createEvent(
+            val result = repository.createEvent(
                 title = uiState.value.title,
                 startDate = startDate.orEmpty(),
                 endDate = endDate.orEmpty(),
+                rrule = frequencyMap[uiState.value.frequencyDialogUiState.selectedFrequency],
                 contextCode = uiState.value.selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
                 locationName = uiState.value.location,
                 locationAddress = uiState.value.address,
@@ -173,7 +253,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             _uiState.update { it.copy(saving = false) }
             _events.send(
                 CreateUpdateEventViewModelAction.RefreshCalendarDays(
-                    listOfNotNull(uiState.value.date)
+                    result.mapNotNull { it.startDate?.toLocalDate() }
                 )
             )
         } catch {
@@ -187,6 +267,14 @@ class CreateUpdateEventViewModel @Inject constructor(
     }
 
     private fun checkUnsavedChanges(): Boolean {
-        return false
+        return uiState.value.title.isNotEmpty() ||
+                uiState.value.date != initialDate ||
+                uiState.value.startTime != null ||
+                uiState.value.endTime != null ||
+                uiState.value.frequencyDialogUiState.selectedFrequency != frequencyMap.keys.first() ||
+                uiState.value.selectCalendarUiState.selectedCanvasContext != apiPrefs.user ||
+                uiState.value.location.isNotEmpty() ||
+                uiState.value.address.isNotEmpty() ||
+                uiState.value.details.isNotEmpty()
     }
 }

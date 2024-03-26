@@ -38,6 +38,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -93,14 +94,17 @@ fun SingleChoiceAlertDialog(
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     if (confirmationButtonText != null) {
+                        val confirmEnabled = selectedIndex.intValue != -1
                         TextButton(
                             onClick = {
                                 onConfirmation(selectedIndex.intValue)
-                            }
+                            },
+                            enabled = confirmEnabled
                         ) {
                             Text(
                                 text = confirmationButtonText,
-                                color = Color(ThemePrefs.textButtonColor)
+                                color = Color(ThemePrefs.textButtonColor),
+                                modifier = Modifier.alpha(if (confirmEnabled) 1f else .4f)
                             )
                         }
                     }

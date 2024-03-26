@@ -1652,9 +1652,9 @@
     <string name="eventDeleteConfirmationText">This will permanently delete your event.</string>
     <string name="eventDeleteErrorMessage">There was an error deleting this event. Please check your connection and try again.</string>
     <string name="eventDeleteRecurringConfirmationTitle">Confirm Deletion</string>
-    <string name="eventDeleteScopeOne">One</string>
-    <string name="eventDeleteScopeAll">All</string>
-    <string name="eventDeleteScopeFollowing">Following</string>
+    <string name="eventDeleteScopeOne">This event</string>
+    <string name="eventDeleteScopeAll">All events</string>
+    <string name="eventDeleteScopeFollowing">This and all following events</string>
     <string name="calendarAddToDo">Add To Do</string>
     <string name="calendarAddEvent">Add Event</string>
 
@@ -1663,11 +1663,32 @@
     <string name="createEventTitleLabel">Title</string>
     <string name="createEventDateLabel">Date</string>
     <string name="createEventStartTimeLabel">From</string>
+    <string name="createEventStartTimeNotSelected">Start Time</string>
     <string name="createEventEndTimeLabel">To</string>
+    <string name="createEventEndTimeNotSelected">End Time</string>
     <string name="createEventFrequencyLabel">Frequency</string>
     <string name="createEventCalendarLabel">Calendar</string>
     <string name="createEventLocationLabel">Location</string>
     <string name="createEventAddressLabel">Address</string>
     <string name="createEventDetailsLabel">Details</string>
     <string name="eventSaveErrorMessage">There was an error saving this Event. Please check your connection and try again.</string>
+    <string name="eventFrequencyDialogTitle">Frequency</string>
+    <string name="eventFrequencyDoesNotRepeat">Does Not Repeat</string>
+    <string name="eventFrequencyDaily">Daily</string>
+    <string name="eventFrequencyWeekly">Weekly on %s</string>
+    <string name="eventFrequencyMonthlyFirst">First</string>
+    <string name="eventFrequencyMonthlySecond">Second</string>
+    <string name="eventFrequencyMonthlyThird">Third</string>
+    <string name="eventFrequencyMonthlyFourth">Fourth</string>
+    <string name="eventFrequencyMonthlyLast">Last</string>
+    <string name="eventFrequencyMonthly">Monthly on the %s %s</string>
+    <string name="eventFrequencyAnnually">Annually on %s</string>
+    <string name="eventFrequencyWeekdays">Every Weekday (Monday to Friday)</string>
+    <string name="eventFrequencyCustom">Custom</string>
+    <string name="eventFrequencyCustomDialogTitle">Custom Repeating Event</string>
+    <string name="eventFrequencyCustomDialogRepeatEvery">Repeat every:</string>
+    <string name="eventFrequencyCustomDialogEnds">Ends:</string>
+    <string name="eventFrequencyCustomDialogOn">on</string>
+    <string name="eventFrequencyCustomDialogAfter">after</string>
+    <string name="eventFrequencyCustomDialogOccurrances">occurrences (max 400)</string>
 </resources>

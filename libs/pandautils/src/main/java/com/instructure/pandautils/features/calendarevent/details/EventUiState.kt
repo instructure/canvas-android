@@ -17,6 +17,7 @@ data class EventUiState(
     val address: String = "",
     val formattedDescription: String = "",
     val isSeriesEvent: Boolean = false,
+    val isSeriesHead: Boolean = false,
     val errorSnack: String? = null
 )
 

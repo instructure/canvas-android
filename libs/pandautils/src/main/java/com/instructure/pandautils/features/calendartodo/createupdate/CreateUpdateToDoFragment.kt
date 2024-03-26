@@ -102,7 +102,7 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         if (viewModel.uiState.value.selectCalendarUiState.show) {
             viewModel.handleAction(CreateUpdateToDoAction.HideSelectCalendarScreen)
             return true
-        } else if (!viewModel.uiState.value.canGoBack) {
+        } else if (!viewModel.uiState.value.canNavigateBack) {
             viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
             return true
         }

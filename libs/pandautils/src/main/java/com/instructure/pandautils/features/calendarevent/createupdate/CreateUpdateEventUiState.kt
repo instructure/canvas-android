@@ -31,7 +31,7 @@ data class CreateUpdateEventUiState(
     val date: LocalDate = LocalDate.now(),
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
-    val frequency: String = "",
+    val frequencyDialogUiState: FrequencyDialogUiState = FrequencyDialogUiState(),
     val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState(),
     val location: String = "",
     val address: String = "",
@@ -39,6 +39,8 @@ data class CreateUpdateEventUiState(
     val saving: Boolean = false,
     val errorSnack: String? = null,
     val loadingCanvasContexts: Boolean = false,
+    val showUnsavedChangesDialog: Boolean = false,
+    val canNavigateBack: Boolean = false
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 
@@ -46,6 +48,11 @@ data class CreateUpdateEventUiState(
         DateTimeFormatter.ofPattern(DateHelper.getPreferredTimeFormat(context).toPattern())
     ).orEmpty()
 }
+
+data class FrequencyDialogUiState(
+    val selectedFrequency: String = "",
+    val frequencies: List<String> = emptyList()
+)
 
 sealed class CreateUpdateEventAction {
     data class UpdateTitle(val title: String) : CreateUpdateEventAction()
@@ -61,10 +68,12 @@ sealed class CreateUpdateEventAction {
     data object SnackbarDismissed : CreateUpdateEventAction()
     data object ShowSelectCalendarScreen : CreateUpdateEventAction()
     data object HideSelectCalendarScreen : CreateUpdateEventAction()
-    data class CheckUnsavedChanges(val result: (Boolean) -> Unit) : CreateUpdateEventAction()
-
+    data object CheckUnsavedChanges : CreateUpdateEventAction()
+    data object HideUnsavedChangesDialog : CreateUpdateEventAction()
+    data object NavigateBack : CreateUpdateEventAction()
 }
 
 sealed class CreateUpdateEventViewModelAction {
     data class RefreshCalendarDays(val days: List<LocalDate>) : CreateUpdateEventViewModelAction()
+    data object NavigateBack : CreateUpdateEventViewModelAction()
 }

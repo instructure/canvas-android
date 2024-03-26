@@ -162,7 +162,9 @@ private fun OverFlowMenuSegment(
     if (showDeleteScopeDialog.value) {
         SingleChoiceAlertDialog(
             dialogTitle = stringResource(id = R.string.eventDeleteRecurringConfirmationTitle),
-            items = CalendarEventAPI.EventDeleteScope.entries.map { stringResource(id = it.stringRes) },
+            items = CalendarEventAPI.EventDeleteScope.entries.take(if (eventUiState.isSeriesHead) 2 else 3).map {
+                stringResource(id = it.stringRes)
+            },
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.delete),
             onDismissRequest = {

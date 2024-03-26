@@ -63,6 +63,10 @@ data class ScheduleItem(
         @SerializedName("series_natural_language")
         val seriesNaturalLanguage: String? = null,
         val rrule: String? = null,
+        @SerializedName("series_head")
+        val seriesHead: Boolean = false,
+        @IgnoredOnParcel
+        val duplicates: List<CalendarEventWrapper> = ArrayList(),
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
@@ -220,6 +224,11 @@ data class ScheduleItem(
             }
         }
     }
+
+    data class CalendarEventWrapper(
+        @SerializedName("calendar_event")
+        val calendarEvent: ScheduleItem
+    )
 
     companion object {
         fun createSyllabus(title: String?, description: String?): ScheduleItem =

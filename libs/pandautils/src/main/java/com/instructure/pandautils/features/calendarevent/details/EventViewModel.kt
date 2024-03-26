@@ -114,7 +114,8 @@ class EventViewModel @Inject constructor(
                 location = scheduleItem.locationName.orEmpty(),
                 address = scheduleItem.locationAddress.orEmpty(),
                 formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty()),
-                isSeriesEvent = scheduleItem.isRecurring
+                isSeriesEvent = scheduleItem.isRecurring,
+                isSeriesHead = scheduleItem.seriesHead
             )
         }
     }

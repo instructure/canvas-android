@@ -35,7 +35,7 @@ data class CreateUpdateToDoUiState(
     val loadingCanvasContexts: Boolean = false,
     val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState(),
     val showUnsavedChangesDialog: Boolean = false,
-    val canGoBack: Boolean = false
+    val canNavigateBack: Boolean = false
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 

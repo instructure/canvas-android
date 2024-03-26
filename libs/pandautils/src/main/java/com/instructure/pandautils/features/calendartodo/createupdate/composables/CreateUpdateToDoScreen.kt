@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.calendartodo.createupdate.composable
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,13 +28,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -57,7 +54,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -68,6 +64,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.SelectCalendarScreen
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
@@ -304,108 +301,31 @@ private fun CreateUpdateToDoContent(
                     singleLine = true
                 )
             }
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-            Row(
-                verticalAlignment = CenterVertically,
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .height(48.dp)
-                    .clickable {
-                        focusManager.clearFocus()
-                        datePickerDialog.show()
-                    }
-            ) {
-                Text(
-                    text = stringResource(R.string.createToDoDateLabel),
-                    modifier = Modifier.padding(start = 16.dp),
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = uiState.formattedDate,
-                    modifier = Modifier.padding(end = 16.dp),
-                    color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp
-                )
-                Icon(
-                    painter = painterResource(id = R.drawable.arrow_right),
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 16.dp),
-                    tint = colorResource(id = R.color.textDark)
-                )
-            }
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-            Row(
-                verticalAlignment = CenterVertically,
-                modifier = Modifier
-                    .height(48.dp)
-                    .clickable {
-                        focusManager.clearFocus()
-                        timePickerDialog.show()
-                    },
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = stringResource(id = R.string.createToDoTimeLabel),
-                    modifier = Modifier.padding(start = 16.dp),
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = uiState.formattedTime(LocalContext.current),
-                    modifier = Modifier.padding(end = 16.dp),
-                    color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp
-                )
-                Icon(
-                    painter = painterResource(id = R.drawable.arrow_right),
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 16.dp),
-                    tint = colorResource(id = R.color.textDark)
-                )
-            }
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-            Row(
-                verticalAlignment = CenterVertically,
-                modifier = Modifier
-                    .height(48.dp)
-                    .clickable(enabled = !uiState.loadingCanvasContexts) {
-                        focusManager.clearFocus()
-                        actionHandler(CreateUpdateToDoAction.ShowSelectCalendarScreen)
-                    },
-                horizontalArrangement = Arrangement.End
-            ) {
-                Text(
-                    text = stringResource(id = R.string.createToDoCalendarLabel),
-                    modifier = Modifier.padding(start = 16.dp),
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                if (uiState.loadingCanvasContexts) {
-                    CircularProgressIndicator(
-                        color = Color(ThemePrefs.buttonColor),
-                        strokeWidth = 3.dp,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                } else {
-                    Text(
-                        text = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
-                        modifier = Modifier.padding(end = 16.dp),
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 14.sp
-                    )
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrow_right),
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 16.dp),
-                        tint = colorResource(id = R.color.textDark)
-                    )
+            LabelValueRow(
+                label = stringResource(id = R.string.createToDoDateLabel),
+                value = uiState.formattedDate,
+                onClick = {
+                    focusManager.clearFocus()
+                    datePickerDialog.show()
                 }
-            }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createToDoTimeLabel),
+                value = uiState.formattedTime(LocalContext.current),
+                onClick = {
+                    focusManager.clearFocus()
+                    timePickerDialog.show()
+                }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createToDoCalendarLabel),
+                value = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
+                loading = uiState.loadingCanvasContexts,
+                onClick = {
+                    focusManager.clearFocus()
+                    actionHandler(CreateUpdateToDoAction.ShowSelectCalendarScreen)
+                }
+            )
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
                 modifier = Modifier
@@ -457,7 +377,7 @@ private fun CreateUpdateToDoPreview() {
             details = "Details",
             saving = false,
             errorSnack = null,
-            loadingCanvasContexts = false,
+            loadingCanvasContexts = true,
             selectCalendarUiState = SelectCalendarUiState(
                 selectedCanvasContext = Course(name = "Course")
             )

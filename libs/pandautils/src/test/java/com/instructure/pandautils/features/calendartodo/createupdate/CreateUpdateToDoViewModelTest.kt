@@ -241,7 +241,7 @@ class CreateUpdateToDoViewModelTest {
         Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
 
         viewModel.handleAction(CreateUpdateToDoAction.NavigateBack)
-        Assert.assertTrue(viewModel.uiState.value.canGoBack)
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
         Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
     }
 
@@ -263,7 +263,7 @@ class CreateUpdateToDoViewModelTest {
         Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
 
         viewModel.handleAction(CreateUpdateToDoAction.NavigateBack)
-        Assert.assertTrue(viewModel.uiState.value.canGoBack)
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
         Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
     }
 
@@ -279,7 +279,7 @@ class CreateUpdateToDoViewModelTest {
 
         viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
         Assert.assertFalse(viewModel.uiState.value.showUnsavedChangesDialog)
-        Assert.assertTrue(viewModel.uiState.value.canGoBack)
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
         Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
     }
 

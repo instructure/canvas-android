@@ -112,8 +112,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
             }
 
             is CreateUpdateToDoAction.CheckUnsavedChanges -> {
-                val hasUnsavedChanges = checkUnsavedChanges()
-                if (hasUnsavedChanges) {
+                if (checkUnsavedChanges()) {
                     _uiState.update { it.copy(showUnsavedChangesDialog = true) }
                 } else {
                     handleAction(CreateUpdateToDoAction.NavigateBack)
@@ -126,7 +125,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
 
             is CreateUpdateToDoAction.NavigateBack -> {
                 viewModelScope.launch {
-                    _uiState.update { it.copy(canGoBack = true) }
+                    _uiState.update { it.copy(canNavigateBack = true) }
                     _events.send(CreateUpdateToDoViewModelAction.NavigateBack)
                 }
             }

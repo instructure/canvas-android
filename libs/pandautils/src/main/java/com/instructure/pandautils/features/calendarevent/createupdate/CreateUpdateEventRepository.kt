@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.calendarevent.createupdate
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.ScheduleItem
 
 
 class CreateUpdateEventRepository(
@@ -29,22 +30,26 @@ class CreateUpdateEventRepository(
         title: String,
         startDate: String,
         endDate: String,
-        //Frequency
+        rrule: String?,
         contextCode: String,
         locationName: String,
         locationAddress: String,
         description: String
-    ) {
-        calendarEventApi.createCalendarEvent(
+    ): List<ScheduleItem> {
+        val result = calendarEventApi.createCalendarEvent(
             contextCode = contextCode,
             title = title,
             description = description,
             startDate = startDate,
             endDate = endDate,
+            allDay = startDate == endDate,
+            rrule = rrule,
             locationName = locationName,
             locationAddress = locationAddress,
             body = "",
             restParams = RestParams()
         ).dataOrThrow
+
+        return listOf(result) + result.duplicates.map { it.calendarEvent }
     }
 }

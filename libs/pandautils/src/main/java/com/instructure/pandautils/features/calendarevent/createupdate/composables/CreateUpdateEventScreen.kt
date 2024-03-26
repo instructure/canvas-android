@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.calendarevent.createupdate.composabl
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +33,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -57,20 +55,22 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.ical.values.RRule
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.SelectCalendarScreen
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
+import com.instructure.pandautils.compose.composables.SingleChoiceAlertDialog
 import com.instructure.pandautils.compose.getDatePickerDialog
 import com.instructure.pandautils.compose.getTimePickerDialog
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventAction
@@ -88,7 +88,6 @@ internal fun CreateUpdateEventScreenWrapper(
     title: String,
     uiState: CreateUpdateEventUiState,
     actionHandler: (CreateUpdateEventAction) -> Unit,
-    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
@@ -109,7 +108,6 @@ internal fun CreateUpdateEventScreenWrapper(
                 title = title,
                 uiState = uiState,
                 actionHandler = actionHandler,
-                navigationAction = navigationAction,
                 modifier = modifier
             )
         }
@@ -121,7 +119,6 @@ internal fun CreateUpdateEventScreen(
     title: String,
     uiState: CreateUpdateEventUiState,
     actionHandler: (CreateUpdateEventAction) -> Unit,
-    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -143,8 +140,7 @@ internal fun CreateUpdateEventScreen(
             CreateUpdateEventTopAppBar(
                 title = title,
                 uiState = uiState,
-                actionHandler = actionHandler,
-                navigationAction = navigationAction
+                actionHandler = actionHandler
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -166,21 +162,19 @@ private fun CreateUpdateEventTopAppBar(
     title: String,
     uiState: CreateUpdateEventUiState,
     actionHandler: (CreateUpdateEventAction) -> Unit,
-    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val showUnsavedChangesDialog = remember { mutableStateOf(false) }
-    if (showUnsavedChangesDialog.value) {
+    if (uiState.showUnsavedChangesDialog) {
         SimpleAlertDialog(
             dialogTitle = stringResource(id = R.string.exitWithoutSavingTitle),
             dialogText = stringResource(id = R.string.exitWithoutSavingMessage),
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.exitUnsaved),
             onDismissRequest = {
-                showUnsavedChangesDialog.value = false
+                actionHandler(CreateUpdateEventAction.HideUnsavedChangesDialog)
             },
             onConfirmation = {
-                navigationAction()
+                actionHandler(CreateUpdateEventAction.NavigateBack)
             }
         )
     }
@@ -202,10 +196,7 @@ private fun CreateUpdateEventTopAppBar(
             }
         },
         navigationActionClick = {
-            actionHandler(CreateUpdateEventAction.CheckUnsavedChanges {
-                showUnsavedChangesDialog.value = it
-                if (!it) navigationAction()
-            })
+            actionHandler(CreateUpdateEventAction.CheckUnsavedChanges)
         },
         modifier = modifier
     )
@@ -271,6 +262,41 @@ private fun CreateUpdateEventContent(
         )
     }
 
+    val showCustomFrequencyDialog = remember { mutableStateOf(false) }
+    if (showCustomFrequencyDialog.value) {
+        CustomFrequencyDialog(
+            defaultRRule = RRule(),
+            defaultDate = uiState.date,
+            onConfirm = {
+                showCustomFrequencyDialog.value = false
+            },
+            onDismissRequest = {
+                showCustomFrequencyDialog.value = false
+            }
+        )
+    }
+
+    val showFrequencyDialog = remember { mutableStateOf(false) }
+    if (showFrequencyDialog.value) {
+        SingleChoiceAlertDialog(
+            dialogTitle = stringResource(id = R.string.eventFrequencyDialogTitle),
+            items = uiState.frequencyDialogUiState.frequencies,
+            defaultSelection = uiState.frequencyDialogUiState.frequencies.indexOf(uiState.frequencyDialogUiState.selectedFrequency),
+            dismissButtonText = stringResource(id = R.string.cancel),
+            onDismissRequest = {
+                showFrequencyDialog.value = false
+            },
+            onItemSelected = {
+                if (it == uiState.frequencyDialogUiState.frequencies.lastIndex) {
+                    showCustomFrequencyDialog.value = true
+                } else {
+                    actionHandler(CreateUpdateEventAction.UpdateFrequency(uiState.frequencyDialogUiState.frequencies[it]))
+                    showFrequencyDialog.value = false
+                }
+            }
+        )
+    }
+
     Surface(
         modifier = modifier,
         color = colorResource(id = R.color.backgroundLightest)
@@ -331,7 +357,8 @@ private fun CreateUpdateEventContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventStartTimeLabel),
-                value = uiState.startTime?.let { uiState.formattedTime(context, it) }.orEmpty(),
+                value = uiState.startTime?.let { uiState.formattedTime(context, it) }
+                    ?: stringResource(id = R.string.createEventStartTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
                     startTimePickerDialog.show()
@@ -339,7 +366,8 @@ private fun CreateUpdateEventContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventEndTimeLabel),
-                value = uiState.endTime?.let { uiState.formattedTime(context, it) }.orEmpty(),
+                value = uiState.endTime?.let { uiState.formattedTime(context, it) }
+                    ?: stringResource(id = R.string.createEventEndTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
                     endTimePickerDialog.show()
@@ -347,15 +375,16 @@ private fun CreateUpdateEventContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventFrequencyLabel),
-                value = uiState.frequency,
+                value = uiState.frequencyDialogUiState.selectedFrequency,
                 onClick = {
                     focusManager.clearFocus()
-
+                    showFrequencyDialog.value = true
                 }
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventCalendarLabel),
                 value = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
+                loading = uiState.loadingCanvasContexts,
                 onClick = {
                     focusManager.clearFocus()
                     actionHandler(CreateUpdateEventAction.ShowSelectCalendarScreen)
@@ -383,43 +412,6 @@ private fun CreateUpdateEventContent(
                 }
             )
         }
-    }
-}
-
-@Composable
-private fun LabelValueRow(
-    label: String,
-    value: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End,
-        modifier = modifier
-            .height(48.dp)
-            .clickable(onClick = onClick)
-    ) {
-        Text(
-            text = label,
-            modifier = Modifier.padding(start = 16.dp),
-            color = colorResource(id = R.color.textDarkest),
-            fontSize = 16.sp
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = value,
-            modifier = Modifier.padding(end = 16.dp),
-            color = colorResource(id = R.color.textDark),
-            fontSize = 14.sp
-        )
-        Icon(
-            painter = painterResource(id = R.drawable.arrow_right),
-            contentDescription = null,
-            modifier = Modifier.padding(end = 16.dp),
-            tint = colorResource(id = R.color.textDark)
-        )
     }
 }
 
@@ -484,7 +476,6 @@ private fun CreateUpdateEventPreview() {
                 selectedCanvasContext = Course(name = "Course")
             )
         ),
-        actionHandler = {},
-        navigationAction = {}
+        actionHandler = {}
     )
 }

@@ -99,6 +99,8 @@ object CalendarEventAPI {
             @Query(value = "calendar_event[description]", encoded = true) description: String,
             @Query(value = "calendar_event[start_at]") startDate: String,
             @Query(value = "calendar_event[end_at]") endDate: String,
+            @Query(value = "calendar_event[all_day]") allDay: Boolean,
+            @Query(value = "calendar_event[rrule]") rrule: String?,
             @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
             @Query(value = "calendar_event[location_address]", encoded = true) locationAddress: String,
             @Body body: String,
