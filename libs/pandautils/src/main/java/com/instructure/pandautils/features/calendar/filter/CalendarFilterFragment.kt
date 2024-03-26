@@ -8,22 +8,24 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.filter.composables.CalendarFiltersScreen
 import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CalendarFilterFragment : BottomSheetDialogFragment() {
 
     private val viewModel: CalendarFilterViewModel by viewModels()
 
-    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
+    @Inject
+    lateinit var sharedEvents: CalendarSharedEvents
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return ComposeView(requireActivity()).apply {
@@ -32,7 +34,7 @@ class CalendarFilterFragment : BottomSheetDialogFragment() {
                 val actionHandler = { action: CalendarFilterAction -> viewModel.handleAction(action) }
                 CalendarFiltersScreen(uiState = uiState, actionHandler = actionHandler, navigationActionClick = {
                     dismiss()
-                    sharedViewModel.filterDialogClosed()
+                    sharedEvents.filterDialogClosed(lifecycleScope)
                 })
             }
         }
@@ -46,7 +48,7 @@ class CalendarFilterFragment : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        sharedViewModel.filterDialogClosed() // We need to react to dialog dismiss to set the status bar color correctly
+        sharedEvents.filterDialogClosed(lifecycleScope) // We need to react to dialog dismiss to set the status bar color correctly
     }
 
     private fun setFullScreen() {

@@ -33,16 +33,16 @@ import org.junit.Test
 import org.threeten.bp.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CalendarSharedViewModelTest {
+class CalendarSharedEventsTest {
 
     private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
-    lateinit var viewModel: CalendarSharedViewModel
+    lateinit var viewModel: CalendarSharedEvents
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = CalendarSharedViewModel()
+        viewModel = CalendarSharedEvents()
     }
 
     @After

@@ -16,12 +16,15 @@
 package com.instructure.pandautils.di
 
 import com.instructure.pandautils.features.calendar.CalendarPrefs
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 import org.threeten.bp.Clock
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -35,5 +38,16 @@ class CalendarModule {
     @Provides
     fun provideCalendarStateMapper(clock: Clock): CalendarStateMapper {
         return CalendarStateMapper(clock)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class CalendarSingletonModule {
+
+    @Provides
+    @Singleton
+    fun provideCalendarSharedEvents(): CalendarSharedEvents {
+        return CalendarSharedEvents()
     }
 }

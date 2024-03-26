@@ -115,4 +115,5 @@ sealed class CalendarViewModelAction {
 sealed class SharedCalendarAction {
     data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
     data object FilterDialogClosed : SharedCalendarAction()
+    data object CloseToDoScreen : SharedCalendarAction()
 }

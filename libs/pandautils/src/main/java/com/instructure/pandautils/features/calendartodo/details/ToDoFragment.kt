@@ -25,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.PlannerItem
@@ -35,7 +34,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_TODO
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendartodo.details.composables.ToDoScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -54,7 +53,9 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     lateinit var toDoRouter: ToDoRouter
 
     private val viewModel: ToDoViewModel by viewModels()
-    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
+
+    @Inject
+    lateinit var sharedEvents: CalendarSharedEvents
 
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
@@ -64,6 +65,7 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     ): View {
         applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {
@@ -76,13 +78,20 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     private fun handleAction(action: ToDoViewModelAction) {
         when (action) {
             is ToDoViewModelAction.RefreshCalendarDay -> {
-                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(listOf(action.date)))
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(listOf(action.date)))
                 navigateBack()
             }
 
             is ToDoViewModelAction.OpenEditToDo -> {
                 toDoRouter.openEditToDo(action.plannerItem)
             }
+        }
+    }
+
+    private fun handleSharedViewModelAction(action: SharedCalendarAction) {
+        when (action) {
+            is SharedCalendarAction.CloseToDoScreen -> activity?.onBackPressed()
+            else -> {}
         }
     }
 
