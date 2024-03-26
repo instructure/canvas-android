@@ -468,6 +468,7 @@ fun AccessibilityButtons(
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back_arrow),
+                    tint = colorResource(id = R.color.textDarkest),
                     contentDescription = stringResource(
                         id = if (expanded) R.string.a11y_calendarPreviousMonth else R.string.a11y_calendarPreviousWeek,
                         previousContentDescription
@@ -481,6 +482,7 @@ fun AccessibilityButtons(
             }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_forward_arrow),
+                    tint = colorResource(id = R.color.textDarkest),
                     contentDescription = stringResource(
                         id = if (expanded) R.string.a11y_calendarNextMonth else R.string.a11y_calendarNextWeek,
                         nextContentDescription
