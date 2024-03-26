@@ -45,7 +45,7 @@ import org.threeten.bp.LocalDate
 
 @Composable
 internal fun CustomFrequencyDialog(
-    defaultRRule: RRule,
+    defaultRRule: RRule?,
     defaultDate: LocalDate,
     onConfirm: (RRule) -> Unit,
     onDismissRequest: () -> Unit,

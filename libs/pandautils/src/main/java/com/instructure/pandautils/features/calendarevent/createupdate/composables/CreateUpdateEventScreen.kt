@@ -60,7 +60,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.ical.values.RRule
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -261,38 +260,39 @@ private fun CreateUpdateEventContent(
             }
         )
     }
-
     val showCustomFrequencyDialog = remember { mutableStateOf(false) }
-    if (showCustomFrequencyDialog.value) {
-        CustomFrequencyDialog(
-            defaultRRule = RRule(),
-            defaultDate = uiState.date,
-            onConfirm = {
-                showCustomFrequencyDialog.value = false
-            },
-            onDismissRequest = {
-                showCustomFrequencyDialog.value = false
-            }
-        )
-    }
-
     val showFrequencyDialog = remember { mutableStateOf(false) }
     if (showFrequencyDialog.value) {
+        val frequencies = uiState.frequencyDialogUiState.frequencies.keys.toList()
         SingleChoiceAlertDialog(
             dialogTitle = stringResource(id = R.string.eventFrequencyDialogTitle),
-            items = uiState.frequencyDialogUiState.frequencies,
-            defaultSelection = uiState.frequencyDialogUiState.frequencies.indexOf(uiState.frequencyDialogUiState.selectedFrequency),
+            items = frequencies,
+            defaultSelection = frequencies.indexOf(uiState.frequencyDialogUiState.selectedFrequency),
             dismissButtonText = stringResource(id = R.string.cancel),
             onDismissRequest = {
                 showFrequencyDialog.value = false
             },
             onItemSelected = {
-                if (it == uiState.frequencyDialogUiState.frequencies.lastIndex) {
+                if (it == uiState.frequencyDialogUiState.frequencies.size - 1) {
                     showCustomFrequencyDialog.value = true
                 } else {
-                    actionHandler(CreateUpdateEventAction.UpdateFrequency(uiState.frequencyDialogUiState.frequencies[it]))
+                    actionHandler(CreateUpdateEventAction.UpdateFrequency(frequencies[it]))
                     showFrequencyDialog.value = false
                 }
+            }
+        )
+    }
+    if (showCustomFrequencyDialog.value) {
+        CustomFrequencyDialog(
+            defaultRRule = uiState.frequencyDialogUiState.frequencies[uiState.frequencyDialogUiState.selectedFrequency],
+            defaultDate = uiState.date,
+            onConfirm = {
+                actionHandler(CreateUpdateEventAction.CustomFrequencySelected(it))
+                showCustomFrequencyDialog.value = false
+                showFrequencyDialog.value = false
+            },
+            onDismissRequest = {
+                showCustomFrequencyDialog.value = false
             }
         )
     }
@@ -375,7 +375,7 @@ private fun CreateUpdateEventContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventFrequencyLabel),
-                value = uiState.frequencyDialogUiState.selectedFrequency,
+                value = uiState.frequencyDialogUiState.selectedFrequency.orEmpty(),
                 onClick = {
                     focusManager.clearFocus()
                     showFrequencyDialog.value = true

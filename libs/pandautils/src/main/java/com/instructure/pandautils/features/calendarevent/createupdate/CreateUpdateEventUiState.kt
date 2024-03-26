@@ -18,6 +18,7 @@
 package com.instructure.pandautils.features.calendarevent.createupdate
 
 import android.content.Context
+import com.google.ical.values.RRule
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
@@ -50,8 +51,8 @@ data class CreateUpdateEventUiState(
 }
 
 data class FrequencyDialogUiState(
-    val selectedFrequency: String = "",
-    val frequencies: List<String> = emptyList()
+    val selectedFrequency: String? = null,
+    val frequencies: Map<String, RRule?> = emptyMap()
 )
 
 sealed class CreateUpdateEventAction {
@@ -71,6 +72,7 @@ sealed class CreateUpdateEventAction {
     data object CheckUnsavedChanges : CreateUpdateEventAction()
     data object HideUnsavedChangesDialog : CreateUpdateEventAction()
     data object NavigateBack : CreateUpdateEventAction()
+    data class CustomFrequencySelected(val rrule: RRule) : CreateUpdateEventAction()
 }
 
 sealed class CreateUpdateEventViewModelAction {
