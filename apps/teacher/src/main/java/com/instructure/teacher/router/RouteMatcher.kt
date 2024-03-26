@@ -40,6 +40,7 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
@@ -228,6 +229,7 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(CreateOrEditPageDetailsFragment::class.java)
         bottomSheetFragments.add(EditSyllabusFragment::class.java)
         bottomSheetFragments.add(PostPolicyFragment::class.java)
+        bottomSheetFragments.add(CreateUpdateToDoFragment::class.java)
     }
 
     private fun routeUrl(activity: FragmentActivity, url: String) {

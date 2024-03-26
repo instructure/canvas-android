@@ -59,6 +59,7 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {
