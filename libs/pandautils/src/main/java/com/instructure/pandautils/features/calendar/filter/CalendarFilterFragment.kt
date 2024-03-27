@@ -44,7 +44,7 @@ class CalendarFilterFragment : BottomSheetDialogFragment() {
     private fun handleAction(action: CalendarFilterViewModelAction) {
         when (action) {
             is CalendarFilterViewModelAction.FiltersClosed -> {
-                sharedEvents.filtersChanged(lifecycleScope, action.changed)
+                sharedEvents.filtersClosed(lifecycleScope, action.changed)
             }
         }
     }

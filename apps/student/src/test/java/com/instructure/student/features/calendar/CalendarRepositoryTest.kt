@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.calendar
+package com.instructure.student.features.calendar
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.pandautils.features.calendar.CalendarRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -50,7 +51,7 @@ class CalendarRepositoryTest {
     private val groupsApi: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
-    private val calendarRepository: CalendarRepository = CalendarRepository(plannerApi, coursesApi, groupsApi, apiPrefs)
+    private val calendarRepository: CalendarRepository = StudentCalendarRepository(plannerApi, coursesApi, groupsApi, apiPrefs)
 
     @Test(expected = IllegalStateException::class)
     fun `Throw exception when request fails`() = runTest {
@@ -102,7 +103,7 @@ class CalendarRepositoryTest {
     }
 
     @Test
-    fun `Get contexts return failed results and don't request groups if course request is failed`() = runBlockingTest {
+    fun `Get contexts return failed results and don't request groups if course request is failed`() = runTest {
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Fail()
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
@@ -112,7 +113,7 @@ class CalendarRepositoryTest {
     }
 
     @Test
-    fun `Get contexts returns only courses if group request is failed`() = runBlockingTest {
+    fun `Get contexts returns only courses if group request is failed`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Fail()
@@ -125,7 +126,7 @@ class CalendarRepositoryTest {
     }
 
     @Test
-    fun `Get contexts adds user context when course request is successful`() = runBlockingTest {
+    fun `Get contexts adds user context when course request is successful`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Fail()
@@ -140,7 +141,7 @@ class CalendarRepositoryTest {
     }
 
     @Test
-    fun `Get contexts returns courses and groups if successful`() = runBlockingTest {
+    fun `Get contexts returns courses and groups if successful`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         val groups = listOf(Group(id = 63, courseId = 44, name = "First group"))
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
@@ -158,7 +159,7 @@ class CalendarRepositoryTest {
     }
 
     @Test
-    fun `Get contexts returns only valid courses`() = runBlockingTest {
+    fun `Get contexts returns only valid courses`() = runTest {
         val courses = listOf(
             Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
             Course(11) // no active enrollment
@@ -175,7 +176,7 @@ class CalendarRepositoryTest {
     }
 
     @Test
-    fun `Get contexts returns only valid groups`() = runBlockingTest {
+    fun `Get contexts returns only valid groups`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         val groups = listOf(
             Group(id = 63, courseId = 44, name = "First group"),
@@ -190,6 +191,11 @@ class CalendarRepositoryTest {
         assertEquals(1, groupsResult.size)
         assertEquals(groups[0].id, groupsResult[0].id)
         assertEquals(groups[0].name, groupsResult[0].name)
+    }
+
+    @Test
+    fun `Get calendar filter limit returns -1`() = runTest {
+        assertEquals(-1, calendarRepository.getCalendarFilterLimit())
     }
 
     private fun createPlannerItem(
