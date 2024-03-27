@@ -273,7 +273,7 @@ private fun CreateUpdateEventContent(
                 showFrequencyDialog.value = false
             },
             onItemSelected = {
-                if (it == uiState.frequencyDialogUiState.frequencies.size - 1) {
+                if (it == frequencies.lastIndex) {
                     showCustomFrequencyDialog.value = true
                 } else {
                     actionHandler(CreateUpdateEventAction.UpdateFrequency(frequencies[it]))

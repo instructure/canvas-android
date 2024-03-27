@@ -25,6 +25,7 @@ import com.google.ical.values.Frequency
 import com.google.ical.values.RRule
 import com.google.ical.values.Weekday
 import com.google.ical.values.WeekdayNum
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -34,6 +35,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment.Companion.INITIAL_DATE
 import com.instructure.pandautils.utils.toLocalDate
+import com.instructure.pandautils.utils.toLocalTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,6 +68,7 @@ class CreateUpdateEventViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val initialDate = savedStateHandle.get<String>(INITIAL_DATE).toSimpleDate()?.toLocalDate() ?: LocalDate.now()
+    private val scheduleItem: ScheduleItem? = savedStateHandle.get<ScheduleItem>(CreateUpdateEventFragment.SCHEDULE_ITEM)
 
     init {
         loadCanvasContexts()
@@ -175,14 +178,27 @@ class CreateUpdateEventViewModel @Inject constructor(
     }
 
     private fun setInitialState() {
-        _uiState.update {
-            it.copy(
-                date = initialDate,
-                frequencyDialogUiState = getFrequencyDialogUiState(initialDate)
-            )
+        scheduleItem?.let {
+            _uiState.update { state ->
+                state.copy(
+                    title = it.title.orEmpty(),
+                    date = it.startDate?.toLocalDate() ?: state.date,
+                    startTime = it.startDate?.toLocalTime(),
+                    endTime = it.endDate?.toLocalTime(),
+                    frequencyDialogUiState = getFrequencyDialogUiState(it.startDate?.toLocalDate() ?: state.date),
+                    location = it.locationName.orEmpty(),
+                    address = it.locationAddress.orEmpty(),
+                    details = it.description.orEmpty(),
+                )
+            }
+        } ?: run {
+            _uiState.update {
+                it.copy(
+                    date = initialDate,
+                    frequencyDialogUiState = getFrequencyDialogUiState(initialDate)
+                )
+            }
         }
-
-        // TODO when editing
     }
 
     private fun loadCanvasContexts() {
@@ -261,18 +277,42 @@ class CreateUpdateEventViewModel @Inject constructor(
             count = 260
         }
 
-        return FrequencyDialogUiState(
-            selectedFrequency = resources.getString(R.string.eventFrequencyDoesNotRepeat),
-            frequencies = mapOf(
-                resources.getString(R.string.eventFrequencyDoesNotRepeat) to null,
-                resources.getString(R.string.eventFrequencyDaily) to daily,
-                resources.getString(R.string.eventFrequencyWeekly, dayOfWeekText) to weekly,
-                resources.getString(R.string.eventFrequencyMonthly, ordinal, dayOfWeekText) to monthly,
-                resources.getString(R.string.eventFrequencyAnnually, dateText) to yearly,
-                resources.getString(R.string.eventFrequencyWeekdays) to weekdays,
-                resources.getString(R.string.eventFrequencyCustom) to null
-            )
+        val frequencies = mutableMapOf(
+            resources.getString(R.string.eventFrequencyDoesNotRepeat) to null,
+            resources.getString(R.string.eventFrequencyDaily) to daily,
+            resources.getString(R.string.eventFrequencyWeekly, dayOfWeekText) to weekly,
+            resources.getString(R.string.eventFrequencyMonthly, ordinal, dayOfWeekText) to monthly,
+            resources.getString(R.string.eventFrequencyAnnually, dateText) to yearly,
+            resources.getString(R.string.eventFrequencyWeekdays) to weekdays
         )
+
+        var selectedFrequency = resources.getString(R.string.eventFrequencyDoesNotRepeat)
+
+        scheduleItem?.let { scheduleItem ->
+            if (scheduleItem.rrule != null) {
+                frequencies.entries.find {
+                    it.value?.toApiString() == scheduleItem.rrule
+                }?.let {
+                    selectedFrequency = it.key
+                } ?: run {
+                    val frequencyText = scheduleItem.seriesNaturalLanguage.orEmpty()
+                    selectedFrequency = frequencyText
+                    frequencies[frequencyText] = RRule("RRULE:${scheduleItem.rrule}")
+                }
+            }
+        }
+
+        frequencies[resources.getString(R.string.eventFrequencyCustom)] = null
+
+        return FrequencyDialogUiState(
+            selectedFrequency = selectedFrequency,
+            frequencies = frequencies
+        )
+    }
+
+    private fun RRule.toApiString(): String {
+        // Drop the "RRULE:" prefix
+        return toIcal().drop(6)
     }
 
     private fun weekDayFromDayOfWeek(dayOfWeek: DayOfWeek): Weekday {
@@ -297,13 +337,14 @@ class CreateUpdateEventViewModel @Inject constructor(
                 title = title,
                 startDate = startDate.orEmpty(),
                 endDate = endDate.orEmpty(),
-                // Drop the "RRULE:" prefix
-                rrule = frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toIcal()?.drop(6).orEmpty(),
+                rrule = frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString().orEmpty(),
                 contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
                 locationName = location,
                 locationAddress = address,
                 description = details
             )
+
+            // TODO Edit event
 
             _uiState.update { it.copy(saving = false) }
             _events.send(
@@ -322,14 +363,26 @@ class CreateUpdateEventViewModel @Inject constructor(
     }
 
     private fun checkUnsavedChanges(): Boolean = with(uiState.value) {
-        return title.isNotEmpty() ||
-                date != initialDate ||
-                startTime != null ||
-                endTime != null ||
-                frequencyDialogUiState.selectedFrequency != frequencyDialogUiState.frequencies.keys.first() ||
-                selectCalendarUiState.selectedCanvasContext != apiPrefs.user ||
-                location.isNotEmpty() ||
-                address.isNotEmpty() ||
-                details.isNotEmpty()
+        return scheduleItem?.let {
+            title != it.title.orEmpty() ||
+                    date != it.startDate?.toLocalDate() ||
+                    startTime != it.startDate?.toLocalTime() ||
+                    endTime != it.endDate?.toLocalTime() ||
+                    frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString() != RRule("RRULE:${it.rrule}").toApiString() ||
+                    selectCalendarUiState.selectedCanvasContext?.contextId != it.contextCode ||
+                    location != it.locationName.orEmpty() ||
+                    address != it.locationAddress.orEmpty() ||
+                    details != it.description.orEmpty()
+        } ?: run {
+            title.isNotEmpty() ||
+                    date != initialDate ||
+                    startTime != null ||
+                    endTime != null ||
+                    frequencyDialogUiState.selectedFrequency != frequencyDialogUiState.frequencies.keys.first() ||
+                    selectCalendarUiState.selectedCanvasContext != apiPrefs.user ||
+                    location.isNotEmpty() ||
+                    address.isNotEmpty() ||
+                    details.isNotEmpty()
+        }
     }
 }

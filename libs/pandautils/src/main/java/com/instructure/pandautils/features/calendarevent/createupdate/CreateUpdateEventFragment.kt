@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
@@ -108,8 +109,14 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
 
     companion object {
         internal const val INITIAL_DATE = "INITIAL_DATE"
+        internal const val SCHEDULE_ITEM = "SCHEDULE_ITEM"
 
         fun newInstance(route: Route) = CreateUpdateEventFragment().withArgs(route.arguments)
+
+        fun makeRoute(scheduleItem: ScheduleItem): Route {
+            val bundle = bundleOf(SCHEDULE_ITEM to scheduleItem)
+            return Route(CreateUpdateEventFragment::class.java, null, bundle)
+        }
 
         fun makeRoute(initialDateString: String?): Route {
             val bundle = bundleOf(INITIAL_DATE to initialDateString)
