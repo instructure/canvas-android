@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.filter.composables.CalendarFiltersScreen
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -28,14 +29,22 @@ class CalendarFilterFragment : BottomSheetDialogFragment() {
     lateinit var sharedEvents: CalendarSharedEvents
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 val actionHandler = { action: CalendarFilterAction -> viewModel.handleAction(action) }
                 CalendarFiltersScreen(uiState = uiState, actionHandler = actionHandler, navigationActionClick = {
                     dismiss()
-                    sharedEvents.filterDialogClosed(lifecycleScope)
                 })
+            }
+        }
+    }
+
+    private fun handleAction(action: CalendarFilterViewModelAction) {
+        when (action) {
+            is CalendarFilterViewModelAction.FiltersClosed -> {
+                sharedEvents.filtersChanged(lifecycleScope, action.changed)
             }
         }
     }
@@ -48,7 +57,7 @@ class CalendarFilterFragment : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        sharedEvents.filterDialogClosed(lifecycleScope) // We need to react to dialog dismiss to set the status bar color correctly
+        viewModel.filtersClosed()
     }
 
     private fun setFullScreen() {

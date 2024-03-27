@@ -32,7 +32,7 @@ class CalendarSharedEvents {
         }
     }
 
-    fun filterDialogClosed(coroutineScope: CoroutineScope) {
-        sendEvent(coroutineScope, SharedCalendarAction.FilterDialogClosed)
+    fun filtersChanged(coroutineScope: CoroutineScope, changed: Boolean) {
+        sendEvent(coroutineScope, SharedCalendarAction.FiltersClosed(changed))
     }
 }

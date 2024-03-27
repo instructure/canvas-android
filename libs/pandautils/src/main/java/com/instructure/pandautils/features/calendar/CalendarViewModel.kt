@@ -38,6 +38,7 @@ import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -85,7 +86,7 @@ class CalendarViewModel @Inject constructor(
     private val contextIdFilters = mutableSetOf<String>()
 
     private val _uiState =
-        MutableStateFlow(CalendarScreenUiState(createCalendarUiState()))
+        MutableStateFlow(CalendarScreenUiState(createCalendarUiState(loadingMonths = true)))
     val uiState = _uiState.asStateFlow()
 
     private val _events = Channel<CalendarViewModelAction>()
@@ -104,29 +105,31 @@ class CalendarViewModel @Inject constructor(
             val groupIds = canvasContexts[CanvasContext.Type.GROUP]?.map { it.contextId } ?: emptyList()
 
             if (filtersFromDb == null && apiPrefs.user?.id != null) {
+                val filterLimit = calendarRepository.getCalendarFilterLimit()
+                val initialFilters = if (filterLimit != -1) {
+                    (userIds + courseIds + groupIds).take(filterLimit)
+                } else {
+                    userIds + courseIds + groupIds
+                }
+                contextIdFilters.addAll(initialFilters)
+                val filter = CalendarFilterEntity(
+                    userDomain = apiPrefs.fullDomain,
+                    userId = apiPrefs.user!!.id.toString(),
+                    filters = contextIdFilters
+                )
+                calendarFilterDao.insert(filter)
+            } else if (calendarPrefs.firstStart) { // Case where we already have filters in the DB from the Flutter version, this can only happen in the student app
+                calendarPrefs.firstStart = false
+                if (contextIdFilters.isEmpty()) {
                     contextIdFilters.addAll(userIds)
                     contextIdFilters.addAll(courseIds)
                     contextIdFilters.addAll(groupIds)
-                    val filter = CalendarFilterEntity(
-                        userDomain = apiPrefs.fullDomain,
-                        userId = apiPrefs.user!!.id.toString(),
-                        filters = contextIdFilters
-                    )
-                    calendarFilterDao.insert(filter)
-                }
-
-                if (calendarPrefs.firstStart) {
-                    calendarPrefs.firstStart = false
-                    if (contextIdFilters.isEmpty()) {
-                        contextIdFilters.addAll(userIds)
-                        contextIdFilters.addAll(courseIds)
-                        contextIdFilters.addAll(groupIds)
-                    } else if (contextIdFilters.containsAll(userIds) && contextIdFilters.containsAll(courseIds)) {
-                        // This is the case where previously all filters were selected, but groups were not supported so we should add those.
-                        contextIdFilters.addAll(canvasContexts.values.flatten().map { it.contextId })
-                    }
+                } else if (contextIdFilters.containsAll(userIds) && contextIdFilters.containsAll(courseIds)) {
+                    // This is the case where previously all filters were selected, but groups were not supported so we should add those.
+                    contextIdFilters.addAll(canvasContexts.values.flatten().map { it.contextId })
                 }
             }
+        }
     }
 
     private suspend fun initFiltersFromDb(): CalendarFilterEntity? {
@@ -150,15 +153,24 @@ class CalendarViewModel @Inject constructor(
                 }
             }
 
-            async { loadEventsForMonth(selectedDay) }
-            async { loadEventsForMonth(selectedDay.plusMonths(1)) }
-            async { loadEventsForMonth(selectedDay.minusMonths(1)) }
+            val loadedStates = awaitAll(
+                async { loadEventsForMonth(selectedDay) },
+                async { loadEventsForMonth(selectedDay.plusMonths(1)) },
+                async { loadEventsForMonth(selectedDay.minusMonths(1)) }
+            )
+
+            if (loadedStates.all { it }) {
+                _uiState.emit(createNewUiState(loadingMonths = false))
+            }
         }
     }
 
-    private suspend fun loadEventsForMonth(date: LocalDate) {
+    /**
+     * @return true if the month was loaded, false if it was already loaded
+     */
+    private suspend fun loadEventsForMonth(date: LocalDate): Boolean {
         val yearMonth = YearMonth.from(date)
-        if (loadedMonths.contains(yearMonth)) return
+        if (loadedMonths.contains(yearMonth)) return false
 
         loadedMonths.add(yearMonth) // We add it here because we don't want to reload even when it's loading
 
@@ -182,6 +194,7 @@ class CalendarViewModel @Inject constructor(
 
             storeResults(result)
             _uiState.emit(createNewUiState())
+            return true
         } catch (e: Exception) {
             loadedMonths.remove(yearMonth)
             loadingDays.removeAll(daysToFetch)
@@ -189,6 +202,7 @@ class CalendarViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.emit(createNewUiState())
             }
+            return true
         }
     }
 
@@ -203,14 +217,14 @@ class CalendarViewModel @Inject constructor(
         return result
     }
 
-    private fun createNewUiState(): CalendarScreenUiState {
+    private fun createNewUiState(loadingMonths: Boolean? = null): CalendarScreenUiState {
         val currentDayForEvents = pendingSelectedDay ?: selectedDay
         val currentPage = createEventsPageForDate(currentDayForEvents)
         val previousPage = createEventsPageForDate(currentDayForEvents.minusDays(1))
         val nextPage = createEventsPageForDate(currentDayForEvents.plusDays(1))
 
         return _uiState.value.copy(
-            calendarUiState = createCalendarUiState(),
+            calendarUiState = createCalendarUiState(loadingMonths),
             calendarEventsUiState = CalendarEventsUiState(
                 previousPage = previousPage,
                 currentPage = currentPage,
@@ -219,7 +233,7 @@ class CalendarViewModel @Inject constructor(
         )
     }
 
-    private fun createCalendarUiState(): CalendarUiState {
+    private fun createCalendarUiState(loadingMonths: Boolean? = null): CalendarUiState {
         val eventIndicators = eventsByDay
             .mapValues {
                 min(3, it.value.filter { plannerItem ->
@@ -229,7 +243,11 @@ class CalendarViewModel @Inject constructor(
         return CalendarUiState(
             selectedDay = selectedDay,
             expanded = expanded && !collapsing,
-            headerUiState = calendarStateMapper.createHeaderUiState(selectedDay, pendingSelectedDay),
+            headerUiState = calendarStateMapper.createHeaderUiState(
+                selectedDay,
+                pendingSelectedDay,
+                loadingMonths ?: _uiState.value.calendarUiState.headerUiState.loadingMonths
+            ),
             bodyUiState = calendarStateMapper.createBodyUiState(expanded, selectedDay, jumpToToday, scrollToPageOffset, eventIndicators),
             scrollToPageOffset = scrollToPageOffset,
             pendingSelectedDay = pendingSelectedDay,
@@ -373,10 +391,23 @@ class CalendarViewModel @Inject constructor(
             CalendarAction.FiltersRefreshed -> {
                 viewModelScope.launch {
                     initFiltersFromDb()
-                    _uiState.emit(createNewUiState())
+                    if (calendarRepository.getCalendarFilterLimit() == -1) { // If we don't have a limit just filter locally
+                        _uiState.emit(createNewUiState())
+                    } else {
+                        refreshCalendar()
+                    }
                 }
             }
         }
+    }
+
+    private suspend fun refreshCalendar() {
+        eventsByDay.clear()
+        loadedMonths.clear()
+
+        _uiState.emit(createNewUiState(loadingMonths = true))
+
+        loadVisibleMonths()
     }
 
     private fun selectedDayChangedWithPageAnimation(newDay: LocalDate) {

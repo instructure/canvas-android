@@ -103,6 +103,10 @@ class TeacherCalendarRepository(
             DataResult.Fail()
         }
     }
+
+    override suspend fun getCalendarFilterLimit(): Int {
+        return 10
+    }
 }
 
 private fun List<ScheduleItem>.toPlannerItems(type: PlannableType): List<PlannerItem> {

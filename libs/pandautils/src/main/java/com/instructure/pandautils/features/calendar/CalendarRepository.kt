@@ -29,4 +29,6 @@ interface CalendarRepository {
     ): List<PlannerItem>
 
     suspend fun getCanvasContexts(): DataResult<Map<CanvasContext.Type, List<CanvasContext>>>
+
+    suspend fun getCalendarFilterLimit(): Int
 }

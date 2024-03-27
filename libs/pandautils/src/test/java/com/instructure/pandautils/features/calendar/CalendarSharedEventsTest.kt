@@ -67,14 +67,14 @@ class CalendarSharedEventsTest {
 
     @Test
     fun `Send event when filter dialog is closed`() = runTest {
-        viewModel.filterDialogClosed()
+        viewModel.filtersChanged()
 
         val events = mutableListOf<SharedCalendarAction>()
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList(events)
         }
 
-        val expectedEvent = SharedCalendarAction.FilterDialogClosed
+        val expectedEvent = SharedCalendarAction.FiltersClosed
         assertEquals(expectedEvent, events.last())
     }
 }

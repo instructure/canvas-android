@@ -41,13 +41,13 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -210,47 +210,58 @@ fun CalendarHeader(
             .padding(8.dp)
     }
 
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Column(modifier = monthRowModifier) {
-            Text(
-                text = headerUiState.yearTitle,
-                fontSize = 12.sp,
-                color = colorResource(id = R.color.textDark),
-                modifier = Modifier.align(Alignment.Start)
-            )
-            Spacer(modifier = Modifier.size(2.dp))
-            Row {
+    Column(modifier = modifier) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Column(modifier = monthRowModifier) {
                 Text(
-                    text = headerUiState.monthTitle,
-                    fontSize = 22.sp,
-                    color = colorResource(id = R.color.textDarkest),
-                    modifier = Modifier.height(30.dp)
+                    text = headerUiState.yearTitle,
+                    fontSize = 12.sp,
+                    color = colorResource(id = R.color.textDark),
+                    modifier = Modifier.align(Alignment.Start)
                 )
-                if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_chevron_down),
-                        tint = colorResource(id = R.color.textDarkest),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .rotate(iconRotation + 180)
-                            .align(Alignment.CenterVertically)
+                Spacer(modifier = Modifier.size(2.dp))
+                Row {
+                    Text(
+                        text = headerUiState.monthTitle,
+                        fontSize = 22.sp,
+                        color = colorResource(id = R.color.textDarkest),
+                        modifier = Modifier.height(30.dp)
                     )
+                    if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_chevron_down),
+                            tint = colorResource(id = R.color.textDarkest),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .rotate(iconRotation + 180)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
                 }
             }
+            Text(
+                text = stringResource(id = R.string.calendarFilterCalendars),
+                fontSize = 16.sp,
+                color = Color(ThemePrefs.textButtonColor),
+                modifier = Modifier
+                    .clickable {
+                        actionHandler(CalendarAction.FilterTapped)
+                    }
+                    .padding(horizontal = 8.dp, vertical = 12.dp))
         }
-        Text(
-            text = stringResource(id = R.string.calendarFilterCalendars),
-            fontSize = 16.sp,
-            color = Color(ThemePrefs.textButtonColor),
-            modifier = Modifier
-                .clickable {
-                    actionHandler(CalendarAction.FilterTapped)
-                }
-                .padding(horizontal = 8.dp, vertical = 12.dp))
+        if (headerUiState.loadingMonths) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp), color = Color(ThemePrefs.buttonColor), backgroundColor = colorResource(id = R.color.backgroundLightest)
+            )
+        } else {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
     }
 }
 
@@ -405,7 +416,7 @@ fun CalendarPreview() {
     val calendarUiState = CalendarUiState(
         LocalDate.now(),
         true,
-        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
+        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null, true),
         bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.now(), false, 0, emptyMap())
     )
     Calendar(calendarUiState = calendarUiState, actionHandler = {})

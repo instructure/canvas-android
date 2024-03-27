@@ -82,4 +82,8 @@ class StudentCalendarRepository(
 
         return DataResult.Success(contexts)
     }
+
+    override suspend fun getCalendarFilterLimit(): Int {
+        return -1
+    }
 }
