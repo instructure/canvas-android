@@ -124,6 +124,8 @@ class CalendarViewModelTest {
             currentPage = CalendarPageUiState(emptyList()),
             nextPage = CalendarPageUiState(emptyList())
         )
+
+        coEvery { calendarRepository.getCalendarFilterLimit() } returns -1
     }
 
     @After

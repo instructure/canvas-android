@@ -19,9 +19,7 @@ package com.instructure.pandautils.features.calendar
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -57,40 +55,29 @@ class CalendarSharedEventsTest {
 
         sharedEvents.sendEvent(this, SharedCalendarAction.RefreshDays(dates))
 
-        val events = mutableListOf<SharedCalendarAction>()
-        backgroundScope.launch(testDispatcher) {
-            sharedEvents.events.collect {
-                events.add(it)
-            }
-        }
+        val event = sharedEvents.events.first()
 
         val expectedEvent = SharedCalendarAction.RefreshDays(dates)
-        assertEquals(expectedEvent, events.last())
+        assertEquals(expectedEvent, event)
     }
 
     @Test
     fun `Send event when filter dialog is closed`() = runTest {
         sharedEvents.filtersClosed(this, true)
 
-        val events = mutableListOf<SharedCalendarAction>()
-        launch(testDispatcher) {
-            sharedEvents.events.toList(events)
-        }
+        val event = sharedEvents.events.first()
 
         val expectedEvent = SharedCalendarAction.FiltersClosed(true)
-        assertEquals(expectedEvent, events.last())
+        assertEquals(expectedEvent, event)
     }
 
     @Test
     fun `Send event when filter dialog is closed and filters not changed`() = runTest {
         sharedEvents.filtersClosed(this, false)
 
-        val events = mutableListOf<SharedCalendarAction>()
-        launch(testDispatcher) {
-            sharedEvents.events.toList(events)
-        }
+        val event = sharedEvents.events.first()
 
         val expectedEvent = SharedCalendarAction.FiltersClosed(false)
-        assertEquals(expectedEvent, events.last())
+        assertEquals(expectedEvent, event)
     }
 }
