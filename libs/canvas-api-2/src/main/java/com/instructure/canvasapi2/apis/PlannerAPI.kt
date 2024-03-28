@@ -44,6 +44,17 @@ object PlannerAPI {
 
         @PUT("planner_notes/{noteId}")
         suspend fun updatePlannerNote(@Path("noteId") noteId: Long, @Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
+
+        @GET("planner_notes")
+        suspend fun getPlannerNotes(
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?,
+            @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>,
+            @Tag restParams: RestParams
+        ): DataResult<List<Plannable>>
+
+        @GET
+        suspend fun nextPagePlannerNotes(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<Plannable>>
     }
 
     fun getPlannerItems(adapter: RestBuilder, callback: StatusCallback<List<PlannerItem>>, params: RestParams, startDate: String? = null, endDate: String? = null) {

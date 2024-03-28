@@ -24,11 +24,11 @@ import java.util.Locale
 
 class CalendarStateMapper(private val clock: Clock) {
 
-    fun createHeaderUiState(selectedDay: LocalDate, pendingSelectedDay: LocalDate?): CalendarHeaderUiState {
+    fun createHeaderUiState(selectedDay: LocalDate, pendingSelectedDay: LocalDate?, loading: Boolean = false): CalendarHeaderUiState {
         val dayToShow = pendingSelectedDay ?: selectedDay
         val month = dayToShow.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
         val year = dayToShow.year.toString()
-        return CalendarHeaderUiState(month, year)
+        return CalendarHeaderUiState(month, year, loading)
     }
 
     fun createBodyUiState(

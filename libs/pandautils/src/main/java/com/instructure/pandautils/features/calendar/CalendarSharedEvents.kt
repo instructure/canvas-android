@@ -17,26 +17,22 @@
 
 package com.instructure.pandautils.features.calendar
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CalendarSharedViewModel @Inject constructor() : ViewModel() {
+class CalendarSharedEvents {
     private val _events = Channel<SharedCalendarAction>()
     val events = _events.receiveAsFlow()
 
-    fun sendEvent(event: SharedCalendarAction) {
-        viewModelScope.launch {
+    fun sendEvent(coroutineScope: CoroutineScope, event: SharedCalendarAction) {
+        coroutineScope.launch {
             _events.send(event)
         }
     }
 
-    fun filterDialogClosed() {
-        sendEvent(SharedCalendarAction.FilterDialogClosed)
+    fun filtersClosed(coroutineScope: CoroutineScope, changed: Boolean) {
+        sendEvent(coroutineScope, SharedCalendarAction.FiltersClosed(changed))
     }
 }

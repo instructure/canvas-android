@@ -83,6 +83,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {

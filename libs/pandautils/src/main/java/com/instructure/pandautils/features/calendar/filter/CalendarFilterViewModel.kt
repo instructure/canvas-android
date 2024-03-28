@@ -15,18 +15,22 @@
  */
 package com.instructure.pandautils.features.calendar.filter
 
+import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,15 +38,21 @@ import javax.inject.Inject
 class CalendarFilterViewModel @Inject constructor(
     private val calendarRepository: CalendarRepository,
     private val calendarFilterDao: CalendarFilterDao,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val resources: Resources
 ) : ViewModel() {
 
     private var canvasContexts = emptyMap<CanvasContext.Type, List<CanvasContext>>()
     private val contextIdFilters = mutableSetOf<String>()
+    private val initialFilters = mutableSetOf<String>()
     private var filterEntityForCurrentUser: CalendarFilterEntity? = null
+    private var filterLimit = -1
 
     private val _uiState = MutableStateFlow(CalendarFilterScreenUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _events = Channel<CalendarFilterViewModelAction>()
+    val events = _events.receiveAsFlow()
 
     init {
         loadFilters()
@@ -55,6 +65,7 @@ class CalendarFilterViewModel @Inject constructor(
             if (result is DataResult.Success) {
                 canvasContexts = result.data
 
+                filterLimit = calendarRepository.getCalendarFilterLimit()
                 val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
                 if (filters != null) {
                     filterEntityForCurrentUser = filters
@@ -65,15 +76,16 @@ class CalendarFilterViewModel @Inject constructor(
             } else {
                 _uiState.value = createNewUiState(error = true)
             }
+            initialFilters.addAll(contextIdFilters)
         }
     }
 
-    private fun createNewUiState(error: Boolean = false, loading: Boolean = false): CalendarFilterScreenUiState {
+    private fun createNewUiState(error: Boolean = false, loading: Boolean = false, snackbarMessage: String? = null): CalendarFilterScreenUiState {
         return CalendarFilterScreenUiState(
             createFilterItemsUiState(CanvasContext.Type.USER),
             createFilterItemsUiState(CanvasContext.Type.COURSE),
             createFilterItemsUiState(CanvasContext.Type.GROUP),
-            error, loading
+            error, loading, filterLimit, snackbarMessage
         )
     }
 
@@ -85,21 +97,33 @@ class CalendarFilterViewModel @Inject constructor(
         when (calendarFilterAction) {
             is CalendarFilterAction.ToggleFilter -> toggleFilter(calendarFilterAction.contextId)
             CalendarFilterAction.Retry -> loadFilters()
+            CalendarFilterAction.SnackbarDismissed -> _uiState.value = _uiState.value.copy(snackbarMessage = null)
         }
     }
 
     private fun toggleFilter(contextId: String) {
+        var snackbarMessage: String? = null
         if (contextIdFilters.contains(contextId)) {
             contextIdFilters.remove(contextId)
         } else {
-            contextIdFilters.add(contextId)
+            if (contextIdFilters.size < filterLimit || filterLimit == -1) {
+                contextIdFilters.add(contextId)
+            } else {
+                snackbarMessage = resources.getString(R.string.calendarFilterLimitSnackbar, filterLimit)
+            }
         }
         viewModelScope.launch {
             filterEntityForCurrentUser?.let {
                 val newFilter = it.copy(filters = contextIdFilters)
                 calendarFilterDao.insertOrUpdate(newFilter)
             }
-            _uiState.emit(createNewUiState())
+            _uiState.emit(createNewUiState(snackbarMessage = snackbarMessage))
+        }
+    }
+
+    fun filtersClosed() {
+        viewModelScope.launch {
+            _events.send(CalendarFilterViewModelAction.FiltersClosed(initialFilters != contextIdFilters))
         }
     }
 }

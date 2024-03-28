@@ -15,70 +15,20 @@
  */
 package com.instructure.pandautils.features.calendar
 
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isValidTerm
 
-class CalendarRepository(
-    private val plannerApi: PlannerAPI.PlannerInterface,
-    private val coursesApi: CourseAPI.CoursesInterface,
-    private val groupsApi: GroupAPI.GroupInterface,
-    private val apiPrefs: ApiPrefs
-) {
+interface CalendarRepository {
 
     suspend fun getPlannerItems(
         startDate: String,
         endDate: String,
         contextCodes: List<String>,
         forceNetwork: Boolean
-    ): List<PlannerItem> {
-        val restParams =
-            RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
+    ): List<PlannerItem>
 
-        // The calendar on web does not include announcements, so we filter them out here to match that behavior
-        return plannerApi.getPlannerItems(
-            startDate,
-            endDate,
-            contextCodes,
-            restParams
-        ).depaginate {
-            plannerApi.nextPagePlannerItems(it, restParams)
-        }.dataOrThrow
-            .filter { it.plannableType != PlannableType.ANNOUNCEMENT }
-    }
+    suspend fun getCanvasContexts(): DataResult<Map<CanvasContext.Type, List<CanvasContext>>>
 
-    suspend fun getCanvasContexts(): DataResult<Map<CanvasContext.Type, List<CanvasContext>>> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)
-
-        val coursesResult = coursesApi.getFirstPageCourses(params)
-            .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
-
-        if (coursesResult.isFail) return DataResult.Fail()
-
-        val courses = (coursesResult as DataResult.Success).data
-        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
-
-        val groupsResult = groupsApi.getFirstPageGroups(params)
-            .depaginate { nextUrl -> groupsApi.getNextPageGroups(nextUrl, params) }
-
-        val groups = groupsResult.dataOrNull ?: emptyList()
-
-        val courseMap = validCourses.associateBy { it.id }
-        val validGroups = groups.filter { it.courseId == 0L || courseMap[it.courseId] != null }
-
-        val users = apiPrefs.user?.let { listOf(it) } ?: emptyList()
-
-        val contexts = (users + validCourses + validGroups).groupBy { it.type }.filter { it.value.isNotEmpty() }
-
-        return DataResult.Success(contexts)
-    }
+    suspend fun getCalendarFilterLimit(): Int
 }

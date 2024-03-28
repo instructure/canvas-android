@@ -58,6 +58,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.RatingDialog
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
@@ -123,14 +124,22 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 addCoursesFragment()
                 COURSES_TAB
             }
+
+            R.id.tab_calendar -> {
+                addCalendarFragment()
+                CALENDAR_TAB
+            }
+
             R.id.tab_inbox -> {
                 addInboxFragment()
                 INBOX_TAB
             }
+
             R.id.tab_todo -> {
                 addToDoFragment()
                 TODO_TAB
             }
+
             else -> return@OnNavigationItemSelectedListener false
         }
 
@@ -259,8 +268,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         fakeToolbar.setBackgroundColor(ThemePrefs.primaryColor)
         when (selectedTab) {
             0 -> addCoursesFragment()
-            1 -> addToDoFragment()
-            2 -> addInboxFragment()
+            1 -> addCalendarFragment()
+            2 -> addToDoFragment()
+            3 -> addInboxFragment()
         }
 
         // Set initially selected item
@@ -292,7 +302,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         binding.drawerLayout.closeDrawer(GravityCompat.START)
     }
 
-    private fun openNavigationDrawer() {
+    fun openNavigationDrawer() {
         binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
@@ -475,7 +485,15 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             container.setGone()
             middleTopDivider.setBackgroundColor(ThemePrefs.primaryColor)
         }
+    }
 
+    private fun addCalendarFragment() = with(binding) {
+        if (supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.simpleName) == null) {
+            setBaseFragment(CalendarFragment())
+        } else if (resources.getBoolean(R.bool.isDeviceTablet)) {
+            container.visibility = View.VISIBLE
+            masterDetailContainer.visibility = View.GONE
+        }
     }
 
     override fun addFragment(route: Route) {
@@ -667,8 +685,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         private const val SELECTED_TAB = "selectedTab"
 
         private const val COURSES_TAB = 0
-        private const val TODO_TAB = 1
-        private const val INBOX_TAB = 2
+        private const val CALENDAR_TAB = 1
+        private const val TODO_TAB = 2
+        private const val INBOX_TAB = 3
 
         fun createIntent(context: Context, intentExtra: Bundle?): Intent =
             Intent(context, InitActivity::class.java).apply {

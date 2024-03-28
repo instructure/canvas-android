@@ -19,34 +19,46 @@ package com.instructure.teacher.features.calendar
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.teacher.activities.InitActivity
+import com.instructure.teacher.fragments.AssignmentDetailsFragment
+import com.instructure.teacher.router.RouteMatcher
 
 class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
     override fun openNavigationDrawer() {
-
+        (activity as? InitActivity)?.openNavigationDrawer()
     }
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {
-        TODO("Not yet implemented")
+        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
     }
 
     override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long) {
-        TODO("Not yet implemented")
+        val route = DiscussionRouterFragment.makeRoute(canvasContext, discussionId)
+        RouteMatcher.route(activity, route)
     }
 
     override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) {
-        TODO("Not yet implemented")
+        RouteMatcher.canRouteInternally(activity, htmlUrl, ApiPrefs.domain, true)
     }
 
     override fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long) {
-        TODO("Not yet implemented")
+        val route = EventFragment.makeRoute(canvasContext, eventId)
+        RouteMatcher.route(activity, route)
     }
 
     override fun openToDo(plannerItem: PlannerItem) {
-        TODO("Not yet implemented")
+        val route = ToDoFragment.makeRoute(plannerItem)
+        RouteMatcher.route(activity, route)
     }
 
     override fun openCreateToDo(initialDateString: String?) {
-        TODO("Not yet implemented")
+        val route = CreateUpdateToDoFragment.makeRoute(initialDateString)
+        RouteMatcher.route(activity, route)
     }
 }

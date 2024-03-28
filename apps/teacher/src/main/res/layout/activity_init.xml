@@ -116,7 +116,8 @@
             android:background="@color/backgroundLightestElevated"
             app:itemIconTint="@color/textDarkest"
             app:itemTextColor="@color/textDarkest"
-            app:menu="@menu/bottom_navigation_items"/>
+            app:menu="@menu/bottom_navigation_items"
+            app:labelVisibilityMode="labeled"/>
 
     </RelativeLayout>
 

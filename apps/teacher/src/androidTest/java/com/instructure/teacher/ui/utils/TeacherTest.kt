@@ -19,7 +19,6 @@ package com.instructure.teacher.ui.utils
 import android.app.Activity
 import android.util.Log
 import android.view.View
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -40,7 +39,6 @@ import com.instructure.teacher.ui.pages.AssignmentDetailsPage
 import com.instructure.teacher.ui.pages.AssignmentDueDatesPage
 import com.instructure.teacher.ui.pages.AssignmentListPage
 import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
-import com.instructure.teacher.ui.pages.CalendarEventPage
 import com.instructure.teacher.ui.pages.ChooseRecipientsPage
 import com.instructure.teacher.ui.pages.CommentLibraryPage
 import com.instructure.teacher.ui.pages.CourseBrowserPage
@@ -73,7 +71,6 @@ import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.pages.PostSettingsPage
 import com.instructure.teacher.ui.pages.ProfileSettingsPage
-import com.instructure.teacher.ui.pages.ProgressPage
 import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage
@@ -134,7 +131,6 @@ abstract class TeacherTest : CanvasTest() {
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assignmentSubmissionListPage = AssignmentSubmissionListPage()
     val postSettingsPage = PostSettingsPage()
-    val calendarEventPage = CalendarEventPage()
     val chooseRecipientsPage = ChooseRecipientsPage()
     val commentLibraryPage = CommentLibraryPage()
     val courseBrowserPage = CourseBrowserPage()

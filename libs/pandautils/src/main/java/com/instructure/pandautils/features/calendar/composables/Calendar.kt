@@ -47,6 +47,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.rememberSwipeableState
@@ -271,6 +272,15 @@ fun CalendarHeader(
                         actionHandler(CalendarAction.FilterTapped)
                     }
                     .padding(horizontal = 8.dp, vertical = 12.dp))
+        }
+        if (headerUiState.loadingMonths) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp), color = Color(ThemePrefs.buttonColor), backgroundColor = colorResource(id = R.color.backgroundLightest)
+            )
+        } else {
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
@@ -503,7 +513,7 @@ fun CalendarPreview() {
     val calendarUiState = CalendarUiState(
         LocalDate.now(),
         true,
-        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
+        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null, true),
         bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.now(), false, 0, emptyMap())
     )
     Calendar(calendarUiState = calendarUiState, actionHandler = {})

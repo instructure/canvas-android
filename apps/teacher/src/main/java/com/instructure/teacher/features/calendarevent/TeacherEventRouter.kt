@@ -24,6 +24,6 @@ import com.instructure.pandautils.features.calendarevent.details.EventRouter
 class TeacherEventRouter(private val activity: FragmentActivity) : EventRouter {
 
     override fun openEditEvent(scheduleItem: ScheduleItem) {
-        TODO("Not yet implemented")
+
     }
 }

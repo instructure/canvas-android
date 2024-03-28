@@ -20,7 +20,9 @@ data class CalendarFilterScreenUiState(
     val courses: List<CalendarFilterItemUiState> = emptyList(),
     val groups: List<CalendarFilterItemUiState> = emptyList(),
     val error: Boolean = false,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val calendarLimit : Int = -1,
+    val snackbarMessage: String? = null
 )
 
 data class CalendarFilterItemUiState(
@@ -32,4 +34,9 @@ data class CalendarFilterItemUiState(
 sealed class CalendarFilterAction {
     data class ToggleFilter(val contextId: String) : CalendarFilterAction()
     data object Retry : CalendarFilterAction()
+    data object SnackbarDismissed : CalendarFilterAction()
+}
+
+sealed class CalendarFilterViewModelAction {
+    data class FiltersClosed(val changed: Boolean) : CalendarFilterViewModelAction()
 }

@@ -15,32 +15,20 @@
  */
 package com.instructure.pandautils.di
 
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarPrefs
-import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 import org.threeten.bp.Clock
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
 class CalendarModule {
-
-    @Provides
-    fun provideCalendarRepository(
-        plannerApi: PlannerAPI.PlannerInterface,
-        courseApi: CourseAPI.CoursesInterface,
-        groupApi: GroupAPI.GroupInterface,
-        apiPrefs: ApiPrefs
-    ): CalendarRepository {
-        return CalendarRepository(plannerApi, courseApi, groupApi, apiPrefs)
-    }
 
     @Provides
     fun provideCalendarPrefs(): CalendarPrefs {
@@ -50,5 +38,16 @@ class CalendarModule {
     @Provides
     fun provideCalendarStateMapper(clock: Clock): CalendarStateMapper {
         return CalendarStateMapper(clock)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class CalendarSingletonModule {
+
+    @Provides
+    @Singleton
+    fun provideCalendarSharedEvents(): CalendarSharedEvents {
+        return CalendarSharedEvents()
     }
 }
