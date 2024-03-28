@@ -758,6 +758,22 @@ class CalendarViewModelTest {
     }
 
     @Test
+    fun `Open create todo when create todo is selected`() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.AddToDoTapped)
+
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val expectedAction = CalendarViewModelAction.OpenCreateToDo(LocalDate.now(clock).toApiString())
+        assertEquals(expectedAction, events.last())
+    }
+
+    @Test
     fun `Correct strings are mapped for submission states`() = runTest {
         val events = listOf(
             createPlannerItem(
@@ -1006,6 +1022,66 @@ class CalendarViewModelTest {
         )
 
         viewModel.handleAction(CalendarAction.FiltersRefreshed)
+
+        val updatedExpectedCurrentEvents = listOf(
+            EventUiState(2, "Course 2", Course(2), "Plannable 2", R.drawable.ic_quiz, "Due Apr 20 12:00 PM"),
+        )
+        val updatedExpectedState = CalendarScreenUiState(
+            baseCalendarUiState, CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = updatedExpectedCurrentEvents),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            )
+        )
+
+        assertEquals(updatedExpectedState, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Refresh filters refreshes calendar when there is a filter limit`() = runTest {
+        val events = listOf(
+            createPlannerItem(1, 1, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12)),
+            createPlannerItem(2, 2, PlannableType.QUIZ, createDate(2023, 4, 20, 12))
+        )
+        coEvery { calendarRepository.getCalendarFilterLimit() } returns 10
+        coEvery { calendarRepository.getPlannerItems(any(), any(), listOf("course_1"), any()) } returns events.subList(0, 1)
+        coEvery { calendarRepository.getPlannerItems(any(), any(), listOf("course_2"), any()) } returns events.subList(1, 2)
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            1,
+            "",
+            "1",
+            filters = setOf("course_1")
+        )
+        initViewModel()
+
+        // This should be called 3 times for the 3 visible months
+        coVerify(exactly = 3) { calendarRepository.getPlannerItems(any(), any(), listOf("course_1"), any()) }
+
+        val expectedCurrentEvents = listOf(
+            EventUiState(1, "Course 1", Course(1), "Plannable 1", R.drawable.ic_assignment, "Due Apr 20 12:00 PM")
+        )
+        val expectedState = CalendarScreenUiState(
+            baseCalendarUiState, CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20), events = expectedCurrentEvents),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            )
+        )
+
+        assertEquals(expectedState, viewModel.uiState.value)
+
+        // Change filters
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            1,
+            "",
+            "1",
+            filters = setOf("course_2")
+        )
+
+        viewModel.handleAction(CalendarAction.FiltersRefreshed)
+
+        // This should be called 3 times for the 3 visible months
+        coVerify(exactly = 3) { calendarRepository.getPlannerItems(any(), any(), listOf("course_2"), any()) }
 
         val updatedExpectedCurrentEvents = listOf(
             EventUiState(2, "Course 2", Course(2), "Plannable 2", R.drawable.ic_quiz, "Due Apr 20 12:00 PM"),

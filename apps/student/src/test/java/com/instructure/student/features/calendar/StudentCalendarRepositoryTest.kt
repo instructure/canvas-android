@@ -37,14 +37,13 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.Date
 
 @ExperimentalCoroutinesApi
-class CalendarRepositoryTest {
+class StudentCalendarRepositoryTest {
 
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
