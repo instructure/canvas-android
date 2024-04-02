@@ -67,7 +67,7 @@ class ModuleListItemBinder :
             }
             moduleItemLoadingView.setVisible(item.isLoading)
 
-            overflow.onClickWithRequireNetwork {
+            publishActions.onClickWithRequireNetwork {
                 if (item.type == ModuleItem.Type.File) {
                     item.contentId?.let {
                         callback.updateFileModuleItem(

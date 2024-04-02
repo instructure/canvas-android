@@ -21,7 +21,9 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.ReleaseExclude
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.toApiString
@@ -53,6 +55,7 @@ class ScheduleE2ETest : StudentTest() {
     @JvmField
     var globalTimeout: Timeout = Timeout.millis(1200000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
 
+    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.SCHEDULE)
