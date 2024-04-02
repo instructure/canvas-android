@@ -15,7 +15,6 @@ import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
-import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.ModuleItemTypes
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
@@ -30,7 +29,6 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import com.instructure.teacher.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
-import java.util.Calendar
 
 @HiltAndroidTest
 class   ModulesE2ETest : TeacherComposeTest() {
