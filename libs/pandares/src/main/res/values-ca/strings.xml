@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">No presentat</string>
     <string name="gradedSubmissionLabel">Qualificat</string>
 
+    <string name="reminderTitle">Recordatori</string>
+    <string name="reminderDescription">Afegiu notificacions de recordatori de dates de lliurament d\'aquesta activitat a aquest dispositiu.</string>
+    <string name="a11y_addReminder">Afegeix un recordatori</string>
+    <string name="a11y_removeReminder">Suprimeix el recordatori</string>
+    <string name="reminderBefore">%s anterior</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minut</item>
+        <item quantity="other">%d minuts</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 hora</item>
+        <item quantity="other">%d hores</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dia</item>
+        <item quantity="other">%d dies</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 setmana</item>
+        <item quantity="other">%d setmanes</item>
+    </plurals>
+    <string name="reminderCustom">Personalitzat</string>
+    <string name="customReminderTitle">Recordatori personalitzat</string>
+    <string name="customReminderQuantityHint">Quantitat</string>
+    <string name="customReminderMinutes">Minuts anteriors</string>
+    <string name="customReminderHours">Hores anteriors</string>
+    <string name="customReminderDays">Dies anteriors</string>
+    <string name="customReminderWeeks">Setmanes anteriors</string>
+    <string name="reminderNotificationChannelName">Notificacions de recordatoris</string>
+    <string name="reminderNotificationChannelDescription">Notificacions del Canvas per a recordatoris d’activitats.</string>
+    <string name="reminderNotificationTitle">Recordatori de data de lliurament</string>
+    <string name="reminderNotificationDescription">Aquesta activitat s’ha de lliurar el %s: %s</string>
+    <string name="reminderInPast">Trieu una data futura per al recordatori</string>
+    <string name="reminderAlreadySet">Ja heu establert un recordatori per a aquesta data</string>
+    <string name="deleteReminderTitle">Suprimeix el recordatori</string>
+    <string name="deleteReminderMessage">Segur que voleu suprimir aquest recordatori?</string>
+    <string name="reminderPermissionNotGrantedError">Heu d\'activar el permís d’alarma exacte per a aquesta acció</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Si es fa servir \'http://\', no hi ha cap visualització prèvia disponible dels URL</string>
     <string name="submissionUrlNotAUrlError">Introduïu un URL vàlid</string>

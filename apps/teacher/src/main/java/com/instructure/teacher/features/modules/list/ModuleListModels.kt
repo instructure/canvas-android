@@ -61,6 +61,7 @@ sealed class ModuleListEvent {
 
     data class UpdateFileModuleItem(val fileId: Long, val contentDetails: ModuleContentDetails) : ModuleListEvent()
     object BulkUpdateCancelled : ModuleListEvent()
+    data class ShowSnackbar(@StringRes val message: Int, val params: Array<Any> = emptyArray()): ModuleListEvent()
 }
 
 sealed class ModuleListEffect {
@@ -100,7 +101,25 @@ sealed class ModuleListEffect {
         val published: Boolean
     ) : ModuleListEffect()
 
-    data class ShowSnackbar(@StringRes val message: Int) : ModuleListEffect()
+    data class ShowSnackbar(@StringRes val message: Int, val params: Array<Any> = emptyArray()) : ModuleListEffect() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ShowSnackbar
+
+            if (message != other.message) return false
+            if (!params.contentEquals(other.params)) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = message
+            result = 31 * result + params.contentHashCode()
+            return result
+        }
+    }
 
     data class UpdateFileModuleItem(
         val fileId: Long,

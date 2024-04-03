@@ -65,7 +65,7 @@ class OfflineFilesE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG, "Create a (text) file within the '${courseTestFolder.name}' folder of the '${course.name}' course.")
         val courseTestFolderTextFile = uploadTextFile(courseTestFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -80,8 +80,9 @@ class OfflineFilesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Files")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' and 'Syncing Offline Content' dashboard notifications to be displayed, and then to disappear.")
-        dashboardPage.waitForOfflineSyncDashboardNotifications()
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()

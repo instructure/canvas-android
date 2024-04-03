@@ -26,18 +26,12 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.AttachmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
@@ -53,6 +47,7 @@ import java.io.FileWriter
 
 @HiltAndroidTest
 class FilesE2ETest: TeacherTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -69,7 +64,7 @@ class FilesE2ETest: TeacherTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seed a text assignment/file/submission.")
-        val assignment = createAssignment(course, teacher)
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD), allowedExtensions = listOf("txt"))
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
@@ -79,8 +74,8 @@ class FilesE2ETest: TeacherTest() {
                 fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
         )
 
-        Log.d(PREPARATION_TAG, "Submit the ${assignment.name} assignment.")
-        submitCourseAssignment(course, assignment, submissionUploadInfo, student)
+        Log.d(PREPARATION_TAG, "Submit the '${assignment.name}' assignment.")
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, assignment.id, submissionType = SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(submissionUploadInfo.id))
 
         Log.d(PREPARATION_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
@@ -90,10 +85,11 @@ class FilesE2ETest: TeacherTest() {
                 fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
 
-        commentOnSubmission(student, course, assignment, commentUploadInfo)
+        Log.d(PREPARATION_TAG, "Comment a text file as a teacher to the '${student.name}' student's submission of the '${assignment.name}' assignment.")
+        SubmissionsApi.commentOnSubmission(course.id, student.token, assignment.id, fileIds = mutableListOf(commentUploadInfo.id))
 
         Log.d(PREPARATION_TAG,"Seed a discussion topic. Will add a reply with attachment below.")
-        val discussionTopic = createDiscussion(course, student)
+        val discussionTopic= DiscussionTopicsApi.createDiscussion(course.id, student.token)
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -113,7 +109,7 @@ class FilesE2ETest: TeacherTest() {
 
         Log.d(PREPARATION_TAG,"Use real API (rather than seeding) to create a reply to our discussion that contains an attachment.")
         tryWeave {
-            awaitApiResponse<DiscussionEntry> {
+            awaitApiResponse {
                 DiscussionManager.postToDiscussionTopic(
                         canvasContext = CanvasContext.emptyCourseContext(id = course.id),
                         topicId = discussionTopic.id,
@@ -132,26 +128,26 @@ class FilesE2ETest: TeacherTest() {
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
 
-        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
+        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that '${discussionAttachmentFile.name}' file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
 
         Log.d(STEP_TAG,"Navigate back to the Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to Assignments Page.")
+        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to Assignments Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openAssignmentsTab()
 
-        Log.d(STEP_TAG,"Click on ${assignment.name} assignment and navigate to Submissions Page.")
+        Log.d(STEP_TAG,"Click on '${assignment.name}' assignment and navigate to Submissions Page.")
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()
 
-        Log.d(STEP_TAG,"Click on ${student.name} student's submission and navigate to Files Tab.")
+        Log.d(STEP_TAG,"Click on '${student.name}' student's submission and navigate to Files Tab.")
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectFilesTab(1)
 
-        Log.d(STEP_TAG,"Assert that ${submissionUploadInfo.fileName} file. Navigate to Comments Tab and ${commentUploadInfo.fileName} comment attachment is displayed.")
+        Log.d(STEP_TAG,"Assert that '${submissionUploadInfo.fileName}' file. Navigate to Comments Tab and '${commentUploadInfo.fileName}' comment attachment is displayed.")
         assignmentSubmissionListPage.assertFileDisplayed(submissionUploadInfo.fileName)
         speedGraderPage.selectCommentsTab()
         assignmentSubmissionListPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
@@ -178,25 +174,25 @@ class FilesE2ETest: TeacherTest() {
         fileListPage.searchable.pressSearchBackButton()
         fileListPage.assertFileListCount(1)
 
-        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
+        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that '${discussionAttachmentFile.name}' file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
 
-        Log.d(STEP_TAG,"Select ${discussionAttachmentFile.name} file.")
+        Log.d(STEP_TAG,"Select '${discussionAttachmentFile.name}' file.")
         fileListPage.selectItem(discussionAttachmentFile.name)
 
         val newFileName = "newFileName.txt"
-        Log.d(STEP_TAG,"Rename ${discussionAttachmentFile.name} file to: $newFileName.")
+        Log.d(STEP_TAG,"Rename '${discussionAttachmentFile.name}' file to: '$newFileName'.")
         fileListPage.renameFile(newFileName)
 
         Log.d(STEP_TAG,"Navigate back to File List Page.")
         Espresso.pressBack()
         fileListPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Assert that the file is displayed with it's new file name: $newFileName.")
+        Log.d(STEP_TAG,"Assert that the file is displayed with it's new file name: '$newFileName'.")
         fileListPage.assertItemDisplayed(newFileName)
 
-        Log.d(STEP_TAG,"Delete $newFileName file.")
+        Log.d(STEP_TAG,"Delete '$newFileName' file.")
         fileListPage.deleteFile(newFileName)
         fileListPage.assertPageObjects()
 
@@ -209,7 +205,7 @@ class FilesE2ETest: TeacherTest() {
         fileListPage.createFolder(newFolderName)
         fileListPage.assertItemDisplayed(newFolderName)
 
-        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${newFolderName}', the file's name to the search input field.")
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '$newFolderName', the file's name to the search input field.")
         fileListPage.searchable.clickOnSearchButton()
         fileListPage.searchable.typeToSearchBar(newFolderName)
 
@@ -220,60 +216,6 @@ class FilesE2ETest: TeacherTest() {
         Log.d(STEP_TAG, "Select '$newFolderName' folder and delete it. Assert that it has been disappeared from the File List Page.")
         fileListPage.deleteFolder(newFolderName)
         fileListPage.assertItemNotDisplayed(newFolderName)
-    }
-
-    private fun createDiscussion(
-        course: CourseApiModel,
-        student: CanvasUserApiModel
-    ): DiscussionApiModel {
-        return DiscussionTopicsApi.createDiscussion(
-            courseId = course.id,
-            token = student.token
-        )
-    }
-
-    private fun commentOnSubmission(
-        student: CanvasUserApiModel,
-        course: CourseApiModel,
-        assignment: AssignmentApiModel,
-        commentUploadInfo: AttachmentApiModel
-    ) {
-        SubmissionsApi.commentOnSubmission(
-            studentToken = student.token,
-            courseId = course.id,
-            assignmentId = assignment.id,
-            fileIds = mutableListOf(commentUploadInfo.id)
-        )
-    }
-
-    private fun submitCourseAssignment(
-        course: CourseApiModel,
-        assignment: AssignmentApiModel,
-        submissionUploadInfo: AttachmentApiModel,
-        student: CanvasUserApiModel
-    ) {
-        SubmissionsApi.submitCourseAssignment(
-            submissionType = SubmissionType.ONLINE_UPLOAD,
-            courseId = course.id,
-            assignmentId = assignment.id,
-            fileIds = mutableListOf(submissionUploadInfo.id),
-            studentToken = student.token
-        )
-    }
-
-    private fun createAssignment(
-        course: CourseApiModel,
-        teacher: CanvasUserApiModel
-    ): AssignmentApiModel {
-        return AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = false,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                allowedExtensions = listOf("txt"),
-                teacherToken = teacher.token
-            )
-        )
     }
 
 }

@@ -17,12 +17,15 @@
 
 package com.instructure.student.ui.pages.offline
 
+import android.widget.TextView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertVisibility
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
@@ -32,6 +35,7 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.pandautils.R
+import com.instructure.student.ui.utils.getView
 
 class SyncProgressPage : BasePage(R.id.syncProgressPage) {
 
@@ -54,5 +58,33 @@ class SyncProgressPage : BasePage(R.id.syncProgressPage) {
     fun assertCourseSyncedSuccessfully(courseName: String) {
         onView(withId(R.id.courseName) + withText(courseName) + withAncestor(R.id.syncProgressPage)).assertDisplayed()
         onView(withId(R.id.successIndicator) + withParent(withId(R.id.actionContainer) + hasSibling(withId(R.id.courseName) + withText(courseName)))).assertVisibility(ViewMatchers.Visibility.VISIBLE)
+    }
+
+    fun expandCollapseCourse(courseName: String) {
+        onView(withId(R.id.toggleButton) + hasSibling(withId(R.id.courseName) + withText(courseName))).click()
+    }
+
+    fun assertCourseTabSynced(tabName: String) {
+        onView(withId(R.id.successIndicator) + withParent(withId(R.id.actionContainer) + hasSibling(withId(R.id.tabTitle) + withText(tabName)))).assertVisibility(ViewMatchers.Visibility.VISIBLE)
+    }
+
+    fun getCourseSize(courseName: String): Int {
+        val courseSizeView = onView(withId(R.id.courseSize) + hasSibling(withId(R.id.courseName) + withText(courseName)))
+        val courseSizeText = (courseSizeView.getView() as TextView).text.toString()
+        return courseSizeText.split(" ")[0].toInt()
+    }
+
+    fun assertSumOfCourseSizes(expectedSize: Int) {
+        if(expectedSize > 999) {
+            val convertedSumSize = convertKiloBytesToMegaBytes(expectedSize)
+            onView(withId(R.id.downloadProgressText)).assertContainsText(convertedSumSize.toString())
+        }
+        else {
+            onView(withId(R.id.downloadProgressText)).assertContainsText(expectedSize.toString())
+        }
+    }
+
+    private fun convertKiloBytesToMegaBytes(kilobytes: Int): Double {
+        return kilobytes / 1000.0
     }
 }

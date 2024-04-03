@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Vantar</string>
     <string name="gradedSubmissionLabel">Metið</string>
 
+    <string name="reminderTitle">Áminning</string>
+    <string name="reminderDescription">Bættu við áminningartilkynningum um skiladag um þetta verkefni á þessu tæki.</string>
+    <string name="a11y_addReminder">Bæta við áminningu</string>
+    <string name="a11y_removeReminder">Fjarlægja áminningu</string>
+    <string name="reminderBefore">%s áður</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 mínútu</item>
+        <item quantity="other">%d mínútur</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 klukkustund</item>
+        <item quantity="other">%d klukkustundir</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dag</item>
+        <item quantity="other">%d daga</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 viku</item>
+        <item quantity="other">%d vikur</item>
+    </plurals>
+    <string name="reminderCustom">Sérsnið</string>
+    <string name="customReminderTitle">Sérsniðin áminning</string>
+    <string name="customReminderQuantityHint">Magn</string>
+    <string name="customReminderMinutes">Mínútum áður</string>
+    <string name="customReminderHours">Klukkutímum áður</string>
+    <string name="customReminderDays">Dögum áður</string>
+    <string name="customReminderWeeks">Vikum áður</string>
+    <string name="reminderNotificationChannelName">Áminningartilkynningar</string>
+    <string name="reminderNotificationChannelDescription">Canvas Tilkynningar fyrir áminningar um verkefni.</string>
+    <string name="reminderNotificationTitle">Áminning um skiladag</string>
+    <string name="reminderNotificationDescription">Skiladagur þessa verkefnis er eftir %s: %s</string>
+    <string name="reminderInPast">Vinsamlegast veldu framtíðartíma fyrir áminningu þína!</string>
+    <string name="reminderAlreadySet">Þú hefur þegar sett áminningu fyrir þennan tíma</string>
+    <string name="deleteReminderTitle">Eyða áminningu</string>
+    <string name="deleteReminderMessage">Viltu örugglega eyða þessari áminningu?</string>
+    <string name="reminderPermissionNotGrantedError">Þú þarft að virkja nákvæmt viðvörunarleyfi fyrir þessa aðgerð</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Engin forskoðun tiltæk fyrir vefslóð sem nota \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Settu inn gilda vefslóð</string>

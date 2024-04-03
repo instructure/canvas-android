@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Deficiente</string>
     <string name="gradedSubmissionLabel">Calificado</string>
 
+    <string name="reminderTitle">Recordatorio</string>
+    <string name="reminderDescription">Agregar notificaciones de recordatorio de fecha de entrega para esta tarea en este dispositivo.</string>
+    <string name="a11y_addReminder">Agregar recordatorio</string>
+    <string name="a11y_removeReminder">Eliminar recordatorio</string>
+    <string name="reminderBefore">%s Antes</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minuto</item>
+        <item quantity="other">%d minutos</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 hora</item>
+        <item quantity="other">%d horas</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 semana</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
+    <string name="reminderCustom">Personalizar</string>
+    <string name="customReminderTitle">Personalizar Recordatorio</string>
+    <string name="customReminderQuantityHint">Cantidad</string>
+    <string name="customReminderMinutes">Minutos antes</string>
+    <string name="customReminderHours">Horas antes</string>
+    <string name="customReminderDays">Días antes</string>
+    <string name="customReminderWeeks">Semanas antes</string>
+    <string name="reminderNotificationChannelName">Notificaciones de recordatorio</string>
+    <string name="reminderNotificationChannelDescription">Notificaciones de Canvas para recordatorios de tareas.</string>
+    <string name="reminderNotificationTitle">Recordatorio de fecha de entrega</string>
+    <string name="reminderNotificationDescription">La tarea se vence en %s: %s</string>
+    <string name="reminderInPast">Elija un horario futuro para su recordatorio.</string>
+    <string name="reminderAlreadySet">Ya ha creado un recordatorio para este horario.</string>
+    <string name="deleteReminderTitle">Eliminar Recordatorio</string>
+    <string name="deleteReminderMessage">¿Seguro que desea eliminar este recordatorio?</string>
+    <string name="reminderPermissionNotGrantedError">Necesita habilitar un permiso de alarma exacto para completar esta acción.</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No hay vistas previas disponibles para las URL que usan \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Ingrese una URL válida</string>

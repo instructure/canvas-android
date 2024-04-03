@@ -46,13 +46,15 @@ class OfflineSyncProgressE2ETest : StudentTest() {
     fun testOfflineGlobalCourseSyncProgressE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
+        val data = seedData(students = 1, teachers = 1, courses = 4, announcements = 3, discussions = 5, syllabusBody = "Syllabus body")
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
+        val course3 = data.coursesList[2]
+        val course4 = data.coursesList[3]
         val testAnnouncement = data.announcementsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -64,26 +66,39 @@ class OfflineSyncProgressE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Select the entire '${course1.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState(course1.name)
+        manageOfflineContentPage.changeItemSelectionState(course2.name)
+        manageOfflineContentPage.changeItemSelectionState(course3.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' dashboard notification to be displayed, and the to disappear.")
+        Log.d(STEP_TAG, "Wait for the Dashboard to be rendered.")
         dashboardPage.waitForRender()
-        dashboardPage.waitForSyncProgressDownloadStartedNotification()
-        dashboardPage.waitForSyncProgressDownloadStartedNotificationToDisappear()
 
-        Log.d(STEP_TAG, "Wait for the 'Syncing Offline Content' dashboard notification to be displayed, and click on it to enter the Sync Progress Page.")
-        dashboardPage.waitForSyncProgressStartingNotification()
+        Log.d(STEP_TAG, "Click on the Dashboard notification to open the Sync Progress Page.")
         dashboardPage.clickOnSyncProgressNotification()
-
-        Log.d(STEP_TAG, "Assert that the Sync Progress has started.")
-        syncProgressPage.waitForDownloadStarting()
 
         Log.d(STEP_TAG, "Assert that the Sync Progress has been successful (so to have the success title and the course success indicator).")
         syncProgressPage.assertDownloadProgressSuccessDetails()
         syncProgressPage.assertCourseSyncedSuccessfully(course1.name)
+        syncProgressPage.assertCourseSyncedSuccessfully(course2.name)
+        syncProgressPage.assertCourseSyncedSuccessfully(course3.name)
+
+        Log.d(STEP_TAG, "Get the sum of '${course1.name}', '${course2.name}' and '${course3.name}' courses' sizes and assert that the sum number is displayed under the progress bar.")
+        val sumOfSyncedCourseSizes = syncProgressPage.getCourseSize(course1.name) + syncProgressPage.getCourseSize(course2.name) + syncProgressPage.getCourseSize(course3.name)
+        syncProgressPage.assertSumOfCourseSizes(sumOfSyncedCourseSizes)
+
+        Log.d(STEP_TAG, "Expand '${course1.name}' course and assert a few tabs (for example) to ensure they synced well and the success indicator is displayed in their rows.")
+        syncProgressPage.expandCollapseCourse(course1.name)
+        syncProgressPage.assertCourseTabSynced("Syllabus")
+        syncProgressPage.assertCourseTabSynced("Announcements")
+        syncProgressPage.assertCourseTabSynced("Grades")
+        device.waitForIdle()
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page and wait for it to be rendered.")
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Assert that the offline sync icon is displayed in online mode on the synced courses' course cards.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
+        dashboardPage.assertCourseOfflineSyncIconVisible(course2.name)
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
@@ -95,9 +110,11 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced courses' course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
-        dashboardPage.assertCourseOfflineSyncIconGone(course2.name)
+        dashboardPage.assertCourseOfflineSyncIconVisible(course2.name)
+        dashboardPage.assertCourseOfflineSyncIconVisible(course3.name)
+        dashboardPage.assertCourseOfflineSyncIconGone(course4.name)
 
         Log.d(STEP_TAG, "Select '${course1.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course1)

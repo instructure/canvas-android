@@ -1599,6 +1599,7 @@
     <string name="unpublishModuleItemAction">Unpublish</string>
     <string name="publishDialogPositiveButton">Publish</string>
     <string name="unpublishDialogPositiveButton">Unpublish</string>
+    <string name="discussionMenuRefresh">Refresh</string>
 
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>

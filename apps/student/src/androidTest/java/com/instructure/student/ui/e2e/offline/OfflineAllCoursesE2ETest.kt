@@ -53,7 +53,7 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         val course2 = data.coursesList[1]
         val course3 = data.coursesList[2]
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -79,15 +79,15 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState(course2.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' and 'Syncing Offline Content' dashboard notifications to be displayed, and then to disappear.")
-        dashboardPage.waitForOfflineSyncDashboardNotifications()
+        Log.d(STEP_TAG, "Assert that the offline sync icon is displayed on the synced  (and favorited) course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
         waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered, and assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
-        dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertCourseNotDisplayed(course2)
         dashboardPage.assertCourseNotDisplayed(course3)

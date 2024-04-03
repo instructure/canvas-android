@@ -19,11 +19,12 @@ package com.instructure.teacher.ui.utils
 import android.app.Activity
 import android.util.Log
 import android.view.View
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
@@ -73,7 +74,6 @@ import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.pages.PostSettingsPage
 import com.instructure.teacher.ui.pages.ProfileSettingsPage
-import com.instructure.teacher.ui.pages.ProgressPage
 import com.instructure.teacher.ui.pages.QuizDetailsPage
 import com.instructure.teacher.ui.pages.QuizListPage
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage
@@ -102,6 +102,8 @@ abstract class TeacherTest : CanvasTest() {
             = TeacherActivityTestRule(LoginActivity::class.java)
 
     override val isTesting = BuildConfig.IS_TESTING
+
+    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory

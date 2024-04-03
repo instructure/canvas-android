@@ -25,9 +25,6 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -46,6 +43,7 @@ import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class PeopleE2ETest: TeacherTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -69,13 +67,13 @@ class PeopleE2ETest: TeacherTest() {
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
         val group2 = GroupsApi.createGroup(groupCategory2.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Create group membership for ${gradedStudent.name} student to '${group.name}' group.")
+        Log.d(PREPARATION_TAG,"Create group membership for '${gradedStudent.name}' student to '${group.name}' group.")
         GroupsApi.createGroupMembership(group.id, gradedStudent.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Create group membership for ${notGradedStudent.name} student to '${group2.name}' group.")
+        Log.d(PREPARATION_TAG,"Create group membership for '${notGradedStudent.name}' student to '${group2.name}' group.")
         GroupsApi.createGroupMembership(group2.id, notGradedStudent.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Seed a 'Text Entry' assignment for course: ${course.name}.")
+        Log.d(PREPARATION_TAG,"Seed a 'Text Entry' assignment for course: '${course.name}'.")
         val assignments = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -84,7 +82,7 @@ class PeopleE2ETest: TeacherTest() {
                 pointsPossible = 10.0
         )
 
-        Log.d(PREPARATION_TAG,"Seed a submission for ${assignments[0].name} assignment.")
+        Log.d(PREPARATION_TAG,"Seed a submission for '${assignments[0].name}' assignment.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -95,13 +93,13 @@ class PeopleE2ETest: TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
-        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${assignments[0].name} assignment.")
-        gradeSubmission(teacher, course, assignments, gradedStudent)
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignments[0].name}' assignment.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignments[0].id, gradedStudent.id, postedGrade = "10")
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to People Page.")
+        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to People Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPeopleTab()
 
@@ -118,7 +116,7 @@ class PeopleE2ETest: TeacherTest() {
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.OBSERVER)
 
-        Log.d(STEP_TAG,"Navigate back and click on ${notGradedStudent.name} student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
+        Log.d(STEP_TAG,"Navigate back and click on '${notGradedStudent.name}' student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
         Espresso.pressBack()
         peopleListPage.assertPersonRole(notGradedStudent.name, PeopleListPage.UserRole.STUDENT)
         peopleListPage.clickPerson(notGradedStudent)
@@ -128,7 +126,7 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.assertStudentGrade("--")
         studentContextPage.assertStudentSubmission("--")
 
-        Log.d(STEP_TAG,"Navigate back and click on ${gradedStudent.name} student." +
+        Log.d(STEP_TAG,"Navigate back and click on '${gradedStudent.name}' student." +
                 "Assert that '${gradedStudent.name}' graded student's info," +
                 "and the '${course.name}' course's info are displayed properly on the Context Page.")
         Espresso.pressBack()
@@ -145,7 +143,7 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.clickOnNewMessageButton()
 
         val subject = "Test Subject"
-        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject. Add some message text and click on 'Send' (aka. 'Arrow') button.")
+        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
         addMessagePage.composeMessageWithSubject(subject, "This a test message from student context page.")
         addMessagePage.clickSendButton()
 
@@ -216,19 +214,4 @@ class PeopleE2ETest: TeacherTest() {
         inboxPage.assertHasConversation()
      }
 
-    private fun gradeSubmission(
-        teacher: CanvasUserApiModel,
-        course: CourseApiModel,
-        assignments: List<AssignmentApiModel>,
-        gradedStudent: CanvasUserApiModel
-    ) {
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = course.id,
-            assignmentId = assignments[0].id,
-            studentId = gradedStudent.id,
-            postedGrade = "10",
-            excused = false
-        )
-    }
 }
