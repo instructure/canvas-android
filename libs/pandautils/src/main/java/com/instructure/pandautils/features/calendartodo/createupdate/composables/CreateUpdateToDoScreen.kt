@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -73,6 +74,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoAction
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoUiState
@@ -414,9 +416,6 @@ private fun CreateUpdateToDoContent(
             Column(
                 modifier = Modifier
                     .defaultMinSize(minHeight = 80.dp)
-                    .clickable {
-                        detailsFocusRequester.requestFocus()
-                    }
             ) {
                 Text(
                     text = stringResource(id = R.string.createToDoDetailsLabel),
@@ -425,22 +424,26 @@ private fun CreateUpdateToDoContent(
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                BasicTextField(
-                    singleLine = false,
-                    value = uiState.details,
-                    onValueChange = {
-                        actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .focusRequester(detailsFocusRequester),
-                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-                    textStyle = TextStyle(
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 16.sp
-                    )
-                )
+                ComposeRCE(modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp))
+//                BasicTextField(
+//                    singleLine = false,
+//                    value = uiState.details,
+//                    onValueChange = {
+//                        actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(horizontal = 16.dp)
+//                        .focusRequester(detailsFocusRequester),
+//                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+//                    textStyle = TextStyle(
+//                        color = colorResource(id = R.color.textDarkest),
+//                        fontSize = 16.sp
+//                    )
+//                )
             }
         }
     }
