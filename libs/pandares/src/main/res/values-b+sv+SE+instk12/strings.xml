@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Saknas</string>
     <string name="gradedSubmissionLabel">Har bedömts</string>
 
+    <string name="reminderTitle">Påminnelse</string>
+    <string name="reminderDescription">Lägg till påminnelse om inlämningsdatum om denna uppgift på denna enhet.</string>
+    <string name="a11y_addReminder">Lägg till påminnelse</string>
+    <string name="a11y_removeReminder">Ta bort påminnelse</string>
+    <string name="reminderBefore">%s Före</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minut</item>
+        <item quantity="other">%d minuter</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 timme</item>
+        <item quantity="other">%d  timmar</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dag</item>
+        <item quantity="other">%d dagar</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 vecka</item>
+        <item quantity="other">%d veckor</item>
+    </plurals>
+    <string name="reminderCustom">Anpassa</string>
+    <string name="customReminderTitle">Anpassad påminnelse</string>
+    <string name="customReminderQuantityHint">Kvantitet</string>
+    <string name="customReminderMinutes">Minuter före</string>
+    <string name="customReminderHours">Timmar före</string>
+    <string name="customReminderDays">Dagar före</string>
+    <string name="customReminderWeeks">Veckor före</string>
+    <string name="reminderNotificationChannelName">Påminnelser</string>
+    <string name="reminderNotificationChannelDescription">Canvas-meddelanden för påminnelser om uppgifter</string>
+    <string name="reminderNotificationTitle">Påminnelse om inlämning</string>
+    <string name="reminderNotificationDescription">Denna uppgift ska lämnas in %s: %s</string>
+    <string name="reminderInPast">Välj en tid i framtiden för din påminnelse!</string>
+    <string name="reminderAlreadySet">Du har redan ställt in en påminnelse för den här tiden</string>
+    <string name="deleteReminderTitle">Radera påminnelse</string>
+    <string name="deleteReminderMessage">Är du säker på att du vill radera den här påminnelsen?</string>
+    <string name="reminderPermissionNotGrantedError">Du måste aktivera behörigheten för exakt larm för den här åtgärden.</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ingen förhandsgranskning är tillgänglig för URL:er som använder \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Ange en giltig URL</string>

@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">ขาดหาย</string>
     <string name="gradedSubmissionLabel">ให้เกรดแล้ว</string>
 
+    <string name="reminderTitle">แจ้งเตือน</string>
+    <string name="reminderDescription">เพิ่มการแจ้งเตือนครบกำหนดเกี่ยวกับภารกิจในอุปกรณ์นี้</string>
+    <string name="a11y_addReminder">เพิ่มการแจ้งเตือน</string>
+    <string name="a11y_removeReminder">ลบการแจ้งเตือน</string>
+    <string name="reminderBefore">%s ก่อน</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 นาที</item>
+        <item quantity="other">%d นาที</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 ชั่วโมง</item>
+        <item quantity="other">%d ชั่วโมง</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 วัน</item>
+        <item quantity="other">%d วัน</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 สัปดาห์</item>
+        <item quantity="other">%d สัปดาห์</item>
+    </plurals>
+    <string name="reminderCustom">กำหนดเอง</string>
+    <string name="customReminderTitle">การแจ้งเตือนกำหนดเอง</string>
+    <string name="customReminderQuantityHint">จำนวน</string>
+    <string name="customReminderMinutes">นาทีก่อนหน้า</string>
+    <string name="customReminderHours">ชั่วโมงก่อนหน้า</string>
+    <string name="customReminderDays">วันก่อนหน้า</string>
+    <string name="customReminderWeeks">สัปดาห์ก่อนหน้า</string>
+    <string name="reminderNotificationChannelName">การแจ้งเตือน</string>
+    <string name="reminderNotificationChannelDescription">การแจ้งข้อมูลจาก Canvas สำหรับการแจ้งเตือนภารกิจ</string>
+    <string name="reminderNotificationTitle">แจ้งเตือนวันครบกำหนด</string>
+    <string name="reminderNotificationDescription">ภารกิจนี้ครบกำหนดใน %s %s</string>
+    <string name="reminderInPast">กรุณาเลือกเวลาในอนาคตสำหรับการแจ้งเตือนของคุณ!</string>
+    <string name="reminderAlreadySet">คุณกำหนดการแจ้งเตือนสำหรับเวลานี้ไปแล้ว</string>
+    <string name="deleteReminderTitle">ลบการแจ้งเตือน</string>
+    <string name="deleteReminderMessage">แน่ใจว่าต้องการลบการแจ้งเตือนนี้หรือไม่</string>
+    <string name="reminderPermissionNotGrantedError">คุณจะต้องเปิดใช้สิทธิ์การแจ้งเตือนที่เจาะจงสำหรับการดำเนินการนี้</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">ไม่มีการแสดงตัวอย่างสำหรับ URL ที่ใช้ ‘http://’</string>
     <string name="submissionUrlNotAUrlError">กรุณากรอก URL ที่ถูกต้อง</string>

@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Manquant</string>
     <string name="gradedSubmissionLabel">Noté</string>
 
+    <string name="reminderTitle">Rappel</string>
+    <string name="reminderDescription">Ajouter des notifications de rappel de date d’échéance concernant cette tâche sur cet appareil.</string>
+    <string name="a11y_addReminder">Ajouter un rappel</string>
+    <string name="a11y_removeReminder">Retirer un rappel</string>
+    <string name="reminderBefore">%s Avant</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minute</item>
+        <item quantity="other">%d Minutes</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 heure</item>
+        <item quantity="other">%d heures</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 jour</item>
+        <item quantity="other">%d jours</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 semaine</item>
+        <item quantity="other">%d semaines</item>
+    </plurals>
+    <string name="reminderCustom">Personnalisé</string>
+    <string name="customReminderTitle">Rappel personnalisé</string>
+    <string name="customReminderQuantityHint">Quantité</string>
+    <string name="customReminderMinutes">Minutes avant</string>
+    <string name="customReminderHours">Heures avant</string>
+    <string name="customReminderDays">Jours avant</string>
+    <string name="customReminderWeeks">Semaines avant</string>
+    <string name="reminderNotificationChannelName">Notifications de rappel</string>
+    <string name="reminderNotificationChannelDescription">Notifications Canvas pour les rappels de tâches.</string>
+    <string name="reminderNotificationTitle">Rappel de la date d’échéance</string>
+    <string name="reminderNotificationDescription">Cette tâche est dû dans %s : %s</string>
+    <string name="reminderInPast">Veuillez choisir une heure ultérieure pour votre rappel!</string>
+    <string name="reminderAlreadySet">Vous avez déjà défini un rappel pour cette heure</string>
+    <string name="deleteReminderTitle">Supprimer le rappel</string>
+    <string name="deleteReminderMessage">Voulez-vous vraiment supprimer ce rappel?</string>
+    <string name="reminderPermissionNotGrantedError">Vous devez activer l’autorisation d’alarme exacte pour cette action</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>

@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
@@ -25,6 +24,7 @@ import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.Searchable
@@ -57,7 +57,6 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
     fun waitForDiscussionTopicToDisplay(topicTitle: String) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
         waitForView(matcher)
-
     }
 
     fun assertTopicDisplayed(topicTitle: String) {
@@ -67,7 +66,7 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
     }
 
     fun assertTopicNotDisplayed(topicTitle: String?) {
-        onView(allOf(withText(topicTitle))).check(ViewAssertions.doesNotExist())
+        onView(allOf(withText(topicTitle))).check(DoesNotExistAssertion(5))
     }
 
     fun assertEmpty() {

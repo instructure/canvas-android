@@ -113,6 +113,7 @@ class UpdateFileDialogFragment : BottomSheetDialogFragment() {
             setOnShowListener {
                 val bottomSheet = findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
                 val behavior = BottomSheetBehavior.from(bottomSheet)
+                bottomSheet.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
                 behavior.skipCollapsed = true
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.peekHeight = 0

@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Tiada</string>
     <string name="gradedSubmissionLabel">Digredkan</string>
 
+    <string name="reminderTitle">Peringatan</string>
+    <string name="reminderDescription">Tambah peringatan tarikh siap untuk tugasan ini pada peranti ini.</string>
+    <string name="a11y_addReminder">Tambah peringatan</string>
+    <string name="a11y_removeReminder">Alih keluar peringatan</string>
+    <string name="reminderBefore">%s Sebelum</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minit</item>
+        <item quantity="other">%d Minit</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Jam</item>
+        <item quantity="other">%d Jam</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Hari</item>
+        <item quantity="other">%d Hari</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Minggu</item>
+        <item quantity="other">%d Minggu</item>
+    </plurals>
+    <string name="reminderCustom">Tersuai</string>
+    <string name="customReminderTitle">Peringatan Tersuai</string>
+    <string name="customReminderQuantityHint">Kuantiti</string>
+    <string name="customReminderMinutes">Minit Sebelum</string>
+    <string name="customReminderHours">Jam Sebelum</string>
+    <string name="customReminderDays">Hari Sebelum</string>
+    <string name="customReminderWeeks">Minggu Sebelum</string>
+    <string name="reminderNotificationChannelName">Pemberitahuan Peringatan</string>
+    <string name="reminderNotificationChannelDescription">Pemberitahuan Canvas untuk peringatan tugasan.</string>
+    <string name="reminderNotificationTitle">Peringatan Tarikh Siap</string>
+    <string name="reminderNotificationDescription">Tugasan ini perlu disiapkan dalam %s: %s</string>
+    <string name="reminderInPast">Sila pilih masa akan datang untuk peringatan anda!</string>
+    <string name="reminderAlreadySet">Anda telah menetapkan peringatan untuk masa ini</string>
+    <string name="deleteReminderTitle">Padam Peringatan</string>
+    <string name="deleteReminderMessage">Adakah anda pasti anda ingin memadamkan peringatan ini?</string>
+    <string name="reminderPermissionNotGrantedError">Anda perlu mendayakan keizinan penggera yang tepat untuk tindakan ini</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Tiada pratonton tersedia untuk URL menggunakan \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Sila masukkan URL yang sah</string>

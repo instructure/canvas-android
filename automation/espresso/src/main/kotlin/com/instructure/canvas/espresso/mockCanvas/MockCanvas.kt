@@ -1599,7 +1599,8 @@ fun MockCanvas.addItemToModule(
         item: Any,
         contentId: Long = 0,
         published: Boolean = true,
-        moduleContentDetails: ModuleContentDetails? = null
+        moduleContentDetails: ModuleContentDetails? = null,
+        unpublishable: Boolean = true
 ) : ModuleItem {
 
     // Placeholders for itemType and itemTitle values that we will compute below
@@ -1663,7 +1664,8 @@ fun MockCanvas.addItemToModule(
             url = itemUrl,
             htmlUrl = itemUrl,
             contentId = contentId,
-            moduleDetails = moduleContentDetails
+            moduleDetails = moduleContentDetails,
+            unpublishable = unpublishable
     )
 
     // Copy/update/replace the module
