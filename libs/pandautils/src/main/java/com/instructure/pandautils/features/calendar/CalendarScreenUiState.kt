@@ -37,7 +37,7 @@ data class CalendarUiState(
     val pendingSelectedDay: LocalDate? = null, // Temporary selected date when the calendar is animating to a new month
 )
 
-data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String)
+data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String, val loadingMonths: Boolean = false)
 
 data class CalendarBodyUiState(
     val previousPage: CalendarPageUiState,
@@ -126,5 +126,6 @@ sealed class CalendarViewModelAction {
 
 sealed class SharedCalendarAction {
     data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
-    data object FilterDialogClosed : SharedCalendarAction()
+    data class FiltersClosed(val changed: Boolean) : SharedCalendarAction()
+    data object CloseToDoScreen : SharedCalendarAction()
 }

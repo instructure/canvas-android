@@ -1599,6 +1599,7 @@
     <string name="unpublishModuleItemAction">Unpublish</string>
     <string name="publishDialogPositiveButton">Publish</string>
     <string name="unpublishDialogPositiveButton">Unpublish</string>
+    <string name="discussionMenuRefresh">Refresh</string>
 
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
@@ -1623,6 +1624,8 @@
     <string name="calendarFilterCourse">Courses</string>
     <string name="calendarFilterGroup">Groups</string>
     <string name="calendarFilterExplanation">Tap to select the calendars you want to see.</string>
+    <string name="calendarFilterExplanationLimited">Tap to select the calendars you want to see. Select up to %d.</string>
+    <string name="calendarFilterLimitSnackbar">You can only select up to %d calendars.</string>
     <string name="calendarFilterTitle">Calendars</string>
     <string name="calendarFiltersFailed">Failed to load filters</string>
 

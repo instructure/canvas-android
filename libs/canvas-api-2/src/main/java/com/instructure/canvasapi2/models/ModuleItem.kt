@@ -17,7 +17,6 @@
 
 package com.instructure.canvasapi2.models
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -44,6 +43,7 @@ data class ModuleItem(
     val externalUrl: String? = null,
     @SerializedName("page_url")
     val pageUrl: String? = null,
+    val unpublishable: Boolean = true,
     @SerializedName("mastery_paths")
     var masteryPaths: MasteryPath? = null,
     // When we display the "Choose Assignment Group" when an assignment uses Mastery Paths we create a new row to display.

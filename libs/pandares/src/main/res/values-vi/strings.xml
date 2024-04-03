@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Bị Thiếu</string>
     <string name="gradedSubmissionLabel">Đã Chấm Điểm</string>
 
+    <string name="reminderTitle">Lời nhắc nhở</string>
+    <string name="reminderDescription">Thêm thông báo lời nhắc nhở ngày đến hạn về bài tập này trên thiết bị này.</string>
+    <string name="a11y_addReminder">Thêm lời nhắc nhở</string>
+    <string name="a11y_removeReminder">Gỡ lời nhắc nhở</string>
+    <string name="reminderBefore">%s Trước</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Phút</item>
+        <item quantity="other">%d Phút</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Giờ</item>
+        <item quantity="other">%d Giờ</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Ngày</item>
+        <item quantity="other">%d Ngày</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Tuần</item>
+        <item quantity="other">%d Tuần</item>
+    </plurals>
+    <string name="reminderCustom">Tùy Chỉnh</string>
+    <string name="customReminderTitle">Lời Nhắc Nhở Tùy Chỉnh</string>
+    <string name="customReminderQuantityHint">Số Lượng</string>
+    <string name="customReminderMinutes">Phút Trước</string>
+    <string name="customReminderHours">Giờ Trước</string>
+    <string name="customReminderDays">Ngày Trước</string>
+    <string name="customReminderWeeks">Tuần Trước</string>
+    <string name="reminderNotificationChannelName">Thông Báo Lời Nhắc Nhở</string>
+    <string name="reminderNotificationChannelDescription">Thông Báo Canvas cho lời nhắc nhở bài tập.</string>
+    <string name="reminderNotificationTitle">Lời Nhắc Nhở Ngày Đến Hạn</string>
+    <string name="reminderNotificationDescription">Bài tập này đến hạn vào %s: %s</string>
+    <string name="reminderInPast">Vui lòng chọn thời gian trong tương lai cho lời nhắc nhở của bạn!</string>
+    <string name="reminderAlreadySet">Bạn đã thiết lập lời nhắc nhở cho thời gian này</string>
+    <string name="deleteReminderTitle">Xóa Lời Nhắc Nhở</string>
+    <string name="deleteReminderMessage">Bạn có chắc chắn muốn xóa lời nhắc nhở này không?</string>
+    <string name="reminderPermissionNotGrantedError">Bạn cần bật quyền báo động chính xác cho hành động này</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Không có mục xem trước có thể sử dụng cho URL sử dụng \"http://\"</string>
     <string name="submissionUrlNotAUrlError">Vui lòng nhập URL hợp lệ</string>

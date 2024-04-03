@@ -43,7 +43,7 @@
         android:maxLines="1"
         android:textColor="@color/textDark"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/statusWrapper"
+        app:layout_constraintEnd_toStartOf="@+id/publishActions"
         app:layout_constraintStart_toEndOf="@id/moduleItemIndent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="SubHeader title" />
@@ -53,10 +53,15 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/statusWrapper"
+        android:id="@+id/publishActions"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingStart="8dp"
         android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/moduleOptions"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/overflow"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -92,24 +97,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/overflow"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:paddingStart="14dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="14dp"
+            android:importantForAccessibility="no"
+            android:tint="@color/textDark"
+            app:srcCompat="@drawable/ic_overflow_white_18dp" />
 
-    <ImageView
-        android:id="@+id/overflow"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?android:selectableItemBackground"
-        android:clickable="true"
-        android:contentDescription="@string/moduleOptions"
-        android:focusable="true"
-        android:paddingStart="14dp"
-        android:paddingTop="14dp"
-        android:paddingEnd="14dp"
-        android:paddingBottom="14dp"
-        android:tint="@color/textDark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_overflow_white_18dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
