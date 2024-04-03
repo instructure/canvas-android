@@ -17,12 +17,19 @@
 package com.instructure.teacher.di
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.teacher.features.calendar.TeacherCalendarRepository
 import com.instructure.teacher.features.calendar.TeacherCalendarRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -31,5 +38,20 @@ class CalendarModule {
     @Provides
     fun provideCalendarRouter(activity: FragmentActivity): CalendarRouter {
         return TeacherCalendarRouter(activity)
+    }
+
+    @Module
+    @InstallIn(ViewModelComponent::class)
+    class CalendarViewModelModule {
+
+        @Provides
+        fun provideCalendarRepository(
+            plannerApi: PlannerAPI.PlannerInterface,
+            coursesApi: CourseAPI.CoursesInterface,
+            calendarEventsApi: CalendarEventAPI.CalendarEventInterface,
+            apiPrefs: ApiPrefs
+        ): CalendarRepository {
+            return TeacherCalendarRepository(plannerApi, coursesApi, calendarEventsApi, apiPrefs)
+        }
     }
 }

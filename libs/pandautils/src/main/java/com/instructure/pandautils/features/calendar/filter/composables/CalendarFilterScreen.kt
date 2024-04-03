@@ -29,8 +29,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +56,7 @@ import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import kotlinx.coroutines.launch
 
 private const val USER_KEY = "user"
 private const val COURSES_KEY = "courses"
@@ -66,6 +73,18 @@ fun CalendarFiltersScreen(
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
+        val snackbarHostState = remember { SnackbarHostState() }
+        val localCoroutineScope = rememberCoroutineScope()
+        if (uiState.snackbarMessage != null) {
+            LaunchedEffect(Unit) {
+                localCoroutineScope.launch {
+                    val result = snackbarHostState.showSnackbar(uiState.snackbarMessage)
+                    if (result == SnackbarResult.Dismissed) {
+                        actionHandler(CalendarFilterAction.SnackbarDismissed)
+                    }
+                }
+            }
+        }
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
@@ -74,6 +93,7 @@ fun CalendarFiltersScreen(
                     navigationActionClick = navigationActionClick
                 )
             },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
                 if (uiState.error) {
                     ErrorContent(errorMessage = stringResource(id = R.string.calendarFiltersFailed), retryClick = {
@@ -106,8 +126,13 @@ private fun CalendarFiltersContent(
     ) {
         item(key = EXPLANATION_KEY, contentType = EXPLANATION_CONTENT_TYPE) {
             Spacer(modifier = Modifier.height(24.dp))
+            val explanationText = if (uiState.calendarLimit != -1) {
+                stringResource(id = R.string.calendarFilterExplanationLimited, uiState.calendarLimit)
+            } else {
+                stringResource(id = R.string.calendarFilterExplanation)
+            }
             Text(
-                text = stringResource(id = R.string.calendarFilterExplanation),
+                text = explanationText,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest),
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -183,10 +208,10 @@ fun CalendarFiltersPreview() {
             CalendarFilterItemUiState("user_1", "User 1", true),
         ), courses = listOf(
             CalendarFilterItemUiState("course_1", "Course 1", true),
-            CalendarFilterItemUiState("course_1", "Course 1", false),
+            CalendarFilterItemUiState("course_2", "Course 2", false),
         ), groups = listOf(
             CalendarFilterItemUiState("group_1", "Group 1", false),
-            CalendarFilterItemUiState("group_1", "Group 1", true),
+            CalendarFilterItemUiState("group_2", "Group 2", true),
         )
     )
     CalendarFiltersScreen(uiState, {}, {})

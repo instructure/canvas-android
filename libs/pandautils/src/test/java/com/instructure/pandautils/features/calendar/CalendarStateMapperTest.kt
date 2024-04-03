@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.calendar
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
@@ -30,10 +31,11 @@ class CalendarStateMapperTest {
 
     @Test
     fun `Format header UI state for selected date`() {
-        val headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.of(2023, 4, 20), null)
+        val headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.of(2023, 4, 20), null, loading = true)
 
         assertEquals("2023", headerUiState.yearTitle)
         assertEquals("April", headerUiState.monthTitle)
+        assertTrue(headerUiState.loadingMonths)
     }
 
     @Test

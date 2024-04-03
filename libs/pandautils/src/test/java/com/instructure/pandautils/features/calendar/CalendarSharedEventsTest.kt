@@ -19,8 +19,7 @@ package com.instructure.pandautils.features.calendar
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -33,16 +32,16 @@ import org.junit.Test
 import org.threeten.bp.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class CalendarSharedViewModelTest {
+class CalendarSharedEventsTest {
 
     private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
-    lateinit var viewModel: CalendarSharedViewModel
+    private lateinit var sharedEvents: CalendarSharedEvents
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = CalendarSharedViewModel()
+        sharedEvents = CalendarSharedEvents()
     }
 
     @After
@@ -54,27 +53,31 @@ class CalendarSharedViewModelTest {
     fun `Refresh action handled`() = runTest {
         val dates = listOf(LocalDate.now())
 
-        viewModel.sendEvent(SharedCalendarAction.RefreshDays(dates))
+        sharedEvents.sendEvent(this, SharedCalendarAction.RefreshDays(dates))
 
-        val events = mutableListOf<SharedCalendarAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val event = sharedEvents.events.first()
 
         val expectedEvent = SharedCalendarAction.RefreshDays(dates)
-        assertEquals(expectedEvent, events.last())
+        assertEquals(expectedEvent, event)
     }
 
     @Test
     fun `Send event when filter dialog is closed`() = runTest {
-        viewModel.filterDialogClosed()
+        sharedEvents.filtersClosed(this, true)
 
-        val events = mutableListOf<SharedCalendarAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val event = sharedEvents.events.first()
 
-        val expectedEvent = SharedCalendarAction.FilterDialogClosed
-        assertEquals(expectedEvent, events.last())
+        val expectedEvent = SharedCalendarAction.FiltersClosed(true)
+        assertEquals(expectedEvent, event)
+    }
+
+    @Test
+    fun `Send event when filter dialog is closed and filters not changed`() = runTest {
+        sharedEvents.filtersClosed(this, false)
+
+        val event = sharedEvents.events.first()
+
+        val expectedEvent = SharedCalendarAction.FiltersClosed(false)
+        assertEquals(expectedEvent, event)
     }
 }
