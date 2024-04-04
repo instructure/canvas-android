@@ -15,12 +15,8 @@
  */
 package com.instructure.pandautils.compose.composables.rce
 
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,38 +24,71 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.instructure.pandautils.utils.ThemePrefs
 import instructure.rceditor.RCETextEditor
-import instructure.rceditor.RCETextEditorView
+import jp.wasabeef.richeditor.RichEditor
 
 @Composable
 fun ComposeRCE(modifier: Modifier = Modifier) {
+    var rceState by remember { mutableStateOf(RCEState()) }
+
     val context = LocalContext.current
-    val rceTextEditor = RCETextEditor(context)
-    val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState()
-    val focusRequester = remember {
-        FocusRequester()
+    var rceTextEditor = RCETextEditor(context).apply {
+        setOnTextChangeListener { evaluateJavascript("javascript:RE.enabledEditingItems();", null) }
+        setOnDecorationChangeListener { text, types ->
+            val typeSet = text.split(",").toSet()
+            rceState = rceState.copy(
+                bold = typeSet.contains(RichEditor.Type.BOLD.name),
+                italic = typeSet.contains(RichEditor.Type.ITALIC.name),
+                underline = typeSet.contains(RichEditor.Type.UNDERLINE.name),
+                numberedList = typeSet.contains(RichEditor.Type.ORDEREDLIST.name),
+                bulletedList = typeSet.contains(RichEditor.Type.UNORDEREDLIST.name)
+            )
+        }
+    }
+    val postUpdateState = { block: () -> Unit ->
+        block()
+        rceTextEditor.evaluateJavascript("javascript:RE.enabledEditingItems();", null)
     }
     LaunchedEffect(Unit) {
         rceTextEditor.html = "<p>Compose RCE</p>"
     }
     Column(modifier = modifier) {
-        var rceState by remember { mutableStateOf(RCEState()) }
         RCEControls(rceState) {
             when (it) {
-                RCEAction.BOLD -> rceState = rceState.copy(bold = !rceState.bold)
-                RCEAction.ITALIC -> rceState = rceState.copy(italic = !rceState.italic)
-                RCEAction.UNDERLINE -> rceState = rceState.copy(underline = !rceState.underline)
-                RCEAction.NUMBERED_LIST -> rceState = rceState.copy(numberedList = !rceState.numberedList)
-                RCEAction.BULLETED_LIST -> rceState = rceState.copy(bulletedList = !rceState.bulletedList)
-                RCEAction.COLOR_PICKER -> rceState = rceState.copy(colorPicker = !rceState.colorPicker)
+                RCEAction.BOLD -> {
+                    postUpdateState { rceTextEditor.setBold() }
+                }
+
+                RCEAction.ITALIC -> {
+                    postUpdateState { rceTextEditor.setItalic() }
+                }
+
+                RCEAction.UNDERLINE -> {
+                    postUpdateState { rceTextEditor.setUnderline() }
+                }
+
+                RCEAction.NUMBERED_LIST -> {
+                    postUpdateState { rceTextEditor.setNumbers() }
+                }
+
+                RCEAction.BULLETED_LIST -> {
+                    postUpdateState { rceTextEditor.setBullets() }
+                }
+
+                RCEAction.COLOR_PICKER -> {
+                    rceState = rceState.copy(colorPicker = !rceState.colorPicker)
+                }
+
+                RCEAction.UNDO -> {
+                    postUpdateState { rceTextEditor.undo() }
+                }
+
+                RCEAction.REDO -> {
+                    postUpdateState { rceTextEditor.redo() }
+                }
+
                 else -> {
                 }
             }
@@ -67,10 +96,12 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
 
         AndroidView(
             modifier = Modifier
-                .height(280.dp)
-                .fillMaxWidth(),
+                .fillMaxSize(),
             factory = {
                 rceTextEditor
+            },
+            update = {
+                rceTextEditor = it
             }
         )
     }
