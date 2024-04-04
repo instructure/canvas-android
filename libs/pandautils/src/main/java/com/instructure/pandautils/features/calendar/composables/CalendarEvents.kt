@@ -74,7 +74,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.textAndIconColor
 import com.jakewharton.threetenabp.AndroidThreeTen
 
-private const val PAGE_COUNT = 100000
+private const val PAGE_COUNT = 1000
 
 @ExperimentalFoundationApi
 @Composable

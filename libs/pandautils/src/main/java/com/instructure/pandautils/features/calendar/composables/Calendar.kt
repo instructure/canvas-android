@@ -47,7 +47,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.IconButton
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
@@ -106,7 +105,7 @@ import java.util.Locale
 private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
 private const val HEADER_HEIGHT = 20
 private const val CALENDAR_ROW_HEIGHT = 46
-private const val PAGE_COUNT = 10000
+private const val PAGE_COUNT = 1000
 
 @Composable
 fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
