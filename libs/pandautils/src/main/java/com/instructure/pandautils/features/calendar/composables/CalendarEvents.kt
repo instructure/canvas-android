@@ -74,6 +74,8 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.textAndIconColor
 import com.jakewharton.threetenabp.AndroidThreeTen
 
+private const val PAGE_COUNT = 1000
+
 @ExperimentalFoundationApi
 @Composable
 fun CalendarEvents(
@@ -81,12 +83,12 @@ fun CalendarEvents(
     actionHandler: (CalendarAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
+    var centerIndex by remember { mutableIntStateOf(PAGE_COUNT / 2) }
     val pagerState = rememberPagerState(
-        initialPage = Int.MAX_VALUE / 2,
+        initialPage = PAGE_COUNT / 2,
         initialPageOffsetFraction = 0f
     ) {
-        Int.MAX_VALUE
+        PAGE_COUNT
     }
 
     LaunchedEffect(pagerState) {
