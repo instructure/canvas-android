@@ -14,6 +14,8 @@
  *     limitations under the License.
  */package com.instructure.pandautils.compose.composables.rce
 
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -48,13 +50,17 @@ import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 
 @Composable
-fun RCEControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
+fun RCEControls(
+    rceState: RCEState,
+    onActionClick: (RCEAction) -> Unit,
+    onColorClick: (Int) -> Unit
+) {
     Column {
         RCETextControls(rceState, onActionClick)
         AnimatedVisibility(
             visible = rceState.colorPicker
         ) {
-            RCEColorControls()
+            RCEColorControls(onColorClick)
         }
         Divider()
     }
@@ -64,21 +70,21 @@ fun RCEControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
 fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
     LazyRow {
         item {
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_undo,
                 contentDescription = R.string.rce_contentDescription_undo,
                 active = false
             ) {
                 onActionClick(RCEAction.UNDO)
             }
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_redo,
                 contentDescription = R.string.rce_contentDescription_redo,
                 active = false
             ) {
                 onActionClick(RCEAction.UNDO)
             }
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_format_bold,
                 contentDescription = R.string.rce_contentDescription_bold,
                 active = rceState.bold
@@ -86,7 +92,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
                 onActionClick(RCEAction.BOLD)
             }
 
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_format_italic,
                 contentDescription = R.string.rce_contentDescription_italic,
                 active = rceState.italic
@@ -94,7 +100,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
                 onActionClick(RCEAction.ITALIC)
             }
 
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_format_underlined,
                 contentDescription = R.string.rce_contentDescription_underline,
                 active = rceState.underline
@@ -102,7 +108,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
                 onActionClick(RCEAction.UNDERLINE)
             }
 
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_format_color_text,
                 contentDescription = R.string.rce_contentDescription_format_text_color,
                 active = rceState.colorPicker
@@ -110,7 +116,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
                 onActionClick(RCEAction.COLOR_PICKER)
             }
 
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_format_list_bulleted,
                 contentDescription = R.string.rce_contentDescription_insert_bullets,
                 active = rceState.bulletedList
@@ -118,7 +124,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
                 onActionClick(RCEAction.BULLETED_LIST)
             }
 
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_format_list_numbered,
                 contentDescription = R.string.rce_contentDescription_insert_numbers,
                 active = rceState.numberedList
@@ -126,7 +132,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
                 onActionClick(RCEAction.NUMBERED_LIST)
             }
 
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_insert_photo,
                 contentDescription = R.string.rce_contentDescription_insert_photo,
                 active = false
@@ -134,7 +140,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
                 onActionClick(RCEAction.INSERT_IMAGE)
             }
 
-            ActionIcon(
+            ActionButton(
                 iconRes = R.drawable.ic_rce_insert_link,
                 contentDescription = R.string.rce_contentDescription_insert_link,
                 active = false
@@ -146,7 +152,7 @@ fun RCETextControls(rceState: RCEState, onActionClick: (RCEAction) -> Unit) {
 }
 
 @Composable
-fun RCEColorControls() {
+fun RCEColorControls(onColorClick: (Int) -> Unit) {
     val context = LocalContext.current
     LazyRow(
         modifier = Modifier
@@ -161,7 +167,8 @@ fun RCEColorControls() {
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(50))
                     .background(colorResource(id = R.color.rce_gray))
-                    .semantics {
+                    .clickable { onColorClick(R.color.rce_pickerWhite) }
+                    .semantics(mergeDescendants = true) {
                         contentDescription =
                             context.getString(R.string.rce_contentDescription_color_white)
                     },
@@ -176,110 +183,52 @@ fun RCEColorControls() {
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerBlack))
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_black)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerBlack,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_black),
+                onColorClick = onColorClick
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerGray))
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_gray)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerGray,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_gray),
+                onColorClick = onColorClick
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerRed))
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_red)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerRed,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_red),
+                onColorClick = onColorClick
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerOrange))
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_orange)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerOrange,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_orange),
+                onColorClick = onColorClick
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerYellow))
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_yellow)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerYellow,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_yellow),
+                onColorClick = onColorClick
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerGreen))
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_green)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerGreen,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_green),
+                onColorClick = onColorClick
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerBlue))
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_blue)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerBlue,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_blue),
+                onColorClick = onColorClick
             )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(colorResource(id = R.color.rce_pickerPurple))
-                    .clickable { /*TODO*/ }
-                    .semantics {
-                        contentDescription =
-                            context.getString(R.string.rce_contentDescription_color_purple)
-                    }
+            ColorButton(
+                color = R.color.rce_pickerPurple,
+                contentDescription = context.getString(R.string.rce_contentDescription_color_purple),
+                onColorClick = onColorClick
             )
         }
 
@@ -287,7 +236,7 @@ fun RCEColorControls() {
 }
 
 @Composable
-fun ActionIcon(
+fun ActionButton(
     @DrawableRes iconRes: Int,
     @StringRes contentDescription: Int,
     active: Boolean,
@@ -307,12 +256,30 @@ fun ActionIcon(
     }
 }
 
+@Composable
+fun ColorButton(
+    @ColorRes color: Int,
+    contentDescription: String,
+    onColorClick: (Int) -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 12.dp)
+            .fillMaxHeight()
+            .aspectRatio(1f)
+            .clip(CircleShape)
+            .background(colorResource(id = color))
+            .clickable { onColorClick(color) }
+            .semantics {
+                this.contentDescription = contentDescription
+            }
+    )
+}
+
 @Preview
 @Composable
 fun RCEControlsPreview() {
-    RCEControls(RCEState()) {
-
-    }
+    RCEControls(RCEState(), {}, {})
 }
 
 @Preview
@@ -326,5 +293,7 @@ fun RCETextControlsPreview() {
 @Preview
 @Composable
 fun RceColorControlsPreview() {
-    RCEColorControls()
+    RCEColorControls() {
+
+    }
 }

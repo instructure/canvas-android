@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import instructure.rceditor.RCETextEditor
 import jp.wasabeef.richeditor.RichEditor
 
@@ -55,7 +56,7 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
         rceTextEditor.html = "<p>Compose RCE</p>"
     }
     Column(modifier = modifier) {
-        RCEControls(rceState) {
+        RCEControls(rceState, onActionClick = {
             when (it) {
                 RCEAction.BOLD -> {
                     postUpdateState { rceTextEditor.setBold() }
@@ -92,7 +93,10 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
                 else -> {
                 }
             }
-        }
+        }, onColorClick = {
+            rceState = rceState.copy(colorPicker = false)
+            postUpdateState { rceTextEditor.setTextColor(ContextCompat.getColor(context, it)) }
+        })
 
         AndroidView(
             modifier = Modifier
