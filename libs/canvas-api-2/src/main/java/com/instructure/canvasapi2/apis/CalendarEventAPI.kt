@@ -103,7 +103,40 @@ object CalendarEventAPI {
             @Query(value = "calendar_event[rrule]") rrule: String?,
             @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
             @Query(value = "calendar_event[location_address]", encoded = true) locationAddress: String,
-            @Body body: String,
+            @Body body: String = "",
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
+
+        @PUT("calendar_events/{eventId}")
+        suspend fun updateRecurringCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Query(value = "calendar_event[context_code]") contextCode: String,
+            @Query(value = "calendar_event[title]", encoded = true) title: String,
+            @Query(value = "calendar_event[description]", encoded = true) description: String,
+            @Query(value = "calendar_event[start_at]") startDate: String,
+            @Query(value = "calendar_event[end_at]") endDate: String,
+            @Query(value = "calendar_event[all_day]") allDay: Boolean,
+            @Query(value = "calendar_event[rrule]") rrule: String?,
+            @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
+            @Query(value = "calendar_event[location_address]", encoded = true) locationAddress: String,
+            @Query(value = "which") modifyEventScope: String,
+            @Body body: String = "",
+            @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
+        @PUT("calendar_events/{eventId}")
+        suspend fun updateCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Query(value = "calendar_event[context_code]") contextCode: String,
+            @Query(value = "calendar_event[title]", encoded = true) title: String,
+            @Query(value = "calendar_event[description]", encoded = true) description: String,
+            @Query(value = "calendar_event[start_at]") startDate: String,
+            @Query(value = "calendar_event[end_at]") endDate: String,
+            @Query(value = "calendar_event[all_day]") allDay: Boolean,
+            @Query(value = "calendar_event[rrule]") rrule: String?,
+            @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
+            @Query(value = "calendar_event[location_address]", encoded = true) locationAddress: String,
+            @Body body: String = "",
             @Tag restParams: RestParams
         ): DataResult<ScheduleItem>
 
@@ -121,7 +154,7 @@ object CalendarEventAPI {
         ASSIGNMENT("assignment")
     }
 
-    enum class EventDeleteScope(val apiName: String, @StringRes val stringRes: Int) {
+    enum class ModifyEventScope(val apiName: String, @StringRes val stringRes: Int) {
         ONE("one", R.string.eventDeleteScopeOne),
         ALL("all", R.string.eventDeleteScopeAll),
         FOLLOWING("following", R.string.eventDeleteScopeFollowing)

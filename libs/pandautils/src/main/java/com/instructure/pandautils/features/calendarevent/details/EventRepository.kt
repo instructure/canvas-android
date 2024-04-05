@@ -34,8 +34,8 @@ class EventRepository(
 
     suspend fun deleteRecurringCalendarEvent(
         eventId: Long,
-        eventDeleteScope: CalendarEventAPI.EventDeleteScope
+        modifyEventScope: CalendarEventAPI.ModifyEventScope
     ): List<ScheduleItem> {
-        return calendarEventApi.deleteRecurringCalendarEvent(eventId, eventDeleteScope.apiName, RestParams()).dataOrThrow
+        return calendarEventApi.deleteRecurringCalendarEvent(eventId, modifyEventScope.apiName, RestParams()).dataOrThrow
     }
 }

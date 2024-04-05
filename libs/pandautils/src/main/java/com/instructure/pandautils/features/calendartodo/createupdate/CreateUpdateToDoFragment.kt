@@ -99,14 +99,7 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
     }
 
     override fun onHandleBackPressed(): Boolean {
-        if (viewModel.uiState.value.selectCalendarUiState.show) {
-            viewModel.handleAction(CreateUpdateToDoAction.HideSelectCalendarScreen)
-            return true
-        } else if (!viewModel.uiState.value.canNavigateBack) {
-            viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
-            return true
-        }
-        return false
+        return viewModel.onBackPressed()
     }
 
     private fun navigateBack() {

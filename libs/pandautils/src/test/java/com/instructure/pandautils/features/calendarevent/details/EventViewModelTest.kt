@@ -330,7 +330,7 @@ class EventViewModelTest {
             viewModel.events.toList(events)
         }
 
-        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.ONE))
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ONE))
 
         coVerify {
             eventRepository.deleteCalendarEvent(scheduleItem.id)
@@ -343,7 +343,7 @@ class EventViewModelTest {
     @Test
     fun `Delete recurring event`() = runTest {
         every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(rrule = "FREQ=DAILY;INTERVAL=1;COUNT=5")
-        coEvery { eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.EventDeleteScope.ALL) } returns listOf(
+        coEvery { eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.ModifyEventScope.ALL) } returns listOf(
             scheduleItem,
             scheduleItem.copy(startAt = LocalDate.of(2024, 3, 2).atTime(11, 0).toApiString())
         )
@@ -355,10 +355,10 @@ class EventViewModelTest {
             viewModel.events.toList(events)
         }
 
-        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.ALL))
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ALL))
 
         coVerify {
-            eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.EventDeleteScope.ALL)
+            eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.ModifyEventScope.ALL)
         }
 
         val expectedEvent = EventViewModelAction.RefreshCalendarDays(
@@ -378,7 +378,7 @@ class EventViewModelTest {
 
         createViewModel()
 
-        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.ONE))
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ONE))
 
         Assert.assertEquals("Error message", viewModel.uiState.value.errorSnack)
 

@@ -74,7 +74,7 @@ class EventRepositoryTest {
     fun `Throw exception when delete recurring calendar event fails`() = runTest {
         coEvery { calendarEventApi.deleteRecurringCalendarEvent(any(), any(), any()) } returns DataResult.Fail()
 
-        eventRepository.deleteRecurringCalendarEvent(1, CalendarEventAPI.EventDeleteScope.ALL)
+        eventRepository.deleteRecurringCalendarEvent(1, CalendarEventAPI.ModifyEventScope.ALL)
     }
 
     @Test
@@ -83,7 +83,7 @@ class EventRepositoryTest {
 
         coEvery { calendarEventApi.deleteRecurringCalendarEvent(any(), any(), any()) } returns DataResult.Success(expected)
 
-        val result = eventRepository.deleteRecurringCalendarEvent(1, CalendarEventAPI.EventDeleteScope.ALL)
+        val result = eventRepository.deleteRecurringCalendarEvent(1, CalendarEventAPI.ModifyEventScope.ALL)
 
         Assert.assertEquals(expected, result)
     }

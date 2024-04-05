@@ -46,10 +46,54 @@ class CreateUpdateEventRepository(
             rrule = rrule,
             locationName = locationName,
             locationAddress = locationAddress,
-            body = "",
             restParams = RestParams()
         ).dataOrThrow
 
         return listOf(result) + result.duplicates.map { it.calendarEvent }
+    }
+
+    suspend fun updateEvent(
+        eventId: Long,
+        title: String,
+        startDate: String,
+        endDate: String,
+        rrule: String?,
+        contextCode: String,
+        locationName: String,
+        locationAddress: String,
+        description: String,
+        modifyEventScope: CalendarEventAPI.ModifyEventScope
+    ): List<ScheduleItem> {
+        if (modifyEventScope == CalendarEventAPI.ModifyEventScope.ONE) {
+            val result = calendarEventApi.updateCalendarEvent(
+                eventId = eventId,
+                contextCode = contextCode,
+                title = title,
+                description = description,
+                startDate = startDate,
+                endDate = endDate,
+                allDay = startDate == endDate,
+                rrule = rrule,
+                locationName = locationName,
+                locationAddress = locationAddress,
+                restParams = RestParams()
+            ).dataOrThrow
+            return listOf(result)
+        } else {
+            return calendarEventApi.updateRecurringCalendarEvent(
+                eventId = eventId,
+                contextCode = contextCode,
+                title = title,
+                description = description,
+                startDate = startDate,
+                endDate = endDate,
+                allDay = startDate == endDate,
+                rrule = rrule,
+                locationName = locationName,
+                locationAddress = locationAddress,
+                modifyEventScope = modifyEventScope.apiName,
+                restParams = RestParams()
+            ).dataOrThrow
+        }
     }
 }

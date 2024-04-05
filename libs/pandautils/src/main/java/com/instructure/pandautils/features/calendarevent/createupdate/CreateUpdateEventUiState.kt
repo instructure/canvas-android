@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.calendarevent.createupdate
 
 import android.content.Context
 import com.google.ical.values.RRule
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
@@ -41,7 +42,9 @@ data class CreateUpdateEventUiState(
     val errorSnack: String? = null,
     val loadingCanvasContexts: Boolean = false,
     val showUnsavedChangesDialog: Boolean = false,
-    val canNavigateBack: Boolean = false
+    val canNavigateBack: Boolean = false,
+    val isSeriesEvent: Boolean = false,
+    val isSeriesHead: Boolean = false
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 
@@ -65,7 +68,7 @@ sealed class CreateUpdateEventAction {
     data class UpdateLocation(val location: String) : CreateUpdateEventAction()
     data class UpdateAddress(val address: String) : CreateUpdateEventAction()
     data class UpdateDetails(val details: String) : CreateUpdateEventAction()
-    data object Save : CreateUpdateEventAction()
+    data class Save(val modifyEventScope: CalendarEventAPI.ModifyEventScope) : CreateUpdateEventAction()
     data object SnackbarDismissed : CreateUpdateEventAction()
     data object ShowSelectCalendarScreen : CreateUpdateEventAction()
     data object HideSelectCalendarScreen : CreateUpdateEventAction()

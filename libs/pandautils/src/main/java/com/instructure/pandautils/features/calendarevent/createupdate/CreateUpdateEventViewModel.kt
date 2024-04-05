@@ -25,6 +25,8 @@ import com.google.ical.values.Frequency
 import com.google.ical.values.RRule
 import com.google.ical.values.Weekday
 import com.google.ical.values.WeekdayNum
+import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
@@ -119,7 +121,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                 _uiState.update { it.copy(details = action.details) }
             }
 
-            is CreateUpdateEventAction.Save -> saveEvent()
+            is CreateUpdateEventAction.Save -> save(action.modifyEventScope)
 
             is CreateUpdateEventAction.SnackbarDismissed -> {
                 _uiState.update { it.copy(errorSnack = null) }
@@ -132,20 +134,9 @@ class CreateUpdateEventViewModel @Inject constructor(
                 }
             }
 
-            is CreateUpdateEventAction.HideSelectCalendarScreen -> {
-                _uiState.update {
-                    val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
-                    it.copy(selectCalendarUiState = selectCalendarUiState)
-                }
-            }
+            is CreateUpdateEventAction.HideSelectCalendarScreen -> hideSelectCalendarScreen()
 
-            is CreateUpdateEventAction.CheckUnsavedChanges -> {
-                if (checkUnsavedChanges()) {
-                    _uiState.update { it.copy(showUnsavedChangesDialog = true) }
-                } else {
-                    handleAction(CreateUpdateEventAction.NavigateBack)
-                }
-            }
+            is CreateUpdateEventAction.CheckUnsavedChanges -> checkUnsavedChanges()
 
             is CreateUpdateEventAction.HideUnsavedChangesDialog -> {
                 _uiState.update { it.copy(showUnsavedChangesDialog = false) }
@@ -177,6 +168,33 @@ class CreateUpdateEventViewModel @Inject constructor(
         }
     }
 
+    fun onBackPressed(): Boolean {
+        return if (uiState.value.selectCalendarUiState.show) {
+            hideSelectCalendarScreen()
+            true
+        } else if (!uiState.value.canNavigateBack) {
+            checkUnsavedChanges()
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun hideSelectCalendarScreen() {
+        _uiState.update {
+            val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
+            it.copy(selectCalendarUiState = selectCalendarUiState)
+        }
+    }
+
+    private fun checkUnsavedChanges() {
+        if (hasUnsavedChanges()) {
+            _uiState.update { it.copy(showUnsavedChangesDialog = true) }
+        } else {
+            handleAction(CreateUpdateEventAction.NavigateBack)
+        }
+    }
+
     private fun setInitialState() {
         scheduleItem?.let {
             _uiState.update { state ->
@@ -189,6 +207,8 @@ class CreateUpdateEventViewModel @Inject constructor(
                     location = it.locationName.orEmpty(),
                     address = it.locationAddress.orEmpty(),
                     details = it.description.orEmpty(),
+                    isSeriesEvent = it.isRecurring,
+                    isSeriesHead = it.seriesHead
                 )
             }
         } ?: run {
@@ -310,11 +330,6 @@ class CreateUpdateEventViewModel @Inject constructor(
         )
     }
 
-    private fun RRule.toApiString(): String {
-        // Drop the "RRULE:" prefix
-        return toIcal().drop(6)
-    }
-
     private fun weekDayFromDayOfWeek(dayOfWeek: DayOfWeek): Weekday {
         return when (dayOfWeek) {
             DayOfWeek.MONDAY -> Weekday.MO
@@ -327,24 +342,39 @@ class CreateUpdateEventViewModel @Inject constructor(
         }
     }
 
-    private fun saveEvent() = with(uiState.value) {
+    private fun save(modifyEventScope: CalendarEventAPI.ModifyEventScope) = with(uiState.value) {
         _uiState.update { it.copy(saving = true) }
         viewModelScope.tryLaunch {
-            val startDate = startTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString()
-            val endDate = endTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString()
+            val startDate = startTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
+            val endDate = endTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
 
-            val result = repository.createEvent(
-                title = title,
-                startDate = startDate.orEmpty(),
-                endDate = endDate.orEmpty(),
-                rrule = frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString().orEmpty(),
-                contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
-                locationName = location,
-                locationAddress = address,
-                description = details
-            )
-
-            // TODO Edit event
+            val result = scheduleItem?.let {
+                repository.updateEvent(
+                    eventId = it.id,
+                    title = title,
+                    startDate = startDate,
+                    endDate = endDate,
+                    rrule = frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString(),
+                    contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
+                    locationName = location,
+                    locationAddress = address,
+                    description = details,
+                    modifyEventScope = modifyEventScope
+                ).also {
+                    CanvasRestAdapter.clearCacheUrls("calendar_events")
+                }
+            } ?: run {
+                repository.createEvent(
+                    title = title,
+                    startDate = startDate,
+                    endDate = endDate,
+                    rrule = frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString(),
+                    contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
+                    locationName = location,
+                    locationAddress = address,
+                    description = details
+                )
+            }
 
             _uiState.update { it.copy(saving = false) }
             _events.send(
@@ -362,7 +392,7 @@ class CreateUpdateEventViewModel @Inject constructor(
         }
     }
 
-    private fun checkUnsavedChanges(): Boolean = with(uiState.value) {
+    private fun hasUnsavedChanges(): Boolean = with(uiState.value) {
         return scheduleItem?.let {
             title != it.title.orEmpty() ||
                     date != it.startDate?.toLocalDate() ||
@@ -385,4 +415,9 @@ class CreateUpdateEventViewModel @Inject constructor(
                     details.isNotEmpty()
         }
     }
+}
+
+private fun RRule.toApiString(): String {
+    // Drop the "RRULE:" prefix
+    return toIcal().drop(6)
 }

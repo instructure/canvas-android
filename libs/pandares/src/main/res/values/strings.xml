@@ -1691,4 +1691,5 @@
     <string name="eventFrequencyCustomDialogOn">on</string>
     <string name="eventFrequencyCustomDialogAfter">after</string>
     <string name="eventFrequencyCustomDialogOccurrances">occurrences (max 400)</string>
+    <string name="eventUpdateRecurringTitle">Confirm Changes</string>
 </resources>

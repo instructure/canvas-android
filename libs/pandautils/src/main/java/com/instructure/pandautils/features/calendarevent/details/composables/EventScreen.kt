@@ -153,7 +153,7 @@ private fun OverFlowMenuSegment(
             },
             onConfirmation = {
                 showDeleteConfirmationDialog.value = false
-                actionHandler(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.ONE))
+                actionHandler(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ONE))
             }
         )
     }
@@ -162,7 +162,7 @@ private fun OverFlowMenuSegment(
     if (showDeleteScopeDialog.value) {
         SingleChoiceAlertDialog(
             dialogTitle = stringResource(id = R.string.eventDeleteRecurringConfirmationTitle),
-            items = CalendarEventAPI.EventDeleteScope.entries.take(if (eventUiState.isSeriesHead) 2 else 3).map {
+            items = CalendarEventAPI.ModifyEventScope.entries.take(if (eventUiState.isSeriesHead) 2 else 3).map {
                 stringResource(id = it.stringRes)
             },
             dismissButtonText = stringResource(id = R.string.cancel),
@@ -172,7 +172,7 @@ private fun OverFlowMenuSegment(
             },
             onConfirmation = {
                 showDeleteScopeDialog.value = false
-                actionHandler(EventAction.DeleteEvent(CalendarEventAPI.EventDeleteScope.entries[it]))
+                actionHandler(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.entries[it]))
             }
         )
     }

@@ -104,20 +104,9 @@ class CreateUpdateToDoViewModel @Inject constructor(
                 }
             }
 
-            is CreateUpdateToDoAction.HideSelectCalendarScreen -> {
-                _uiState.update {
-                    val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
-                    it.copy(selectCalendarUiState = selectCalendarUiState)
-                }
-            }
+            is CreateUpdateToDoAction.HideSelectCalendarScreen -> hideSelectCalendarScreen()
 
-            is CreateUpdateToDoAction.CheckUnsavedChanges -> {
-                if (checkUnsavedChanges()) {
-                    _uiState.update { it.copy(showUnsavedChangesDialog = true) }
-                } else {
-                    handleAction(CreateUpdateToDoAction.NavigateBack)
-                }
-            }
+            is CreateUpdateToDoAction.CheckUnsavedChanges -> checkUnsavedChanges()
 
             is CreateUpdateToDoAction.HideUnsavedChangesDialog -> {
                 _uiState.update { it.copy(showUnsavedChangesDialog = false) }
@@ -129,6 +118,33 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     _events.send(CreateUpdateToDoViewModelAction.NavigateBack)
                 }
             }
+        }
+    }
+
+    fun onBackPressed(): Boolean {
+        return if (uiState.value.selectCalendarUiState.show) {
+            hideSelectCalendarScreen()
+            true
+        } else if (!uiState.value.canNavigateBack) {
+            checkUnsavedChanges()
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun hideSelectCalendarScreen() {
+        _uiState.update {
+            val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
+            it.copy(selectCalendarUiState = selectCalendarUiState)
+        }
+    }
+
+    private fun checkUnsavedChanges() {
+        if (hasUnsavedChanges()) {
+            _uiState.update { it.copy(showUnsavedChangesDialog = true) }
+        } else {
+            handleAction(CreateUpdateToDoAction.NavigateBack)
         }
     }
 
@@ -211,7 +227,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
         }
     }
 
-    private fun checkUnsavedChanges(): Boolean {
+    private fun hasUnsavedChanges(): Boolean {
         return plannerItem?.let { plannerItem ->
             uiState.value.title != plannerItem.plannable.title ||
                     uiState.value.details != plannerItem.plannable.details.orEmpty() ||

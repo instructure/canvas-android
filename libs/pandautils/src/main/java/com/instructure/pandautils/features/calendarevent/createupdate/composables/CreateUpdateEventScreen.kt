@@ -60,6 +60,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -207,12 +208,35 @@ private fun ActionsSegment(
     actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val showModifyScopeDialog = remember { mutableStateOf(false) }
+    if (showModifyScopeDialog.value) {
+        SingleChoiceAlertDialog(
+            dialogTitle = stringResource(id = R.string.eventUpdateRecurringTitle),
+            items = CalendarEventAPI.ModifyEventScope.entries.take(if (uiState.isSeriesHead) 2 else 3).map {
+                stringResource(id = it.stringRes)
+            },
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.confirm),
+            onDismissRequest = {
+                showModifyScopeDialog.value = false
+            },
+            onConfirmation = {
+                showModifyScopeDialog.value = false
+                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.entries[it]))
+            }
+        )
+    }
+
     val saveEnabled = uiState.title.isNotEmpty()
     val focusManager = LocalFocusManager.current
     TextButton(
         onClick = {
             focusManager.clearFocus()
-            actionHandler(CreateUpdateEventAction.Save)
+            if (uiState.isSeriesEvent) {
+                showModifyScopeDialog.value = true
+            } else {
+                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+            }
         },
         enabled = saveEnabled,
         modifier = modifier

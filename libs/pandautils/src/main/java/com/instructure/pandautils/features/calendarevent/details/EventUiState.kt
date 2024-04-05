@@ -30,7 +30,7 @@ data class ToolbarUiState(
 
 sealed class EventAction {
     data class OnLtiClicked(val url: String) : EventAction()
-    data class DeleteEvent(val deleteScope: CalendarEventAPI.EventDeleteScope) : EventAction()
+    data class DeleteEvent(val deleteScope: CalendarEventAPI.ModifyEventScope) : EventAction()
     data object EditEvent : EventAction()
 
     data object SnackbarDismissed : EventAction()

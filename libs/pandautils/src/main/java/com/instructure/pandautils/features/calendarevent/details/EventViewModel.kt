@@ -140,7 +140,7 @@ class EventViewModel @Inject constructor(
         return DateHelper.getFormattedDate(context, startDate).orEmpty()
     }
 
-    private fun deleteEvent(deleteScope: CalendarEventAPI.EventDeleteScope) {
+    private fun deleteEvent(deleteScope: CalendarEventAPI.ModifyEventScope) {
         viewModelScope.tryLaunch {
             scheduleItem?.let { scheduleItem ->
                 _uiState.update { it.copy(toolbarUiState = it.toolbarUiState.copy(deleting = true)) }
