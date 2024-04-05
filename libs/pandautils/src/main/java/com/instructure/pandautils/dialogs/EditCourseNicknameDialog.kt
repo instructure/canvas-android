@@ -1,4 +1,4 @@
-package com.instructure.teacher.dialog
+package com.instructure.pandautils.dialogs
 
 /*
  * Copyright (C) 2017 - present Instructure, Inc.
@@ -27,10 +27,10 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_COURSE_NICKNAME
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
 import java.util.Locale
 import kotlin.properties.Delegates
 
@@ -57,14 +57,14 @@ class EditCourseNicknameDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val course : Course = nonNullArgs.get(Const.COURSE) as Course
-        val view = View.inflate(requireActivity(), R.layout.dialog_course_nickname, null)
+        val view = View.inflate(activity, R.layout.dialog_course_nickname, null)
         val editCourseNicknameEditText = view.findViewById<AppCompatEditText>(R.id.newCourseNickname)
         editCourseNicknameEditText.setText(course.name)
         ViewStyler.themeEditText(requireContext(), editCourseNicknameEditText, ThemePrefs.brandColor)
         editCourseNicknameEditText.inputType = EditorInfo.TYPE_TEXT_FLAG_CAP_WORDS
         editCourseNicknameEditText.selectAll()
 
-        val nameDialog = AlertDialog.Builder(requireActivity())
+        val nameDialog = AlertDialog.Builder(requireContext())
                 .setCancelable(true)
                 .setTitle(getString(R.string.edit_course_nickname))
                 .setView(view)
@@ -74,6 +74,16 @@ class EditCourseNicknameDialog : AppCompatDialogFragment() {
             .setNegativeButton(getString(android.R.string.cancel).uppercase(Locale.getDefault()), null)
                 .create()
         nameDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+
+        editCourseNicknameEditText.onTextChanged {
+            if (course.originalName == null && it.isEmpty()) {
+                nameDialog.getButton(Dialog.BUTTON_POSITIVE).isEnabled = false
+                nameDialog.getButton(Dialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.increaseAlpha(ThemePrefs.textButtonColor, 128))
+            } else {
+                nameDialog.getButton(Dialog.BUTTON_POSITIVE).isEnabled = true
+                nameDialog.getButton(Dialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
+            }
+        }
 
         nameDialog.setOnShowListener {
             nameDialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
