@@ -15,6 +15,9 @@
  */
 package com.instructure.pandautils.compose.composables.rce
 
+import android.content.DialogInterface
+import android.graphics.Color
+import android.webkit.URLUtil
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -27,12 +30,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.instructure.pandautils.utils.getFragmentActivity
+import instructure.rceditor.R
+import instructure.rceditor.RCEInsertDialog
 import instructure.rceditor.RCETextEditor
 import jp.wasabeef.richeditor.RichEditor
 
 @Composable
 fun ComposeRCE(modifier: Modifier = Modifier) {
     var rceState by remember { mutableStateOf(RCEState()) }
+    var showInsertLinkDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     var rceTextEditor = RCETextEditor(context).apply {
@@ -54,44 +61,48 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
     }
     LaunchedEffect(Unit) {
         rceTextEditor.html = "<p>Compose RCE</p>"
+
+
     }
+
+    LaunchedEffect(showInsertLinkDialog) {
+        if (showInsertLinkDialog) {
+            showInsertLinkDialog = false
+            rceTextEditor.getSelectedText {
+                RCEInsertDialog.newInstance(
+                    context.getString(R.string.rce_insertLink),
+                    Color.BLACK,
+                    Color.BLACK,
+                    true,
+                    it
+                )
+                    .setListener { url, alt ->
+                        if (URLUtil.isValidUrl(url)) {
+                            rceTextEditor.insertLink(url, alt)
+                        } else {
+                            rceTextEditor.insertLink("https://$url", alt)
+                        }
+                    }
+                    .show(context.getFragmentActivity().supportFragmentManager, "RCEInsertDialog")
+            }
+        }
+    }
+
     Column(modifier = modifier) {
         RCEControls(rceState, onActionClick = {
             when (it) {
-                RCEAction.BOLD -> {
-                    postUpdateState { rceTextEditor.setBold() }
-                }
+                RCEAction.BOLD -> postUpdateState { rceTextEditor.setBold() }
+                RCEAction.ITALIC -> postUpdateState { rceTextEditor.setItalic() }
+                RCEAction.UNDERLINE -> postUpdateState { rceTextEditor.setUnderline() }
+                RCEAction.NUMBERED_LIST -> postUpdateState { rceTextEditor.setNumbers() }
+                RCEAction.BULLETED_LIST -> postUpdateState { rceTextEditor.setBullets() }
+                RCEAction.COLOR_PICKER -> rceState =
+                    rceState.copy(colorPicker = !rceState.colorPicker)
 
-                RCEAction.ITALIC -> {
-                    postUpdateState { rceTextEditor.setItalic() }
-                }
-
-                RCEAction.UNDERLINE -> {
-                    postUpdateState { rceTextEditor.setUnderline() }
-                }
-
-                RCEAction.NUMBERED_LIST -> {
-                    postUpdateState { rceTextEditor.setNumbers() }
-                }
-
-                RCEAction.BULLETED_LIST -> {
-                    postUpdateState { rceTextEditor.setBullets() }
-                }
-
-                RCEAction.COLOR_PICKER -> {
-                    rceState = rceState.copy(colorPicker = !rceState.colorPicker)
-                }
-
-                RCEAction.UNDO -> {
-                    postUpdateState { rceTextEditor.undo() }
-                }
-
-                RCEAction.REDO -> {
-                    postUpdateState { rceTextEditor.redo() }
-                }
-
-                else -> {
-                }
+                RCEAction.UNDO -> postUpdateState { rceTextEditor.undo() }
+                RCEAction.REDO -> postUpdateState { rceTextEditor.redo() }
+                RCEAction.INSERT_LINK -> showInsertLinkDialog = true
+                else -> {}
             }
         }, onColorClick = {
             rceState = rceState.copy(colorPicker = false)
