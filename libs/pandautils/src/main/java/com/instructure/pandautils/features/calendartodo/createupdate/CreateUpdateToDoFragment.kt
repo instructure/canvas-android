@@ -27,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.PlannerItem
@@ -35,8 +34,7 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendartodo.createupdate.composables.CreateUpdateToDoScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -45,12 +43,15 @@ import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CreateUpdateToDoViewModel by viewModels()
-    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
+
+    @Inject
+    lateinit var sharedEvents: CalendarSharedEvents
 
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
@@ -58,6 +59,7 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {
@@ -71,8 +73,9 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
     private fun handleAction(action: CreateUpdateToDoViewModelAction) {
         when (action) {
             is CreateUpdateToDoViewModelAction.RefreshCalendarDays -> {
-                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
-                activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
+                activity?.onBackPressed()
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseToDoScreen)
             }
 
             is CreateUpdateToDoViewModelAction.NavigateBack -> navigateBack()

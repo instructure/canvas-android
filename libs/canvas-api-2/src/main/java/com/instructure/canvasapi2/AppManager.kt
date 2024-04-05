@@ -64,14 +64,6 @@ abstract class AppManager : Application() {
         validateAuthentication()
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe
-    fun tokenRefreshedEvent(event: CanvasTokenRefreshedEvent) {
-        onCanvasTokenRefreshed()
-    }
-
-    open fun onCanvasTokenRefreshed() = Unit
-
     private fun logTokenAnalytics() {
         val analyticsString = if (ApiPrefs.refreshToken.isNotEmpty()) {
             AnalyticsEventConstants.REFRESH_TOKEN

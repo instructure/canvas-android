@@ -19,6 +19,8 @@ import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.TextStyle
+import java.util.Locale
 
 data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
@@ -35,7 +37,7 @@ data class CalendarUiState(
     val pendingSelectedDay: LocalDate? = null, // Temporary selected date when the calendar is animating to a new month
 )
 
-data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String)
+data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String, val loadingMonths: Boolean = false)
 
 data class CalendarBodyUiState(
     val previousPage: CalendarPageUiState,
@@ -43,7 +45,10 @@ data class CalendarBodyUiState(
     val nextPage: CalendarPageUiState
 )
 
-data class CalendarPageUiState(val calendarRows: List<CalendarRowUiState>)
+data class CalendarPageUiState(
+    val calendarRows: List<CalendarRowUiState>,
+    val buttonContentDescription: String
+)
 
 data class CalendarRowUiState(val days: List<CalendarDayUiState>)
 
@@ -51,13 +56,20 @@ data class CalendarDayUiState(
     val dayNumber: Int,
     val date: LocalDate = LocalDate.now(),
     val enabled: Boolean = true,
-    val indicatorCount: Int = 0
+    val indicatorCount: Int = 0,
 ) {
     val today: Boolean
         get() {
             val today = LocalDate.now()
             return date.isEqual(today)
         }
+
+    val contentDescription: String = date.let {
+        val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val month = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+        val day = date.dayOfMonth
+        "$dayOfWeek, $month $day"
+    }
 }
 
 data class CalendarEventsUiState(
@@ -116,5 +128,6 @@ sealed class CalendarViewModelAction {
 
 sealed class SharedCalendarAction {
     data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
-    data object FilterDialogClosed : SharedCalendarAction()
+    data class FiltersClosed(val changed: Boolean) : SharedCalendarAction()
+    data object CloseToDoScreen : SharedCalendarAction()
 }

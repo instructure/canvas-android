@@ -13,8 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+
 package com.instructure.pandautils.features.calendar.composables
 
+import android.content.Context
+import android.os.Build
+import android.view.accessibility.AccessibilityManager
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -34,6 +39,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,15 +47,19 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -64,7 +74,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,7 +93,9 @@ import com.instructure.pandautils.features.calendar.CalendarRowUiState
 import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
@@ -90,17 +105,17 @@ import java.util.Locale
 private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
 private const val HEADER_HEIGHT = 20
 private const val CALENDAR_ROW_HEIGHT = 46
+private const val PAGE_COUNT = 1000
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -> Unit, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        var centerIndex by remember { mutableIntStateOf(Int.MAX_VALUE / 2) }
+        var centerIndex by remember { mutableIntStateOf(PAGE_COUNT / 2) }
         val pagerState = rememberPagerState(
-            initialPage = Int.MAX_VALUE / 2,
+            initialPage = PAGE_COUNT / 2,
             initialPageOffsetFraction = 0f
         ) {
-            Int.MAX_VALUE
+            PAGE_COUNT
         }
 
         val calendarBodyUiState = calendarUiState.bodyUiState
@@ -125,9 +140,15 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
         CalendarHeader(
             calendarUiState.headerUiState, calendarUiState.expanded, actionHandler, modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 8.dp),
         )
         Spacer(modifier = Modifier.height(6.dp))
+        AccessibilityButtons(
+            previousContentDescription = calendarUiState.bodyUiState.previousPage.buttonContentDescription,
+            nextContentDescription = calendarUiState.bodyUiState.nextPage.buttonContentDescription,
+            pagerState = pagerState,
+            expanded = calendarUiState.expanded
+        )
         HorizontalPager(
             modifier = Modifier.swipeable(
                 state = rememberSwipeableState(initialValue = if (calendarUiState.expanded) 1f else 0f, confirmStateChange = {
@@ -210,47 +231,58 @@ fun CalendarHeader(
             .padding(8.dp)
     }
 
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Bottom
-    ) {
-        Column(modifier = monthRowModifier) {
-            Text(
-                text = headerUiState.yearTitle,
-                fontSize = 12.sp,
-                color = colorResource(id = R.color.textDark),
-                modifier = Modifier.align(Alignment.Start)
-            )
-            Spacer(modifier = Modifier.size(2.dp))
-            Row {
+    Column(modifier = modifier) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Column(modifier = monthRowModifier) {
                 Text(
-                    text = headerUiState.monthTitle,
-                    fontSize = 22.sp,
-                    color = colorResource(id = R.color.textDarkest),
-                    modifier = Modifier.height(30.dp)
+                    text = headerUiState.yearTitle,
+                    fontSize = 12.sp,
+                    color = colorResource(id = R.color.textDark),
+                    modifier = Modifier.align(Alignment.Start)
                 )
-                if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_chevron_down),
-                        tint = colorResource(id = R.color.textDarkest),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .rotate(iconRotation + 180)
-                            .align(Alignment.CenterVertically)
+                Spacer(modifier = Modifier.size(2.dp))
+                Row {
+                    Text(
+                        text = headerUiState.monthTitle,
+                        fontSize = 22.sp,
+                        color = colorResource(id = R.color.textDarkest),
+                        modifier = Modifier.height(30.dp)
                     )
+                    if (screenHeightDp > MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_chevron_down),
+                            tint = colorResource(id = R.color.textDarkest),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .rotate(iconRotation + 180)
+                                .align(Alignment.CenterVertically)
+                        )
+                    }
                 }
             }
+            Text(
+                text = stringResource(id = R.string.calendarFilterCalendars),
+                fontSize = 16.sp,
+                color = Color(ThemePrefs.textButtonColor),
+                modifier = Modifier
+                    .clickable {
+                        actionHandler(CalendarAction.FilterTapped)
+                    }
+                    .padding(horizontal = 8.dp, vertical = 12.dp))
         }
-        Text(
-            text = stringResource(id = R.string.calendarFilterCalendars),
-            fontSize = 16.sp,
-            color = Color(ThemePrefs.textButtonColor),
-            modifier = Modifier
-                .clickable {
-                    actionHandler(CalendarAction.FilterTapped)
-                }
-                .padding(horizontal = 8.dp, vertical = 12.dp))
+        if (headerUiState.loadingMonths) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp), color = Color(ThemePrefs.buttonColor), backgroundColor = colorResource(id = R.color.backgroundLightest)
+            )
+        } else {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
     }
 }
 
@@ -279,7 +311,7 @@ fun CalendarBody(
 @Composable
 fun DayHeaders(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.clearAndSetSemantics {  }, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val daysOfWeek = DayOfWeek.values()
         // Shift the starting point to Sunday
@@ -360,17 +392,26 @@ fun DaysOfWeekRow(
                     .width(32.dp)
                     .wrapContentHeight()
             ) {
+                val dayContentDescription =
+                    dayState.contentDescription + " " + pluralStringResource(
+                        id = R.plurals.a11y_calendar_day_event_count,
+                        dayState.indicatorCount,
+                        dayState.indicatorCount
+                    )
                 Text(
                     text = dayState.dayNumber.toString(),
                     fontSize = 16.sp,
                     color = textColor,
-                    modifier = dayModifier,
-                    textAlign = TextAlign.Center
+                    modifier = dayModifier.semantics {
+                        contentDescription = dayContentDescription
+                    },
+                    textAlign = TextAlign.Center,
                 )
                 Row(
                     Modifier
                         .height(10.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clearAndSetSemantics { },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -395,6 +436,74 @@ fun EventIndicator(modifier: Modifier = Modifier) {
     )
 }
 
+@Composable
+fun AccessibilityButtons(
+    previousContentDescription: String,
+    nextContentDescription: String,
+    pagerState: PagerState,
+    expanded: Boolean
+) {
+    var isAccessibilityEnabled by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val accessibilityManager =
+        context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    val a11yListener: (AccessibilityManager) -> Unit = { manager ->
+        isAccessibilityEnabled = manager.isEnabled
+    }
+
+    LaunchedEffect(Unit) {
+        isAccessibilityEnabled = isAccessibilityEnabled(context)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            accessibilityManager.addAccessibilityServicesStateChangeListener(a11yListener)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                accessibilityManager.removeAccessibilityServicesStateChangeListener(a11yListener)
+            }
+        }
+    }
+    if (isAccessibilityEnabled) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            IconButton(onClick = {
+                coroutineScope.launch {
+                    pagerState.scrollToPage(pagerState.currentPage - 1)
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back_arrow),
+                    tint = colorResource(id = R.color.textDarkest),
+                    contentDescription = stringResource(
+                        id = if (expanded) R.string.a11y_calendarPreviousMonth else R.string.a11y_calendarPreviousWeek,
+                        previousContentDescription
+                    )
+                )
+            }
+            IconButton(onClick = {
+                coroutineScope.launch {
+                    pagerState.scrollToPage(pagerState.currentPage + 1)
+                }
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_forward_arrow),
+                    tint = colorResource(id = R.color.textDarkest),
+                    contentDescription = stringResource(
+                        id = if (expanded) R.string.a11y_calendarNextMonth else R.string.a11y_calendarNextWeek,
+                        nextContentDescription
+                    )
+                )
+            }
+        }
+    }
+}
+
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
@@ -405,7 +514,7 @@ fun CalendarPreview() {
     val calendarUiState = CalendarUiState(
         LocalDate.now(),
         true,
-        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null),
+        headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.now(), null, true),
         bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.now(), false, 0, emptyMap())
     )
     Calendar(calendarUiState = calendarUiState, actionHandler = {})

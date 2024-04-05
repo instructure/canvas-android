@@ -19,10 +19,13 @@ package com.instructure.teacher.features.calendartodo
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import com.instructure.teacher.router.RouteMatcher
 
 class TeacherToDoRouter(private val activity: FragmentActivity) : ToDoRouter {
     override fun openEditToDo(plannerItem: PlannerItem) {
-        TODO("Not yet implemented")
+        val route = CreateUpdateToDoFragment.makeRoute(plannerItem = plannerItem)
+        RouteMatcher.route(activity, route)
     }
 }

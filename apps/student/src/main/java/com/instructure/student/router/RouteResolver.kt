@@ -3,7 +3,7 @@ package com.instructure.student.router
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
@@ -148,7 +148,7 @@ object RouteResolver {
             cls.isA<CreateUpdateToDoFragment>() -> CreateUpdateToDoFragment.newInstance(route)
             cls.isA<CreateUpdateEventFragment>() -> CreateUpdateEventFragment.newInstance(route)
             cls.isA<EventFragment>() -> EventFragment.newInstance(route)
-            cls.isA<ComposeCalendarFragment>() -> ComposeCalendarFragment.newInstance(route)
+            cls.isA<CalendarFragment>() -> CalendarFragment.newInstance(route)
             cls.isA<FileDetailsFragment>() -> FileDetailsFragment.newInstance(route)
             cls.isA<ViewImageFragment>() -> ViewImageFragment.newInstance(route)
             cls.isA<ViewHtmlFragment>() -> ViewHtmlFragment.newInstance(route)

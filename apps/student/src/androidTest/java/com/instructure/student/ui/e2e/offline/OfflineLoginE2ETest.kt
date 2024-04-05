@@ -51,7 +51,7 @@ class OfflineLoginE2ETest : StudentTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(STEP_TAG, "Login with user: ${student1.name}, login id: ${student1.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student1.name}', login id: '${student1.loginId}'.")
         loginWithUser(student1)
         dashboardPage.waitForRender()
 
@@ -61,7 +61,7 @@ class OfflineLoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
 
-        Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student2.name}', login id: '${student2.loginId}'.")
         loginWithUser(student2, true)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")

@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Missing</string>
     <string name="gradedSubmissionLabel">Graded</string>
 
+    <string name="reminderTitle">Reminder</string>
+    <string name="reminderDescription">Add due date reminder notifications about this assignment on this device.</string>
+    <string name="a11y_addReminder">Add reminder</string>
+    <string name="a11y_removeReminder">Remove reminder</string>
+    <string name="reminderBefore">%s Before</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minute</item>
+        <item quantity="other">%d Minutes</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Hour</item>
+        <item quantity="other">%d Hours</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Day</item>
+        <item quantity="other">%d Days</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Week</item>
+        <item quantity="other">%d Weeks</item>
+    </plurals>
+    <string name="reminderCustom">Custom</string>
+    <string name="customReminderTitle">Custom Reminder</string>
+    <string name="customReminderQuantityHint">Quantity</string>
+    <string name="customReminderMinutes">Minutes Before</string>
+    <string name="customReminderHours">Hours Before</string>
+    <string name="customReminderDays">Days Before</string>
+    <string name="customReminderWeeks">Weeks Before</string>
+    <string name="reminderNotificationChannelName">Reminder Notifications</string>
+    <string name="reminderNotificationChannelDescription">Canvas Notifications for assignment reminders.</string>
+    <string name="reminderNotificationTitle">Due Date Reminder</string>
+    <string name="reminderNotificationDescription">This assignment is due in %s: %s</string>
+    <string name="reminderInPast">Please choose a future time for your reminder!</string>
+    <string name="reminderAlreadySet">You have already set a reminder for this time</string>
+    <string name="deleteReminderTitle">Delete Reminder</string>
+    <string name="deleteReminderMessage">Are you sure you would like to delete this reminder?</string>
+    <string name="reminderPermissionNotGrantedError">You need to enable exact alarm permission for this action</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>

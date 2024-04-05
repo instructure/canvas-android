@@ -3,7 +3,9 @@ package com.instructure.teacher.ui.pages
 import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.ViewAlphaAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasContentDescription
 import com.instructure.espresso.assertNotDisplayed
@@ -38,17 +40,9 @@ class ModulesPage : BasePage() {
         onView(allOf(withId(R.id.moduleListEmptyView), withAncestor(R.id.moduleList))).assertDisplayed()
     }
 
-    /**
-     * Asserts that the module is not published.
-     */
-    fun assertModuleNotPublished() {
-        onView(withId(R.id.unpublishedIcon)).assertDisplayed()
-        onView(withId(R.id.publishedIcon)).assertNotDisplayed()
-    }
-
     fun assertModuleNotPublished(moduleTitle: String) {
-        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
-        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
+        onView(withId(R.id.unpublishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertDisplayed()
+        onView(withId(R.id.publishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertNotDisplayed()
     }
 
     /**
@@ -60,8 +54,8 @@ class ModulesPage : BasePage() {
     }
 
     fun assertModuleIsPublished(moduleTitle: String) {
-        onView(withId(R.id.unpublishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertNotDisplayed()
-        onView(withId(R.id.publishedIcon) + hasSibling(withId(R.id.moduleName) + withText(moduleTitle))).assertDisplayed()
+        onView(withId(R.id.unpublishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertNotDisplayed()
+        onView(withId(R.id.publishedIcon) + withParent(hasSibling(withId(R.id.moduleName) + withText(moduleTitle)))).assertDisplayed()
     }
 
     /**
@@ -121,6 +115,16 @@ class ModulesPage : BasePage() {
     }
 
     /**
+     * Assert module status icon alpha value.
+     *
+     * @param moduleItemName The name of the module item.
+     * @param expectedAlphaValue The expected alpha (float) value.
+     */
+    fun assertModuleStatusIconAlpha(moduleItemName: String, expectedAlphaValue: Float) {
+        onView(withId(R.id.moduleItemStatusIcon) + withParent(withId(R.id.publishActions) + hasSibling(withId(R.id.moduleItemTitle) + withText(moduleItemName)))).check(ViewAlphaAssertion(expectedAlphaValue))
+    }
+
+    /**
      * Clicks on the collapse/expand icon.
      */
     fun clickOnCollapseExpandIcon() {
@@ -149,7 +153,7 @@ class ModulesPage : BasePage() {
     }
 
     fun clickItemOverflow(itemName: String) {
-        onView(withParent(withChild(withText(itemName))) + withId(R.id.overflow)).scrollTo().click()
+        onView(withParent(withChild(withText(itemName))) + withId(R.id.publishActions)).scrollTo().click()
     }
 
     fun assertModuleMenuItems() {
@@ -172,6 +176,10 @@ class ModulesPage : BasePage() {
 
     fun assertSnackbarText(@StringRes snackbarText: Int) {
         onView(withId(com.google.android.material.R.id.snackbar_text) + withText(snackbarText)).assertDisplayed()
+    }
+
+    fun assertSnackbarContainsText(snackbarText: String) {
+        onView(withId(com.google.android.material.R.id.snackbar_text) + containsTextCaseInsensitive(snackbarText)).assertDisplayed()
     }
 
     fun assertModuleItemHidden(moduleItemName: String) {

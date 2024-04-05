@@ -23,7 +23,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
@@ -79,7 +78,7 @@ import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -124,13 +123,11 @@ import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.events.ShowGradesToggledEvent
-import com.instructure.student.events.StatusBarColorChangeEvent
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
-import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InboxComposeMessageFragment
@@ -343,8 +340,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             finish()
         }
 
-        FlutterComm.updateDarkMode(this)
-
         binding.bottomBar.inflateMenu(navigationBehavior.bottomBarMenu)
 
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
@@ -439,10 +434,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun initialCoreDataLoadingComplete() {
-        // Send updated info to Flutter
-        FlutterComm.sendUpdatedLogin()
-        FlutterComm.sendUpdatedTheme()
-
         // We are ready to load our UI
         if (currentFragment == null) {
             loadLandingPage(true)
@@ -511,7 +502,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     addFragment(BookmarksFragment.newInstance(route) { RouteMatcher.routeUrl(this, it.url!!) }, route)
                 }
                 AppShortcutManager.APP_SHORTCUT_CALENDAR -> selectBottomNavFragment(
-                    ComposeCalendarFragment::class.java)
+                    CalendarFragment::class.java)
                 AppShortcutManager.APP_SHORTCUT_TODO -> selectBottomNavFragment(ToDoListFragment::class.java)
                 AppShortcutManager.APP_SHORTCUT_NOTIFICATIONS -> selectBottomNavFragment(NotificationListFragment::class.java)
                 AppShortcutManager.APP_SHORTCUT_INBOX -> {
@@ -739,7 +730,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private val bottomBarItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
         when (item.itemId) {
             R.id.bottomNavigationHome -> selectBottomNavFragment(navigationBehavior.homeFragmentClass)
-            R.id.bottomNavigationCalendar -> selectBottomNavFragment(ComposeCalendarFragment::class.java)
+            R.id.bottomNavigationCalendar -> selectBottomNavFragment(CalendarFragment::class.java)
             R.id.bottomNavigationToDo -> selectBottomNavFragment(ToDoListFragment::class.java)
             R.id.bottomNavigationNotifications -> selectBottomNavFragment(NotificationListFragment::class.java)
             R.id.bottomNavigationInbox -> {
@@ -762,7 +753,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             when (item.itemId) {
                 R.id.bottomNavigationHome -> abortReselect = currentFragmentClass.isAssignableFrom(navigationBehavior.homeFragmentClass)
                 R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(
-                    ComposeCalendarFragment::class.java)
+                    CalendarFragment::class.java)
                 R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(ToDoListFragment::class.java)
                 R.id.bottomNavigationNotifications -> abortReselect = currentFragmentClass.isAssignableFrom(NotificationListFragment::class.java)
                 R.id.bottomNavigationInbox -> abortReselect = currentFragmentClass.isAssignableFrom(InboxFragment::class.java)
@@ -772,7 +763,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if(!abortReselect) {
             when (item.itemId) {
                 R.id.bottomNavigationHome -> selectBottomNavFragment(navigationBehavior.homeFragmentClass)
-                R.id.bottomNavigationCalendar -> selectBottomNavFragment(ComposeCalendarFragment::class.java)
+                R.id.bottomNavigationCalendar -> selectBottomNavFragment(CalendarFragment::class.java)
                 R.id.bottomNavigationToDo -> selectBottomNavFragment(ToDoListFragment::class.java)
                 R.id.bottomNavigationNotifications -> selectBottomNavFragment(NotificationListFragment::class.java)
                 R.id.bottomNavigationInbox -> {
@@ -822,7 +813,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun setBottomBarItemSelected(fragment: Fragment) {
         when(fragment) {
             //Calendar
-            is ComposeCalendarFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
+            is CalendarFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
             is EventFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
             //To-do
             is ToDoListFragment -> setBottomBarItemSelected(R.id.bottomNavigationToDo)
@@ -1218,18 +1209,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
     }
 
-    /** Handles status bar color change events posted by FlutterComm */
-    @Subscribe
-    fun updateStatusBarColor(event: StatusBarColorChangeEvent) {
-        event.get { color ->
-            if (color == Color.WHITE) {
-                ViewStyler.setStatusBarLight(this)
-            } else {
-                ViewStyler.setStatusBarDark(this, color)
-            }
-        }
-    }
-
     /** Handles showing confetti on a successful assignment submission */
     @Subscribe
     fun showConfetti(event: ShowConfettiEvent) {
@@ -1262,9 +1241,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 val route = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)
                 navigationBehavior.createHomeFragment(route)
             }
-            ComposeCalendarFragment::class.java.name -> {
-                val route = ComposeCalendarFragment.makeRoute()
-                ComposeCalendarFragment.newInstance(route)
+            CalendarFragment::class.java.name -> {
+                val route = CalendarFragment.makeRoute()
+                CalendarFragment.newInstance(route)
             }
             ToDoListFragment::class.java.name -> {
                 val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)

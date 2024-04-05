@@ -51,7 +51,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -195,8 +195,9 @@ class ManageOfflineContentE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on the 'Sync' button and confirm sync.")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' and 'Syncing Offline Content' dashboard notifications to be displayed, and then to disappear.")
-        dashboardPage.waitForOfflineSyncDashboardNotifications()
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course2.name)
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()

@@ -914,5 +914,28 @@ class ModuleListUpdateTest : Assert() {
             )
     }
 
+    @Test
+    fun `ShowSnackbar event emits ShowSnackbar effect`() {
+        val model = initModel.copy(
+            isLoading = false,
+            pageData = ModuleListPageData(DataResult.Success(emptyList()), false, "fakeUrl"),
+            modules = listOf(
+                ModuleObject(1L, items = listOf(ModuleItem(100L))),
+                ModuleObject(2L, items = listOf(ModuleItem(200L)))
+            ),
+            loadingModuleItemIds = setOf(1L)
+        )
+        val params = arrayOf<Any>("param")
+        val snackbarEffect = ModuleListEffect.ShowSnackbar(R.string.error_unpublishable_module_item, params)
+        updateSpec
+            .given(model)
+            .whenEvent(ModuleListEvent.ShowSnackbar(R.string.error_unpublishable_module_item, params))
+            .then(
+                assertThatNext(
+                    matchesEffects(snackbarEffect)
+                )
+            )
+    }
+
 
 }

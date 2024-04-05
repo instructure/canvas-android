@@ -27,7 +27,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
 import com.instructure.teacher.mobius.common.ui.Presenter
-import kotlin.math.roundToInt
 
 object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
 
@@ -135,7 +134,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             isLoading = loading,
             type = tryOrNull { ModuleItem.Type.valueOf(item.type.orEmpty()) } ?: ModuleItem.Type.Assignment,
             contentDetails = item.moduleDetails,
-            contentId = item.contentId
+            contentId = item.contentId,
+            unpublishable = item.unpublishable
         )
     }
 

@@ -23,7 +23,6 @@ import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -47,6 +46,8 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
@@ -316,6 +317,16 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun assertPointsPossibleNotDisplayed() {
         onView(withId(R.id.pointsTextView)).assertNotDisplayed()
+    }
+
+    fun clickOnInnerReply() {
+        onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
+            .withElement(findElement(Locator.XPATH, "//div[@class='reply_wrapper' and contains(@id, 'reply')]"))
+            .perform(webClick())
+    }
+
+    fun clickOnAddBookmarkMenu() {
+        onView(withText("Add Bookmark")).click()
     }
 
     private fun isUnreadIndicatorVisible(reply: DiscussionEntry): Boolean {

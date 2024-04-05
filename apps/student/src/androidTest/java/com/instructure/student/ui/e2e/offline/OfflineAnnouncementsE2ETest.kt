@@ -55,20 +55,23 @@ class OfflineAnnouncementsE2ETest : StudentTest() {
 
         val lockedAnnouncement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token, locked = true)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
         dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
 
+        Log.d(STEP_TAG, "Expand '${course.name}' course.")
         manageOfflineContentPage.expandCollapseItem(course.name)
+
         Log.d(STEP_TAG, "Select the 'Announcements' of '${course.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Wait for the 'Download Started' and 'Syncing Offline Content' dashboard notifications to be displayed, and then to disappear.")
-        dashboardPage.waitForOfflineSyncDashboardNotifications()
+        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+        device.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
@@ -79,9 +82,6 @@ class OfflineAnnouncementsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
-
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
-        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
 
         Log.d(STEP_TAG, "Select '${course.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course)

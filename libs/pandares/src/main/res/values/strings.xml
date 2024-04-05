@@ -1599,6 +1599,7 @@
     <string name="unpublishModuleItemAction">Unpublish</string>
     <string name="publishDialogPositiveButton">Publish</string>
     <string name="unpublishDialogPositiveButton">Unpublish</string>
+    <string name="discussionMenuRefresh">Refresh</string>
 
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
     <string name="a11y_calendarSwitchToMonthView">Switch to month view</string>
@@ -1623,6 +1624,8 @@
     <string name="calendarFilterCourse">Courses</string>
     <string name="calendarFilterGroup">Groups</string>
     <string name="calendarFilterExplanation">Tap to select the calendars you want to see.</string>
+    <string name="calendarFilterExplanationLimited">Tap to select the calendars you want to see. Select up to %d.</string>
+    <string name="calendarFilterLimitSnackbar">You can only select up to %d calendars.</string>
     <string name="calendarFilterTitle">Calendars</string>
     <string name="calendarFiltersFailed">Failed to load filters</string>
 
@@ -1651,6 +1654,14 @@
     <string name="eventDeleteConfirmationTitle">Delete Event?</string>
     <string name="eventDeleteConfirmationText">This will permanently delete your event.</string>
     <string name="eventDeleteErrorMessage">There was an error deleting this event. Please check your connection and try again.</string>
+    <string name="a11y_calendarPreviousMonth">Previous month %s</string>
+    <string name="a11y_calendarPreviousWeek">Previous week starting on %s</string>
+    <string name="a11y_calendarNextMonth">Next month %s</string>
+    <string name="a11y_calendarNextWeek">Next week starting on %s</string>
+    <plurals name="a11y_calendar_day_event_count">
+        <item quantity="one">%d event</item>
+        <item quantity="other">%d events</item>
+    </plurals>
     <string name="eventDeleteRecurringConfirmationTitle">Confirm Deletion</string>
     <string name="eventDeleteScopeOne">This event</string>
     <string name="eventDeleteScopeAll">All events</string>

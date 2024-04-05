@@ -36,6 +36,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class QuizE2ETest: TeacherTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -51,63 +52,48 @@ class QuizE2ETest: TeacherTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to Quizzes Page.")
+        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to Quizzes Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openQuizzesTab()
 
         Log.d(STEP_TAG,"Assert that there is no quiz displayed on the page.")
         quizListPage.assertDisplaysNoQuizzesView()
 
-        Log.d(PREPARATION_TAG,"Seed a quiz for the ${course.name} course. Also, seed a question into the quiz and publish it.")
-        val testQuizList = seedQuizzes(
-                courseId = course.id,
-                withDescription = true,
-                dueAt = 3.days.fromNow.iso8601,
-                teacherToken = teacher.token,
-                published = false
-        )
+        Log.d(PREPARATION_TAG,"Seed a quiz for the '${course.name}' course. Also, seed a question into the quiz and publish it.")
+        val testQuizList = seedQuizzes(courseId = course.id, withDescription = true, dueAt = 3.days.fromNow.iso8601, teacherToken = teacher.token, published = false)
+        seedQuizQuestion(courseId = course.id, quizId = testQuizList.quizList[0].id, teacherToken = teacher.token)
 
-        seedQuizQuestion(
-                courseId = course.id,
-                quizId = testQuizList.quizList[0].id,
-                teacherToken = teacher.token
-        )
-
-        Log.d(STEP_TAG,"Refresh the page. Assert that the quiz is there and click on the previously seeded quiz: ${testQuizList.quizList[0].title}.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that the quiz is there and click on the previously seeded quiz: '${testQuizList.quizList[0].title}'.")
         quizListPage.refresh()
         quizListPage.clickQuiz(testQuizList.quizList[0].title)
 
-        Log.d(STEP_TAG,"Assert that ${testQuizList.quizList[0].title} quiz is 'Not Submitted' and it is unpublished.")
+        Log.d(STEP_TAG,"Assert that '${testQuizList.quizList[0].title}' quiz is 'Not Submitted' and it is unpublished.")
         quizDetailsPage.assertNotSubmitted()
         quizDetailsPage.assertQuizUnpublished()
 
         val newQuizTitle = "This is a new quiz"
-        Log.d(STEP_TAG,"Open 'Edit' page and edit the ${testQuizList.quizList[0].title} quiz's title to: $newQuizTitle.")
+        Log.d(STEP_TAG,"Open 'Edit' page and edit the '${testQuizList.quizList[0].title}' quiz's title to: '$newQuizTitle'.")
         quizDetailsPage.openEditPage()
         editQuizDetailsPage.editQuizTitle(newQuizTitle)
 
-        Log.d(STEP_TAG,"Assert that the quiz name has been changed to: $newQuizTitle.")
+        Log.d(STEP_TAG,"Assert that the quiz name has been changed to: '$newQuizTitle'.")
         quizDetailsPage.assertQuizNameChanged(newQuizTitle)
 
-        Log.d(STEP_TAG,"Open 'Edit' page and switch on the 'Published' checkbox, so publish the $newQuizTitle quiz. Click on 'Save'.")
+        Log.d(STEP_TAG,"Open 'Edit' page and switch on the 'Published' checkbox, so publish the '$newQuizTitle' quiz. Click on 'Save'.")
         quizDetailsPage.openEditPage()
         editQuizDetailsPage.switchPublish()
         editQuizDetailsPage.saveQuiz()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that $newQuizTitle quiz has been unpublished.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that '$newQuizTitle' quiz has been unpublished.")
         quizDetailsPage.refresh()
         quizDetailsPage.assertQuizPublished()
 
-        Log.d(PREPARATION_TAG,"Submit the ${testQuizList.quizList[0].title} quiz.")
-        seedQuizSubmission(
-                courseId = course.id,
-                quizId = testQuizList.quizList[0].id,
-                studentToken = student.token
-        )
+        Log.d(PREPARATION_TAG,"Submit the '${testQuizList.quizList[0].title}' quiz.")
+        seedQuizSubmission(courseId = course.id, quizId = testQuizList.quizList[0].id, studentToken = student.token)
 
         Log.d(STEP_TAG,"Refresh the page. Assert that it needs grading because of the previous submission.")
         quizListPage.refresh()

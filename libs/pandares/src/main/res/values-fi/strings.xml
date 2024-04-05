@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Puuttuu</string>
     <string name="gradedSubmissionLabel">Arvosteltu</string>
 
+    <string name="reminderTitle">Muistutus</string>
+    <string name="reminderDescription">Lisää päivämäärän muistutuksia tästä tehtävästä tällä laitteella.</string>
+    <string name="a11y_addReminder">Lisää muistutus</string>
+    <string name="a11y_removeReminder">Poista muistutus</string>
+    <string name="reminderBefore">%s Ennen</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minuutti</item>
+        <item quantity="other">%d minuuttia</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 tunti</item>
+        <item quantity="other">%d tuntia</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 päivä</item>
+        <item quantity="other">%d päivää</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 viikko</item>
+        <item quantity="other">%d viikkoa</item>
+    </plurals>
+    <string name="reminderCustom">Mukautettu</string>
+    <string name="customReminderTitle">Mukautettu muistutus</string>
+    <string name="customReminderQuantityHint">Määrä</string>
+    <string name="customReminderMinutes">Minuuttia ennen</string>
+    <string name="customReminderHours">Tuntia ennen</string>
+    <string name="customReminderDays">Päivää ennen</string>
+    <string name="customReminderWeeks">Viikkoa ennen</string>
+    <string name="reminderNotificationChannelName">Muistutukset</string>
+    <string name="reminderNotificationChannelDescription">Canvas-ilmoitukset tehtävämuistutuksille.</string>
+    <string name="reminderNotificationTitle">Päivämäärämuistutukset</string>
+    <string name="reminderNotificationDescription">Tämän tehtävän määräpäivä on %s %s</string>
+    <string name="reminderInPast">Valitse tuleva aika muistutuksellesi!</string>
+    <string name="reminderAlreadySet">Olet jo asettanut muistutuksen tähän ajankohtaan</string>
+    <string name="deleteReminderTitle">Poista muistutus</string>
+    <string name="deleteReminderMessage">Haluatko varmasti poistaa tämän muistutuksen?</string>
+    <string name="reminderPermissionNotGrantedError">Sinun täytyy ottaa käyttöön täsmälliset hälytyksen käyttöoikeudet tälle toiminnolle</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ei saatavissa esikatselua URL-linkeille, jotka käyttävät \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Syötä voimassa oleva URL</string>
