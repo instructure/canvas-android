@@ -14,7 +14,6 @@
  *     limitations under the License.
  */package com.instructure.pandautils.compose.composables.rce
 
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -279,7 +278,7 @@ fun ColorButton(
 @Preview
 @Composable
 fun RCEControlsPreview() {
-    RCEControls(RCEState(), {}, {})
+    RCEControls(RCEState(colorPicker = true), {}, {})
 }
 
 @Preview
@@ -293,7 +292,7 @@ fun RCETextControlsPreview() {
 @Preview
 @Composable
 fun RceColorControlsPreview() {
-    RCEColorControls() {
+    RCEColorControls {
 
     }
 }

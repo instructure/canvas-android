@@ -46,9 +46,9 @@ import jp.wasabeef.richeditor.RichEditor
 fun ComposeRCE(
     hint: String,
     html: String,
-    onTextChangeListener: (String) -> Unit,
     modifier: Modifier = Modifier,
-    canvasContext: CanvasContext? = null
+    canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
+    onTextChangeListener: (String) -> Unit
 ) {
     var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
@@ -60,7 +60,7 @@ fun ComposeRCE(
             onTextChangeListener(it)
             evaluateJavascript("javascript:RE.enabledEditingItems();", null)
         }
-        setOnDecorationChangeListener { text, types ->
+        setOnDecorationChangeListener { text, _ ->
             showControls = true
             val typeSet = text.split(",").toSet()
             rceState = rceState.copy(
@@ -75,13 +75,13 @@ fun ComposeRCE(
 
     val imagePickerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-            it?.let {
+            it?.let { imageUri ->
                 MediaUploadUtils.uploadRceImageJob(
-                    it,
-                    canvasContext ?: CanvasContext.defaultCanvasContext(),
+                    imageUri,
+                    canvasContext,
                     context.getFragmentActivity()
-                ) {
-                    rceTextEditor.insertImage(it, "")
+                ) { imageUrl ->
+                    rceTextEditor.insertImage(imageUrl, "")
                 }
             }
         }
@@ -92,7 +92,7 @@ fun ComposeRCE(
                 imageUri?.let { imageUri ->
                     MediaUploadUtils.uploadRceImageJob(
                         imageUri,
-                        canvasContext ?: CanvasContext.defaultCanvasContext(),
+                        canvasContext,
                         context.getFragmentActivity()
                     ) { imageUrl ->
                         MediaUploadUtils.showAltTextDialog(

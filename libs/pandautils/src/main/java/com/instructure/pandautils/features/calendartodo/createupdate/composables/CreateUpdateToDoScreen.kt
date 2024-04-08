@@ -428,12 +428,12 @@ private fun CreateUpdateToDoContent(
                 ComposeRCE(
                     hint = stringResource(id = R.string.createToDoDetailsLabel),
                     html = uiState.details,
-                    onTextChangeListener = {
-                        actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
-                    },
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp))
+                        .padding(horizontal = 16.dp)
+                ) {
+                    actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
+                }
             }
         }
     }
