@@ -15,9 +15,13 @@
  */
 package com.instructure.pandautils.compose.composables.rce
 
-import android.content.DialogInterface
+import android.content.ContentValues
 import android.graphics.Color
+import android.net.Uri
+import android.provider.MediaStore
 import android.webkit.URLUtil
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -30,6 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.pandautils.utils.getFragmentActivity
 import instructure.rceditor.R
 import instructure.rceditor.RCEInsertDialog
@@ -38,13 +44,17 @@ import jp.wasabeef.richeditor.RichEditor
 
 @Composable
 fun ComposeRCE(modifier: Modifier = Modifier) {
+    var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
     var showInsertLinkDialog by remember { mutableStateOf(false) }
+    var showInsertImageDialog by remember { mutableStateOf(false) }
+    var showControls by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     var rceTextEditor = RCETextEditor(context).apply {
         setOnTextChangeListener { evaluateJavascript("javascript:RE.enabledEditingItems();", null) }
         setOnDecorationChangeListener { text, types ->
+            showControls = true
             val typeSet = text.split(",").toSet()
             rceState = rceState.copy(
                 bold = typeSet.contains(RichEditor.Type.BOLD.name),
@@ -59,10 +69,44 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
         block()
         rceTextEditor.evaluateJavascript("javascript:RE.enabledEditingItems();", null)
     }
+
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
+            it?.let {
+                MediaUploadUtils.uploadRceImageJob(
+                    it,
+                    CanvasContext.defaultCanvasContext(),
+                    context.getFragmentActivity()
+                ) {
+                    rceTextEditor.insertImage(it, "")
+                }
+            }
+        }
+
+    val photoLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                imageUri?.let { imageUri ->
+                    MediaUploadUtils.uploadRceImageJob(
+                        imageUri,
+                        CanvasContext.defaultCanvasContext(),
+                        context.getFragmentActivity()
+                    ) { imageUrl ->
+                        MediaUploadUtils.showAltTextDialog(
+                            context.getFragmentActivity(),
+                            onPositiveClick = { altText ->
+                                rceTextEditor.insertImage(imageUrl, altText)
+                            },
+                            onNegativeClick = {
+                            })
+                        rceTextEditor.insertImage(imageUrl, "")
+                    }
+                }
+            }
+        }
+
     LaunchedEffect(Unit) {
         rceTextEditor.html = "<p>Compose RCE</p>"
-
-
     }
 
     LaunchedEffect(showInsertLinkDialog) {
@@ -88,26 +132,48 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
         }
     }
 
-    Column(modifier = modifier) {
-        RCEControls(rceState, onActionClick = {
-            when (it) {
-                RCEAction.BOLD -> postUpdateState { rceTextEditor.setBold() }
-                RCEAction.ITALIC -> postUpdateState { rceTextEditor.setItalic() }
-                RCEAction.UNDERLINE -> postUpdateState { rceTextEditor.setUnderline() }
-                RCEAction.NUMBERED_LIST -> postUpdateState { rceTextEditor.setNumbers() }
-                RCEAction.BULLETED_LIST -> postUpdateState { rceTextEditor.setBullets() }
-                RCEAction.COLOR_PICKER -> rceState =
-                    rceState.copy(colorPicker = !rceState.colorPicker)
+    LaunchedEffect(showInsertImageDialog) {
+        if (showInsertImageDialog) {
+            showInsertImageDialog = false
+            val fileName = "rce_${System.currentTimeMillis()}.jpg"
+            val values = ContentValues()
+            values.put(MediaStore.Images.Media.TITLE, fileName)
 
-                RCEAction.UNDO -> postUpdateState { rceTextEditor.undo() }
-                RCEAction.REDO -> postUpdateState { rceTextEditor.redo() }
-                RCEAction.INSERT_LINK -> showInsertLinkDialog = true
-                else -> {}
-            }
-        }, onColorClick = {
-            rceState = rceState.copy(colorPicker = false)
-            postUpdateState { rceTextEditor.setTextColor(ContextCompat.getColor(context, it)) }
-        })
+            imageUri =
+                context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+            MediaUploadUtils.showPickImageDialog(
+                context.getFragmentActivity(),
+                imagePickerLauncher,
+                "image/*",
+                photoLauncher,
+                imageUri,
+            )
+        }
+    }
+
+    Column(modifier = modifier) {
+        if (showControls) {
+            RCEControls(rceState, onActionClick = {
+                when (it) {
+                    RCEAction.BOLD -> postUpdateState { rceTextEditor.setBold() }
+                    RCEAction.ITALIC -> postUpdateState { rceTextEditor.setItalic() }
+                    RCEAction.UNDERLINE -> postUpdateState { rceTextEditor.setUnderline() }
+                    RCEAction.NUMBERED_LIST -> postUpdateState { rceTextEditor.setNumbers() }
+                    RCEAction.BULLETED_LIST -> postUpdateState { rceTextEditor.setBullets() }
+                    RCEAction.COLOR_PICKER -> rceState =
+                        rceState.copy(colorPicker = !rceState.colorPicker)
+
+                    RCEAction.UNDO -> postUpdateState { rceTextEditor.undo() }
+                    RCEAction.REDO -> postUpdateState { rceTextEditor.redo() }
+                    RCEAction.INSERT_LINK -> showInsertLinkDialog = true
+                    RCEAction.INSERT_IMAGE -> showInsertImageDialog = true
+                }
+            }, onColorClick = {
+                rceState = rceState.copy(colorPicker = false)
+                postUpdateState { rceTextEditor.setTextColor(ContextCompat.getColor(context, it)) }
+            })
+        }
 
         AndroidView(
             modifier = Modifier

@@ -212,6 +212,7 @@ dependencies {
     debugImplementation Libs.COMPOSE_TOOLING
     implementation Libs.COMPOSE_VIEW_MODEL
     implementation Libs.COMPOSE_UI
+    implementation Libs.COMPOSE_ACTIVITY
 
     implementation Libs.FLEXBOX_LAYOUT
 
