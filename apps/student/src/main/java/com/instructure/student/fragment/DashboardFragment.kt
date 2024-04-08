@@ -63,7 +63,7 @@ import com.instructure.student.databinding.CourseGridRecyclerRefreshLayoutBindin
 import com.instructure.student.databinding.FragmentCourseGridBinding
 import com.instructure.student.decorations.VerticalGridSpacingDecoration
 import com.instructure.student.dialog.ColorPickerDialog
-import com.instructure.student.dialog.EditCourseNicknameDialog
+import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
