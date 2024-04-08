@@ -89,6 +89,7 @@ class ModuleProgressionFragment : Fragment() {
         addOnPageChangeListener(object : SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 setupCarousel(data, position)
+                viewModel.setCurrentPosition(position)
             }
         })
     }
