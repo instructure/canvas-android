@@ -43,16 +43,23 @@ import instructure.rceditor.RCETextEditor
 import jp.wasabeef.richeditor.RichEditor
 
 @Composable
-fun ComposeRCE(modifier: Modifier = Modifier) {
+fun ComposeRCE(
+    hint: String,
+    html: String,
+    onTextChangeListener: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    canvasContext: CanvasContext? = null
+) {
     var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
-    var showInsertLinkDialog by remember { mutableStateOf(false) }
-    var showInsertImageDialog by remember { mutableStateOf(false) }
     var showControls by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     var rceTextEditor = RCETextEditor(context).apply {
-        setOnTextChangeListener { evaluateJavascript("javascript:RE.enabledEditingItems();", null) }
+        setOnTextChangeListener {
+            onTextChangeListener(it)
+            evaluateJavascript("javascript:RE.enabledEditingItems();", null)
+        }
         setOnDecorationChangeListener { text, types ->
             showControls = true
             val typeSet = text.split(",").toSet()
@@ -65,17 +72,13 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
             )
         }
     }
-    val postUpdateState = { block: () -> Unit ->
-        block()
-        rceTextEditor.evaluateJavascript("javascript:RE.enabledEditingItems();", null)
-    }
 
     val imagePickerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
             it?.let {
                 MediaUploadUtils.uploadRceImageJob(
                     it,
-                    CanvasContext.defaultCanvasContext(),
+                    canvasContext ?: CanvasContext.defaultCanvasContext(),
                     context.getFragmentActivity()
                 ) {
                     rceTextEditor.insertImage(it, "")
@@ -89,7 +92,7 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
                 imageUri?.let { imageUri ->
                     MediaUploadUtils.uploadRceImageJob(
                         imageUri,
-                        CanvasContext.defaultCanvasContext(),
+                        canvasContext ?: CanvasContext.defaultCanvasContext(),
                         context.getFragmentActivity()
                     ) { imageUrl ->
                         MediaUploadUtils.showAltTextDialog(
@@ -98,58 +101,58 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
                                 rceTextEditor.insertImage(imageUrl, altText)
                             },
                             onNegativeClick = {
+                                rceTextEditor.insertImage(imageUrl, "")
                             })
-                        rceTextEditor.insertImage(imageUrl, "")
                     }
                 }
             }
         }
 
-    LaunchedEffect(Unit) {
-        rceTextEditor.html = "<p>Compose RCE</p>"
-    }
-
-    LaunchedEffect(showInsertLinkDialog) {
-        if (showInsertLinkDialog) {
-            showInsertLinkDialog = false
-            rceTextEditor.getSelectedText {
-                RCEInsertDialog.newInstance(
-                    context.getString(R.string.rce_insertLink),
-                    Color.BLACK,
-                    Color.BLACK,
-                    true,
-                    it
-                )
-                    .setListener { url, alt ->
-                        if (URLUtil.isValidUrl(url)) {
-                            rceTextEditor.insertLink(url, alt)
-                        } else {
-                            rceTextEditor.insertLink("https://$url", alt)
-                        }
-                    }
-                    .show(context.getFragmentActivity().supportFragmentManager, "RCEInsertDialog")
-            }
-        }
-    }
-
-    LaunchedEffect(showInsertImageDialog) {
-        if (showInsertImageDialog) {
-            showInsertImageDialog = false
-            val fileName = "rce_${System.currentTimeMillis()}.jpg"
-            val values = ContentValues()
-            values.put(MediaStore.Images.Media.TITLE, fileName)
-
-            imageUri =
-                context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-
-            MediaUploadUtils.showPickImageDialog(
-                context.getFragmentActivity(),
-                imagePickerLauncher,
-                "image/*",
-                photoLauncher,
-                imageUri,
+    val insertLink = {
+        rceTextEditor.getSelectedText {
+            RCEInsertDialog.newInstance(
+                context.getString(R.string.rce_insertLink),
+                Color.BLACK,
+                Color.BLACK,
+                true,
+                it
             )
+                .setListener { url, alt ->
+                    if (URLUtil.isValidUrl(url)) {
+                        rceTextEditor.insertLink(url, alt)
+                    } else {
+                        rceTextEditor.insertLink("https://$url", alt)
+                    }
+                }
+                .show(context.getFragmentActivity().supportFragmentManager, "RCEInsertDialog")
         }
+    }
+
+    val insertPhoto = {
+        val fileName = "rce_${System.currentTimeMillis()}.jpg"
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, fileName)
+
+        imageUri =
+            context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+        MediaUploadUtils.showPickImageDialog(
+            context.getFragmentActivity(),
+            imagePickerLauncher,
+            "image/*",
+            photoLauncher,
+            imageUri,
+        )
+    }
+
+    val postUpdateState = { block: () -> Unit ->
+        block()
+        rceTextEditor.evaluateJavascript("javascript:RE.enabledEditingItems();", null)
+    }
+
+    LaunchedEffect(Unit) {
+        rceTextEditor.setPlaceholder(hint)
+        rceTextEditor.html = html
     }
 
     Column(modifier = modifier) {
@@ -166,8 +169,8 @@ fun ComposeRCE(modifier: Modifier = Modifier) {
 
                     RCEAction.UNDO -> postUpdateState { rceTextEditor.undo() }
                     RCEAction.REDO -> postUpdateState { rceTextEditor.redo() }
-                    RCEAction.INSERT_LINK -> showInsertLinkDialog = true
-                    RCEAction.INSERT_IMAGE -> showInsertImageDialog = true
+                    RCEAction.INSERT_LINK -> insertLink()
+                    RCEAction.INSERT_IMAGE -> insertPhoto()
                 }
             }, onColorClick = {
                 rceState = rceState.copy(colorPicker = false)

@@ -50,9 +50,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -269,7 +271,6 @@ private fun CreateUpdateToDoContent(
                 .verticalScroll(rememberScrollState())
         ) {
             val titleFocusRequester = remember { FocusRequester() }
-            val detailsFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
 
             LaunchedEffect(key1 = uiState.title, block = {
@@ -424,26 +425,15 @@ private fun CreateUpdateToDoContent(
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                ComposeRCE(modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp))
-//                BasicTextField(
-//                    singleLine = false,
-//                    value = uiState.details,
-//                    onValueChange = {
-//                        actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
-//                    },
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(horizontal = 16.dp)
-//                        .focusRequester(detailsFocusRequester),
-//                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-//                    textStyle = TextStyle(
-//                        color = colorResource(id = R.color.textDarkest),
-//                        fontSize = 16.sp
-//                    )
-//                )
+                ComposeRCE(
+                    hint = stringResource(id = R.string.createToDoDetailsLabel),
+                    html = uiState.details,
+                    onTextChangeListener = {
+                        actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp))
             }
         }
     }
