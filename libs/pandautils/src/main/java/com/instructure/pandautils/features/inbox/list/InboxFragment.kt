@@ -324,6 +324,8 @@ class InboxFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
         binding.addMessage.backgroundTintList = ViewStyler.makeColorStateListForButton()
+        binding.scopeFilterText.setTextColor(ThemePrefs.textButtonColor)
+        binding.scopeFilterIcon.setColorFilter(ThemePrefs.textButtonColor)
         inboxRouter.attachNavigationIcon(binding.toolbar)
     }
 
