@@ -16,7 +16,6 @@
 package com.instructure.pandautils.compose.composables.rce
 
 import android.content.ContentValues
-import android.graphics.Color
 import android.net.Uri
 import android.provider.MediaStore
 import android.webkit.URLUtil
@@ -24,6 +23,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,10 +32,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivity
 import instructure.rceditor.R
 import instructure.rceditor.RCEInsertDialog
@@ -112,8 +114,8 @@ fun ComposeRCE(
         rceTextEditor.getSelectedText {
             RCEInsertDialog.newInstance(
                 context.getString(R.string.rce_insertLink),
-                Color.BLACK,
-                Color.BLACK,
+                ThemePrefs.brandColor,
+                ThemePrefs.textButtonColor,
                 true,
                 it
             )
@@ -137,11 +139,13 @@ fun ComposeRCE(
             context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 
         MediaUploadUtils.showPickImageDialog(
-            context.getFragmentActivity(),
-            imagePickerLauncher,
-            "image/*",
-            photoLauncher,
-            imageUri,
+            activity = context.getFragmentActivity(),
+            onNewPhotoClick = {
+                photoLauncher.launch(imageUri)
+            },
+            onChooseFromGalleryClick = {
+                imagePickerLauncher.launch("image/*")
+            }
         )
     }
 
@@ -180,7 +184,8 @@ fun ComposeRCE(
 
         AndroidView(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(top = 8.dp),
             factory = {
                 rceTextEditor
             },
