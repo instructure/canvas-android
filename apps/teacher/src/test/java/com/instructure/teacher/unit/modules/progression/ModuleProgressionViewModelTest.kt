@@ -50,6 +50,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -104,8 +105,8 @@ class ModuleProgressionViewModelTest {
 
         viewModel.loadData(Course(id = 1L), 1L, ModuleItemAsset.MODULE_ITEM.name, "")
 
-        Assert.assertEquals(ViewState.Error(expected), viewModel.state.value)
-        Assert.assertEquals(expected, (viewModel.state.value as? ViewState.Error)?.errorMessage)
+        assertEquals(ViewState.Error(expected), viewModel.state.value)
+        assertEquals(expected, (viewModel.state.value as? ViewState.Error)?.errorMessage)
     }
 
     @Test
@@ -118,8 +119,8 @@ class ModuleProgressionViewModelTest {
 
         viewModel.loadData(Course(id = 1L), 1L, ModuleItemAsset.MODULE_ITEM.name, "")
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(expected, viewModel.data.value)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(expected, viewModel.data.value)
     }
 
     @Test
@@ -136,8 +137,8 @@ class ModuleProgressionViewModelTest {
 
         viewModel.loadData(Course(id = 1L), -1, ModuleItemAsset.ASSIGNMENT.name, "1")
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(expected, viewModel.data.value)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(expected, viewModel.data.value)
     }
 
     @Test
@@ -186,11 +187,11 @@ class ModuleProgressionViewModelTest {
         verify { Uri.parse("externalUri1") }
         verify { Uri.parse("externalUri2") }
         verify(exactly = 2) { mockUriBuilder.appendQueryParameter("display", "borderless") }
-        Assert.assertEquals(expected, viewModel.data.value)
+        assertEquals(expected, viewModel.data.value)
     }
 
     @Test
-    fun `Initial position calculated correctly`() {
+    fun `Position calculated correctly`() {
         coEvery { repository.getModulesWithItems(any()) } returns listOf(
             ModuleObject(
                 id = 1L, name = "Module 1", items = listOf(
@@ -208,8 +209,37 @@ class ModuleProgressionViewModelTest {
 
         viewModel.loadData(Course(id = 1L), 3L, ModuleItemAsset.MODULE_ITEM.name, "")
 
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-        Assert.assertEquals(2, viewModel.data.value?.initialPosition)
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(2, viewModel.data.value?.initialPosition)
+    }
+
+    @Test
+    fun `Position uses current position after reload when position was changed`() {
+        coEvery { repository.getModulesWithItems(any()) } returns listOf(
+            ModuleObject(
+                id = 1L, name = "Module 1", items = listOf(
+                    ModuleItem(id = 1L, type = "Page", pageUrl = "pageUrl", moduleId = 1L),
+                    ModuleItem(id = 2L, type = "Assignment", contentId = 1L, moduleId = 1L)
+                )
+            ),
+            ModuleObject(
+                id = 2L, name = "Module 2", items = listOf(
+                    ModuleItem(id = 3L, type = "Discussion", contentId = 2L, moduleId = 2L),
+                    ModuleItem(id = 4L, type = "Quiz", contentId = 3L, moduleId = 2L)
+                )
+            )
+        )
+
+        viewModel.loadData(Course(id = 1L), 3L, ModuleItemAsset.MODULE_ITEM.name, "")
+
+        assertEquals(ViewState.Success, viewModel.state.value)
+        assertEquals(2, viewModel.data.value?.initialPosition)
+
+        viewModel.setCurrentPosition(3)
+
+        viewModel.loadData(Course(id = 1L), 3L, ModuleItemAsset.MODULE_ITEM.name, "")
+
+        assertEquals(3, viewModel.data.value?.initialPosition)
     }
 
     @Test
@@ -220,6 +250,6 @@ class ModuleProgressionViewModelTest {
 
         viewModel.loadData(Course(id = 1L), -1, ModuleItemAsset.ASSIGNMENT.name, "1")
 
-        Assert.assertEquals(expected, viewModel.events.value?.peekContent())
+        assertEquals(expected, viewModel.events.value?.peekContent())
     }
 }
