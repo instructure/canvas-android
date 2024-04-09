@@ -19,12 +19,14 @@ package com.instructure.pandautils.features.calendarevent.createupdate
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 
 
-class CreateUpdateEventRepository(
+abstract class CreateUpdateEventRepository(
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface
 ) {
+    abstract suspend fun getCanvasContexts(): List<CanvasContext>
 
     suspend fun createEvent(
         title: String,

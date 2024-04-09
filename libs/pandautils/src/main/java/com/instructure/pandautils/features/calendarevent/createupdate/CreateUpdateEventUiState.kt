@@ -72,12 +72,10 @@ data class CustomFrequencyUiState(
     val repeatsOnVisible: Boolean = false,
     val repeatsOn: List<String> = emptyList(),
     val selectedRepeatsOnIndex: Int = 0,
-    val endsOnSelected: Boolean = false,
-    val selectedDate: LocalDate = LocalDate.now(),
-    val endsAfterSelected: Boolean = false,
+    val selectedDate: LocalDate? = null,
     val selectedOccurrences: Int = 0
 ) {
-    val formattedEndDate = selectedDate.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthYearFormat.toPattern())).orEmpty()
+    val formattedEndDate = selectedDate?.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthYearFormat.toPattern())).orEmpty()
 }
 
 sealed class CreateUpdateEventAction {
@@ -105,9 +103,7 @@ sealed class CreateUpdateEventAction {
     data class UpdateCustomFrequencySelectedTimeUnitIndex(val index: Int) : CreateUpdateEventAction()
     data class UpdateCustomFrequencySelectedDays(val days: Set<DayOfWeek>) : CreateUpdateEventAction()
     data class UpdateCustomFrequencySelectedRepeatsOnIndex(val index: Int) : CreateUpdateEventAction()
-    data object CustomFrequencyEndsOnSelected : CreateUpdateEventAction()
     data class UpdateCustomFrequencyEndDate(val date: LocalDate) : CreateUpdateEventAction()
-    data object CustomFrequencyEndsAfterSelected : CreateUpdateEventAction()
     data class UpdateCustomFrequencyOccurrences(val occurrences: Int) : CreateUpdateEventAction()
     data object SaveCustomFrequency : CreateUpdateEventAction()
 }

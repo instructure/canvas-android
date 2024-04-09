@@ -72,6 +72,7 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CustomFreq
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.orDefault
 import com.jakewharton.threetenabp.AndroidThreeTen
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
 import java.util.Locale
 
@@ -130,7 +131,7 @@ private fun CustomFrequencyContent(
     val datePickerDialog = remember {
         getDatePickerDialog(
             context = context,
-            date = uiState.selectedDate,
+            date = uiState.selectedDate ?: LocalDate.now().plusYears(1),
             onDateSelected = {
                 actionHandler(CreateUpdateEventAction.UpdateCustomFrequencyEndDate(it))
             }
@@ -174,7 +175,7 @@ private fun CustomFrequencyContent(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         unfocusedBorderColor = colorResource(id = R.color.borderMedium),
-                        focusedBorderColor = Color(color = ThemePrefs.brandColor),
+                        focusedBorderColor = colorResource(id = R.color.borderInfo),
                         cursorColor = colorResource(id = R.color.textDarkest),
                         textColor = colorResource(id = R.color.textDark)
                     )
@@ -240,12 +241,17 @@ private fun CustomFrequencyContent(
                     .padding(16.dp)
             )
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .height(48.dp)
+                    .clickable {
+                        datePickerDialog.show()
+                    }
             ) {
                 RadioButton(
-                    selected = uiState.endsOnSelected,
+                    selected = uiState.selectedDate != null,
                     onClick = {
-                        actionHandler(CreateUpdateEventAction.CustomFrequencyEndsOnSelected)
+                        datePickerDialog.show()
                     },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = Color(color = ThemePrefs.brandColor),
@@ -253,47 +259,43 @@ private fun CustomFrequencyContent(
                     ),
                     modifier = Modifier.padding(start = 2.dp)
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier
-                        .height(48.dp)
-                        .clickable(enabled = uiState.endsOnSelected) {
-                            datePickerDialog.show()
-                        }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.eventCustomFrequencyScreenOn),
-                        modifier = Modifier.padding(start = 8.dp),
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 16.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = uiState.formattedEndDate,
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .weight(1f),
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.End
-                    )
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrow_right),
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 16.dp),
-                        tint = colorResource(id = R.color.textDark)
-                    )
-                }
+                Text(
+                    text = stringResource(id = R.string.eventCustomFrequencyScreenOn),
+                    modifier = Modifier.padding(start = 8.dp),
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = uiState.formattedEndDate,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .weight(1f),
+                    color = colorResource(id = R.color.textDark),
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.End
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.arrow_right),
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 16.dp),
+                    tint = colorResource(id = R.color.textDark)
+                )
             }
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .height(48.dp)
+                    .clickable {
+                        showNumberOfOccurrencesDialog.value = true
+                    }
             ) {
                 RadioButton(
-                    selected = uiState.endsAfterSelected,
+                    selected = uiState.selectedOccurrences > 0,
                     onClick = {
-                        actionHandler(CreateUpdateEventAction.CustomFrequencyEndsAfterSelected)
+                        showNumberOfOccurrencesDialog.value = true
                     },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = Color(color = ThemePrefs.brandColor),
@@ -301,39 +303,30 @@ private fun CustomFrequencyContent(
                     ),
                     modifier = Modifier.padding(start = 2.dp)
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier
-                        .height(48.dp)
-                        .clickable(enabled = uiState.endsAfterSelected) {
-                            showNumberOfOccurrencesDialog.value = true
-                        }
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.eventCustomFrequencyScreenAfter),
-                        modifier = Modifier.padding(start = 8.dp),
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 16.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = uiState.selectedOccurrences.takeIf { it > 0 }?.toString().orEmpty(),
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .weight(1f),
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.End
-                    )
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrow_right),
-                        contentDescription = null,
-                        modifier = Modifier.padding(end = 16.dp),
-                        tint = colorResource(id = R.color.textDark)
-                    )
-                }
+                Text(
+                    text = stringResource(id = R.string.eventCustomFrequencyScreenAfter),
+                    modifier = Modifier.padding(start = 8.dp),
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = uiState.selectedOccurrences.takeIf { it > 0 }?.toString().orEmpty(),
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .weight(1f),
+                    color = colorResource(id = R.color.textDark),
+                    fontSize = 14.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.End
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.arrow_right),
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 16.dp),
+                    tint = colorResource(id = R.color.textDark)
+                )
             }
         }
     }

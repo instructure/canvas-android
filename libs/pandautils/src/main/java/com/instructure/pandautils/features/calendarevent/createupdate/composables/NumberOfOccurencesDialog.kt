@@ -77,7 +77,7 @@ fun NumberOfOccurrencesDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         unfocusedBorderColor = colorResource(id = R.color.borderMedium),
-                        focusedBorderColor = Color(color = ThemePrefs.brandColor),
+                        focusedBorderColor = colorResource(id = R.color.borderInfo),
                         cursorColor = colorResource(id = R.color.textDarkest),
                         textColor = colorResource(id = R.color.textDark)
                     )

@@ -34,7 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -43,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.ThemePrefs
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -73,7 +71,7 @@ fun Dropdown(
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 unfocusedBorderColor = colorResource(id = R.color.borderMedium),
-                focusedBorderColor = Color(color = ThemePrefs.brandColor),
+                focusedBorderColor = colorResource(id = R.color.borderInfo),
                 cursorColor = colorResource(id = R.color.textDarkest),
                 textColor = colorResource(id = R.color.textDark)
             )

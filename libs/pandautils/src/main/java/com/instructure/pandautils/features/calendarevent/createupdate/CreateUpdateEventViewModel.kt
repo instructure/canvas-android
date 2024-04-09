@@ -209,28 +209,11 @@ class CreateUpdateEventViewModel @Inject constructor(
                 }
             }
 
-            is CreateUpdateEventAction.CustomFrequencyEndsOnSelected -> {
-                _uiState.update {
-                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(
-                        endsOnSelected = !it.selectFrequencyUiState.customFrequencyUiState.endsOnSelected,
-                        endsAfterSelected = false
-                    )
-                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
-                }
-            }
-
             is CreateUpdateEventAction.UpdateCustomFrequencyEndDate -> {
                 _uiState.update {
-                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(selectedDate = action.date)
-                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
-                }
-            }
-
-            is CreateUpdateEventAction.CustomFrequencyEndsAfterSelected -> {
-                _uiState.update {
                     val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(
-                        endsAfterSelected = !it.selectFrequencyUiState.customFrequencyUiState.endsAfterSelected,
-                        endsOnSelected = false
+                        selectedDate = action.date,
+                        selectedOccurrences = 0
                     )
                     it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
                 }
@@ -238,7 +221,10 @@ class CreateUpdateEventViewModel @Inject constructor(
 
             is CreateUpdateEventAction.UpdateCustomFrequencyOccurrences -> {
                 _uiState.update {
-                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(selectedOccurrences = action.occurrences)
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(
+                        selectedOccurrences = action.occurrences,
+                        selectedDate = null
+                    )
                     it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
                 }
             }
@@ -329,18 +315,29 @@ class CreateUpdateEventViewModel @Inject constructor(
 
     private fun loadCanvasContexts() {
         _uiState.update { it.copy(loadingCanvasContexts = true) }
-        val userList = listOfNotNull(apiPrefs.user)
-
-        //TODO Get canvas contexts for Teacher
-
-        _uiState.update {
-            it.copy(
-                loadingCanvasContexts = false,
-                selectCalendarUiState = it.selectCalendarUiState.copy(
-                    canvasContexts = userList,
-                    selectedCanvasContext = apiPrefs.user
+        viewModelScope.tryLaunch {
+            val canvasContexts = repository.getCanvasContexts()
+            _uiState.update {
+                it.copy(
+                    loadingCanvasContexts = false,
+                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                        canvasContexts = canvasContexts,
+                        selectedCanvasContext = canvasContexts.firstOrNull { canvasContext ->
+                            canvasContext.id == scheduleItem?.contextId
+                        } ?: apiPrefs.user
+                    )
                 )
-            )
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    loadingCanvasContexts = false,
+                    selectCalendarUiState = it.selectCalendarUiState.copy(
+                        canvasContexts = emptyList(),
+                        selectedCanvasContext = null
+                    )
+                )
+            }
         }
     }
 
@@ -561,7 +558,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                 weekDayOfMonth.getDisplayName(TextStyle.FULL, Locale.getDefault())
             )
         )
-        val endsOn = selectedRRule?.until?.let { LocalDate.of(it.year(), it.month(), it.day()) } ?: LocalDate.now().plusYears(1)
+        val endsOn = selectedRRule?.until?.let { LocalDate.of(it.year(), it.month(), it.day()) }
 
         return CustomFrequencyUiState(
             show = true,
@@ -574,9 +571,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             repeatsOnVisible = selectedRRule?.freq == Frequency.MONTHLY,
             repeatsOn = repeatsOn,
             selectedRepeatsOnIndex = if (selectedRRule?.byMonthDay?.isNotEmpty().orDefault()) 0 else 1,
-            endsOnSelected = selectedRRule?.until != null,
             selectedDate = endsOn,
-            endsAfterSelected = selectedRRule?.count.orDefault() > 0,
             selectedOccurrences = selectedRRule?.count.orDefault()
         )
     }
@@ -622,10 +617,10 @@ class CreateUpdateEventViewModel @Inject constructor(
                     byMonthDay = intArrayOf(uiState.value.date.dayOfMonth)
                 }
             }
-            if (customFrequencyUiState.endsOnSelected) {
+            if (customFrequencyUiState.selectedDate != null) {
                 val date = customFrequencyUiState.selectedDate
                 until = DateValueImpl(date.year, date.monthValue, date.dayOfMonth)
-            } else if (customFrequencyUiState.endsAfterSelected) {
+            } else {
                 count = customFrequencyUiState.selectedOccurrences
             }
         }
