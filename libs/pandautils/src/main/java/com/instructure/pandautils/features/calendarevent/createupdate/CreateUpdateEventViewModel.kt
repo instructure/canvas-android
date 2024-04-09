@@ -21,6 +21,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.ical.values.DateValueImpl
 import com.google.ical.values.Frequency
 import com.google.ical.values.RRule
 import com.google.ical.values.Weekday
@@ -36,6 +37,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment.Companion.INITIAL_DATE
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.pandautils.utils.toLocalTime
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -84,7 +86,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             is CreateUpdateEventAction.UpdateDate -> {
-                _uiState.update { it.copy(date = action.date, frequencyDialogUiState = getFrequencyDialogUiState(action.date)) }
+                _uiState.update { it.copy(date = action.date, selectFrequencyUiState = getFrequencyUiState(action.date)) }
             }
 
             is CreateUpdateEventAction.UpdateStartTime -> {
@@ -97,8 +99,8 @@ class CreateUpdateEventViewModel @Inject constructor(
 
             is CreateUpdateEventAction.UpdateFrequency -> {
                 _uiState.update {
-                    val frequencyDialogUiState = it.frequencyDialogUiState.copy(selectedFrequency = action.frequency)
-                    it.copy(frequencyDialogUiState = frequencyDialogUiState)
+                    val frequencyUiState = it.selectFrequencyUiState.copy(selectedFrequency = action.frequency)
+                    it.copy(selectFrequencyUiState = frequencyUiState)
                 }
             }
 
@@ -149,21 +151,115 @@ class CreateUpdateEventViewModel @Inject constructor(
                 }
             }
 
-            is CreateUpdateEventAction.CustomFrequencySelected -> {
-                val selectedFrequency = uiState.value.frequencyDialogUiState.frequencies.entries.find {
-                    it.value?.toIcal() == action.rrule.toIcal()
+            is CreateUpdateEventAction.ShowFrequencyDialog -> {
+                _uiState.update {
+                    val frequencyUiState = it.selectFrequencyUiState.copy(showFrequencyDialog = true)
+                    it.copy(selectFrequencyUiState = frequencyUiState)
+                }
+            }
+
+            is CreateUpdateEventAction.HideFrequencyDialog -> {
+                _uiState.update {
+                    val frequencyUiState = it.selectFrequencyUiState.copy(showFrequencyDialog = false)
+                    it.copy(selectFrequencyUiState = frequencyUiState)
+                }
+            }
+
+            is CreateUpdateEventAction.ShowCustomFrequencyScreen -> {
+                _uiState.update {
+                    val customFrequencyUiState = getCustomFrequencyUiState()
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.HideCustomFrequencyScreen -> hideCustomFrequencyScreen()
+
+            is CreateUpdateEventAction.UpdateCustomFrequencyQuantity -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(
+                        quantity = action.quantity,
+                        timeUnits = getTimeUnits(action.quantity.coerceAtLeast(1))
+                    )
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.UpdateCustomFrequencySelectedTimeUnitIndex -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(
+                        selectedTimeUnitIndex = action.index,
+                        daySelectorVisible = action.index == 1,
+                        repeatsOnVisible = action.index == 2
+                    )
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.UpdateCustomFrequencySelectedDays -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(selectedDays = action.days)
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.UpdateCustomFrequencySelectedRepeatsOnIndex -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(selectedRepeatsOnIndex = action.index)
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.CustomFrequencyEndsOnSelected -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(
+                        endsOnSelected = !it.selectFrequencyUiState.customFrequencyUiState.endsOnSelected,
+                        endsAfterSelected = false
+                    )
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.UpdateCustomFrequencyEndDate -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(selectedDate = action.date)
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.CustomFrequencyEndsAfterSelected -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(
+                        endsAfterSelected = !it.selectFrequencyUiState.customFrequencyUiState.endsAfterSelected,
+                        endsOnSelected = false
+                    )
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.UpdateCustomFrequencyOccurrences -> {
+                _uiState.update {
+                    val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(selectedOccurrences = action.occurrences)
+                    it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
+                }
+            }
+
+            is CreateUpdateEventAction.SaveCustomFrequency -> {
+                val customFrequencyRRule = getCustomFrequencyRRule()
+
+                val selectedFrequency = uiState.value.selectFrequencyUiState.frequencies.entries.find {
+                    it.value?.toIcal() == customFrequencyRRule.toIcal()
                 }?.key
-                val frequencyDialogUiState = if (selectedFrequency != null) {
-                    uiState.value.frequencyDialogUiState.copy(selectedFrequency = selectedFrequency)
+                val frequencyUiState = if (selectedFrequency != null) {
+                    uiState.value.selectFrequencyUiState.copy(selectedFrequency = selectedFrequency)
                 } else {
-                    uiState.value.frequencyDialogUiState.copy(
+                    uiState.value.selectFrequencyUiState.copy(
                         selectedFrequency = resources.getString(R.string.eventFrequencyCustom),
-                        frequencies = uiState.value.frequencyDialogUiState.frequencies.toMutableMap().apply {
-                            put(resources.getString(R.string.eventFrequencyCustom), action.rrule)
+                        frequencies = uiState.value.selectFrequencyUiState.frequencies.toMutableMap().apply {
+                            put(resources.getString(R.string.eventFrequencyCustom), customFrequencyRRule)
                         }
                     )
                 }
-                _uiState.update { it.copy(frequencyDialogUiState = frequencyDialogUiState) }
+                _uiState.update { it.copy(selectFrequencyUiState = frequencyUiState) }
             }
         }
     }
@@ -171,6 +267,9 @@ class CreateUpdateEventViewModel @Inject constructor(
     fun onBackPressed(): Boolean {
         return if (uiState.value.selectCalendarUiState.show) {
             hideSelectCalendarScreen()
+            true
+        } else if (uiState.value.selectFrequencyUiState.customFrequencyUiState.show) {
+            hideCustomFrequencyScreen()
             true
         } else if (!uiState.value.canNavigateBack) {
             checkUnsavedChanges()
@@ -184,6 +283,13 @@ class CreateUpdateEventViewModel @Inject constructor(
         _uiState.update {
             val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
             it.copy(selectCalendarUiState = selectCalendarUiState)
+        }
+    }
+
+    private fun hideCustomFrequencyScreen() {
+        _uiState.update {
+            val customFrequencyUiState = it.selectFrequencyUiState.customFrequencyUiState.copy(show = false)
+            it.copy(selectFrequencyUiState = it.selectFrequencyUiState.copy(customFrequencyUiState = customFrequencyUiState))
         }
     }
 
@@ -203,7 +309,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                     date = it.startDate?.toLocalDate() ?: state.date,
                     startTime = it.startDate?.toLocalTime(),
                     endTime = it.endDate?.toLocalTime(),
-                    frequencyDialogUiState = getFrequencyDialogUiState(it.startDate?.toLocalDate() ?: state.date),
+                    selectFrequencyUiState = getFrequencyUiState(it.startDate?.toLocalDate() ?: state.date),
                     location = it.locationName.orEmpty(),
                     address = it.locationAddress.orEmpty(),
                     details = it.description.orEmpty(),
@@ -215,7 +321,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     date = initialDate,
-                    frequencyDialogUiState = getFrequencyDialogUiState(initialDate)
+                    selectFrequencyUiState = getFrequencyUiState(initialDate)
                 )
             }
         }
@@ -238,7 +344,7 @@ class CreateUpdateEventViewModel @Inject constructor(
         }
     }
 
-    private fun getFrequencyDialogUiState(date: LocalDate): FrequencyDialogUiState {
+    private fun getFrequencyUiState(date: LocalDate): SelectFrequencyUiState {
         val dayOfWeek = date.dayOfWeek
         val dayOfMonthOrdinal = (date.dayOfMonth - 1) / 7 + 1
         val isLastDayOfWeekInMonth = date.with(TemporalAdjusters.lastInMonth(dayOfWeek)) == date
@@ -246,13 +352,7 @@ class CreateUpdateEventViewModel @Inject constructor(
         val dateText = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern()))
         val ordinal = when {
             isLastDayOfWeekInMonth -> resources.getString(R.string.eventFrequencyMonthlyLast)
-            else -> when (dayOfMonthOrdinal) {
-                1 -> resources.getString(R.string.eventFrequencyMonthlyFirst)
-                2 -> resources.getString(R.string.eventFrequencyMonthlySecond)
-                3 -> resources.getString(R.string.eventFrequencyMonthlyThird)
-                4 -> resources.getString(R.string.eventFrequencyMonthlyFourth)
-                else -> resources.getString(R.string.eventFrequencyMonthlyLast)
-            }
+            else -> getWeekDayInMonthOrdinal(dayOfMonthOrdinal)
         }
 
         val daily = RRule().apply {
@@ -317,17 +417,25 @@ class CreateUpdateEventViewModel @Inject constructor(
                 } ?: run {
                     val frequencyText = scheduleItem.seriesNaturalLanguage.orEmpty()
                     selectedFrequency = frequencyText
-                    frequencies[frequencyText] = RRule("RRULE:${scheduleItem.rrule}")
+                    frequencies[frequencyText] = scheduleItem.getRRule()
                 }
             }
         }
 
         frequencies[resources.getString(R.string.eventFrequencyCustom)] = null
 
-        return FrequencyDialogUiState(
+        return SelectFrequencyUiState(
             selectedFrequency = selectedFrequency,
             frequencies = frequencies
         )
+    }
+
+    private fun getWeekDayInMonthOrdinal(dayOfMonthOrdinal: Int) = when (dayOfMonthOrdinal) {
+        1 -> resources.getString(R.string.eventFrequencyMonthlyFirst)
+        2 -> resources.getString(R.string.eventFrequencyMonthlySecond)
+        3 -> resources.getString(R.string.eventFrequencyMonthlyThird)
+        4 -> resources.getString(R.string.eventFrequencyMonthlyFourth)
+        else -> resources.getString(R.string.eventFrequencyMonthlyLast)
     }
 
     private fun weekDayFromDayOfWeek(dayOfWeek: DayOfWeek): Weekday {
@@ -354,7 +462,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                     title = title,
                     startDate = startDate,
                     endDate = endDate,
-                    rrule = frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString(),
+                    rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString(),
                     contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
                     locationName = location,
                     locationAddress = address,
@@ -368,7 +476,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                     title = title,
                     startDate = startDate,
                     endDate = endDate,
-                    rrule = frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString(),
+                    rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString(),
                     contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
                     locationName = location,
                     locationAddress = address,
@@ -376,7 +484,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                 )
             }
 
-            _uiState.update { it.copy(saving = false) }
+            _uiState.update { it.copy(saving = false, canNavigateBack = true) }
             _events.send(
                 CreateUpdateEventViewModelAction.RefreshCalendarDays(
                     result.mapNotNull { it.startDate?.toLocalDate() }
@@ -398,7 +506,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                     date != it.startDate?.toLocalDate() ||
                     startTime != it.startDate?.toLocalTime() ||
                     endTime != it.endDate?.toLocalTime() ||
-                    frequencyDialogUiState.frequencies[frequencyDialogUiState.selectedFrequency]?.toApiString() != RRule("RRULE:${it.rrule}").toApiString() ||
+                    selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString() != it.getRRule()?.toApiString() ||
                     selectCalendarUiState.selectedCanvasContext?.contextId != it.contextCode ||
                     location != it.locationName.orEmpty() ||
                     address != it.locationAddress.orEmpty() ||
@@ -408,11 +516,118 @@ class CreateUpdateEventViewModel @Inject constructor(
                     date != initialDate ||
                     startTime != null ||
                     endTime != null ||
-                    frequencyDialogUiState.selectedFrequency != frequencyDialogUiState.frequencies.keys.first() ||
+                    selectFrequencyUiState.selectedFrequency != selectFrequencyUiState.frequencies.keys.first() ||
                     selectCalendarUiState.selectedCanvasContext != apiPrefs.user ||
                     location.isNotEmpty() ||
                     address.isNotEmpty() ||
                     details.isNotEmpty()
+        }
+    }
+
+    private fun getCustomFrequencyUiState(): CustomFrequencyUiState {
+        val selectedRRule = uiState.value.selectFrequencyUiState.frequencies[uiState.value.selectFrequencyUiState.selectedFrequency]
+        val timeUnitIndex = when (selectedRRule?.freq) {
+            Frequency.WEEKLY -> 1
+            Frequency.MONTHLY -> 2
+            Frequency.YEARLY -> 3
+            else -> 0
+        }
+        val daysOfWeek = DayOfWeek.entries.toTypedArray()
+        val shiftedDaysOfWeek = Array(7) { daysOfWeek[(it + 6) % 7] }.toList()
+        val selectedDays = selectedRRule?.byDay?.map { shiftedDaysOfWeek[it.wday.ordinal] }?.toSet().orEmpty()
+        val dayOfMonthOrdinal = selectedRRule?.bySetPos?.firstOrNull()?.let {
+            getWeekDayInMonthOrdinal(it)
+        } ?: run {
+            val date = uiState.value.date
+            val dayOfWeek = date.dayOfWeek
+            val dayOfMonthOrdinal = (date.dayOfMonth - 1) / 7 + 1
+            val isLastDayOfWeekInMonth = date.with(TemporalAdjusters.lastInMonth(dayOfWeek)) == date
+            when {
+                isLastDayOfWeekInMonth -> resources.getString(R.string.eventFrequencyMonthlyLast)
+                else -> getWeekDayInMonthOrdinal(dayOfMonthOrdinal)
+            }
+        }
+        val weekDayOfMonth = selectedRRule?.byDay?.firstOrNull()?.wday?.let {
+            shiftedDaysOfWeek[it.ordinal]
+        } ?: run {
+            uiState.value.date.dayOfWeek
+        }
+        val defaultDayOfMonth = uiState.value.date.dayOfMonth
+        val repeatsOn = listOf(
+            resources.getString(R.string.eventCustomFrequencyScreenOnDay, selectedRRule?.byMonthDay?.firstOrNull().orDefault(defaultDayOfMonth)),
+            resources.getString(
+                R.string.eventCustomFrequencyScreenOnWeekday,
+                dayOfMonthOrdinal,
+                weekDayOfMonth.getDisplayName(TextStyle.FULL, Locale.getDefault())
+            )
+        )
+        val endsOn = selectedRRule?.until?.let { LocalDate.of(it.year(), it.month(), it.day()) } ?: LocalDate.now().plusYears(1)
+
+        return CustomFrequencyUiState(
+            show = true,
+            quantity = selectedRRule?.interval.orDefault(),
+            timeUnits = getTimeUnits(selectedRRule?.interval.orDefault(1)),
+            selectedTimeUnitIndex = timeUnitIndex,
+            daySelectorVisible = selectedRRule?.freq == Frequency.WEEKLY,
+            days = shiftedDaysOfWeek,
+            selectedDays = selectedDays,
+            repeatsOnVisible = selectedRRule?.freq == Frequency.MONTHLY,
+            repeatsOn = repeatsOn,
+            selectedRepeatsOnIndex = if (selectedRRule?.byMonthDay?.isNotEmpty().orDefault()) 0 else 1,
+            endsOnSelected = selectedRRule?.until != null,
+            selectedDate = endsOn,
+            endsAfterSelected = selectedRRule?.count.orDefault() > 0,
+            selectedOccurrences = selectedRRule?.count.orDefault()
+        )
+    }
+
+    private fun getTimeUnits(quantity: Int): List<String> {
+        return listOf(
+            resources.getQuantityString(R.plurals.eventCustomFrequencyScreenDay, quantity),
+            resources.getQuantityString(R.plurals.eventCustomFrequencyScreenWeek, quantity),
+            resources.getQuantityString(R.plurals.eventCustomFrequencyScreenMonth, quantity),
+            resources.getQuantityString(R.plurals.eventCustomFrequencyScreenYear, quantity),
+        )
+    }
+
+    private fun getCustomFrequencyRRule(): RRule {
+        val customFrequencyUiState = uiState.value.selectFrequencyUiState.customFrequencyUiState
+        return RRule().apply {
+            interval = customFrequencyUiState.quantity
+            when (customFrequencyUiState.selectedTimeUnitIndex) {
+                0 -> {
+                    freq = Frequency.DAILY
+                }
+
+                1 -> {
+                    freq = Frequency.WEEKLY
+                    byDay = customFrequencyUiState.selectedDays.map { WeekdayNum(0, weekDayFromDayOfWeek(it)) }
+                }
+
+                2 -> {
+                    freq = Frequency.MONTHLY
+                    if (customFrequencyUiState.selectedRepeatsOnIndex == 0) {
+                        byMonthDay = intArrayOf(uiState.value.date.dayOfMonth)
+                    } else {
+                        val date = uiState.value.date
+                        byDay = listOf(WeekdayNum(0, weekDayFromDayOfWeek(date.dayOfWeek)))
+                        val isLastDayOfWeekInMonth = date.with(TemporalAdjusters.lastInMonth(date.dayOfWeek)) == date
+                        bySetPos = intArrayOf(if (isLastDayOfWeekInMonth) -1 else (uiState.value.date.dayOfMonth - 1) / 7 + 1)
+                    }
+                }
+
+                3 -> {
+                    freq = Frequency.YEARLY
+                    byMonth = intArrayOf(uiState.value.date.monthValue)
+                    byMonthDay = intArrayOf(uiState.value.date.dayOfMonth)
+                }
+            }
+            if (customFrequencyUiState.endsOnSelected) {
+                val date = customFrequencyUiState.selectedDate
+                until = DateValueImpl(date.year, date.monthValue, date.dayOfMonth)
+            } else if (customFrequencyUiState.endsAfterSelected) {
+                count = customFrequencyUiState.selectedOccurrences
+            }
         }
     }
 }
@@ -420,4 +635,8 @@ class CreateUpdateEventViewModel @Inject constructor(
 private fun RRule.toApiString(): String {
     // Drop the "RRULE:" prefix
     return toIcal().drop(6)
+}
+
+private fun ScheduleItem.getRRule(): RRule? {
+    return rrule?.let { RRule("RRULE:$it") }
 }

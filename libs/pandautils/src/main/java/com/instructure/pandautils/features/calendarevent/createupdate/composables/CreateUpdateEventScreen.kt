@@ -91,7 +91,16 @@ internal fun CreateUpdateEventScreenWrapper(
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
-        if (uiState.selectCalendarUiState.show) {
+        if (uiState.selectFrequencyUiState.customFrequencyUiState.show) {
+            CustomFrequencyScreen(
+                uiState = uiState.selectFrequencyUiState.customFrequencyUiState,
+                actionHandler = actionHandler,
+                navigationActionClick = {
+                    actionHandler(CreateUpdateEventAction.HideCustomFrequencyScreen)
+                },
+                modifier = modifier
+            )
+        } else if (uiState.selectCalendarUiState.show) {
             SelectCalendarScreen(
                 uiState = uiState.selectCalendarUiState,
                 onCalendarSelected = {
@@ -284,39 +293,23 @@ private fun CreateUpdateEventContent(
             }
         )
     }
-    val showCustomFrequencyDialog = remember { mutableStateOf(false) }
-    val showFrequencyDialog = remember { mutableStateOf(false) }
-    if (showFrequencyDialog.value) {
-        val frequencies = uiState.frequencyDialogUiState.frequencies.keys.toList()
+    if (uiState.selectFrequencyUiState.showFrequencyDialog) {
+        val frequencies = uiState.selectFrequencyUiState.frequencies.keys.toList()
         SingleChoiceAlertDialog(
             dialogTitle = stringResource(id = R.string.eventFrequencyDialogTitle),
             items = frequencies,
-            defaultSelection = frequencies.indexOf(uiState.frequencyDialogUiState.selectedFrequency),
+            defaultSelection = frequencies.indexOf(uiState.selectFrequencyUiState.selectedFrequency),
             dismissButtonText = stringResource(id = R.string.cancel),
             onDismissRequest = {
-                showFrequencyDialog.value = false
+                actionHandler(CreateUpdateEventAction.HideFrequencyDialog)
             },
             onItemSelected = {
                 if (it == frequencies.lastIndex) {
-                    showCustomFrequencyDialog.value = true
+                    actionHandler(CreateUpdateEventAction.ShowCustomFrequencyScreen)
                 } else {
                     actionHandler(CreateUpdateEventAction.UpdateFrequency(frequencies[it]))
-                    showFrequencyDialog.value = false
+                    actionHandler(CreateUpdateEventAction.HideFrequencyDialog)
                 }
-            }
-        )
-    }
-    if (showCustomFrequencyDialog.value) {
-        CustomFrequencyDialog(
-            defaultRRule = uiState.frequencyDialogUiState.frequencies[uiState.frequencyDialogUiState.selectedFrequency],
-            defaultDate = uiState.date,
-            onConfirm = {
-                actionHandler(CreateUpdateEventAction.CustomFrequencySelected(it))
-                showCustomFrequencyDialog.value = false
-                showFrequencyDialog.value = false
-            },
-            onDismissRequest = {
-                showCustomFrequencyDialog.value = false
             }
         )
     }
@@ -399,10 +392,10 @@ private fun CreateUpdateEventContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventFrequencyLabel),
-                value = uiState.frequencyDialogUiState.selectedFrequency.orEmpty(),
+                value = uiState.selectFrequencyUiState.selectedFrequency.orEmpty(),
                 onClick = {
                     focusManager.clearFocus()
-                    showFrequencyDialog.value = true
+                    actionHandler(CreateUpdateEventAction.ShowFrequencyDialog)
                 }
             )
             LabelValueRow(

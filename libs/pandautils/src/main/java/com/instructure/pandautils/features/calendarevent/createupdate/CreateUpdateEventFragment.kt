@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -34,22 +33,25 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.createupdate.composables.CreateUpdateEventScreenWrapper
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: CreateUpdateEventViewModel by viewModels()
-    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
+
+    @Inject
+    lateinit var sharedEvents: CalendarSharedEvents
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,8 +71,9 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
     private fun handleAction(action: CreateUpdateEventViewModelAction) {
         when (action) {
             is CreateUpdateEventViewModelAction.RefreshCalendarDays -> {
-                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
-                activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
+                navigateBack()
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseEventScreen)
             }
 
             is CreateUpdateEventViewModelAction.NavigateBack -> navigateBack()
@@ -81,7 +84,11 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
         get() = activity as? Navigation
 
     override fun title(): String = getString(
-        R.string.createEventScreenTitle
+        if (arguments?.containsKey(SCHEDULE_ITEM).orDefault()) {
+            R.string.editEventScreenTitle
+        } else {
+            R.string.createEventScreenTitle
+        }
     )
 
     override fun applyTheme() {

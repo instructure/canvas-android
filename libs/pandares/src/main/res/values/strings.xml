@@ -1696,11 +1696,31 @@
     <string name="eventFrequencyAnnually">Annually on %s</string>
     <string name="eventFrequencyWeekdays">Every Weekday (Monday to Friday)</string>
     <string name="eventFrequencyCustom">Custom</string>
-    <string name="eventFrequencyCustomDialogTitle">Custom Repeating Event</string>
-    <string name="eventFrequencyCustomDialogRepeatEvery">Repeat every:</string>
-    <string name="eventFrequencyCustomDialogEnds">Ends:</string>
-    <string name="eventFrequencyCustomDialogOn">on</string>
-    <string name="eventFrequencyCustomDialogAfter">after</string>
-    <string name="eventFrequencyCustomDialogOccurrances">occurrences (max 400)</string>
+    <string name="eventCustomFrequencyScreenTitle">Custom Frequency</string>
+    <string name="eventCustomFrequencyScreenEnds">Ends</string>
+    <string name="eventCustomFrequencyScreenRepeatsOn">Repeats on</string>
+    <string name="eventCustomFrequencyScreenOn">On Date</string>
+    <string name="eventCustomFrequencyScreenAfter">After Occurrences</string>
+    <plurals name="eventCustomFrequencyScreenDay">
+        <item quantity="one">Day</item>
+        <item quantity="other">Days</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenWeek">
+        <item quantity="one">Week</item>
+        <item quantity="other">Weeks</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenMonth">
+        <item quantity="one">Month</item>
+        <item quantity="other">Months</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenYear">
+        <item quantity="one">Year</item>
+        <item quantity="other">Years</item>
+    </plurals>
+    <string name="eventCustomFrequencyScreenOnDay">on day %d</string>
+    <string name="eventCustomFrequencyScreenOnWeekday">on the %s %s</string>
+    <string name="numberOfOccurrencesDialogTitle">Number of Occurrences</string>
+    <string name="numberOfOccurrencesDialogDescription">How many times you would like to repeat?</string>
+    <string name="numberOfOccurrencesDialogSupportingText">Max 400</string>
     <string name="eventUpdateRecurringTitle">Confirm Changes</string>
 </resources>

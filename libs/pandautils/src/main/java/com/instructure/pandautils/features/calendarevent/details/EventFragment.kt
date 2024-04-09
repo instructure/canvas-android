@@ -26,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -37,8 +36,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.features.calendar.CalendarSharedViewModel
-import com.instructure.pandautils.features.calendar.ComposeCalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.details.composables.EventScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -64,7 +62,8 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     private val viewModel: EventViewModel by viewModels()
 
-    private val sharedViewModel: CalendarSharedViewModel by activityViewModels()
+    @Inject
+    lateinit var sharedEvents: CalendarSharedEvents
 
     private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
         override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, viewModel.canvasContext)
@@ -91,6 +90,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     ): View {
         applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         return ComposeView(requireActivity()).apply {
             id = R.id.eventFragment
@@ -137,9 +137,16 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             is EventViewModelAction.OpenLtiScreen -> webViewRouter.openLtiScreen(viewModel.canvasContext, action.url)
             is EventViewModelAction.OpenEditEvent -> eventRouter.openEditEvent(action.scheduleItem)
             is EventViewModelAction.RefreshCalendarDays -> {
-                sharedViewModel.sendEvent(SharedCalendarAction.RefreshDays(action.days))
-                activity?.supportFragmentManager?.popBackStack(ComposeCalendarFragment::class.java.name, 0)
+                navigateBack()
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
             }
+        }
+    }
+
+    private fun handleSharedViewModelAction(action: SharedCalendarAction) {
+        when (action) {
+            is SharedCalendarAction.CloseEventScreen -> activity?.onBackPressed()
+            else -> {}
         }
     }
 

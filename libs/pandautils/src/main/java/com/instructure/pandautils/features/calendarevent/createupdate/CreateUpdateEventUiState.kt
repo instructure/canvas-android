@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -33,7 +34,7 @@ data class CreateUpdateEventUiState(
     val date: LocalDate = LocalDate.now(),
     val startTime: LocalTime? = null,
     val endTime: LocalTime? = null,
-    val frequencyDialogUiState: FrequencyDialogUiState = FrequencyDialogUiState(),
+    val selectFrequencyUiState: SelectFrequencyUiState = SelectFrequencyUiState(),
     val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState(),
     val location: String = "",
     val address: String = "",
@@ -53,10 +54,31 @@ data class CreateUpdateEventUiState(
     ).orEmpty()
 }
 
-data class FrequencyDialogUiState(
+data class SelectFrequencyUiState(
+    val showFrequencyDialog: Boolean = false,
     val selectedFrequency: String? = null,
-    val frequencies: Map<String, RRule?> = emptyMap()
+    val frequencies: Map<String, RRule?> = emptyMap(),
+    val customFrequencyUiState: CustomFrequencyUiState = CustomFrequencyUiState()
 )
+
+data class CustomFrequencyUiState(
+    val show: Boolean = false,
+    val quantity: Int = 0,
+    val timeUnits: List<String> = emptyList(),
+    val selectedTimeUnitIndex: Int = 0,
+    val daySelectorVisible: Boolean = false,
+    val days: List<DayOfWeek> = emptyList(),
+    val selectedDays: Set<DayOfWeek> = emptySet(),
+    val repeatsOnVisible: Boolean = false,
+    val repeatsOn: List<String> = emptyList(),
+    val selectedRepeatsOnIndex: Int = 0,
+    val endsOnSelected: Boolean = false,
+    val selectedDate: LocalDate = LocalDate.now(),
+    val endsAfterSelected: Boolean = false,
+    val selectedOccurrences: Int = 0
+) {
+    val formattedEndDate = selectedDate.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthYearFormat.toPattern())).orEmpty()
+}
 
 sealed class CreateUpdateEventAction {
     data class UpdateTitle(val title: String) : CreateUpdateEventAction()
@@ -75,7 +97,19 @@ sealed class CreateUpdateEventAction {
     data object CheckUnsavedChanges : CreateUpdateEventAction()
     data object HideUnsavedChangesDialog : CreateUpdateEventAction()
     data object NavigateBack : CreateUpdateEventAction()
-    data class CustomFrequencySelected(val rrule: RRule) : CreateUpdateEventAction()
+    data object ShowFrequencyDialog : CreateUpdateEventAction()
+    data object HideFrequencyDialog : CreateUpdateEventAction()
+    data object ShowCustomFrequencyScreen : CreateUpdateEventAction()
+    data object HideCustomFrequencyScreen : CreateUpdateEventAction()
+    data class UpdateCustomFrequencyQuantity(val quantity: Int) : CreateUpdateEventAction()
+    data class UpdateCustomFrequencySelectedTimeUnitIndex(val index: Int) : CreateUpdateEventAction()
+    data class UpdateCustomFrequencySelectedDays(val days: Set<DayOfWeek>) : CreateUpdateEventAction()
+    data class UpdateCustomFrequencySelectedRepeatsOnIndex(val index: Int) : CreateUpdateEventAction()
+    data object CustomFrequencyEndsOnSelected : CreateUpdateEventAction()
+    data class UpdateCustomFrequencyEndDate(val date: LocalDate) : CreateUpdateEventAction()
+    data object CustomFrequencyEndsAfterSelected : CreateUpdateEventAction()
+    data class UpdateCustomFrequencyOccurrences(val occurrences: Int) : CreateUpdateEventAction()
+    data object SaveCustomFrequency : CreateUpdateEventAction()
 }
 
 sealed class CreateUpdateEventViewModelAction {

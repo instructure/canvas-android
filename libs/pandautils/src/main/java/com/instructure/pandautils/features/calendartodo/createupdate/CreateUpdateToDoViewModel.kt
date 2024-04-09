@@ -211,7 +211,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     courseId = uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id,
                 )
             }
-            _uiState.update { it.copy(saving = false) }
+            _uiState.update { it.copy(saving = false, canNavigateBack = true) }
             _events.send(
                 CreateUpdateToDoViewModelAction.RefreshCalendarDays(
                     listOfNotNull(plannerItem?.plannable?.todoDate?.toDate()?.toLocalDate(), uiState.value.date)
