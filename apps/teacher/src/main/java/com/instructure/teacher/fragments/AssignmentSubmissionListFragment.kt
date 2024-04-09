@@ -205,7 +205,9 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         when (presenter.getFilter()) {
             SubmissionListFilter.ALL -> {
                 filterTitle.setText(R.string.all_submissions)
-                clearFilterTextView.setGone()
+                if (presenter.getSectionFilterText().isEmpty()) {
+                    clearFilterTextView.setGone()
+                }
             }
             SubmissionListFilter.LATE -> filterTitle.setText(R.string.submitted_late)
             SubmissionListFilter.MISSING -> filterTitle.setText(R.string.havent_submitted_yet)
@@ -236,9 +238,6 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             presenter.setSections(canvasContexts)
 
             updateFilterTitle()
-
-            filterTitle.text = filterTitle.text.toString().plus(presenter.getSectionFilterText())
-            clearFilterTextView.setVisible()
             return
         }
 
