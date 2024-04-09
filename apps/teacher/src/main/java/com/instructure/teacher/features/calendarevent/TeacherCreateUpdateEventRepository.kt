@@ -22,10 +22,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
 
 
@@ -36,18 +33,13 @@ class TeacherCreateUpdateEventRepository(
 ) : CreateUpdateEventRepository(calendarEventApi) {
 
     override suspend fun getCanvasContexts(): List<CanvasContext> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)
+        val params = RestParams(usePerPageQueryParam = true)
 
-        val coursesResult = coursesApi.getFirstPageCourses(params)
+        val coursesResult = coursesApi.getFirstPageCoursesTeacher(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
-        if (coursesResult.isFail) return emptyList()
+        val users = listOfNotNull(apiPrefs.user)
 
-        val courses = (coursesResult as DataResult.Success).data
-        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() && it.isTeacher }
-
-        val users = apiPrefs.user?.let { listOf(it) } ?: emptyList()
-
-        return users + validCourses
+        return users + coursesResult.dataOrNull.orEmpty()
     }
 }

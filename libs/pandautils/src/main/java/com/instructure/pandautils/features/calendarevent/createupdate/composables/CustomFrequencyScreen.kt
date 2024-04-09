@@ -49,6 +49,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -93,17 +94,20 @@ internal fun CustomFrequencyScreen(
                 navIconRes = R.drawable.ic_back_arrow,
                 navIconContentDescription = stringResource(id = R.string.back),
                 actions = {
+                    val saveEnabled = uiState.quantity > 0 && (uiState.selectedDate != null || uiState.selectedOccurrences > 0)
                     TextButton(
                         onClick = {
                             actionHandler(CreateUpdateEventAction.SaveCustomFrequency)
                             actionHandler(CreateUpdateEventAction.HideCustomFrequencyScreen)
                             actionHandler(CreateUpdateEventAction.HideFrequencyDialog)
-                        }
+                        },
+                        enabled = saveEnabled
                     ) {
                         Text(
                             text = stringResource(id = R.string.save),
                             color = Color(color = ThemePrefs.textButtonColor),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            modifier = Modifier.alpha(if (saveEnabled) 1f else .4f)
                         )
                     }
                 }
@@ -212,7 +216,7 @@ private fun CustomFrequencyContent(
                         Text(
                             text = stringResource(id = R.string.eventCustomFrequencyScreenRepeatsOn),
                             color = colorResource(id = R.color.textDarkest),
-                            fontSize = 18.sp,
+                            fontSize = 16.sp,
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(start = 16.dp)

@@ -23,7 +23,6 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
@@ -43,20 +42,18 @@ class StudentCreateUpdateEventRepository(
         val coursesResult = coursesApi.getFirstPageCourses(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
-        if (coursesResult.isFail) return emptyList()
-
-        val courses = (coursesResult as DataResult.Success).data
+        val courses = coursesResult.dataOrNull.orEmpty()
         val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
 
         val groupsResult = groupsApi.getFirstPageGroups(params)
             .depaginate { nextUrl -> groupsApi.getNextPageGroups(nextUrl, params) }
 
-        val groups = groupsResult.dataOrNull ?: emptyList()
+        val groups = groupsResult.dataOrNull.orEmpty()
 
         val courseMap = validCourses.associateBy { it.id }
         val validGroups = groups.filter { it.courseId == 0L || courseMap[it.courseId] != null }
 
-        val users = apiPrefs.user?.let { listOf(it) } ?: emptyList()
+        val users = listOfNotNull(apiPrefs.user)
 
         return users + validGroups
     }
