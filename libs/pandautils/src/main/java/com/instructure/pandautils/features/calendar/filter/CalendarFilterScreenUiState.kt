@@ -23,7 +23,7 @@ data class CalendarFilterScreenUiState(
     val groups: List<CalendarFilterItemUiState> = emptyList(),
     val error: Boolean = false,
     val loading: Boolean = false,
-    val calendarLimit : Int = -1,
+    val explanationMessage: String? = null,
     val snackbarMessage: String? = null
 ) {
     val anyFiltersSelected: Boolean

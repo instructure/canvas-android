@@ -83,11 +83,12 @@ class CalendarFilterViewModel @Inject constructor(
     }
 
     private fun createNewUiState(error: Boolean = false, loading: Boolean = false, snackbarMessage: String? = null): CalendarFilterScreenUiState {
+        val explanationMessage = if (filterLimit != -1) resources.getString(R.string.calendarFilterExplanationLimited, filterLimit) else null
         return CalendarFilterScreenUiState(
             createFilterItemsUiState(CanvasContext.Type.USER),
             createFilterItemsUiState(CanvasContext.Type.COURSE),
             createFilterItemsUiState(CanvasContext.Type.GROUP),
-            error, loading, filterLimit, snackbarMessage
+            error, loading, explanationMessage, snackbarMessage
         )
     }
 

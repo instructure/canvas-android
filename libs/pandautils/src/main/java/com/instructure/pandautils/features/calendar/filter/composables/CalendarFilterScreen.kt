@@ -129,20 +129,17 @@ private fun CalendarFiltersContent(
     LazyColumn(
         modifier = modifier
     ) {
-        item(key = EXPLANATION_KEY, contentType = EXPLANATION_CONTENT_TYPE) {
-            Spacer(modifier = Modifier.height(24.dp))
-            val explanationText = if (uiState.calendarLimit != -1) {
-                stringResource(id = R.string.calendarFilterExplanationLimited, uiState.calendarLimit)
-            } else {
-                stringResource(id = R.string.calendarFilterExplanation)
+        if (uiState.explanationMessage != null) {
+            item(key = EXPLANATION_KEY, contentType = EXPLANATION_CONTENT_TYPE) {
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = uiState.explanationMessage,
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.textDarkest),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(24.dp))
             }
-            Text(
-                text = explanationText,
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.textDarkest),
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(24.dp))
         }
         items(uiState.users, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { user ->
             CalendarFilterItem(user, actionHandler, Modifier.fillMaxWidth())
