@@ -60,7 +60,8 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.QuizDetailsPresenterFactory
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter.SubmissionListFilter
 import com.instructure.teacher.presenters.QuizDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.anonymousSubmissionsDisplayable

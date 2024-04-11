@@ -17,10 +17,16 @@
 package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListRepository
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
 import instructure.androidblueprint.PresenterFactory
 
-class AssignmentSubmissionListPresenterFactory(private var mAssignment: Assignment, private var mFilter: AssignmentSubmissionListPresenter.SubmissionListFilter) : PresenterFactory<AssignmentSubmissionListView, AssignmentSubmissionListPresenter> {
-    override fun create(): AssignmentSubmissionListPresenter = AssignmentSubmissionListPresenter(mAssignment, mFilter)
+class AssignmentSubmissionListPresenterFactory(
+    private var assignment: Assignment,
+    private var filter: AssignmentSubmissionListPresenter.SubmissionListFilter,
+    private val assignmentSubmissionListRepository: AssignmentSubmissionListRepository
+) : PresenterFactory<AssignmentSubmissionListView, AssignmentSubmissionListPresenter> {
+    override fun create(): AssignmentSubmissionListPresenter =
+        AssignmentSubmissionListPresenter(assignment, filter, assignmentSubmissionListRepository)
 }

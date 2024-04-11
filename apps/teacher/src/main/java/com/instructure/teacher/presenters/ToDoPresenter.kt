@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.events.ToDoListUpdatedEvent
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.Companion.makeGroupSubmissions
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter.Companion.makeGroupSubmissions
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.viewinterface.ToDoView
 import instructure.androidblueprint.SyncPresenter

@@ -57,8 +57,9 @@ import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.events.DiscussionEntryEvent
 import com.instructure.teacher.factory.DiscussionsDetailsPresenterFactory
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.fragments.*
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*

@@ -14,24 +14,32 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.presenters
+package com.instructure.teacher.features.assignment.submission
 
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.intersectBy
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Job
-import java.util.*
+import java.util.Locale
+import java.util.Random
 
-class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var mFilter: SubmissionListFilter) : SyncPresenter<GradeableStudentSubmission, AssignmentSubmissionListView>(GradeableStudentSubmission::class.java) {
+class AssignmentSubmissionListPresenter(
+    val assignment: Assignment,
+    private var filter: SubmissionListFilter,
+    private val assignmentSubmissionListRepository: AssignmentSubmissionListRepository
+) : SyncPresenter<GradeableStudentSubmission, AssignmentSubmissionListView>(GradeableStudentSubmission::class.java) {
 
     enum class SubmissionListFilter {
         ALL,
@@ -45,12 +53,12 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
 
     private var apiCalls: Job? = null
 
-    private var mUnfilteredSubmissions: List<GradeableStudentSubmission> = emptyList()
-    private var mFilteredSubmissions: List<GradeableStudentSubmission> = emptyList()
+    private var unfilteredSubmissions: List<GradeableStudentSubmission> = emptyList()
+    private var filteredSubmissions: List<GradeableStudentSubmission> = emptyList()
 
-    private var mFilterValue: Double = 0.0
+    private var filterValue: Double = 0.0
 
-    private var mSectionsSelected = ArrayList<CanvasContext>()
+    private var sectionsSelected = ArrayList<CanvasContext>()
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     override fun loadData(forceNetwork: Boolean) {
@@ -58,7 +66,7 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         if (apiCalls?.isActive == true) return
 
         // Use existing data if we already have it. Unfiltered submissions should be cleared on refresh
-        if (!forceNetwork && mUnfilteredSubmissions.isNotEmpty()) {
+        if (!forceNetwork && unfilteredSubmissions.isNotEmpty()) {
             setFilteredData()
             return
         }
@@ -67,44 +75,21 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         apiCalls = weave {
             try {
                 viewCallback?.onRefreshStarted()
-                val (gradeableStudents, enrollments, submissions) = awaitApis<List<GradeableStudent>, List<Enrollment>, List<Submission>>(
-                        { AssignmentManager.getAllGradeableStudentsForAssignment(mAssignment.courseId, mAssignment.id, forceNetwork, it) },
-                        { EnrollmentManager.getAllEnrollmentsForCourse(mAssignment.courseId, null, forceNetwork, it) },
-                        { AssignmentManager.getAllSubmissionsForAssignment(mAssignment.courseId, mAssignment.id, forceNetwork, it) }
-                )
-
-                val enrollmentMap = enrollments.associateBy { it.user?.id }
-                val students = gradeableStudents.distinctBy { it.id }.map {
-                    // Students need the enrollment info
-                    var user = enrollmentMap[it.id]?.user
-                    // Users can be enrolled in multiple sections, so we need to get all of them
-                    user = user?.copy(
-                        enrollments = user.enrollments + enrollments.filter { enrollment -> enrollment.userId == user?.id },
-                        isFakeStudent = it.isFakeStudent
+                unfilteredSubmissions =
+                    assignmentSubmissionListRepository.getGradeableStudentSubmissions(
+                        assignment,
+                        assignment.courseId,
+                        forceNetwork
                     )
-                    // Need to null out the user object to prevent infinite parcels
-                    user?.enrollments?.forEach { it.user = null }
-                    user
-                }.filterNotNull()
-                mUnfilteredSubmissions = if (mAssignment.groupCategoryId > 0 && !mAssignment.isGradeGroupsIndividually) {
-                    val groups = awaitApi<List<Group>> { CourseManager.getGroupsForCourse(mAssignment.courseId, it, false) }
-                            .filter { it.groupCategoryId == mAssignment.groupCategoryId }
-                    makeGroupSubmissions(students, groups, submissions)
-                } else {
-                    val submissionMap = submissions.associateBy { it.userId }
-                    students.map {
-                        GradeableStudentSubmission(StudentAssignee(it), submissionMap[it.id])
-                    }
-                }
-
                 setFilteredData()
             } catch (ignore: Throwable) {
+                ignore.printStackTrace()
             }
         }
     }
 
     fun setSections(sections: ArrayList<CanvasContext>) {
-        mSectionsSelected = sections
+        sectionsSelected = sections
 
         setFilteredData()
     }
@@ -117,22 +102,22 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
      */
     fun getSectionListIds(): ArrayList<Long> {
         val contextIds = ArrayList<Long>()
-        mSectionsSelected.forEach {
+        sectionsSelected.forEach {
             contextIds.add(it.id)
         }
         return contextIds
     }
 
     fun getSectionFilterText() : String {
-        when (mSectionsSelected.isEmpty()) {
+        when (sectionsSelected.isEmpty()) {
             true -> return ""
             false -> {
                 // get the title based on Section selected
                 val title = StringBuilder()
                 title.append(", ")
-                mSectionsSelected.forEachIndexed { index, canvasContext ->
+                sectionsSelected.forEachIndexed { index, canvasContext ->
                     title.append(canvasContext.name)
-                    if ((index + 1) < mSectionsSelected.size) {
+                    if ((index + 1) < sectionsSelected.size) {
                         title.append(", ")
                     }
                 }
@@ -142,18 +127,18 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
     }
 
     fun clearFilterList() {
-        mSectionsSelected.clear()
+        sectionsSelected.clear()
     }
 
     private fun setFilteredData() {
-        mFilteredSubmissions = mUnfilteredSubmissions.filter {
-            when (mFilter) {
+        filteredSubmissions = unfilteredSubmissions.filter {
+            when (filter) {
                 SubmissionListFilter.ALL -> true
-                SubmissionListFilter.LATE -> it.submission?.let { mAssignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
-                SubmissionListFilter.NOT_GRADED -> it.submission?.let { mAssignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
-                SubmissionListFilter.GRADED -> it.submission?.let { mAssignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING)  && it.isGradeMatchesCurrentSubmission} ?: false
-                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= mFilterValue } ?: false
-                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < mFilterValue } ?: false
+                SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
+                SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
+                SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING)  && it.isGradeMatchesCurrentSubmission} ?: false
+                SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
+                SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
                 // which students haven't submitted yet
                 SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
@@ -161,17 +146,17 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         }
 
         // Shuffle if grading anonymously
-        if (mAssignment.anonymousGrading) mFilteredSubmissions = mFilteredSubmissions.shuffled(Random(1234))
+        if (assignment.anonymousGrading) filteredSubmissions = filteredSubmissions.shuffled(Random(1234))
 
         data.clear()
 
         // Filter by section if there is a section filter set
-        if (mSectionsSelected.isNotEmpty()) {
+        if (sectionsSelected.isNotEmpty()) {
 
             // get list of ids
-            val sectionIds = mSectionsSelected.map { it.id }
+            val sectionIds = sectionsSelected.map { it.id }
 
-            mFilteredSubmissions.forEach { submission ->
+            filteredSubmissions.forEach { submission ->
                 sectionIds.forEach { section ->
                     if (submission.assignee is StudentAssignee) {
                         (submission.assignee as StudentAssignee).student.enrollments.forEach {
@@ -184,7 +169,7 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
             }
         } else {
             // No section filter, add all the submission filtered users
-            data.addOrUpdate(mFilteredSubmissions)
+            data.addOrUpdate(filteredSubmissions)
         }
 
         viewCallback?.onRefreshFinished()
@@ -199,7 +184,7 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
 
     override fun refresh(forceNetwork: Boolean) {
         clearData()
-        mUnfilteredSubmissions = emptyList()
+        unfilteredSubmissions = emptyList()
         loadData(forceNetwork)
     }
 
@@ -207,17 +192,17 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         //In case this filter hasn't been shown yet, we'll need to show the loader so the user
         //doesn't see "no items" view first
         viewCallback?.onRefreshStarted()
-        mFilter = filter
-        mFilterValue = value
+        this.filter = filter
+        filterValue = value
         setFilteredData()
     }
 
-    fun getFilter() : SubmissionListFilter = mFilter
+    fun getFilter() : SubmissionListFilter = filter
 
-    fun getFilterPoints() : Double = mFilterValue
+    fun getFilterPoints() : Double = filterValue
 
     fun getRecipients() : List<Recipient> {
-        return mFilteredSubmissions.map { submission ->
+        return filteredSubmissions.map { submission ->
             when(val assignee = submission.assignee) {
                 is StudentAssignee -> Recipient.from(assignee.student)
                 is GroupAssignee -> Recipient.from(assignee.group)
@@ -227,7 +212,7 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
 
     override fun compare(item1: GradeableStudentSubmission, item2: GradeableStudentSubmission): Int {
         // Turns out we do need to sort them by sortable name, but not when anonymous grading is on
-        if (item1.assignee is StudentAssignee && item2.assignee is StudentAssignee && !mAssignment.anonymousGrading) {
+        if (item1.assignee is StudentAssignee && item2.assignee is StudentAssignee && !assignment.anonymousGrading) {
             return (item1.assignee as StudentAssignee).student.sortableName?.lowercase(Locale.getDefault())
                 ?.compareTo((item2.assignee as StudentAssignee).student.sortableName?.lowercase(
                     Locale.getDefault()

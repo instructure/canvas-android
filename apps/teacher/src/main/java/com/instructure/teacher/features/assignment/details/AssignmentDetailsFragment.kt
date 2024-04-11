@@ -13,7 +13,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.instructure.teacher.fragments
+package com.instructure.teacher.features.assignment.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -62,8 +62,11 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
-import com.instructure.teacher.presenters.AssignmentDetailsPresenter
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.fragments.DueDatesFragment
+import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
+import com.instructure.teacher.fragments.LtiLaunchFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
