@@ -484,7 +484,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             _uiState.update { it.copy(saving = false, canNavigateBack = true) }
             _events.send(
                 CreateUpdateEventViewModelAction.RefreshCalendarDays(
-                    result.mapNotNull { it.startDate?.toLocalDate() }
+                    result.mapNotNull { it.startDate?.toLocalDate() } + listOfNotNull(scheduleItem?.startDate?.toLocalDate())
                 )
             )
         } catch {

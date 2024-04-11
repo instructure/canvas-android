@@ -26,7 +26,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
 
-internal fun getDatePickerDialog(
+fun getDatePickerDialog(
     context: Context,
     date: LocalDate,
     onDateSelected: (LocalDate) -> Unit
@@ -53,7 +53,7 @@ internal fun getDatePickerDialog(
     }
 }
 
-internal fun getTimePickerDialog(
+fun getTimePickerDialog(
     context: Context,
     time: LocalTime,
     onTimeSelected: (LocalTime) -> Unit

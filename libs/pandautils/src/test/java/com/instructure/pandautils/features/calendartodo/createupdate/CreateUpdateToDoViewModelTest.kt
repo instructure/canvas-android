@@ -283,6 +283,42 @@ class CreateUpdateToDoViewModelTest {
         Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
     }
 
+    @Test
+    fun `Back pressed when select calendar screen is showing`() = runTest {
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateToDoAction.ShowSelectCalendarScreen)
+        Assert.assertTrue(viewModel.uiState.value.selectCalendarUiState.show)
+
+        viewModel.onBackPressed()
+        Assert.assertFalse(viewModel.uiState.value.selectCalendarUiState.show)
+    }
+
+    @Test
+    fun `Back pressed when there are unsaved changes`() = runTest {
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
+
+        viewModel.onBackPressed()
+
+        Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
+    }
+
+    @Test
+    fun `Back pressed when there are no unsaved changes`() = runTest {
+        createViewModel()
+        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.onBackPressed()
+
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
+        Assert.assertEquals(CreateUpdateToDoViewModelAction.NavigateBack, events.last())
+    }
+
     private fun createViewModel() {
         viewModel = CreateUpdateToDoViewModel(savedStateHandle, resources, repository, apiPrefs)
     }

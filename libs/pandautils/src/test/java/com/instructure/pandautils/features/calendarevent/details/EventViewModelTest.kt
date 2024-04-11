@@ -77,7 +77,8 @@ class EventViewModelTest {
         seriesNaturalLanguage = "Every day",
         locationName = "Location",
         locationAddress = "Address",
-        description = "Description html"
+        description = "Description html",
+        workflowState = "active"
     )
 
     @Before
@@ -125,7 +126,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -151,7 +153,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = true
+                editAllowed = true,
+                deleteAllowed = true
             ),
             loading = false,
             title = "Title",
@@ -191,7 +194,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -218,7 +222,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -245,7 +250,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -272,7 +278,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -384,6 +391,80 @@ class EventViewModelTest {
 
         viewModel.handleAction(EventAction.SnackbarDismissed)
         Assert.assertNull(viewModel.uiState.value.errorSnack)
+    }
+
+    @Test
+    fun `Can modify event if contextCode matches userId`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { apiPrefs.user } returns User(1)
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can not modify event if contextCode not matches userId`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { apiPrefs.user } returns User(2)
+
+        createViewModel()
+
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can modify event if user can manage calendar events and event has course contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "course_1"
+        )
+        coEvery { eventRepository.canManageCourseCalendar(1) } returns true
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can not modify event if user can not manage calendar events and event has course contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "course_1"
+        )
+        coEvery { eventRepository.canManageCourseCalendar(1) } returns false
+
+        createViewModel()
+
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can modify event if user can manage calendar events and event has group contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "group_1"
+        )
+        coEvery { eventRepository.canManageGroupCalendar(1) } returns true
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can not modify event if user can not manage calendar events and event has group contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "group_1"
+        )
+        coEvery { eventRepository.canManageGroupCalendar(1) } returns false
+
+        createViewModel()
+
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.deleteAllowed)
     }
 
     private fun createViewModel() {
