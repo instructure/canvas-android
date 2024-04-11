@@ -24,7 +24,8 @@ data class EventUiState(
 data class ToolbarUiState(
     val toolbarColor: Int = ThemePrefs.primaryColor,
     val subtitle: String = "",
-    val modifyAllowed: Boolean = false,
+    val editAllowed: Boolean = false,
+    val deleteAllowed: Boolean = false,
     val deleting: Boolean = false
 )
 

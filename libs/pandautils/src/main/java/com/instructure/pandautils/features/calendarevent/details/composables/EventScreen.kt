@@ -104,7 +104,7 @@ internal fun EventScreen(
                                 strokeWidth = 3.dp,
                                 modifier = Modifier.size(32.dp)
                             )
-                        } else if (eventUiState.toolbarUiState.modifyAllowed) {
+                        } else if (eventUiState.toolbarUiState.editAllowed || eventUiState.toolbarUiState.deleteAllowed) {
                             OverFlowMenuSegment(
                                 eventUiState = eventUiState,
                                 actionHandler = actionHandler
@@ -182,16 +182,18 @@ private fun OverFlowMenuSegment(
         modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
         showMenu = showMenu
     ) {
-        DropdownMenuItem(
-            onClick = {
-                showMenu.value = !showMenu.value
-                actionHandler(EventAction.EditEvent)
+        if (eventUiState.toolbarUiState.editAllowed) {
+            DropdownMenuItem(
+                onClick = {
+                    showMenu.value = !showMenu.value
+                    actionHandler(EventAction.EditEvent)
+                }
+            ) {
+                Text(
+                    color = colorResource(id = R.color.textDarkest),
+                    text = stringResource(id = R.string.edit),
+                )
             }
-        ) {
-            Text(
-                color = colorResource(id = R.color.textDarkest),
-                text = stringResource(id = R.string.edit),
-            )
         }
         DropdownMenuItem(
             onClick = {
@@ -316,7 +318,7 @@ private fun EventPreview() {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = ThemePrefs.primaryColor,
                 subtitle = "Subtitle",
-                modifyAllowed = true
+                editAllowed = true
             ),
             loading = false,
             title = "Creative Machines and Innovative Instrumentation Conference",

@@ -67,6 +67,8 @@ data class ScheduleItem(
         val seriesHead: Boolean = false,
         @IgnoredOnParcel
         val duplicates: List<CalendarEventWrapper> = ArrayList(),
+        @SerializedName("workflow_state")
+        val workflowState: String? = null,
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),

@@ -78,12 +78,27 @@ class EventViewModel @Inject constructor(
             _uiState.update { it.copy(loading = true) }
             if (scheduleItemArg != null) {
                 scheduleItem = scheduleItemArg
-                updateUiStateWithData(scheduleItemArg)
             } else {
                 val scheduleItem = eventRepository.getCalendarEvent(scheduleItemId.orDefault())
                 this@EventViewModel.scheduleItem = scheduleItem
-                updateUiStateWithData(scheduleItem)
             }
+            val canManageCalendar = when (scheduleItem?.contextType) {
+                CanvasContext.Type.USER -> {
+                    scheduleItem?.userId == apiPrefs.user?.id
+                }
+                CanvasContext.Type.COURSE -> {
+                    eventRepository.canManageCourseCalendar(scheduleItem?.courseId.orDefault())
+                }
+                CanvasContext.Type.GROUP -> {
+                    eventRepository.canManageGroupCalendar(scheduleItem?.groupId.orDefault())
+                }
+                else -> false
+            }
+            updateUiStateWithData(
+                scheduleItem!!,
+                canManageCalendar && scheduleItem?.workflowState == "active",
+                canManageCalendar
+            )
         } catch {
             _uiState.update {
                 it.copy(
@@ -100,12 +115,13 @@ class EventViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateUiStateWithData(scheduleItem: ScheduleItem) {
+    private suspend fun updateUiStateWithData(scheduleItem: ScheduleItem, editAllowed: Boolean, deleteAllowed: Boolean) {
         _uiState.update {
             it.copy(
                 toolbarUiState = it.toolbarUiState.copy(
                     subtitle = scheduleItem.contextName.orEmpty(),
-                    modifyAllowed = scheduleItem.contextId == apiPrefs.user?.id
+                    editAllowed = editAllowed,
+                    deleteAllowed = deleteAllowed
                 ),
                 loading = false,
                 title = scheduleItem.title.orEmpty(),
