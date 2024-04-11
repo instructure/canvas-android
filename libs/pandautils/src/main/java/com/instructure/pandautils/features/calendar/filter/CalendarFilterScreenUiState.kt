@@ -15,6 +15,8 @@
  */
 package com.instructure.pandautils.features.calendar.filter
 
+import androidx.annotation.ColorInt
+
 data class CalendarFilterScreenUiState(
     val users: List<CalendarFilterItemUiState> = emptyList(),
     val courses: List<CalendarFilterItemUiState> = emptyList(),
@@ -28,7 +30,8 @@ data class CalendarFilterScreenUiState(
 data class CalendarFilterItemUiState(
     val contextId: String,
     val name: String,
-    val selected: Boolean
+    val selected: Boolean,
+    @ColorInt val color: Int
 )
 
 sealed class CalendarFilterAction {
