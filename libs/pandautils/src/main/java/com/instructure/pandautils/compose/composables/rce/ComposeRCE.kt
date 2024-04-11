@@ -18,11 +18,18 @@ package com.instructure.pandautils.compose.composables.rce
 import android.content.ContentValues
 import android.net.Uri
 import android.provider.MediaStore
+import android.view.ViewGroup
 import android.webkit.URLUtil
+import android.widget.FrameLayout
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,14 +38,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.apollographql.apollo.api.toInput
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.pandautils.utils.toPx
 import instructure.rceditor.R
 import instructure.rceditor.RCEInsertDialog
 import instructure.rceditor.RCETextEditor
@@ -83,7 +96,14 @@ fun ComposeRCE(
                     canvasContext,
                     context.getFragmentActivity()
                 ) { imageUrl ->
-                    rceTextEditor.insertImage(imageUrl, "")
+                    MediaUploadUtils.showAltTextDialog(
+                        context.getFragmentActivity(),
+                        onPositiveClick = { altText ->
+                            rceTextEditor.insertImage(imageUrl, altText)
+                        },
+                        onNegativeClick = {
+                            rceTextEditor.insertImage(imageUrl, "")
+                        })
                 }
             }
         }
@@ -156,7 +176,7 @@ fun ComposeRCE(
 
     LaunchedEffect(Unit) {
         rceTextEditor.setPlaceholder(hint)
-        rceTextEditor.html = html
+        rceTextEditor.applyHtml(html)
     }
 
     Column(modifier = modifier) {

@@ -429,7 +429,8 @@ private fun CreateUpdateToDoContent(
                     hint = stringResource(id = R.string.createToDoDetailsLabel),
                     html = uiState.details,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
+                        .height(320.dp)
                         .padding(horizontal = 16.dp)
                 ) {
                     actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
