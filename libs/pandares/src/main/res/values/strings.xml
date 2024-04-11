@@ -1662,4 +1662,6 @@
         <item quantity="one">%d event</item>
         <item quantity="other">%d events</item>
     </plurals>
+    <string name="calendarFiltersSelectAll">Select all</string>
+    <string name="calendarFiltersDeselectAll">Deselect all</string>
 </resources>

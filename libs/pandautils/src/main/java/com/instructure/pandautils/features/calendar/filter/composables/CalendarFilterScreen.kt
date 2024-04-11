@@ -35,6 +35,7 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -57,6 +58,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
+import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.launch
 
 private const val COURSES_KEY = "courses"
@@ -90,17 +92,20 @@ fun CalendarFiltersScreen(
             topBar = {
                 CanvasAppBar(
                     title = stringResource(id = R.string.calendarFilterTitle),
-                    navigationActionClick = navigationActionClick
+                    navigationActionClick = navigationActionClick,
+                    actions = { FilterActions(anyFilterSelected = uiState.anyFiltersSelected, actionHandler = actionHandler) }
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
                 if (uiState.error) {
-                    ErrorContent(errorMessage = stringResource(id = R.string.calendarFiltersFailed), retryClick = {
-                        actionHandler(CalendarFilterAction.Retry)
-                    }, modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight())
+                    ErrorContent(
+                        errorMessage = stringResource(id = R.string.calendarFiltersFailed), retryClick = {
+                            actionHandler(CalendarFilterAction.Retry)
+                        }, modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                    )
                 } else if (uiState.loading) {
                     Loading(modifier = Modifier.fillMaxSize())
                 } else {
@@ -162,7 +167,11 @@ private fun CalendarFiltersContent(
 }
 
 @Composable
-private fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler: (CalendarFilterAction) -> Unit, modifier: Modifier = Modifier) {
+private fun CalendarFilterItem(
+    uiState: CalendarFilterItemUiState,
+    actionHandler: (CalendarFilterAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = 54.dp)
@@ -197,6 +206,28 @@ private fun HeaderItem(text: String, modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp)
             .wrapContentHeight(align = Alignment.CenterVertically)
     )
+}
+
+@Composable
+private fun FilterActions(
+    anyFilterSelected: Boolean,
+    actionHandler: (CalendarFilterAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TextButton(
+        onClick = {
+            val action = if (anyFilterSelected) CalendarFilterAction.DeselectAll else CalendarFilterAction.SelectAll
+            actionHandler(action)
+        },
+        modifier = modifier
+    ) {
+        val resourceId = if (anyFilterSelected) R.string.calendarFiltersDeselectAll else R.string.calendarFiltersSelectAll
+        Text(
+            text = stringResource(id = resourceId),
+            color = Color(color = ThemePrefs.textButtonColor),
+            fontSize = 14.sp,
+        )
+    }
 }
 
 @Preview

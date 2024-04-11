@@ -101,6 +101,8 @@ class CalendarFilterViewModel @Inject constructor(
             is CalendarFilterAction.ToggleFilter -> toggleFilter(calendarFilterAction.contextId)
             CalendarFilterAction.Retry -> loadFilters()
             CalendarFilterAction.SnackbarDismissed -> _uiState.value = _uiState.value.copy(snackbarMessage = null)
+            CalendarFilterAction.DeselectAll -> deselectAll()
+            CalendarFilterAction.SelectAll -> selectAll()
         }
     }
 
@@ -127,6 +129,36 @@ class CalendarFilterViewModel @Inject constructor(
     fun filtersClosed() {
         viewModelScope.launch {
             _events.send(CalendarFilterViewModelAction.FiltersClosed(initialFilters != contextIdFilters))
+        }
+    }
+
+    private fun deselectAll() {
+        contextIdFilters.clear()
+        viewModelScope.launch {
+            filterEntityForCurrentUser?.let {
+                val newFilter = it.copy(filters = contextIdFilters)
+                calendarFilterDao.insertOrUpdate(newFilter)
+            }
+            _uiState.emit(createNewUiState())
+        }
+    }
+
+    private fun selectAll() {
+        var snackbarMessage: String? = null
+        canvasContexts.flatMap { it.value }.forEach {
+            if (filterLimit == -1 || contextIdFilters.size < filterLimit) {
+                contextIdFilters.add(it.contextId)
+            } else {
+                snackbarMessage = resources.getString(R.string.calendarFilterLimitSnackbar, filterLimit)
+                return@forEach
+            }
+        }
+        viewModelScope.launch {
+            filterEntityForCurrentUser?.let {
+                val newFilter = it.copy(filters = contextIdFilters)
+                calendarFilterDao.insertOrUpdate(newFilter)
+            }
+            _uiState.emit(createNewUiState(snackbarMessage = snackbarMessage))
         }
     }
 }

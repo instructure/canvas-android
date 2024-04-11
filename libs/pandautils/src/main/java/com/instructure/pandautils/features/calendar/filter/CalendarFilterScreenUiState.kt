@@ -25,7 +25,10 @@ data class CalendarFilterScreenUiState(
     val loading: Boolean = false,
     val calendarLimit : Int = -1,
     val snackbarMessage: String? = null
-)
+) {
+    val anyFiltersSelected: Boolean
+        get() = users.any { it.selected } || courses.any { it.selected } || groups.any { it.selected }
+}
 
 data class CalendarFilterItemUiState(
     val contextId: String,
@@ -38,6 +41,8 @@ sealed class CalendarFilterAction {
     data class ToggleFilter(val contextId: String) : CalendarFilterAction()
     data object Retry : CalendarFilterAction()
     data object SnackbarDismissed : CalendarFilterAction()
+    data object SelectAll : CalendarFilterAction()
+    data object DeselectAll : CalendarFilterAction()
 }
 
 sealed class CalendarFilterViewModelAction {
