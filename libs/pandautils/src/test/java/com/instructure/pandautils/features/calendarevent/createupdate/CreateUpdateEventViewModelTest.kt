@@ -241,6 +241,134 @@ class CreateUpdateEventViewModelTest {
         Assert.assertEquals(expectedEvent, events.last())
     }
 
+    @Test
+    fun `Save event failed`() {
+        every { resources.getString(R.string.eventSaveErrorMessage) } returns "Failed to save event"
+        coEvery { repository.createEvent(any(), any(), any(), any(), any(), any(), any(), any()) } throws Exception()
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+        Assert.assertEquals("Failed to save event", viewModel.uiState.value.errorSnack)
+
+        viewModel.handleAction(CreateUpdateEventAction.SnackbarDismissed)
+        Assert.assertEquals(null, viewModel.uiState.value.errorSnack)
+    }
+
+    @Test
+    fun `Check unsaved changes when creating`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+        val events = mutableListOf<CreateUpdateEventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(CreateUpdateEventAction.CheckUnsavedChanges)
+        Assert.assertFalse(viewModel.uiState.value.showUnsavedChangesDialog)
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateTitle("Title"))
+
+        viewModel.handleAction(CreateUpdateEventAction.CheckUnsavedChanges)
+        Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
+
+        viewModel.handleAction(CreateUpdateEventAction.NavigateBack)
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
+        Assert.assertEquals(CreateUpdateEventViewModelAction.NavigateBack, events.last())
+    }
+
+    @Test
+    fun `Check unsaved changes when editing`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(CreateUpdateEventFragment.SCHEDULE_ITEM) } returns ScheduleItem(
+            itemId = "1",
+            title = "Title",
+            contextCode = "user_1",
+            startAt = LocalDateTime.now(clock).toApiString()
+        )
+
+        createViewModel()
+        val events = mutableListOf<CreateUpdateEventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(CreateUpdateEventAction.CheckUnsavedChanges)
+        Assert.assertFalse(viewModel.uiState.value.showUnsavedChangesDialog)
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateTitle("Updated Title"))
+
+        viewModel.handleAction(CreateUpdateEventAction.CheckUnsavedChanges)
+        Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
+
+        viewModel.handleAction(CreateUpdateEventAction.NavigateBack)
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
+        Assert.assertEquals(CreateUpdateEventViewModelAction.NavigateBack, events.last())
+    }
+
+    @Test
+    fun `Check unsaved changes when no changes`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+        val events = mutableListOf<CreateUpdateEventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(CreateUpdateEventAction.CheckUnsavedChanges)
+        Assert.assertFalse(viewModel.uiState.value.showUnsavedChangesDialog)
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
+        Assert.assertEquals(CreateUpdateEventViewModelAction.NavigateBack, events.last())
+    }
+
+    @Test
+    fun `Back pressed when select calendar screen is showing`() = runTest {
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.ShowSelectCalendarScreen)
+        Assert.assertTrue(viewModel.uiState.value.selectCalendarUiState.show)
+
+        viewModel.onBackPressed()
+        Assert.assertFalse(viewModel.uiState.value.selectCalendarUiState.show)
+    }
+
+    @Test
+    fun `Back pressed when custom frequency screen is showing`() = runTest {
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.ShowCustomFrequencyScreen)
+        Assert.assertTrue(viewModel.uiState.value.selectFrequencyUiState.customFrequencyUiState.show)
+
+        viewModel.onBackPressed()
+        Assert.assertFalse(viewModel.uiState.value.selectFrequencyUiState.customFrequencyUiState.show)
+    }
+
+    @Test
+    fun `Back pressed when there are unsaved changes`() = runTest {
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateTitle("Updated Title"))
+
+        viewModel.onBackPressed()
+
+        Assert.assertTrue(viewModel.uiState.value.showUnsavedChangesDialog)
+    }
+
+    @Test
+    fun `Back pressed when there are no unsaved changes`() = runTest {
+        createViewModel()
+        val events = mutableListOf<CreateUpdateEventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.onBackPressed()
+
+        Assert.assertTrue(viewModel.uiState.value.canNavigateBack)
+        Assert.assertEquals(CreateUpdateEventViewModelAction.NavigateBack, events.last())
+    }
+
     private fun createViewModel() {
         viewModel = CreateUpdateEventViewModel(savedStateHandle, resources, repository, apiPrefs)
     }

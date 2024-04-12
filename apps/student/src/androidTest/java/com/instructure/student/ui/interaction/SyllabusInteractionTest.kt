@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.addCourseSettings
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
@@ -48,6 +49,7 @@ class SyllabusInteractionTest : StudentComposeTest() {
         val data = goToSyllabus(eventCount = 1, assignmentCount = 0)
 
         val course = data.courses.values.first()
+        data.coursePermissions[course.id] = CanvasContextPermission(manageCalendar = true)
         val event = data.courseCalendarEvents[course.id]!!.first()
 
         syllabusPage.selectSummaryTab()
