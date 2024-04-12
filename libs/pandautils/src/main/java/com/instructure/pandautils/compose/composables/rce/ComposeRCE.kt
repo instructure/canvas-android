@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,6 +77,7 @@ fun ComposeRCE(
             evaluateJavascript("javascript:RE.enabledEditingItems();", null)
         }
         setOnDecorationChangeListener { text, _ ->
+            focusEditor()
             showControls = true
             val typeSet = text.split(",").toSet()
             rceState = rceState.copy(
@@ -204,7 +206,7 @@ fun ComposeRCE(
 
         AndroidView(
             modifier = Modifier
-                .fillMaxSize()
+                .height(280.dp)
                 .padding(top = 8.dp),
             factory = {
                 rceTextEditor

@@ -430,7 +430,6 @@ private fun CreateUpdateToDoContent(
                     html = uiState.details,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(320.dp)
                         .padding(horizontal = 16.dp)
                 ) {
                     actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
