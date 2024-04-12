@@ -161,8 +161,8 @@ class EventViewModel @Inject constructor(
             scheduleItem?.let { scheduleItem ->
                 _uiState.update { it.copy(toolbarUiState = it.toolbarUiState.copy(deleting = true)) }
                 if (scheduleItem.isRecurring) {
-                    val removedEvents = eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, deleteScope)
-                    _events.send(EventViewModelAction.RefreshCalendarDays(removedEvents.mapNotNull { it.startDate?.toLocalDate() }))
+                    eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, deleteScope)
+                    _events.send(EventViewModelAction.RefreshCalendar)
                 } else {
                     val removedEvent = eventRepository.deleteCalendarEvent(scheduleItem.id)
                     _events.send(EventViewModelAction.RefreshCalendarDays(listOfNotNull(removedEvent.startDate?.toLocalDate())))

@@ -368,12 +368,7 @@ class EventViewModelTest {
             eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.ModifyEventScope.ALL)
         }
 
-        val expectedEvent = EventViewModelAction.RefreshCalendarDays(
-            listOf(
-                LocalDate.of(2024, 3, 1),
-                LocalDate.of(2024, 3, 2)
-            )
-        )
+        val expectedEvent = EventViewModelAction.RefreshCalendar
         Assert.assertEquals(expectedEvent, events.last())
     }
 

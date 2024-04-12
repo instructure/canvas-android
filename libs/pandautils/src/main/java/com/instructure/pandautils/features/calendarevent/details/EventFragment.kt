@@ -140,6 +140,10 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 navigateBack()
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
             }
+            is EventViewModelAction.RefreshCalendar -> {
+                navigateBack()
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshCalendar)
+            }
         }
     }
 

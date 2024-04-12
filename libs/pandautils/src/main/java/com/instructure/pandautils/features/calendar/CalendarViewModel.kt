@@ -405,6 +405,9 @@ class CalendarViewModel @Inject constructor(
             is CalendarAction.AddEventTapped -> viewModelScope.launch {
                 _events.send(CalendarViewModelAction.OpenCreateEvent(selectedDay.toApiString()))
             }
+            is CalendarAction.RefreshCalendar -> viewModelScope.launch {
+                refreshCalendar()
+            }
         }
     }
 

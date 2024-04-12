@@ -100,6 +100,8 @@ class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 viewModel.handleAction(CalendarAction.RefreshDay(it))
             }
 
+            is SharedCalendarAction.RefreshCalendar -> viewModel.handleAction(CalendarAction.RefreshCalendar)
+
             is SharedCalendarAction.FiltersClosed -> {
                 applyTheme()
                 if (action.changed) {

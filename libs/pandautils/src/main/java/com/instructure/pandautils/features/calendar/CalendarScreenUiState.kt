@@ -113,6 +113,7 @@ sealed class CalendarAction {
     data object FilterTapped : CalendarAction()
     data object FiltersRefreshed : CalendarAction()
     data object AddEventTapped : CalendarAction()
+    data object RefreshCalendar : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {
@@ -128,6 +129,7 @@ sealed class CalendarViewModelAction {
 
 sealed class SharedCalendarAction {
     data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
+    data object RefreshCalendar : SharedCalendarAction()
     data class FiltersClosed(val changed: Boolean) : SharedCalendarAction()
     data object CloseToDoScreen : SharedCalendarAction()
     data object CloseEventScreen : SharedCalendarAction()

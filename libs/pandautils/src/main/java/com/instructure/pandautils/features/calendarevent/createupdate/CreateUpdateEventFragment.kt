@@ -76,6 +76,12 @@ class CreateUpdateEventFragment : Fragment(), NavigationCallbacks, FragmentInter
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseEventScreen)
             }
 
+            is CreateUpdateEventViewModelAction.RefreshCalendar -> {
+                navigateBack()
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshCalendar)
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseEventScreen)
+            }
+
             is CreateUpdateEventViewModelAction.NavigateBack -> navigateBack()
         }
     }

@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.calendarevent.createupdate
 
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -31,6 +32,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -72,6 +74,8 @@ class CreateUpdateEventViewModelTest {
         every { savedStateHandle.get<Any>(any()) } returns null
         every { apiPrefs.user } returns User(1)
         coEvery { repository.getCanvasContexts() } returns listOf(User(1))
+        mockkObject(CanvasRestAdapter)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns mockk()
     }
 
     @After
@@ -185,7 +189,55 @@ class CreateUpdateEventViewModelTest {
             )
         }
 
-        val expectedEvent = CreateUpdateEventViewModelAction.RefreshCalendarDays(listOf(LocalDate.of(2024, 4, 10)))
+        val expectedEvent = CreateUpdateEventViewModelAction.RefreshCalendar
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Updates event when editing`() = runTest {
+        val event = ScheduleItem(
+            itemId = "1",
+            title = "Title",
+            contextCode = "user_1",
+            startAt = LocalDateTime.now(clock).toApiString()
+        )
+
+        every { savedStateHandle.get<ScheduleItem>(CreateUpdateEventFragment.SCHEDULE_ITEM) } returns event
+        coEvery { repository.updateEvent(any(), any(), any(), any(), any(), any(), any(), any(), any(), any()) } returns listOf(
+            event.copy(startAt = LocalDateTime.now(clock).plusDays(1).toApiString())
+        )
+
+        createViewModel()
+        val events = mutableListOf<CreateUpdateEventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateTitle("Updated"))
+        viewModel.handleAction(CreateUpdateEventAction.UpdateDate(LocalDate.now(clock).plusDays(1)))
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.updateEvent(
+                1,
+                "Updated",
+                "2024-04-11T11:00:00Z",
+                "2024-04-11",
+                null,
+                "user_1",
+                "",
+                "",
+                "",
+                CalendarEventAPI.ModifyEventScope.ONE
+            )
+        }
+
+        val expectedEvent = CreateUpdateEventViewModelAction.RefreshCalendarDays(
+            listOf(
+                LocalDate.of(2024, 4, 10),
+                LocalDate.of(2024, 4, 11)
+            )
+        )
         Assert.assertEquals(expectedEvent, events.last())
     }
 

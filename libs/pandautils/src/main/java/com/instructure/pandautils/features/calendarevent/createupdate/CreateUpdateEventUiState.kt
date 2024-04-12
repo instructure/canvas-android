@@ -110,5 +110,6 @@ sealed class CreateUpdateEventAction {
 
 sealed class CreateUpdateEventViewModelAction {
     data class RefreshCalendarDays(val days: List<LocalDate>) : CreateUpdateEventViewModelAction()
+    data object RefreshCalendar : CreateUpdateEventViewModelAction()
     data object NavigateBack : CreateUpdateEventViewModelAction()
 }

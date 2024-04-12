@@ -452,6 +452,8 @@ class CreateUpdateEventViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val startDate = startTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
             val endDate = endTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
+            val rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString()
+            val contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty()
 
             val result = scheduleItem?.let {
                 repository.updateEvent(
@@ -459,22 +461,22 @@ class CreateUpdateEventViewModel @Inject constructor(
                     title = title,
                     startDate = startDate,
                     endDate = endDate,
-                    rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString(),
-                    contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
+                    rrule = rrule,
+                    contextCode = contextCode,
                     locationName = location,
                     locationAddress = address,
                     description = details,
                     modifyEventScope = modifyEventScope
                 ).also {
-                    CanvasRestAdapter.clearCacheUrls("calendar_events")
+                    CanvasRestAdapter.clearCacheUrls("calendar_events/")
                 }
             } ?: run {
                 repository.createEvent(
                     title = title,
                     startDate = startDate,
                     endDate = endDate,
-                    rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString(),
-                    contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty(),
+                    rrule = rrule,
+                    contextCode = contextCode,
                     locationName = location,
                     locationAddress = address,
                     description = details
@@ -482,11 +484,12 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             _uiState.update { it.copy(saving = false, canNavigateBack = true) }
-            _events.send(
-                CreateUpdateEventViewModelAction.RefreshCalendarDays(
-                    result.mapNotNull { it.startDate?.toLocalDate() } + listOfNotNull(scheduleItem?.startDate?.toLocalDate())
-                )
-            )
+            if (rrule != null) {
+                _events.send(CreateUpdateEventViewModelAction.RefreshCalendar)
+            } else {
+                val daysToRefresh = listOfNotNull(scheduleItem?.startDate?.toLocalDate()) + result.mapNotNull { it.startDate?.toLocalDate() }
+                _events.send(CreateUpdateEventViewModelAction.RefreshCalendarDays(daysToRefresh))
+            }
         } catch {
             _uiState.update {
                 it.copy(

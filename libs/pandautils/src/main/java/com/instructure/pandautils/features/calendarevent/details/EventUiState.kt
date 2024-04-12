@@ -40,5 +40,6 @@ sealed class EventAction {
 sealed class EventViewModelAction {
     data class OpenLtiScreen(val url: String) : EventViewModelAction()
     data class RefreshCalendarDays(val days: List<LocalDate>) : EventViewModelAction()
+    data object RefreshCalendar : EventViewModelAction()
     data class OpenEditEvent(val scheduleItem: ScheduleItem) : EventViewModelAction()
 }
