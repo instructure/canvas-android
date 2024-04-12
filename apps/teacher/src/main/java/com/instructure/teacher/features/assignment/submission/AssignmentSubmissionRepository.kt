@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.intersectBy
 
-class AssignmentSubmissionListRepository(
+class AssignmentSubmissionRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
     private val courseApi: CourseAPI.CoursesInterface

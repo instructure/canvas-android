@@ -20,7 +20,11 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.events.SubmissionUpdatedEvent
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
+import com.instructure.teacher.utils.getState
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.instructure.teacher.viewinterface.SpeedGraderView
 import instructure.androidblueprint.Presenter
@@ -28,14 +32,19 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.Locale
 
 class SpeedGraderPresenter(
-        private var courseId: Long,
-        private var assignmentId: Long,
-        private var submissions: List<GradeableStudentSubmission>,
-        private var submissionId: Long,
-        private var discussion: DiscussionTopicHeader?
+    private var courseId: Long,
+    private var assignmentId: Long,
+    private var submissionId: Long,
+    private var discussion: DiscussionTopicHeader?,
+    private val repository: AssignmentSubmissionRepository,
+    private val filter: AssignmentSubmissionListPresenter.SubmissionListFilter,
+    private val filterValue: Double
 ) : Presenter<SpeedGraderView> {
+
+    private var submissions: List<GradeableStudentSubmission> = emptyList()
 
     private var mView: SpeedGraderView? = null
     private var mApiJob: Job? = null
@@ -97,6 +106,26 @@ class SpeedGraderPresenter(
             )
             course = data.first
             assignment = data.second
+            val allSubmissions = repository.getGradeableStudentSubmissions(assignment, courseId, false).sortedBy {
+                (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(
+                    Locale.getDefault())
+            }
+            submissions = allSubmissions.filter {
+                when (filter) {
+                    AssignmentSubmissionListPresenter.SubmissionListFilter.ALL -> true
+                    AssignmentSubmissionListPresenter.SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
+                    AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
+                    AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING)  && it.isGradeMatchesCurrentSubmission} ?: false
+                    AssignmentSubmissionListPresenter.SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
+                    AssignmentSubmissionListPresenter.SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
+                    // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
+                    // which students haven't submitted yet
+                    AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
+                }
+            }
 
             if (submissionId > 0 && submissions.isEmpty()) {
                 // We don't have all the data we need (we came from a push notification), get all the stuffs first

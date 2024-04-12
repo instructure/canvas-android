@@ -67,7 +67,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         GradeableStudentSubmissionAdapter>(), AssignmentSubmissionListView {
 
     @Inject
-    lateinit var assignmentSubmissionListRepository: AssignmentSubmissionListRepository
+    lateinit var assignmentSubmissionRepository: AssignmentSubmissionRepository
 
     private val binding by viewBinding(FragmentAssignmentSubmissionListBinding::bind)
 
@@ -93,7 +93,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_submission_list
     override val recyclerView: RecyclerView get() = binding.submissionsRecyclerView
-    override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(assignment, filter, assignmentSubmissionListRepository)
+    override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(assignment, filter, assignmentSubmissionRepository)
     override fun onCreateView(view: View) = Unit
     override fun onPresenterPrepared(presenter: AssignmentSubmissionListPresenter) = with(binding) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
@@ -139,7 +139,14 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             withRequireNetwork {
                 val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
                 val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
-                val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, filteredSubmissions, selectedIdx, assignment.anonymousGrading)
+                val bundle = SpeedGraderActivity.makeBundle(
+                    course.id,
+                    assignment.id,
+                    selectedIdx,
+                    assignment.anonymousGrading,
+                    presenter.getFilter(),
+                    presenter.getFilterPoints()
+                )
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
         }

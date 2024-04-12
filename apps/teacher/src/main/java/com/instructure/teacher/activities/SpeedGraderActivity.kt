@@ -57,6 +57,8 @@ import com.instructure.teacher.adapters.SubmissionContentAdapter
 import com.instructure.teacher.databinding.ActivitySpeedgraderBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryFragment
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
@@ -75,11 +77,15 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import javax.inject.Inject
 
 @PageView("courses/{courseId}/gradebook/speed_grader?assignment_id={assignmentId}")
 @ScreenView(SCREEN_VIEW_SPEED_GRADER)
 @AndroidEntryPoint
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
+
+    @Inject
+    lateinit var repository: AssignmentSubmissionRepository
 
     private val binding by viewBinding(ActivitySpeedgraderBinding::inflate)
 
@@ -89,9 +95,15 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     @get:PageViewUrlParam("assignmentId")
     private val assignmentId: Long by lazy { intent.extras!!.getLong(Const.ASSIGNMENT_ID) }
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
-    private val submissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras!!.getParcelableArrayList(Const.SUBMISSION) ?: arrayListOf() }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
+    private val filter: AssignmentSubmissionListPresenter.SubmissionListFilter by lazy {
+        intent.extras!!.getSerializable(
+            FILTER
+        ) as? AssignmentSubmissionListPresenter.SubmissionListFilter
+            ?: AssignmentSubmissionListPresenter.SubmissionListFilter.ALL
+    }
+    private val filterValue: Double by lazy { intent.extras!!.getDouble(FILTER_VALUE) }
 
     private val initialSelection: Int by lazy { intent.extras!!.getInt(Const.SELECTED_ITEM, 0) }
     private var currentSelection = 0
@@ -124,9 +136,11 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     override fun getPresenterFactory() = SpeedGraderPresenterFactory(
         courseId,
         assignmentId,
-        submissions,
         submissionId,
-        discussionTopicHeader
+        discussionTopicHeader,
+        repository,
+        filter,
+        filterValue
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -363,6 +377,27 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
          * TransactionTooLargeException when creating SpeedGraderActivity.
          */
         private const val MAX_HISTORY_THRESHOLD = 8
+
+        const val FILTER = "filter"
+        const val FILTER_VALUE = "filter_value"
+
+        fun makeBundle(
+            courseId: Long,
+            assignmentId: Long,
+            selectedIdx: Int,
+            anonymousGrading: Boolean? = null,
+            filter: AssignmentSubmissionListPresenter.SubmissionListFilter,
+            filterValue: Double
+        ): Bundle {
+            return Bundle().apply {
+                putLong(Const.COURSE_ID, courseId)
+                putLong(Const.ASSIGNMENT_ID, assignmentId)
+                putInt(Const.SELECTED_ITEM, selectedIdx)
+                putBoolean(Const.ANONYMOUS_GRADING, anonymousGrading ?: false)
+                putSerializable(FILTER, filter)
+                putDouble(FILTER_VALUE, filterValue)
+            }
+        }
 
         fun makeBundle(courseId: Long, assignmentId: Long, submissions: List<GradeableStudentSubmission>, selectedIdx: Int, anonymousGrading: Boolean? = null): Bundle {
             return Bundle().apply {

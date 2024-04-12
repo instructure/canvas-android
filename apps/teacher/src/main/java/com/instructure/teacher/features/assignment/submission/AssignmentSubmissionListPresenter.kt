@@ -38,7 +38,7 @@ import java.util.Random
 class AssignmentSubmissionListPresenter(
     val assignment: Assignment,
     private var filter: SubmissionListFilter,
-    private val assignmentSubmissionListRepository: AssignmentSubmissionListRepository
+    private val assignmentSubmissionRepository: AssignmentSubmissionRepository
 ) : SyncPresenter<GradeableStudentSubmission, AssignmentSubmissionListView>(GradeableStudentSubmission::class.java) {
 
     enum class SubmissionListFilter {
@@ -76,7 +76,7 @@ class AssignmentSubmissionListPresenter(
             try {
                 viewCallback?.onRefreshStarted()
                 unfilteredSubmissions =
-                    assignmentSubmissionListRepository.getGradeableStudentSubmissions(
+                    assignmentSubmissionRepository.getGradeableStudentSubmissions(
                         assignment,
                         assignment.courseId,
                         forceNetwork
