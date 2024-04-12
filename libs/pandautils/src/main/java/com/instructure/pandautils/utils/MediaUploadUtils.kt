@@ -77,11 +77,12 @@ object MediaUploadUtils {
         return imageUri
     }
 
-    fun chooseFromGalleryBecausePermissionsAlreadyGranted(activity: Activity) {
+    fun chooseFromGalleryBecausePermissionsAlreadyGranted(fragment: Fragment?, activity: Activity) {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         val file = File(activity.filesDir, "/image/*")
         intent.setDataAndType(FileProvider.getUriForFile(activity, activity.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file), "image/*")
-        activity.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
+        fragment?.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
+            ?: activity.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
     }
 
     fun showPickImageDialog(fragment: Fragment) {
@@ -96,7 +97,7 @@ object MediaUploadUtils {
                 newPhoto(fragment, activity)
             },
             onChooseFromGalleryClick = {
-                chooseFromGallery(activity)
+                chooseFromGallery(fragment, activity)
             }
         )
     }
@@ -171,9 +172,9 @@ object MediaUploadUtils {
     }
 
     const val REQUEST_CODE_PERMISSIONS_GALLERY = 332
-    private fun chooseFromGallery(activity: Activity) {
+    private fun chooseFromGallery(fragment: Fragment?, activity: Activity) {
         checkGalleryPermissions(activity) {
-            chooseFromGalleryBecausePermissionsAlreadyGranted(activity)
+            chooseFromGalleryBecausePermissionsAlreadyGranted(fragment, activity)
         }
     }
 

@@ -172,7 +172,7 @@ class ProfileEditFragment : BasePresenterFragment<
             }
         } else if (requestCode == MediaUploadUtils.REQUEST_CODE_PERMISSIONS_GALLERY) {
             if (PermissionUtils.allPermissionsGrantedResultSummary(grantResults)) {
-                chooseFromGalleryBecausePermissionsAlreadyGranted(requireActivity())
+                chooseFromGalleryBecausePermissionsAlreadyGranted(this, requireActivity())
             } else {
                 Toast.makeText(requireActivity(), R.string.permissionDenied, Toast.LENGTH_LONG).show()
             }
