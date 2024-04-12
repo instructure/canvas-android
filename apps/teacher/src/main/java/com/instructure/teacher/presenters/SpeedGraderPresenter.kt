@@ -17,13 +17,29 @@
 package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitApis
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.events.SubmissionUpdatedEvent
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
+import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.instructure.teacher.viewinterface.SpeedGraderView
@@ -40,7 +56,7 @@ class SpeedGraderPresenter(
     private var submissionId: Long,
     private var discussion: DiscussionTopicHeader?,
     private val repository: AssignmentSubmissionRepository,
-    private val filter: AssignmentSubmissionListPresenter.SubmissionListFilter,
+    private val filter: SubmissionListFilter,
     private val filterValue: Double
 ) : Presenter<SpeedGraderView> {
 
@@ -112,18 +128,16 @@ class SpeedGraderPresenter(
             }
             submissions = allSubmissions.filter {
                 when (filter) {
-                    AssignmentSubmissionListPresenter.SubmissionListFilter.ALL -> true
-                    AssignmentSubmissionListPresenter.SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(
+                    SubmissionListFilter.ALL -> true
+                    SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
-                    AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
+                    SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
-                    AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
+                    SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
                         AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING)  && it.isGradeMatchesCurrentSubmission} ?: false
-                    AssignmentSubmissionListPresenter.SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
-                    AssignmentSubmissionListPresenter.SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
-                    // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
-                    // which students haven't submitted yet
-                    AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
+                    SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
+                    SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
+                    SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
                 }
             }
 

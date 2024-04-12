@@ -41,16 +41,6 @@ class AssignmentSubmissionListPresenter(
     private val assignmentSubmissionRepository: AssignmentSubmissionRepository
 ) : SyncPresenter<GradeableStudentSubmission, AssignmentSubmissionListView>(GradeableStudentSubmission::class.java) {
 
-    enum class SubmissionListFilter {
-        ALL,
-        LATE,
-        MISSING,
-        NOT_GRADED,
-        GRADED,
-        BELOW_VALUE,
-        ABOVE_VALUE
-    }
-
     private var apiCalls: Job? = null
 
     private var unfilteredSubmissions: List<GradeableStudentSubmission> = emptyList()

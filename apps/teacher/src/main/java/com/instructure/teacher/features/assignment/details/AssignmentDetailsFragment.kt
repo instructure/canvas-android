@@ -64,6 +64,7 @@ import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.fragments.LtiLaunchFragment
@@ -393,17 +394,17 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
 
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
+            navigateToSubmissions(course, assignment, SubmissionListFilter.ALL)
         }
         donutGroup.viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
         donutGroup.gradedWrapper.setOnClickListener {
-            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
+            navigateToSubmissions(course, assignment, SubmissionListFilter.GRADED)
         }
         donutGroup.ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
+            navigateToSubmissions(course, assignment, SubmissionListFilter.NOT_GRADED)
         }
         donutGroup.notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(course, assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
+            navigateToSubmissions(course, assignment, SubmissionListFilter.MISSING)
         }
         noDescriptionTextView.setOnClickListener { openEditPage(assignment) }
 
@@ -428,7 +429,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun navigateToSubmissions(course: Course, assignment: Assignment, filter: AssignmentSubmissionListPresenter.SubmissionListFilter) {
+    private fun navigateToSubmissions(course: Course, assignment: Assignment, filter: SubmissionListFilter) {
         val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
         RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }

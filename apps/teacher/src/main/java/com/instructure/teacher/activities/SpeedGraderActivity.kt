@@ -59,6 +59,7 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
+import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryFragment
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryViewModel
@@ -97,11 +98,11 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
-    private val filter: AssignmentSubmissionListPresenter.SubmissionListFilter by lazy {
+    private val filter: SubmissionListFilter by lazy {
         intent.extras!!.getSerializable(
             FILTER
-        ) as? AssignmentSubmissionListPresenter.SubmissionListFilter
-            ?: AssignmentSubmissionListPresenter.SubmissionListFilter.ALL
+        ) as? SubmissionListFilter
+            ?: SubmissionListFilter.ALL
     }
     private val filterValue: Double by lazy { intent.extras!!.getDouble(FILTER_VALUE) }
 
@@ -386,7 +387,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             assignmentId: Long,
             selectedIdx: Int,
             anonymousGrading: Boolean? = null,
-            filter: AssignmentSubmissionListPresenter.SubmissionListFilter,
+            filter: SubmissionListFilter,
             filterValue: Double
         ): Bundle {
             return Bundle().apply {
