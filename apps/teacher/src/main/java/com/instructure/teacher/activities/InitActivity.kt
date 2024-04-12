@@ -348,7 +348,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         }
     }
 
-    fun attachNavigationDrawer(toolbar: Toolbar) = with(navigationDrawerBinding) {
+    fun attachToolbar(toolbar: Toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+        toolbar.setNavigationOnClickListener { openNavigationDrawer() }
+    }
+
+    fun attachNavigationDrawer() = with(navigationDrawerBinding) {
         // Navigation items
         navigationDrawerItemFiles.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemGauge.setOnClickListener(navDrawerOnClick)
@@ -365,10 +371,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         // App version
         navigationDrawerVersion.text = getString(R.string.version, BuildConfig.VERSION_NAME)
-
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-        toolbar.setNavigationOnClickListener { openNavigationDrawer() }
 
         setupUserDetails(ApiPrefs.user)
 

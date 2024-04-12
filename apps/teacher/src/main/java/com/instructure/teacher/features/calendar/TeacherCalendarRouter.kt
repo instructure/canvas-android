@@ -67,4 +67,8 @@ class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
         val route = CreateUpdateEventFragment.makeRoute(initialDateString)
         RouteMatcher.route(activity, route)
     }
+
+    override fun attachNavigationDrawer() {
+        (activity as? InitActivity)?.attachNavigationDrawer()
+    }
 }

@@ -72,4 +72,8 @@ class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRo
         val route = CreateUpdateEventFragment.makeRoute(initialDateString)
         RouteMatcher.route(activity, route)
     }
+
+    override fun attachNavigationDrawer() {
+        // This is a no-op in the Student app, navigation drawer is already handled in the Activty
+    }
 }

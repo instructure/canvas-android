@@ -35,4 +35,6 @@ interface CalendarRouter {
     fun openCreateToDo(initialDateString: String?)
 
     fun openCreateEvent(initialDateString: String?)
+
+    fun attachNavigationDrawer()
 }

@@ -15,26 +15,34 @@
  */
 package com.instructure.pandautils.features.calendar.filter
 
+import androidx.annotation.ColorInt
+
 data class CalendarFilterScreenUiState(
     val users: List<CalendarFilterItemUiState> = emptyList(),
     val courses: List<CalendarFilterItemUiState> = emptyList(),
     val groups: List<CalendarFilterItemUiState> = emptyList(),
     val error: Boolean = false,
     val loading: Boolean = false,
-    val calendarLimit : Int = -1,
+    val explanationMessage: String? = null,
     val snackbarMessage: String? = null
-)
+) {
+    val anyFiltersSelected: Boolean
+        get() = users.any { it.selected } || courses.any { it.selected } || groups.any { it.selected }
+}
 
 data class CalendarFilterItemUiState(
     val contextId: String,
     val name: String,
-    val selected: Boolean
+    val selected: Boolean,
+    @ColorInt val color: Int
 )
 
 sealed class CalendarFilterAction {
     data class ToggleFilter(val contextId: String) : CalendarFilterAction()
     data object Retry : CalendarFilterAction()
     data object SnackbarDismissed : CalendarFilterAction()
+    data object SelectAll : CalendarFilterAction()
+    data object DeselectAll : CalendarFilterAction()
 }
 
 sealed class CalendarFilterViewModelAction {

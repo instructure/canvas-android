@@ -166,7 +166,8 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
 
         val activity = requireActivity()
         if (activity is InitActivity) {
-            activity.attachNavigationDrawer(toolbar)
+            activity.attachNavigationDrawer()
+            activity.attachToolbar(toolbar)
         } else {
             toolbar.setupAsBackButton(this@DashboardFragment)
         }

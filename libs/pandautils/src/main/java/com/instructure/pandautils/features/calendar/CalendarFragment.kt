@@ -64,6 +64,7 @@ class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedViewModel.events, ::handleSharedViewModelAction)
 
@@ -120,6 +121,7 @@ class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
 
     override fun applyTheme() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+        calendarRouter.attachNavigationDrawer()
     }
 
     override fun getFragment(): Fragment? {
