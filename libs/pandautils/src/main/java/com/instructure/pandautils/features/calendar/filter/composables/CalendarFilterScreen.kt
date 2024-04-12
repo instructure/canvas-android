@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.calendar.filter.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
@@ -33,6 +35,7 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -58,7 +61,6 @@ import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenU
 import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.launch
 
-private const val USER_KEY = "user"
 private const val COURSES_KEY = "courses"
 private const val GROUPS_KEY = "groups"
 private const val EXPLANATION_KEY = "explanation"
@@ -90,17 +92,20 @@ fun CalendarFiltersScreen(
             topBar = {
                 CanvasAppBar(
                     title = stringResource(id = R.string.calendarFilterTitle),
-                    navigationActionClick = navigationActionClick
+                    navigationActionClick = navigationActionClick,
+                    actions = { FilterActions(anyFilterSelected = uiState.anyFiltersSelected, actionHandler = actionHandler) }
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
                 if (uiState.error) {
-                    ErrorContent(errorMessage = stringResource(id = R.string.calendarFiltersFailed), retryClick = {
-                        actionHandler(CalendarFilterAction.Retry)
-                    }, modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight())
+                    ErrorContent(
+                        errorMessage = stringResource(id = R.string.calendarFiltersFailed), retryClick = {
+                            actionHandler(CalendarFilterAction.Retry)
+                        }, modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                    )
                 } else if (uiState.loading) {
                     Loading(modifier = Modifier.fillMaxSize())
                 } else {
@@ -124,32 +129,24 @@ private fun CalendarFiltersContent(
     LazyColumn(
         modifier = modifier
     ) {
-        item(key = EXPLANATION_KEY, contentType = EXPLANATION_CONTENT_TYPE) {
-            Spacer(modifier = Modifier.height(24.dp))
-            val explanationText = if (uiState.calendarLimit != -1) {
-                stringResource(id = R.string.calendarFilterExplanationLimited, uiState.calendarLimit)
-            } else {
-                stringResource(id = R.string.calendarFilterExplanation)
+        if (uiState.explanationMessage != null) {
+            item(key = EXPLANATION_KEY, contentType = EXPLANATION_CONTENT_TYPE) {
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = uiState.explanationMessage,
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.textDarkest),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+                Spacer(modifier = Modifier.height(24.dp))
             }
-            Text(
-                text = explanationText,
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.textDarkest),
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            Spacer(modifier = Modifier.height(24.dp))
         }
-        if (uiState.users.isNotEmpty()) {
-            item(key = USER_KEY, contentType = HEADER_CONTENT_TYPE) {
-                HeaderItem(text = stringResource(id = R.string.calendarFilterUser), modifier = Modifier.padding(bottom = 8.dp))
-            }
-            items(uiState.users, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { user ->
-                CalendarFilterItem(user, actionHandler, Modifier.fillMaxWidth())
-            }
+        items(uiState.users, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { user ->
+            CalendarFilterItem(user, actionHandler, Modifier.fillMaxWidth())
         }
         if (uiState.courses.isNotEmpty()) {
             item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
-                HeaderItem(text = stringResource(id = R.string.calendarFilterCourse), modifier = Modifier.padding(vertical = 8.dp))
+                HeaderItem(text = stringResource(id = R.string.calendarFilterCourse))
             }
             items(uiState.courses, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
                 CalendarFilterItem(course, actionHandler, Modifier.fillMaxWidth())
@@ -157,7 +154,7 @@ private fun CalendarFiltersContent(
         }
         if (uiState.groups.isNotEmpty()) {
             item(key = GROUPS_KEY, contentType = HEADER_CONTENT_TYPE) {
-                HeaderItem(text = stringResource(id = R.string.calendarFilterGroup), modifier = Modifier.padding(vertical = 8.dp))
+                HeaderItem(text = stringResource(id = R.string.calendarFilterGroup))
             }
             items(uiState.groups, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { group ->
                 CalendarFilterItem(group, actionHandler, Modifier.fillMaxWidth())
@@ -167,7 +164,11 @@ private fun CalendarFiltersContent(
 }
 
 @Composable
-private fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler: (CalendarFilterAction) -> Unit, modifier: Modifier = Modifier) {
+private fun CalendarFilterItem(
+    uiState: CalendarFilterItemUiState,
+    actionHandler: (CalendarFilterAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = 54.dp)
@@ -180,8 +181,8 @@ private fun CalendarFilterItem(uiState: CalendarFilterItemUiState, actionHandler
             checked = uiState.selected, onCheckedChange = {
                 actionHandler(CalendarFilterAction.ToggleFilter(uiState.contextId))
             }, colors = CheckboxDefaults.colors(
-                checkedColor = Color(ThemePrefs.brandColor),
-                uncheckedColor = colorResource(id = R.color.textDarkest),
+                checkedColor = Color(uiState.color),
+                uncheckedColor = Color(uiState.color),
                 checkmarkColor = colorResource(id = R.color.white)
             )
         )
@@ -195,8 +196,35 @@ private fun HeaderItem(text: String, modifier: Modifier = Modifier) {
         text,
         fontSize = 14.sp,
         color = colorResource(id = R.color.textDark),
-        modifier = modifier.padding(horizontal = 16.dp)
+        modifier = modifier
+            .fillMaxWidth()
+            .height(54.dp)
+            .background(colorResource(id = R.color.backgroundLight))
+            .padding(horizontal = 16.dp)
+            .wrapContentHeight(align = Alignment.CenterVertically)
     )
+}
+
+@Composable
+private fun FilterActions(
+    anyFilterSelected: Boolean,
+    actionHandler: (CalendarFilterAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    TextButton(
+        onClick = {
+            val action = if (anyFilterSelected) CalendarFilterAction.DeselectAll else CalendarFilterAction.SelectAll
+            actionHandler(action)
+        },
+        modifier = modifier
+    ) {
+        val resourceId = if (anyFilterSelected) R.string.calendarFiltersDeselectAll else R.string.calendarFiltersSelectAll
+        Text(
+            text = stringResource(id = resourceId),
+            color = Color(color = ThemePrefs.textButtonColor),
+            fontSize = 14.sp,
+        )
+    }
 }
 
 @Preview
@@ -205,13 +233,13 @@ fun CalendarFiltersPreview() {
     ContextKeeper.appContext = LocalContext.current
     val uiState = CalendarFilterScreenUiState(
         users = listOf(
-            CalendarFilterItemUiState("user_1", "User 1", true),
+            CalendarFilterItemUiState("user_1", "User 1", true, android.graphics.Color.BLUE),
         ), courses = listOf(
-            CalendarFilterItemUiState("course_1", "Course 1", true),
-            CalendarFilterItemUiState("course_2", "Course 2", false),
+            CalendarFilterItemUiState("course_1", "Course 1", true, android.graphics.Color.BLUE),
+            CalendarFilterItemUiState("course_2", "Course 2", false, android.graphics.Color.BLUE),
         ), groups = listOf(
-            CalendarFilterItemUiState("group_1", "Group 1", false),
-            CalendarFilterItemUiState("group_2", "Group 2", true),
+            CalendarFilterItemUiState("group_1", "Group 1", false, android.graphics.Color.BLUE),
+            CalendarFilterItemUiState("group_2", "Group 2", true, android.graphics.Color.BLUE),
         )
     )
     CalendarFiltersScreen(uiState, {}, {})

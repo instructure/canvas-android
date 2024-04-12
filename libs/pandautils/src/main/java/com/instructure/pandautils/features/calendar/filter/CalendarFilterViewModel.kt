@@ -25,6 +25,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -81,16 +83,18 @@ class CalendarFilterViewModel @Inject constructor(
     }
 
     private fun createNewUiState(error: Boolean = false, loading: Boolean = false, snackbarMessage: String? = null): CalendarFilterScreenUiState {
+        val explanationMessage = if (filterLimit != -1) resources.getString(R.string.calendarFilterExplanationLimited, filterLimit) else null
         return CalendarFilterScreenUiState(
             createFilterItemsUiState(CanvasContext.Type.USER),
             createFilterItemsUiState(CanvasContext.Type.COURSE),
             createFilterItemsUiState(CanvasContext.Type.GROUP),
-            error, loading, filterLimit, snackbarMessage
+            error, loading, explanationMessage, snackbarMessage
         )
     }
 
     private fun createFilterItemsUiState(type: CanvasContext.Type) = canvasContexts[type]?.map {
-        CalendarFilterItemUiState(it.contextId, it.name.orEmpty(), contextIdFilters.contains(it.contextId))
+        val color = if (type == CanvasContext.Type.USER) ThemePrefs.brandColor else it.backgroundColor
+        CalendarFilterItemUiState(it.contextId, it.name.orEmpty(), contextIdFilters.contains(it.contextId), color)
     } ?: emptyList()
 
     fun handleAction(calendarFilterAction: CalendarFilterAction) {
@@ -98,6 +102,8 @@ class CalendarFilterViewModel @Inject constructor(
             is CalendarFilterAction.ToggleFilter -> toggleFilter(calendarFilterAction.contextId)
             CalendarFilterAction.Retry -> loadFilters()
             CalendarFilterAction.SnackbarDismissed -> _uiState.value = _uiState.value.copy(snackbarMessage = null)
+            CalendarFilterAction.DeselectAll -> deselectAll()
+            CalendarFilterAction.SelectAll -> selectAll()
         }
     }
 
@@ -124,6 +130,36 @@ class CalendarFilterViewModel @Inject constructor(
     fun filtersClosed() {
         viewModelScope.launch {
             _events.send(CalendarFilterViewModelAction.FiltersClosed(initialFilters != contextIdFilters))
+        }
+    }
+
+    private fun deselectAll() {
+        contextIdFilters.clear()
+        viewModelScope.launch {
+            filterEntityForCurrentUser?.let {
+                val newFilter = it.copy(filters = contextIdFilters)
+                calendarFilterDao.insertOrUpdate(newFilter)
+            }
+            _uiState.emit(createNewUiState())
+        }
+    }
+
+    private fun selectAll() {
+        var snackbarMessage: String? = null
+        canvasContexts.flatMap { it.value }.forEach {
+            if (filterLimit == -1 || contextIdFilters.size < filterLimit) {
+                contextIdFilters.add(it.contextId)
+            } else {
+                snackbarMessage = resources.getString(R.string.calendarFilterLimitSnackbar, filterLimit)
+                return@forEach
+            }
+        }
+        viewModelScope.launch {
+            filterEntityForCurrentUser?.let {
+                val newFilter = it.copy(filters = contextIdFilters)
+                calendarFilterDao.insertOrUpdate(newFilter)
+            }
+            _uiState.emit(createNewUiState(snackbarMessage = snackbarMessage))
         }
     }
 }
