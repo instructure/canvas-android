@@ -55,7 +55,8 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
 
     override fun attachNavigationIcon(toolbar: Toolbar) {
         if (activity is InitActivity) {
-            activity.attachNavigationDrawer(toolbar)
+            activity.attachNavigationDrawer()
+            activity.attachToolbar(toolbar)
         } else {
             toolbar.setupBackButtonAsBackPressedOnly(fragment)
         }
