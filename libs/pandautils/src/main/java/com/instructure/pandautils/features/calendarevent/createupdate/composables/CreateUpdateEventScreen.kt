@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
@@ -81,6 +82,7 @@ import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
+import org.threeten.bp.format.DateTimeFormatter
 
 
 @Composable
@@ -372,9 +374,10 @@ private fun CreateUpdateEventContent(
                     datePickerDialog.show()
                 }
             )
+            val preferredTimePattern = DateHelper.getPreferredTimeFormat(context).toPattern()
             LabelValueRow(
                 label = stringResource(id = R.string.createEventStartTimeLabel),
-                value = uiState.startTime?.let { uiState.formattedTime(context, it) }
+                value = uiState.startTime?.format(DateTimeFormatter.ofPattern(preferredTimePattern))
                     ?: stringResource(id = R.string.createEventStartTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
@@ -383,7 +386,7 @@ private fun CreateUpdateEventContent(
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createEventEndTimeLabel),
-                value = uiState.endTime?.let { uiState.formattedTime(context, it) }
+                value = uiState.endTime?.format(DateTimeFormatter.ofPattern(preferredTimePattern))
                     ?: stringResource(id = R.string.createEventEndTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()

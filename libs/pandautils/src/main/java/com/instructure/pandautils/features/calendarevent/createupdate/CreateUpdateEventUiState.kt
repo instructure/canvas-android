@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.features.calendarevent.createupdate
 
-import android.content.Context
 import com.google.ical.values.RRule
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.CanvasContext
@@ -48,10 +47,6 @@ data class CreateUpdateEventUiState(
     val isSeriesHead: Boolean = false
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
-
-    fun formattedTime(context: Context, time: LocalTime) = time.format(
-        DateTimeFormatter.ofPattern(DateHelper.getPreferredTimeFormat(context).toPattern())
-    ).orEmpty()
 }
 
 data class SelectFrequencyUiState(

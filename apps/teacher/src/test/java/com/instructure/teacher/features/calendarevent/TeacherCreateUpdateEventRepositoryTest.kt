@@ -51,7 +51,16 @@ class TeacherCreateUpdateEventRepositoryTest {
 
     @Test
     fun `Get contexts adds user context and returns it with courses when course request is successful`() = runTest {
-        val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
+        val courses = listOf(
+            Course(
+                44,
+                enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE, type = Enrollment.EnrollmentType.Teacher))
+            ),
+            Course(
+                55,
+                enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE, type = Enrollment.EnrollmentType.Student))
+            )
+        )
         coEvery { coursesApi.getFirstPageCoursesTeacher(any()) } returns DataResult.Success(courses)
         coEvery { apiPrefs.user } returns User(1, "Test User")
 

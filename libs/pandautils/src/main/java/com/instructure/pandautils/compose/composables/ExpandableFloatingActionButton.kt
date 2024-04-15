@@ -60,6 +60,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 
+private const val ANIMATION_DURATION = 400
 
 @Composable
 fun ExpandableFloatingActionButton(
@@ -81,11 +82,11 @@ fun ExpandableFloatingActionButton(
             visible = expanded.value,
             enter = slideInVertically(
                 initialOffsetY = { fullHeight -> fullHeight },
-                animationSpec = TweenSpec(400)
+                animationSpec = TweenSpec(ANIMATION_DURATION)
             ),
             exit = slideOutVertically(
                 targetOffsetY = { fullHeight -> fullHeight },
-                animationSpec = TweenSpec(400)
+                animationSpec = TweenSpec(ANIMATION_DURATION)
             ),
             modifier = Modifier
                 .padding(top = 16.dp)

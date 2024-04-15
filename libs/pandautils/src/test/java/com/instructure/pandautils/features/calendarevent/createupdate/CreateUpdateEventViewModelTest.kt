@@ -46,6 +46,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.Clock
+import org.threeten.bp.DayOfWeek
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -223,7 +224,7 @@ class CreateUpdateEventViewModelTest {
                 "Updated",
                 "2024-04-11T11:00:00Z",
                 "2024-04-11",
-                null,
+                "",
                 "user_1",
                 "",
                 "",
@@ -369,6 +370,171 @@ class CreateUpdateEventViewModelTest {
         Assert.assertEquals(CreateUpdateEventViewModelAction.NavigateBack, events.last())
     }
 
+    @Test
+    fun `Frequency updates correctly - Does not repeat`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateFrequency("Does Not Repeat"))
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.createEvent(
+                any(),
+                any(),
+                any(),
+                "",
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `Frequency updates correctly - Daily`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateFrequency("Daily"))
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.createEvent(
+                any(),
+                any(),
+                any(),
+                "FREQ=DAILY;COUNT=365;INTERVAL=1",
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `Frequency updates correctly - Weekly`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateFrequency("Weekly on Wednesday"))
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.createEvent(
+                any(),
+                any(),
+                any(),
+                "FREQ=WEEKLY;COUNT=52;INTERVAL=1;BYDAY=WE",
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `Frequency updates correctly - Monthly`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateFrequency("Monthly on the Second Wednesday"))
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.createEvent(
+                any(),
+                any(),
+                any(),
+                "FREQ=MONTHLY;COUNT=12;INTERVAL=1;BYDAY=WE;BYSETPOS=2",
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `Frequency updates correctly - Annually`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateFrequency("Annually on Apr 10"))
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.createEvent(
+                any(),
+                any(),
+                any(),
+                "FREQ=YEARLY;COUNT=5;INTERVAL=1;BYMONTH=4;BYMONTHDAY=10",
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `Frequency updates correctly - Weekdays`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateFrequency("Every Weekday (Monday to Friday)"))
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.createEvent(
+                any(),
+                any(),
+                any(),
+                "FREQ=WEEKLY;COUNT=260;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR",
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `Frequency updates correctly - Custom`() = runTest {
+        every { savedStateHandle.get<String>(CreateUpdateEventFragment.INITIAL_DATE) } returns "2024-04-10"
+
+        createViewModel()
+
+        viewModel.handleAction(CreateUpdateEventAction.UpdateCustomFrequencyQuantity(2))
+        viewModel.handleAction(CreateUpdateEventAction.UpdateCustomFrequencySelectedTimeUnitIndex(1))
+        viewModel.handleAction(CreateUpdateEventAction.UpdateCustomFrequencySelectedDays(setOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY)))
+        viewModel.handleAction(CreateUpdateEventAction.UpdateCustomFrequencyOccurrences(15))
+        viewModel.handleAction(CreateUpdateEventAction.SaveCustomFrequency)
+        viewModel.handleAction(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify(exactly = 1) {
+            repository.createEvent(
+                any(),
+                any(),
+                any(),
+                "FREQ=WEEKLY;COUNT=15;INTERVAL=2;BYDAY=MO,TU",
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
     private fun createViewModel() {
         viewModel = CreateUpdateEventViewModel(savedStateHandle, resources, repository, apiPrefs)
     }
@@ -387,7 +553,7 @@ class CreateUpdateEventViewModelTest {
         }
         every { resources.getString(R.string.eventFrequencyMonthly, any(), any()) } answers {
             val args = secondArg<Array<Any>>()
-            "Monthly on ${args[0]} ${args[1]}"
+            "Monthly on the ${args[0]} ${args[1]}"
         }
         every { resources.getString(R.string.eventFrequencyAnnually, any()) } answers {
             val args = secondArg<Array<Any>>()

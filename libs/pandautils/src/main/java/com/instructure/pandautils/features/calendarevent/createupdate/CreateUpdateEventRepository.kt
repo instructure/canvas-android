@@ -32,22 +32,26 @@ abstract class CreateUpdateEventRepository(
         title: String,
         startDate: String,
         endDate: String,
-        rrule: String?,
+        rrule: String,
         contextCode: String,
         locationName: String,
         locationAddress: String,
         description: String
     ): List<ScheduleItem> {
         val result = calendarEventApi.createCalendarEvent(
-            contextCode = contextCode,
-            title = title,
-            description = description,
-            startDate = startDate,
-            endDate = endDate,
-            allDay = startDate == endDate,
-            rrule = rrule,
-            locationName = locationName,
-            locationAddress = locationAddress,
+            body = ScheduleItem.CalendarEventWrapper(
+                ScheduleItem(
+                    contextCode = contextCode,
+                    title = title,
+                    description = description,
+                    startAt = startDate,
+                    endAt = endDate,
+                    isAllDay = startDate == endDate,
+                    rrule = rrule,
+                    locationName = locationName,
+                    locationAddress = locationAddress,
+                )
+            ),
             restParams = RestParams()
         ).dataOrThrow
 
@@ -59,41 +63,49 @@ abstract class CreateUpdateEventRepository(
         title: String,
         startDate: String,
         endDate: String,
-        rrule: String?,
+        rrule: String,
         contextCode: String,
         locationName: String,
         locationAddress: String,
         description: String,
         modifyEventScope: CalendarEventAPI.ModifyEventScope
     ): List<ScheduleItem> {
-        if (modifyEventScope == CalendarEventAPI.ModifyEventScope.ONE) {
+        if (modifyEventScope == CalendarEventAPI.ModifyEventScope.ONE && rrule.isEmpty()) {
             val result = calendarEventApi.updateCalendarEvent(
                 eventId = eventId,
-                contextCode = contextCode,
-                title = title,
-                description = description,
-                startDate = startDate,
-                endDate = endDate,
-                allDay = startDate == endDate,
-                rrule = rrule,
-                locationName = locationName,
-                locationAddress = locationAddress,
+                body = ScheduleItem.CalendarEventWrapper(
+                    ScheduleItem(
+                        contextCode = contextCode,
+                        title = title,
+                        description = description,
+                        startAt = startDate,
+                        endAt = endDate,
+                        isAllDay = startDate == endDate,
+                        rrule = rrule,
+                        locationName = locationName,
+                        locationAddress = locationAddress,
+                    )
+                ),
                 restParams = RestParams()
             ).dataOrThrow
             return listOf(result)
         } else {
             return calendarEventApi.updateRecurringCalendarEvent(
                 eventId = eventId,
-                contextCode = contextCode,
-                title = title,
-                description = description,
-                startDate = startDate,
-                endDate = endDate,
-                allDay = startDate == endDate,
-                rrule = rrule,
-                locationName = locationName,
-                locationAddress = locationAddress,
                 modifyEventScope = modifyEventScope.apiName,
+                body = ScheduleItem.CalendarEventWrapper(
+                    ScheduleItem(
+                        contextCode = contextCode,
+                        title = title,
+                        description = description,
+                        startAt = startDate,
+                        endAt = endDate,
+                        isAllDay = startDate == endDate,
+                        rrule = rrule,
+                        locationName = locationName,
+                        locationAddress = locationAddress,
+                    )
+                ),
                 restParams = RestParams()
             ).dataOrThrow
         }

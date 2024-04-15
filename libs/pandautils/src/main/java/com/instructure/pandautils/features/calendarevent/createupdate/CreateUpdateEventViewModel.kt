@@ -464,7 +464,7 @@ class CreateUpdateEventViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val startDate = startTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
             val endDate = endTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
-            val rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString()
+            val rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString().orEmpty()
             val contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty()
 
             val result = scheduleItem?.let {
@@ -496,7 +496,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             _uiState.update { it.copy(saving = false, canNavigateBack = true) }
-            if (rrule != null) {
+            if (rrule.isNotEmpty() || !scheduleItem?.rrule.isNullOrEmpty()) {
                 _events.send(CreateUpdateEventViewModelAction.RefreshCalendar)
             } else {
                 val daysToRefresh = listOfNotNull(scheduleItem?.startDate?.toLocalDate()) + result.mapNotNull { it.startDate?.toLocalDate() }

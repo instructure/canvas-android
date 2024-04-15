@@ -38,28 +38,19 @@ class CreateUpdateEventRepositoryTest {
         coEvery {
             calendarEventApi.createCalendarEvent(
                 any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
                 any()
             )
         } returns DataResult.Fail()
 
         repository.createEvent(
-            "title",
-            "description",
-            "location",
-            "startDate",
-            "endDate",
-            "startTime",
-            "endTime",
-            "contextId"
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description"
         )
     }
 
@@ -70,28 +61,19 @@ class CreateUpdateEventRepositoryTest {
         coEvery {
             calendarEventApi.createCalendarEvent(
                 any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
                 any()
             )
         } returns DataResult.Success(event)
 
         val result = repository.createEvent(
-            "title",
-            "description",
-            "location",
-            "startDate",
-            "endDate",
-            "startTime",
-            "endTime",
-            "contextId"
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description"
         )
 
         Assert.assertEquals(listOf(event), result)
@@ -113,28 +95,19 @@ class CreateUpdateEventRepositoryTest {
         coEvery {
             calendarEventApi.createCalendarEvent(
                 any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
                 any()
             )
         } returns DataResult.Success(event)
 
         val result = repository.createEvent(
-            "title",
-            "description",
-            "location",
-            "startDate",
-            "endDate",
-            "startTime",
-            "endTime",
-            "contextId"
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description"
         )
 
         Assert.assertEquals(listOf(event, event2, event3, event4), result)
@@ -146,30 +119,21 @@ class CreateUpdateEventRepositoryTest {
             calendarEventApi.updateCalendarEvent(
                 any(),
                 any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
                 any()
             )
         } returns DataResult.Fail()
 
         repository.updateEvent(
-            1L,
-            "title",
-            "description",
-            "location",
-            "startDate",
-            "endDate",
-            "startTime",
-            "endTime",
-            "contextId",
-            CalendarEventAPI.ModifyEventScope.ONE
+            eventId = 1L,
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description",
+            modifyEventScope = CalendarEventAPI.ModifyEventScope.ONE
         )
     }
 
@@ -181,33 +145,78 @@ class CreateUpdateEventRepositoryTest {
             calendarEventApi.updateCalendarEvent(
                 any(),
                 any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
                 any()
             )
         } returns DataResult.Success(event)
 
         val result = repository.updateEvent(
             1L,
-            "title",
-            "description",
-            "location",
-            "startDate",
-            "endDate",
-            "startTime",
-            "endTime",
-            "contextId",
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description",
             CalendarEventAPI.ModifyEventScope.ONE
         )
 
         Assert.assertEquals(listOf(event), result)
+    }
+
+    @Test
+    fun `Update single calendar event calls recurring endpoint if has rrule`() = runTest {
+        val events = listOf(ScheduleItem("itemId"))
+
+        coEvery {
+            calendarEventApi.updateRecurringCalendarEvent(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(events)
+
+        val result = repository.updateEvent(
+            1L,
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "rrule",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description",
+            CalendarEventAPI.ModifyEventScope.ONE
+        )
+
+        Assert.assertEquals(events, result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `Throw exception when update recurring calendar event fails`() = runTest {
+        coEvery {
+            calendarEventApi.updateRecurringCalendarEvent(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Fail()
+
+        repository.updateEvent(
+            eventId = 1L,
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "rrule",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description",
+            modifyEventScope = CalendarEventAPI.ModifyEventScope.ONE
+        )
     }
 
     @Test
@@ -219,29 +228,20 @@ class CreateUpdateEventRepositoryTest {
                 any(),
                 any(),
                 any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
                 any()
             )
         } returns DataResult.Success(event)
 
         val result = repository.updateEvent(
             1L,
-            "title",
-            "description",
-            "location",
-            "startDate",
-            "endDate",
-            "startTime",
-            "endTime",
-            "contextId",
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "rrule",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description",
             CalendarEventAPI.ModifyEventScope.ALL
         )
 
