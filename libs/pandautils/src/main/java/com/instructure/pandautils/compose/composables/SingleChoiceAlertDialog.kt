@@ -93,6 +93,16 @@ fun SingleChoiceAlertDialog(
                     modifier = Modifier.padding(end = 8.dp)
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
+                    TextButton(
+                        onClick = {
+                            onDismissRequest()
+                        }
+                    ) {
+                        Text(
+                            text = dismissButtonText,
+                            color = Color(ThemePrefs.textButtonColor)
+                        )
+                    }
                     if (confirmationButtonText != null) {
                         val confirmEnabled = selectedIndex.intValue != -1
                         TextButton(
@@ -107,16 +117,6 @@ fun SingleChoiceAlertDialog(
                                 modifier = Modifier.alpha(if (confirmEnabled) 1f else .4f)
                             )
                         }
-                    }
-                    TextButton(
-                        onClick = {
-                            onDismissRequest()
-                        }
-                    ) {
-                        Text(
-                            text = dismissButtonText,
-                            color = Color(ThemePrefs.textButtonColor)
-                        )
                     }
                 }
             }

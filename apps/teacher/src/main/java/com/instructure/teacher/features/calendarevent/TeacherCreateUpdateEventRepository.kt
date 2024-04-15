@@ -37,9 +37,12 @@ class TeacherCreateUpdateEventRepository(
 
         val coursesResult = coursesApi.getFirstPageCoursesTeacher(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
+            .dataOrNull
+            .orEmpty()
+            .filter { it.isTeacher }
 
         val users = listOfNotNull(apiPrefs.user)
 
-        return users + coursesResult.dataOrNull.orEmpty()
+        return users + coursesResult
     }
 }

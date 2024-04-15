@@ -130,7 +130,7 @@ data class ScheduleItem(
     val startDate: Date? get() = startAt?.toDate()
 
     @IgnoredOnParcel
-    val isRecurring: Boolean get() = rrule != null
+    val isRecurring: Boolean get() = !rrule.isNullOrEmpty()
 
     val contextId: Long
         get() {

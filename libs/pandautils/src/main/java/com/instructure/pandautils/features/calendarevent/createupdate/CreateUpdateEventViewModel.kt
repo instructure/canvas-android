@@ -90,11 +90,23 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
 
             is CreateUpdateEventAction.UpdateStartTime -> {
-                _uiState.update { it.copy(startTime = action.time) }
+                _uiState.update {
+                    if (it.endTime == null || action.time <= it.endTime) {
+                        it.copy(startTime = action.time)
+                    } else {
+                        it.copy(errorSnack = resources.getString(R.string.eventStartTimeError))
+                    }
+                }
             }
 
             is CreateUpdateEventAction.UpdateEndTime -> {
-                _uiState.update { it.copy(endTime = action.time) }
+                _uiState.update {
+                    if (it.startTime == null || action.time >= it.startTime) {
+                        it.copy(endTime = action.time)
+                    } else {
+                        it.copy(errorSnack = resources.getString(R.string.eventEndTimeError))
+                    }
+                }
             }
 
             is CreateUpdateEventAction.UpdateFrequency -> {
@@ -406,7 +418,7 @@ class CreateUpdateEventViewModel @Inject constructor(
         var selectedFrequency = resources.getString(R.string.eventFrequencyDoesNotRepeat)
 
         scheduleItem?.let { scheduleItem ->
-            if (scheduleItem.rrule != null) {
+            if (!scheduleItem.rrule.isNullOrEmpty()) {
                 frequencies.entries.find {
                     it.value?.toApiString() == scheduleItem.rrule
                 }?.let {
@@ -636,5 +648,9 @@ private fun RRule.toApiString(): String {
 }
 
 private fun ScheduleItem.getRRule(): RRule? {
-    return rrule?.let { RRule("RRULE:$it") }
+    return try {
+        RRule("RRULE:$rrule")
+    } catch (e: Exception) {
+        null
+    }
 }

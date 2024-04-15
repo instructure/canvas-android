@@ -352,7 +352,7 @@ private fun WeekDaySelector(
                 text = it.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
                 fontSize = 12.sp,
                 color = if (selected) {
-                    Color(ThemePrefs.primaryTextColor)
+                    Color(ThemePrefs.buttonTextColor)
                 } else {
                     colorResource(id = R.color.textDarkest)
                 },
@@ -362,7 +362,7 @@ private fun WeekDaySelector(
                     .clip(RoundedCornerShape(size = 40.dp))
                     .background(
                         color = if (selected) {
-                            Color(ThemePrefs.textButtonColor)
+                            Color(ThemePrefs.buttonColor)
                         } else {
                             Color.Transparent
                         },

@@ -1722,6 +1722,8 @@
     <string name="numberOfOccurrencesDialogDescription">How many times you would like to repeat?</string>
     <string name="numberOfOccurrencesDialogSupportingText">Max 400</string>
     <string name="eventUpdateRecurringTitle">Confirm Changes</string>
+    <string name="eventStartTimeError">Start time cannot be after end time.</string>
+    <string name="eventEndTimeError">End time cannot be before start time.</string>
     <string name="calendarFiltersSelectAll">Select all</string>
     <string name="calendarFiltersDeselectAll">Deselect all</string>
 </resources>
