@@ -174,6 +174,7 @@ object Libs {
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.6.4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
+    const val COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
 }
 
 object Plugins {

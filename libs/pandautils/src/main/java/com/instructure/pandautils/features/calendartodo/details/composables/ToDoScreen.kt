@@ -51,6 +51,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.calendartodo.details.ToDoAction
@@ -221,11 +222,9 @@ private fun ToDoContent(
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = toDoUiState.description,
+                ComposeCanvasWebViewWrapper(
+                    html = toDoUiState.description,
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
