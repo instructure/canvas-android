@@ -50,6 +50,12 @@ object EnrollmentAPI {
                 @Path("courseId") courseId: Long,
                 @Query("type[]") enrollmentType: String?): Call<List<Enrollment>>
 
+        @GET("courses/{courseId}/enrollments?include[]=avatar_url&state[]=active")
+        suspend fun getFirstPageEnrollmentsForCourse(
+            @Path("courseId") courseId: Long,
+            @Query("type[]") enrollmentType: String?,
+            @Tag restParams: RestParams): DataResult<List<Enrollment>>
+
         @GET("courses/{courseId}/enrollments?userId")
         fun getFirstPageEnrollmentsForUserInCourse(
                 @Path("courseId") courseId: Long,

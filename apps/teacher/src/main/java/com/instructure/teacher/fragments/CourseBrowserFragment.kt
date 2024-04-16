@@ -46,6 +46,7 @@ import com.instructure.teacher.adapters.CourseBrowserAdapter
 import com.instructure.teacher.databinding.FragmentCourseBrowserBinding
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CourseBrowserPresenterFactory
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.holders.CourseBrowserViewHolder
