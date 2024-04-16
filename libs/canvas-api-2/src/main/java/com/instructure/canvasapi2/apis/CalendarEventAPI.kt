@@ -94,7 +94,7 @@ object CalendarEventAPI {
 
         @POST("calendar_events/")
         suspend fun createCalendarEvent(
-            @Body body: ScheduleItem.CalendarEventWrapper,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
             @Tag restParams: RestParams
         ): DataResult<ScheduleItem>
 
@@ -102,14 +102,14 @@ object CalendarEventAPI {
         suspend fun updateRecurringCalendarEvent(
             @Path("eventId") eventId: Long,
             @Query(value = "which") modifyEventScope: String,
-            @Body body: ScheduleItem.CalendarEventWrapper,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
             @Tag restParams: RestParams
         ): DataResult<List<ScheduleItem>>
 
         @PUT("calendar_events/{eventId}")
         suspend fun updateCalendarEvent(
             @Path("eventId") eventId: Long,
-            @Body body: ScheduleItem.CalendarEventWrapper,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
             @Tag restParams: RestParams
         ): DataResult<ScheduleItem>
 

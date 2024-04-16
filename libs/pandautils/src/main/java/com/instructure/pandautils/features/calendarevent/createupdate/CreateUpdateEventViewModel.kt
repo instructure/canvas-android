@@ -50,6 +50,7 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.TemporalAdjusters
@@ -462,8 +463,8 @@ class CreateUpdateEventViewModel @Inject constructor(
     private fun save(modifyEventScope: CalendarEventAPI.ModifyEventScope) = with(uiState.value) {
         _uiState.update { it.copy(saving = true) }
         viewModelScope.tryLaunch {
-            val startDate = startTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
-            val endDate = endTime?.let { LocalDateTime.of(date, it).toApiString() } ?: date.toApiString().orEmpty()
+            val startDate = LocalDateTime.of(date, startTime ?: LocalTime.of(6, 0)).toApiString().orEmpty()
+            val endDate = LocalDateTime.of(date, endTime ?: LocalTime.of(6, 0)).toApiString().orEmpty()
             val rrule = selectFrequencyUiState.frequencies[selectFrequencyUiState.selectedFrequency]?.toApiString().orEmpty()
             val contextCode = selectCalendarUiState.selectedCanvasContext?.contextId.orEmpty()
 

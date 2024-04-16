@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
+import java.util.TimeZone
 
 
 abstract class CreateUpdateEventRepository(
@@ -39,8 +40,8 @@ abstract class CreateUpdateEventRepository(
         description: String
     ): List<ScheduleItem> {
         val result = calendarEventApi.createCalendarEvent(
-            body = ScheduleItem.CalendarEventWrapper(
-                ScheduleItem(
+            body = ScheduleItem.ScheduleItemParamsWrapper(
+                ScheduleItem.ScheduleItemParams(
                     contextCode = contextCode,
                     title = title,
                     description = description,
@@ -50,6 +51,7 @@ abstract class CreateUpdateEventRepository(
                     rrule = rrule,
                     locationName = locationName,
                     locationAddress = locationAddress,
+                    timeZoneEdited = TimeZone.getDefault().id
                 )
             ),
             restParams = RestParams()
@@ -73,8 +75,8 @@ abstract class CreateUpdateEventRepository(
         if (modifyEventScope == CalendarEventAPI.ModifyEventScope.ONE && rrule.isEmpty()) {
             val result = calendarEventApi.updateCalendarEvent(
                 eventId = eventId,
-                body = ScheduleItem.CalendarEventWrapper(
-                    ScheduleItem(
+                body = ScheduleItem.ScheduleItemParamsWrapper(
+                    ScheduleItem.ScheduleItemParams(
                         contextCode = contextCode,
                         title = title,
                         description = description,
@@ -84,6 +86,7 @@ abstract class CreateUpdateEventRepository(
                         rrule = rrule,
                         locationName = locationName,
                         locationAddress = locationAddress,
+                        timeZoneEdited = TimeZone.getDefault().id
                     )
                 ),
                 restParams = RestParams()
@@ -93,8 +96,8 @@ abstract class CreateUpdateEventRepository(
             return calendarEventApi.updateRecurringCalendarEvent(
                 eventId = eventId,
                 modifyEventScope = modifyEventScope.apiName,
-                body = ScheduleItem.CalendarEventWrapper(
-                    ScheduleItem(
+                body = ScheduleItem.ScheduleItemParamsWrapper(
+                    ScheduleItem.ScheduleItemParams(
                         contextCode = contextCode,
                         title = title,
                         description = description,
@@ -104,6 +107,7 @@ abstract class CreateUpdateEventRepository(
                         rrule = rrule,
                         locationName = locationName,
                         locationAddress = locationAddress,
+                        timeZoneEdited = TimeZone.getDefault().id
                     )
                 ),
                 restParams = RestParams()

@@ -232,6 +232,31 @@ data class ScheduleItem(
         val calendarEvent: ScheduleItem
     )
 
+    data class ScheduleItemParams(
+        @SerializedName("context_code")
+        val contextCode: String?,
+        val title: String?,
+        val description: String?,
+        @SerializedName("start_at")
+        val startAt: String?,
+        @SerializedName("end_at")
+        val endAt: String?,
+        @SerializedName("all_day")
+        val isAllDay: Boolean?,
+        val rrule: String?,
+        @SerializedName("location_name")
+        val locationName: String?,
+        @SerializedName("location_address")
+        val locationAddress: String?,
+        @SerializedName("time_zone_edited")
+        val timeZoneEdited: String?
+    )
+
+    data class ScheduleItemParamsWrapper(
+        @SerializedName("calendar_event")
+        val calendarEvent: ScheduleItemParams
+    )
+
     companion object {
         fun createSyllabus(title: String?, description: String?): ScheduleItem =
                 ScheduleItem(
