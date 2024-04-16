@@ -19,6 +19,7 @@ package com.instructure.teacher.di
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarRepository
@@ -49,9 +50,10 @@ class CalendarModule {
             plannerApi: PlannerAPI.PlannerInterface,
             coursesApi: CourseAPI.CoursesInterface,
             calendarEventsApi: CalendarEventAPI.CalendarEventInterface,
-            apiPrefs: ApiPrefs
+            apiPrefs: ApiPrefs,
+            featuresApi: FeaturesAPI.FeaturesInterface
         ): CalendarRepository {
-            return TeacherCalendarRepository(plannerApi, coursesApi, calendarEventsApi, apiPrefs)
+            return TeacherCalendarRepository(plannerApi, coursesApi, calendarEventsApi, apiPrefs, featuresApi)
         }
     }
 }

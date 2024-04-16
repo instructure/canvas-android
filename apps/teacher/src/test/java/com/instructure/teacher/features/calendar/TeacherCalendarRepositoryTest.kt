@@ -19,6 +19,7 @@ package com.instructure.teacher.features.calendar
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -49,8 +50,9 @@ class TeacherCalendarRepositoryTest {
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
-    private val calendarRepository: CalendarRepository = TeacherCalendarRepository(plannerApi, coursesApi, calendarEventApi, apiPrefs)
+    private val calendarRepository: CalendarRepository = TeacherCalendarRepository(plannerApi, coursesApi, calendarEventApi, apiPrefs, featuresApi)
 
     @Test(expected = Exception::class)
     fun `Throw exception when calendar event request fails`() = runTest {
@@ -153,5 +155,32 @@ class TeacherCalendarRepositoryTest {
         val coursesResult = canvasContextsResults.dataOrThrow[CanvasContext.Type.COURSE] ?: emptyList()
         assertEquals(1, coursesResult.size)
         assertEquals(courses[0].id, coursesResult[0].id)
+    }
+
+    @Test
+    fun `Return 20 for calendar filter limit when context limit is increased`() = runTest {
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(mapOf("calendar_contexts_limit" to true))
+
+        val result = calendarRepository.getCalendarFilterLimit()
+
+        assertEquals(20, result)
+    }
+
+    @Test
+    fun `Return 10 for calendar filter limit when context limit is not increased`() = runTest {
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(mapOf("calendar_contexts_limit" to false))
+
+        val result = calendarRepository.getCalendarFilterLimit()
+
+        assertEquals(10, result)
+    }
+
+    @Test
+    fun `Return 10 for calendar filter limit when features request fails`() = runTest {
+        coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Fail()
+
+        val result = calendarRepository.getCalendarFilterLimit()
+
+        assertEquals(10, result)
     }
 }
