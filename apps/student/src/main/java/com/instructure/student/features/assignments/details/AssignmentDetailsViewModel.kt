@@ -281,7 +281,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
 
         // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
-        val isMissing = assignment.submission?.missing.orDefault() || (assignment.turnInType != Assignment.TurnInType.EXTERNAL_TOOL
+        val isMissing = assignment.isMissing() || (assignment.turnInType != Assignment.TurnInType.EXTERNAL_TOOL
                 && assignment.dueAt != null
                 && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)
 
@@ -308,8 +308,11 @@ class AssignmentDetailsViewModel @Inject constructor(
         val submittedStatusIcon = if (assignment.isSubmitted) R.drawable.ic_complete_solid else R.drawable.ic_no
 
         // Submission Status under title - We only show Graded or nothing at all for PAPER/NONE
-        val submissionStatusVisible = assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED
-                || (assignment.turnInType != Assignment.TurnInType.ON_PAPER && assignment.turnInType != Assignment.TurnInType.NONE)
+        val submissionStatusVisible =
+            assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED
+                    || assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING
+                    || assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING
+                    || (assignment.turnInType != Assignment.TurnInType.ON_PAPER && assignment.turnInType != Assignment.TurnInType.NONE)
 
         if (assignment.isLocked) {
             val lockedMessage = if (assignment.lockInfo?.contextModule != null) {
