@@ -200,7 +200,8 @@ class CreateUpdateEventViewModelTest {
             itemId = "1",
             title = "Title",
             contextCode = "user_1",
-            startAt = LocalDateTime.now(clock).toApiString()
+            startAt = LocalDateTime.now(clock).toApiString(),
+            endAt = LocalDateTime.now(clock).toApiString()
         )
 
         every { savedStateHandle.get<ScheduleItem>(CreateUpdateEventFragment.SCHEDULE_ITEM) } returns event
@@ -223,7 +224,7 @@ class CreateUpdateEventViewModelTest {
                 1,
                 "Updated",
                 "2024-04-11T11:00:00Z",
-                "2024-04-11",
+                "2024-04-11T11:00:00Z",
                 "",
                 "user_1",
                 "",
