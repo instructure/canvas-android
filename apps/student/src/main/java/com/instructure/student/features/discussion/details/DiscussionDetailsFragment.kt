@@ -612,7 +612,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                             canvasContext,
                             discussionTopicHeader,
                             discussionTopic!!.views,
-                            discussionEntryId
+                            discussionEntryId,
+                            repository.isOnline()
                         )
 
                 loadDiscussionTopicViews(html)
