@@ -18,6 +18,7 @@ package com.instructure.teacher.features.calendar
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
@@ -39,7 +40,8 @@ class TeacherCalendarRepository(
     private val plannerApi: PlannerAPI.PlannerInterface,
     private val coursesApi: CourseAPI.CoursesInterface,
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val featuresApi: FeaturesAPI.FeaturesInterface
 ) : CalendarRepository {
 
     override suspend fun getPlannerItems(
@@ -105,7 +107,14 @@ class TeacherCalendarRepository(
     }
 
     override suspend fun getCalendarFilterLimit(): Int {
-        return 10
+        val result = featuresApi.getAccountSettingsFeatures(RestParams())
+        return if (result.isSuccess) {
+            val features = result.dataOrThrow
+            val increasedContextLimit = features["calendar_contexts_limit"]
+            if (increasedContextLimit == true) 20 else 10
+        } else {
+            10
+        }
     }
 }
 
