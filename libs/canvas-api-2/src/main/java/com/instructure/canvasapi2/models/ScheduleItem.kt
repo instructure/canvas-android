@@ -62,6 +62,13 @@ data class ScheduleItem(
         val type: String = "",
         @SerializedName("series_natural_language")
         val seriesNaturalLanguage: String? = null,
+        val rrule: String? = null,
+        @SerializedName("series_head")
+        val seriesHead: Boolean = false,
+        @IgnoredOnParcel
+        val duplicates: List<CalendarEventWrapper> = ArrayList(),
+        @SerializedName("workflow_state")
+        val workflowState: String? = null,
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
@@ -121,6 +128,9 @@ data class ScheduleItem(
 
     @IgnoredOnParcel
     val startDate: Date? get() = startAt?.toDate()
+
+    @IgnoredOnParcel
+    val isRecurring: Boolean get() = !rrule.isNullOrEmpty()
 
     val contextId: Long
         get() {
@@ -216,6 +226,36 @@ data class ScheduleItem(
             }
         }
     }
+
+    data class CalendarEventWrapper(
+        @SerializedName("calendar_event")
+        val calendarEvent: ScheduleItem
+    )
+
+    data class ScheduleItemParams(
+        @SerializedName("context_code")
+        val contextCode: String?,
+        val title: String?,
+        val description: String?,
+        @SerializedName("start_at")
+        val startAt: String?,
+        @SerializedName("end_at")
+        val endAt: String?,
+        @SerializedName("all_day")
+        val isAllDay: Boolean?,
+        val rrule: String?,
+        @SerializedName("location_name")
+        val locationName: String?,
+        @SerializedName("location_address")
+        val locationAddress: String?,
+        @SerializedName("time_zone_edited")
+        val timeZoneEdited: String?
+    )
+
+    data class ScheduleItemParamsWrapper(
+        @SerializedName("calendar_event")
+        val calendarEvent: ScheduleItemParams
+    )
 
     companion object {
         fun createSyllabus(title: String?, description: String?): ScheduleItem =

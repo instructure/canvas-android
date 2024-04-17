@@ -19,11 +19,14 @@ package com.instructure.teacher.features.calendarevent
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.teacher.router.RouteMatcher
 
 class TeacherEventRouter(private val activity: FragmentActivity) : EventRouter {
 
     override fun openEditEvent(scheduleItem: ScheduleItem) {
-
+        val route = CreateUpdateEventFragment.makeRoute(scheduleItem)
+        RouteMatcher.route(activity, route)
     }
 }

@@ -17,6 +17,8 @@
 package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.pandautils.features.calendarevent.details.EventRepository
 import dagger.Module
 import dagger.Provides
@@ -28,7 +30,11 @@ import dagger.hilt.android.components.ViewModelComponent
 class EventModule {
 
     @Provides
-    fun provideEventRepository(calendarEventApi: CalendarEventAPI.CalendarEventInterface): EventRepository {
-        return EventRepository(calendarEventApi)
+    fun provideEventRepository(
+        calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+        courseApi: CourseAPI.CoursesInterface,
+        groupApi: GroupAPI.GroupInterface
+    ): EventRepository {
+        return EventRepository(calendarEventApi, courseApi, groupApi)
     }
 }

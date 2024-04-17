@@ -20,6 +20,7 @@ package com.instructure.pandautils.features.calendartodo.createupdate
 import android.content.Context
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -32,7 +33,9 @@ data class CreateUpdateToDoUiState(
     val saving: Boolean = false,
     val errorSnack: String? = null,
     val loadingCanvasContexts: Boolean = false,
-    val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState()
+    val selectCalendarUiState: SelectCalendarUiState = SelectCalendarUiState(),
+    val showUnsavedChangesDialog: Boolean = false,
+    val canNavigateBack: Boolean = false
 ) {
     val formattedDate = date.format(DateTimeFormatter.ofPattern(DateHelper.dayMonthDateFormat.toPattern())).orEmpty()
 
@@ -40,12 +43,6 @@ data class CreateUpdateToDoUiState(
         DateTimeFormatter.ofPattern(DateHelper.getPreferredTimeFormat(context).toPattern())
     ).orEmpty()
 }
-
-data class SelectCalendarUiState(
-    val show: Boolean = false,
-    val selectedCanvasContext: CanvasContext? = null,
-    val canvasContexts: List<CanvasContext> = emptyList()
-)
 
 sealed class CreateUpdateToDoAction {
     data class UpdateTitle(val title: String) : CreateUpdateToDoAction()
@@ -57,9 +54,12 @@ sealed class CreateUpdateToDoAction {
     data object SnackbarDismissed : CreateUpdateToDoAction()
     data object ShowSelectCalendarScreen : CreateUpdateToDoAction()
     data object HideSelectCalendarScreen : CreateUpdateToDoAction()
-    data class CheckUnsavedChanges(val result: (Boolean) -> Unit) : CreateUpdateToDoAction()
+    data object CheckUnsavedChanges : CreateUpdateToDoAction()
+    data object HideUnsavedChangesDialog : CreateUpdateToDoAction()
+    data object NavigateBack : CreateUpdateToDoAction()
 }
 
 sealed class CreateUpdateToDoViewModelAction {
     data class RefreshCalendarDays(val days: List<LocalDate>) : CreateUpdateToDoViewModelAction()
+    data object NavigateBack : CreateUpdateToDoViewModelAction()
 }

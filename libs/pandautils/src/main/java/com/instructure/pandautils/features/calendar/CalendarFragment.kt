@@ -91,6 +91,7 @@ class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
                 val calendarFilterFragment = CalendarFilterFragment.newInstance()
                 calendarFilterFragment.show(requireActivity().supportFragmentManager, ContextFilterFragment::javaClass.name)
             }
+            is CalendarViewModelAction.OpenCreateEvent -> calendarRouter.openCreateEvent(action.initialDateString)
         }
     }
 
@@ -99,6 +100,8 @@ class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             is SharedCalendarAction.RefreshDays -> action.days.forEach {
                 viewModel.handleAction(CalendarAction.RefreshDay(it))
             }
+
+            is SharedCalendarAction.RefreshCalendar -> viewModel.handleAction(CalendarAction.RefreshCalendar)
 
             is SharedCalendarAction.FiltersClosed -> {
                 applyTheme()

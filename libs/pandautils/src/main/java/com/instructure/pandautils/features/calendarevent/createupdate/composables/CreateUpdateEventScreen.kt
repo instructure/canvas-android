@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.pandautils.features.calendartodo.createupdate.composables
+package com.instructure.pandautils.features.calendarevent.createupdate.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -42,9 +42,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
@@ -59,8 +60,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
@@ -68,41 +71,51 @@ import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.SelectCalendarScreen
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
-import com.instructure.pandautils.compose.composables.rce.ComposeRCE
+import com.instructure.pandautils.compose.composables.SingleChoiceAlertDialog
 import com.instructure.pandautils.compose.getDatePickerDialog
 import com.instructure.pandautils.compose.getTimePickerDialog
-import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoAction
-import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoUiState
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventAction
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
+import org.threeten.bp.format.DateTimeFormatter
 
-@ExperimentalFoundationApi
+
 @Composable
-internal fun CreateUpdateToDoScreenWrapper(
+internal fun CreateUpdateEventScreenWrapper(
     title: String,
-    uiState: CreateUpdateToDoUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
-        if (uiState.selectCalendarUiState.show) {
+        if (uiState.selectFrequencyUiState.customFrequencyUiState.show) {
+            CustomFrequencyScreen(
+                uiState = uiState.selectFrequencyUiState.customFrequencyUiState,
+                actionHandler = actionHandler,
+                navigationActionClick = {
+                    actionHandler(CreateUpdateEventAction.HideCustomFrequencyScreen)
+                },
+                modifier = modifier
+            )
+        } else if (uiState.selectCalendarUiState.show) {
             SelectCalendarScreen(
                 uiState = uiState.selectCalendarUiState,
                 onCalendarSelected = {
-                    actionHandler(CreateUpdateToDoAction.UpdateCanvasContext(it))
-                    actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
+                    actionHandler(CreateUpdateEventAction.UpdateCanvasContext(it))
+                    actionHandler(CreateUpdateEventAction.HideSelectCalendarScreen)
                 },
                 navigationActionClick = {
-                    actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
+                    actionHandler(CreateUpdateEventAction.HideSelectCalendarScreen)
                 },
                 modifier = modifier
             )
         } else {
-            CreateUpdateToDoScreen(
+            CreateUpdateEventScreen(
                 title = title,
                 uiState = uiState,
                 actionHandler = actionHandler,
@@ -113,10 +126,10 @@ internal fun CreateUpdateToDoScreenWrapper(
 }
 
 @Composable
-private fun CreateUpdateToDoScreen(
+internal fun CreateUpdateEventScreen(
     title: String,
-    uiState: CreateUpdateToDoUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -126,7 +139,7 @@ private fun CreateUpdateToDoScreen(
             localCoroutineScope.launch {
                 val result = snackbarHostState.showSnackbar(uiState.errorSnack)
                 if (result == SnackbarResult.Dismissed) {
-                    actionHandler(CreateUpdateToDoAction.SnackbarDismissed)
+                    actionHandler(CreateUpdateEventAction.SnackbarDismissed)
                 }
             }
         }
@@ -135,15 +148,15 @@ private fun CreateUpdateToDoScreen(
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
-            CreateUpdateToDoTopAppBar(
+            CreateUpdateEventTopAppBar(
                 title = title,
                 uiState = uiState,
-                actionHandler = actionHandler,
+                actionHandler = actionHandler
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         content = { padding ->
-            CreateUpdateToDoContent(
+            CreateUpdateEventContent(
                 uiState = uiState,
                 actionHandler = actionHandler,
                 modifier = Modifier
@@ -156,10 +169,10 @@ private fun CreateUpdateToDoScreen(
 }
 
 @Composable
-private fun CreateUpdateToDoTopAppBar(
+private fun CreateUpdateEventTopAppBar(
     title: String,
-    uiState: CreateUpdateToDoUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (uiState.showUnsavedChangesDialog) {
@@ -169,10 +182,10 @@ private fun CreateUpdateToDoTopAppBar(
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.exitUnsaved),
             onDismissRequest = {
-                actionHandler(CreateUpdateToDoAction.HideUnsavedChangesDialog)
+                actionHandler(CreateUpdateEventAction.HideUnsavedChangesDialog)
             },
             onConfirmation = {
-                actionHandler(CreateUpdateToDoAction.NavigateBack)
+                actionHandler(CreateUpdateEventAction.NavigateBack)
             }
         )
     }
@@ -194,7 +207,7 @@ private fun CreateUpdateToDoTopAppBar(
             }
         },
         navigationActionClick = {
-            actionHandler(CreateUpdateToDoAction.CheckUnsavedChanges)
+            actionHandler(CreateUpdateEventAction.CheckUnsavedChanges)
         },
         modifier = modifier
     )
@@ -202,16 +215,39 @@ private fun CreateUpdateToDoTopAppBar(
 
 @Composable
 private fun ActionsSegment(
-    uiState: CreateUpdateToDoUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val showModifyScopeDialog = remember { mutableStateOf(false) }
+    if (showModifyScopeDialog.value) {
+        SingleChoiceAlertDialog(
+            dialogTitle = stringResource(id = R.string.eventUpdateRecurringTitle),
+            items = CalendarEventAPI.ModifyEventScope.entries.take(if (uiState.isSeriesHead) 2 else 3).map {
+                stringResource(id = it.stringRes)
+            },
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.confirm),
+            onDismissRequest = {
+                showModifyScopeDialog.value = false
+            },
+            onConfirmation = {
+                showModifyScopeDialog.value = false
+                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.entries[it]))
+            }
+        )
+    }
+
     val saveEnabled = uiState.title.isNotEmpty()
     val focusManager = LocalFocusManager.current
     TextButton(
         onClick = {
             focusManager.clearFocus()
-            actionHandler(CreateUpdateToDoAction.Save)
+            if (uiState.isSeriesEvent) {
+                showModifyScopeDialog.value = true
+            } else {
+                actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
+            }
         },
         enabled = saveEnabled,
         modifier = modifier
@@ -226,9 +262,9 @@ private fun ActionsSegment(
 }
 
 @Composable
-private fun CreateUpdateToDoContent(
-    uiState: CreateUpdateToDoUiState,
-    actionHandler: (CreateUpdateToDoAction) -> Unit,
+private fun CreateUpdateEventContent(
+    uiState: CreateUpdateEventUiState,
+    actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -237,16 +273,45 @@ private fun CreateUpdateToDoContent(
             context = context,
             date = uiState.date,
             onDateSelected = {
-                actionHandler(CreateUpdateToDoAction.UpdateDate(it))
+                actionHandler(CreateUpdateEventAction.UpdateDate(it))
             }
         )
     }
-    val timePickerDialog = remember {
+    val startTimePickerDialog = remember {
         getTimePickerDialog(
             context = context,
-            time = uiState.time,
+            time = uiState.startTime ?: LocalTime.of(0, 0),
             onTimeSelected = {
-                actionHandler(CreateUpdateToDoAction.UpdateTime(it))
+                actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
+            }
+        )
+    }
+    val endTimePickerDialog = remember {
+        getTimePickerDialog(
+            context = context,
+            time = uiState.endTime ?: LocalTime.of(0, 0),
+            onTimeSelected = {
+                actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
+            }
+        )
+    }
+    if (uiState.selectFrequencyUiState.showFrequencyDialog) {
+        val frequencies = uiState.selectFrequencyUiState.frequencies.keys.toList()
+        SingleChoiceAlertDialog(
+            dialogTitle = stringResource(id = R.string.eventFrequencyDialogTitle),
+            items = frequencies,
+            defaultSelection = frequencies.indexOf(uiState.selectFrequencyUiState.selectedFrequency),
+            dismissButtonText = stringResource(id = R.string.cancel),
+            onDismissRequest = {
+                actionHandler(CreateUpdateEventAction.HideFrequencyDialog)
+            },
+            onItemSelected = {
+                if (it == frequencies.lastIndex) {
+                    actionHandler(CreateUpdateEventAction.ShowCustomFrequencyScreen)
+                } else {
+                    actionHandler(CreateUpdateEventAction.UpdateFrequency(frequencies[it]))
+                    actionHandler(CreateUpdateEventAction.HideFrequencyDialog)
+                }
             }
         )
     }
@@ -271,7 +336,7 @@ private fun CreateUpdateToDoContent(
             })
 
             Row(
-                verticalAlignment = CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .height(48.dp)
                     .clickable {
@@ -279,7 +344,7 @@ private fun CreateUpdateToDoContent(
                     }
             ) {
                 Text(
-                    text = stringResource(id = R.string.createToDoTitleLabel),
+                    text = stringResource(id = R.string.createEventTitleLabel),
                     modifier = Modifier.padding(start = 16.dp),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
@@ -287,7 +352,7 @@ private fun CreateUpdateToDoContent(
                 BasicTextField(
                     value = uiState.title,
                     onValueChange = {
-                        actionHandler(CreateUpdateToDoAction.UpdateTitle(it))
+                        actionHandler(CreateUpdateEventAction.UpdateTitle(it))
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -302,72 +367,131 @@ private fun CreateUpdateToDoContent(
                 )
             }
             LabelValueRow(
-                label = stringResource(id = R.string.createToDoDateLabel),
+                label = stringResource(R.string.createEventDateLabel),
                 value = uiState.formattedDate,
                 onClick = {
                     focusManager.clearFocus()
                     datePickerDialog.show()
                 }
             )
+            val preferredTimePattern = DateHelper.getPreferredTimeFormat(context).toPattern()
             LabelValueRow(
-                label = stringResource(id = R.string.createToDoTimeLabel),
-                value = uiState.formattedTime(LocalContext.current),
+                label = stringResource(id = R.string.createEventStartTimeLabel),
+                value = uiState.startTime?.format(DateTimeFormatter.ofPattern(preferredTimePattern))
+                    ?: stringResource(id = R.string.createEventStartTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
-                    timePickerDialog.show()
+                    startTimePickerDialog.show()
                 }
             )
             LabelValueRow(
-                label = stringResource(id = R.string.createToDoCalendarLabel),
+                label = stringResource(id = R.string.createEventEndTimeLabel),
+                value = uiState.endTime?.format(DateTimeFormatter.ofPattern(preferredTimePattern))
+                    ?: stringResource(id = R.string.createEventEndTimeNotSelected),
+                onClick = {
+                    focusManager.clearFocus()
+                    endTimePickerDialog.show()
+                }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createEventFrequencyLabel),
+                value = uiState.selectFrequencyUiState.selectedFrequency.orEmpty(),
+                onClick = {
+                    focusManager.clearFocus()
+                    actionHandler(CreateUpdateEventAction.ShowFrequencyDialog)
+                }
+            )
+            LabelValueRow(
+                label = stringResource(id = R.string.createEventCalendarLabel),
                 value = uiState.selectCalendarUiState.selectedCanvasContext?.name.orEmpty(),
                 loading = uiState.loadingCanvasContexts,
                 onClick = {
                     focusManager.clearFocus()
-                    actionHandler(CreateUpdateToDoAction.ShowSelectCalendarScreen)
+                    actionHandler(CreateUpdateEventAction.ShowSelectCalendarScreen)
                 }
             )
-            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-            Column(
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 80.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.createToDoDetailsLabel),
-                    modifier = Modifier.padding(start = 16.dp, top = 12.dp),
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                ComposeRCE(
-                    hint = stringResource(id = R.string.createToDoDetailsLabel),
-                    html = uiState.details,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
+            LabeledTextField(
+                label = stringResource(id = R.string.createEventLocationLabel),
+                value = uiState.location,
+                onValueChange = {
+                    actionHandler(CreateUpdateEventAction.UpdateLocation(it))
                 }
-            }
+            )
+            LabeledTextField(
+                label = stringResource(id = R.string.createEventAddressLabel),
+                value = uiState.address,
+                onValueChange = {
+                    actionHandler(CreateUpdateEventAction.UpdateAddress(it))
+                }
+            )
+            LabeledTextField(
+                label = stringResource(id = R.string.createEventDetailsLabel),
+                value = uiState.details,
+                onValueChange = {
+                    actionHandler(CreateUpdateEventAction.UpdateDetails(it))
+                }
+            )
         }
+    }
+}
+
+@Composable
+private fun LabeledTextField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val focusRequester = remember { FocusRequester() }
+    Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+    Column(
+        modifier = modifier
+            .defaultMinSize(minHeight = 80.dp)
+            .clickable {
+                focusRequester.requestFocus()
+            }
+    ) {
+        Text(
+            text = label,
+            modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        BasicTextField(
+            singleLine = false,
+            value = value,
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .focusRequester(focusRequester),
+            cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+            textStyle = TextStyle(
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 16.sp
+            )
+        )
     }
 }
 
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
-private fun CreateUpdateToDoPreview() {
+private fun CreateUpdateEventPreview() {
     ContextKeeper.appContext = LocalContext.current
     AndroidThreeTen.init(LocalContext.current)
-    CreateUpdateToDoScreen(
-        title = "New To Do",
-        uiState = CreateUpdateToDoUiState(
+    CreateUpdateEventScreen(
+        title = "New Event",
+        uiState = CreateUpdateEventUiState(
             title = "Title",
             date = LocalDate.now(),
-            time = LocalTime.now(),
+            startTime = LocalTime.now(),
+            endTime = LocalTime.now(),
             details = "Details",
             saving = false,
             errorSnack = null,
-            loadingCanvasContexts = true,
+            loadingCanvasContexts = false,
             selectCalendarUiState = SelectCalendarUiState(
                 selectedCanvasContext = Course(name = "Course")
             )

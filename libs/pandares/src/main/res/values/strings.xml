@@ -1618,7 +1618,7 @@
     <string name="calendarFromTo">%1$s from %2$s to %3$s</string>
     <string name="calendarPageError">There was an error loading your calendar</string>
     <string name="calendarRefreshFailed">Failed to refresh calendar</string>
-    <string name="calendarAddButtonContentDescription">New To Do</string>
+    <string name="calendarAddButtonContentDescription">Add new</string>
     <string name="calendarFilterCalendars">Calendars</string>
     <string name="calendarFilterUser">User</string>
     <string name="calendarFilterCourse">Courses</string>
@@ -1661,6 +1661,69 @@
         <item quantity="one">%d event</item>
         <item quantity="other">%d events</item>
     </plurals>
+    <string name="eventDeleteRecurringConfirmationTitle">Confirm Deletion</string>
+    <string name="eventDeleteScopeOne">This event</string>
+    <string name="eventDeleteScopeAll">All events</string>
+    <string name="eventDeleteScopeFollowing">This and all following events</string>
+    <string name="calendarAddToDo">Add To Do</string>
+    <string name="calendarAddEvent">Add Event</string>
+
+    <string name="createEventScreenTitle">New Event</string>
+    <string name="editEventScreenTitle">Edit Event</string>
+    <string name="createEventTitleLabel">Title</string>
+    <string name="createEventDateLabel">Date</string>
+    <string name="createEventStartTimeLabel">From</string>
+    <string name="createEventStartTimeNotSelected">Start Time</string>
+    <string name="createEventEndTimeLabel">To</string>
+    <string name="createEventEndTimeNotSelected">End Time</string>
+    <string name="createEventFrequencyLabel">Frequency</string>
+    <string name="createEventCalendarLabel">Calendar</string>
+    <string name="createEventLocationLabel">Location</string>
+    <string name="createEventAddressLabel">Address</string>
+    <string name="createEventDetailsLabel">Details</string>
+    <string name="eventSaveErrorMessage">There was an error saving this Event. Please check your connection and try again.</string>
+    <string name="eventFrequencyDialogTitle">Frequency</string>
+    <string name="eventFrequencyDoesNotRepeat">Does Not Repeat</string>
+    <string name="eventFrequencyDaily">Daily</string>
+    <string name="eventFrequencyWeekly">Weekly on %s</string>
+    <string name="eventFrequencyMonthlyFirst">First</string>
+    <string name="eventFrequencyMonthlySecond">Second</string>
+    <string name="eventFrequencyMonthlyThird">Third</string>
+    <string name="eventFrequencyMonthlyFourth">Fourth</string>
+    <string name="eventFrequencyMonthlyLast">Last</string>
+    <string name="eventFrequencyMonthly">Monthly on the %s %s</string>
+    <string name="eventFrequencyAnnually">Annually on %s</string>
+    <string name="eventFrequencyWeekdays">Every Weekday (Monday to Friday)</string>
+    <string name="eventFrequencyCustom">Custom</string>
+    <string name="eventCustomFrequencyScreenTitle">Custom Frequency</string>
+    <string name="eventCustomFrequencyScreenEnds">Ends</string>
+    <string name="eventCustomFrequencyScreenRepeatsOn">Repeats on</string>
+    <string name="eventCustomFrequencyScreenOn">On Date</string>
+    <string name="eventCustomFrequencyScreenAfter">After Occurrences</string>
+    <plurals name="eventCustomFrequencyScreenDay">
+        <item quantity="one">Day</item>
+        <item quantity="other">Days</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenWeek">
+        <item quantity="one">Week</item>
+        <item quantity="other">Weeks</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenMonth">
+        <item quantity="one">Month</item>
+        <item quantity="other">Months</item>
+    </plurals>
+    <plurals name="eventCustomFrequencyScreenYear">
+        <item quantity="one">Year</item>
+        <item quantity="other">Years</item>
+    </plurals>
+    <string name="eventCustomFrequencyScreenOnDay">on day %d</string>
+    <string name="eventCustomFrequencyScreenOnWeekday">on the %s %s</string>
+    <string name="numberOfOccurrencesDialogTitle">Number of Occurrences</string>
+    <string name="numberOfOccurrencesDialogDescription">How many times you would like to repeat?</string>
+    <string name="numberOfOccurrencesDialogSupportingText">Max 400</string>
+    <string name="eventUpdateRecurringTitle">Confirm Changes</string>
+    <string name="eventStartTimeError">Start time cannot be after end time.</string>
+    <string name="eventEndTimeError">End time cannot be before start time.</string>
     <string name="calendarFiltersSelectAll">Select all</string>
     <string name="calendarFiltersDeselectAll">Deselect all</string>
 </resources>

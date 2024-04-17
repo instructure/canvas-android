@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.calendarevent.details
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
@@ -33,6 +34,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.backgroundColor
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -75,7 +77,8 @@ class EventViewModelTest {
         seriesNaturalLanguage = "Every day",
         locationName = "Location",
         locationAddress = "Address",
-        description = "Description html"
+        description = "Description html",
+        workflowState = "active"
     )
 
     @Before
@@ -123,7 +126,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -149,7 +153,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = true
+                editAllowed = true,
+                deleteAllowed = true
             ),
             loading = false,
             title = "Title",
@@ -158,6 +163,21 @@ class EventViewModelTest {
             location = "Location",
             address = "Address",
             formattedDescription = "Description html"
+        )
+
+        Assert.assertEquals(expectedState, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Event loading failed`() {
+        every { savedStateHandle.get<Long>(EventFragment.SCHEDULE_ITEM_ID) } returns 1
+        every { context.getString(R.string.errorLoadingEvent) } returns "Error loading event"
+        coEvery { eventRepository.getCalendarEvent(1) } throws Exception()
+
+        createViewModel()
+
+        val expectedState = EventUiState(
+            loadError = "Error loading event"
         )
 
         Assert.assertEquals(expectedState, viewModel.uiState.value)
@@ -174,7 +194,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -201,7 +222,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -228,7 +250,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -255,7 +278,8 @@ class EventViewModelTest {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = 1,
                 subtitle = "Context name",
-                modifyAllowed = false
+                editAllowed = false,
+                deleteAllowed = false
             ),
             loading = false,
             title = "Title",
@@ -282,6 +306,160 @@ class EventViewModelTest {
 
         val expectedEvent = EventViewModelAction.OpenLtiScreen("url")
         Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Edit event button tapped`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.EditEvent)
+
+        val expectedEvent = EventViewModelAction.OpenEditEvent(scheduleItem)
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Delete event`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        coEvery { eventRepository.deleteCalendarEvent(scheduleItem.id) } returns scheduleItem
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ONE))
+
+        coVerify {
+            eventRepository.deleteCalendarEvent(scheduleItem.id)
+        }
+
+        val expectedEvent = EventViewModelAction.RefreshCalendarDays(listOf(LocalDate.of(2024, 3, 1)))
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Delete recurring event`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(rrule = "FREQ=DAILY;INTERVAL=1;COUNT=5")
+        coEvery { eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.ModifyEventScope.ALL) } returns listOf(
+            scheduleItem,
+            scheduleItem.copy(startAt = LocalDate.of(2024, 3, 2).atTime(11, 0).toApiString())
+        )
+
+        createViewModel()
+
+        val events = mutableListOf<EventViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ALL))
+
+        coVerify {
+            eventRepository.deleteRecurringCalendarEvent(scheduleItem.id, CalendarEventAPI.ModifyEventScope.ALL)
+        }
+
+        val expectedEvent = EventViewModelAction.RefreshCalendar
+        Assert.assertEquals(expectedEvent, events.last())
+    }
+
+    @Test
+    fun `Delete event failed`() = runTest {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { context.getString(R.string.eventDeleteErrorMessage) } returns "Error message"
+        coEvery { eventRepository.deleteCalendarEvent(scheduleItem.id) } throws Exception()
+
+        createViewModel()
+
+        viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ONE))
+
+        Assert.assertEquals("Error message", viewModel.uiState.value.errorSnack)
+
+        viewModel.handleAction(EventAction.SnackbarDismissed)
+        Assert.assertNull(viewModel.uiState.value.errorSnack)
+    }
+
+    @Test
+    fun `Can modify event if contextCode matches userId`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { apiPrefs.user } returns User(1)
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can not modify event if contextCode not matches userId`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem
+        every { apiPrefs.user } returns User(2)
+
+        createViewModel()
+
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can modify event if user can manage calendar events and event has course contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "course_1"
+        )
+        coEvery { eventRepository.canManageCourseCalendar(1) } returns true
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can not modify event if user can not manage calendar events and event has course contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "course_1"
+        )
+        coEvery { eventRepository.canManageCourseCalendar(1) } returns false
+
+        createViewModel()
+
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can modify event if user can manage calendar events and event has group contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "group_1"
+        )
+        coEvery { eventRepository.canManageGroupCalendar(1) } returns true
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertTrue(viewModel.uiState.value.toolbarUiState.deleteAllowed)
+    }
+
+    @Test
+    fun `Can not modify event if user can not manage calendar events and event has group contextCode`() {
+        every { savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM) } returns scheduleItem.copy(
+            contextCode = "group_1"
+        )
+        coEvery { eventRepository.canManageGroupCalendar(1) } returns false
+
+        createViewModel()
+
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.editAllowed)
+        Assert.assertFalse(viewModel.uiState.value.toolbarUiState.deleteAllowed)
     }
 
     private fun createViewModel() {

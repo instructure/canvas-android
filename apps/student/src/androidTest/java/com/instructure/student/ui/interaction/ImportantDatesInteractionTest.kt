@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.mockCanvas.addAssignmentCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -112,6 +113,7 @@ class ImportantDatesInteractionTest : StudentComposeTest() {
     fun testOpenCalendarEvent() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
+        data.coursePermissions[course.id] = CanvasContextPermission(manageCalendar = true)
         val event = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
         goToImportantDatesTab(data)

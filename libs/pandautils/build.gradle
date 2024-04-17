@@ -216,6 +216,8 @@ dependencies {
 
     implementation Libs.FLEXBOX_LAYOUT
 
+    implementation Libs.RRULE
+
     // We need to add this dependency if we update ExoPlayer to 2.12.0
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905
     implementation 'com.google.guava:guava:29.0-android'

@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
@@ -59,6 +60,11 @@ class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
 
     override fun openCreateToDo(initialDateString: String?) {
         val route = CreateUpdateToDoFragment.makeRoute(initialDateString)
+        RouteMatcher.route(activity, route)
+    }
+
+    override fun openCreateEvent(initialDateString: String?) {
+        val route = CreateUpdateEventFragment.makeRoute(initialDateString)
         RouteMatcher.route(activity, route)
     }
 

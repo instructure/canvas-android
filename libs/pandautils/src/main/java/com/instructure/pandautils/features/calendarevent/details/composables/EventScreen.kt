@@ -24,17 +24,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -52,12 +59,14 @@ import com.instructure.pandautils.compose.composables.FullScreenError
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
+import com.instructure.pandautils.compose.composables.SingleChoiceAlertDialog
 import com.instructure.pandautils.features.calendarevent.details.EventAction
 import com.instructure.pandautils.features.calendarevent.details.EventUiState
 import com.instructure.pandautils.features.calendarevent.details.ToolbarUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.views.CanvasWebView
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun EventScreen(
@@ -69,16 +78,48 @@ internal fun EventScreen(
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
+        val snackbarHostState = remember { SnackbarHostState() }
+        val localCoroutineScope = rememberCoroutineScope()
+        if (eventUiState.errorSnack != null) {
+            LaunchedEffect(Unit) {
+                localCoroutineScope.launch {
+                    val result = snackbarHostState.showSnackbar(eventUiState.errorSnack)
+                    if (result == SnackbarResult.Dismissed) {
+                        actionHandler(EventAction.SnackbarDismissed)
+                    }
+                }
+            }
+        }
+
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                EventTopAppBar(
+                CanvasThemedAppBar(
                     title = title,
-                    uiState = eventUiState,
-                    actionHandler = actionHandler,
-                    navigationAction = navigationAction
+                    subtitle = eventUiState.toolbarUiState.subtitle,
+                    actions = {
+                        if (eventUiState.toolbarUiState.deleting) {
+                            CircularProgressIndicator(
+                                color = Color(color = ThemePrefs.primaryTextColor),
+                                strokeWidth = 3.dp,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        } else if (eventUiState.toolbarUiState.editAllowed || eventUiState.toolbarUiState.deleteAllowed) {
+                            OverFlowMenuSegment(
+                                eventUiState = eventUiState,
+                                actionHandler = actionHandler
+                            )
+                        }
+                    },
+                    backgroundColor = Color(color = eventUiState.toolbarUiState.toolbarColor),
+                    contentColor = Color.White,
+                    navigationActionClick = {
+                        navigationAction()
+                    },
+                    modifier = modifier
                 )
             },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
                 EventContent(
                     uiState = eventUiState,
@@ -95,11 +136,9 @@ internal fun EventScreen(
 }
 
 @Composable
-private fun EventTopAppBar(
-    title: String,
-    uiState: EventUiState,
+private fun OverFlowMenuSegment(
+    eventUiState: EventUiState,
     actionHandler: (EventAction) -> Unit,
-    navigationAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val showDeleteConfirmationDialog = remember { mutableStateOf(false) }
@@ -114,57 +153,56 @@ private fun EventTopAppBar(
             },
             onConfirmation = {
                 showDeleteConfirmationDialog.value = false
-                actionHandler(EventAction.DeleteEvent)
+                actionHandler(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ONE))
             }
         )
     }
 
-    CanvasThemedAppBar(
-        title = title,
-        subtitle = uiState.toolbarUiState.subtitle,
-        actions = {
-            if (uiState.toolbarUiState.modifyAllowed) {
-                OverFlowMenuSegment(
-                    actionHandler = actionHandler,
-                    showDeleteConfirmationDialog = showDeleteConfirmationDialog
-                )
+    val showDeleteScopeDialog = remember { mutableStateOf(false) }
+    if (showDeleteScopeDialog.value) {
+        SingleChoiceAlertDialog(
+            dialogTitle = stringResource(id = R.string.eventDeleteRecurringConfirmationTitle),
+            items = CalendarEventAPI.ModifyEventScope.entries.take(if (eventUiState.isSeriesHead) 2 else 3).map {
+                stringResource(id = it.stringRes)
+            },
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.delete),
+            onDismissRequest = {
+                showDeleteScopeDialog.value = false
+            },
+            onConfirmation = {
+                showDeleteScopeDialog.value = false
+                actionHandler(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.entries[it]))
             }
-        },
-        backgroundColor = Color(uiState.toolbarUiState.toolbarColor),
-        contentColor = Color.White,
-        navigationActionClick = {
-            navigationAction()
-        },
-        modifier = modifier
-    )
-}
+        )
+    }
 
-@Composable
-private fun OverFlowMenuSegment(
-    actionHandler: (EventAction) -> Unit,
-    showDeleteConfirmationDialog: MutableState<Boolean>,
-    modifier: Modifier = Modifier
-) {
     val showMenu = remember { mutableStateOf(false) }
     OverflowMenu(
         modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
         showMenu = showMenu
     ) {
-        DropdownMenuItem(
-            onClick = {
-                showMenu.value = !showMenu.value
-                actionHandler(EventAction.EditEvent)
+        if (eventUiState.toolbarUiState.editAllowed) {
+            DropdownMenuItem(
+                onClick = {
+                    showMenu.value = !showMenu.value
+                    actionHandler(EventAction.EditEvent)
+                }
+            ) {
+                Text(
+                    color = colorResource(id = R.color.textDarkest),
+                    text = stringResource(id = R.string.edit),
+                )
             }
-        ) {
-            Text(
-                color = colorResource(id = R.color.textDarkest),
-                text = stringResource(id = R.string.edit),
-            )
         }
         DropdownMenuItem(
             onClick = {
                 showMenu.value = !showMenu.value
-                showDeleteConfirmationDialog.value = true
+                if (eventUiState.isSeriesEvent) {
+                    showDeleteScopeDialog.value = true
+                } else {
+                    showDeleteConfirmationDialog.value = true
+                }
             }
         ) {
             Text(
@@ -280,7 +318,7 @@ private fun EventPreview() {
             toolbarUiState = ToolbarUiState(
                 toolbarColor = ThemePrefs.primaryColor,
                 subtitle = "Subtitle",
-                modifyAllowed = true
+                editAllowed = true
             ),
             loading = false,
             title = "Creative Machines and Innovative Instrumentation Conference",

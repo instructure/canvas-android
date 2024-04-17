@@ -23,8 +23,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
@@ -34,6 +32,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -53,6 +52,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.ExpandableFabItem
+import com.instructure.pandautils.compose.composables.ExpandableFloatingActionButton
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
@@ -90,7 +91,8 @@ fun CalendarScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                CanvasThemedAppBar(title = title,
+                CanvasThemedAppBar(
+                    title = title,
                     actions = {
                         if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
@@ -115,7 +117,8 @@ fun CalendarScreen(
                     },
                     navigationActionClick = navigationActionClick,
                     navIconRes = R.drawable.ic_hamburger,
-                    navIconContentDescription = stringResource(id = R.string.navigation_drawer_open))
+                    navIconContentDescription = stringResource(id = R.string.navigation_drawer_open)
+                )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
@@ -133,19 +136,35 @@ fun CalendarScreen(
                 }
             },
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        actionHandler(CalendarAction.AddToDoTapped)
+                val fabExpandedState = remember { mutableStateOf(false) }
+                ExpandableFloatingActionButton(
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_add),
+                            tint = Color.White,
+                            contentDescription = stringResource(id = R.string.calendarAddButtonContentDescription)
+                        )
                     },
-                    shape = CircleShape,
-                    backgroundColor = Color(ThemePrefs.buttonColor)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_add),
-                        tint = Color.White,
-                        contentDescription = stringResource(id = R.string.calendarAddButtonContentDescription)
-                    )
-                }
+                    expanded = fabExpandedState,
+                    expandedItems = listOf {
+                        ExpandableFabItem(
+                            icon = painterResource(id = R.drawable.ic_todo),
+                            text = stringResource(id = R.string.calendarAddToDo),
+                            modifier = Modifier.clickable {
+                                fabExpandedState.value = false
+                                actionHandler(CalendarAction.AddToDoTapped)
+                            }
+                        )
+                        ExpandableFabItem(
+                            icon = painterResource(id = R.drawable.ic_calendar_month),
+                            text = stringResource(id = R.string.calendarAddEvent),
+                            modifier = Modifier.clickable {
+                                fabExpandedState.value = false
+                                actionHandler(CalendarAction.AddEventTapped)
+                            }
+                        )
+                    }
+                )
             }
         )
     }

@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
@@ -103,16 +104,47 @@ class CreateUpdateToDoViewModel @Inject constructor(
                 }
             }
 
-            is CreateUpdateToDoAction.HideSelectCalendarScreen -> {
-                _uiState.update {
-                    val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
-                    it.copy(selectCalendarUiState = selectCalendarUiState)
-                }
+            is CreateUpdateToDoAction.HideSelectCalendarScreen -> hideSelectCalendarScreen()
+
+            is CreateUpdateToDoAction.CheckUnsavedChanges -> checkUnsavedChanges()
+
+            is CreateUpdateToDoAction.HideUnsavedChangesDialog -> {
+                _uiState.update { it.copy(showUnsavedChangesDialog = false) }
             }
 
-            is CreateUpdateToDoAction.CheckUnsavedChanges -> {
-                action.result(checkUnsavedChanges())
+            is CreateUpdateToDoAction.NavigateBack -> {
+                viewModelScope.launch {
+                    _uiState.update { it.copy(canNavigateBack = true) }
+                    _events.send(CreateUpdateToDoViewModelAction.NavigateBack)
+                }
             }
+        }
+    }
+
+    fun onBackPressed(): Boolean {
+        return if (uiState.value.selectCalendarUiState.show) {
+            hideSelectCalendarScreen()
+            true
+        } else if (!uiState.value.canNavigateBack) {
+            checkUnsavedChanges()
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun hideSelectCalendarScreen() {
+        _uiState.update {
+            val selectCalendarUiState = it.selectCalendarUiState.copy(show = false)
+            it.copy(selectCalendarUiState = selectCalendarUiState)
+        }
+    }
+
+    private fun checkUnsavedChanges() {
+        if (hasUnsavedChanges()) {
+            _uiState.update { it.copy(showUnsavedChangesDialog = true) }
+        } else {
+            handleAction(CreateUpdateToDoAction.NavigateBack)
         }
     }
 
@@ -179,7 +211,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     courseId = uiState.value.selectCalendarUiState.selectedCanvasContext.takeIf { it is Course }?.id,
                 )
             }
-            _uiState.update { it.copy(saving = false) }
+            _uiState.update { it.copy(saving = false, canNavigateBack = true) }
             _events.send(
                 CreateUpdateToDoViewModelAction.RefreshCalendarDays(
                     listOfNotNull(plannerItem?.plannable?.todoDate?.toDate()?.toLocalDate(), uiState.value.date)
@@ -195,7 +227,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
         }
     }
 
-    private fun checkUnsavedChanges(): Boolean {
+    private fun hasUnsavedChanges(): Boolean {
         return plannerItem?.let { plannerItem ->
             uiState.value.title != plannerItem.plannable.title ||
                     uiState.value.details != plannerItem.plannable.details.orEmpty() ||

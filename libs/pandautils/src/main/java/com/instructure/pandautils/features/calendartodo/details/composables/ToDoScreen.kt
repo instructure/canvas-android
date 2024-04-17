@@ -36,7 +36,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -87,11 +86,21 @@ internal fun ToDoScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                ToDoTopAppBar(
+                CanvasThemedAppBar(
                     title = title,
-                    deleting = toDoUiState.deleting,
-                    actionHandler = actionHandler,
-                    navigationActionClick = navigationActionClick
+                    actions = {
+                        if (toDoUiState.deleting) {
+                            CircularProgressIndicator(
+                                color = Color(color = ThemePrefs.primaryTextColor),
+                                strokeWidth = 3.dp,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        } else {
+                            OverFlowMenuSegment(actionHandler)
+                        }
+                    },
+                    navigationActionClick = navigationActionClick,
+                    modifier = modifier
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -109,11 +118,8 @@ internal fun ToDoScreen(
 }
 
 @Composable
-private fun ToDoTopAppBar(
-    title: String,
-    deleting: Boolean,
+private fun OverFlowMenuSegment(
     actionHandler: (ToDoAction) -> Unit,
-    navigationActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val showDeleteConfirmationDialog = remember { mutableStateOf(false) }
@@ -133,30 +139,6 @@ private fun ToDoTopAppBar(
         )
     }
 
-    CanvasThemedAppBar(
-        title = title,
-        actions = {
-            if (deleting) {
-                CircularProgressIndicator(
-                    color = Color(color = ThemePrefs.primaryTextColor),
-                    strokeWidth = 3.dp,
-                    modifier = Modifier.size(32.dp)
-                )
-            } else {
-                OverFlowMenuSegment(actionHandler, showDeleteConfirmationDialog)
-            }
-        },
-        navigationActionClick = navigationActionClick,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun OverFlowMenuSegment(
-    actionHandler: (ToDoAction) -> Unit,
-    showDeleteConfirmationDialog: MutableState<Boolean>,
-    modifier: Modifier = Modifier
-) {
     val showMenu = remember { mutableStateOf(false) }
     OverflowMenu(
         modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),

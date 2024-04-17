@@ -18,10 +18,37 @@
 package com.instructure.pandautils.features.calendarevent.details
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContextPermission.Companion.MANAGE_CALENDAR
+import com.instructure.canvasapi2.models.ScheduleItem
 
 class EventRepository(
-    private val calendarEventApi: CalendarEventAPI.CalendarEventInterface
+    private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val groupApi: GroupAPI.GroupInterface
 ) {
     suspend fun getCalendarEvent(eventId: Long) = calendarEventApi.getCalendarEvent(eventId, RestParams()).dataOrThrow
+
+    suspend fun deleteCalendarEvent(
+        eventId: Long
+    ): ScheduleItem {
+        return calendarEventApi.deleteCalendarEvent(eventId, RestParams()).dataOrThrow
+    }
+
+    suspend fun deleteRecurringCalendarEvent(
+        eventId: Long,
+        modifyEventScope: CalendarEventAPI.ModifyEventScope
+    ): List<ScheduleItem> {
+        return calendarEventApi.deleteRecurringCalendarEvent(eventId, modifyEventScope.apiName, RestParams()).dataOrThrow
+    }
+
+    suspend fun canManageCourseCalendar(contextId: Long) = courseApi.getCoursePermissions(
+        contextId, listOf(MANAGE_CALENDAR), RestParams()
+    ).dataOrThrow.manageCalendar
+
+    suspend fun canManageGroupCalendar(contextId: Long) = groupApi.getGroupPermissions(
+        contextId, listOf(MANAGE_CALENDAR), RestParams()
+    ).dataOrThrow.manageCalendar
 }

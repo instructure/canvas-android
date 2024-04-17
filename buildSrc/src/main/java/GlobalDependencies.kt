@@ -163,6 +163,8 @@ object Libs {
 
     const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 
+    const val RRULE = "org.scala-saddle:google-rfc-2445:20110304"
+
     // Compose
     const val COMPOSE_BOM = "androidx.compose:compose-bom:2024.03.00"
     const val COMPOSE_MATERIAL = "androidx.compose.material:material"

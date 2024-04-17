@@ -36,6 +36,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CALENDAR_EVENT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.details.composables.EventScreen
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.navigation.WebViewRouter
@@ -59,6 +61,9 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     lateinit var webViewRouter: WebViewRouter
 
     private val viewModel: EventViewModel by viewModels()
+
+    @Inject
+    lateinit var sharedEvents: CalendarSharedEvents
 
     private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
         override fun launchInternalWebViewFragment(url: String) = webViewRouter.launchInternalWebViewFragment(url, viewModel.canvasContext)
@@ -85,6 +90,7 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     ): View {
         applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         return ComposeView(requireActivity()).apply {
             id = R.id.eventFragment
@@ -130,7 +136,21 @@ class EventFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
         when (action) {
             is EventViewModelAction.OpenLtiScreen -> webViewRouter.openLtiScreen(viewModel.canvasContext, action.url)
             is EventViewModelAction.OpenEditEvent -> eventRouter.openEditEvent(action.scheduleItem)
-            is EventViewModelAction.RefreshCalendarDay -> Unit
+            is EventViewModelAction.RefreshCalendarDays -> {
+                navigateBack()
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
+            }
+            is EventViewModelAction.RefreshCalendar -> {
+                navigateBack()
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshCalendar)
+            }
+        }
+    }
+
+    private fun handleSharedViewModelAction(action: SharedCalendarAction) {
+        when (action) {
+            is SharedCalendarAction.CloseEventScreen -> activity?.onBackPressed()
+            else -> {}
         }
     }
 
