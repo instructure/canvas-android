@@ -18,9 +18,8 @@
 package com.instructure.pandautils.features.calendartodo.createupdate.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,11 +43,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
@@ -74,7 +71,6 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
-import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -259,48 +255,37 @@ private fun CreateUpdateToDoContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            val titleFocusRequester = remember { FocusRequester() }
             val detailsFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
 
-            LaunchedEffect(key1 = uiState.title, block = {
-                awaitFrame()
-                if (uiState.title.isEmpty()) {
-                    titleFocusRequester.requestFocus()
-                }
-            })
-
-            Row(
-                verticalAlignment = CenterVertically,
-                modifier = Modifier
-                    .height(48.dp)
-                    .clickable {
-                        titleFocusRequester.requestFocus()
+            BasicTextField(
+                value = uiState.title,
+                decorationBox = {
+                    Box(contentAlignment = Alignment.CenterStart) {
+                        if (uiState.title.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.createToDoTitleHint),
+                                color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
+                                fontSize = 16.sp
+                            )
+                        }
+                        it()
                     }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.createToDoTitleLabel),
-                    modifier = Modifier.padding(start = 16.dp),
+                },
+                onValueChange = {
+                    actionHandler(CreateUpdateToDoAction.UpdateTitle(it))
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(horizontal = 16.dp),
+                cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+                textStyle = TextStyle(
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
-                )
-                BasicTextField(
-                    value = uiState.title,
-                    onValueChange = {
-                        actionHandler(CreateUpdateToDoAction.UpdateTitle(it))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .focusRequester(titleFocusRequester),
-                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-                    textStyle = TextStyle(
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 16.sp
-                    ),
-                    singleLine = true
-                )
-            }
+                ),
+                singleLine = true
+            )
             LabelValueRow(
                 label = stringResource(id = R.string.createToDoDateLabel),
                 value = uiState.formattedDate,
