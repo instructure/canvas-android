@@ -45,6 +45,10 @@ class DiscussionTopicHeaderFacade(
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
         val discussionTopicHeaderId = discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId, null))
         val permissionId = discussionTopicHeader.permissions?.let { discussionTopicPermissionDao.insert(DiscussionTopicPermissionEntity(it, discussionTopicHeaderId)) }
+        val attachments = discussionTopicHeader.attachments.map { RemoteFileEntity(it) }
+        val connectionEntities = attachments.map { DiscussionTopicRemoteFileEntity(discussionTopicHeaderId, it.id) }
+        remoteFileDao.insertAll(attachments)
+        discussionTopicRemoteFileDao.insertAll(connectionEntities)
         discussionTopicHeaderDao.update(DiscussionTopicHeaderEntity(discussionTopicHeader.copy(id = discussionTopicHeaderId), courseId, permissionId))
         return discussionTopicHeaderId
     }
