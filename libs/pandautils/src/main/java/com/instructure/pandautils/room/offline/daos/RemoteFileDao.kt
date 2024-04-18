@@ -15,6 +15,7 @@
  */package com.instructure.pandautils.room.offline.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -28,6 +29,9 @@ interface RemoteFileDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(entities: List<RemoteFileEntity>)
+
+    @Delete
+    suspend fun delete(entity: RemoteFileEntity)
 
     @Query("SELECT * FROM RemoteFileEntity WHERE id = :id")
     suspend fun findById(id: Long): RemoteFileEntity?
