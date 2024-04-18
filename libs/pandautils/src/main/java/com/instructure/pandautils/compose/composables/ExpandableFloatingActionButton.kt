@@ -19,21 +19,21 @@ package com.instructure.pandautils.compose.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
@@ -47,20 +47,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 
-private const val ANIMATION_DURATION = 400
 
 @Composable
 fun ExpandableFloatingActionButton(
@@ -70,7 +72,7 @@ fun ExpandableFloatingActionButton(
     shape: Shape = CircleShape,
     backgroundColor: Color = Color(color = ThemePrefs.buttonColor),
     contentColor: Color = Color(color = ThemePrefs.buttonTextColor),
-    expandedItems: List<@Composable () -> Unit>
+    expandedItems: List<@Composable ColumnScope.() -> Unit>
 ) {
     val rotationState by animateFloatAsState(targetValue = if (expanded.value) 45f else 0f, label = "fabRotation")
 
@@ -78,24 +80,14 @@ fun ExpandableFloatingActionButton(
         modifier = modifier,
         horizontalAlignment = Alignment.End
     ) {
-        AnimatedVisibility(
-            visible = expanded.value,
-            enter = slideInVertically(
-                initialOffsetY = { fullHeight -> fullHeight },
-                animationSpec = TweenSpec(ANIMATION_DURATION)
-            ),
-            exit = slideOutVertically(
-                targetOffsetY = { fullHeight -> fullHeight },
-                animationSpec = TweenSpec(ANIMATION_DURATION)
-            ),
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .animateContentSize()
-        ) {
-            LazyColumn(horizontalAlignment = Alignment.End) {
-                items(expandedItems) {
-                    it()
-                }
+        expandedItems.forEach {
+            AnimatedVisibility(
+                visible = expanded.value,
+                enter = fadeIn() + scaleIn(transformOrigin = TransformOrigin(.80f, .5f)),
+                exit = fadeOut() + scaleOut(transformOrigin = TransformOrigin(.80f, .5f)),
+                modifier = Modifier.animateContentSize()
+            ) {
+                it()
             }
         }
         Spacer(modifier = Modifier.height(4.dp))
@@ -104,7 +96,9 @@ fun ExpandableFloatingActionButton(
             backgroundColor = backgroundColor,
             contentColor = contentColor,
             onClick = { expanded.value = !expanded.value },
-            modifier = Modifier.rotate(rotationState)
+            modifier = Modifier
+                .size(56.dp)
+                .rotate(rotationState)
         ) {
             icon()
         }
@@ -123,32 +117,44 @@ fun ExpandableFabItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+        modifier = modifier.padding(vertical = 4.dp, horizontal = 9.dp)
     ) {
-        Text(
-            text = text,
-            color = labelTextColor,
+        Box(
             modifier = Modifier
+                .shadow(
+                    elevation = 1.dp,
+                    shape = RoundedCornerShape(4.dp)
+                )
                 .background(
                     color = labelBackgroundColor,
                     shape = RoundedCornerShape(4.dp)
-                )
-                .padding(horizontal = 8.dp, vertical = 4.dp)
-        )
+                ),
+        ) {
+            Text(
+                text = text,
+                color = labelTextColor,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            )
+        }
         Spacer(modifier = Modifier.width(8.dp))
         Box(
             modifier = Modifier
+                .size(38.dp)
+                .shadow(
+                    elevation = 2.dp,
+                    shape = CircleShape
+                )
                 .background(
                     color = iconBackgroundColor,
                     shape = CircleShape
-                )
-                .padding(8.dp),
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 painter = icon,
                 contentDescription = null,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(18.dp),
                 tint = iconContentColor
             )
         }
@@ -169,9 +175,9 @@ fun ExpandableFloatingActionButtonPreview() {
             )
         },
         expanded = remember { mutableStateOf(false) },
-        expandedItems = listOf {
-            ExpandableFabItem(icon = painterResource(id = R.drawable.ic_todo), text = "Add To Do")
-            ExpandableFabItem(icon = painterResource(id = R.drawable.ic_calendar_month), text = "Add Event")
-        }
+        expandedItems = listOf(
+            { ExpandableFabItem(icon = painterResource(id = R.drawable.ic_todo), text = "Add To Do") },
+            { ExpandableFabItem(icon = painterResource(id = R.drawable.ic_calendar_month_24), text = "Add Event") }
+        )
     )
 }

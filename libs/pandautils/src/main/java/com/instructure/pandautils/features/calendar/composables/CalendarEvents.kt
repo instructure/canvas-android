@@ -242,7 +242,7 @@ fun CalendarEventsEmpty(modifier: Modifier = Modifier) {
                 id = R.color.textDarkest
             ),
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 68.dp)
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
@@ -252,7 +252,7 @@ fun CalendarEventsEmpty(modifier: Modifier = Modifier) {
                 id = R.color.textDarkest
             ),
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 68.dp)
         )
     }
 }

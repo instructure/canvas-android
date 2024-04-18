@@ -19,8 +19,8 @@ package com.instructure.pandautils.features.calendarevent.createupdate.composabl
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -78,7 +78,6 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpda
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
-import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -325,47 +324,36 @@ private fun CreateUpdateEventContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            val titleFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
 
-            LaunchedEffect(key1 = uiState.title, block = {
-                awaitFrame()
-                if (uiState.title.isEmpty()) {
-                    titleFocusRequester.requestFocus()
-                }
-            })
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .height(48.dp)
-                    .clickable {
-                        titleFocusRequester.requestFocus()
+            BasicTextField(
+                value = uiState.title,
+                decorationBox = {
+                    Box(contentAlignment = Alignment.CenterStart) {
+                        if (uiState.title.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.createEventTitleHint),
+                                color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
+                                fontSize = 16.sp
+                            )
+                        }
+                        it()
                     }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.createEventTitleLabel),
-                    modifier = Modifier.padding(start = 16.dp),
+                },
+                onValueChange = {
+                    actionHandler(CreateUpdateEventAction.UpdateTitle(it))
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(horizontal = 16.dp),
+                cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+                textStyle = TextStyle(
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
-                )
-                BasicTextField(
-                    value = uiState.title,
-                    onValueChange = {
-                        actionHandler(CreateUpdateEventAction.UpdateTitle(it))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .focusRequester(titleFocusRequester),
-                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-                    textStyle = TextStyle(
-                        color = colorResource(id = R.color.textDarkest),
-                        fontSize = 16.sp
-                    ),
-                    singleLine = true
-                )
-            }
+                ),
+                singleLine = true
+            )
             LabelValueRow(
                 label = stringResource(R.string.createEventDateLabel),
                 value = uiState.formattedDate,

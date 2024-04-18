@@ -97,7 +97,7 @@ fun CalendarScreen(
                         if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
                             Box(contentAlignment = Alignment.Center, modifier = Modifier
                                 .padding(horizontal = 12.dp)
-                                .semantics(mergeDescendants = true) {  }
+                                .semantics(mergeDescendants = true) { }
                                 .clickable {
                                     actionHandler(CalendarAction.TodayTapped)
                                 }) {
@@ -109,7 +109,9 @@ fun CalendarScreen(
                                 Text(
                                     text = LocalDate.now().dayOfMonth.toString(),
                                     fontSize = 9.sp,
-                                    modifier = Modifier.padding(top = 4.dp).clearAndSetSemantics {  },
+                                    modifier = Modifier
+                                        .padding(top = 4.dp)
+                                        .clearAndSetSemantics { },
                                     color = Color(ThemePrefs.primaryTextColor),
                                 )
                             }
@@ -146,24 +148,28 @@ fun CalendarScreen(
                         )
                     },
                     expanded = fabExpandedState,
-                    expandedItems = listOf {
-                        ExpandableFabItem(
-                            icon = painterResource(id = R.drawable.ic_todo),
-                            text = stringResource(id = R.string.calendarAddToDo),
-                            modifier = Modifier.clickable {
-                                fabExpandedState.value = false
-                                actionHandler(CalendarAction.AddToDoTapped)
-                            }
-                        )
-                        ExpandableFabItem(
-                            icon = painterResource(id = R.drawable.ic_calendar_month),
-                            text = stringResource(id = R.string.calendarAddEvent),
-                            modifier = Modifier.clickable {
-                                fabExpandedState.value = false
-                                actionHandler(CalendarAction.AddEventTapped)
-                            }
-                        )
-                    }
+                    expandedItems = listOf(
+                        {
+                            ExpandableFabItem(
+                                icon = painterResource(id = R.drawable.ic_todo),
+                                text = stringResource(id = R.string.calendarAddToDo),
+                                modifier = Modifier.clickable {
+                                    fabExpandedState.value = false
+                                    actionHandler(CalendarAction.AddToDoTapped)
+                                }
+                            )
+                        },
+                        {
+                            ExpandableFabItem(
+                                icon = painterResource(id = R.drawable.ic_calendar_month_24),
+                                text = stringResource(id = R.string.calendarAddEvent),
+                                modifier = Modifier.clickable {
+                                    fabExpandedState.value = false
+                                    actionHandler(CalendarAction.AddEventTapped)
+                                }
+                            )
+                        }
+                    )
                 )
             }
         )
