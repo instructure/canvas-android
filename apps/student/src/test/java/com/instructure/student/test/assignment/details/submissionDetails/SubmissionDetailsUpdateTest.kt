@@ -17,6 +17,7 @@ package com.instructure.student.test.assignment.details.submissionDetails
 
 import android.net.Uri
 import android.webkit.MimeTypeMap
+import android.webkit.URLUtil
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -34,6 +35,7 @@ import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import io.mockk.*
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -59,6 +61,14 @@ class SubmissionDetailsUpdateTest : Assert() {
         submission = Submission(id = 30L, attempt = 1L, assignmentId = assignment.id)
         initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isStudioEnabled = isStudioEnabled, assignmentEnhancementsEnabled = true)
         ltiTool = LTITool(url = "https://www.instructure.com")
+
+        mockkStatic(URLUtil::class)
+        every { URLUtil.isNetworkUrl(any()) } returns true
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test

@@ -16,6 +16,7 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
+import android.webkit.URLUtil
 import com.instructure.canvasapi2.models.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEffect
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
@@ -30,6 +31,10 @@ import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -51,6 +56,14 @@ class SubmissionCommentsUpdateTest : Assert() {
             attemptId = 1,
             assignmentEnhancementsEnabled = true
         )
+
+        mockkStatic(URLUtil::class)
+        every { URLUtil.isNetworkUrl(any()) } returns false
+    }
+
+    @After
+    fun teardown() {
+        unmockkAll()
     }
 
     @Test
