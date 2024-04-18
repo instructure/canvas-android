@@ -330,9 +330,9 @@ private fun CreateUpdateEventContent(
         val scrollState = rememberScrollState()
         var focusedTextFields by remember { mutableStateOf(emptySet<Int>()) }
 
-        LaunchedEffect(key1 = Unit) {
+        LaunchedEffect(Unit) {
             // Since we cannot track the focus of the RCE correctly we track the focus of all the other text fields.
-            // When no text field is focused but the scroll state maxValue is changed that means that the RCE is focuses.
+            // When no text field is focused but the scroll state maxValue is changed that means that the RCE is focused.
             // In this case we just scroll to the bottom.
             snapshotFlow { scrollState.maxValue }.collect { maxValue ->
                 if (maxValue != 0 && maxValue != Int.MAX_VALUE && focusedTextFields.isEmpty()) {
