@@ -1636,7 +1636,7 @@
     <string name="todoDeleteErrorMessage">There was an error deleting this To Do. Please check your connection and try again.</string>
     <string name="createTodoScreenTitle">New To Do</string>
     <string name="editTodoScreenTitle">Edit To Do</string>
-    <string name="createToDoTitleLabel">Title</string>
+    <string name="createToDoTitleHint">Add title</string>
     <string name="createToDoDateLabel">Date</string>
     <string name="createToDoTimeLabel">Time</string>
     <string name="createToDoCalendarLabel">Calendar</string>
@@ -1670,7 +1670,7 @@
 
     <string name="createEventScreenTitle">New Event</string>
     <string name="editEventScreenTitle">Edit Event</string>
-    <string name="createEventTitleLabel">Title</string>
+    <string name="createEventTitleHint">Add title</string>
     <string name="createEventDateLabel">Date</string>
     <string name="createEventStartTimeLabel">From</string>
     <string name="createEventStartTimeNotSelected">Start Time</string>
