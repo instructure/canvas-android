@@ -42,14 +42,18 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
@@ -72,6 +76,7 @@ import com.instructure.pandautils.compose.composables.SelectCalendarScreen
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.SingleChoiceAlertDialog
+import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.getDatePickerDialog
 import com.instructure.pandautils.compose.getTimePickerDialog
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventAction
@@ -84,6 +89,9 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 
+private const val TITLE = 1
+private const val LOCATION = 2
+private const val ADDRESS = 3
 
 @Composable
 internal fun CreateUpdateEventScreenWrapper(
@@ -320,10 +328,24 @@ private fun CreateUpdateEventContent(
         modifier = modifier,
         color = colorResource(id = R.color.backgroundLightest)
     ) {
+        val scrollState = rememberScrollState()
+        var focusedTextFields by remember { mutableStateOf(emptySet<Int>()) }
+
+        LaunchedEffect(key1 = Unit) {
+            // Since we cannot track the focus of the RCE correctly we track the focus of all the other text fields.
+            // When no text field is focused but the scroll state maxValue is changed that means that the RCE is focuses.
+            // In this case we just scroll to the bottom.
+            snapshotFlow { scrollState.maxValue }.collect { maxValue ->
+                if (maxValue != 0 && maxValue != Int.MAX_VALUE && focusedTextFields.isEmpty()) {
+                    scrollState.scrollTo((maxValue))
+                }
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
         ) {
             val titleFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
@@ -357,7 +379,14 @@ private fun CreateUpdateEventContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .focusRequester(titleFocusRequester),
+                        .focusRequester(titleFocusRequester)
+                        .onFocusChanged {
+                            focusedTextFields = if (it.hasFocus) {
+                                focusedTextFields + TITLE
+                            } else {
+                                focusedTextFields - TITLE
+                            }
+                        },
                     cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                     textStyle = TextStyle(
                         color = colorResource(id = R.color.textDarkest),
@@ -415,22 +444,50 @@ private fun CreateUpdateEventContent(
                 value = uiState.location,
                 onValueChange = {
                     actionHandler(CreateUpdateEventAction.UpdateLocation(it))
-                }
+                },
+                modifier = Modifier.onFocusChanged {
+                    focusedTextFields = if (it.hasFocus) {
+                        focusedTextFields + LOCATION
+                    } else {
+                        focusedTextFields - LOCATION
+                    }
+                },
             )
             LabeledTextField(
                 label = stringResource(id = R.string.createEventAddressLabel),
                 value = uiState.address,
                 onValueChange = {
                     actionHandler(CreateUpdateEventAction.UpdateAddress(it))
-                }
+                },
+                modifier = Modifier.onFocusChanged {
+                    focusedTextFields = if (it.hasFocus) {
+                        focusedTextFields + ADDRESS
+                    } else {
+                        focusedTextFields - ADDRESS
+                    }
+                },
             )
-            LabeledTextField(
-                label = stringResource(id = R.string.createEventDetailsLabel),
-                value = uiState.details,
-                onValueChange = {
+            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+            Column(
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 80.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.createEventDetailsLabel),
+                    modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                ComposeRCE(
+                    html = uiState.details,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
                     actionHandler(CreateUpdateEventAction.UpdateDetails(it))
                 }
-            )
+            }
         }
     }
 }

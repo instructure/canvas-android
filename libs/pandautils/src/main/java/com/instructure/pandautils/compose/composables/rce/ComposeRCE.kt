@@ -49,9 +49,9 @@ import jp.wasabeef.richeditor.RichEditor
 
 @Composable
 fun ComposeRCE(
-    hint: String,
     html: String,
     modifier: Modifier = Modifier,
+    hint: String = "",
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
     onTextChangeListener: (String) -> Unit
 ) {

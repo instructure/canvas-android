@@ -68,7 +68,6 @@ import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.SelectCalendarScreen
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
-import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.getDatePickerDialog
 import com.instructure.pandautils.compose.getTimePickerDialog
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoAction
@@ -261,6 +260,7 @@ private fun CreateUpdateToDoContent(
                 .verticalScroll(rememberScrollState())
         ) {
             val titleFocusRequester = remember { FocusRequester() }
+            val detailsFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
 
             LaunchedEffect(key1 = uiState.title, block = {
@@ -329,7 +329,10 @@ private fun CreateUpdateToDoContent(
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
                 modifier = Modifier
-                    .defaultMinSize(minHeight = 80.dp)
+                    .defaultMinSize(minHeight = 120.dp)
+                    .clickable {
+                        detailsFocusRequester.requestFocus()
+                    }
             ) {
                 Text(
                     text = stringResource(id = R.string.createToDoDetailsLabel),
@@ -338,15 +341,22 @@ private fun CreateUpdateToDoContent(
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                ComposeRCE(
-                    hint = stringResource(id = R.string.createToDoDetailsLabel),
-                    html = uiState.details,
+                BasicTextField(
+                    singleLine = false,
+                    value = uiState.details,
+                    onValueChange = {
+                        actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
+                    },
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(horizontal = 16.dp)
-                ) {
-                    actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
-                }
+                        .focusRequester(detailsFocusRequester),
+                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+                    textStyle = TextStyle(
+                        color = colorResource(id = R.color.textDarkest),
+                        fontSize = 16.sp
+                    )
+                )
             }
         }
     }
