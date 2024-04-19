@@ -145,12 +145,7 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             if (contextIdFilters.isEmpty()) {
                 val filters = initFiltersFromDb()
-                if (filters == null) {
-                    loadFilters(filters)
-                } else {
-                    // If we already have filters in the DB we can do this async
-                    async { loadFilters(filters) }
-                }
+                loadFilters(filters)
             }
 
             val loadedStates = awaitAll(
