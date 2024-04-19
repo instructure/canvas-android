@@ -44,6 +44,8 @@ class TeacherCalendarRepository(
     private val featuresApi: FeaturesAPI.FeaturesInterface
 ) : CalendarRepository {
 
+    private var canvasContexts: List<CanvasContext> = emptyList()
+
     override suspend fun getPlannerItems(
         startDate: String,
         endDate: String,
@@ -100,6 +102,7 @@ class TeacherCalendarRepository(
         return if (coursesResult is DataResult.Success) {
             val users = apiPrefs.user?.let { listOf(it) } ?: emptyList()
             val contexts = (users + coursesResult.data).groupBy { it.type }.filter { it.value.isNotEmpty() }
+            canvasContexts = contexts.values.flatten()
             DataResult.Success(contexts)
         } else {
             DataResult.Fail()
@@ -114,6 +117,32 @@ class TeacherCalendarRepository(
             if (increasedContextLimit == true) 20 else 10
         } else {
             10
+        }
+    }
+
+    private fun List<Plannable>.toPlannerItems(): List<PlannerItem> {
+        return mapNotNull { plannable ->
+            val contextType = if (plannable.courseId != null) CanvasContext.Type.COURSE.apiString else CanvasContext.Type.USER.apiString
+            val contextName = if (plannable.courseId != null) canvasContexts.find { it.id == plannable.courseId }?.name else null
+            val plannableDate = plannable.todoDate.toDate()
+            if (plannableDate == null) {
+                null
+            } else {
+                PlannerItem(
+                    courseId = plannable.courseId,
+                    groupId = plannable.groupId,
+                    userId = plannable.userId,
+                    contextType = contextType,
+                    contextName = contextName,
+                    plannableType = PlannableType.PLANNER_NOTE,
+                    plannable = plannable,
+                    plannableDate = plannableDate,
+                    htmlUrl = null,
+                    submissionState = null,
+                    newActivity = false,
+                    plannerOverride = null
+                )
+            }
         }
     }
 }
@@ -168,30 +197,6 @@ private fun List<ScheduleItem>.toPlannerItems(type: PlannableType): List<Planner
                 null,
                 null,
                 null,
-            )
-        }
-    }
-}
-
-private fun List<Plannable>.toPlannerItems(): List<PlannerItem> {
-    return mapNotNull {
-        val plannableDate = it.todoDate.toDate()
-        if (plannableDate == null) {
-            null
-        } else {
-            PlannerItem(
-                courseId = it.courseId,
-                groupId = it.groupId,
-                userId = it.userId,
-                contextType = null,
-                contextName = null,
-                plannableType = PlannableType.PLANNER_NOTE,
-                plannable = it,
-                plannableDate = plannableDate,
-                htmlUrl = null,
-                submissionState = null,
-                newActivity = false,
-                plannerOverride = null
             )
         }
     }
