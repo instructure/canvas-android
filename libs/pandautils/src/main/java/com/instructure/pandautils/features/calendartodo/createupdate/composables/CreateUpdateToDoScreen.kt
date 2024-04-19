@@ -18,6 +18,7 @@
 package com.instructure.pandautils.features.calendartodo.createupdate.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,6 +47,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
@@ -65,7 +68,6 @@ import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.SelectCalendarScreen
 import com.instructure.pandautils.compose.composables.SelectCalendarUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
-import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.getDatePickerDialog
 import com.instructure.pandautils.compose.getTimePickerDialog
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoAction
@@ -256,6 +258,7 @@ private fun CreateUpdateToDoContent(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
+            val detailsFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
 
             BasicTextField(
@@ -314,7 +317,10 @@ private fun CreateUpdateToDoContent(
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
                 modifier = Modifier
-                    .defaultMinSize(minHeight = 80.dp)
+                    .defaultMinSize(minHeight = 120.dp)
+                    .clickable {
+                        detailsFocusRequester.requestFocus()
+                    }
             ) {
                 Text(
                     text = stringResource(id = R.string.createToDoDetailsLabel),
@@ -323,15 +329,22 @@ private fun CreateUpdateToDoContent(
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                ComposeRCE(
-                    hint = stringResource(id = R.string.createToDoDetailsLabel),
-                    html = uiState.details,
+                BasicTextField(
+                    singleLine = false,
+                    value = uiState.details,
+                    onValueChange = {
+                        actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
+                    },
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(horizontal = 16.dp)
-                ) {
-                    actionHandler(CreateUpdateToDoAction.UpdateDetails(it))
-                }
+                        .focusRequester(detailsFocusRequester),
+                    cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
+                    textStyle = TextStyle(
+                        color = colorResource(id = R.color.textDarkest),
+                        fontSize = 16.sp
+                    )
+                )
             }
         }
     }
