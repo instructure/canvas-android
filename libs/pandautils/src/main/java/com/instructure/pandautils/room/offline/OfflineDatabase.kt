@@ -43,6 +43,7 @@ import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicRemoteFileDao
 import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
@@ -66,6 +67,7 @@ import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.daos.RemoteFileDao
 import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
 import com.instructure.pandautils.room.offline.daos.RubricCriterionDao
 import com.instructure.pandautils.room.offline.daos.RubricCriterionRatingDao
@@ -341,4 +343,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun discussionEntryDao(): DiscussionEntryDao
 
     abstract fun discussionTopicPermissionDao(): DiscussionTopicPermissionDao
+
+    abstract fun remoteFileDao(): RemoteFileDao
+
+    abstract fun discussionTopicRemoteFileDao(): DiscussionTopicRemoteFileDao
 }
