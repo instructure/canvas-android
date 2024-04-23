@@ -15,6 +15,7 @@ pluginManagement {
 /* Top-level project modules */
 include ':student'
 include ':teacher'
+include ':parent'
 /* Flutter embed modules */
 setBinding(new Binding([gradle: this]))
 

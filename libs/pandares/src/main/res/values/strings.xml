@@ -1600,4 +1600,15 @@
     <string name="publishDialogPositiveButton">Publish</string>
     <string name="unpublishDialogPositiveButton">Unpublish</string>
     <string name="discussionMenuRefresh">Refresh</string>
+
+    <!--Parent-->
+    <string name="screenTitleAlerts">Alerts</string>
+    <string name="screenTitleCalendar">Calendar</string>
+    <string name="screenTitleCourses">Courses</string>
+    <string name="screenTitleInbox">Inbox</string>
+    <string name="screenTitleHelp">Help</string>
+    <string name="screenTitleManageStudents">Manage Students</string>
+    <string name="screenTitleSettings">Settings</string>
+    <string name="navigationDrawerSwitchUsers">Switch Users</string>
+    <string name="navigationDrawerLogOut">Log Out</string>
 </resources>

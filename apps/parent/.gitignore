@@ -1,0 +1,58 @@
+# Private data
+google-services.json
+src/main/res/xml/analytics.xml
+src/main/res/values/private_strings.xml
+private.properties
+
+# built application files #
+*.apk
+*.ap_
+
+# files for the dex VM #
+*.dex
+
+# Java class files #
+*.class
+
+# generated files #
+bin
+gen
+target
+
+# Local configuration file (sdk path, etc) #
+local.properties
+
+# Windows thumbnail db #
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Eclipse project files #
+.classpath
+.project
+
+# Android Studio #
+.idea
+*.iml
+build
+*.iws
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Project Files #
+.gitconfig
+
+# Gradle Files #
+gradle.properties
+.gradle
+
+# OSS License data
+src/main/res/raw/third_party_license_metadata
+src/main/res/raw/third_party_licenses
+
+# Flank
+results/
