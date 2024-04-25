@@ -44,6 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -107,7 +108,8 @@ internal fun EventScreen(
                         } else if (eventUiState.toolbarUiState.editAllowed || eventUiState.toolbarUiState.deleteAllowed) {
                             OverFlowMenuSegment(
                                 eventUiState = eventUiState,
-                                actionHandler = actionHandler
+                                actionHandler = actionHandler,
+                                modifier.testTag("overFlowMenuSegment")
                             )
                         }
                     },
@@ -116,7 +118,7 @@ internal fun EventScreen(
                     navigationActionClick = {
                         navigationAction()
                     },
-                    modifier = modifier
+                    modifier = modifier.testTag("canvasThemedAppBar")
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -179,7 +181,7 @@ private fun OverFlowMenuSegment(
 
     val showMenu = remember { mutableStateOf(false) }
     OverflowMenu(
-        modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
+        modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)).testTag("overFlowMenu"),
         showMenu = showMenu
     ) {
         if (eventUiState.toolbarUiState.editAllowed) {
@@ -231,21 +233,21 @@ private fun EventContent(
                 Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     text = uiState.title,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp).testTag("eventTitle"),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 22.sp
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = uiState.date,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp).testTag("eventDate"),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )
                 if (uiState.recurrence.isNotEmpty()) {
                     Text(
                         text = uiState.recurrence,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 6.dp).testTag("recurrence"),
                         color = colorResource(id = R.color.textDarkest),
                         fontSize = 16.sp
                     )
@@ -256,14 +258,14 @@ private fun EventContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
                         text = stringResource(id = R.string.eventLocationLabel),
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp).testTag("locationLabel"),
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = uiState.location,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp).testTag("location"),
                         color = colorResource(id = R.color.textDarkest),
                         fontSize = 16.sp
                     )
@@ -272,14 +274,14 @@ private fun EventContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
                         text = stringResource(id = R.string.eventAddressLabel),
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp).testTag("addressLabel"),
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = uiState.address,
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp).testTag("address"),
                         color = colorResource(id = R.color.textDarkest),
                         fontSize = 16.sp
                     )
@@ -288,13 +290,13 @@ private fun EventContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
                         text = stringResource(id = R.string.eventDetailsLabel),
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp).testTag("detailsLabel"),
                         color = colorResource(id = R.color.textDark),
                         fontSize = 14.sp
                     )
                     ComposeCanvasWebViewWrapper(
                         html = uiState.formattedDescription,
-                        modifier = Modifier.padding(horizontal = 8.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp).testTag("composeCanvasWebViewWrapper"),
                         onLtiButtonPressed = {
                             actionHandler(EventAction.OnLtiClicked(it))
                         },

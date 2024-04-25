@@ -63,8 +63,8 @@ class SyllabusPageTest : TeacherComposeTest() {
         syllabusPage.selectSummaryTab()
         syllabusPage.assertItemDisplayed(calendarEvent.title!!)
         syllabusPage.selectSummaryEvent(calendarEvent.title!!)
-        calendarEventPage.verifyTitle(calendarEvent.title!!)
-        calendarEventPage.verifyDescription(calendarEvent.description!!)
+        calendarEventPage.assertTitle(calendarEvent.title!!)
+        calendarEventPage.assertDescription(calendarEvent.description!!)
     }
 
     // Tests that we can open the edit syllabus.

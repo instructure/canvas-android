@@ -58,6 +58,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -375,7 +376,8 @@ private fun CreateUpdateEventContent(
                         } else {
                             focusedTextFields - TITLE
                         }
-                    },
+                    }
+                    .testTag("addTitleField"),
                 cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                 textStyle = TextStyle(
                     color = colorResource(id = R.color.textDarkest),
@@ -439,7 +441,7 @@ private fun CreateUpdateEventContent(
                     } else {
                         focusedTextFields - LOCATION
                     }
-                },
+                }.testTag("locationTextField"),
             )
             LabeledTextField(
                 label = stringResource(id = R.string.createEventAddressLabel),
@@ -453,7 +455,7 @@ private fun CreateUpdateEventContent(
                     } else {
                         focusedTextFields - ADDRESS
                     }
-                },
+                }.testTag("addressTextField"),
             )
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
@@ -471,7 +473,7 @@ private fun CreateUpdateEventContent(
                     html = uiState.details,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 16.dp).testTag("detailsComposeRCE"),
                 ) {
                     actionHandler(CreateUpdateEventAction.UpdateDetails(it))
                 }

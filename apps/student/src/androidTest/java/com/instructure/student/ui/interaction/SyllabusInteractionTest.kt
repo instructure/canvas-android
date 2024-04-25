@@ -55,7 +55,7 @@ class SyllabusInteractionTest : StudentComposeTest() {
         syllabusPage.selectSummaryTab()
         syllabusPage.assertItemDisplayed(event.title!!)
         syllabusPage.selectSummaryEvent(event.title!!)
-        calendarEventPage.verifyTitle(event.title!!)
+        calendarEventPage.assertTitle(event.title!!)
         calendarEventPage.verifyDescription(event.description!!)
     }
 

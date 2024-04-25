@@ -53,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -116,7 +117,7 @@ fun CalendarEvents(
             }
 
             if (page >= settledPage - 1 && page <= settledPage + 1 && !calendarEventsPageUiState.loading) {
-                CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState, actionHandler)
+                CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState, actionHandler, Modifier.testTag("calendarEventsPage"))
             } else {
                 Loading(modifier = Modifier.fillMaxSize())
             }
@@ -137,7 +138,7 @@ fun CalendarEventsPage(
         refreshThreshold = PullRefreshDefaults.RefreshingOffset
     )
 
-    Box(modifier.pullRefresh(pullRefreshState)) {
+    Box(modifier.pullRefresh(pullRefreshState).testTag("calendarEventItemsBox")) {
         if (calendarEventsPageUiState.events.isNotEmpty()) {
             LazyColumn(
                 Modifier
@@ -146,7 +147,7 @@ fun CalendarEventsPage(
                 items(calendarEventsPageUiState.events) {
                     CalendarEventItem(eventUiState = it, { id ->
                         actionHandler(CalendarAction.EventSelected(id))
-                    })
+                    }, Modifier.testTag("calendarEventItem"))
                 }
             }
         } else if (calendarEventsPageUiState.error) {
@@ -159,7 +160,7 @@ fun CalendarEventsPage(
         } else {
             CalendarEventsEmpty(
                 Modifier
-                    .fillMaxSize()
+                    .fillMaxSize().testTag("calendarEventsEmpty")
             )
         }
 
@@ -198,25 +199,25 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
                 text = eventUiState.contextName,
                 fontSize = 14.sp,
                 color = contextColor,
-                modifier = Modifier.padding(vertical = 1.dp)
+                modifier = Modifier.padding(vertical = 1.dp).testTag("contextName")
             )
             Text(
                 text = eventUiState.name,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest),
-                modifier = Modifier.padding(vertical = 1.dp)
+                modifier = Modifier.padding(vertical = 1.dp).testTag("eventTitle")
             )
             if (eventUiState.date != null) Text(
                 text = eventUiState.date,
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.textDark),
-                modifier = Modifier.padding(vertical = 1.dp)
+                modifier = Modifier.padding(vertical = 1.dp).testTag("eventDate")
             )
             if (eventUiState.status != null) Text(
                 text = eventUiState.status,
                 fontSize = 14.sp,
                 color = Color(ThemePrefs.brandColor),
-                modifier = Modifier.padding(vertical = 1.dp)
+                modifier = Modifier.padding(vertical = 1.dp).testTag("eventStatus")
             )
         }
     }

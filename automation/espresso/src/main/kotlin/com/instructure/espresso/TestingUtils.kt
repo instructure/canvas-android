@@ -18,6 +18,7 @@ package com.instructure.espresso
 import android.os.Build
 import androidx.annotation.RequiresApi
 import org.apache.commons.lang3.StringUtils
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 
@@ -49,6 +50,11 @@ fun getCurrentDateInCanvasFormat(): String {
     val dayString = expectedDate.dayOfMonth
     val yearString = expectedDate.year
     return "$monthString $dayString, $yearString"
+}
+
+fun getCurrentDateInCanvasCalendarFormat(): String {
+    val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+    return dateFormat.format(Date())
 }
 
 fun retry(

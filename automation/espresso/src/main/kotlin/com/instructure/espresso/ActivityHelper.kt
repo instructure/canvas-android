@@ -44,7 +44,7 @@ object ActivityHelper {
     fun currentActivity(): Activity {
         // fix: java.lang.IllegalStateException: Querying activity state off main thread is not allowed.
         val activity = AtomicReference<Activity>(null)
-        InstrumentationRegistry.getInstrumentation().runOnMainSync { activity.set(Iterables.getOnlyElement(getActivitiesInStages(Stage.RESUMED))) }
+        InstrumentationRegistry.getInstrumentation().runOnMainSync { activity.set(Iterables.getOnlyElement(getActivitiesInStages(Stage.RESUMED)) as Activity?) }
 
         val result = activity.get()
         Preconditions.checkNotNull(result)

@@ -78,6 +78,8 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.compose.ui:ui-test-android:1.6.6'
+
     // last update: Sept 30 2017
     // old versions: $ANDROID_HOME/extras/android/m2repository/com/android/support/test/
     // new versions: https://maven.google.com

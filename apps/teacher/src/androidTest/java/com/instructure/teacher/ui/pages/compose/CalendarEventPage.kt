@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,11 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.ui.pages
+package com.instructure.teacher.ui.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextReplacement
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -33,13 +37,38 @@ import org.hamcrest.Matchers
 
 class CalendarEventPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
-    fun verifyTitle(title: String) {
+    fun assertTitle(title: String) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
     }
 
-    fun verifyDescription(description: String) {
+    fun assertDescription(description: String) {
         onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
             .withElement(findElement(Locator.ID, "content"))
             .check(webMatches(getText(), Matchers.comparesEqualTo(description)))
+    }
+
+    fun typeTitle(title: String) {
+        composeTestRule.onNodeWithTag("addTitleField").assertExists().performTextReplacement(title)
+        composeTestRule.waitForIdle()
+    }
+
+    fun typeLocation(location: String) {
+        composeTestRule.onNodeWithTag("locationTextField").onChildAt(0).performTextReplacement(location)
+        composeTestRule.waitForIdle()
+    }
+
+    fun typeAddress(address: String) {
+        composeTestRule.onNodeWithTag("addressTextField").onChildAt(0).performTextReplacement(address)
+        composeTestRule.waitForIdle()
+    }
+
+    fun typeDetails(details: String) {
+        composeTestRule.onNodeWithTag("detailsComposeRCE").performTextReplacement(details)
+        composeTestRule.waitForIdle()
+    }
+
+    fun clickSave() {
+        composeTestRule.onNodeWithText("Save").performClick()
+        composeTestRule.waitForIdle()
     }
 }
