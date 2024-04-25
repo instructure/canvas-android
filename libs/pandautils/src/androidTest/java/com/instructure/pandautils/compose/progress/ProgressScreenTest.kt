@@ -16,7 +16,7 @@
  *
  */
 
-package com.instructure.pandautils.compose
+package com.instructure.pandautils.compose.progress
 
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
