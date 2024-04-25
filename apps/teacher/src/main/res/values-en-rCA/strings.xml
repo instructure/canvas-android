@@ -718,7 +718,6 @@
     <string name="changeUser">Change User</string>
     <string name="general">General</string>
     <string name="sendFeedback">Send Feedback</string>
-    <string name="rateOnTheAppStore">Rate on the App Store</string>
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Terms of Use</string>
@@ -875,7 +874,6 @@
         <item quantity="one">-%s point</item>
         <item quantity="other">-%s points</item>
     </plurals>
-    <string name="todoUnreadCount">To do %d unread</string>
     <string name="profileSettings">Profile Settings</string>
     <string name="downloadingFile">Downloading file&#8230;</string>
     <string name="fileDownloadedSuccessfully">File downloaded successfully.</string>
@@ -900,5 +898,6 @@
     <string name="no_grade">No grade</string>
     <string name="excuse">Excuse</string>
     <string name="speed_grader_overgraded_by">Overgraded by %s</string>
+    <string name="error_unpublishable_module_item">Cannot unpublish %s if there are student submissions</string>
 
 </resources>
