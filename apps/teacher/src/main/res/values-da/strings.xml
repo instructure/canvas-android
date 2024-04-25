@@ -715,7 +715,6 @@
     <string name="changeUser">Skift bruger</string>
     <string name="general">Generelt</string>
     <string name="sendFeedback">Send feedback</string>
-    <string name="rateOnTheAppStore">Vurder i App Store</string>
     <string name="privacyPolicy">Datapolitik</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Betingelser for brug</string>
@@ -872,7 +871,6 @@
         <item quantity="one">-%s point</item>
         <item quantity="other">-%s point</item>
     </plurals>
-    <string name="todoUnreadCount">Opgaveliste %d ulæst</string>
     <string name="profileSettings">Profilindstillinger</string>
     <string name="downloadingFile">Downloader fil&#8230;</string>
     <string name="fileDownloadedSuccessfully">Fil blev downloaded!</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Ingen karakter</string>
     <string name="excuse">Undskyld</string>
     <string name="speed_grader_overgraded_by">Givet for høj karakter af %s</string>
+    <string name="error_unpublishable_module_item">Kan ikke fjerne offentliggørelse af %s, hvis der er afleveringer fra studerende</string>
 </resources>
