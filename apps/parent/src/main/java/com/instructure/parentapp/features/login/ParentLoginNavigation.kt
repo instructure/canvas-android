@@ -15,29 +15,30 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.features.login
 
+import android.content.Intent
+import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.LoginNavigation
-import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
-import com.instructure.parentapp.features.login.ParentLoginNavigation
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import com.instructure.parentapp.MainActivity
 
-@Module
-@InstallIn(ActivityComponent::class)
-class LoginModule {
 
-    @Provides
-    fun provideAcceptableUsePolicyRouter(activity: FragmentActivity): AcceptableUsePolicyRouter {
+class ParentLoginNavigation(
+    private val activity: FragmentActivity
+) : LoginNavigation(activity) {
+
+    override val checkElementary: Boolean = false
+
+    override fun logout() {
         // TODO: Implement
-        throw NotImplementedError()
     }
 
-    @Provides
-    fun provideLoginNavigation(activity: FragmentActivity): LoginNavigation {
-        return ParentLoginNavigation(activity)
+    override fun initMainActivityIntent(): Intent {
+        CookieManager.getInstance().flush()
+
+        val intent = Intent(activity, MainActivity::class.java)
+        activity.intent?.extras?.let { intent.putExtras(it) }
+        return intent
     }
 }

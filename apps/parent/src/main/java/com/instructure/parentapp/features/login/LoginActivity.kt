@@ -15,26 +15,25 @@
  *
  */
 
-package com.instructure.parentapp.util
+package com.instructure.parentapp.features.login
 
-import com.instructure.canvasapi2.AppManager
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
-import dagger.hilt.android.HiltAndroidApp
+import android.content.Intent
+import androidx.core.content.ContextCompat
+import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.pandautils.utils.Const
+import com.instructure.parentapp.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
+class LoginActivity : BaseLoginInitActivity() {
 
-@HiltAndroidApp
-class AppManager : AppManager() {
-
-    override fun onCreate() {
-        super.onCreate()
-        init()
+    override fun beginLoginFlowIntent(): Intent {
+        return LoginLandingPageActivity.createIntent(this)
     }
 
-    override fun performLogoutOnAuthError() {
-        // TODO: Implement
+    override fun themeColor(): Int {
+        return ContextCompat.getColor(this, R.color.login_parentAppTheme)
     }
 
-    private fun init() {
-        RemoteConfigUtils.initialize()
-    }
+    override fun userAgent() = Const.PARENT_USER_AGENT
 }

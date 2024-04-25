@@ -14,7 +14,10 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.instructure.parentapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".util.AppManager"
@@ -25,26 +28,51 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Apps"
         tools:overrideLibrary="com.instructure.canvasapi">
+
+        <activity
+            android:name=".features.login.LoginActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.Splash_Parent"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".features.login.LoginLandingPageActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
+        <activity
+            android:name=".features.login.FindSchoolActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
+        <activity
+            android:name=".features.login.SignInActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
+        <activity
+            android:name=".features.login.ParentLoginWithQRActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <nav-graph android:value="@navigation/nav_graph" />
-
-            <intent-filter>
-
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter android:autoVerify="true">
-
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <data android:host="*.instructure.com" />
 
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
