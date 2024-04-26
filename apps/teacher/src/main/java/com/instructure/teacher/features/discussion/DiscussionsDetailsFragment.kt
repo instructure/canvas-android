@@ -57,8 +57,10 @@ import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.events.DiscussionEntryEvent
 import com.instructure.teacher.factory.DiscussionsDetailsPresenterFactory
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.fragments.*
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
@@ -377,21 +379,21 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             RouteMatcher.route(requireActivity(), Route(null, DueDatesFragment::class.java, canvasContext, args))
         }
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.ALL)
         }
         binding.donutGroup.viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
         binding.donutGroup.gradedWrapper.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.GRADED)
         }
         binding.donutGroup.ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.NOT_GRADED)
         }
         binding.donutGroup.notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.MISSING)
         }
     }
 
-    private fun navigateToSubmissions(context: CanvasContext, assignment: Assignment, filter: AssignmentSubmissionListPresenter.SubmissionListFilter) {
+    private fun navigateToSubmissions(context: CanvasContext, assignment: Assignment, filter: SubmissionListFilter) {
         val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
         RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, context, args))
     }

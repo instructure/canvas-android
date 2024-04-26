@@ -20,7 +20,7 @@ package com.instructure.teacher.features.modules.progression
 import androidx.fragment.app.Fragment
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.teacher.fragments.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.QuizDetailsFragment
 

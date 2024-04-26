@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.teacher.presenters
+package com.instructure.teacher.features.assignment.list
 
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AssignmentManager

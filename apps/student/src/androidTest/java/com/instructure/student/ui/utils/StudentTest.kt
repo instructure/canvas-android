@@ -35,6 +35,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
@@ -61,6 +62,7 @@ import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.pages.FileListPage
 import com.instructure.student.ui.pages.FileUploadPage
+import com.instructure.student.ui.pages.GoToQuizPage
 import com.instructure.student.ui.pages.GradesPage
 import com.instructure.student.ui.pages.GroupBrowserPage
 import com.instructure.student.ui.pages.HelpPage
@@ -77,6 +79,7 @@ import com.instructure.student.ui.pages.ModuleProgressionPage
 import com.instructure.student.ui.pages.ModulesPage
 import com.instructure.student.ui.pages.NewMessagePage
 import com.instructure.student.ui.pages.NotificationPage
+import com.instructure.student.ui.pages.PageDetailsPage
 import com.instructure.student.ui.pages.PageListPage
 import com.instructure.student.ui.pages.PairObserverPage
 import com.instructure.student.ui.pages.PandaAvatarPage
@@ -149,7 +152,7 @@ abstract class StudentTest : CanvasTest() {
      */
     val annotationCommentListPage = AnnotationCommentListPage()
     val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val assignmentDetailsPage = AssignmentDetailsPage()
+    val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()
     val canvasWebViewPage = CanvasWebViewPage()
@@ -161,7 +164,7 @@ abstract class StudentTest : CanvasTest() {
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
-    val discussionDetailsPage = DiscussionDetailsPage()
+    val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val allCoursesPage = AllCoursesPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
@@ -179,6 +182,7 @@ abstract class StudentTest : CanvasTest() {
     val newMessagePage = NewMessagePage()
     val notificationPage = NotificationPage()
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
+    val pageDetailsPage = PageDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val pairObserverPage = PairObserverPage()
     val pandaAvatarPage = PandaAvatarPage()
     val peopleListPage = PeopleListPage()
@@ -188,6 +192,7 @@ abstract class StudentTest : CanvasTest() {
     val qrLoginPage = QRLoginPage()
     val quizListPage = QuizListPage()
     val quizTakingPage = QuizTakingPage()
+    val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val settingsPage = SettingsPage()
     val submissionDetailsPage = SubmissionDetailsPage()

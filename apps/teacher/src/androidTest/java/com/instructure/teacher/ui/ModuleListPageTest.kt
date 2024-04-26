@@ -322,7 +322,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickUnpublishRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        updateFilePermissionsPage.clickUpdateButton()
 
         moduleListPage.assertModuleItemNotPublished(fileFolder.displayName.orEmpty())
     }
@@ -353,7 +353,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickPublishRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        updateFilePermissionsPage.clickUpdateButton()
 
         moduleListPage.assertModuleItemIsPublished(fileFolder.displayName.orEmpty())
     }
@@ -384,7 +384,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickHideRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        updateFilePermissionsPage.clickUpdateButton()
 
         moduleListPage.assertModuleItemHidden(fileFolder.displayName.orEmpty())
     }

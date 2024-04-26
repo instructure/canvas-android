@@ -715,7 +715,6 @@
     <string name="changeUser">Gebruiker wijzigen</string>
     <string name="general">Algemeen</string>
     <string name="sendFeedback">Feedback versturen</string>
-    <string name="rateOnTheAppStore">Beoordelen in de App Store</string>
     <string name="privacyPolicy">Privacy-beleid</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Gebruiksvoorwaarden</string>
@@ -872,7 +871,6 @@
         <item quantity="one">-%s punt</item>
         <item quantity="other">-%s punten</item>
     </plurals>
-    <string name="todoUnreadCount">Taken %d ongelezen</string>
     <string name="profileSettings">Profielinstellingen</string>
     <string name="downloadingFile">Bestand downloaden&#8230;</string>
     <string name="fileDownloadedSuccessfully">Bestand is gedownload.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Geen cijfer</string>
     <string name="excuse">Vrijstellen</string>
     <string name="speed_grader_overgraded_by">Te hoog beoordeeld door %s</string>
+    <string name="error_unpublishable_module_item">Kan publicatie van %s niet ongedaan maken als er inleveringen van studenten zijn</string>
 </resources>

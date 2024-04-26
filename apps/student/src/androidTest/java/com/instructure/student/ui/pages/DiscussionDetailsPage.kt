@@ -36,6 +36,7 @@ import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertGone
@@ -56,7 +57,7 @@ import org.hamcrest.Matchers.containsString
 import org.junit.Assert.assertTrue
 
 
-class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
+class DiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(R.id.discussionDetailsPage) {
     private val discussionTopicTitle by OnViewWithId(R.id.discussionTopicTitle)
     private val replyButton by OnViewWithId(R.id.replyToDiscussionTopic)
 

@@ -318,7 +318,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val isUserFiles = canvasContext.type == CanvasContext.Type.USER
 
         if (recyclerAdapter == null) {
-            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder, canvasContext, fileListRepository.isOnline()), folder, adapterCallback, fileListRepository)
+            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder, canvasContext, fileListRepository.isOnline(), folder), folder, adapterCallback, fileListRepository)
         }
 
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
@@ -362,7 +362,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val popup = PopupMenu(requireContext(), anchorView)
         popup.inflate(R.menu.file_folder_options)
         with(popup.menu) {
-            val options = getFileMenuOptions(item, canvasContext, fileListRepository.isOnline())
+            val options = getFileMenuOptions(item, canvasContext, fileListRepository.isOnline(), folder)
             // Only show alternate-open option for PDF files
             findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
             findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
@@ -609,7 +609,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         /**
          * @return A list of possible actions the user is able to perform on the file/folder
          */
-        fun getFileMenuOptions(fileFolder: FileFolder?, canvasContext: CanvasContext, isOnline: Boolean): List<FileMenuType> {
+        fun getFileMenuOptions(fileFolder: FileFolder?, canvasContext: CanvasContext, isOnline: Boolean, folder: FileFolder?): List<FileMenuType> {
             if (fileFolder == null) return emptyList()
             val options: MutableList<FileMenuType> = mutableListOf()
 
@@ -617,7 +617,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 // We're in the user's files, they should have options in the options menu
                 if (!fileFolder.isLockedForUser) {
                     // File is not locked for this user
-                    if (!fileFolder.forSubmissions) {
+                    val forSubmission = if (!fileFolder.isFile) fileFolder.forSubmissions else folder?.forSubmissions ?: false
+                    if (!forSubmission) {
                         // File/folder is not for a submission, so we can rename/delete
                         with(options) {
                             add(FileMenuType.RENAME)

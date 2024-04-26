@@ -763,7 +763,6 @@
     <string name="changeUser">تغيير المستخدم</string>
     <string name="general">عام</string>
     <string name="sendFeedback">إرسال تعليقات</string>
-    <string name="rateOnTheAppStore">التقييم على App Store</string>
     <string name="privacyPolicy">سياسة الخصوصية</string>
     <string name="EULA">اتفاقية ترخيص المستخدم</string>
     <string name="termsOfUse">شروط الاستخدام</string>
@@ -928,7 +927,6 @@
         <item quantity="many">-%s نقطة</item>
         <item quantity="other">-%s نقاط</item>
     </plurals>
-    <string name="todoUnreadCount">قائمة مهام %d غير مقروءة</string>
     <string name="profileSettings">إعدادات ملف التعريف</string>
     <string name="downloadingFile">تنزيل الملف&#8230;</string>
     <string name="fileDownloadedSuccessfully">تم تنزيل الملف بنجاح.</string>
@@ -953,4 +951,5 @@
     <string name="no_grade">لا يوجد تقدير</string>
     <string name="excuse">إعفاء</string>
     <string name="speed_grader_overgraded_by">تقدير مبالغ فيه بواسطة %s</string>
+    <string name="error_unpublishable_module_item">لا يمكن إلغاء نشر %s في حالة وجود عمليات إرسال لطالب</string>
 </resources>
