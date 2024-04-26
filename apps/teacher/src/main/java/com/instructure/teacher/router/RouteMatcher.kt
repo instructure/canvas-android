@@ -78,9 +78,6 @@ import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.fragments.AnnouncementListFragment
 import com.instructure.teacher.fragments.AssigneeListFragment
-import com.instructure.teacher.fragments.AssignmentDetailsFragment
-import com.instructure.teacher.fragments.AssignmentListFragment
-import com.instructure.teacher.fragments.AssignmentSubmissionListFragment
 import com.instructure.teacher.fragments.AttendanceListFragment
 import com.instructure.teacher.fragments.ChooseRecipientsFragment
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
