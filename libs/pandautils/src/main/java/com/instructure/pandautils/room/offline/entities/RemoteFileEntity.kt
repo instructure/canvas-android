@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.models.RemoteFile
 
 @Entity
 data class RemoteFileEntity(
@@ -42,4 +43,48 @@ data class RemoteFileEntity(
     val lockedForUser: Boolean,
     val previewUrl: String?,
     val lockExplanation: String?
-)
+) {
+    constructor(remoteFile: RemoteFile) : this(
+        id = remoteFile.id,
+        folderId = remoteFile.folderId,
+        displayName = remoteFile.displayName,
+        fileName = remoteFile.fileName,
+        contentType = remoteFile.contentType,
+        url = remoteFile.url,
+        size = remoteFile.size,
+        createdAt = remoteFile.createdAt,
+        updatedAt = remoteFile.updatedAt,
+        unlockAt = remoteFile.unlockAt,
+        locked = remoteFile.locked,
+        hidden = remoteFile.hidden,
+        lockAt = remoteFile.lockAt,
+        hiddenForUser = remoteFile.hiddenForUser,
+        thumbnailUrl = remoteFile.thumbnailUrl,
+        modifiedAt = remoteFile.modifiedAt,
+        lockedForUser = remoteFile.lockedForUser,
+        previewUrl = remoteFile.previewUrl,
+        lockExplanation = remoteFile.lockExplanation
+    )
+
+    fun toApiModel() = RemoteFile(
+        id = id,
+        folderId = folderId,
+        displayName = displayName,
+        fileName = fileName,
+        contentType = contentType,
+        url = url,
+        size = size,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        unlockAt = unlockAt,
+        locked = locked,
+        hidden = hidden,
+        lockAt = lockAt,
+        hiddenForUser = hiddenForUser,
+        thumbnailUrl = thumbnailUrl,
+        modifiedAt = modifiedAt,
+        lockedForUser = lockedForUser,
+        previewUrl = previewUrl,
+        lockExplanation = lockExplanation
+    )
+}

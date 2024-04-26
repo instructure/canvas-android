@@ -79,7 +79,6 @@ class OfflineSyncHelper(
         val syncSettings = syncSettingsFacade.getSyncSettings()
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(if (syncSettings.wifiOnly) NetworkType.UNMETERED else NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(true)
             .build()
         val inputData = Data.Builder()
             .putLongArray(COURSE_IDS, courseIds.toLongArray())

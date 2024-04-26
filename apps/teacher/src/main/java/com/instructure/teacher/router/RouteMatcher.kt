@@ -66,6 +66,9 @@ import com.instructure.teacher.activities.MasterDetailActivity
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment

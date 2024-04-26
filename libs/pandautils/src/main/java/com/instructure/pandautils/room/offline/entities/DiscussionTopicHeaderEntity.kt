@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
+import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.pandautils.utils.orDefault
 import java.util.Date
 
@@ -126,7 +127,8 @@ data class DiscussionTopicHeaderEntity(
     fun toApiModel(
         author: DiscussionParticipant? = null,
         assignment: Assignment? = null,
-        permissions: DiscussionTopicPermission? = null
+        permissions: DiscussionTopicPermission? = null,
+        attachments: List<RemoteFile>
     ) = DiscussionTopicHeader(
         id = id,
         discussionType = discussionType,
@@ -151,8 +153,7 @@ data class DiscussionTopicHeaderEntity(
         groupCategoryId = groupCategoryId,
         announcement = announcement,
         groupTopicChildren = emptyList(),
-        //TODO
-        attachments = mutableListOf(),
+        attachments = attachments.toMutableList(),
         //TODO
         permissions = permissions,
         assignment = assignment,

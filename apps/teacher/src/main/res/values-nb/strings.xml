@@ -313,7 +313,6 @@
     <string name="assignments_list">Oppgaveliste</string>
     <string name="syllabus">Emneoversikt</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flere forfallsdatoer</string>
     <string name="everyone">Alle</string>
@@ -718,7 +717,6 @@
     <string name="changeUser">Endre bruker</string>
     <string name="general">Generelt</string>
     <string name="sendFeedback">Send tilbakemelding</string>
-    <string name="rateOnTheAppStore">Vurder på App Store</string>
     <string name="privacyPolicy">Retningslinjer for personvern</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">brukervilkår</string>
@@ -875,7 +873,6 @@
         <item quantity="one">-%s poeng</item>
         <item quantity="other">-%s poeng</item>
     </plurals>
-    <string name="todoUnreadCount">Gjøremål %d ulest</string>
     <string name="profileSettings">Profilinnstillinger</string>
     <string name="downloadingFile">Laster ned fil&#8230;</string>
     <string name="fileDownloadedSuccessfully">Filnedlasting utført.</string>
@@ -901,4 +898,5 @@
     <string name="excuse">Unnskyldning</string>
     <string name="speed_grader_overgraded_by">Overgradert av %s</string>
 
+    <string name="error_unpublishable_module_item">Kan ikke avpublisere %s hvis det er innleveringer fra student</string>
 </resources>

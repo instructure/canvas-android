@@ -29,7 +29,7 @@ import com.instructure.teacher.databinding.AdapterAssignmentBinding
 import com.instructure.teacher.databinding.AdapterAssignmentGroupHeaderBinding
 import com.instructure.teacher.holders.AssignmentGroupHeaderViewHolder
 import com.instructure.teacher.holders.AssignmentViewHolder
-import com.instructure.teacher.presenters.AssignmentListPresenter
+import com.instructure.teacher.features.assignment.list.AssignmentListPresenter
 import com.instructure.teacher.viewinterface.AssignmentListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 

@@ -38,6 +38,7 @@ import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
@@ -66,7 +67,7 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 
-open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
+open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(R.id.assignmentDetailsPage) {
     val toolbar by OnViewWithId(R.id.toolbar)
     val points by OnViewWithId(R.id.points)
     val date by OnViewWithId(R.id.dueDateTextView)
