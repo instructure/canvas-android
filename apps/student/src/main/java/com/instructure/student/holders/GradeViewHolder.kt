@@ -99,7 +99,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
         date.setVisible(date.text.isNotBlank())
 
-        if (assignment.isMissing() && !isEdit && assignment.submission?.grade == null) {
+        if (assignment.isMissing() && !isEdit) {
             submissionState.text = context.getString(R.string.missingAssignment)
             submissionState.setTextColor(ContextCompat.getColor(context, R.color.textDanger))
             submissionState.setVisible()

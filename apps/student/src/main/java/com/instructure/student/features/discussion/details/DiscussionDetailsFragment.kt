@@ -194,33 +194,29 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Discussion Actions
 
     private fun viewAttachments(remoteFiles: List<RemoteFile>) {
-        if (repository.isOnline()) {
-            // Only one file can be attached to a discussion
-            val remoteFile = remoteFiles.firstOrNull() ?: return
+        // Only one file can be attached to a discussion
+        val remoteFile = remoteFiles.firstOrNull() ?: return
 
-            // Show lock message if file is locked
-            if (remoteFile.lockedForUser) {
-                if (remoteFile.lockExplanation.isValid()) {
-                    Snackbar.make(
-                        requireView(),
-                        remoteFile.lockExplanation!!,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Snackbar.make(
-                        requireView(),
-                        R.string.fileCurrentlyLocked,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
+        // Show lock message if file is locked
+        if (remoteFile.lockedForUser) {
+            if (remoteFile.lockExplanation.isValid()) {
+                Snackbar.make(
+                    requireView(),
+                    remoteFile.lockExplanation!!,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            } else {
+                Snackbar.make(
+                    requireView(),
+                    R.string.fileCurrentlyLocked,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-
-            // Show attachment
-            val attachment = remoteFile.mapToAttachment()
-            openMedia(attachment.contentType, attachment.url, attachment.filename, canvasContext)
-        } else {
-            NoInternetConnectionDialog.show(requireFragmentManager())
         }
+
+        // Show attachment
+        val attachment = remoteFile.mapToAttachment()
+        openMedia(attachment.contentType, attachment.url, attachment.filename, canvasContext, localFile = attachment.isLocalFile)
     }
 
     private fun showReplyView(discussionEntryId: Long) {
@@ -612,7 +608,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                             canvasContext,
                             discussionTopicHeader,
                             discussionTopic!!.views,
-                            discussionEntryId
+                            discussionEntryId,
+                            repository.isOnline()
                         )
 
                 loadDiscussionTopicViews(html)

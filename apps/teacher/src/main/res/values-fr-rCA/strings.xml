@@ -715,7 +715,6 @@
     <string name="changeUser">Changer d\'utilisateur</string>
     <string name="general">Général</string>
     <string name="sendFeedback">Envoyer un avis</string>
-    <string name="rateOnTheAppStore">Noter sur l\'App Store</string>
     <string name="privacyPolicy">Politique de confidentialité</string>
     <string name="EULA">CLUF</string>
     <string name="termsOfUse">Conditions d\'utilisation</string>
@@ -872,7 +871,6 @@
         <item quantity="one">-%s point</item>
         <item quantity="other">-%s points</item>
     </plurals>
-    <string name="todoUnreadCount">À faire %d non lue</string>
     <string name="profileSettings">Paramètres de profil</string>
     <string name="downloadingFile">Téléchargement du fichier &#8230;</string>
     <string name="fileDownloadedSuccessfully">Fichiers téléchargé avec succès.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Aucune note</string>
     <string name="excuse">Exempté</string>
     <string name="speed_grader_overgraded_by">Surclassement par %s</string>
+    <string name="error_unpublishable_module_item">Impossible d’annuler la publication %s s’il y a des envois d’étudiants</string>
 </resources>

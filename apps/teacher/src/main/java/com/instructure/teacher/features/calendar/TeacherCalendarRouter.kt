@@ -27,7 +27,7 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.teacher.activities.InitActivity
-import com.instructure.teacher.fragments.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {

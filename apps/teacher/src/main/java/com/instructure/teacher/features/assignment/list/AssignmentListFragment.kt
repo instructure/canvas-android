@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.teacher.fragments
+package com.instructure.teacher.features.assignment.list
 
 import android.os.Bundle
 import android.view.Gravity
@@ -40,7 +40,9 @@ import com.instructure.teacher.adapters.AssignmentAdapter
 import com.instructure.teacher.databinding.FragmentAssignmentListBinding
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.factory.AssignmentListPresenterFactory
-import com.instructure.teacher.presenters.AssignmentListPresenter
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.fragments.QuizDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setHeaderVisibilityListener

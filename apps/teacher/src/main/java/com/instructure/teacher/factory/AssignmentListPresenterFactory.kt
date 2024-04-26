@@ -17,7 +17,7 @@
 package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.teacher.presenters.AssignmentListPresenter
+import com.instructure.teacher.features.assignment.list.AssignmentListPresenter
 import com.instructure.teacher.viewinterface.AssignmentListView
 import instructure.androidblueprint.PresenterFactory
 

@@ -40,7 +40,7 @@ import com.instructure.teacher.databinding.FragmentSyllabusBinding
 import com.instructure.teacher.events.SyllabusUpdatedEvent
 import com.instructure.teacher.features.syllabus.SyllabusEvent
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
-import com.instructure.teacher.fragments.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton

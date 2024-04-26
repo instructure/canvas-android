@@ -165,7 +165,7 @@
 
     <string name="inbox_empty_title">Không có tin nhắn</string>
     <string name="inbox_empty_starred_title">Không Có Tin Nhắn Được Gắn Dấu Sao</string>
-    <string name="inbox_empty_message">Nhấn vào dấu \\"+\\" để tạo cuộc trò chuyện mới.</string>
+    <string name="inbox_empty_message">Nhấn vào dấu \"+\" để tạo cuộc trò chuyện mới.</string>
     <string name="inbox_empty_starred_message">Gắn dấu sao bằng cách nhấn vào hình ngôi sao trong tin nhắn.</string>
 
     <string name="reply">Trả Lời</string>
@@ -313,7 +313,6 @@
     <string name="assignments_list">Danh Sách Bài Tập</string>
     <string name="syllabus">Chương Trình Học</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Nhiều Ngày Đến Hạn</string>
     <string name="everyone">Mọi Người</string>
@@ -718,7 +717,6 @@
     <string name="changeUser">Thay Đổi Người Dùng</string>
     <string name="general">Chung</string>
     <string name="sendFeedback">Gửi Ý Kiến Phản Hồi</string>
-    <string name="rateOnTheAppStore">Đánh giá trên App Store</string>
     <string name="privacyPolicy">Chính Sách Quyền Riêng Tư</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Điều Khoản Sử Dụng</string>
@@ -875,7 +873,6 @@
         <item quantity="one">-%s điểm thành phần</item>
         <item quantity="other">-%s điểm thành phần</item>
     </plurals>
-    <string name="todoUnreadCount">Cần làm %d chưa đọc</string>
     <string name="profileSettings">Cài Đặt Hồ Sơ</string>
     <string name="downloadingFile">Đang tải xuống tập tin&#8230;</string>
     <string name="fileDownloadedSuccessfully">Đã tải xuống tập tin thành công.</string>
@@ -901,4 +898,5 @@
     <string name="excuse">Xin Phép</string>
     <string name="speed_grader_overgraded_by">Được chấm điểm nhiều lần bởi %s</string>
 
+    <string name="error_unpublishable_module_item">Không thể hủy công bố %s nếu có các bài nộp của sinh viên</string>
 </resources>

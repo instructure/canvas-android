@@ -59,6 +59,7 @@ import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
+import com.instructure.pandautils.room.offline.entities.RemoteFileEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -150,7 +151,11 @@ class CourseSync(
             listOf(contentDeferred, filesDeferred).awaitAll()
         }
 
-        fileSync.syncAdditionalFiles(courseSettings, additionalFileIdsToSync[courseId].orEmpty(), externalFilesToSync[courseId].orEmpty())
+        fileSync.syncAdditionalFiles(
+            courseSettings,
+            additionalFileIdsToSync[courseId].orEmpty(),
+            externalFilesToSync[courseId].orEmpty(),
+        )
 
         val progress = courseSyncProgressDao.findByCourseId(courseId)
         progress
@@ -411,6 +416,9 @@ class CourseSync(
 
             discussions.forEach {
                 it.message = parseHtmlContent(it.message, courseId)
+                it.attachments.forEach {
+                    additionalFileIdsToSync[courseId] = additionalFileIdsToSync[courseId].orEmpty() + it.id
+                }
             }
 
             discussionTopicHeaderFacade.insertDiscussions(discussions, courseId, false)
@@ -433,6 +441,9 @@ class CourseSync(
 
             announcements.forEach {
                 it.message = parseHtmlContent(it.message, courseId)
+                it.attachments.forEach {
+                    additionalFileIdsToSync[courseId] = additionalFileIdsToSync[courseId].orEmpty() + it.id
+                }
             }
 
             discussionTopicHeaderFacade.insertDiscussions(announcements, courseId, true)

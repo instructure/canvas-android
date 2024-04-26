@@ -89,13 +89,13 @@ class ModulesE2ETest: StudentTest() {
         Log.d(PREPARATION_TAG,"Associate '${assignment2.name}' assignment with '${module2.name}' module.")
         ModulesApi.createModuleItem(course.id, teacher.token, module2.id, assignment2.name, ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment2.id.toString())
 
-        Log.d(PREPARATION_TAG,"Associate '${page1.title}' page with '${module2.name}' module.")
-        ModulesApi.createModuleItem(course.id, teacher.token, module2.id, page1.title, ModuleItemTypes.PAGE.stringVal, pageUrl = page1.url)
-
         Log.d(PREPARATION_TAG,"Associate '${discussionTopic1.title}' discussion topic with '${module2.name}' module.")
         ModulesApi.createModuleItem(course.id, teacher.token, module2.id, discussionTopic1.title, ModuleItemTypes.DISCUSSION.stringVal, contentId = discussionTopic1.id.toString())
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(PREPARATION_TAG,"Associate '${quiz1.title}' page with '${module2.name}' module.")
+        ModulesApi.createModuleItem(course.id, teacher.token, module2.id, page1.title, ModuleItemTypes.PAGE.stringVal, pageUrl = page1.url)
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -149,9 +149,61 @@ class ModulesE2ETest: StudentTest() {
         modulesPage.clickOnModuleExpandCollapseIcon(module2.name)
         modulesPage.assertModulesAndItemsCount(7) // 2 modules titles, 2 module items in first module, 3 items in second module
 
-        Log.d(STEP_TAG, "Assert that '${assignment1.name}' module item is displayed and open it. Assert that the Assignment Details page is displayed with the corresponding assignment title.")
+        Log.d(STEP_TAG, "Assert that '${assignment1.name}' module item is displayed and open it. Assert that the Assignment Details page is displayed with the corresponding assignment name: '${assignment1.name}'.")
         modulesPage.assertAndClickModuleItem(module1.name, assignment1.name, true)
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertAssignmentTitle(assignment1.name)
+
+        Log.d(STEP_TAG, "Assert that the module name, '${module1.name}' is displayed at the bottom.")
+        assignmentDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module1.name)
+
+        Log.d(STEP_TAG, "Assert that the previous arrow button is not displayed because the user is on the first module item's details page, but the next arrow button is displayed.")
+        assignmentDetailsPage.moduleItemInteractions.assertPreviousArrowNotDisplayed()
+        assignmentDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
+
+        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${quiz1.title}' quiz module item's 'Go To Quiz' page is displayed.")
+        assignmentDetailsPage.moduleItemInteractions.clickOnNextArrow()
+        goToQuizPage.assertQuizTitle(quiz1.title)
+
+        Log.d(STEP_TAG, "Assert that the module name, '${module1.name}' is displayed at the bottom.")
+        goToQuizPage.moduleItemInteractions.assertModuleNameDisplayed(module1.name)
+
+        Log.d(STEP_TAG, "Assert that both the previous and the next buttons are displayed (since we are not at the first or the last module item details page).")
+        goToQuizPage.moduleItemInteractions.assertPreviousArrowDisplayed()
+        goToQuizPage.moduleItemInteractions.assertNextArrowDisplayed()
+
+        Log.d(STEP_TAG, "Click on the next arrow button and assert that the Assignment Details Page is displayed with the corresponding assignment name: '${assignment2.name}'.")
+        goToQuizPage.moduleItemInteractions.clickOnNextArrow()
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertAssignmentTitle(assignment2.name)
+
+        Log.d(STEP_TAG, "Assert that the second module name, '${module2.name}' is displayed at the bottom since we can navigate even between modules with these arrows.")
+        assignmentDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module2.name)
+
+        Log.d(STEP_TAG, "Assert that both the previous and the next buttons are displayed (since we are not at the first or the last module item details page, even if it's a first item of a module, but of the second module).")
+        assignmentDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
+        assignmentDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
+
+        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${discussionTopic1.title}' discussion topic module item's details page is displayed.")
+        assignmentDetailsPage.moduleItemInteractions.clickOnNextArrow()
+        discussionDetailsPage.assertTitleText(discussionTopic1.title)
+
+        Log.d(STEP_TAG, "Assert that the second module name, '${module2.name}' is displayed at the bottom.")
+        discussionDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module2.name)
+
+        Log.d(STEP_TAG, "Assert that both the previous and the next buttons are displayed.")
+        discussionDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
+        discussionDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
+
+        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${page1.url}' page module item's details page is displayed.")
+        discussionDetailsPage.moduleItemInteractions.clickOnNextArrow()
+        pageDetailsPage.webAssertPageUrl(page1.url)
+
+        Log.d(STEP_TAG, "Assert that the second module name, '${module2.name}' is displayed at the bottom.")
+        pageDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module2.name)
+
+        Log.d(STEP_TAG, "Assert that the previous arrow button is displayed but the next arrow button is not displayed because the user is on the last module item's details page.")
+        pageDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
+        pageDetailsPage.moduleItemInteractions.assertNextArrowNotDisplayed()
     }
 }

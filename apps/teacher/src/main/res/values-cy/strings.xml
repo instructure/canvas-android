@@ -715,7 +715,6 @@
     <string name="changeUser">Newid Defnyddiwr</string>
     <string name="general">Cyffredinol</string>
     <string name="sendFeedback">Anfon Adborth</string>
-    <string name="rateOnTheAppStore">Sgorio’r App Store</string>
     <string name="privacyPolicy">Polisi Preifatrwydd</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Telerau Defnyddio</string>
@@ -872,7 +871,6 @@
         <item quantity="one">%s pwynt</item>
         <item quantity="other">%s pwynt</item>
     </plurals>
-    <string name="todoUnreadCount">I\'w gwneud %d heb eu darllen</string>
     <string name="profileSettings">Gosodiadau Proffil</string>
     <string name="downloadingFile">Llwytho ffeil i lawr&#8230;</string>
     <string name="fileDownloadedSuccessfully">Wedi llwyddo i lwytho ffeil i lawr.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Dim gradd</string>
     <string name="excuse">Esgusodi</string>
     <string name="speed_grader_overgraded_by">Wedi’i or-raddio gan %s</string>
+    <string name="error_unpublishable_module_item">Does dim modd datgyhoeddi %s os oes gwaith wedi’i gyflwyno gan fyfyrwyr</string>
 </resources>

@@ -739,7 +739,6 @@
     <string name="changeUser">Сменить пользователя</string>
     <string name="general">Общее</string>
     <string name="sendFeedback">Отправить отзыв</string>
-    <string name="rateOnTheAppStore">Оценить в App Store</string>
     <string name="privacyPolicy">Политика конфиденциальности</string>
     <string name="EULA">Лицензионный договор</string>
     <string name="termsOfUse">Условия использования</string>
@@ -900,7 +899,6 @@
         <item quantity="many">-%s балла/баллов</item>
         <item quantity="other">-%s балла/баллов</item>
     </plurals>
-    <string name="todoUnreadCount">Выполнить непрочитанные %d</string>
     <string name="profileSettings">Настройки профиля</string>
     <string name="downloadingFile">Загрузка файла&#8230;</string>
     <string name="fileDownloadedSuccessfully">Файл успешно загружен.</string>
@@ -925,4 +923,5 @@
     <string name="no_grade">Без оценки</string>
     <string name="excuse">Освободить</string>
     <string name="speed_grader_overgraded_by">Переоценил %s</string>
+    <string name="error_unpublishable_module_item">Невозможно отменить публикацию %s, если есть отправленные студентами задания</string>
 </resources>

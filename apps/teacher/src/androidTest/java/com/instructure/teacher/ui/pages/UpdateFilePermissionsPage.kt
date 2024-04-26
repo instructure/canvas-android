@@ -18,6 +18,13 @@
 
 package com.instructure.teacher.ui.pages
 
+import android.widget.DatePicker
+import android.widget.NumberPicker
+import android.widget.TimePicker
+import androidx.databinding.adapters.TextViewBindingAdapter.setText
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.contrib.PickerActions
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertChecked
 import com.instructure.espresso.assertDisabled
@@ -26,18 +33,27 @@ import com.instructure.espresso.assertEnabled
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.getDateInCanvasFormat
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForViewWithClassName
 import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
+import com.instructure.espresso.typeText
 import com.instructure.teacher.R
+import org.hamcrest.Matchers
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 
 class UpdateFilePermissionsPage : BasePage() {
 
-    private val saveButton by OnViewWithId(R.id.updateButton)
+    private val updateButton by OnViewWithId(R.id.updateButton)
     private val publishRadioButton by OnViewWithId(R.id.publish)
     private val unpublishRadioButton by OnViewWithId(R.id.unpublish)
     private val hideRadioButton by OnViewWithId(R.id.hide)
@@ -84,8 +100,8 @@ class UpdateFilePermissionsPage : BasePage() {
         publicRadioButton.assertChecked()
     }
 
-    fun clickSaveButton() {
-        saveButton.click()
+    fun clickUpdateButton() {
+        updateButton.click()
     }
 
     fun clickPublishRadioButton() {
@@ -98,6 +114,10 @@ class UpdateFilePermissionsPage : BasePage() {
 
     fun clickHideRadioButton() {
         waitForViewWithId(R.id.hide).click()
+    }
+
+    fun clickScheduleRadioButton() {
+        waitForViewWithId(R.id.schedule).click()
     }
 
     fun assertScheduleLayoutDisplayed() {
@@ -143,5 +163,27 @@ class UpdateFilePermissionsPage : BasePage() {
     fun swipeUpBottomSheet() {
         onViewWithText(R.string.edit_permissions).swipeUp()
         Thread.sleep(1000)
+    }
+
+    fun setFromDateTime(calendar: Calendar) {
+        availableFromDate.perform(click())
+        waitForViewWithClassName(Matchers.equalTo(DatePicker::class.java.name)).perform(PickerActions.setDate(calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)))
+        onViewWithId(android.R.id.button1).click()
+        availableFromTime.perform(click())
+        onView(withClassName(Matchers.equalTo(TimePicker::class.java.name)))
+            .perform(PickerActions.setTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)))
+        onViewWithId(android.R.id.button1).click()
+    }
+
+    fun setUntilDateTime(calendar: Calendar) {
+        availableUntilDate.perform(click())
+        waitForViewWithClassName(Matchers.equalTo(DatePicker::class.java.name)).perform(PickerActions.setDate(calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)))
+        onViewWithId(android.R.id.button1).click()
+        availableUntilTime.perform(click())
+        onView(withClassName(Matchers.equalTo(TimePicker::class.java.name)))
+            .perform(PickerActions.setTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)))
+        onViewWithId(android.R.id.button1).click()
     }
 }

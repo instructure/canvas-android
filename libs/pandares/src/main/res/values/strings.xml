@@ -1499,7 +1499,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Offline Content Sync Failed</string>
     <string name="syncProgress_cancelConfirmationTitle">Cancel Sync?</string>
     <string name="syncProgress_cancelConfirmationMessage">It will stop offline content sync. You can do it again later.</string>
-    <string name="syncProgress_syncErrorSubtitle">One or more files failed to sync. Check your internet connection and retry to submit.</string>
+    <string name="syncProgress_syncErrorSubtitle">One or more items failed to sync. Please check your internet connection and retry syncing.</string>
     <string name="syncProgress_downloadStarting">Download starting</string>
     <string name="coursesCannotBeFavoritedOffline">Courses cannot be added to favorites offline.</string>
     <string name="allCoursesScreenHeader">All Courses</string>

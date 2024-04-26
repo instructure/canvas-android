@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.fragments
+package com.instructure.teacher.features.assignment.submission
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -31,7 +31,15 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LI
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.SerializableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.GradeableStudentSubmissionAdapter
@@ -44,18 +52,24 @@ import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.factory.AssignmentSubmissionListPresenterFactory
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
+import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.setHeaderVisibilityListener
+import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
+import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_SUBMISSION_LIST)
+@AndroidEntryPoint
 class AssignmentSubmissionListFragment : BaseSyncFragment<
         GradeableStudentSubmission,
         AssignmentSubmissionListPresenter,
@@ -63,17 +77,20 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         GradeableStudentSubmissionViewHolder,
         GradeableStudentSubmissionAdapter>(), AssignmentSubmissionListView {
 
+    @Inject
+    lateinit var assignmentSubmissionRepository: AssignmentSubmissionRepository
+
     private val binding by viewBinding(FragmentAssignmentSubmissionListBinding::bind)
 
-    private var mAssignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
-    private var mCourse: Course by ParcelableArg(Course())
+    private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
+    private var course: Course by ParcelableArg(Course())
     private lateinit var mRecyclerView: RecyclerView
-    private var mFilter by SerializableArg(SubmissionListFilter.ALL, FILTER_TYPE)
-    private var mCanvasContextsSelected = ArrayList<CanvasContext>()
+    private var filter by SerializableArg(SubmissionListFilter.ALL, FILTER_TYPE)
+    private var canvasContextsSelected = ArrayList<CanvasContext>()
 
-    private var mNeedToForceNetwork = false
+    private var needToForceNetwork = false
 
-    private val mSubmissionFilters: Map<Int, String> by lazy {
+    private val submissionFilters: Map<Int, String> by lazy {
         sortedMapOf(
                 Pair(SubmissionListFilter.ALL.ordinal, getString(R.string.all_submissions)),
                 Pair(SubmissionListFilter.LATE.ordinal, getString(R.string.submitted_late)),
@@ -87,7 +104,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_submission_list
     override val recyclerView: RecyclerView get() = binding.submissionsRecyclerView
-    override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(mAssignment, mFilter)
+    override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(assignment, filter, assignmentSubmissionRepository)
     override fun onCreateView(view: View) = Unit
     override fun onPresenterPrepared(presenter: AssignmentSubmissionListPresenter) = with(binding) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
@@ -111,8 +128,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             mRecyclerView.adapter = adapter
         }
 
-        presenter.refresh(mNeedToForceNetwork)
-        mNeedToForceNetwork = false
+        presenter.refresh(needToForceNetwork)
+        needToForceNetwork = false
 
         updateFilterTitle()
         binding.clearFilterTextView.setTextColor(ThemePrefs.textButtonColor)
@@ -129,11 +146,18 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     }
 
     override fun createAdapter(): GradeableStudentSubmissionAdapter {
-        return GradeableStudentSubmissionAdapter(mAssignment, mCourse.id, requireContext(), presenter) { gradeableStudentSubmission ->
+        return GradeableStudentSubmissionAdapter(assignment, course.id, requireContext(), presenter) { gradeableStudentSubmission ->
             withRequireNetwork {
                 val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
                 val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
-                val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx, mAssignment.anonymousGrading)
+                val bundle = SpeedGraderActivity.makeBundle(
+                    course.id,
+                    assignment.id,
+                    selectedIdx,
+                    assignment.anonymousGrading,
+                    presenter.getFilter(),
+                    presenter.getFilterPoints()
+                )
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
         }
@@ -151,7 +175,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         swipeRefreshLayout.isRefreshing = false
 
         // Theme the toolbar again since visibilities may have changed
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, course.backgroundColor, requireContext().getColor(R.color.white))
 
         updateStatuses() // Muted is now also set by not being in the new gradebook
     }
@@ -170,13 +194,13 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         assignmentSubmissionListToolbar.setupBackButtonAsBackPressedOnly(this@AssignmentSubmissionListFragment)
 
         if(isTablet) {
-            assignmentSubmissionListToolbar.title = mAssignment.name
+            assignmentSubmissionListToolbar.title = assignment.name
         } else {
             assignmentSubmissionListToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
             assignmentSubmissionListToolbar.title = getString(R.string.submissions)
-            assignmentSubmissionListToolbar.subtitle = mCourse.name
+            assignmentSubmissionListToolbar.subtitle = course.name
         }
-        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, mCourse.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), assignmentSubmissionListToolbar, course.backgroundColor, requireContext().getColor(R.color.white))
         ViewStyler.themeFAB(addMessage)
     }
 
@@ -189,7 +213,12 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         }
 
         addMessage.setOnClickListener {
-            val args = AddMessageFragment.createBundle(presenter.getRecipients(), filterTitle.text.toString() + " " + getString(R.string.on) + " " + mAssignment.name, mCourse.contextId, false)
+            val args = AddMessageFragment.createBundle(
+                presenter.getRecipients(),
+                filterTitle.text.toString() + " " + getString(R.string.on) + " " + assignment.name,
+                course.contextId,
+                false
+            )
             RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
         }
     }
@@ -205,7 +234,9 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         when (presenter.getFilter()) {
             SubmissionListFilter.ALL -> {
                 filterTitle.setText(R.string.all_submissions)
-                clearFilterTextView.setGone()
+                if (presenter.getSectionFilterText().isEmpty()) {
+                    clearFilterTextView.setGone()
+                }
             }
             SubmissionListFilter.LATE -> filterTitle.setText(R.string.submitted_late)
             SubmissionListFilter.MISSING -> filterTitle.setText(R.string.havent_submitted_yet)
@@ -230,15 +261,12 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     private fun setFilter(filterIndex: Int = -1, canvasContexts: ArrayList<CanvasContext>? = null) = with(binding) {
         canvasContexts?.let {
-            mCanvasContextsSelected = ArrayList()
-            mCanvasContextsSelected.addAll(canvasContexts)
+            canvasContextsSelected = ArrayList()
+            canvasContextsSelected.addAll(canvasContexts)
 
             presenter.setSections(canvasContexts)
 
             updateFilterTitle()
-
-            filterTitle.text = filterTitle.text.toString().plus(presenter.getSectionFilterText())
-            clearFilterTextView.setVisible()
             return
         }
 
@@ -260,13 +288,13 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 updateFilterTitle()
             }
             SubmissionListFilter.BELOW_VALUE.ordinal -> {
-                FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_less_than), mAssignment.pointsPossible) { points ->
+                FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_less_than), assignment.pointsPossible) { points ->
                     presenter.setFilter(SubmissionListFilter.BELOW_VALUE, points)
                     updateFilterTitle()
                 }.show(requireActivity().supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
             }
             SubmissionListFilter.ABOVE_VALUE.ordinal -> {
-                FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_more_than), mAssignment.pointsPossible) { points ->
+                FilterSubmissionByPointsDialog.getInstance(requireFragmentManager(), getString(R.string.scored_more_than), assignment.pointsPossible) { points ->
                     presenter.setFilter(SubmissionListFilter.ABOVE_VALUE, points)
                     updateFilterTitle()
                 }.show(requireActivity().supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
@@ -277,7 +305,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.filterSubmissions -> {
-                val (keys, values) = mSubmissionFilters.toList().unzip()
+                val (keys, values) = submissionFilters.toList().unzip()
                 val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.filter_submissions), values as ArrayList<String>, keys.indexOf(presenter.getFilter().ordinal)) { idx ->
                     EventBus.getDefault().post(SubmissionFilterChangedEvent(keys[idx]))
                 }
@@ -286,18 +314,18 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
             }
             R.id.filterBySection -> {
                 //let the user select the course/group they want to see
-                PeopleListFilterDialog.getInstance(requireActivity().supportFragmentManager, presenter.getSectionListIds(), mCourse, false) { canvasContexts ->
+                PeopleListFilterDialog.getInstance(requireActivity().supportFragmentManager, presenter.getSectionListIds(), course, false) { canvasContexts ->
                     EventBus.getDefault().post(SubmissionFilterChangedEvent(canvasContext = canvasContexts))
                 }.show(requireActivity().supportFragmentManager, PeopleListFilterDialog::class.java.simpleName)
             }
             R.id.menuPostPolicies -> {
-                RouteMatcher.route(requireActivity(), PostPolicyFragment.makeRoute(mCourse, mAssignment))
+                RouteMatcher.route(requireActivity(), PostPolicyFragment.makeRoute(course, assignment))
             }
         }
     }
 
     private fun updateStatuses() {
-        if (presenter.mAssignment.anonymousGrading)
+        if (presenter.assignment.anonymousGrading)
             binding.anonGradingStatusView.setVisible().text = getString(R.string.anonymousGradingLabel)
     }
 
@@ -306,7 +334,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
         event.once(javaClass.simpleName) {
             //force network call on resume
-            if(presenter.mAssignment.id == it) mNeedToForceNetwork = true
+            if(presenter.assignment.id == it) needToForceNetwork = true
         }
     }
 
@@ -315,7 +343,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     fun onQuizGraded(event: QuizSubmissionGradedEvent) {
         event.once(javaClass.simpleName) {
             // Force network call on resume
-            if (presenter.mAssignment.id == it.assignmentId) mNeedToForceNetwork = true
+            if (presenter.assignment.id == it.assignmentId) needToForceNetwork = true
         }
     }
 
@@ -323,7 +351,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onSubmissionCommentUpdated(event: SubmissionCommentsUpdated) {
         event.once(AssignmentSubmissionListFragment::class.java.simpleName) {
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
         }
     }
 
@@ -338,7 +366,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         @JvmStatic val FILTER_TYPE = "filter_type"
 
         fun newInstance(course: Course, args: Bundle) = AssignmentSubmissionListFragment().withArgs(args).apply {
-            mCourse = course
+            this.course = course
         }
 
         fun makeBundle(assignment: Assignment): Bundle {
