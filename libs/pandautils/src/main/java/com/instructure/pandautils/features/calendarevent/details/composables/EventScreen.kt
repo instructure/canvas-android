@@ -247,7 +247,7 @@ private fun EventContent(
                 if (uiState.recurrence.isNotEmpty()) {
                     Text(
                         text = uiState.recurrence,
-                        modifier = Modifier.padding(horizontal = 6.dp).testTag("recurrence"),
+                        modifier = Modifier.padding(horizontal = 16.dp).testTag("recurrence"),
                         color = colorResource(id = R.color.textDarkest),
                         fontSize = 16.sp
                     )

@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.espresso.getCurrentDateInCanvasCalendarFormat
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.clickCalendarTab
-import com.instructure.teacher.ui.utils.clickInboxTab
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -61,12 +60,12 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarScreenPage.clickAddEvent()
 
         Log.d(STEP_TAG, "Assert that the Calendar Event Page is displayed and the title is 'New Event' as we are making a new one.")
-        calendarEventPage.assertTitle("New Event")
+        calendarEventCreateEditPage.assertTitle("New Event")
 
         Log.d(STEP_TAG, "Type 'New Test Event' to the title input field and click on 'Save'.")
         val newEventTitle = "New Test Event"
-        calendarEventPage.typeTitle(newEventTitle)
-        calendarEventPage.clickSave()
+        calendarEventCreateEditPage.typeTitle(newEventTitle)
+        calendarEventCreateEditPage.clickSave()
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         var currentDate = getCurrentDateInCanvasCalendarFormat()
@@ -92,14 +91,14 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarEventDetailsPage.clickEditMenu()
 
         Log.d(STEP_TAG, "Assert that the Calendar Event Page is displayed and the title is 'New Event' as we are editing an existing one.")
-        calendarEventPage.assertTitle("Edit Event")
+        calendarEventCreateEditPage.assertTitle("Edit Event")
 
         val modifiedEventTitle = "Modified Test Event"
         Log.d(STEP_TAG, "Type '$modifiedEventTitle' to the title, 'Test Room 1' to the 'Location', 'Test Address 1' to the 'Address' input fields.")
-        calendarEventPage.typeTitle(modifiedEventTitle)
-        calendarEventPage.typeLocation("Test Room 1")
-        calendarEventPage.typeAddress("Test Address 1")
-        calendarEventPage.clickSave()
+        calendarEventCreateEditPage.typeTitle(modifiedEventTitle)
+        calendarEventCreateEditPage.typeLocation("Test Room 1")
+        calendarEventCreateEditPage.typeAddress("Test Address 1")
+        calendarEventCreateEditPage.clickSave()
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding modified details (title, context name, date) on the page.")
         currentDate = getCurrentDateInCanvasCalendarFormat()

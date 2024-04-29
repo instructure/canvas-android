@@ -23,28 +23,12 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
-import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
-import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.getText
-import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.pandautils.R
-import org.hamcrest.Matchers
 
-class CalendarEventPage(private val composeTestRule: ComposeTestRule) : BasePage() {
+class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertTitle(title: String) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
-    }
-
-    fun assertDescription(description: String) {
-        onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
-            .withElement(findElement(Locator.ID, "content"))
-            .check(webMatches(getText(), Matchers.comparesEqualTo(description)))
     }
 
     fun typeTitle(title: String) {

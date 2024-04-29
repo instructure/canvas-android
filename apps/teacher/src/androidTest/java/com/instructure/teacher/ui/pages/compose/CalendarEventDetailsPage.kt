@@ -85,6 +85,12 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
         composeTestRule.onNode(hasTestTag("address")).assertIsDisplayed().assertTextEquals(address)
     }
 
+    fun assertDescription(description: String) {
+        onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
+            .withElement(findElement(Locator.ID, "content"))
+            .check(webMatches(getText(), Matchers.comparesEqualTo(description)))
+    }
+
     fun clickOverflowMenu() {
         composeTestRule.waitForIdle()
         val canvasThemedAppBar = composeTestRule.onNodeWithTag("canvasThemedAppBar").assertIsDisplayed()

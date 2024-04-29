@@ -20,7 +20,7 @@ package com.instructure.teacher.ui.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.ui.pages.compose.CalendarEventPage
+import com.instructure.teacher.ui.pages.compose.CalendarEventCreateEditPage
 import com.instructure.teacher.ui.pages.ProgressPage
 import com.instructure.teacher.ui.pages.compose.CalendarEventDetailsPage
 import com.instructure.teacher.ui.pages.compose.CalendarScreenPage
@@ -32,7 +32,7 @@ abstract class TeacherComposeTest : TeacherTest() {
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
     val calendarScreenPage = CalendarScreenPage(composeTestRule)
-    val calendarEventPage = CalendarEventPage(composeTestRule)
+    val calendarEventCreateEditPage = CalendarEventCreateEditPage(composeTestRule)
     val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
     val progressPage = ProgressPage(composeTestRule)
 }
