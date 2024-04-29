@@ -44,17 +44,27 @@ fun capitalizeFirstLetter(inputText: String): String {
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getCurrentDateInCanvasFormat(): String {
-    val expectedDate = LocalDateTime.now()
+fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
+    val expectedDate = date ?: LocalDateTime.now()
     val monthString = capitalizeFirstLetter(expectedDate.month.name.take(3))
     val dayString = expectedDate.dayOfMonth
     val yearString = expectedDate.year
     return "$monthString $dayString, $yearString"
 }
 
+
 fun getCurrentDateInCanvasCalendarFormat(): String {
     val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
     return dateFormat.format(Date())
+}
+    
+fun getCustomDateCalendar(dayDiffFromToday: Int): Calendar {
+    val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    cal.add(Calendar.DATE, dayDiffFromToday)
+    cal.set(Calendar.HOUR_OF_DAY, 10)
+    cal.set(Calendar.MINUTE, 1)
+    cal.set(Calendar.SECOND, 1)
+    return cal
 }
 
 fun retry(

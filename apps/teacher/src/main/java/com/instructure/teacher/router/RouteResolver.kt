@@ -21,6 +21,9 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
@@ -31,9 +34,6 @@ import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.fragments.AnnouncementListFragment
 import com.instructure.teacher.fragments.AssigneeListFragment
-import com.instructure.teacher.fragments.AssignmentDetailsFragment
-import com.instructure.teacher.fragments.AssignmentListFragment
-import com.instructure.teacher.fragments.AssignmentSubmissionListFragment
 import com.instructure.teacher.fragments.AttendanceListFragment
 import com.instructure.teacher.fragments.ChooseRecipientsFragment
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment

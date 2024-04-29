@@ -898,4 +898,5 @@
     <string name="excuse">Dibolehkan</string>
     <string name="speed_grader_overgraded_by">Nilai lebih oleh %s</string>
 
+    <string name="error_unpublishable_module_item">Tidak dapat menghapus terbitan %s jika ada penyerahan siswa</string>
 </resources>

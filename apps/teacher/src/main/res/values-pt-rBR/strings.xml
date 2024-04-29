@@ -716,7 +716,6 @@
     <string name="changeUser">Trocar Usuário</string>
     <string name="general">Geral</string>
     <string name="sendFeedback">Enviar Comentários</string>
-    <string name="rateOnTheAppStore">Avaliar na App Store</string>
     <string name="privacyPolicy">Política de privacidade</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Termos de Uso</string>
@@ -873,7 +872,6 @@
         <item quantity="one">-%s ponto</item>
         <item quantity="other">-%s pontos</item>
     </plurals>
-    <string name="todoUnreadCount">%d da lista de tarefas não lido(s)</string>
     <string name="profileSettings">Configurações do perfil</string>
     <string name="downloadingFile">Baixando arquivo&#8230;</string>
     <string name="fileDownloadedSuccessfully">Arquivo baixado com sucesso.</string>
@@ -898,4 +896,5 @@
     <string name="no_grade">Sem nota</string>
     <string name="excuse">Com licença</string>
     <string name="speed_grader_overgraded_by">Superado por %s</string>
+    <string name="error_unpublishable_module_item">Não é possível remover a publicação de %s se houver trabalhos submetidos pelos alunos</string>
 </resources>

@@ -96,6 +96,11 @@ class FileDetailsFragment : ParentFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = inflater.inflate(R.layout.fragment_file_details, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.downloadButton.setVisible(repository.isOnline())
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         getFileFolder()
@@ -131,8 +136,6 @@ class FileDetailsFragment : ParentFragment() {
                 requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
             }
         }
-
-        binding.downloadButton.setVisible(repository.isOnline())
     }
 
     override fun onMediaLoadingStarted() {

@@ -717,7 +717,6 @@
     <string name="changeUser">Tukar Pengguna</string>
     <string name="general">Umum</string>
     <string name="sendFeedback">Hantar Maklum Balas</string>
-    <string name="rateOnTheAppStore">Nilaikan di App Store</string>
     <string name="privacyPolicy">Dasar Privasi</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Terma Penggunaan</string>
@@ -899,4 +898,5 @@
     <string name="excuse">Maafkan</string>
     <string name="speed_grader_overgraded_by">Digredkan Terlebih oleh %s</string>
 
+    <string name="error_unpublishable_module_item">Tidak dapat menyahterbit %s jika terdapat serahan pelajar</string>
 </resources>

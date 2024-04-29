@@ -145,7 +145,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   SubmissionStatus getStatus({required String? studentId}) {
     final submission = this.submission(studentId);
-    if (!isSubmittable()) {
+    if (!isSubmittable() && submission == null) {
       return SubmissionStatus.NONE;
     } else if (submission?.isLate == true) {
       return SubmissionStatus.LATE;

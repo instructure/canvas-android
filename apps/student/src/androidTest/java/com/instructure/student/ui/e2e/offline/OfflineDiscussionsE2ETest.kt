@@ -26,7 +26,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.dataseeding.api.DiscussionTopicsApi
-import com.instructure.espresso.getCurrentDateInCanvasFormat
+import com.instructure.espresso.getDateInCanvasFormat
 import com.instructure.student.R
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
@@ -127,7 +127,7 @@ class OfflineDiscussionsE2ETest : StudentTest() {
         discussionListPage.assertUnreadReplyCount(discussion1.title, 0)
 
         Log.d(STEP_TAG, "Assert that the due date is the current date (in the expected format).")
-        val currentDate = getCurrentDateInCanvasFormat()
+        val currentDate = getDateInCanvasFormat()
         discussionListPage.assertDueDate(discussion1.title, currentDate)
 
         Log.d(STEP_TAG, "Click on the Search (magnifying glass) icon and the '${discussion1.title}' discussion's title into the search input field.")

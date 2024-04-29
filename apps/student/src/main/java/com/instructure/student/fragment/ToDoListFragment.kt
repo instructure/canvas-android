@@ -178,12 +178,10 @@ class ToDoListFragment : ParentFragment() {
         when {
             toDo?.assignment != null -> { // Launch assignment details fragment.
                 if (toDo.assignment!!.discussionTopicHeader != null) {
-                    val groupTopic = toDo.assignment!!.discussionTopicHeader!!.groupTopicChildren.firstOrNull()
-                    if (groupTopic == null) { // Launch discussion details fragment
-                        RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!))
-                    } else { // Launch discussion details fragment with the group
-                        RouteMatcher.route(requireActivity(), DiscussionRouterFragment.makeRoute(CanvasContext.emptyGroupContext(groupTopic.groupId), groupTopic.id))
-                    }
+                    RouteMatcher.route(
+                        requireActivity(),
+                        DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!)
+                    )
                 } else {
                     // Launch assignment details fragment.
                     RouteMatcher.route(requireActivity(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
