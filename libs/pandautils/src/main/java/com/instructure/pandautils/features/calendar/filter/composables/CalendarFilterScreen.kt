@@ -93,7 +93,11 @@ fun CalendarFiltersScreen(
                 CanvasAppBar(
                     title = stringResource(id = R.string.calendarFilterTitle),
                     navigationActionClick = navigationActionClick,
-                    actions = { FilterActions(anyFilterSelected = uiState.anyFiltersSelected, actionHandler = actionHandler) }
+                    actions = {
+                        if (uiState.selectAllAvailable || uiState.anyFiltersSelected) {
+                            FilterActions(anyFilterSelected = uiState.anyFiltersSelected, actionHandler = actionHandler)
+                        }
+                    }
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -213,12 +217,12 @@ private fun FilterActions(
 ) {
     TextButton(
         onClick = {
-            val action = if (anyFilterSelected) CalendarFilterAction.DeselectAll else CalendarFilterAction.SelectAll
+            val action = if (!anyFilterSelected) CalendarFilterAction.SelectAll else CalendarFilterAction.DeselectAll
             actionHandler(action)
         },
         modifier = modifier
     ) {
-        val resourceId = if (anyFilterSelected) R.string.calendarFiltersDeselectAll else R.string.calendarFiltersSelectAll
+        val resourceId = if (!anyFilterSelected) R.string.calendarFiltersSelectAll else R.string.calendarFiltersDeselectAll
         Text(
             text = stringResource(id = resourceId),
             color = Color(color = ThemePrefs.textButtonColor),

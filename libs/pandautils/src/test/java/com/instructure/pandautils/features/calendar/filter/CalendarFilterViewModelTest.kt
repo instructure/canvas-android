@@ -426,7 +426,7 @@ class CalendarFilterViewModelTest {
     }
 
     @Test
-    fun `Do not show explanation when filter limit is -1`() {
+    fun `Do not show explanation and make select all available when filter limit is -1`() {
         val course = Course(1, name = "Course")
         val group = Group(3, name = "Group")
         coEvery { calendarRepository.getCalendarFilterLimit() } returns -1
@@ -450,6 +450,7 @@ class CalendarFilterViewModelTest {
             listOf(CalendarFilterItemUiState("user_5", "User", false, ThemePrefs.brandColor)),
             listOf(CalendarFilterItemUiState("course_1", "Course", true, course.backgroundColor)),
             listOf(CalendarFilterItemUiState("group_3", "Group", true, group.backgroundColor)),
+            selectAllAvailable = true,
             explanationMessage = null
         )
 
