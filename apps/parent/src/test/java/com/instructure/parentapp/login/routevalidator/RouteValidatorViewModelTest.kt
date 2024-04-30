@@ -18,19 +18,43 @@
 package com.instructure.parentapp.login.routevalidator
 
 import android.content.Context
+import android.net.Uri
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AuthenticatedSession
+import com.instructure.canvasapi2.models.OAuthTokenResponse
+import com.instructure.canvasapi2.models.TokenUser
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.parentapp.features.login.routevalidator.RouteValidatorAction
 import com.instructure.parentapp.features.login.routevalidator.RouteValidatorViewModel
+import com.instructure.parentapp.util.ParentLogoutTask
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkConstructor
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.runs
+import io.mockk.unmockkAll
+import io.mockk.unmockkObject
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -50,6 +74,9 @@ class RouteValidatorViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
+    private val mockUri = mockk<Uri>(relaxed = true) {
+        every { host } returns "mobiledev.instructure.com"
+    }
 
     private lateinit var viewModel: RouteValidatorViewModel
 
@@ -57,6 +84,19 @@ class RouteValidatorViewModelTest {
     fun setup() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+        mockkStatic(Uri::class)
+        every { Uri.parse(any()) } returns mockUri
+        ContextKeeper.appContext = context
+        mockkConstructor(Bundle::class)
+        every { anyConstructed<Bundle>().putString(any(), any()) } just runs
+        mockkConstructor(ParentLogoutTask::class)
+        every { anyConstructed<ParentLogoutTask>().execute() } just runs
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -73,6 +113,113 @@ class RouteValidatorViewModelTest {
         viewModel.loadRoute("")
 
         Assert.assertEquals(RouteValidatorAction.Finish, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Load route with QR login url when user is already signed in`() {
+        every { apiPrefs.getValidToken() } returns "token"
+        mockkObject(QRLogin)
+        every { QRLogin.verifySSOLoginUri(any()) } returns true
+
+        createViewModel()
+        viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
+
+        Assert.assertEquals(RouteValidatorAction.Finish, viewModel.events.value?.peekContent())
+        unmockkObject(QRLogin)
+    }
+
+
+    @Test
+    fun `Load route with QR login url`() = runTest {
+        every { apiPrefs.getValidToken() } returns ""
+        mockkObject(QRLogin)
+        every { QRLogin.verifySSOLoginUri(any()) } returns true
+        coEvery { QRLogin.performSSOLogin(any(), any(), any()) } returns OAuthTokenResponse()
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
+
+        createViewModel()
+        viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
+
+        Assert.assertEquals(RouteValidatorAction.LoadWebViewUrl("sessionUrl"), viewModel.events.value?.peekContent())
+        delay(800)
+        Assert.assertEquals(RouteValidatorAction.StartMainActivity(), viewModel.events.value?.peekContent())
+
+        unmockkObject(QRLogin)
+    }
+
+    @Test
+    fun `Load route with masquerade QR login url`() = runTest {
+        every { apiPrefs.getValidToken() } returns ""
+        mockkObject(QRLogin)
+        every { QRLogin.verifySSOLoginUri(any()) } returns true
+        coEvery { QRLogin.performSSOLogin(any(), any(), any()) } returns OAuthTokenResponse(
+            realUser = TokenUser(1, "", ""),
+            user = TokenUser(1, "", "")
+        )
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
+
+        createViewModel()
+        viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
+
+        Assert.assertEquals(RouteValidatorAction.LoadWebViewUrl("sessionUrl"), viewModel.events.value?.peekContent())
+        delay(800)
+        Assert.assertEquals(RouteValidatorAction.StartMainActivity(1), viewModel.events.value?.peekContent())
+
+        unmockkObject(QRLogin)
+    }
+
+    @Test
+    fun `Load route with QR login url when error happens`() {
+        every { apiPrefs.getValidToken() } returns ""
+        mockkObject(QRLogin)
+        every { QRLogin.verifySSOLoginUri(any()) } returns true
+        coEvery { QRLogin.performSSOLogin(any(), any(), any()) } throws Exception()
+
+        createViewModel()
+        viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
+
+        verify { apiPrefs.clearAllData() }
+        Assert.assertEquals(RouteValidatorAction.Finish, viewModel.events.value?.peekContent())
+
+        unmockkObject(QRLogin)
+    }
+
+    @Test
+    fun `Load route when user is not logged in`() = runTest {
+        every { apiPrefs.getValidToken() } returns ""
+
+        createViewModel()
+        viewModel.loadRoute("https://mobiledev.instructure.com/courses")
+
+        delay(800)
+        Assert.assertEquals(
+            RouteValidatorAction.StartSignInActivity(AccountDomain("mobiledev.instructure.com")),
+            viewModel.events.value?.peekContent()
+        )
+    }
+
+    @Test
+    fun `Load route when user is not logged in and no host found in url`() = runTest {
+        every { apiPrefs.getValidToken() } returns ""
+        every { mockUri.host } returns ""
+
+        createViewModel()
+        viewModel.loadRoute("https://mobiledev.instructure.com/courses")
+
+        delay(800)
+        Assert.assertEquals(RouteValidatorAction.StartLoginActivity, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `Load route when user is logged in`() = runTest {
+        every { apiPrefs.domain } returns "mobiledev.instructure.com"
+        every { apiPrefs.getValidToken() } returns "token"
+
+        createViewModel()
+        viewModel.loadRoute("https://mobiledev.instructure.com/courses")
+
+        delay(800)
+        Assert.assertEquals(RouteValidatorAction.StartMainActivity(data = mockUri), viewModel.events.value?.peekContent())
     }
 
     private fun createViewModel() {
