@@ -15,17 +15,18 @@
  *
  */
 
-package com.instructure.parentapp.features.login
+package com.instructure.parentapp.features.login.routevalidator
 
 import android.net.Uri
-import com.instructure.loginapi.login.activities.LoginWithQRActivity
-import com.instructure.parentapp.features.login.routevalidator.RouteValidatorActivity
+import com.instructure.canvasapi2.models.AccountDomain
 
 
-class ParentLoginWithQRActivity : LoginWithQRActivity() {
+sealed class RouteValidatorAction {
 
-    override fun launchApplicationWithQRLogin(loginUri: Uri) {
-        // The RouteValidatorActivity is set up to handle the QR code url from inside or outside the app
-        startActivity(RouteValidatorActivity.createIntent(this, loginUri))
-    }
+    data object Finish : RouteValidatorAction()
+    data class LoadWebViewUrl(val url: String) : RouteValidatorAction()
+    data class StartMainActivity(val masqueradeId: Long? = null, val data: Uri? = null) : RouteValidatorAction()
+    data class ShowToast(val message: String) : RouteValidatorAction()
+    data class StartSignInActivity(val accountDomain: AccountDomain) : RouteValidatorAction()
+    data object StartLoginActivity : RouteValidatorAction()
 }

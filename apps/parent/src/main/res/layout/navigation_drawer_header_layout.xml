@@ -20,26 +20,26 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:id="@+id/nav_header_image"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:layout_marginStart="16dp"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_group" />
+        android:contentDescription="@null" />
 
     <TextView
+        android:id="@+id/nav_header_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
-        android:text="Name"
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/nav_header_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="email@email.com" />
+        android:layout_marginTop="4dp" />
 
     <View
         android:layout_width="wrap_content"

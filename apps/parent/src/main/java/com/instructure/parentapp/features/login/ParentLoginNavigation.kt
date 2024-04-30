@@ -21,7 +21,9 @@ import android.content.Intent
 import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.LoginNavigation
-import com.instructure.parentapp.MainActivity
+import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.parentapp.features.main.MainActivity
+import com.instructure.parentapp.util.ParentLogoutTask
 
 
 class ParentLoginNavigation(
@@ -31,7 +33,7 @@ class ParentLoginNavigation(
     override val checkElementary: Boolean = false
 
     override fun logout() {
-        // TODO: Implement
+        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
 
     override fun initMainActivityIntent(): Intent {

@@ -25,6 +25,6 @@
         <deepLink
             android:id="@+id/deepLink"
             android:autoVerify="true"
-            app:uri=".*.instructure.com/alerts" />
+            app:uri=".*/alerts" />
     </fragment>
 </navigation>

@@ -25,7 +25,7 @@
         <deepLink
             android:id="@+id/deepLink"
             android:autoVerify="true"
-            app:uri=".*.instructure.com/courses" />
+            app:uri=".*/courses" />
     </fragment>
 
     <fragment
@@ -39,7 +39,7 @@
         <deepLink
             android:id="@+id/deepLink"
             android:autoVerify="true"
-            app:uri=".*.instructure.com/courses/{id}" />
+            app:uri=".*/courses/{id}" />
     </fragment>
 
 </navigation>

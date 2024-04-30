@@ -13,23 +13,21 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_graph"
-    app:startDestination="@+id/courses">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include app:graph="@navigation/courses" />
-    <include app:graph="@navigation/calendar" />
-    <include app:graph="@navigation/alerts" />
+    <com.instructure.pandautils.views.CanvasWebView
+        android:id="@+id/dummyWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
 
-    <fragment
-        android:id="@+id/inbox"
-        android:name="com.instructure.pandautils.features.inbox.list.InboxFragment"
-        android:label="@string/screenTitleInbox" />
-
-    <dialog
-        android:id="@+id/help"
-        android:name="com.instructure.pandautils.features.help.HelpDialogFragment"
-        android:label="@string/screenTitleHelp" />
-
-</navigation>
+    <com.instructure.loginapi.login.view.CanvasLoadingView
+        android:id="@+id/canvasLoadingView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        app:clv_override_color="@color/login_parentAppTheme" />
+</FrameLayout>

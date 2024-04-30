@@ -17,11 +17,12 @@
 
 package com.instructure.parentapp.util
 
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.utils.LogoutHelper
 
 class ParentLogoutHelper : LogoutHelper {
     override fun logout(databaseProvider: DatabaseProvider) {
-        // TODO: Implement
+        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
 }

@@ -17,15 +17,30 @@
 
 package com.instructure.parentapp.features.login
 
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.loginapi.login.util.QRLogin
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Const
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.login.routevalidator.RouteValidatorActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Check to see if we are switching users from an external QR scan
+        if (QRLogin.verifySSOLoginUri(intent.data, AppType.PARENT)) {
+            startActivity(RouteValidatorActivity.createIntent(this, intent.data!!))
+            finish()
+        }
+    }
 
     override fun beginLoginFlowIntent(): Intent {
         return LoginLandingPageActivity.createIntent(this)
@@ -36,4 +51,20 @@ class LoginActivity : BaseLoginInitActivity() {
     }
 
     override fun userAgent() = Const.PARENT_USER_AGENT
+
+    companion object {
+        fun createIntent(context: Context): Intent {
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            return intent
+        }
+
+        // Used specifically for a QR Scan user switch
+        fun createIntent(context: Context, uri: Uri): Intent {
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.data = uri
+            return intent
+        }
+    }
 }

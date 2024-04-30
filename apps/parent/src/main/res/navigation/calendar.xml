@@ -25,6 +25,6 @@
         <deepLink
             android:id="@+id/deepLink"
             android:autoVerify="true"
-            app:uri=".*.instructure.com/calendar" />
+            app:uri=".*/calendar" />
     </fragment>
 </navigation>
