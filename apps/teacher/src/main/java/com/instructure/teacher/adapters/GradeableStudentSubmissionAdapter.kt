@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.teacher.databinding.AdapterGradeableStudentSubmissionBinding
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
 import instructure.androidblueprint.SyncRecyclerAdapter
 

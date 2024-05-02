@@ -279,7 +279,7 @@ fun TeacherTest.seedAssignmentSubmission(
     return SubmissionsApi.seedAssignmentSubmission(courseId, studentToken, assignmentId, commentSeeds, submissionSeeds)
 }
 
-fun TeacherTest.uploadTextFile(courseId: Long, assignmentId: Long, token: String, fileUploadType: FileUploadType): AttachmentApiModel {
+fun TeacherTest.uploadTextFile(courseId: Long, assignmentId: Long? = null, token: String, fileUploadType: FileUploadType): AttachmentApiModel {
 
     // Create the file
     val file = File(

@@ -715,7 +715,6 @@
     <string name="changeUser">Huri Kaiwhakamahi</string>
     <string name="general">Whānui</string>
     <string name="sendFeedback">Tuku Urupare</string>
-    <string name="rateOnTheAppStore">Auau i runga i te Taupānga Toa</string>
     <string name="privacyPolicy">Kaupapahere Tūmataiti</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Ngā ritenga whakamahi</string>
@@ -872,7 +871,6 @@
         <item quantity="one">-%s koinga</item>
         <item quantity="other">-%s ngā koinga</item>
     </plurals>
-    <string name="todoUnreadCount">Hei mahi %d kaore i pānuitia</string>
     <string name="profileSettings">Ngā Tautuhinga Kōtaha</string>
     <string name="downloadingFile">E tikiake ake ana kōnae&#8230;</string>
     <string name="fileDownloadedSuccessfully">I pai te tikiake i te kōnae.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Kaore he kōeke</string>
     <string name="excuse">Whakawātea</string>
     <string name="speed_grader_overgraded_by">Kōeketia nui ma te %s</string>
+    <string name="error_unpublishable_module_item">Kaore e taea te whakaputa %s mehemea he tukunga a nga tauira</string>
 </resources>

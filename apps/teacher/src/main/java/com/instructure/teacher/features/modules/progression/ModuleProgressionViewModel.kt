@@ -55,6 +55,8 @@ class ModuleProgressionViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<ModuleProgressionAction>>()
 
+    private var currentPosition = -1
+
     fun loadData(canvasContext: CanvasContext, moduleItemIdParam: Long, assetType: String, assetId: String) {
         viewModelScope.tryLaunch {
             _state.postValue(ViewState.Loading)
@@ -82,7 +84,13 @@ class ModuleProgressionViewModel @Inject constructor(
                 .map { createModuleItemViewData(it, isDiscussionRedesignEnabled) to it }
                 .filter { it.first != null }
 
-            val initialPosition = items.indexOfFirst { it.second.id == moduleItemId }.coerceAtLeast(0)
+            val position = if (currentPosition == -1) {
+                val initialPosition = items.indexOfFirst { it.second.id == moduleItemId }.coerceAtLeast(0)
+                currentPosition = initialPosition
+                initialPosition
+            } else {
+                currentPosition
+            }
 
             val moduleNames = items.map { item ->
                 modules.find { item.second.moduleId == it.id }?.name.orEmpty()
@@ -92,7 +100,7 @@ class ModuleProgressionViewModel @Inject constructor(
                 ModuleProgressionViewData(
                     items.map { it.first!! },
                     moduleNames,
-                    initialPosition,
+                    position,
                     canvasContext.textAndIconColor
                 )
             )
@@ -113,5 +121,9 @@ class ModuleProgressionViewModel @Inject constructor(
         }
         Type.File.name -> ModuleItemViewData.File(item.url.orEmpty())
         else -> null
+    }
+
+    fun setCurrentPosition(position: Int) {
+        currentPosition = position
     }
 }

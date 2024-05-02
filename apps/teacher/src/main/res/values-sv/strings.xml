@@ -716,7 +716,6 @@
     <string name="changeUser">Ändra användare</string>
     <string name="general">Allmänt</string>
     <string name="sendFeedback">Skicka feedback</string>
-    <string name="rateOnTheAppStore">Bedöm på App Store</string>
     <string name="privacyPolicy">Integritetspolicy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Användningsvillkor</string>
@@ -873,7 +872,6 @@
         <item quantity="one">-%s poäng</item>
         <item quantity="other">-%s poäng</item>
     </plurals>
-    <string name="todoUnreadCount">Att göra %d olästa</string>
     <string name="profileSettings">Profilinställningar</string>
     <string name="downloadingFile">Hämtar fil&#8230;</string>
     <string name="fileDownloadedSuccessfully">Filen hämtades.</string>
@@ -898,4 +896,5 @@
     <string name="no_grade">Inget omdöme</string>
     <string name="excuse">Ursäkta</string>
     <string name="speed_grader_overgraded_by">Överbedömd med %s</string>
+    <string name="error_unpublishable_module_item">Det går inte att avpublicera %s om studentinlämningar finns</string>
 </resources>

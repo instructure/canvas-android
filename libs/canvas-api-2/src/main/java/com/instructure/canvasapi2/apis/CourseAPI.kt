@@ -136,8 +136,14 @@ object CourseAPI {
         @GET("courses/{courseId}/groups?include[]=users")
         fun getFirstPageGroups(@Path("courseId") courseId: Long): Call<List<Group>>
 
+        @GET("courses/{courseId}/groups?include[]=users")
+        suspend fun getFirstPageGroups(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<List<Group>>
+
         @GET
         fun getNextPageGroups(@Url nextUrl: String): Call<List<Group>>
+
+        @GET
+        suspend fun getNextPageGroups(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Group>>
 
         @GET("courses/{courseId}/permissions")
         fun getCoursePermissions(@Path("courseId") courseId: Long, @Query("permissions[]") requestedPermissions: List<String>): Call<CanvasContextPermission>

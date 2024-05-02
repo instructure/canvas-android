@@ -282,9 +282,20 @@ class OfflineModule {
         discussionTopicHeaderDao: DiscussionTopicHeaderDao,
         discussionParticipantDao: DiscussionParticipantDao,
         discussionTopicPermissionDao: DiscussionTopicPermissionDao,
+        remoteFileDao: RemoteFileDao,
+        localFileDao: LocalFileDao,
+        discussionTopicRemoteFileDao: DiscussionTopicRemoteFileDao,
         offlineDatabase: OfflineDatabase,
     ): DiscussionTopicHeaderFacade {
-        return DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao, offlineDatabase)
+        return DiscussionTopicHeaderFacade(
+            discussionTopicHeaderDao,
+            discussionParticipantDao,
+            discussionTopicPermissionDao,
+            remoteFileDao,
+            localFileDao,
+            discussionTopicRemoteFileDao,
+            offlineDatabase
+        )
     }
 
     @Provides
@@ -531,5 +542,17 @@ class OfflineModule {
         apiPrefs: ApiPrefs
     ): OfflineSyncHelper {
         return OfflineSyncHelper(workManager, syncSettingsFacade, apiPrefs)
+    }
+
+    @Provides
+    fun provideRemoteFileDao(
+        appDatabase: OfflineDatabase
+    ): RemoteFileDao {
+        return appDatabase.remoteFileDao()
+    }
+
+    @Provides
+    fun provideDiscussionTopicRemoteFileDao(appDatabase: OfflineDatabase): DiscussionTopicRemoteFileDao {
+        return appDatabase.discussionTopicRemoteFileDao()
     }
 }

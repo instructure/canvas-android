@@ -17,6 +17,9 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment

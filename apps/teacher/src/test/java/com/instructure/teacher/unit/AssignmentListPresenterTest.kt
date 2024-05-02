@@ -18,7 +18,7 @@ package com.instructure.teacher.unit
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.teacher.factory.AssignmentListPresenterFactory
-import com.instructure.teacher.presenters.AssignmentListPresenter
+import com.instructure.teacher.features.assignment.list.AssignmentListPresenter
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before

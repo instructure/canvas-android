@@ -362,8 +362,18 @@ class EditAssignmentDetailsFragment : BaseFragment() {
             if (dueDateGroup.isEveryone) {
                 assignees += getString(if (editDateGroups.any { it.hasOverrideAssignees }) R.string.everyone_else else R.string.everyone)
             }
-            dueDateGroup.groupIds.forEach { assignees.add(groupsMapped[it]?.name!!) }
-            dueDateGroup.sectionIds.forEach { assignees.add(sectionsMapped[it]?.name!!) }
+            dueDateGroup.groupIds.forEach {
+                val group = groupsMapped[it]
+                if (group?.name != null) {
+                    assignees.add(group.name!!)
+                }
+            }
+            dueDateGroup.sectionIds.forEach {
+                val section = sectionsMapped[it]
+                if (section != null) {
+                    assignees.add(section.name)
+                }
+            }
             dueDateGroup.studentIds.forEach {
                 val student = studentsMapped[it]
                 if (student != null) {

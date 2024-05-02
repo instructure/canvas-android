@@ -122,14 +122,30 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignments/{assignmentId}/gradeable_students")
         fun getFirstPageGradeableStudentsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<List<GradeableStudent>>
 
+        @GET("courses/{courseId}/assignments/{assignmentId}/gradeable_students")
+        suspend fun getFirstPageGradeableStudentsForAssignment(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<List<GradeableStudent>>
+
         @GET
         fun getNextPageGradeableStudents(@Url nextUrl: String): Call<List<GradeableStudent>>
+
+        @GET
+        suspend fun getNextPageGradeableStudents(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<GradeableStudent>>
 
         @GET("courses/{courseId}/assignments/{assignmentId}/submissions?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getFirstPageSubmissionsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<List<Submission>>
 
+        @GET("courses/{courseId}/assignments/{assignmentId}/submissions?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        suspend fun getFirstPageSubmissionsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long, @Tag params: RestParams): DataResult<List<Submission>>
+
         @GET
         fun getNextPageSubmissions(@Url nextUrl: String): Call<List<Submission>>
+
+        @GET
+        suspend fun getNextPageSubmissions(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Submission>>
 
         @GET("courses/{courseId}/assignments?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getAssignments(@Path("courseId") courseId: Long): Call<List<Assignment>>

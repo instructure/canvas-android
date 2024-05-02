@@ -5,6 +5,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.ViewAlphaAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasContentDescription
 import com.instructure.espresso.assertNotDisplayed
@@ -111,6 +112,16 @@ class ModulesPage : BasePage() {
         onView(withAncestor(withChild(withText(moduleItemName))) + withId(R.id.moduleItemStatusIcon)).assertHasContentDescription(
             R.string.a11y_unpublished
         )
+    }
+
+    /**
+     * Assert module status icon alpha value.
+     *
+     * @param moduleItemName The name of the module item.
+     * @param expectedAlphaValue The expected alpha (float) value.
+     */
+    fun assertModuleStatusIconAlpha(moduleItemName: String, expectedAlphaValue: Float) {
+        onView(withId(R.id.moduleItemStatusIcon) + withParent(withId(R.id.publishActions) + hasSibling(withId(R.id.moduleItemTitle) + withText(moduleItemName)))).check(ViewAlphaAssertion(expectedAlphaValue))
     }
 
     /**
