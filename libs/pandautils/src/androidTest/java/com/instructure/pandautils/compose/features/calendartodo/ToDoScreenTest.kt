@@ -30,7 +30,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.compose.assertTextColor
+import com.instructure.espresso.assertTextColor
 import com.instructure.pandautils.features.calendartodo.details.ToDoUiState
 import com.instructure.pandautils.features.calendartodo.details.composables.ToDoScreen
 import org.junit.Rule

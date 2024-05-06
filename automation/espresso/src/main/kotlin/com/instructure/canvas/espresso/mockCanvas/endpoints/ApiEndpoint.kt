@@ -21,11 +21,28 @@ import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.utils.DontCareAuthModel
+import com.instructure.canvas.espresso.mockCanvas.utils.LongId
+import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.StringId
+import com.instructure.canvas.espresso.mockCanvas.utils.getJsonFromRequestBody
+import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
+import com.instructure.canvas.espresso.mockCanvas.utils.successRedirectWithHeader
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.models.QuizSubmissionQuestion
+import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.toDate
 import okio.Buffer
-import retrofit2.http.GET
 
 /**
  * Base endpoint for the Canvas API
@@ -156,6 +173,15 @@ object ApiEndpoint : Endpoint(
             override val authModel = DontCareAuthModel
         }
     ),
+    Segment("settings") to Endpoint(
+        Segment("environment") to Endpoint(
+            response = {
+                GET {
+                    request.successResponse(mapOf("calendar_contexts_limit" to 20))
+                }
+            }
+        )
+    ),
     Segment("progress") to Endpoint(
         LongId(PathVars::progressId) to Endpoint {
             GET {
@@ -167,7 +193,24 @@ object ApiEndpoint : Endpoint(
                 }
             }
         }
-    )
+    ),
+    Segment("planner_notes") to Endpoint {
+        GET {
+            val contextCodes = request.url.queryParameterValues("context_codes[]")
+            val startDate = request.url.queryParameter("start_date").toDate()
+            val endDate = request.url.queryParameter("end_date").toDate()
+            val courseIds = contextCodes.map { it?.substringAfter("_")?.toLong() }
+
+            val plannables = data.todos.filter {
+                courseIds.contains(it.courseId)
+            }.filter {
+                if (it.plannable.todoDate == null) return@filter true
+                if (startDate == null || endDate == null) return@filter true
+                it.plannable.todoDate.toDate()?.time in startDate.time..endDate.time
+            }.map { it.plannable }
+            request.successResponse(plannables)
+        }
+    }
 )
 
 object FileUrlEndpoint : Endpoint(
