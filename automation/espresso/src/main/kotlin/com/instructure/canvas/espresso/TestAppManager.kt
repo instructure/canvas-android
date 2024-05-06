@@ -16,8 +16,14 @@
 
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.AppManager
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 
 open class TestAppManager: AppManager() {
+
+    override fun onCreate() {
+        super.onCreate()
+        RemoteConfigUtils.initialize()
+    }
 
     var workerFactory: WorkerFactory? = null
     override fun getWorkManagerFactory(): WorkerFactory {
