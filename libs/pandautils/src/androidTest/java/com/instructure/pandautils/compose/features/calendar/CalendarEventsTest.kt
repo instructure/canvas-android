@@ -154,19 +154,19 @@ class CalendarEventsTest {
             ), actionHandler = {})
         }
 
-//        val parentMatcher = (hasAnyAncestor(hasTestTag("CalendarEventsPage0")))
-        // TODO Why does this not work?
-//        val event1Title = composeTestRule.onNode(parentMatcher.and(hasText("Todo 1").and(hasTestTag("EventName"))))
         val event1Title = composeTestRule.onNode(hasText("Todo 1"))
-        event1Title.assertIsDisplayed().assertHasClickAction()
+        event1Title.assertIsDisplayed()
         val event1ContextName = composeTestRule.onNode(hasText("Course To Do"))
         event1ContextName.assertIsDisplayed()
 
-        // TODO
-//        val event1Date = composeTestRule.onNode(hasAnySibling(hasText("Todo 1")).and(hasTestTag("EventDate")))
-//        event1Date.assertIsNotDisplayed()
-//        val event1Status = composeTestRule.onNode(hasAnySibling(hasText("Todo 1")).and(hasTestTag("EventStatus")))
-//        event1Status.assertIsNotDisplayed()
+        val event2Title = composeTestRule.onNode(hasText("Assignment 1"))
+        event2Title.assertIsDisplayed()
+        val event2ContextName = composeTestRule.onNode(hasText("Course"))
+        event2ContextName.assertIsDisplayed()
+        val event2Date = composeTestRule.onNode(hasText("Due Jan 9 at 8:00 AM"))
+        event2Date.assertIsDisplayed()
+        val event2Status = composeTestRule.onNode(hasText("Missing"))
+        event2Status.assertIsDisplayed()
     }
 
     @Test

@@ -80,6 +80,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -192,7 +193,9 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                         calendarUiState.pendingSelectedDay ?: calendarUiState.selectedDay,
                         scaleRatio = rowsScaleRatio,
                         selectedDayChanged = { actionHandler(CalendarAction.DaySelected(it)) },
-                        modifier = Modifier.height(height.dp).testTag("calendarBody$monthOffset")
+                        modifier = Modifier
+                            .height(height.dp)
+                            .testTag("calendarBody$monthOffset")
                     )
                 } else {
                     Loading(
@@ -306,7 +309,6 @@ fun CalendarBody(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp)
-                .testTag("dayHeaders")
         )
         Spacer(modifier = Modifier.height(4.dp))
         CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio)
@@ -316,7 +318,7 @@ fun CalendarBody(
 @Composable
 fun DayHeaders(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier.clearAndSetSemantics {  }, horizontalArrangement = Arrangement.SpaceBetween
+        modifier = modifier.clearAndSetSemantics { testTag = "dayHeaders" }, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val daysOfWeek = DayOfWeek.values()
         // Shift the starting point to Sunday
@@ -416,13 +418,12 @@ fun DaysOfWeekRow(
                 Row(
                     Modifier
                         .height(10.dp)
-                        .fillMaxWidth()
-                        .clearAndSetSemantics { },
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     repeat(dayState.indicatorCount) {
-                        EventIndicator(modifier = Modifier.testTag("eventIndicator$it"))
+                        EventIndicator(modifier = Modifier.clearAndSetSemantics { testTag = "eventIndicator$it" })
                     }
                 }
             }

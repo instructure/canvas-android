@@ -15,18 +15,20 @@
  */
 package com.instructure.pandautils.compose.features.calendar
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarStateMapper
@@ -66,9 +68,13 @@ class CalendarTest {
             )
         }
 
-        // TODO Help Wanted - Merged semantics makes this hard to verify
-//        val yearMonthTitle = composeTestRule.onNodeWithTag("yearMonthTitle")
-//        yearMonthTitle.assertIsDisplayed().assertTextEquals("2023, April")
+        composeTestRule.onRoot().printToLog("TAG")
+        val yearMonthTitle = composeTestRule.onNodeWithTag("yearMonthTitle")
+        yearMonthTitle
+            .assertIsDisplayed()
+            .assertTextContains("2023")
+            .assertTextContains("April")
+            .assertHasClickAction()
         val calendarsButton = composeTestRule.onNodeWithText("Calendars")
         calendarsButton
             .assertIsDisplayed()
@@ -94,8 +100,6 @@ class CalendarTest {
         val dayHeadersMatcher = hasTestTag("dayHeaders").and(hasAnyAncestor(hasTestTag("calendarBody0")))
         val dayHeaders = composeTestRule.onNode(dayHeadersMatcher)
         dayHeaders.assertIsDisplayed()
-        // TODO Help Wanted - This does not work because of the missing semantics
-//        composeTestRule.onNode(hasAnyAncestor(dayHeadersMatcher).and(hasText("Sun"))).assertIsDisplayed()
     }
 
     @Test
@@ -191,8 +195,9 @@ class CalendarTest {
         val calendarRowMatcher = hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))
         val calendarRow = composeTestRule.onNode(calendarRowMatcher)
         calendarRow.assertIsDisplayed()
-        // TODO clear semantics ruins this as well
-//        composeTestRule.onNode((hasTestTag("eventIndicator0"))).assertIsDisplayed()
+        composeTestRule.onNode((hasTestTag("eventIndicator0"))).assertIsDisplayed()
+        composeTestRule.onNode((hasTestTag("eventIndicator1"))).assertIsDisplayed()
+        composeTestRule.onNode((hasTestTag("eventIndicator2"))).assertIsNotDisplayed()
     }
 
     @Test

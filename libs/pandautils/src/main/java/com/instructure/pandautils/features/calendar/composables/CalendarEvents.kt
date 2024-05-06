@@ -123,7 +123,9 @@ fun CalendarEvents(
                     modifier = Modifier.testTag("CalendarEventsPage$monthOffset")
                 )
             } else {
-                Loading(modifier = Modifier.fillMaxSize().testTag("Loading$monthOffset"))
+                Loading(modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("Loading$monthOffset"))
             }
         }
     )
@@ -203,25 +205,25 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
                 text = eventUiState.contextName,
                 fontSize = 14.sp,
                 color = contextColor,
-                modifier = Modifier.padding(vertical = 1.dp).testTag("EventContextName")
+                modifier = Modifier.padding(vertical = 1.dp)
             )
             Text(
                 text = eventUiState.name,
                 fontSize = 16.sp,
                 color = colorResource(id = R.color.textDarkest),
-                modifier = Modifier.padding(vertical = 1.dp).testTag("EventName")
+                modifier = Modifier.padding(vertical = 1.dp)
             )
             if (eventUiState.date != null) Text(
                 text = eventUiState.date,
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.textDark),
-                modifier = Modifier.padding(vertical = 1.dp).testTag("EventDate")
+                modifier = Modifier.padding(vertical = 1.dp)
             )
             if (eventUiState.status != null) Text(
                 text = eventUiState.status,
                 fontSize = 14.sp,
                 color = Color(ThemePrefs.brandColor),
-                modifier = Modifier.padding(vertical = 1.dp).testTag("EventStatus")
+                modifier = Modifier.padding(vertical = 1.dp)
             )
         }
     }
