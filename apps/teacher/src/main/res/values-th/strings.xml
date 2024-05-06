@@ -717,7 +717,6 @@
     <string name="changeUser">เปลี่ยนผู้ใช้</string>
     <string name="general">ทั่วไป</string>
     <string name="sendFeedback">ส่งความเห็น</string>
-    <string name="rateOnTheAppStore">ให้คะแนนใน App Store</string>
     <string name="privacyPolicy">นโยบายความเป็นส่วนตัว</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">เงื่อนไขการใช้งาน</string>
@@ -874,7 +873,6 @@
         <item quantity="one">-%s คะแนน</item>
         <item quantity="other">-%s คะแนน</item>
     </plurals>
-    <string name="todoUnreadCount">สิ่งที่ต้องทำ %d ที่ไม่ได้อ่าน</string>
     <string name="profileSettings">ค่าปรับตั้งโพรไฟล์</string>
     <string name="downloadingFile">กำลังดาวน์โหลดไฟล์&#8230;</string>
     <string name="fileDownloadedSuccessfully">ดาวน์โหลดไฟล์เสร็จสิ้น</string>
@@ -900,4 +898,5 @@
     <string name="excuse">ยกเว้น</string>
     <string name="speed_grader_overgraded_by">ให้เกรดเกินโดย %s</string>
 
+    <string name="error_unpublishable_module_item">ไม่สามารถเลิกเผยแพร่ %s หากมีผลงานจัดส่งจากผู้เรียน</string>
 </resources>

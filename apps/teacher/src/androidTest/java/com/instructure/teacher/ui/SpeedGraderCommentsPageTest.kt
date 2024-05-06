@@ -166,6 +166,7 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
                     // Allows Espresso to distinguish between this and the full name, which is elsewhere on the page
                     authorName = student.shortName,
                     authorPronouns = student.pronouns,
+                    attempt = 1L,
                     comment = "a comment",
                     attachments = if(attachment == null) arrayListOf<Attachment>() else arrayListOf(attachment)
             )

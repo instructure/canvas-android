@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
-import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.openOverflowMenu
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -323,7 +322,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickUnpublishRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        updateFilePermissionsPage.clickUpdateButton()
 
         moduleListPage.assertModuleItemNotPublished(fileFolder.displayName.orEmpty())
     }
@@ -354,7 +353,7 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickPublishRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        updateFilePermissionsPage.clickUpdateButton()
 
         moduleListPage.assertModuleItemIsPublished(fileFolder.displayName.orEmpty())
     }
@@ -385,10 +384,35 @@ class ModuleListPageTest : TeacherComposeTest() {
 
         updateFilePermissionsPage.swipeUpBottomSheet()
         updateFilePermissionsPage.clickHideRadioButton()
-        updateFilePermissionsPage.clickSaveButton()
+        updateFilePermissionsPage.clickUpdateButton()
 
         moduleListPage.assertModuleItemHidden(fileFolder.displayName.orEmpty())
     }
+
+    @Test
+    fun assertModuleItemDisabled() {
+        val data = goToModulesPage()
+        val module = data.courseModules.values.first().first()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(courseId = data.courses.values.first().id)
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = assignment,
+            published = true,
+            moduleContentDetails = ModuleContentDetails(
+                hidden = false,
+                locked = true
+            ),
+            unpublishable = false
+        )
+
+        moduleListPage.refresh()
+
+        moduleListPage.clickItemOverflow(assignment.name.orEmpty())
+        moduleListPage.assertSnackbarContainsText(assignment.name.orEmpty())
+    }
+
 
     private fun goToModulesPage(publishedModuleCount: Int = 1, unpublishedModuleCount: Int = 0): MockCanvas {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)

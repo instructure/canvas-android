@@ -85,7 +85,7 @@ class ModuleListEffectHandler(
             )
 
             is ModuleListEffect.ShowSnackbar -> {
-                view?.showSnackbar(effect.message)
+                view?.showSnackbar(effect.message, effect.params)
             }
 
             is ModuleListEffect.UpdateFileModuleItem -> {

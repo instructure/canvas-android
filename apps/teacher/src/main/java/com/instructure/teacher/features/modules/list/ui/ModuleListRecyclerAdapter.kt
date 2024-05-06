@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.modules.list.ui
 
 import android.content.Context
+import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.teacher.adapters.GroupedRecyclerAdapter
 import com.instructure.teacher.adapters.ListItemCallback
@@ -39,6 +40,8 @@ interface ModuleListCallback : ListItemCallback {
     fun publishModuleAndItems(moduleId: Long)
     fun unpublishModuleAndItems(moduleId: Long)
     fun updateFileModuleItem(fileId: Long, contentDetails: ModuleContentDetails)
+
+    fun showSnackbar(@StringRes message: Int, params: Array<Any>)
 }
 
 class ModuleListRecyclerAdapter(

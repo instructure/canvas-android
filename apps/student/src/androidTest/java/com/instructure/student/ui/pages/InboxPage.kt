@@ -300,4 +300,8 @@ class InboxPage : BasePage(R.id.inboxPage) {
         editToolbar.assertVisibility(visibility)
     }
 
+    fun assertConversationSubject(expectedSubject: String) {
+        onView(withId(R.id.subjectView) + withText(expectedSubject) + withAncestor(R.id.inboxRecyclerView)).assertDisplayed()
+    }
+
 }

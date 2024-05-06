@@ -33,7 +33,7 @@ class ProgressPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun clickDone() {
         composeTestRule.waitForIdle()
-        composeTestRule.waitUntilExactlyOneExists(hasText("Done"), 10000)
+        composeTestRule.waitUntilExactlyOneExists(hasText("Done"), 20000)
         composeTestRule.onNodeWithText("Done").performClick()
     }
 

@@ -419,9 +419,10 @@ class InboxE2ETest: StudentTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open Inbox Page. Assert that the asked question is displayed in the teacher's inbox with the proper recipients ($recipientList) and message ($questionText).")
+        Log.d(STEP_TAG,"Open Inbox Page. Assert that the asked question is displayed in the teacher's inbox with the proper recipients ($recipientList), subject and message ($questionText).")
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationWithRecipientsDisplayed(recipientList)
+        inboxPage.assertConversationSubject("(No Subject)")
         inboxPage.assertConversationDisplayed(questionText)
 
         Log.d(STEP_TAG, "Open the conversation and assert that there is no subject of the conversation and the message body is equal to which the student typed in the 'Ask Your Instructor' dialog: '$questionText'.")

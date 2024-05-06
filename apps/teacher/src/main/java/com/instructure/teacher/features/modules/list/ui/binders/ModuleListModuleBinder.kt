@@ -44,7 +44,7 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
 
                 loadingView.setVisible(item.isLoading)
 
-                overflow.onClickWithRequireNetwork {
+                publishActions.onClickWithRequireNetwork {
                     val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
                     popup.inflate(R.menu.menu_module)
 
@@ -66,7 +66,7 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
                         }
                     }
 
-                    overflow.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
+                    publishActions.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
                     popup.show()
                 }
             }

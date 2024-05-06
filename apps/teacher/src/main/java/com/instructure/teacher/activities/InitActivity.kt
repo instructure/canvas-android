@@ -57,6 +57,7 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -73,7 +74,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityInitBinding
 import com.instructure.teacher.databinding.NavigationDrawerBinding
 import com.instructure.teacher.dialog.ColorPickerDialog
-import com.instructure.teacher.dialog.EditCourseNicknameDialog
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory

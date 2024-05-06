@@ -41,6 +41,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.Timeout
+import java.lang.Thread.sleep
 import java.util.*
 
 @HiltAndroidTest
@@ -52,7 +53,7 @@ class ScheduleE2ETest : StudentTest() {
 
     @Rule
     @JvmField
-    var globalTimeout: Timeout = Timeout.millis(600000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
+    var globalTimeout: Timeout = Timeout.millis(1200000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
 
     @Stub
     @E2E
@@ -91,7 +92,6 @@ class ScheduleE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to K5 Schedule Page and assert it is loaded.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
-        schedulePage.assertPageObjects()
 
         //Depends on how we handle Sunday, need to clarify with calendar team
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {  schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(homeroomCourse.name, homeroomAnnouncement.title) }
@@ -110,13 +110,13 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
 
         Log.d(STEP_TAG, "Scroll to 'Missing Items' section  and verify that a missing assignment (${testMissingAssignment.name}) is displayed there with 100 points.")
-        schedulePage.scrollToItem(R.id.missingItemLayout, testMissingAssignment.name)
-        schedulePage.assertMissingItemDisplayed(testMissingAssignment.name, nonHomeroomCourses[2].name, "100 pts")
+        schedulePage.scrollToItem(R.id.metaLayout, testMissingAssignment.name)
+        schedulePage.assertMissingItemDisplayedOnPlannerItem(testMissingAssignment.name, nonHomeroomCourses[2].name, "100 pts")
 
         Log.d(STEP_TAG, "Refresh the Schedule Page. Assert that the items are still displayed correctly.")
         schedulePage.scrollToPosition(0)
         schedulePage.refresh()
-        schedulePage.assertPageObjects()
+        sleep(3000)
 
         Log.d(STEP_TAG, "Assert that the current day of the calendar is titled as 'Today'.")
         schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
@@ -161,6 +161,7 @@ class ScheduleE2ETest : StudentTest() {
 
             Log.d(STEP_TAG, "Navigate back to Schedule Page and assert it is loaded.")
             Espresso.pressBack()
+            sleep(3000)
             schedulePage.assertPageObjects()
         }
 

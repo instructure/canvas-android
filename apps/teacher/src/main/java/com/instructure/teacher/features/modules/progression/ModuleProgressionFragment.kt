@@ -40,7 +40,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleProgressionBinding
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.files.details.FileDetailsFragment
-import com.instructure.teacher.fragments.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.QuizDetailsFragment
@@ -89,6 +89,7 @@ class ModuleProgressionFragment : Fragment() {
         addOnPageChangeListener(object : SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 setupCarousel(data, position)
+                viewModel.setCurrentPosition(position)
             }
         })
     }

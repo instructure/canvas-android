@@ -9,19 +9,24 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.api.FileFolderApi
 import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.ModuleItemTypes
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.getCustomDateCalendar
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.openOverflowMenu
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
+import com.instructure.teacher.ui.utils.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
@@ -203,10 +208,14 @@ class   ModulesE2ETest : TeacherComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
+
+        Log.d(PREPARATION_TAG,"Submit '${assignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
         Log.d(PREPARATION_TAG, "Seeding another 'Text Entry' assignment for '${course.name}' course.")
         val assignment2 = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
@@ -261,6 +270,7 @@ class   ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleIsDisplayed(module2.name)
         moduleListPage.assertModuleNotPublished(module2.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
+        moduleListPage.assertModuleStatusIconAlpha(assignment.name, 0.5f)
         moduleListPage.assertModuleItemIsPublished(quiz.title)
         moduleListPage.assertModuleItemIsPublished(discussionTopic.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
@@ -303,13 +313,15 @@ class   ModulesE2ETest : TeacherComposeTest() {
         progressPage.assertProgressPageTitle(R.string.allModulesAndItems)
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became unpublished.")
+        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment)  became unpublished.")
         moduleListPage.assertSnackbarText(R.string.allModulesAndAllItemsUnpublished)
         moduleListPage.assertModuleNotPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
+
+        Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Assert that '${module2.name}' module and all of it's items became unpublished.")
         moduleListPage.assertModuleNotPublished(module2.name)
@@ -330,7 +342,7 @@ class   ModulesE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and only the '${module.name}' module became published, but it's items remaining unpublished.")
         moduleListPage.assertSnackbarText(R.string.onlyModulesPublished)
         moduleListPage.assertModuleIsPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
@@ -373,13 +385,15 @@ class   ModulesE2ETest : TeacherComposeTest() {
         progressPage.assertProgressPageTitle(R.string.selectedModulesAndItems)
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became unpublished.")
+        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment) became unpublished.")
         moduleListPage.assertSnackbarText(R.string.moduleAndAllItemsUnpublished)
         moduleListPage.assertModuleNotPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
+
+        Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Click on '${module.name}' module overflow.")
         moduleListPage.clickItemOverflow(module.name)
@@ -390,23 +404,14 @@ class   ModulesE2ETest : TeacherComposeTest() {
         device.waitForWindowUpdate(null, 3000)
         device.waitForIdle()
 
-        Log.d(STEP_TAG, "Assert that only the '${module.name}' module became published, but it's items remaining unpublished.")
+        Log.d(STEP_TAG, "Assert that only the '${module.name}' module became published, but it's items (except '${assignment.name}' assignment) remaining unpublished.")
         moduleListPage.assertModuleIsPublished(module.name)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
 
         //Bottom layer - One module item
-
-        Log.d(STEP_TAG, "Click on '${assignment.name}' assignment's overflow menu and publish it. Confirm the publish via the publish dialog.")
-        moduleListPage.clickItemOverflow(assignment.name)
-        moduleListPage.clickOnText(R.string.publishModuleItemAction)
-        moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
-
-        Log.d(STEP_TAG, "Assert that the 'Item published' snack bar has displayed and the '${assignment.name}' assignment became published.")
-        moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
-        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Click on '${quiz.title}' quiz's overflow menu and publish it. Confirm the publish via the publish dialog.")
         moduleListPage.clickItemOverflow(quiz.title)
@@ -435,14 +440,10 @@ class   ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
         moduleListPage.assertModuleItemIsPublished(discussionTopic.title)
 
-        Log.d(STEP_TAG, "Click on '${assignment.name}' assignment's overflow menu and unpublish it. Confirm the unpublish via the unpublish dialog.")
+        Log.d(STEP_TAG, "Try to click on '${assignment.name}' assignment's overflow menu (in order to unpublish it). Assert that a snack bar with a proper text will be displayed that it cannot be unpublished since it has student submissions.")
         moduleListPage.clickItemOverflow(assignment.name)
-        moduleListPage.clickOnText(R.string.unpublishModuleItemAction)
-        moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
-
-        Log.d(STEP_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${assignment.name}' assignment became unpublished.")
-        moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
-        moduleListPage.assertModuleItemNotPublished(assignment.name)
+        moduleListPage.assertSnackbarContainsText(assignment.name)
+        moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Click on '${quiz.title}' quiz's overflow menu and unpublish it. Confirm the unpublish via the unpublish dialog.")
         moduleListPage.clickItemOverflow(quiz.title)
@@ -470,6 +471,128 @@ class   ModulesE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${discussionTopic.title}' discussion topic became unpublished.")
         moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.E2E)
+    fun testFileModuleItemUpdateE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding a module for '${course.name}' course. It starts as unpublished.")
+        val module = ModulesApi.createModule(course.id, teacher.token)
+
+        Log.d(PREPARATION_TAG, "Get the root folder of the course.")
+        val courseRootFolder = FileFolderApi.getCourseRootFolder(course.id, teacher.token)
+
+        Log.d(PREPARATION_TAG, "Create a (text) file within the root folder (so the 'Files' tab file list) of the '${course.name}' course.")
+        val testTextFile = uploadTextFile(courseRootFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
+
+        Log.d(PREPARATION_TAG, "Create another (text) file within the root folder (so the 'Files' tab file list) of the '${course.name}' course.")
+        val testTextFile2 = uploadTextFile(courseRootFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
+
+        Log.d(PREPARATION_TAG, "Associate '${testTextFile.fileName}' (course) file with module: '${module.id}'.")
+        ModulesApi.createModuleItem(
+            course.id,
+            teacher.token,
+            module.id,
+            moduleItemTitle = testTextFile.fileName,
+            moduleItemType = ModuleItemTypes.FILE.stringVal,
+            contentId = testTextFile.id.toString()
+        )
+
+        Log.d(PREPARATION_TAG, "Associate '${testTextFile2.fileName}' (course) file with module: '${module.id}'.")
+        ModulesApi.createModuleItem(
+            course.id,
+            teacher.token,
+            module.id,
+            moduleItemTitle = testTextFile2.fileName,
+            moduleItemType = ModuleItemTypes.FILE.stringVal,
+            contentId = testTextFile2.id.toString()
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'. Assert that '${course.name}' course is displayed on the Dashboard.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Modules Page.")
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.openModulesTab()
+
+        Log.d(STEP_TAG, "Assert that both, the '${testTextFile.fileName}' and '${testTextFile2.fileName}' files are published.")
+        moduleListPage.assertModuleItemIsPublished(testTextFile.fileName)
+        moduleListPage.assertModuleItemIsPublished(testTextFile2.fileName)
+
+        Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
+        moduleListPage.clickItemOverflow(testTextFile.fileName)
+
+        Log.d(STEP_TAG, "Assert that by default, on the Update File Permissions Page the 'Published' radio button is checked within the 'Availability' section.")
+        updateFilePermissionsPage.assertFilePublished()
+
+        Log.d(STEP_TAG, "Assert that the 'Visibility' section radio buttons are enabled and the 'Inherit from course' radio button is checked by default within the 'Visibility' section.")
+        updateFilePermissionsPage.assertVisibilityEnabled()
+        updateFilePermissionsPage.assertFileVisibilityInherit()
+
+        Log.d(STEP_TAG, "Click on the 'Unpublish' radio button and assert that the 'Visibility' section radio buttons became disabled.")
+        updateFilePermissionsPage.clickUnpublishRadioButton()
+        updateFilePermissionsPage.assertVisibilityDisabled()
+
+        Log.d(STEP_TAG, "Click on the 'Update' button and assert on the Module List Page that the '${testTextFile.fileName}' file became unpublished.")
+        updateFilePermissionsPage.clickUpdateButton()
+        moduleListPage.assertModuleItemNotPublished(testTextFile.fileName)
+
+        Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
+        moduleListPage.clickItemOverflow(testTextFile.fileName)
+
+        Log.d(STEP_TAG, "Assert that the 'Unpublished' radio button is checked because of the previous modifications.")
+        updateFilePermissionsPage.assertFileUnpublished()
+
+        Log.d(STEP_TAG, "Click on the 'Only available with link' (aka. 'Hide') radio button and click on the 'Update' button to save the changes.")
+        updateFilePermissionsPage.clickHideRadioButton()
+        updateFilePermissionsPage.clickUpdateButton()
+
+        Log.d(STEP_TAG, "Assert that the '${testTextFile.fileName}' file module item became hidden.")
+        moduleListPage.assertModuleItemHidden(testTextFile.fileName)
+
+        Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
+        moduleListPage.clickItemOverflow(testTextFile.fileName)
+
+        Log.d(STEP_TAG, "Assert that the 'Hidden' radio button is checked because of the previous modifications.")
+        updateFilePermissionsPage.assertFileHidden()
+
+        Log.d(STEP_TAG, "Click on the 'Schedule availability' (aka. 'Scheduled') radio button without setting any 'From' and 'Until' dates and click on the 'Update' button to save the changes.")
+        updateFilePermissionsPage.clickScheduleRadioButton()
+        updateFilePermissionsPage.clickUpdateButton()
+
+        Log.d(STEP_TAG, "Assert that the '${testTextFile.fileName}' file is published since that is the expected behaviour if we does not select any dates for schedule.")
+        moduleListPage.assertModuleItemIsPublished(testTextFile.fileName)
+
+        Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
+        moduleListPage.clickItemOverflow(testTextFile.fileName)
+
+        Log.d(STEP_TAG, "Assert that by default, on the Update File Permissions Page the 'Published' radio button is checked within the 'Availability' section.")
+        updateFilePermissionsPage.assertFilePublished()
+
+        Log.d(STEP_TAG, "Click on the 'Schedule availability' (aka. 'Scheduled') radio button, set some dates and click on the 'Update' button to save the changes.")
+        updateFilePermissionsPage.clickScheduleRadioButton()
+
+        Log.d(PREPARATION_TAG, "Create a calendar with 3 days ago and another one with 3 days later.")
+        val unlockDateCalendar = getCustomDateCalendar(-3)
+        val lockDateCalendar = getCustomDateCalendar(3)
+
+        Log.d(STEP_TAG, "Set the 'From' and 'Until' dates (and times) as well. These are coming from the calendars which has been previously created.")
+        updateFilePermissionsPage.setFromDateTime(unlockDateCalendar)
+        updateFilePermissionsPage.setUntilDateTime(lockDateCalendar)
+
+        Log.d(STEP_TAG, "Click on the 'Update' button to save the changes.")
+        updateFilePermissionsPage.clickUpdateButton()
+
+        Log.d(STEP_TAG, "Assert that the '${testTextFile.fileName}' file module item is scheduled.")
+        moduleListPage.assertModuleItemScheduled(testTextFile.fileName)
     }
 
 }
