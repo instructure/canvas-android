@@ -208,7 +208,7 @@ private fun ToDoContent(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = toDoUiState.date,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp).testTag("date"),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp
             )
@@ -225,7 +225,7 @@ private fun ToDoContent(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = toDoUiState.description,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp).testTag("description"),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )

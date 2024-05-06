@@ -14,11 +14,15 @@
  *     limitations under the License.
  */package com.instructure.canvas.espresso.common
 
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.common.page.ToDoDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPlannable
 import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.textAndIconColor
 import org.junit.Test
 import java.util.Date
@@ -62,8 +66,119 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.waitForToolbar()
         toDoDetailsPage.assertCanvasContext(course.name, course.textAndIconColor)
+    }
+
+    @Test
+    fun assertDate() {
+        val data = initData()
+        val student = data.students[0]
+        val course = data.courses.values.first()
+        data.addPlannable(
+            name = "Test Todo",
+            course = course,
+            userId = student.id,
+            type = PlannableType.PLANNER_NOTE,
+            date = Date()
+        )
+
+        goToToDoDetails(data)
+
+        composeTestRule.waitForIdle()
+        toDoDetailsPage.assertDate(originalActivity, data.todos.first().plannable.todoDate.toDate()!!)
+    }
+
+    @Test
+    fun assertDescription() {
+        val data = initData()
+        val student = data.students[0]
+        val course = data.courses.values.first()
+        data.addPlannable(
+            name = "Test Todo",
+            course = course,
+            userId = student.id,
+            type = PlannableType.PLANNER_NOTE,
+            date = Date(),
+            details = "Test Description"
+        )
+
+        goToToDoDetails(data)
+
+        composeTestRule.waitForIdle()
+        toDoDetailsPage.assertDescription("Test Description")
+    }
+
+    @Test
+    fun openToDoEditPage() {
+        val data = initData()
+        val student = data.students[0]
+        val course = data.courses.values.first()
+        data.addPlannable(
+            name = "Test Todo",
+            course = course,
+            userId = student.id,
+            type = PlannableType.PLANNER_NOTE,
+            date = Date()
+        )
+
+        goToToDoDetails(data)
+
+        composeTestRule.waitForIdle()
+        toDoDetailsPage.clickToolbarMenu()
+        toDoDetailsPage.clickEditMenu()
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Edit To Do").assertIsDisplayed()
+    }
+
+    @Test
+    fun openToDoEditDialog() {
+        val data = initData()
+        val student = data.students[0]
+        val course = data.courses.values.first()
+        data.addPlannable(
+            name = "Test Todo",
+            course = course,
+            userId = student.id,
+            type = PlannableType.PLANNER_NOTE,
+            date = Date()
+        )
+
+        goToToDoDetails(data)
+
+        composeTestRule.waitForIdle()
+        toDoDetailsPage.clickToolbarMenu()
+        toDoDetailsPage.clickDeleteMenu()
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
+    }
+
+    @Test
+    fun deleteToDo() {
+        val data = initData()
+        val student = data.students[0]
+        val course = data.courses.values.first()
+        data.addPlannable(
+            name = "Test Todo",
+            course = course,
+            userId = student.id,
+            type = PlannableType.PLANNER_NOTE,
+            date = Date()
+        )
+
+        goToToDoDetails(data)
+
+        composeTestRule.waitForIdle()
+        toDoDetailsPage.clickToolbarMenu()
+        toDoDetailsPage.clickDeleteMenu()
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Delete").performClick()
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Test Todo").assertDoesNotExist()
     }
 
     abstract fun goToToDoDetails(data: MockCanvas)

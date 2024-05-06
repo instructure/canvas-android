@@ -15,26 +15,23 @@
  */
 package com.instructure.canvas.espresso.common.page
 
+import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.assertTextColor
+import java.util.Date
 
 class ToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
-
-    fun waitForToolbar() {
-        composeTestRule.waitUntil {
-            composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText("To Do")))
-                .isDisplayed()
-        }
-    }
 
     fun assertTitle(title: String) {
         composeTestRule.waitForIdle()
@@ -46,5 +43,37 @@ class ToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText(title)
             .assertIsDisplayed()
             .assertTextColor(Color(color))
+    }
+
+    fun assertDate(context: Context, date: Date) {
+        val dateTitle = date.let {
+            val dateText = DateHelper.dayMonthDateFormat.format(it)
+            val timeText = DateHelper.getFormattedTime(context, it)
+            "$dateText at $timeText"
+        }
+
+        composeTestRule.onNodeWithTag("date")
+            .assertTextEquals(dateTitle).isDisplayed()
+    }
+
+    fun assertDescription(description: String) {
+        composeTestRule.onNodeWithTag("description")
+            .assertTextEquals(description).isDisplayed()
+    }
+
+    fun clickToolbarMenu() {
+        composeTestRule.onNode(
+            hasParent(hasTestTag("Toolbar"))
+                .and(hasContentDescription("More options"))
+        )
+            .performClick()
+    }
+
+    fun clickEditMenu() {
+        composeTestRule.onNodeWithText("Edit").performClick()
+    }
+
+    fun clickDeleteMenu() {
+        composeTestRule.onNodeWithText("Delete").performClick()
     }
 }
