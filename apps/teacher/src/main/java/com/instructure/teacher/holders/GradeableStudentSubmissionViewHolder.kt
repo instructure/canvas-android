@@ -74,7 +74,7 @@ class GradeableStudentSubmissionViewHolder(private val binding: AdapterGradeable
                 studentAvatar.setupAvatarA11y(assignee.name)
                 studentAvatar.onClick {
                     val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
-                    RouteMatcher.route(context as FragmentActivity, Route(StudentContextFragment::class.java, null, bundle))
+                    RouteMatcher.route(context.getFragmentActivity(), Route(StudentContextFragment::class.java, null, bundle))
                 }
             }
             assignee is GroupAssignee -> {
