@@ -37,6 +37,7 @@ class GradeCellRenderTest : StudentRenderTest() {
         val submittedTitle by OnViewWithId(R.id.submittedTitle)
         val submittedSubtitle by OnViewWithId(R.id.submittedSubtitle)
         val pointsLabel by OnViewWithId(R.id.pointsLabel)
+        val yourGrade by OnViewWithId(R.id.yourGrade)
         val latePenalty by OnViewWithId(R.id.latePenalty)
         val finalGrade by OnViewWithId(R.id.finalGrade)
         val grade by OnViewWithId(R.id.grade)
@@ -122,7 +123,8 @@ class GradeCellRenderTest : StudentRenderTest() {
             score = "91",
             showPointsLabel = true,
             outOf = "Out of 100 pts",
-            latePenalty = "Late Penalty (-2 pts)",
+            yourGrade = "Your Grade: 91 pts",
+            latePenalty = "Late Penalty: -2 pts",
             finalGrade = "Final Grade: 89 pts"
         )
         setupViewWithState(state)
@@ -132,6 +134,7 @@ class GradeCellRenderTest : StudentRenderTest() {
             score.assertDisplayed()
             pointsLabel.assertDisplayed()
             outOf.assertDisplayed()
+            yourGrade.assertDisplayed()
             latePenalty.assertDisplayed()
             finalGrade.assertDisplayed()
         }
@@ -140,6 +143,7 @@ class GradeCellRenderTest : StudentRenderTest() {
         with(gradeCell) {
             score.assertHasText(state.score)
             outOf.assertHasText(state.outOf)
+            yourGrade.assertHasText(state.yourGrade)
             latePenalty.assertHasText(state.latePenalty)
             finalGrade.assertHasText(state.finalGrade)
         }

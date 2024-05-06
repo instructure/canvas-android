@@ -16,7 +16,12 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addCourseSettings
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.CourseSettings
@@ -101,7 +106,7 @@ class SyllabusPageTest : TeacherTest() {
         repeat(assignmentCount) {
             data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 dueAt = 2.days.fromNow.iso8601,
                 name = "Assignment: $it"
             )

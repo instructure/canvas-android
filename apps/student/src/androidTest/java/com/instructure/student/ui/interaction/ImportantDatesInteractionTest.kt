@@ -16,7 +16,11 @@
 
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.StubTablet
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentCalendarEvent
@@ -26,10 +30,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -44,7 +44,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowCalendarEvents() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -59,12 +59,12 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowAssignment() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
 
-        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
         val assignmentScheduleItem = data.addAssignmentCalendarEvent(course.id, 2.days.fromNow.iso8601, assignment.name!!, assignment.description!!, true, assignment)
 
         goToImportantDatesTab(data)
@@ -75,7 +75,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testEmptyView() {
         val data = createMockData(courseCount = 1)
 
@@ -86,7 +86,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testPullToRefresh() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -107,7 +107,7 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenCalendarEvent() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
@@ -127,12 +127,12 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenAssignment() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
 
-        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
         val assignmentScheduleItem = data.addAssignmentCalendarEvent(course.id, 2.days.fromNow.iso8601, assignment.name!!, assignment.description!!, true, assignment)
 
         goToImportantDatesTab(data)
@@ -147,12 +147,12 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowMultipleCalendarEventsOnSameDay() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
 
-        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
         data.addAssignmentCalendarEvent(course.id, 2.days.fromNow.iso8601, assignment.name!!, assignment.description!!, true, assignment)
         val calendarEvent = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
@@ -171,12 +171,12 @@ class ImportantDatesInteractionTest : StudentTest() {
 
     @Test
     @StubTablet(description = "The UI is different on tablet, so we only check the phone version")
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testMultipleCalendarEventsOnDifferentDays() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
 
-        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
         val twoDaysFromNowEvent = data.addAssignmentCalendarEvent(course.id,
             2.days.fromNow.iso8601, "Important event two days later", "Important event two days later description", true, assignment)
         val threeDaysFromNowEvent = data.addCourseCalendarEvent(course.id,

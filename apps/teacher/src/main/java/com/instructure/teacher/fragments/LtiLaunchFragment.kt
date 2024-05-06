@@ -26,6 +26,8 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -37,7 +39,17 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_LTI_LAUNCH
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.asChooserExcludingInstructure
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentLtiLaunchBinding
 import com.instructure.teacher.router.RouteMatcher
@@ -108,12 +120,27 @@ class LtiLaunchFragment : BaseFragment() {
                     var url = ltiUrl // Replace deep link scheme
                         .replaceFirst("canvas-courses://", "${ApiPrefs.protocol}://")
                         .replaceFirst("canvas-student://", "${ApiPrefs.protocol}://")
+
                     if (sessionLessLaunch) {
-                        if (url.contains("api/v1/")) {
+                        if (url.contains("sessionless_launch")) {
                             getSessionlessLtiUrl(url)
                         } else {
-                            // This is specific for Studio and Gauge
-                            url = "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                            val id = url.substringAfterLast("/external_tools/").substringBefore("?")
+                            url = when {
+                                (id.toIntOrNull() != null) -> when (canvasContext) {
+                                    is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${(canvasContext as Course).id}/external_tools/sessionless_launch?id=$id"
+                                    is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${(canvasContext as Group).id}/external_tools/sessionless_launch?id=$id"
+                                    else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?id=$id"
+                                }
+
+                                else -> {
+                                    when (canvasContext) {
+                                        is Course -> "${ApiPrefs.fullDomain}/api/v1/courses/${(canvasContext as Course).id}/external_tools/sessionless_launch?url=$url"
+                                        is Group -> "${ApiPrefs.fullDomain}/api/v1/groups/${(canvasContext as Group).id}/external_tools/sessionless_launch?url=$url"
+                                        else -> "${ApiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=$url"
+                                    }
+                                }
+                            }
                             getSessionlessLtiUrl(url)
                         }
                     } else {

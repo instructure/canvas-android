@@ -15,8 +15,16 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionsForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.espresso.randomString
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -38,7 +46,7 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
     @Test
     override fun displaysPageObjects() {
         goToSpeedGraderCommentsPage(
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         speedGraderCommentsPage.assertPageObjects()
@@ -46,42 +54,42 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
 
     @Test
     fun displaysAuthorName() {
-        val submission = goToSpeedGraderCommentsPage(
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+        val submissionList = goToSpeedGraderCommentsPage(
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 withComment = true
         )
 
-        val authorName = submission!!.submissionComments[0].authorName!!
+        val authorName = submissionList?.get(0)!!.submissionComments[0].authorName!!
         speedGraderCommentsPage.assertDisplaysAuthorName(authorName)
     }
 
     @Test
     fun displaysCommentText() {
-        val submission = goToSpeedGraderCommentsPage(
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+        val submissionList = goToSpeedGraderCommentsPage(
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 withComment = true
         )
 
-        val commentText = submission!!.submissionComments[0].comment!!
+        val commentText = submissionList?.get(0)!!.submissionComments[0].comment!!
         speedGraderCommentsPage.assertDisplaysCommentText(commentText)
     }
 
     @Test
     fun displaysCommentAttachment() {
-        val submission = goToSpeedGraderCommentsPage(
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+        val submissionList = goToSpeedGraderCommentsPage(
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 withComment = true,
                 attachment = attachment
         )
 
-        val attachment = submission!!.submissionComments[0].attachments.get(0)
+        val attachment = submissionList?.get(0)!!.submissionComments[0].attachments.get(0)
         speedGraderCommentsPage.assertDisplaysCommentAttachment(attachment)
     }
 
     @Test
     fun displaysSubmissionHistory() {
         goToSpeedGraderCommentsPage(
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         speedGraderCommentsPage.assertDisplaysSubmission()
@@ -89,19 +97,19 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
 
     @Test
     fun displaysSubmissionFile() {
-        val submission = goToSpeedGraderCommentsPage(
-                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD,
+        val submissionList = goToSpeedGraderCommentsPage(
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD),
                 attachment = attachment
         )
 
-        val fileAttachments = submission!!.attachments.get(0)
+        val fileAttachments = submissionList?.get(0)!!.attachments[0]
         speedGraderCommentsPage.assertDisplaysSubmissionFile(fileAttachments)
     }
 
     @Test
     fun addsNewTextComment() {
         goToSpeedGraderCommentsPage(
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         val newComment = randomString(32)
@@ -113,7 +121,7 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
     fun showsNoCommentsMessage() {
         goToSpeedGraderCommentsPage(
                 submissionCount = 0,
-                submissionType = Assignment.SubmissionType.ON_PAPER
+                submissionTypeList = listOf(Assignment.SubmissionType.ON_PAPER)
         )
 
         speedGraderCommentsPage.assertDisplaysEmptyState()
@@ -123,17 +131,17 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
      * Common setup routine
      *
      * [submissionCount] is the number of submissions for the created assignment.  Typically 0 or 1.
-     * [submissionType] is the submission type for the assignment.
+     * [submissionTypeList] is the submission type for the assignment.
      * [withComment] if true, include a (student) comment with the submission.
      * [attachment] if non-null, is either a comment attachment (if withComment is true) or a submission
      * attachment (if withComment is false).
      *
      */
     private fun goToSpeedGraderCommentsPage(
-            submissionCount: Int = 1,
-            submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-            withComment: Boolean = false,
-            attachment: Attachment? = null): Submission? {
+        submissionCount: Int = 1,
+        submissionTypeList: List<Assignment.SubmissionType> = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
+        withComment: Boolean = false,
+        attachment: Attachment? = null): MutableList<Submission>? {
 
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val teacher = data.teachers[0]
@@ -147,7 +155,7 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = submissionType
+                submissionTypeList = submissionTypeList
         )
 
         var submissionComment : SubmissionComment? = null
@@ -158,17 +166,19 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
                     // Allows Espresso to distinguish between this and the full name, which is elsewhere on the page
                     authorName = student.shortName,
                     authorPronouns = student.pronouns,
+                    attempt = 1L,
                     comment = "a comment",
                     attachments = if(attachment == null) arrayListOf<Attachment>() else arrayListOf(attachment)
             )
         }
 
-        var submission: Submission? = null
+        var submissionList = mutableListOf<Submission>()
         repeat(submissionCount) {
-            submission = data.addSubmissionForAssignment(
+            val submissionTypesRaw = submissionTypeList.map { it.apiString }
+            submissionList = data.addSubmissionsForAssignment(
                     assignmentId = assignment.id,
                     userId = student.id,
-                    type = submissionType.apiString,
+                    types = submissionTypesRaw,
                     comment = submissionComment,
                     attachment = if (withComment) null else attachment
             )
@@ -185,6 +195,6 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
         speedGraderPage.selectCommentsTab()
         speedGraderPage.swipeUpCommentsTab()
 
-        return submission
+        return submissionList
     }
 }

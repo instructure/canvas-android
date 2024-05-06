@@ -28,6 +28,7 @@ import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_UNSUPPORTED_FILE
 import com.instructure.pandautils.analytics.ScreenView
@@ -39,7 +40,9 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentUnsupportedFileTypeBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import java.io.File
@@ -58,6 +61,7 @@ class ViewUnsupportedFileFragment : Fragment() {
     private var mFallbackIcon by IntArg(R.drawable.ic_attachment)
     private var mEditableFile: EditableFile? by NullableParcelableArg()
     private var mToolbarColor by IntArg(0)
+    private var isInModulesPager by BooleanArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_unsupported_file_type, container, false)
@@ -67,8 +71,9 @@ class ViewUnsupportedFileFragment : Fragment() {
         super.onResume()
         // If returning from editing this file, check if it was deleted so we can immediately go back
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
-        if (fileFolderDeletedEvent != null)
+        if (fileFolderDeletedEvent != null && fileFolderDeletedEvent.deletedFileFolder.id == mEditableFile?.file?.id) {
             requireActivity().finish()
+        }
 
         mEditableFile?.let { setupToolbar() } ?: binding.toolbar.setGone()
     }
@@ -79,7 +84,9 @@ class ViewUnsupportedFileFragment : Fragment() {
             // Check if we need to update the file name
             val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
             fileFolderUpdatedEvent?.let { event ->
-                it.file = event.updatedFileFolder
+                if (it.file.id == event.updatedFileFolder.id) {
+                    it.file = event.updatedFileFolder
+                }
             }
 
             toolbar.title = it.file.displayName
@@ -101,7 +108,14 @@ class ViewUnsupportedFileFragment : Fragment() {
             }
         }
 
-        if (isTablet && mToolbarColor != 0) {
+        if (isInModulesPager) {
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewUnsupportedFileFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewUnsupportedFileFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+        } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
@@ -164,13 +178,14 @@ class ViewUnsupportedFileFragment : Fragment() {
     companion object {
         @JvmOverloads
         fun newInstance(
-                uri: Uri,
-                displayName: String,
-                contentType: String,
-                previewUri: Uri?,
-                @DrawableRes fallbackIcon: Int,
-                toolbarColor: Int = 0,
-                editableFile: EditableFile? = null
+            uri: Uri,
+            displayName: String,
+            contentType: String,
+            previewUri: Uri?,
+            @DrawableRes fallbackIcon: Int,
+            toolbarColor: Int = 0,
+            editableFile: EditableFile? = null,
+            isInModulesPager: Boolean = false
         ) = ViewUnsupportedFileFragment().apply {
             mUri = uri
             mDisplayName = displayName
@@ -179,6 +194,7 @@ class ViewUnsupportedFileFragment : Fragment() {
             mFallbackIcon = fallbackIcon
             mToolbarColor = toolbarColor
             mEditableFile = editableFile
+            this.isInModulesPager = isInModulesPager
         }
 
         fun newInstance(bundle: Bundle) = ViewUnsupportedFileFragment().apply { arguments = bundle }

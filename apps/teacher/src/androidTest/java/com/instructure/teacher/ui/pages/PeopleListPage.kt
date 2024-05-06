@@ -17,6 +17,7 @@
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -25,6 +26,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -33,8 +35,10 @@ import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
@@ -128,6 +132,43 @@ class PeopleListPage(val searchable: Searchable) : BasePage(R.id.peopleListPage)
      */
     fun assertPersonRole(personName: String, role: UserRole) {
         onView(withId(R.id.userRole) + withText(role.roleName) + hasSibling(withId(R.id.userName) + withText(personName))).assertDisplayed()
+    }
+
+    /**
+     * Clicks on the People Filter menu item.
+     *
+     */
+    fun clickOnPeopleFilterMenu() {
+        onView(withId(R.id.peopleFilterMenuItem)).click()
+    }
+
+    /**
+     * (De)Select group(s) or section(s) as a filter(s).
+     *
+     * @param filterTextList A String list with the name(s) of the section(s) or group(s) which will be (de)selected for filter.
+     */
+    fun selectFilter(filterTextList: List<String>) {
+        for(filterText in filterTextList) {
+            onView(allOf(withId(R.id.checkbox), hasSibling(withText(filterText)))).perform(click())
+        }
+        onView(withText(android.R.string.ok) + withId(android.R.id.button1)).click()
+    }
+
+    /**
+     * Clicks on the clear filter button.
+     *
+     */
+    fun clickOnClearFilter() {
+        onView(withId(R.id.clearFilterTextView) + withParent(R.id.filterTitleWrapper)).click()
+    }
+
+    /**
+     * Assert filter title
+     *
+     * @param expectedTitle The expected filter title.
+     */
+    fun assertFilterTitle(expectedTitle: String) {
+        onView(withId(R.id.peopleFilter) + withParent(R.id.filterTitleWrapper)).assertHasText(expectedTitle)
     }
 
     /**

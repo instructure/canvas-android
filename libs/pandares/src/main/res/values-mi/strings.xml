@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Ngaro</string>
     <string name="gradedSubmissionLabel">kōekehia</string>
 
+    <string name="reminderTitle">Whakamaumahara</string>
+    <string name="reminderDescription">Tāpirihia nga whakamohiotanga whakamaumahara mo te ra tika mo tenei taumahi i runga i tenei taputapu.</string>
+    <string name="a11y_addReminder">Tāpiri whakamaumahara</string>
+    <string name="a11y_removeReminder">Tango whakamaumahara</string>
+    <string name="reminderBefore">%s I mua</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 meneti</item>
+        <item quantity="other">%d meneti</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Haora</item>
+        <item quantity="other">%d Ngā Haora</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Ra</item>
+        <item quantity="other">%d Ngā Ra</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Wiki</item>
+        <item quantity="other">%d Nga wiki</item>
+    </plurals>
+    <string name="reminderCustom">Tikanga</string>
+    <string name="customReminderTitle">Whakamaumahara Ritenga</string>
+    <string name="customReminderQuantityHint">Te nui</string>
+    <string name="customReminderMinutes">Nga meneti o mua</string>
+    <string name="customReminderHours">Nga haora i mua</string>
+    <string name="customReminderDays">Nga ra o mua</string>
+    <string name="customReminderWeeks">Nga wiki o mua</string>
+    <string name="reminderNotificationChannelName">Panui Whakamaumahara</string>
+    <string name="reminderNotificationChannelDescription">Whakamōhiotanga Canvas mō ngā whakamaumahara taumahi.</string>
+    <string name="reminderNotificationTitle">Whakamaumahara ki te Ra Whakatau</string>
+    <string name="reminderNotificationDescription">Ka tika tenei taumahi i roto %s: %s</string>
+    <string name="reminderInPast">Tena koa whiriwhiria he wa kei te heke mai mo to whakamaumahara!</string>
+    <string name="reminderAlreadySet">Kua tautuhia e koe he whakamaumahara mo tenei wa</string>
+    <string name="deleteReminderTitle">Muku Whakamaumahara</string>
+    <string name="deleteReminderMessage">E tino hiahia ana koe ki te muku i tenei whakamaumahara?</string>
+    <string name="reminderPermissionNotGrantedError">Me whakaahei koe i te whakaaetanga whakaoho mo tenei mahi</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Kaore e wātea he arokite mo ngā  URL e mahi ana http//</string>
     <string name="submissionUrlNotAUrlError">Tēnā koa whakauru he URL whaimana</string>
@@ -957,6 +994,8 @@
     <string name="inviteAccepted">Kua whakāetia te tono!</string>
     <string name="inviteDeclined">Kaore i whakāetia te tono.</string>
     <string name="latePenalty">Whiu tōmuri (-%s)</string>
+    <string name="latePenaltyUpdated">Whiu tōmuri: -%s ngā koinga</string>
+    <string name="yourGrade">Tō Kōeke: %s ngā koinga</string>
     <string name="finalGrade">Kōeke whakamutunga</string>
 
     <string name="max_count">99+</string>
@@ -1410,6 +1449,21 @@
     <string name="offline_content_select_all">Tīpako katoa</string>
     <string name="offline_content_deselect_all">Whakakorehia te katoa</string>
     <string name="offline_content_loading_error">I puta he hapa i te wa e uta ana te ihirangi.</string>
+    <string name="offline_content_empty_title">Kāore he Akoranga</string>
+    <string name="offline_content_empty_message">Ka whakarārangihia ō akoranga ki reira ka taea e koe te whakawātea mō te whakamahi tuimotu.</string>
+    <string name="offline_content_empty_course_title">Karekau he ihirangi akoranga</string>
+    <string name="offline_content_empty_course_message">Kua whakarārangitia te ihirangi akoranga ki konei katahi ka taea e koe te waatea mo te whakamahi tuimotu.</string>
+    <string name="offline_content_discard_dialog_title">Tūraki ngā Huringa?</string>
+    <string name="offline_content_discard_dialog_message">Mena ka whiriwhiri koe ki te whakakore, ka kore nga huringa e tiakina.</string>
+    <string name="offline_content_discard_dialog_positive">Tūraki</string>
+    <string name="offline_content_sync_dialog_title">Tukutahi ihirangi tuimotu?</string>
+    <string name="offline_content_sync_dialog_message">Tenei ka tukutahi ~%s ihirangi. Ka hua pea he utu taapiri mai i to kaiwhakarato raraunga, mena kaore koe e hono ki te whatunga Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Ma tenei ka tukutahi ~%s ihirangi anake i te wa e hono ana koe ki te whatunga Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Tukutahi</string>
+    <string name="offline_content_sync_loading_title">E uta ana ....</string>
+    <string name="offline_content_sync_loading_message">Kia mau, tatou kei te whakarite mea mo koe.</string>
+    <string name="content_description_expand_content">Roha ihirangi</string>
+    <string name="content_description_collapse_content">Tiango ihirangi</string>
     <string name="syncSettings_autoContentSyncDescription">Ina whakahohea te waahanga Tukutahi Ihirangi Aunoa, ko nga ihirangi kua tikiakehia ka whakawhirinaki ki nga tautuhinga kua whakarārangihia i raro nei. Ahakoa kaore i tuwhera te tono, ka mau tonu te tukutahitanga ihirangi. Karekau he tukutahitanga mena kua weto te tautuhinga. Ko nga mea kua oti te tango ake ka kore e tangohia.</string>
     <string name="syncSettings_syncFrequencyTitle">Auautanga Tukutahi</string>
     <string name="syncSettings_autoContentSyncTitle">Tukutahi Ihirangi Aunoa</string>
@@ -1452,7 +1506,6 @@
         <item quantity="one">%d Kei te tukutahi te akoranga.</item>
         <item quantity="other">%d kei te tukutahi nga akoranga.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Whakaahua ihirangi akoranga</string>
     <string name="assignmentNoLongerAvailable">Kaore tēnei whakataunga i te wātea.</string>
     <string name="editDashboardOfflineMode">Kei te tuimotu koe</string>
     <string name="editDashboardOfflineModeMessage">I tenei wa karekau he akoranga kei te waatea tuimotu.</string>
@@ -1464,4 +1517,78 @@
         <item quantity="one">%d kua tukutahia te akoranga.</item>
         <item quantity="other">%d kua tukutahia nga akoranga.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Ihirangi akoranga taapiri</string>
+    <string name="failedToUpdateDashboardOrder">I rahua te whakahōu i te raupapa kāri Papatohu</string>
+    <string name="publishAllModulesAndItems">Whakaputa i ngā Kōwae me ngā Tūemi katoa</string>
+    <string name="publishModulesOnly">Whakaputa Kōwae anake</string>
+    <string name="unpublishAllModulesAndItems">Wete whakaputa i ngā Kōwae me ngā Tūemi katoa</string>
+    <string name="moduleOptions">Ngā Kōwhiringa Kōwae</string>
+    <string name="publishModuleAndItems">Whakaputa Kōwae me ngā Tūemi Katoa</string>
+    <string name="publishModuleOnly">Whakaputa Kōwae anake</string>
+    <string name="unpublishModuleAndItems">Wete whakaputa i te Kōwae me ngā Tūemi katoa</string>
+    <string name="a11y_contentDescription_moduleOptions">Ngā kōwhiringa kōwae mō %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Ngā kōwhiringa tūemi kōwae mō %s</string>
+    <string name="publishModuleItem">Whakaputa Tūemi Kōwae</string>
+    <string name="unpublishModuleItem">Wete whakaputa i te Tūemi Kōwae</string>
+    <string name="publishDialogTitle">Whakaputa?</string>
+    <string name="publishModuleDialogMessage">Mā tēnei anake e kitea ai te kōwae ki ngā ākonga.</string>
+    <string name="publishModuleAndItemsDialogMessage">Mā tēnei ka kitea te kōwae me ngā tūemi katoa e kitea ana e ngā ākonga.</string>
+    <string name="unpublishDialogTitle">Weteputa?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">Mā tēnei ka noho te kōwae me ngā tūemi katoa kāore e kitea ana e ngā ākonga.</string>
+    <string name="publishModuleItemDialogMessage">Mā tēnei anake e kitea ai tēnei tūemi ki ngā ākonga.</string>
+    <string name="unpublishModuleItemDialogMessage">Mā tēnei anake e mahi i tēnei tūemi kāore e kitea ana e ngā ākonga.</string>
+    <string name="publishModulesAndItemsDialogMessage">Mā tēnei ka kitea ngā kōwae me ngā tūemi katoa ki ngā ākonga.</string>
+    <string name="publishModulesDialogMessage">Mā tēnei anake e kitea ai ngā kōwae ki ngā ākonga.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">Mā tēnei ka kitea ngā kōwae me ngā tūemi katoa ki ngā ākonga.</string>
+    <string name="only_available_with_link">E waatea ana me te hono</string>
+    <string name="schedule_availability">Whakaritea te waate</string>
+    <string name="moduleItemPublished">Tūemi i whakaputaina</string>
+    <string name="moduleItemUnpublished">Kāore i whakaputaina te tūemi</string>
+    <string name="onlyModulePublished">Kōwae anake i whakaputaina</string>
+    <string name="moduleAndAllItemsPublished">Kōwae me ngā Tūemi katoa i whakaputaina</string>
+    <string name="moduleAndAllItemsUnpublished">Kōwae me ngā Tūemi katoa kāore anō kia whakaputaina</string>
+    <string name="onlyModulesPublished">Ngā Kōwae anake i whakaputaina</string>
+    <string name="allModulesAndAllItemsPublished">Ngā Kōwae Katoa me ngā Tūemi katoa i whakaputaina</string>
+    <string name="allModulesAndAllItemsUnpublished">Ngā Kōwae Katoa me ngā Tūemi katoa kāore i whakaputaina</string>
+    <string name="inherit_from_course">Tukua mai i te Akoranga</string>
+    <string name="course_members">Nga Mema Akoranga</string>
+    <string name="institution_members">Nga Mema Whare</string>
+    <string name="public_title">tūmatanui</string>
+    <string name="edit_permissions">Whakatika Whakaaetanga</string>
+    <string name="update">Whakahou</string>
+    <string name="availability_title">Wātea</string>
+    <string name="visibility_title">Aritanga</string>
+    <string name="available_from">Wātea Mai</string>
+    <string name="available_until">Wātea Kia</string>
+    <string name="from">Nā</string>
+    <string name="until">Tae noa ki</string>
+    <string name="date">Rā</string>
+    <string name="time">Wā</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Ūkui Mai i te Rā</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Ūkui tae noa ki te Rā</string>
+    <string name="progressMessage">He meneti torutoru pea tenei tukanga. Ka taea e koe te kati i te matapihi aratau ka waiho ranei i te wharangi i tenei mahi.</string>
+    <string name="noteTitle">Tuhipoka</string>
+    <string name="allModules">Ngā kōwae katoa</string>
+    <string name="allModulesAndItems">Ngā Kōwae me ngā Tūemi Katoa</string>
+    <string name="selectedModulesAndItems">Ngā Kōwae me ngā Tūemi kua tīpakohia</string>
+    <string name="selectedModules">Ngā Kōwae kua Tīpakohia</string>
+    <string name="publishing">Whakaputa ana</string>
+    <string name="unpublishing">Wete whakaputa ana</string>
+    <string name="moduleBulkUpdateNote">Ko nga waahanga me nga mea kua oti te tukatuka e kore e hoki ki to ratau ahuatanga o mua ka haukotia te tukanga.</string>
+    <string name="success">Angitu!</string>
+    <string name="updateFailed">I rahua te whakahou</string>
+    <string name="updateCancelled">Kua whakakorea te whakahōu</string>
+    <string name="a11y_hidden">Huna</string>
+    <string name="a11y_scheduled">Kua Raupapatia</string>
+    <string name="a11y_published">I whakaputaina</string>
+    <string name="a11y_unpublished">Kaore ii whakaputaina</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f koinga</item>
+        <item quantity="other">%.0f ngā koinga</item>
+    </plurals>
+    <string name="publishModuleItemAction">Whakaputa</string>
+    <string name="unpublishModuleItemAction">Kaore i tāngia</string>
+    <string name="publishDialogPositiveButton">Whakaputa</string>
+    <string name="unpublishDialogPositiveButton">Kaore i tāngia</string>
+    <string name="discussionMenuRefresh">Whakahouhia</string>
 </resources>

@@ -18,6 +18,7 @@ package com.instructure.teacher.features.discussion
 import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.webkit.CookieManager
@@ -39,7 +40,6 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.AttachmentPickerDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
@@ -57,8 +57,10 @@ import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.events.DiscussionEntryEvent
 import com.instructure.teacher.factory.DiscussionsDetailsPresenterFactory
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.fragments.*
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
@@ -74,9 +76,8 @@ import java.util.*
 @ScreenView(SCREEN_VIEW_DISCUSSION_DETAILS)
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
-        DiscussionsDetailsView>(), DiscussionsDetailsView, Identity {
-
-    private val binding by viewBinding(FragmentDiscussionsDetailsBinding::bind)
+        DiscussionsDetailsView,
+        FragmentDiscussionsDetailsBinding>(), DiscussionsDetailsView, Identity {
 
     //region Member Variables
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -100,7 +101,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     @PageViewUrlParam("topicId")
     private fun getTopicId() = discussionTopicHeader.id
 
-    override fun layoutResId(): Int = R.layout.fragment_discussions_details
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentDiscussionsDetailsBinding = FragmentDiscussionsDetailsBinding::inflate
 
     override fun onRefreshFinished() {
         binding.discussionProgressBar.setGone()
@@ -378,21 +379,21 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             RouteMatcher.route(requireActivity(), Route(null, DueDatesFragment::class.java, canvasContext, args))
         }
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.ALL)
         }
         binding.donutGroup.viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
         binding.donutGroup.gradedWrapper.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.GRADED)
         }
         binding.donutGroup.ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.NOT_GRADED)
         }
         binding.donutGroup.notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
+            navigateToSubmissions(canvasContext, presenter.discussionTopicHeader.assignment!!, SubmissionListFilter.MISSING)
         }
     }
 
-    private fun navigateToSubmissions(context: CanvasContext, assignment: Assignment, filter: AssignmentSubmissionListPresenter.SubmissionListFilter) {
+    private fun navigateToSubmissions(context: CanvasContext, assignment: Assignment, filter: SubmissionListFilter) {
         val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
         RouteMatcher.route(requireActivity(), Route(null, AssignmentSubmissionListFragment::class.java, context, args))
     }

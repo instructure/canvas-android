@@ -19,10 +19,10 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.pandautils.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -35,51 +35,51 @@ class SyncSettingsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testFurtherSettingsDisplayedByDefault() {
         goToSyncSettings()
-        syncSettingsPage.assertFurtherSettingsIsDisplayed()
+        offlineSyncSettingsPage.assertFurtherSettingsIsDisplayed()
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testClickAutoSyncHidesFurtherSettings() {
         goToSyncSettings()
-        syncSettingsPage.clickAutoSyncSwitch()
-        syncSettingsPage.assertFurtherSettingsNotDisplayed()
+        offlineSyncSettingsPage.clickAutoSyncSwitch()
+        offlineSyncSettingsPage.assertFurtherSettingsNotDisplayed()
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testChangeFrequency() {
         goToSyncSettings()
-        syncSettingsPage.assertFrequencyLabelText(R.string.daily)
-        syncSettingsPage.clickFrequency()
-        syncSettingsPage.clickDialogOption(R.string.weekly)
-        syncSettingsPage.assertFrequencyLabelText(R.string.weekly)
+        offlineSyncSettingsPage.assertSyncFrequencyLabelText(R.string.daily)
+        offlineSyncSettingsPage.openSyncFrequencySettingsDialog()
+        offlineSyncSettingsPage.clickSyncFrequencyDialogOption(R.string.weekly)
+        offlineSyncSettingsPage.assertSyncFrequencyLabelText(R.string.weekly)
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testChangeContentOverWifiOnly() {
         goToSyncSettings()
-        syncSettingsPage.assertWifiOnlySwitchIsChecked()
-        syncSettingsPage.clickWifiOnlySwitch()
-        syncSettingsPage.assertDialogDisplayedWithTitle(R.string.syncSettings_wifiConfirmationTitle)
-        syncSettingsPage.clickTurnOff()
-        syncSettingsPage.assertWifiOnlySwitchIsNotChecked()
+        offlineSyncSettingsPage.assertWifiOnlySwitchIsChecked()
+        offlineSyncSettingsPage.clickWifiOnlySwitch()
+        offlineSyncSettingsPage.assertTurnOffWifiOnlyDialogTexts()
+        offlineSyncSettingsPage.clickTurnOff()
+        offlineSyncSettingsPage.assertWifiOnlySwitchIsNotChecked()
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SYNC_SETTINGS, TestCategory.INTERACTION)
     fun testChangesSavedCorrectly() {
         val data = createMockCanvas()
         goToSyncSettings(data)
 
-        syncSettingsPage.clickFrequency()
-        syncSettingsPage.clickDialogOption(R.string.weekly)
-        syncSettingsPage.clickWifiOnlySwitch()
-        syncSettingsPage.clickTurnOff()
+        offlineSyncSettingsPage.openSyncFrequencySettingsDialog()
+        offlineSyncSettingsPage.clickSyncFrequencyDialogOption(R.string.weekly)
+        offlineSyncSettingsPage.clickWifiOnlySwitch()
+        offlineSyncSettingsPage.clickTurnOff()
 
         with(activityRule) {
             finishActivity()
@@ -88,8 +88,8 @@ class SyncSettingsInteractionTest : StudentTest() {
 
         goToSyncSettings(data)
 
-        syncSettingsPage.assertFrequencyLabelText(R.string.weekly)
-        syncSettingsPage.assertWifiOnlySwitchIsNotChecked()
+        offlineSyncSettingsPage.assertSyncFrequencyLabelText(R.string.weekly)
+        offlineSyncSettingsPage.assertWifiOnlySwitchIsNotChecked()
     }
 
     private fun createMockCanvas(): MockCanvas {
@@ -104,6 +104,6 @@ class SyncSettingsInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
         dashboardPage.waitForRender()
         leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.openOfflineContentPage()
+        settingsPage.openOfflineSyncSettingsPage()
     }
 }

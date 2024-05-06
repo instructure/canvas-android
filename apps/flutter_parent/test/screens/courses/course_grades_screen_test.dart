@@ -427,6 +427,30 @@ void main() {
       expect(find.text(grade), findsOneWidget);
     });
 
+    testWidgetsWithAccessibilityChecks('from current grade and score', (tester) async {
+      final grade = 'Big fat F';
+      final score = 15.15;
+      final groups = [
+        _mockAssignmentGroup(assignments: [_mockAssignment()])
+      ];
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..grades = _mockGrade(currentScore: score, currentGrade: grade));
+      final model = CourseDetailsModel(_student, _courseId);
+      model.course = _mockCourse();
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
+      when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
+          GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
+          .thenAnswer((_) async => [enrollment]);
+
+      await tester.pumpWidget(_testableWidget(model));
+      await tester.pump(); // Build the widget
+      await tester.pump(); // Let the future finish
+
+      expect(find.text("$grade $score%"), findsOneWidget);
+    });
+
     testWidgetsWithAccessibilityChecks('is not shown when locked', (tester) async {
       final groups = [
         _mockAssignmentGroup(assignments: [_mockAssignment()])
@@ -481,6 +505,31 @@ void main() {
       final enrollment = Enrollment((b) => b
         ..enrollmentState = 'active'
         ..grades = _mockGrade(currentGrade: grade));
+      final model = CourseDetailsModel(_student, _courseId);
+      model.course = _mockCourse();
+      model.courseSettings = CourseSettings((b) => b..restrictQuantitativeData = true);
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
+      when(interactor.loadGradingPeriods(_courseId))
+          .thenAnswer((_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(<GradingPeriod>[]).toBuilder()));
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
+
+      await tester.pumpWidget(_testableWidget(model));
+      await tester.pump(); // Build the widget
+      await tester.pump(); // Let the future finish
+
+      // Verify that we are showing the course grade when restricted
+      expect(find.text(grade), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('only grade is shown when restricted', (tester) async {
+      final grade = 'Big fat F';
+      final score = 15.15;
+      final groups = [
+        _mockAssignmentGroup(assignments: [_mockAssignment()])
+      ];
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..grades = _mockGrade(currentScore: score, currentGrade: grade));
       final model = CourseDetailsModel(_student, _courseId);
       model.course = _mockCourse();
       model.courseSettings = CourseSettings((b) => b..restrictQuantitativeData = true);
@@ -780,7 +829,7 @@ Course _mockCourse() {
 GradeBuilder _mockGrade({double? currentScore, double? finalScore, String? currentGrade, String? finalGrade}) {
   return GradeBuilder()
     ..htmlUrl = ''
-    ..currentScore = currentScore ?? 0
+    ..currentScore = currentScore
     ..finalScore = finalScore ?? 0
     ..currentGrade = currentGrade ?? ''
     ..finalGrade = finalGrade ?? '';

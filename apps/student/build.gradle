@@ -50,8 +50,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 255
-        versionName = '6.26.1'
+        versionCode = 260
+        versionName = '7.2.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -126,6 +126,14 @@ android {
             ext {
                 heapEnabled = true
             }
+        }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
         }
 
         release {
@@ -240,12 +248,11 @@ android {
     hilt {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
     }
 }
 
 dependencies {
-    implementation project(path: ':panda_annotations')
-    kaptAndroidTestQa project(path: ':panda_processor')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -320,7 +327,8 @@ dependencies {
     implementation Libs.SQLDELIGHT
 
     /* Qr Code */
-    implementation Libs.JOURNEY_ZXING
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 
     /* AAC */
     implementation Libs.VIEW_MODEL
@@ -349,6 +357,10 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
+
+    testImplementation Libs.HAMCREST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }
 
 // Comment out this line if the reporting logic starts going wonky.

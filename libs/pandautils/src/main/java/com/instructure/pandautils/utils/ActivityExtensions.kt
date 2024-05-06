@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.utils
 
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.APIHelper
@@ -32,4 +34,10 @@ fun FragmentActivity.withRequireNetwork(block: () -> Unit) {
             .setPositiveButton(android.R.string.ok, { dialog, _ -> dialog.dismiss() })
             .showThemed()
     }
+}
+
+fun Context.getFragmentActivity(): FragmentActivity {
+    if (this is FragmentActivity) return this
+    if (this is ContextWrapper) return this.baseContext.getFragmentActivity()
+    else throw IllegalStateException("Not FragmentActivity context")
 }

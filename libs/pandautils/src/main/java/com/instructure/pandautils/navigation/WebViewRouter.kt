@@ -23,4 +23,6 @@ interface WebViewRouter {
     fun routeInternally(url: String)
 
     fun openMedia(url: String)
+
+    fun routeExternally(url: String)
 }

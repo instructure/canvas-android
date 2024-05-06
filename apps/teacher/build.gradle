@@ -39,8 +39,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 60
-        versionName = '1.26.0'
+        versionCode = 64
+        versionName = '1.29.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -111,6 +111,15 @@ android {
                 heapEnabled = true
             }
         }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
@@ -240,7 +249,6 @@ dependencies {
     androidTestImplementation project(':espresso')
     androidTestImplementation project(':dataseedingapi')
     androidTestImplementation Libs.JUNIT
-    androidTestImplementation project(path: ':panda_annotations')
 
     androidTestUtil(Libs.TEST_ORCHESTRATOR) {
         exclude module: 'support-annotations'
@@ -310,6 +318,10 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
+
+    testImplementation Libs.HAMCREST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }
 
 apply plugin: 'com.google.gms.google-services'

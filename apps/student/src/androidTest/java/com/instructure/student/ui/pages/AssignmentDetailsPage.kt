@@ -20,18 +20,25 @@ import android.view.View
 import android.widget.ScrollView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
@@ -57,8 +64,10 @@ import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anything
+import org.hamcrest.Matchers.not
 
-open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
+open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(R.id.assignmentDetailsPage) {
     val toolbar by OnViewWithId(R.id.toolbar)
     val points by OnViewWithId(R.id.points)
     val date by OnViewWithId(R.id.dueDateTextView)
@@ -220,6 +229,86 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     private fun assertAttemptInformation() {
         waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
         waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
+    }
+
+    fun selectSubmissionType(submissionType: SubmissionType) {
+        val viewMatcher = when (submissionType) {
+            SubmissionType.ONLINE_TEXT_ENTRY -> withId(R.id.submissionEntryText)
+            SubmissionType.ONLINE_UPLOAD -> withId(R.id.submissionEntryFile)
+            SubmissionType.ONLINE_URL -> withId(R.id.submissionEntryWebsite)
+            SubmissionType.MEDIA_RECORDING -> withId(R.id.submissionEntryMedia)
+
+            else -> {withId(R.id.submissionEntryText)}
+        }
+
+        onView(viewMatcher).click()
+    }
+
+    fun assertSubmissionTypeDisplayed(submissionType: String) {
+        onView(withText(submissionType) + withAncestor(R.id.customPanel)).assertDisplayed()
+    }
+
+    fun assertReminderSectionNotDisplayed() {
+        onView(withId(R.id.reminderTitle)).assertNotDisplayed()
+        onView(withId(R.id.reminderDescription)).assertNotDisplayed()
+        onView(withId(R.id.reminderAdd)).assertNotDisplayed()
+    }
+
+    fun assertReminderSectionDisplayed() {
+        onView(withId(R.id.reminderTitle)).scrollTo().assertDisplayed()
+        onView(withId(R.id.reminderDescription)).scrollTo().assertDisplayed()
+        onView(withId(R.id.reminderAdd)).scrollTo().assertDisplayed()
+    }
+
+    fun clickAddReminder() {
+        onView(withId(R.id.reminderAdd)).scrollTo().click()
+    }
+
+    fun selectTimeOption(timeOption: String) {
+        onView(withText(timeOption)).scrollTo().click()
+    }
+
+    fun assertReminderDisplayedWithText(text: String) {
+        onView(withText(text)).scrollTo().assertDisplayed()
+    }
+
+    fun removeReminderWithText(text: String) {
+        onView(
+            allOf(
+                withId(R.id.remove),
+                hasSibling(withText(text))
+            )
+        ).click()
+        onView(withText(R.string.yes)).scrollTo().click()
+    }
+
+    fun assertReminderNotDisplayedWithText(text: String) {
+        onView(withText(text)).check(doesNotExist())
+    }
+
+    fun clickCustom() {
+        onData(anything()).inRoot(isDialog()).atPosition(6).perform(click())
+    }
+
+    fun fillQuantity(quantity: String) {
+        onView(withId(R.id.quantity)).scrollTo().typeText(quantity)
+        Espresso.closeSoftKeyboard()
+    }
+
+    fun clickHoursBefore() {
+        onView(withId(R.id.hours)).scrollTo().click()
+    }
+
+    fun clickDaysBefore() {
+        onView(withId(R.id.days)).scrollTo().click()
+    }
+
+    fun assertDoneButtonIsDisabled() {
+        onView(withText(R.string.done)).check(matches(not(isEnabled())))
+    }
+
+    fun clickDone() {
+        onView(withText(R.string.done)).click()
     }
 }
 

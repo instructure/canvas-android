@@ -16,10 +16,12 @@
 package com.instructure.teacher.ui.renderTests
 
 import android.graphics.Color
-import android.os.Build
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
@@ -37,6 +39,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Test
+import java.util.Date
 
 @HiltAndroidTest
 class ModuleListRenderTest : TeacherRenderTest() {
@@ -51,17 +54,20 @@ class ModuleListRenderTest : TeacherRenderTest() {
             id = 1L,
             name = "Module 1",
             isPublished = true,
+            isLoading = false,
             moduleItems = emptyList()
         )
         moduleItemTemplate = ModuleListItemData.ModuleItemData(
             id = 2L,
             title = "Assignment Module Item",
             subtitle = "Due Tomorrow",
+            subtitle2 = "10 pts",
             iconResId = R.drawable.ic_assignment,
             isPublished = true,
             indent = 0,
             tintColor = Color.BLUE,
-            enabled = true
+            enabled = true,
+            type = ModuleItem.Type.Assignment
         )
     }
 
@@ -86,9 +92,9 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun displaysInlineError() {
         val state = ModuleListViewState(
             items = listOf(
-                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList()),
-                ModuleListItemData.ModuleData(2, "Module 2", true, emptyList()),
-                ModuleListItemData.ModuleData(3, "Module 3", true, emptyList()),
+                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList(), false),
+                ModuleListItemData.ModuleData(2, "Module 2", true, emptyList(), false),
+                ModuleListItemData.ModuleData(3, "Module 3", true, emptyList(), false),
                 ModuleListItemData.InlineError(Color.BLUE)
             )
         )
@@ -107,7 +113,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
 
     @Test
     fun displaysEmptyModule() {
-        val module = ModuleListItemData.ModuleData(1, "Module 1", true, emptyList())
+        val module = ModuleListItemData.ModuleData(1, "Module 1", true, emptyList(), false)
         val state = ModuleListViewState(
             items = listOf(module)
         )
@@ -128,7 +134,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun displaysInlineLoadingView() {
         val state = ModuleListViewState(
             items = listOf(
-                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList()),
+                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList(), false),
                 ModuleListItemData.Loading
             )
         )
@@ -156,8 +162,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             items = listOf(moduleItem)
         )
         loadPageWithViewState(state)
-        page.moduleItemPublishedIcon.assertDisplayed()
-        page.moduleItemUnpublishedIcon.assertNotDisplayed()
+        page.assertStatusIconContentDescription(R.string.a11y_published)
     }
 
     @Test
@@ -169,21 +174,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             items = listOf(moduleItem)
         )
         loadPageWithViewState(state)
-        page.moduleItemUnpublishedIcon.assertDisplayed()
-        page.moduleItemPublishedIcon.assertNotDisplayed()
-    }
-
-    @Test
-    fun doesNotDisplayModuleItemPublishStatusIcon() {
-        val moduleItem = moduleItemTemplate.copy(
-            isPublished = null
-        )
-        val state = ModuleListViewState(
-            items = listOf(moduleItem)
-        )
-        loadPageWithViewState(state)
-        page.moduleItemUnpublishedIcon.assertNotDisplayed()
-        page.moduleItemPublishedIcon.assertNotDisplayed()
+        page.assertStatusIconContentDescription(R.string.a11y_unpublished)
     }
 
     @Test
@@ -215,13 +206,16 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             id = idx + 2L,
                             title = "Module Item ${idx + 1}",
                             subtitle = null,
+                            subtitle2 = null,
                             iconResId = R.drawable.ic_assignment,
                             isPublished = false,
+                            isLoading = false,
                             indent = 0,
                             tintColor = Color.BLUE,
-                            enabled = true
+                            enabled = true,
+                            type = ModuleItem.Type.Assignment
                         )
-                    }
+                    }, false
                 )
             )
         )
@@ -308,13 +302,16 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             id = idx + 2L,
                             title = "Module Item ${idx + 1}",
                             subtitle = null,
+                            subtitle2 = null,
                             iconResId = R.drawable.ic_assignment,
                             isPublished = false,
+                            isLoading = false,
                             indent = 0,
                             tintColor = Color.BLUE,
-                            enabled = true
+                            enabled = true,
+                            type = ModuleItem.Type.Assignment
                         )
-                    }
+                    }, false
                 )
             ),
             collapsedModuleIds = setOf(1L)
@@ -327,7 +324,16 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun scrollsToTargetItem() {
         val itemCount = 50
         val targetItem = ModuleListItemData.ModuleItemData(
-            1234L, "This is the target item", null, R.drawable.ic_attachment, false, 0, Color.BLUE, true
+            1234L,
+            "This is the target item",
+            null,
+            null,
+            R.drawable.ic_attachment,
+            false,
+            0,
+            Color.BLUE,
+            true,
+            type = ModuleItem.Type.Assignment
         )
         val state = ModuleListViewState(
             items = listOf(
@@ -339,10 +345,11 @@ class ModuleListRenderTest : TeacherRenderTest() {
                         } else {
                             moduleItemTemplate.copy(
                                 id = idx + 2L,
-                                title = "Module Item ${idx + 1}"
+                                title = "Module Item ${idx + 1}",
+                                isLoading = false
                             )
                         }
-                    }
+                    }, false
                 )
             )
         )
@@ -378,6 +385,42 @@ class ModuleListRenderTest : TeacherRenderTest() {
         page.moduleItemIcon.assertNotDisplayed()
         page.moduleItemLoadingView.assertDisplayed()
         page.moduleItemRoot.check(matches(not(isEnabled())))
+    }
+
+    @Test
+    fun displaysFileModuleItemHiddenIcon() {
+        val item = moduleItemTemplate.copy(
+            iconResId = R.drawable.ic_attachment,
+            type = ModuleItem.Type.File,
+            contentDetails = ModuleContentDetails(
+                hidden = true
+            )
+        )
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemIcon.assertDisplayed()
+        page.assertStatusIconContentDescription(R.string.a11y_hidden)
+    }
+
+    @Test
+    fun displaysFileModuleItemScheduledIcon() {
+        val item = moduleItemTemplate.copy(
+            iconResId = R.drawable.ic_attachment,
+            type = ModuleItem.Type.File,
+            contentDetails = ModuleContentDetails(
+                hidden = false,
+                locked = true,
+                unlockAt = Date().toApiString()
+            )
+        )
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemIcon.assertDisplayed()
+        page.assertStatusIconContentDescription(R.string.a11y_scheduled)
     }
 
     private fun loadPageWithViewState(

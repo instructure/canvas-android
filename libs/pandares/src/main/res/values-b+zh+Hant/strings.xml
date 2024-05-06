@@ -67,6 +67,39 @@
     <string name="missingSubmissionLabel">缺少</string>
     <string name="gradedSubmissionLabel">已評分</string>
 
+    <string name="reminderTitle">提醒</string>
+    <string name="reminderDescription">在此裝置上添加有關此作業的截止日期提醒通知。</string>
+    <string name="a11y_addReminder">添加提醒</string>
+    <string name="a11y_removeReminder">移除提醒</string>
+    <string name="reminderBefore">%s 前</string>
+    <plurals name="reminderMinute">
+        <item quantity="other">%d 分鐘</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="other">%d 小時</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="other">%d 週</item>
+    </plurals>
+    <string name="reminderCustom">自訂</string>
+    <string name="customReminderTitle">自訂提醒</string>
+    <string name="customReminderQuantityHint">數量</string>
+    <string name="customReminderMinutes">分鐘前</string>
+    <string name="customReminderHours">小時前</string>
+    <string name="customReminderDays">天前</string>
+    <string name="customReminderWeeks">週前</string>
+    <string name="reminderNotificationChannelName">提醒通知</string>
+    <string name="reminderNotificationChannelDescription">使用於作業提醒的 Canvas 通知。</string>
+    <string name="reminderNotificationTitle">截止日期提醒</string>
+    <string name="reminderNotificationDescription">此作業截止於 %s:%s</string>
+    <string name="reminderInPast">請選擇您將來的提醒時間！</string>
+    <string name="reminderAlreadySet">您已經為此時間設定了提醒</string>
+    <string name="deleteReminderTitle">刪除提醒</string>
+    <string name="deleteReminderMessage">是否確定要刪除此提醒？</string>
+    <string name="reminderPermissionNotGrantedError">您需要為此動作啟用確切的警報權限</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">沒有使用 \'http://\' 的 URL 的可用預覽</string>
     <string name="submissionUrlNotAUrlError">請輸入有效的 URL</string>
@@ -948,6 +981,8 @@
     <string name="inviteAccepted">接受邀請！</string>
     <string name="inviteDeclined">拒絕邀請。</string>
     <string name="latePenalty">逾期懲罰 (-%s)</string>
+    <string name="latePenaltyUpdated">逾期懲罰：-%s 分</string>
+    <string name="yourGrade">您的評分：%s 分</string>
     <string name="finalGrade">最終評分</string>
 
     <string name="max_count">99+</string>
@@ -1392,6 +1427,21 @@
     <string name="offline_content_select_all">全選</string>
     <string name="offline_content_deselect_all">取消全選</string>
     <string name="offline_content_loading_error">載入內容時發生錯誤。</string>
+    <string name="offline_content_empty_title">無課程</string>
+    <string name="offline_content_empty_message">您的課程將將在此處列出，然後您可以讓它們可以離線使用。</string>
+    <string name="offline_content_empty_course_title">沒有課程內容</string>
+    <string name="offline_content_empty_course_message">課程內容將在此處列出，然後您可以讓它們可以離線使用。</string>
+    <string name="offline_content_discard_dialog_title">捨棄變更？</string>
+    <string name="offline_content_discard_dialog_message">如果您選擇捨棄，系統將不會儲存變更。</string>
+    <string name="offline_content_discard_dialog_positive">放棄</string>
+    <string name="offline_content_sync_dialog_title">同步離線內容？</string>
+    <string name="offline_content_sync_dialog_message">這將同步 ~%s 內容。如果您未連線到 Wi-Fi 網路，則可能會導致您的資料提供者收取額外費用。</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">這將僅在您連線到 Wi-Fi 網路時同步 ~%s 內容。</string>
+    <string name="offline_content_sync_dialog_positive">同步</string>
+    <string name="offline_content_sync_loading_title">正在載入&#8230;&#8230;</string>
+    <string name="offline_content_sync_loading_message">請稍等，我們已經為您準備好了。</string>
+    <string name="content_description_expand_content">展開內容</string>
+    <string name="content_description_collapse_content">收起內容</string>
     <string name="syncSettings_autoContentSyncDescription">啟用「自動內容同步」將根據以下設定注意下載所選取的內容。內容同步將會進行，即使應用程式並未正在執行中。如果關閉設定，則將不會進行同步。已經下載的內容也將不會刪除。</string>
     <string name="syncSettings_syncFrequencyTitle">同步頻率</string>
     <string name="syncSettings_autoContentSyncTitle">自動內容同步</string>
@@ -1433,7 +1483,6 @@
     <plurals name="syncProgress_itemCount">
         <item quantity="other">%d 課程正在同步中。</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">課程內容影像</string>
     <string name="assignmentNoLongerAvailable">此作業不再可用。</string>
     <string name="editDashboardOfflineMode">您已離線</string>
     <string name="editDashboardOfflineModeMessage">您目前沒有任何可離線使用的課程。</string>
@@ -1444,4 +1493,77 @@
     <plurals name="offlineContentSyncSuccessNotificationBody">
         <item quantity="other">%d 課程已同步。</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">額外課程內容</string>
+    <string name="failedToUpdateDashboardOrder">無法更新控制面板卡片順序</string>
+    <string name="publishAllModulesAndItems">發佈所有單元和項目</string>
+    <string name="publishModulesOnly">僅發佈單元</string>
+    <string name="unpublishAllModulesAndItems">取消發佈所有單元和項目</string>
+    <string name="moduleOptions">單元選項</string>
+    <string name="publishModuleAndItems">發佈單元和所有項目</string>
+    <string name="publishModuleOnly">僅發佈單元</string>
+    <string name="unpublishModuleAndItems">取消發佈單元和所有項目</string>
+    <string name="a11y_contentDescription_moduleOptions">%s 的單元選項</string>
+    <string name="a11y_contentDescription_moduleItemOptions">%s 的單元項目選項</string>
+    <string name="publishModuleItem">發佈單元項目</string>
+    <string name="unpublishModuleItem">取消發佈單元項目</string>
+    <string name="publishDialogTitle">發佈嗎？</string>
+    <string name="publishModuleDialogMessage">這將使學生僅看到單元。</string>
+    <string name="publishModuleAndItemsDialogMessage">這將使學生看到單元和所有項目。</string>
+    <string name="unpublishDialogTitle">取消發佈嗎？</string>
+    <string name="unpublishModuleAndItemsDialogMessage">這將使學生看不到單元和所有項目。</string>
+    <string name="publishModuleItemDialogMessage">這將使學生僅看到此項目。</string>
+    <string name="unpublishModuleItemDialogMessage">這將使學生僅看不到此項目。</string>
+    <string name="publishModulesAndItemsDialogMessage">這將使學生看到所有單元和項目。</string>
+    <string name="publishModulesDialogMessage">這將使學生僅看到單元。</string>
+    <string name="unpublishModulesAndItemsDialogMessage">這將使學生看不到所有單元和項目。</string>
+    <string name="only_available_with_link">只可以搭配連結使用</string>
+    <string name="schedule_availability">排程可用性</string>
+    <string name="moduleItemPublished">已發佈項目</string>
+    <string name="moduleItemUnpublished">已取消發佈項目</string>
+    <string name="onlyModulePublished">僅已發佈單元</string>
+    <string name="moduleAndAllItemsPublished">已發佈單元和所有項目</string>
+    <string name="moduleAndAllItemsUnpublished">已取消發佈單元和所有項目</string>
+    <string name="onlyModulesPublished">僅已發佈單元</string>
+    <string name="allModulesAndAllItemsPublished">已發佈所有單元和所有項目</string>
+    <string name="allModulesAndAllItemsUnpublished">已取消發佈所有單元和所有項目</string>
+    <string name="inherit_from_course">自課程繼承</string>
+    <string name="course_members">學生</string>
+    <string name="institution_members">機構成員</string>
+    <string name="public_title">公開</string>
+    <string name="edit_permissions">編輯權限</string>
+    <string name="update">更新</string>
+    <string name="availability_title">可用期</string>
+    <string name="visibility_title">可見度</string>
+    <string name="available_from">可用起始日期</string>
+    <string name="available_until">可用截止時間</string>
+    <string name="from">開始時間</string>
+    <string name="until">結束</string>
+    <string name="date">日期</string>
+    <string name="time">時間</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">清除開始日期</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">清除截止日期</string>
+    <string name="progressMessage">此程序可能需要幾分鐘的時間。您可以在此處理期間關閉模態，或導覽遠離頁面。</string>
+    <string name="noteTitle">注釋</string>
+    <string name="allModules">所有單元</string>
+    <string name="allModulesAndItems">所有單元和項目</string>
+    <string name="selectedModulesAndItems">選取的單元和項目</string>
+    <string name="selectedModules">選取的單元</string>
+    <string name="publishing">正在發佈</string>
+    <string name="unpublishing">取消發佈</string>
+    <string name="moduleBulkUpdateNote">中止處理時，已處理的單元和項目將不會回復到之前的狀態。</string>
+    <string name="success">成功！</string>
+    <string name="updateFailed">更新失敗</string>
+    <string name="updateCancelled">已取消更新</string>
+    <string name="a11y_hidden">已隱藏</string>
+    <string name="a11y_scheduled">已排程</string>
+    <string name="a11y_published">已發佈</string>
+    <string name="a11y_unpublished">已取消發佈</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="other">%.0f 分</item>
+    </plurals>
+    <string name="publishModuleItemAction">發佈</string>
+    <string name="unpublishModuleItemAction">取消發佈</string>
+    <string name="publishDialogPositiveButton">發佈</string>
+    <string name="unpublishDialogPositiveButton">取消發佈</string>
+    <string name="discussionMenuRefresh">重新整理</string>
 </resources>

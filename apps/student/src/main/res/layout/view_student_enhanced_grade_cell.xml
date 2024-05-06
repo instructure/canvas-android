@@ -273,11 +273,26 @@
             android:text="@{viewData.outOf}"
             android:textColor="@color/textDarkest"
             android:visibility="@{viewData.outOf.empty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toTopOf="@id/latePenalty"
+            app:layout_constraintBottom_toTopOf="@id/yourGrade"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/chart"
             app:layout_constraintTop_toBottomOf="@id/grade"
             tools:text="Out of 100 pts" />
+
+        <TextView
+            android:id="@+id/yourGrade"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:text="@{viewData.yourGrade}"
+            android:textColor="@color/textDarkest"
+            android:visibility="@{viewData.yourGrade.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/latePenalty"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/chart"
+            app:layout_constraintTop_toBottomOf="@id/outOf"
+            tools:text="Late Penalty (-2 pts)" />
 
         <TextView
             android:id="@+id/latePenalty"
@@ -286,13 +301,12 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="4dp"
             android:text="@{viewData.latePenalty}"
-            android:textColor="@color/textInfo"
-            android:textSize="12sp"
+            android:textColor="@color/textWarning"
             android:visibility="@{viewData.latePenalty.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/finalGrade"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/chart"
-            app:layout_constraintTop_toBottomOf="@id/outOf"
+            app:layout_constraintTop_toBottomOf="@id/yourGrade"
             tools:text="Late Penalty (-2 pts)" />
 
         <TextView
@@ -300,7 +314,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="@{viewData.finalGrade}"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"

@@ -17,16 +17,15 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.espresso.page.getStringFromResource
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
@@ -40,7 +39,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowGrades() {
         val data = createMockData(courseCount = 3)
         goToGradesTab(data)
@@ -53,7 +52,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
@@ -73,7 +72,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenCourseGrades() {
         val data = createMockData(courseCount = 3)
         goToGradesTab(data)
@@ -91,7 +90,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testChangeGradingPeriod() {
         val data = createMockData(courseCount = 3, withGradingPeriods = true)
         goToGradesTab(data)
@@ -105,7 +104,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testEmptyView() {
         val data = createMockData(homeroomCourseCount = 1)
         goToGradesTab(data)
@@ -115,7 +114,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testShowPercentageOnlyIfNoAlphabeticalGrade() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
@@ -136,7 +135,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testDontShowProgressWhenQuantitativeDataIsRestricted() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
@@ -158,7 +157,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testDontShowGradeWhenQuantitativeDataIsRestrictedAndThereIsOnlyScore() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)

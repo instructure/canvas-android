@@ -17,10 +17,14 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
@@ -186,6 +190,8 @@ object RouteResolver {
             fragment = EditSyllabusFragment.newInstance(route.arguments)
         } else if (CalendarEventFragment::class.java.isAssignableFrom(cls)) {
             fragment = CalendarEventFragment.newInstance(route.arguments)
+        } else if (ModuleProgressionFragment::class.java.isAssignableFrom(cls)) {
+            fragment = ModuleProgressionFragment.newInstance(route.copy(canvasContext = canvasContext))
         } else if (FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = FullscreenInternalWebViewFragment.newInstance(route.arguments)
         } else if (InternalWebViewFragment::class.java.isAssignableFrom(cls)) {

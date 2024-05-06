@@ -207,6 +207,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun showImmediateFlow() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(4)
@@ -270,8 +271,8 @@ class InAppUpdateInteractionTest : StudentTest() {
     }
 
     @Test
-    @Stub("Unstable, there is a ticket to fix this")
     fun flexibleUpdateCompletesIfAppRestarts() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(2)
@@ -288,6 +289,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun immediateUpdateCompletion() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(4)
@@ -307,6 +309,7 @@ class InAppUpdateInteractionTest : StudentTest() {
 
     @Test
     fun hideImmediateUpdateFlowIfUserCancels() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(4)

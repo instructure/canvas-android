@@ -715,7 +715,6 @@
     <string name="changeUser">Change User (Vaihda käyttäjää)</string>
     <string name="general">Yleinen</string>
     <string name="sendFeedback">Lähetä palautetta</string>
-    <string name="rateOnTheAppStore">Arvostele App Storessa</string>
     <string name="privacyPolicy">Tietosuojakäytäntö</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Käyttöehdot</string>
@@ -872,7 +871,6 @@
         <item quantity="one">-%s piste</item>
         <item quantity="other">-%s pistettä</item>
     </plurals>
-    <string name="todoUnreadCount">Tehtävä %d lukematon</string>
     <string name="profileSettings">Profiiliasetukset</string>
     <string name="downloadingFile">Tiedostoa ladataan&#8230;</string>
     <string name="fileDownloadedSuccessfully">Tiedoston lataus onnistui.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Ei arvosanaa</string>
     <string name="excuse">Vapauta tehtävästä</string>
     <string name="speed_grader_overgraded_by">Yliarvosteltu, arvostelija %s</string>
+    <string name="error_unpublishable_module_item">Julkaisua %s ei voida peruuttaa, jos opiskelijoiden tehtäväpalautuksia on olemassa</string>
 </resources>

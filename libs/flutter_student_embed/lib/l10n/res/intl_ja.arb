@@ -90,7 +90,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "pointsPossible": "{points}の可能なポイント",
+  "pointsPossible": "配点 {points}",
   "@pointsPossible": {
     "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
     "type": "text",

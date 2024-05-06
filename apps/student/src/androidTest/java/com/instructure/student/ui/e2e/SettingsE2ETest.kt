@@ -22,13 +22,13 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.espresso.ViewUtils
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.R
 import com.instructure.student.ui.utils.IntentActionMatcher
 import com.instructure.student.ui.utils.StudentTest
@@ -66,10 +66,10 @@ class SettingsE2ETest : StudentTest() {
         profileSettingsPage.assertPageObjects()
 
         val newUserName = "John Doe"
-        Log.d(STEP_TAG, "Edit username to: $newUserName. Click on 'Save' button.")
+        Log.d(STEP_TAG, "Edit username to: '$newUserName'. Click on 'Save' button.")
         profileSettingsPage.changeUserNameTo(newUserName)
 
-        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Assert that the username has been changed to $newUserName.")
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Assert that the username has been changed to '$newUserName'.")
         ViewUtils.pressBackButton(2)
         leftSideNavigationDrawerPage.assertUserLoggedIn(newUserName)
 

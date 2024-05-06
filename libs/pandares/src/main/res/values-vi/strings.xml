@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Bị Thiếu</string>
     <string name="gradedSubmissionLabel">Đã Chấm Điểm</string>
 
+    <string name="reminderTitle">Lời nhắc nhở</string>
+    <string name="reminderDescription">Thêm thông báo lời nhắc nhở ngày đến hạn về bài tập này trên thiết bị này.</string>
+    <string name="a11y_addReminder">Thêm lời nhắc nhở</string>
+    <string name="a11y_removeReminder">Gỡ lời nhắc nhở</string>
+    <string name="reminderBefore">%s Trước</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Phút</item>
+        <item quantity="other">%d Phút</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Giờ</item>
+        <item quantity="other">%d Giờ</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Ngày</item>
+        <item quantity="other">%d Ngày</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Tuần</item>
+        <item quantity="other">%d Tuần</item>
+    </plurals>
+    <string name="reminderCustom">Tùy Chỉnh</string>
+    <string name="customReminderTitle">Lời Nhắc Nhở Tùy Chỉnh</string>
+    <string name="customReminderQuantityHint">Số Lượng</string>
+    <string name="customReminderMinutes">Phút Trước</string>
+    <string name="customReminderHours">Giờ Trước</string>
+    <string name="customReminderDays">Ngày Trước</string>
+    <string name="customReminderWeeks">Tuần Trước</string>
+    <string name="reminderNotificationChannelName">Thông Báo Lời Nhắc Nhở</string>
+    <string name="reminderNotificationChannelDescription">Thông Báo Canvas cho lời nhắc nhở bài tập.</string>
+    <string name="reminderNotificationTitle">Lời Nhắc Nhở Ngày Đến Hạn</string>
+    <string name="reminderNotificationDescription">Bài tập này đến hạn vào %s: %s</string>
+    <string name="reminderInPast">Vui lòng chọn thời gian trong tương lai cho lời nhắc nhở của bạn!</string>
+    <string name="reminderAlreadySet">Bạn đã thiết lập lời nhắc nhở cho thời gian này</string>
+    <string name="deleteReminderTitle">Xóa Lời Nhắc Nhở</string>
+    <string name="deleteReminderMessage">Bạn có chắc chắn muốn xóa lời nhắc nhở này không?</string>
+    <string name="reminderPermissionNotGrantedError">Bạn cần bật quyền báo động chính xác cho hành động này</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Không có mục xem trước có thể sử dụng cho URL sử dụng \"http://\"</string>
     <string name="submissionUrlNotAUrlError">Vui lòng nhập URL hợp lệ</string>
@@ -957,6 +994,8 @@
     <string name="inviteAccepted">Lời mời đã được chấp nhận!</string>
     <string name="inviteDeclined">Lời mời đã bị từ chối.</string>
     <string name="latePenalty">Hình phạt trễ (-%s)</string>
+    <string name="latePenaltyUpdated">Phạt Do Muộn: -%s điểm thành phần</string>
+    <string name="yourGrade">Điểm của Bạn: %s điểm thành phần</string>
     <string name="finalGrade">Điểm Cuối Cùng</string>
 
     <string name="max_count">99+</string>
@@ -1411,6 +1450,21 @@
     <string name="offline_content_select_all">Chọn Tất Cả</string>
     <string name="offline_content_deselect_all">Bỏ Chọn Tất Cả</string>
     <string name="offline_content_loading_error">Đã xảy ra lỗi khi tải nội dung.</string>
+    <string name="offline_content_empty_title">Không Có Khóa Học</string>
+    <string name="offline_content_empty_message">Khóa học của bạn sẽ được liệt kê ở đây, và sau đó bạn có thể xử lý để sử dụng ngoại tuyến.</string>
+    <string name="offline_content_empty_course_title">Không Có Nội Dung Khóa Học</string>
+    <string name="offline_content_empty_course_message">Nội dung khóa học sẽ được liệt kê ở đây, và sau đó bạn có thể xử lý để sử dụng ngoại tuyến.</string>
+    <string name="offline_content_discard_dialog_title">Hủy Bỏ Thay Đổi?</string>
+    <string name="offline_content_discard_dialog_message">Nếu bạn chọn hủy, các thay đổi sẽ không được lưu.</string>
+    <string name="offline_content_discard_dialog_positive">Hủy Bỏ</string>
+    <string name="offline_content_sync_dialog_title">Đồng Bộ Hóa Nội Dung Ngoại Tuyến?</string>
+    <string name="offline_content_sync_dialog_message">Thao tác này sẽ đồng bộ ~%s nội dung. Điều này có thể khiến bạn bị tính thêm phí từ nhà cung cấp dữ liệu của bạn, nếu bạn không kết nối với mạng Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Thao tác này sẽ đồng bộ ~%s nội dung chỉ khi bạn kết nối với mạng Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Đồng bộ</string>
+    <string name="offline_content_sync_loading_title">Đang tải...</string>
+    <string name="offline_content_sync_loading_message">Hãy chờ nhé, chúng tôi đang chuẩn bị mọi thứ cho bạn.</string>
+    <string name="content_description_expand_content">Mở rộng nội dung</string>
+    <string name="content_description_collapse_content">Thu gọn nội dung</string>
     <string name="syncSettings_autoContentSyncDescription">Bật chức năng Tự Động Đồng Bộ Nội Dung sẽ xử lý việc tải xuống các nội dung được chọn dựa theo cài đặt dưới đây. Thao tác đồng bộ nội dung sẽ diễn ra ngay cả khi ứng dụng không chạy. Nếu tắt cài đặt thì quá trình đồng bộ sẽ không diễn ra. Nội dung đã được tải xuống sẽ không bị xóa.</string>
     <string name="syncSettings_syncFrequencyTitle">Tần Suất Đồng Bộ</string>
     <string name="syncSettings_autoContentSyncTitle">Tự Động Đồng Bộ Nội Dung</string>
@@ -1453,7 +1507,6 @@
         <item quantity="one">%d khóa học đang đồng bộ.</item>
         <item quantity="other">%d khóa học đang đồng bộ.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Hình ảnh nội dung khóa học</string>
     <string name="assignmentNoLongerAvailable">Bài tập này không còn khả dụng.</string>
     <string name="editDashboardOfflineMode">Bạn đang ngoại tuyến</string>
     <string name="editDashboardOfflineModeMessage">Hiện tại bạn không có bất kỳ khóa học nào khả dụng ngoại tuyến.</string>
@@ -1465,4 +1518,78 @@
         <item quantity="one">%d khóa học đã được đồng bộ.</item>
         <item quantity="other">%d khóa học đã được đồng bộ.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Nội dung khóa học bổ sung</string>
+    <string name="failedToUpdateDashboardOrder">Không thể cập nhật thứ tự thẻ Bảng Điều Khiển</string>
+    <string name="publishAllModulesAndItems">Phát hành tất cả các Học Phần và Mục</string>
+    <string name="publishModulesOnly">Chỉ phát hành Các Học Phần</string>
+    <string name="unpublishAllModulesAndItems">Hủy phát hành tất cả các Học Phần và Mục</string>
+    <string name="moduleOptions">Tùy Chọn Học Phần</string>
+    <string name="publishModuleAndItems">Phát Hành Học Phần và tất cả Các Mục</string>
+    <string name="publishModuleOnly">Chỉ phát hành Học Phần</string>
+    <string name="unpublishModuleAndItems">Hủy phát hành Học Phần và tất cả Các Mục</string>
+    <string name="a11y_contentDescription_moduleOptions">Tùy chọn học phần cho %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Tùy chọn mục học phần cho %s</string>
+    <string name="publishModuleItem">Phát Hành Mục Học Phần</string>
+    <string name="unpublishModuleItem">Hủy Phát Hành Mục Học Phần</string>
+    <string name="publishDialogTitle">Phát hành?</string>
+    <string name="publishModuleDialogMessage">Chức năng này sẽ chỉ hiển thị học phần cho sinh viên.</string>
+    <string name="publishModuleAndItemsDialogMessage">Chức năng này sẽ hiển thị học phần và tất cả các mục cho sinh viên.</string>
+    <string name="unpublishDialogTitle">Hủy phát hành?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">Chức năng này sẽ ẩn học phần và tất cả các mục đối với sinh viên.</string>
+    <string name="publishModuleItemDialogMessage">Chức năng này sẽ chỉ hiển thị mục này cho sinh viên.</string>
+    <string name="unpublishModuleItemDialogMessage">Chức năng này sẽ chỉ ẩn mục này đối với sinh viên.</string>
+    <string name="publishModulesAndItemsDialogMessage">Chức năng này sẽ hiển thị tất cả các học phần và mục cho sinh viên.</string>
+    <string name="publishModulesDialogMessage">Chức năng này sẽ chỉ hiển thị các học phần cho sinh viên.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">Chức năng này sẽ ẩn tất cả các học phần và mục đối với sinh viên.</string>
+    <string name="only_available_with_link">Chỉ khả dụng với liên kết</string>
+    <string name="schedule_availability">Đặt lịch độ khả dụng</string>
+    <string name="moduleItemPublished">Mục đã phát hành</string>
+    <string name="moduleItemUnpublished">Mục đã hủy phát hành</string>
+    <string name="onlyModulePublished">Riêng Học Phần đã phát hành</string>
+    <string name="moduleAndAllItemsPublished">Học Phần và tất cả Các Mục đã phát hành</string>
+    <string name="moduleAndAllItemsUnpublished">Học Phần và tất cả Các Mục đã hủy phát hành</string>
+    <string name="onlyModulesPublished">Riêng Các Học Phần đã phát hành</string>
+    <string name="allModulesAndAllItemsPublished">Tất cả Các Học Phần và tất cả Các Mục đã phát hành</string>
+    <string name="allModulesAndAllItemsUnpublished">Tất cả Các Học Phần và tất cả Các Mục đã hủy phát hành</string>
+    <string name="inherit_from_course">Kế thừa từ Khóa Học</string>
+    <string name="course_members">Các Thành Viên Khóa Học</string>
+    <string name="institution_members">Các Thành Viên Của Tổ Chức</string>
+    <string name="public_title">Công Khai</string>
+    <string name="edit_permissions">Quyền Chỉnh Sửa</string>
+    <string name="update">Cập Nhật</string>
+    <string name="availability_title">Độ Khả Dụng</string>
+    <string name="visibility_title">Hiển Thị</string>
+    <string name="available_from">Khả Dụng Từ</string>
+    <string name="available_until">Khả Dụng Đến</string>
+    <string name="from">Từ</string>
+    <string name="until">Đến</string>
+    <string name="date">Ngày</string>
+    <string name="time">Thời Gian</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Xóa Từ Ngày</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Xóa Đến Ngày</string>
+    <string name="progressMessage">Quá trình này có thể mất vài phút. Bạn có thể đóng phương thức hoặc điều hướng khỏi trang trong quá trình này.</string>
+    <string name="noteTitle">Ghi chú</string>
+    <string name="allModules">Tất Cả Các Học Phần</string>
+    <string name="allModulesAndItems">Tất Cả Các Học Phần và Mục</string>
+    <string name="selectedModulesAndItems">Các Học Phần và Mục Đã Chọn</string>
+    <string name="selectedModules">Các Học Phần Đã Chọn</string>
+    <string name="publishing">Đang phát hành</string>
+    <string name="unpublishing">Đang hủy phát hành</string>
+    <string name="moduleBulkUpdateNote">Các học phần và mục đã được xử lý sẽ không được hoàn nguyên về trạng thái trước đó khi ngừng quá trình.</string>
+    <string name="success">Thành công!</string>
+    <string name="updateFailed">Cập nhật không thành công</string>
+    <string name="updateCancelled">Đã hủy bỏ cập nhật</string>
+    <string name="a11y_hidden">Ẩn</string>
+    <string name="a11y_scheduled">Đã Đặt Lịch</string>
+    <string name="a11y_published">Đã phát hành</string>
+    <string name="a11y_unpublished">Chưa Phát Hành</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f điểm</item>
+        <item quantity="other">%.0f điểm</item>
+    </plurals>
+    <string name="publishModuleItemAction">Phát Hành</string>
+    <string name="unpublishModuleItemAction">Hủy Phát Hành</string>
+    <string name="publishDialogPositiveButton">Phát Hành</string>
+    <string name="unpublishDialogPositiveButton">Hủy Phát Hành</string>
+    <string name="discussionMenuRefresh">Làm Mới</string>
 </resources>

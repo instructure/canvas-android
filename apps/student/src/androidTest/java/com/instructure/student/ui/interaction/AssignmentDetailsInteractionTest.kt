@@ -15,6 +15,12 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
@@ -23,25 +29,22 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.SecondaryFeatureCategory
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
-import java.util.Calendar
+import java.util.*
 
 @HiltAndroidTest
 class AssignmentDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, SecondaryFeatureCategory.SUBMISSIONS_ONLINE_URL)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_ONLINE_URL)
     fun testSubmission_submitAssignment() {
         // TODO - Test submitting for each submission type
         // For now, I'm going to just test one submission type
@@ -53,7 +56,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val student = data.students[0]
         val token = data.tokenFor(student)!!
-        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_URL)
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_URL))
         data.addSubmissionForAssignment(
             assignmentId = assignment.id,
             userId = data.users.values.first().id,
@@ -118,7 +121,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun testDisplayBookmarMenu() {
+    fun testDisplayBookmarkMenu() {
         val data = setUpData()
         goToAssignmentList()
         val assignmentList = data.assignments
@@ -194,7 +197,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testLetterGradeAssignmentWithoutQuantitativeRestriction() {
         val data = setUpData()
         val assignment = addAssignment(data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
@@ -207,7 +210,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testGpaScaleAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
@@ -220,7 +223,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
@@ -233,7 +236,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentExcusedWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
@@ -246,7 +249,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPercentageAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "90%", 90.0, 100)
@@ -259,7 +262,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPassFailAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
@@ -272,7 +275,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testLetterGradeAssignmentWithQuantitativeRestriction() {
         val data = setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
@@ -285,7 +288,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testGpaScaleAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
@@ -298,7 +301,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "65", 65.0, 100)
@@ -311,7 +314,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPointsAssignmentExcusedWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
@@ -324,7 +327,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPercentageAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "70%", 70.0, 100)
@@ -337,7 +340,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testPassFailAssignmentWithQuantitativeRestriction() {
         setUpData(restrictQuantitativeData = true)
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
@@ -347,6 +350,190 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         assignmentDetailsPage.assertGradeDisplayed("Complete")
         assignmentDetailsPage.assertOutOfTextNotDisplayed()
         assignmentDetailsPage.assertScoreNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MULTIPLE_TYPE)
+    fun testSubmission_multipleSubmissionType() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, Assignment.SubmissionType.ONLINE_UPLOAD, Assignment.SubmissionType.MEDIA_RECORDING, Assignment.SubmissionType.DISCUSSION_TOPIC, Assignment.SubmissionType.ONLINE_URL))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.ONLINE_URL.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+        assignmentListPage.waitForPage()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Text Entry")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Website URL")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("File Upload")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Media Recording")
+
+        //Try 1 submission to check if it's possible to submit even when there are multiple submission types available.
+        assignmentDetailsPage.selectSubmissionType(SubmissionType.ONLINE_URL)
+        urlSubmissionUploadPage.submitText("https://google.com")
+        assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionIsNotVisibleWhenThereIsNoFutureDueDate() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertReminderSectionNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionIsVisibleWhenThereIsFutureDueDate() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertReminderSectionDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminder() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+
+        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testRemoveReminder() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+
+        assignmentDetailsPage.assertReminderDisplayedWithText("1 Hour Before")
+
+        assignmentDetailsPage.removeReminderWithText("1 Hour Before")
+
+        assignmentDetailsPage.assertReminderNotDisplayedWithText("1 Hour Before")
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddCustomReminder() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.clickCustom()
+        assignmentDetailsPage.assertDoneButtonIsDisabled()
+        assignmentDetailsPage.fillQuantity("15")
+        assignmentDetailsPage.assertDoneButtonIsDisabled()
+        assignmentDetailsPage.clickHoursBefore()
+        assignmentDetailsPage.clickDone()
+
+        assignmentDetailsPage.assertReminderDisplayedWithText("15 Hours Before")
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminderInPastShowsError() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.MINUTE, 30)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+
+        checkToastText(R.string.reminderInPast, activityRule.activity)
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminderForTheSameTimeShowsError() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 1)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.selectTimeOption("1 Hour Before")
+
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+    }
+
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testAddReminderForTheSameTimeWithDifferentMeasureOfTimeShowsError() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, 10)
+        }.time.toApiString())
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickAddReminder()
+        assignmentDetailsPage.selectTimeOption("1 Week Before")
+        assignmentDetailsPage.clickAddReminder()
+
+        assignmentDetailsPage.clickCustom()
+        assignmentDetailsPage.fillQuantity("7")
+        assignmentDetailsPage.clickDaysBefore()
+        assignmentDetailsPage.clickDone()
+
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }
 
     private fun setUpData(restrictQuantitativeData: Boolean = false): MockCanvas {
@@ -401,7 +588,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
 
         val assignment = data.addAssignment(
             courseId = course.id,
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
             gradingType = Assignment.gradingTypeToAPIString(gradingType) ?: "",
             pointsPossible = maxScore,
         )

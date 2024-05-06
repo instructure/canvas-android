@@ -24,6 +24,7 @@ import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.StubCoverage
 import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -131,7 +132,7 @@ class ShareExtensionInteractionTest : StudentTest() {
         val uri = setupFileOnDevice("sample.jpg")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        val assignment = data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+        val assignment = data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
 
         login(student)
         device.pressHome()
@@ -182,8 +183,8 @@ class ShareExtensionInteractionTest : StudentTest() {
         val uri = setupFileOnDevice("sample.jpg")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
-        val assignment2 = data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+        data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
+        val assignment2 = data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
 
         login(student)
         device.pressHome()
@@ -233,13 +234,14 @@ class ShareExtensionInteractionTest : StudentTest() {
     }
 
     @Test
+    @StubCoverage("Cannot init FileUploadWorker and OfflineSyncWorker")
     fun testFileAssignmentSubmission() {
         val data = createMockData()
         val student = data.students[0]
         val uri = setupFileOnDevice("sample.jpg")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        data.addAssignment(data.courses.values.first().id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD)
+        data.addAssignment(data.courses.values.first().id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
 
         login(student)
         device.pressHome()

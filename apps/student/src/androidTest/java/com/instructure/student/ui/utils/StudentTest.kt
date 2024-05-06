@@ -32,8 +32,10 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
@@ -42,6 +44,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.espresso.StudentHiltTestApplication_Application
 import com.instructure.student.ui.pages.AboutPage
+import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
 import com.instructure.student.ui.pages.AnnouncementListPage
 import com.instructure.student.ui.pages.AssignmentDetailsPage
@@ -56,11 +59,11 @@ import com.instructure.student.ui.pages.CourseGradesPage
 import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.pages.DiscussionDetailsPage
 import com.instructure.student.ui.pages.DiscussionListPage
-import com.instructure.student.ui.pages.EditDashboardPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.pages.FileListPage
 import com.instructure.student.ui.pages.FileUploadPage
+import com.instructure.student.ui.pages.GoToQuizPage
 import com.instructure.student.ui.pages.GradesPage
 import com.instructure.student.ui.pages.GroupBrowserPage
 import com.instructure.student.ui.pages.HelpPage
@@ -77,6 +80,7 @@ import com.instructure.student.ui.pages.ModuleProgressionPage
 import com.instructure.student.ui.pages.ModulesPage
 import com.instructure.student.ui.pages.NewMessagePage
 import com.instructure.student.ui.pages.NotificationPage
+import com.instructure.student.ui.pages.PageDetailsPage
 import com.instructure.student.ui.pages.PageListPage
 import com.instructure.student.ui.pages.PairObserverPage
 import com.instructure.student.ui.pages.PandaAvatarPage
@@ -95,11 +99,11 @@ import com.instructure.student.ui.pages.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.ShareExtensionTargetPage
 import com.instructure.student.ui.pages.SubmissionDetailsPage
 import com.instructure.student.ui.pages.SyllabusPage
-import com.instructure.student.ui.pages.SyncSettingsPage
 import com.instructure.student.ui.pages.TextSubmissionUploadPage
 import com.instructure.student.ui.pages.TodoPage
 import com.instructure.student.ui.pages.UrlSubmissionUploadPage
 import com.instructure.student.ui.pages.offline.ManageOfflineContentPage
+import com.instructure.student.ui.pages.offline.OfflineSyncSettingsPage
 import com.instructure.student.ui.pages.offline.SyncProgressPage
 import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
@@ -111,6 +115,8 @@ import java.io.File
 import javax.inject.Inject
 
 abstract class StudentTest : CanvasTest() {
+
+    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)
@@ -147,7 +153,7 @@ abstract class StudentTest : CanvasTest() {
      */
     val annotationCommentListPage = AnnotationCommentListPage()
     val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val assignmentDetailsPage = AssignmentDetailsPage()
+    val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()
     val calendarEventPage = CalendarEventPage()
@@ -160,9 +166,9 @@ abstract class StudentTest : CanvasTest() {
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
-    val discussionDetailsPage = DiscussionDetailsPage()
+    val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val editDashboardPage = EditDashboardPage()
+    val allCoursesPage = AllCoursesPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val fileUploadPage = FileUploadPage()
     val helpPage = HelpPage()
@@ -178,6 +184,7 @@ abstract class StudentTest : CanvasTest() {
     val newMessagePage = NewMessagePage()
     val notificationPage = NotificationPage()
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
+    val pageDetailsPage = PageDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val pairObserverPage = PairObserverPage()
     val pandaAvatarPage = PandaAvatarPage()
     val peopleListPage = PeopleListPage()
@@ -187,6 +194,7 @@ abstract class StudentTest : CanvasTest() {
     val qrLoginPage = QRLoginPage()
     val quizListPage = QuizListPage()
     val quizTakingPage = QuizTakingPage()
+    val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val settingsPage = SettingsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
@@ -202,7 +210,7 @@ abstract class StudentTest : CanvasTest() {
     val importantDatesPage = ImportantDatesPage()
     val shareExtensionTargetPage = ShareExtensionTargetPage()
     val shareExtensionStatusPage = ShareExtensionStatusPage()
-    val syncSettingsPage = SyncSettingsPage()
+    val offlineSyncSettingsPage = OfflineSyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
 

@@ -238,7 +238,6 @@ class InAppUpdatePageTest : TeacherTest() {
     }
 
     @Test
-    @Stub("Stubbed because on API lvl 29 device the notification will remain opened even though we push the back button at the end. Should be investigated and make some workaround once.")
     fun showNotificationOnFlexibleDownloadFinish() {
         updatePrefs.clearPrefs()
         val expectedTitle = context.getString(R.string.appUpdateReadyTitle)
@@ -270,8 +269,8 @@ class InAppUpdatePageTest : TeacherTest() {
     }
 
     @Test
-    @Stub(description = "https://instructure.atlassian.net/browse/MBL-16824")
     fun flexibleUpdateCompletesIfAppRestarts() {
+        updatePrefs.clearPrefs()
         with(appUpdateManager) {
             setUpdateAvailable(400)
             setUpdatePriority(2)

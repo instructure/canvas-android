@@ -23,7 +23,6 @@ import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -37,6 +36,7 @@ import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertGone
@@ -47,6 +47,8 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
@@ -55,7 +57,7 @@ import org.hamcrest.Matchers.containsString
 import org.junit.Assert.assertTrue
 
 
-class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
+class DiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(R.id.discussionDetailsPage) {
     private val discussionTopicTitle by OnViewWithId(R.id.discussionTopicTitle)
     private val replyButton by OnViewWithId(R.id.replyToDiscussionTopic)
 
@@ -91,7 +93,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper)).scrollTo()
     }
 
-    private fun clickReply() {
+    fun clickReply() {
         replyButton.click()
     }
 
@@ -118,9 +120,13 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     fun sendReply(replyMessage: String) {
         clickReply()
         waitForViewWithId(R.id.rce_webView).perform(TypeInRCETextEditor(replyMessage))
-        onView(withId(R.id.menu_send)).click()
+        clickOnSendReplyButton()
 
         sleep(3000) // wait out the toast message
+    }
+
+    private fun clickOnSendReplyButton() {
+        onView(withId(R.id.menu_send)).click()
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry, refreshesAllowed: Int = 0) {
@@ -312,6 +318,16 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun assertPointsPossibleNotDisplayed() {
         onView(withId(R.id.pointsTextView)).assertNotDisplayed()
+    }
+
+    fun clickOnInnerReply() {
+        onWebView(withId(R.id.contentWebView) + withAncestor(R.id.discussionRepliesWebViewWrapper))
+            .withElement(findElement(Locator.XPATH, "//div[@class='reply_wrapper' and contains(@id, 'reply')]"))
+            .perform(webClick())
+    }
+
+    fun clickOnAddBookmarkMenu() {
+        onView(withText("Add Bookmark")).click()
     }
 
     private fun isUnreadIndicatorVisible(reply: DiscussionEntry): Boolean {

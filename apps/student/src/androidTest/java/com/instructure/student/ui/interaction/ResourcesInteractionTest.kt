@@ -16,12 +16,16 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
+import com.instructure.canvas.espresso.mockCanvas.addEnrollment
+import com.instructure.canvas.espresso.mockCanvas.addLTITool
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -34,7 +38,7 @@ class ResourcesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testImportantLinksAndActionItemsShowUpInResourcesScreen() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -63,7 +67,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOnlyActionItemsShowIfSyllabusIsEmpty() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -91,7 +95,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOnlyLtiToolsShowIfNoHomeroomCourse() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
@@ -113,7 +117,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testRefresh() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 
@@ -148,7 +152,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenLtiToolShowsCourseSelector() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -171,7 +175,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOpenComposeMessageScreen() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -197,7 +201,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testImportantLinksForTwoCourses() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2)
 
@@ -221,7 +225,7 @@ class ResourcesInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testEmptyState() {
         val data = createMockDataWithHomeroomCourse(courseCount = 2, homeroomCourseCount = 0)
 

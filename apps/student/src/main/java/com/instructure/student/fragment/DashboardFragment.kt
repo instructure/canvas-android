@@ -25,17 +25,23 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkInfo.State
+import androidx.work.WorkManager
+import androidx.work.WorkQuery
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -44,9 +50,12 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
+import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
+import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
@@ -54,13 +63,14 @@ import com.instructure.student.databinding.CourseGridRecyclerRefreshLayoutBindin
 import com.instructure.student.databinding.FragmentCourseGridBinding
 import com.instructure.student.decorations.VerticalGridSpacingDecoration
 import com.instructure.student.dialog.ColorPickerDialog
-import com.instructure.student.dialog.EditCourseNicknameDialog
+import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.dashboard.DashboardRepository
 import com.instructure.student.flutterChannels.FlutterComm
+import com.instructure.student.holders.CourseViewHolder
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
@@ -86,6 +96,15 @@ class DashboardFragment : ParentFragment() {
     @Inject
     lateinit var networkStateProvider: NetworkStateProvider
 
+    @Inject
+    lateinit var aggregateProgressObserver: AggregateProgressObserver
+
+    @Inject
+    lateinit var workManager: WorkManager
+
+    @Inject
+    lateinit var firebaseCrashlytics: FirebaseCrashlytics
+
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
 
@@ -95,6 +114,8 @@ class DashboardFragment : ParentFragment() {
 
     private var courseColumns: Int = LIST_SPAN_COUNT
     private var groupColumns: Int = LIST_SPAN_COUNT
+
+    private val runningWorkers = mutableSetOf<String>()
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -119,6 +140,28 @@ class DashboardFragment : ParentFragment() {
         networkStateProvider.isOnlineLiveData.observe(this) { online ->
             recyclerAdapter?.refresh()
             if (online) recyclerBinding.swipeRefreshLayout.isRefreshing = true
+        }
+
+        lifecycleScope.launch {
+            if (featureFlagProvider.offlineEnabled()) {
+                subscribeToOfflineSyncUpdates()
+            }
+        }
+    }
+
+    private fun subscribeToOfflineSyncUpdates() {
+        val workQuery = WorkQuery.Builder.fromTags(listOf(OfflineSyncWorker.PERIODIC_TAG, OfflineSyncWorker.ONE_TIME_TAG)).build()
+        workManager.getWorkInfosLiveData(workQuery).observe(this) { workInfos ->
+            workInfos.forEach { workInfo ->
+                if (workInfo.state == State.RUNNING) {
+                    runningWorkers.add(workInfo.id.toString())
+                }
+            }
+
+            if (workInfos?.any { (it.state == State.SUCCEEDED || it.state == State.FAILED) && runningWorkers.contains(it.id.toString()) } == true) {
+                recyclerAdapter?.silentRefresh()
+                runningWorkers.clear()
+            }
         }
     }
 
@@ -237,16 +280,13 @@ class DashboardFragment : ParentFragment() {
         }
 
         recyclerBinding.listView.fadeAnimationWithAction {
-            courseColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
-            groupColumns = if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
-            (recyclerBinding.listView.layoutManager as? GridLayoutManager)?.spanCount = courseColumns * groupColumns
-            view?.post { recyclerAdapter?.notifyDataSetChanged() }
+            configureGridSize()
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        configureRecyclerView()
+        configureGridSize()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (isTablet) {
                 binding.emptyCoursesView.setGuidelines(.37f, .49f, .6f, .7f, .12f, .88f)
@@ -261,6 +301,16 @@ class DashboardFragment : ParentFragment() {
                 binding.emptyCoursesView.setGuidelines(.27f, .52f, .58f,.73f, .15f, .85f)
             }
         }
+    }
+
+    private fun configureGridSize() {
+        courseColumns =
+            if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.course_card_columns)
+        groupColumns =
+            if (StudentPrefs.listDashboard) LIST_SPAN_COUNT else resources.getInteger(R.integer.group_card_columns)
+        (recyclerBinding.listView.layoutManager as? GridLayoutManager)?.spanCount =
+            courseColumns * groupColumns
+        view?.post { recyclerAdapter?.notifyDataSetChanged() }
     }
 
     private fun configureRecyclerView() = with(binding) {
@@ -307,12 +357,103 @@ class DashboardFragment : ParentFragment() {
         recyclerBinding.listView.clipToPadding = false
 
         emptyCoursesView.onClickAddCourses {
-            if (!APIHelper.hasNetworkConnection()) {
-                toast(R.string.notAvailableOffline)
-            } else {
-                RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
-            }
+            RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
         }
+
+        addItemTouchHelperForCardReorder()
+    }
+
+    fun cancelCardDrag() {
+        recyclerBinding.listView.onTouchEvent(MotionEvent.obtain(0L, 0L, ACTION_CANCEL, 0f, 0f, 0))
+    }
+
+    private fun addItemTouchHelperForCardReorder() {
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP,
+            0
+        ) {
+
+            private var itemToMove: DashboardCourseItem? = null
+
+            // We need to consider other items in the recyclerview when dealing with positions.
+            // In the callbacks we get the adapter position, but we want to get the course items position so we use this.
+            // If there is any other recyclerview item added above the courses this should be modified.
+            private val POSITION_MODIFIER = 1
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+
+                if (viewHolder == null) return
+                val fromPosition = viewHolder.bindingAdapterPosition
+                val fromItem = recyclerAdapter?.getItem(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, fromPosition - POSITION_MODIFIER) as? DashboardCourseItem
+
+                itemToMove = fromItem
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPosition = viewHolder.bindingAdapterPosition
+                val toPosition = target.bindingAdapterPosition
+
+                val itemsSize = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)?.size ?: 0
+
+                if (toPosition - POSITION_MODIFIER in 0..< itemsSize) {
+                    recyclerAdapter?.notifyItemMoved(fromPosition, toPosition)
+                }
+
+                return true
+            }
+
+            override fun getDragDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                return if (viewHolder is CourseViewHolder && networkStateProvider.isOnline()) {
+                    ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP
+                } else 0
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                val finishingPosition = viewHolder.bindingAdapterPosition
+
+                if (finishingPosition == RecyclerView.NO_POSITION) {
+                    itemToMove = null
+                    firebaseCrashlytics.recordException(Throwable("Failed to reorder dashboard. finishingPosition == RecyclerView.NO_POSITION"))
+                    toast(R.string.failedToUpdateDashboardOrder)
+                    return
+                }
+
+                itemToMove?.let {
+                    recyclerAdapter?.moveItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER, it, finishingPosition - 1)
+                    recyclerAdapter?.notifyDataSetChanged()
+                    itemToMove = null
+                }
+
+                val courseItems = recyclerAdapter?.getItems(DashboardRecyclerAdapter.ItemType.COURSE_HEADER)
+                        ?.mapNotNull { it as? DashboardCourseItem } ?: emptyList()
+                val positions = courseItems
+                    .mapIndexed { index, course -> Pair(course.course.contextId, index) }
+                    .toMap()
+
+                val dashboardPositions = DashboardPositions(positions)
+                lifecycleScope.launch {
+                    val updateResult = repository.updateDashboardPositions(dashboardPositions)
+                    if (updateResult.isFail) {
+                        toast(R.string.failedToUpdateDashboardOrder)
+                    }
+                }
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(recyclerBinding.listView)
     }
 
     override fun onStart() {

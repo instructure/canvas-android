@@ -29,7 +29,6 @@ const val TAB_PROGRESS_SIZE = 100 * 1000
 data class CourseSyncProgressEntity(
     @PrimaryKey
     val courseId: Long,
-    val workerId: String,
     val courseName: String,
     val tabs: Map<String, TabSyncData> = emptyMap(),
     val additionalFilesStarted: Boolean = false,

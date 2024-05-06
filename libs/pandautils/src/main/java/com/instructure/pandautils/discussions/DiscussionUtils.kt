@@ -248,7 +248,8 @@ object DiscussionUtils {
             canvasContext: CanvasContext,
             discussionTopicHeader: DiscussionTopicHeader,
             discussionEntries: List<DiscussionEntry>,
-            startEntryId: Long): String {
+            startEntryId: Long,
+            isOnline: Boolean = true): String {
 
         val builder = StringBuilder()
         val brandColor = ThemePrefs.brandColor
@@ -276,7 +277,7 @@ object DiscussionUtils {
         fun buildEntry(discussionEntry: DiscussionEntry, depth: Int) {
             val isViewableEnd = (depth == maxDepth && discussionEntry.totalChildren > 0)
             builder.append(build(context, isTablet, canvasContext, discussionTopicHeader, discussionEntry, converter,
-                    template, makeAvatarForWebView(context, discussionEntry), depth, isViewableEnd, brandColor, likeColor,
+                    template, makeAvatarForWebView(context, discussionEntry, isOnline), depth, isViewableEnd, brandColor, likeColor,
                     likeImage, replyButtonWidth))
             if (depth < maxDepth) discussionEntry.replies?.forEach { buildEntry(it, depth + 1) }
         }
@@ -475,8 +476,8 @@ object DiscussionUtils {
      * If the avatar is valid then returns an empty string. Otherwise...
      * Returns an avatar bitmap converted into a base64 string for webviews.
      */
-    private fun makeAvatarForWebView(context: Context, discussionEntry: DiscussionEntry): String {
-        if (discussionEntry.author != null && ProfileUtils.shouldLoadAltAvatarImage(discussionEntry.author!!.avatarImageUrl)) {
+    private fun makeAvatarForWebView(context: Context, discussionEntry: DiscussionEntry, isOnline: Boolean): String {
+        if (!isOnline || discussionEntry.author != null && ProfileUtils.shouldLoadAltAvatarImage(discussionEntry.author!!.avatarImageUrl)) {
             val avatarBitmap = ProfileUtils.getInitialsAvatarBitMap(
                     context, discussionEntry.author!!.displayName!!,
                     Color.TRANSPARENT,

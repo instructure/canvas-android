@@ -4,14 +4,17 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.espresso.retry
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -20,15 +23,16 @@ import org.junit.Test
 
 @HiltAndroidTest
 class InboxE2ETest : TeacherTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
-
 
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageComposeReplyAndOptionMenuActionsE2E() {
+
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 2, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -38,10 +42,10 @@ class InboxE2ETest : TeacherTest() {
 
         val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
-        Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} student to the group: ${group.name}.")
+        Log.d(PREPARATION_TAG, "Create group membership for '${student1.name}' student to the group: '${group.name}'.")
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course)
@@ -77,11 +81,11 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Add a new conversation message manually via UI. Click on 'New Message' ('+') button.")
         inboxPage.clickAddMessageFAB()
 
-        Log.d(STEP_TAG,"Select ${course.name} from course spinner.Click on the '+' icon next to the recipients input field. Select the two students: ${student1.name} and ${student2.name}. Click on 'Done'.")
+        Log.d(STEP_TAG,"Select '${course.name}' from course spinner. Click on the '+' icon next to the recipients input field. Select the two students: '${student1.name}' and '${student2.name}'. Click on 'Done'.")
         addNewMessage(course,data.studentsList)
 
         val subject = "Hello there"
-        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject. Add some message text and click on 'Send' (aka. 'Arrow') button.")
+        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
         addMessagePage.composeMessageWithSubject(subject, "General Kenobi")
         addMessagePage.clickSendButton()
 
@@ -91,7 +95,7 @@ class InboxE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()
 
-        Log.d(STEP_TAG,"Click on $subject conversation.")
+        Log.d(STEP_TAG,"Click on '$subject' conversation.")
         inboxPage.clickConversation(subject)
 
         val replyMessageTwo = "Test Reply 2"
@@ -168,10 +172,10 @@ class InboxE2ETest : TeacherTest() {
 
         val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
-        Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} student to the group: ${group.name}.")
+        Log.d(PREPARATION_TAG, "Create group membership for '${student1.name}' student to the group: '${group.name}'.")
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course)
@@ -181,30 +185,17 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
-        val seedConversation = ConversationsApi.createConversation(
-            token = student1.token,
-            recipients = listOf(teacher.id.toString())
-        )
+        val seedConversation = ConversationsApi.createConversation(token = student1.token, recipients = listOf(teacher.id.toString()))
 
         Log.d(STEP_TAG, "Refresh the page. Assert that the conversation displayed as unread.")
         inboxPage.refresh()
         inboxPage.assertThereIsAnUnreadMessage(true)
 
         Log.d(PREPARATION_TAG, "Seed another Inbox conversation via API.")
-        val seedConversation2 = ConversationsApi.createConversation(
-            token = student1.token,
-            recipients = listOf(teacher.id.toString()),
-            subject = "Second conversation",
-            body = "Second body"
-        )
+        val seedConversation2 = ConversationsApi.createConversation(token = student1.token, recipients = listOf(teacher.id.toString()), subject = "Second conversation", body = "Second body")
 
         Log.d(PREPARATION_TAG, "Seed a third Inbox conversation via API.")
-        val seedConversation3 = ConversationsApi.createConversation(
-            token = student2.token,
-            recipients = listOf(teacher.id.toString()),
-            subject = "Third conversation",
-            body = "Third body"
-        )
+        val seedConversation3 = ConversationsApi.createConversation(token = student2.token, recipients = listOf(teacher.id.toString()), subject = "Third conversation", body = "Third body")
 
         Log.d(STEP_TAG,"Refresh the page. Filter the Inbox by selecting 'Inbox' category from the spinner on Inbox Page. Assert that the '${seedConversation[0]}' conversation is displayed. Assert that the conversation is unread yet.")
         inboxPage.refresh()
@@ -218,7 +209,11 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Select 'ARCHIVED' scope and assert that '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
         inboxPage.filterMessageScope("Archived")
-        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+
+        retry(times = 10, delay = 3000, block = {
+            refresh()
+            inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        })
 
         Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation and unarchive it." +
                 "Assert that the selected number of conversation on the toolbar is 1 and '${seedConversation2[0].subject}' conversation is not displayed in the 'ARCHIVED' scope.")
@@ -227,11 +222,11 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.clickUnArchive()
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
 
-        Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that ${seedConversation2[0].subject} conversation is displayed.")
+        Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that '${seedConversation2[0].subject}' conversation is displayed.")
         inboxPage.filterMessageScope("Inbox")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
-        Log.d(STEP_TAG, "Select both of the conversations (${seedConversation[0].subject} and ${seedConversation2[0].subject} and star them." +
+        Log.d(STEP_TAG, "Select both of the conversations '${seedConversation[0].subject}' and '${seedConversation2[0].subject}' and star them." +
                 "Assert that both of the has been starred and the selected number of conversations on the toolbar shows 2")
         inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
         inboxPage.assertSelectedConversationNumber("2")
@@ -296,6 +291,7 @@ class InboxE2ETest : TeacherTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxSwipeGesturesE2E() {
+
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 2, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -305,10 +301,10 @@ class InboxE2ETest : TeacherTest() {
 
         val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
-        Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} student to the group: ${group.name}.")
+        Log.d(PREPARATION_TAG, "Create group membership for '${student1.name}' student to the group: '${group.name}'.")
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course)
@@ -318,10 +314,7 @@ class InboxE2ETest : TeacherTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(PREPARATION_TAG, "Seed an Inbox conversation via API.")
-        val seedConversation = ConversationsApi.createConversation(
-            token = student1.token,
-            recipients = listOf(teacher.id.toString())
-        )
+        ConversationsApi.createConversation(token = student1.token, recipients = listOf(teacher.id.toString()))
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the previously seeded Inbox conversation is displayed. Assert that the message is unread yet.")
         inboxPage.refresh()
@@ -372,20 +365,27 @@ class InboxE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
         inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
-        inboxPage.clickStar()
         inboxPage.clickMarkAsRead()
+
+        retry(times = 10, delay = 3000, block = {
+            Log.d(STEP_TAG, "Assert that '${seedConversation3[0].subject}' conversation is read.")
+            inboxPage.assertUnreadMarkerVisibility(seedConversation3[0].subject, ViewMatchers.Visibility.GONE)
+        })
+
+        Log.d(STEP_TAG, "Select both of the conversations. Star them and mark the unread.")
+        inboxPage.clickStar()
 
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope. Assert that both of the conversation are displayed in the 'STARRED' scope.")
         inboxPage.filterMessageScope("Starred")
-        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
-        inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
+
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+            inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
+        }
 
         Log.d(STEP_TAG, "Swipe '${seedConversation2[0].subject}' left and assert it is removed from the 'STARRED' scope because it has became unstarred.")
         inboxPage.swipeConversationLeft(seedConversation2[0])
         inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
-
-        Log.d(STEP_TAG, "Assert that '${seedConversation3[0].subject}' conversation is read.")
-        inboxPage.assertUnreadMarkerVisibility(seedConversation3[0].subject, ViewMatchers.Visibility.GONE)
 
         Log.d(STEP_TAG, "Swipe '${seedConversation3[0].subject}' conversation right and assert that it has became unread.")
         inboxPage.swipeConversationRight(seedConversation3[0].subject)
@@ -440,10 +440,10 @@ class InboxE2ETest : TeacherTest() {
 
         val groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
-        Log.d(PREPARATION_TAG, "Create group membership for ${student1.name} student to the group: ${group.name}.")
+        Log.d(PREPARATION_TAG, "Create group membership for '${student1.name}' student to the group: '${group.name}'.")
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
         dashboardPage.assertDisplaysCourse(course)

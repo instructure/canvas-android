@@ -15,11 +15,11 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
@@ -30,13 +30,13 @@ class LoginInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testLogin_canFindSchool() {
         // Should be able to search for and select a school in the "What's your school's name?" page
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testLogin_qrTutorialPageLoads() {
         // Should be able to view and assert page objects on the QR tutorial page
         loginLandingPage.clickQRCodeButton()

@@ -18,9 +18,11 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.instructure.interactions.FragmentInteractions
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
@@ -31,6 +33,8 @@ import com.instructure.student.databinding.ActivitySettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+private const val OFFLINE_ENABLED = "offlineEnabled"
+
 @ScreenView(SCREEN_VIEW_SETTINGS)
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(){
@@ -40,16 +44,29 @@ class SettingsActivity : AppCompatActivity(){
 
     private val binding by viewBinding(ActivitySettingsBinding::inflate)
 
+    var offlineEnabled: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        offlineEnabled = intent.getBooleanExtra(OFFLINE_ENABLED, false)
         setContentView(binding.root)
-
         networkStateProvider.isOnlineLiveData.observe(this) { isOnline ->
             binding.offlineIndicator.root.setVisible(!isOnline)
         }
     }
 
     private val currentFragment: Fragment? get() = supportFragmentManager.fragments.last()
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        applyThemeForAllFragments()
+    }
+
+    private fun applyThemeForAllFragments() {
+        supportFragmentManager.fragments.forEach {
+            (it as? FragmentInteractions)?.applyTheme()
+        }
+    }
 
     fun addFragment(fragment: Fragment) {
         val ft = supportFragmentManager.beginTransaction()
@@ -60,8 +77,10 @@ class SettingsActivity : AppCompatActivity(){
     }
 
     companion object {
-         fun createIntent(context: Context): Intent {
-            return Intent(context, SettingsActivity::class.java)
+         fun createIntent(context: Context, offlineEnabled: Boolean): Intent {
+            return Intent(context, SettingsActivity::class.java).apply {
+                putExtra(OFFLINE_ENABLED, offlineEnabled)
+            }
         }
     }
 }

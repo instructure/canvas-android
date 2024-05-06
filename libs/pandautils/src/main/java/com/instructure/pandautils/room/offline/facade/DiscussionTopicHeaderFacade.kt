@@ -23,20 +23,32 @@ import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicRemoteFileDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.daos.RemoteFileDao
 import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicHeaderEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicPermissionEntity
+import com.instructure.pandautils.room.offline.entities.DiscussionTopicRemoteFileEntity
+import com.instructure.pandautils.room.offline.entities.RemoteFileEntity
 
 class DiscussionTopicHeaderFacade(
     private val discussionTopicHeaderDao: DiscussionTopicHeaderDao,
     private val discussionParticipantDao: DiscussionParticipantDao,
     private val discussionTopicPermissionDao: DiscussionTopicPermissionDao,
+    private val remoteFileDao: RemoteFileDao,
+    private val localFileDao: LocalFileDao,
+    private val discussionTopicRemoteFileDao: DiscussionTopicRemoteFileDao,
     private val offlineDatabase: OfflineDatabase
 ) {
     suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader, courseId: Long): Long {
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
         val discussionTopicHeaderId = discussionTopicHeaderDao.insert(DiscussionTopicHeaderEntity(discussionTopicHeader, courseId, null))
         val permissionId = discussionTopicHeader.permissions?.let { discussionTopicPermissionDao.insert(DiscussionTopicPermissionEntity(it, discussionTopicHeaderId)) }
+        val attachments = discussionTopicHeader.attachments.map { RemoteFileEntity(it) }
+        val connectionEntities = attachments.map { DiscussionTopicRemoteFileEntity(discussionTopicHeaderId, it.id) }
+        remoteFileDao.insertAll(attachments)
+        discussionTopicRemoteFileDao.insertAll(connectionEntities)
         discussionTopicHeaderDao.update(DiscussionTopicHeaderEntity(discussionTopicHeader.copy(id = discussionTopicHeaderId), courseId, permissionId))
         return discussionTopicHeaderId
     }
@@ -51,15 +63,23 @@ class DiscussionTopicHeaderFacade(
 
             discussionParticipantDao.upsertAll(authors)
 
-            val discussionEntities =
-                discussionTopicHeaders.mapIndexed { index, discussionTopicHeader ->
-                    DiscussionTopicHeaderEntity(
-                        discussionTopicHeader,
-                        courseId,
-                        null
-                    )
-                }
+            val discussionEntities = mutableListOf<DiscussionTopicHeaderEntity>()
+            val attachmentEntities = mutableListOf<RemoteFileEntity>()
+            val discussionRemoteFileEntities = mutableListOf<DiscussionTopicRemoteFileEntity>()
+
+            discussionTopicHeaders.forEach { discussion ->
+                val entity = DiscussionTopicHeaderEntity(discussion, courseId, null)
+                val attachments = discussion.attachments.map { RemoteFileEntity(it) }
+                val connectionEntites = attachments.map { DiscussionTopicRemoteFileEntity(entity.id, it.id) }
+
+                discussionEntities.add(entity)
+                attachmentEntities.addAll(attachments)
+                discussionRemoteFileEntities.addAll(connectionEntites)
+            }
+
             discussionTopicHeaderDao.insertAll(discussionEntities)
+            remoteFileDao.insertAll(attachmentEntities)
+            discussionTopicRemoteFileDao.insertAll(discussionRemoteFileEntities)
 
             val permissionIds = discussionTopicHeaders.mapIndexed { index, discussionTopicHeader ->
                 discussionTopicHeader.permissions?.let {
@@ -76,9 +96,7 @@ class DiscussionTopicHeaderFacade(
     suspend fun getDiscussionsForCourse(courseId: Long): List<DiscussionTopicHeader> {
         return discussionTopicHeaderDao.findAllDiscussionsForCourse(courseId)
             .map { discussionTopic ->
-                val authorEntity = discussionTopic.authorId?.let { discussionParticipantDao.findById(it) }
-                val permission = discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopic.id)
-                discussionTopic.toApiModel(author = authorEntity?.toApiModel(), permissions = permission?.toApiModel())
+                createDiscussionApiModel(discussionTopic)
             }
     }
 
@@ -97,8 +115,18 @@ class DiscussionTopicHeaderFacade(
     }
 
     private suspend fun createDiscussionApiModel(discussionTopicHeaderEntity: DiscussionTopicHeaderEntity): DiscussionTopicHeader {
-        val authorEntity = discussionTopicHeaderEntity.authorId?.let { discussionParticipantDao.findById(it) }
-        val permission = discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopicHeaderEntity.id)
-        return discussionTopicHeaderEntity.toApiModel(authorEntity?.toApiModel(), permissions = permission?.toApiModel())
+        val authorEntity =
+            discussionTopicHeaderEntity.authorId?.let { discussionParticipantDao.findById(it) }
+        val permission =
+            discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopicHeaderEntity.id)
+        val attachments = discussionTopicRemoteFileDao.findByDiscussionId(
+            discussionTopicHeaderEntity.id
+        ).mapNotNull { remoteFileDao.findById(it.remoteFileId) }
+            .map {
+                val path = localFileDao.findById(it.id)?.path
+                it.copy(url = path)
+            }
+            .map { it.toApiModel() }
+        return discussionTopicHeaderEntity.toApiModel(authorEntity?.toApiModel(), permissions = permission?.toApiModel(), attachments = attachments)
     }
 }

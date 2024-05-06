@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Mangler</string>
     <string name="gradedSubmissionLabel">Vurdert</string>
 
+    <string name="reminderTitle">Påminnelse</string>
+    <string name="reminderDescription">Legg til varsler for påminnelse om forfallsdato for oppgaven på denne enheten.</string>
+    <string name="a11y_addReminder">Legg til påminnelse</string>
+    <string name="a11y_removeReminder">Fjern påminnelse</string>
+    <string name="reminderBefore">%s før</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minutt</item>
+        <item quantity="other">%d minutter</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 time</item>
+        <item quantity="other">%d timer</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dag</item>
+        <item quantity="other">%d dager</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 uke</item>
+        <item quantity="other">%d uker</item>
+    </plurals>
+    <string name="reminderCustom">Tilpasset</string>
+    <string name="customReminderTitle">Tilpasset påminnelse</string>
+    <string name="customReminderQuantityHint">Antall</string>
+    <string name="customReminderMinutes">Minutter før</string>
+    <string name="customReminderHours">Timer før</string>
+    <string name="customReminderDays">Dager før</string>
+    <string name="customReminderWeeks">Uker før</string>
+    <string name="reminderNotificationChannelName">Påminnelsesvarslinger</string>
+    <string name="reminderNotificationChannelDescription">Canvas-varslinger for oppgavepåminnelser.</string>
+    <string name="reminderNotificationTitle">Påminnelse om forfallsdato</string>
+    <string name="reminderNotificationDescription">Denne oppgaven har frist om %s: %s</string>
+    <string name="reminderInPast">Velg en fremtidig forfallsdato for påminnelsen din!</string>
+    <string name="reminderAlreadySet">Du har allerede angitt en påminnelse for dette tidspunktet</string>
+    <string name="deleteReminderTitle">Slett påminnelse</string>
+    <string name="deleteReminderMessage">Er du sikker på at du vil slette denne påminnelsen?</string>
+    <string name="reminderPermissionNotGrantedError">Du må aktivere nøyaktig alarmtillatelse for denne handlingen.</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Det er ingen forhåndsvisnings-URL ved bruk av \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Skriv inn gyldig URL</string>
@@ -957,6 +994,8 @@
     <string name="inviteAccepted">Invitasjonen ble akseptert!</string>
     <string name="inviteDeclined">Invitasjonen ble avslått.</string>
     <string name="latePenalty">Forsinkelsesstraff (-%s)</string>
+    <string name="latePenaltyUpdated">Forsinkelsesstraff: -%s poeng</string>
+    <string name="yourGrade">Din vurdering: %s poeng</string>
     <string name="finalGrade">Sluttvurdering</string>
 
     <string name="max_count">99+</string>
@@ -1411,6 +1450,21 @@
     <string name="offline_content_select_all">Velg alle</string>
     <string name="offline_content_deselect_all">Fjern all merking</string>
     <string name="offline_content_loading_error">Det oppsto en feil ved lasting av innholdet.</string>
+    <string name="offline_content_empty_title">Ingen fag</string>
+    <string name="offline_content_empty_message">Fagene dine vil vises her, og du kan deretter gjøre det tilgjengelig for frakoblet bruk.</string>
+    <string name="offline_content_empty_course_title">Intet faginnhold</string>
+    <string name="offline_content_empty_course_message">Faginnholdet vises her, og du kan deretter gjøre det tilgjengelig for frakoblet bruk.</string>
+    <string name="offline_content_discard_dialog_title">Forkaste endringer?</string>
+    <string name="offline_content_discard_dialog_message">Hvis du velger å forkaste, blir ikke endringene lagret.</string>
+    <string name="offline_content_discard_dialog_positive">Forkast</string>
+    <string name="offline_content_sync_dialog_title">Synkronisere frakoblet innhold?</string>
+    <string name="offline_content_sync_dialog_message">Dette vil synkronisere ~%s-innhold. Dette kan føre til ekstra kostnader fra din datatilbyder hvis du ikke er koblet til et Wi-Fi-nettverk.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Dette vil synkronisere ~%s-innhold bare når du er tilkoblet et Wi-Fi-nettverk.</string>
+    <string name="offline_content_sync_dialog_positive">Synkroniser</string>
+    <string name="offline_content_sync_loading_title">Laster&#8230;</string>
+    <string name="offline_content_sync_loading_message">Vent litt, vi gjør alt klart for deg.</string>
+    <string name="content_description_expand_content">Utvid innhold</string>
+    <string name="content_description_collapse_content">Skjul innhold</string>
     <string name="syncSettings_autoContentSyncDescription">Aktivering av Automatisk synkronisering av innhold vil ta seg av nedlasting av det valgte innholdet basert på følgende innstillinger. Synkronisering av innhold vil skje selv om applikasjonen ikke kjører. Hvis innstillingen er slått av, vil det ikke skje noen synkronisering. Det allerede nedlastede innholdet vil ikke bli slettet.</string>
     <string name="syncSettings_syncFrequencyTitle">Synkroniseringsfrekvens</string>
     <string name="syncSettings_autoContentSyncTitle">Automatisk synkronisering av innhold</string>
@@ -1453,7 +1507,6 @@
         <item quantity="one">%d fag synkroniseres.</item>
         <item quantity="other">%d fag synkroniseres.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Faginnhold-bilder</string>
     <string name="assignmentNoLongerAvailable">Denne oppgaven er ikke lenger tilgjengelig.</string>
     <string name="editDashboardOfflineMode">Du er frakoblet</string>
     <string name="editDashboardOfflineModeMessage">Du har ingen fag som er tilgjengelig i frakoblet modus.</string>
@@ -1465,4 +1518,78 @@
         <item quantity="one">%d fag er synkronisert.</item>
         <item quantity="other">%d fag er synkronisert.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Ytterligere faginnhold</string>
+    <string name="failedToUpdateDashboardOrder">Kunne ikke oppdatere rekkefølge på oversiktskort</string>
+    <string name="publishAllModulesAndItems">Publiser alle moduler og elementer</string>
+    <string name="publishModulesOnly">Publiser kun moduler</string>
+    <string name="unpublishAllModulesAndItems">Avpubliser alle moduler og elementer</string>
+    <string name="moduleOptions">Modulalternativer</string>
+    <string name="publishModuleAndItems">Publiser modul og alle elementer</string>
+    <string name="publishModuleOnly">Publiser kun moduler</string>
+    <string name="unpublishModuleAndItems">Avpubliser modul og alle elementer</string>
+    <string name="a11y_contentDescription_moduleOptions">Modulalternativer for %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Modulelementalternativer for %s</string>
+    <string name="publishModuleItem">Publiser modulelement</string>
+    <string name="unpublishModuleItem">Avpubliser modulelement</string>
+    <string name="publishDialogTitle">Publisere?</string>
+    <string name="publishModuleDialogMessage">Dette vil gjøre kun modulen synlig for elever.</string>
+    <string name="publishModuleAndItemsDialogMessage">Dette vil gjøre modulen og alle elementer synlige for elever.</string>
+    <string name="unpublishDialogTitle">Avpublisere?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">Dette vil gjøre modulen og alle elementer usynlige for elever.</string>
+    <string name="publishModuleItemDialogMessage">Dette vil gjøre kun dette elementet synlig for elever.</string>
+    <string name="unpublishModuleItemDialogMessage">Dette vil gjøre kun dette elementet usynlig for elever.</string>
+    <string name="publishModulesAndItemsDialogMessage">Dette vil gjøre alle moduler og elementer synlige for elever.</string>
+    <string name="publishModulesDialogMessage">Dette vil gjøre kun modulene synlig for elever.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">Dette vil gjøre alle moduler og elementer usynlige for elever.</string>
+    <string name="only_available_with_link">Kun tilgjengelig med lenke</string>
+    <string name="schedule_availability">Planlegg tilgjengelighet</string>
+    <string name="moduleItemPublished">Element publisert</string>
+    <string name="moduleItemUnpublished">Element avpublisert</string>
+    <string name="onlyModulePublished">Kun modul publisert</string>
+    <string name="moduleAndAllItemsPublished">Modul og alle elementer publisert</string>
+    <string name="moduleAndAllItemsUnpublished">Modul og alle elementer avpublisert</string>
+    <string name="onlyModulesPublished">Alle moduler publisert</string>
+    <string name="allModulesAndAllItemsPublished">Alle moduler og alle elementer publisert</string>
+    <string name="allModulesAndAllItemsUnpublished">Alle moduler og alle elementer avpublisert</string>
+    <string name="inherit_from_course">Arve fra fag</string>
+    <string name="course_members">Fagmedlemmer</string>
+    <string name="institution_members">Institusjonsmedlemmer</string>
+    <string name="public_title">Offentlig</string>
+    <string name="edit_permissions">Redigeringstillatelser</string>
+    <string name="update">Oppdater</string>
+    <string name="availability_title">Tilgjengelighet</string>
+    <string name="visibility_title">Synlighet</string>
+    <string name="available_from">Tilgjengelig fra</string>
+    <string name="available_until">Tilgjengelig frem til</string>
+    <string name="from">Fra</string>
+    <string name="until">Inntil</string>
+    <string name="date">Dato</string>
+    <string name="time">Tid</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Slett fra dato</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Slett til dato</string>
+    <string name="progressMessage">Denne prosessen kan ta noen minutter. Du kan lukke modalen eller navigere bor fra siden under denne prosessen.</string>
+    <string name="noteTitle">Merknad</string>
+    <string name="allModules">Alle moduler</string>
+    <string name="allModulesAndItems">Alle moduler og elementer</string>
+    <string name="selectedModulesAndItems">Valgte moduler og elementer</string>
+    <string name="selectedModules">Valgte moduler</string>
+    <string name="publishing">Publiserer</string>
+    <string name="unpublishing">Avpubliserer</string>
+    <string name="moduleBulkUpdateNote">Moduler og elementer som allerede er behandlet, vil ikke bli tilbakestilt til tidligere tilstand når prosessen avbrytes.</string>
+    <string name="success">Vellykket!</string>
+    <string name="updateFailed">Oppdatering mislyktes</string>
+    <string name="updateCancelled">Oppdatering avbrutt</string>
+    <string name="a11y_hidden">Skjult</string>
+    <string name="a11y_scheduled">Planlagt</string>
+    <string name="a11y_published">Publisert</string>
+    <string name="a11y_unpublished">Upublisert</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f poeng</item>
+        <item quantity="other">%.0f poeng</item>
+    </plurals>
+    <string name="publishModuleItemAction">Publiser</string>
+    <string name="unpublishModuleItemAction">Avpubliser</string>
+    <string name="publishDialogPositiveButton">Publiser</string>
+    <string name="unpublishDialogPositiveButton">Avpubliser</string>
+    <string name="discussionMenuRefresh">Oppdater</string>
 </resources>

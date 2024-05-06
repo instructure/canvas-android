@@ -2,11 +2,10 @@ package com.instructure.student.ui.e2e
 
 import android.util.Log
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.KnownBug
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.pages.CollaborationsPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -15,20 +14,15 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 
-/**
- * Very basic test to verify that the collaborations web page shows up correctly.
- * We make no attempt to actually start a collaboration.
- * This test could break if changes are made to the web page that we bring up.
- */
 @HiltAndroidTest
 class CollaborationsE2ETest: StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
-    @KnownBug("https://instructure.atlassian.net/browse/VICE-3157")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COLLABORATIONS, TestCategory.E2E)
     fun testCollaborationsE2E() {
 
@@ -37,24 +31,24 @@ class CollaborationsE2ETest: StudentTest() {
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to ${course.name} course's Collaborations Page.")
+        Log.d(STEP_TAG,"Navigate to '${course.name}' course's Collaborations Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectCollaborations()
 
         Log.d(STEP_TAG,"Verify that various elements of the web page are present.")
         CollaborationsPage.assertCurrentCollaborationsHeaderPresent()
 
-        //On some screen size, this spinner does not displayed at all, instead of it,
-        //there is a button on the top-right corner with the 'Start a new Collaboration' text
-        //and clicking on it will 'expand' and display this spinner.
-        //However, there is a bug (see link in this @KnownBug annotation) which is about the button not displayed on some screen size
-        //So this test will breaks until it this ticket will be fixed.
+        Log.d(STEP_TAG, "Assert that the 'Start a New Collaboration' button is displayed.")
         CollaborationsPage.assertStartANewCollaborationPresent()
-        CollaborationsPage.assertGoogleDocsChoicePresent()
-        CollaborationsPage.assertGoogleDocsExplanationPresent()
+
+        Log.d(STEP_TAG, "Assert that within the selector, the 'Google Docs' has been selected as the default value.")
+        CollaborationsPage.assertGoogleDocsChoicePresentAsDefaultOption()
+
+        Log.d(STEP_TAG, "Assert that the warning section (under the selector) of Google Docs has been displayed.")
+        CollaborationsPage.assertGoogleDocsWarningDescriptionPresent()
     }
 }

@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_PDF
 import com.instructure.pandautils.analytics.ScreenView
@@ -49,6 +50,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     private var mUrl by StringArg()
     private var mToolbarColor by IntArg()
     private var mEditableFile: EditableFile? by NullableParcelableArg()
+    private var isInModulesPager by BooleanArg()
 
     private val mPdfConfiguration: PdfConfiguration = PdfConfiguration.Builder().scrollDirection(PageScrollDirection.VERTICAL).build()
 
@@ -67,15 +69,18 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
         // If returning from editing this file, check if it was deleted so we can immediately go back
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
-        if (fileFolderDeletedEvent != null)
+        if (fileFolderDeletedEvent != null && fileFolderDeletedEvent.deletedFileFolder.id == mEditableFile?.file?.id) {
             requireActivity().finish()
+        }
     }
 
     private fun updateFileNameIfNeeded() {
         mEditableFile?.let { editableFile ->
             val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
             fileFolderUpdatedEvent?.let { event ->
-                editableFile.file = event.updatedFileFolder
+                if (editableFile.file.id == event.updatedFileFolder.id) {
+                    editableFile.file = event.updatedFileFolder
+                }
             }
             binding.toolbar.title = editableFile.file.displayName
         }
@@ -101,7 +106,14 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
             }
         }
 
-        if(isTablet && mToolbarColor != 0) {
+        if (isInModulesPager) {
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewPdfFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewPdfFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+        } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
@@ -139,12 +151,22 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     }
 
     companion object {
-        @JvmStatic @JvmOverloads fun newInstance(url: String, toolbarColor: Int = 0, editableFile: EditableFile? = null) = ViewPdfFragment().apply {
+        @JvmStatic
+        @JvmOverloads
+        fun newInstance(
+            url: String,
+            toolbarColor: Int = 0,
+            editableFile: EditableFile? = null,
+            isInModulesPager: Boolean = false
+        ) = ViewPdfFragment().apply {
             mUrl = url
             mToolbarColor = toolbarColor
             mEditableFile = editableFile
+            this.isInModulesPager = isInModulesPager
         }
-        @JvmStatic fun newInstance(bundle: Bundle) = ViewPdfFragment().apply { arguments = bundle }
+
+        @JvmStatic
+        fun newInstance(bundle: Bundle) = ViewPdfFragment().apply { arguments = bundle }
     }
 }
 

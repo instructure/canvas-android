@@ -18,10 +18,10 @@ package com.instructure.student.ui.e2e
 
 import android.util.Log
 import com.instructure.canvas.espresso.E2E
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -51,7 +51,7 @@ class PeopleE2ETest : StudentTest() {
         tokenLogin(student1)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to ${course.name} course's People Page.")
+        Log.d(STEP_TAG,"Navigate to '${course.name}' course's People Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectPeople()
 
@@ -70,7 +70,7 @@ class PeopleE2ETest : StudentTest() {
         peopleListPage.assertPersonListed(student2)
         peopleListPage.assertPeopleCount(3)
 
-        Log.d(STEP_TAG,"Select ${student2.name} student and assert if we are landing on the Person Details Page.")
+        Log.d(STEP_TAG,"Select ${student2.name} student and assert if we are landing on the Person Details Page. Assert that the Person Details page's information (user name, role, and picture) are displayed.")
         peopleListPage.selectPerson(student2)
         personDetailsPage.assertPageObjects()
 

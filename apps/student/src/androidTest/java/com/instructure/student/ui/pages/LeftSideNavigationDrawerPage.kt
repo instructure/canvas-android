@@ -12,8 +12,22 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.*
-import com.instructure.espresso.page.*
+import com.instructure.espresso.OnViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.ViewAlphaAssertion
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.swipeUp
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
@@ -84,6 +98,10 @@ class LeftSideNavigationDrawerPage : BasePage() {
 
     fun clickBookmarksMenu() {
         clickMenu(R.id.navigationDrawerItem_bookmarks)
+    }
+
+    fun clickStudioMenu() {
+        clickMenu(R.id.navigationDrawerItem_studio)
     }
 
     fun clickSettingsMenu() {
@@ -179,6 +197,73 @@ class LeftSideNavigationDrawerPage : BasePage() {
         help.assertDisplayed()
         changeUser.assertDisplayed()
         logoutButton.assertDisplayed()
+    }
+
+    //OfflineMethod
+    private fun assertViewAlpha(matcher: Matcher<View>, expectedAlphaValue: Float) {
+        onView(matcher).check(ViewAlphaAssertion(expectedAlphaValue))
+    }
+
+    //OfflineMethod
+    private fun assertFilesMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_files), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertBookmarksMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_bookmarks), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertStudioMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_studio), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertSettingsMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerSettings), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertShowGradesMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_showGrades), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertColorOverlayMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_colorOverlay), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertHelpMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_help), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertChangeUserMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_changeUser), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    private fun assertLogoutMenuAlphaValue(expectedAlphaValue: Float) {
+        assertViewAlpha(withId(R.id.navigationDrawerItem_logout), expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    fun assertOfflineDisabledMenus(expectedAlphaValue: Float) {
+        assertFilesMenuAlphaValue(expectedAlphaValue)
+        assertBookmarksMenuAlphaValue(expectedAlphaValue)
+        assertStudioMenuAlphaValue(expectedAlphaValue)
+        assertColorOverlayMenuAlphaValue(expectedAlphaValue)
+        assertHelpMenuAlphaValue(expectedAlphaValue)
+    }
+
+    //OfflineMethod
+    fun assertOfflineEnabledMenus(expectedAlphaValue: Float) {
+        assertSettingsMenuAlphaValue(expectedAlphaValue)
+        assertShowGradesMenuAlphaValue(expectedAlphaValue)
+        assertChangeUserMenuAlphaValue(expectedAlphaValue)
+        assertLogoutMenuAlphaValue(expectedAlphaValue)
     }
 
     /**

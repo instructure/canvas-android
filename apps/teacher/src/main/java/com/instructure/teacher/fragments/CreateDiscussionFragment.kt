@@ -21,6 +21,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -31,7 +32,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.models.postmodels.DiscussionTopicPostBody
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -43,7 +50,6 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_DISCUSSION
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
@@ -51,7 +57,25 @@ import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.descendants
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
@@ -65,21 +89,29 @@ import com.instructure.teacher.factory.CreateDiscussionPresenterFactory
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.presenters.CreateDiscussionPresenter
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.EditDateGroups
+import com.instructure.teacher.utils.groupedDueDates
+import com.instructure.teacher.utils.setGroupedDueDates
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.CreateDiscussionView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @PageView("courses/{canvasContext}/discussion_topics/new")
 @ScreenView(SCREEN_VIEW_CREATE_DISCUSSION)
 class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
-        CreateDiscussionView>(), CreateDiscussionView, Identity, FileUploadDialogParent {
-
-    private val binding by viewBinding(FragmentCreateDiscussionBinding::bind)
+        CreateDiscussionView,
+        FragmentCreateDiscussionBinding>(),
+    CreateDiscussionView,
+    Identity,
+    FileUploadDialogParent {
 
     private var canvasContext: CanvasContext by ParcelableArg(Course(), CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(null, DISCUSSION_TOPIC_HEADER)
@@ -206,7 +238,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
 
     override fun onPresenterPrepared(presenter: CreateDiscussionPresenter) { }
 
-    override fun layoutResId(): Int = R.layout.fragment_create_discussion
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCreateDiscussionBinding = FragmentCreateDiscussionBinding::inflate
 
     override fun updateDueDateGroups(groups: HashMap<Long, Group>, sections: HashMap<Long, Section>, students: HashMap<Long, User>) {
         groupsMapped += groups

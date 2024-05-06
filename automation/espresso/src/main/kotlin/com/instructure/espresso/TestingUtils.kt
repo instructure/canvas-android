@@ -43,10 +43,67 @@ fun capitalizeFirstLetter(inputText: String): String {
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getCurrentDateInCanvasFormat(): String {
-    val expectedDate = LocalDateTime.now()
+fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
+    val expectedDate = date ?: LocalDateTime.now()
     val monthString = capitalizeFirstLetter(expectedDate.month.name.take(3))
     val dayString = expectedDate.dayOfMonth
     val yearString = expectedDate.year
     return "$monthString $dayString, $yearString"
+}
+
+fun getCustomDateCalendar(dayDiffFromToday: Int): Calendar {
+    val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    cal.add(Calendar.DATE, dayDiffFromToday)
+    cal.set(Calendar.HOUR_OF_DAY, 10)
+    cal.set(Calendar.MINUTE, 1)
+    cal.set(Calendar.SECOND, 1)
+    return cal
+}
+
+fun retry(
+    times: Int = 3,
+    delay: Long = 1000,
+    catchBlock: (() -> Unit)? = null,
+    block: () -> Unit
+) {
+    repeat(times - 1) {
+        try {
+            block()
+            return
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Thread.sleep(delay)
+            catchBlock?.invoke()
+        }
+    }
+    block()
+}
+
+fun retryWithIncreasingDelay(
+    times: Int = 3,
+    initialDelay: Long = 100,
+    maxDelay: Long = 1000,
+    factor: Double = 2.0,
+    catchBlock: (() -> Unit)? = null,
+    block: () -> Unit
+) {
+    var currentDelay = initialDelay
+    repeat(times - 1) {
+        try {
+            block()
+            return
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Thread.sleep(currentDelay)
+            currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
+            catchBlock?.invoke()
+        }
+    }
+    block()
+}
+
+fun extractInnerTextById(html: String, id: String): String? {
+    val pattern = "<[^>]*?\\bid=\"$id\"[^>]*?>(.*?)</[^>]*?>".toRegex(RegexOption.DOT_MATCHES_ALL)
+    val matchResult = pattern.find(html)
+    return matchResult?.groupValues?.getOrNull(1)
 }

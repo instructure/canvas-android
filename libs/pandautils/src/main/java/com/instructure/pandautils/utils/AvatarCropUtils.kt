@@ -199,8 +199,8 @@ class AvatarCropActivity : AppCompatActivity() {
      * crop boundary as a percentage (0f to 1f) of the source image dimensions.
      */
     private fun getCropInfo(): RectF = with(binding) {
-        val origin = imageView.viewToSourceCoord(0f, 0f)
-        val dimen = imageView.viewToSourceCoord(imageView.width.toFloat(), imageView.height.toFloat())
+        val origin = imageView.viewToSourceCoord(0f, 0f) ?: return RectF(0f, 0f, 1f, 1f)
+        val dimen = imageView.viewToSourceCoord(imageView.width.toFloat(), imageView.height.toFloat()) ?: return RectF(0f, 0f, 1f, 1f)
         val (appliedWidth, appliedHeight) = when (imageView.appliedOrientation) {
             90, 270 -> imageView.sHeight to imageView.sWidth
             else -> imageView.sWidth to imageView.sHeight

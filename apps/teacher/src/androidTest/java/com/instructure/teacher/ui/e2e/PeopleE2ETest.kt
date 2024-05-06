@@ -19,19 +19,17 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.ViewUtils
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.pages.PeopleListPage
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherTest
@@ -41,9 +39,11 @@ import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class PeopleE2ETest: TeacherTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -61,7 +61,19 @@ class PeopleE2ETest: TeacherTest() {
         val course = data.coursesList[0]
         val parent = data.parentsList[0]
 
-        Log.d(PREPARATION_TAG,"Seed a 'Text Entry' assignment for course: ${course.name}.")
+        Log.d(PREPARATION_TAG,"Seed some group info.")
+        val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
+        val groupCategory2 = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
+        val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
+        val group2 = GroupsApi.createGroup(groupCategory2.id, teacher.token)
+
+        Log.d(PREPARATION_TAG,"Create group membership for '${gradedStudent.name}' student to '${group.name}' group.")
+        GroupsApi.createGroupMembership(group.id, gradedStudent.id, teacher.token)
+
+        Log.d(PREPARATION_TAG,"Create group membership for '${notGradedStudent.name}' student to '${group2.name}' group.")
+        GroupsApi.createGroupMembership(group2.id, notGradedStudent.id, teacher.token)
+
+        Log.d(PREPARATION_TAG,"Seed a 'Text Entry' assignment for course: '${course.name}'.")
         val assignments = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -70,7 +82,7 @@ class PeopleE2ETest: TeacherTest() {
                 pointsPossible = 10.0
         )
 
-        Log.d(PREPARATION_TAG,"Seed a submission for ${assignments[0].name} assignment.")
+        Log.d(PREPARATION_TAG,"Seed a submission for '${assignments[0].name}' assignment.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -81,13 +93,13 @@ class PeopleE2ETest: TeacherTest() {
                 studentToken = gradedStudent.token
         )
 
-        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for ${assignments[0].name} assignment.")
-        gradeSubmission(teacher, course, assignments, gradedStudent)
+        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignments[0].name}' assignment.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignments[0].id, gradedStudent.id, postedGrade = "10")
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to People Page.")
+        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to People Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPeopleTab()
 
@@ -104,7 +116,7 @@ class PeopleE2ETest: TeacherTest() {
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.OBSERVER)
 
-        Log.d(STEP_TAG,"Navigate back and click on ${notGradedStudent.name} student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
+        Log.d(STEP_TAG,"Navigate back and click on '${notGradedStudent.name}' student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
         Espresso.pressBack()
         peopleListPage.assertPersonRole(notGradedStudent.name, PeopleListPage.UserRole.STUDENT)
         peopleListPage.clickPerson(notGradedStudent)
@@ -114,7 +126,7 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.assertStudentGrade("--")
         studentContextPage.assertStudentSubmission("--")
 
-        Log.d(STEP_TAG,"Navigate back and click on ${gradedStudent.name} student." +
+        Log.d(STEP_TAG,"Navigate back and click on '${gradedStudent.name}' student." +
                 "Assert that '${gradedStudent.name}' graded student's info," +
                 "and the '${course.name}' course's info are displayed properly on the Context Page.")
         Espresso.pressBack()
@@ -131,7 +143,7 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.clickOnNewMessageButton()
 
         val subject = "Test Subject"
-        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: $subject. Add some message text and click on 'Send' (aka. 'Arrow') button.")
+        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
         addMessagePage.composeMessageWithSubject(subject, "This a test message from student context page.")
         addMessagePage.clickSendButton()
 
@@ -146,12 +158,52 @@ class PeopleE2ETest: TeacherTest() {
         peopleListPage.assertSearchResultCount(1)
         peopleListPage.assertPersonListed(gradedStudent)
 
-        Log.d(STEP_TAG, "Click on 'Reset' search (X) icon and assert that all the poeple are displayed (5).")
+        Log.d(STEP_TAG, "Click on 'Reset' search (X) icon and assert that all the people are displayed (5).")
         peopleListPage.searchable.clickOnClearSearchButton()
         peopleListPage.assertSearchResultCount(5)
 
+        Log.d(STEP_TAG, "Quit from searching and navigate to People List page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG, "Click on the 'Filter' icon on the top-right corner and select '${group.name}' group as a filter.")
+        peopleListPage.clickOnPeopleFilterMenu()
+        peopleListPage.selectFilter(listOf(group.name))
+
+        Log.d(STEP_TAG, "Assert that the filter title is the previously selected, '${group.name}' group.")
+        peopleListPage.assertFilterTitle(group.name)
+
+        Log.d(STEP_TAG, "Assert that only 1 person matches for the filter, and it is '${gradedStudent.name}', the graded student.")
+        peopleListPage.assertSearchResultCount(1)
+        peopleListPage.assertPersonListed(gradedStudent)
+
+        Log.d(STEP_TAG, "Clear the filter and assert that the list title became 'All People' and all the people are displayed again.")
+        peopleListPage.clickOnClearFilter()
+        sleep(1000) //Allow the clear filter process to propagate.
+        peopleListPage.assertFilterTitle("All People")
+        peopleListPage.assertSearchResultCount(5)
+
+        Log.d(STEP_TAG, "Click on the 'Filter' icon on the top-right corner and select '${group.name}' and '${group2.name}' groups as a filters.")
+        peopleListPage.clickOnPeopleFilterMenu()
+        peopleListPage.selectFilter(listOf(group.name, group2.name))
+
+        Log.d(STEP_TAG, "Assert that the filter title is the previously selected TWO groups: '${group.name}' and '${group2.name}'.")
+        //The order of how the filter title is generated is inconsistent, so we check both way if group1 is the leading and if group2.
+        try { peopleListPage.assertFilterTitle(group.name + ", " + group2.name) }
+        catch(e: AssertionError) { peopleListPage.assertFilterTitle(group2.name + ", " + group.name) }
+
+        Log.d(STEP_TAG, "Assert that only that 2 people matches for the filter, and they are '${gradedStudent.name}' and '${notGradedStudent.name}'.")
+        peopleListPage.assertSearchResultCount(2)
+        peopleListPage.assertPersonListed(gradedStudent)
+        peopleListPage.assertPersonListed(notGradedStudent)
+
+        Log.d(STEP_TAG, "Clear the filter and assert that the list title became 'All People' and all the people are displayed again.")
+        peopleListPage.clickOnClearFilter()
+        sleep(1000) //Allow the clear filter process to propagate.
+        peopleListPage.assertFilterTitle("All People")
+        peopleListPage.assertSearchResultCount(5)
+
         Log.d(STEP_TAG, "Navigate back to Dashboard Page. Click on the Inbox bottom menu. Assert that the 'All' section is empty.")
-        ViewUtils.pressBackButton(4)
+        ViewUtils.pressBackButton(2)
         dashboardPage.openInbox()
         inboxPage.assertInboxEmpty()
 
@@ -162,19 +214,4 @@ class PeopleE2ETest: TeacherTest() {
         inboxPage.assertHasConversation()
      }
 
-    private fun gradeSubmission(
-        teacher: CanvasUserApiModel,
-        course: CourseApiModel,
-        assignments: List<AssignmentApiModel>,
-        gradedStudent: CanvasUserApiModel
-    ) {
-        SubmissionsApi.gradeSubmission(
-            teacherToken = teacher.token,
-            courseId = course.id,
-            assignmentId = assignments[0].id,
-            studentId = gradedStudent.id,
-            postedGrade = "10",
-            excused = false
-        )
-    }
 }

@@ -16,12 +16,12 @@
  */
 package com.instructure.student.ui.interaction
 
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLoginElementary
@@ -34,7 +34,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testNavigateToElementaryDashboard() {
         // User should be able to tap and navigate to dashboard page
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
@@ -46,7 +46,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testTabsNavigation() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
@@ -70,7 +70,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.K5_DASHBOARD, TestCategory.INTERACTION)
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
     fun testOnlyElementarySpecificNavigationItemsShownInTheNavigationDrawer() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.openDrawer()

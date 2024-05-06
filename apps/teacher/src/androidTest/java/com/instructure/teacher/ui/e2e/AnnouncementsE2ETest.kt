@@ -19,21 +19,17 @@ package com.instructure.teacher.ui.e2e
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
-/**
- * Announcements e2e test
- *
- * @constructor Create empty Announcements e2e test
- */
+
 @HiltAndroidTest
 class AnnouncementsE2ETest : TeacherTest() {
 
@@ -44,10 +40,6 @@ class AnnouncementsE2ETest : TeacherTest() {
     //Because of naming conventions, we are using 'announcementDetailsPage' naming in this class to make the code more readable and straightforward.
     private val announcementDetailsPage = discussionsDetailsPage
 
-    /**
-     * Test announcements e2e
-     *
-     */
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.E2E)

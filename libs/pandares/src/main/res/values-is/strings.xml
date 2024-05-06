@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Vantar</string>
     <string name="gradedSubmissionLabel">Metið</string>
 
+    <string name="reminderTitle">Áminning</string>
+    <string name="reminderDescription">Bættu við áminningartilkynningum um skiladag um þetta verkefni á þessu tæki.</string>
+    <string name="a11y_addReminder">Bæta við áminningu</string>
+    <string name="a11y_removeReminder">Fjarlægja áminningu</string>
+    <string name="reminderBefore">%s áður</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 mínútu</item>
+        <item quantity="other">%d mínútur</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 klukkustund</item>
+        <item quantity="other">%d klukkustundir</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dag</item>
+        <item quantity="other">%d daga</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 viku</item>
+        <item quantity="other">%d vikur</item>
+    </plurals>
+    <string name="reminderCustom">Sérsnið</string>
+    <string name="customReminderTitle">Sérsniðin áminning</string>
+    <string name="customReminderQuantityHint">Magn</string>
+    <string name="customReminderMinutes">Mínútum áður</string>
+    <string name="customReminderHours">Klukkutímum áður</string>
+    <string name="customReminderDays">Dögum áður</string>
+    <string name="customReminderWeeks">Vikum áður</string>
+    <string name="reminderNotificationChannelName">Áminningartilkynningar</string>
+    <string name="reminderNotificationChannelDescription">Canvas Tilkynningar fyrir áminningar um verkefni.</string>
+    <string name="reminderNotificationTitle">Áminning um skiladag</string>
+    <string name="reminderNotificationDescription">Skiladagur þessa verkefnis er eftir %s: %s</string>
+    <string name="reminderInPast">Vinsamlegast veldu framtíðartíma fyrir áminningu þína!</string>
+    <string name="reminderAlreadySet">Þú hefur þegar sett áminningu fyrir þennan tíma</string>
+    <string name="deleteReminderTitle">Eyða áminningu</string>
+    <string name="deleteReminderMessage">Viltu örugglega eyða þessari áminningu?</string>
+    <string name="reminderPermissionNotGrantedError">Þú þarft að virkja nákvæmt viðvörunarleyfi fyrir þessa aðgerð</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Engin forskoðun tiltæk fyrir vefslóð sem nota \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Settu inn gilda vefslóð</string>
@@ -957,6 +994,8 @@
     <string name="inviteAccepted">Boð samþykkt!</string>
     <string name="inviteDeclined">Boði hafnað.</string>
     <string name="latePenalty">Viðurlög vegna of seinna skila(-%s)</string>
+    <string name="latePenaltyUpdated">Viðurlög vegna skila sem ekki berast í tæka tíð: -%s punktar</string>
+    <string name="yourGrade">Einkunn þín: %s punktar</string>
     <string name="finalGrade">Lokaeinkunn:</string>
 
     <string name="max_count">99+</string>
@@ -1410,6 +1449,21 @@
     <string name="offline_content_select_all">Velja allt</string>
     <string name="offline_content_deselect_all">Afvelja allt</string>
     <string name="offline_content_loading_error">Villa kom fram við að hlaða innihaldið.</string>
+    <string name="offline_content_empty_title">Engin námskeið</string>
+    <string name="offline_content_empty_message">Námskeiðin þín verða skráð hér og síðan geturðu gert þau aðgengileg til notkunar án nettengingar.</string>
+    <string name="offline_content_empty_course_title">Ekkert námskeiðsefni</string>
+    <string name="offline_content_empty_course_message">Efni námskeiðsins verður skráð hér og síðan geturðu gert það aðgengilegt til notkunar án nettengingar.</string>
+    <string name="offline_content_discard_dialog_title">Henda breytingum?</string>
+    <string name="offline_content_discard_dialog_message">Breytingarnar verða ekki vistaðar ef þú velur að henda.</string>
+    <string name="offline_content_discard_dialog_positive">Henda</string>
+    <string name="offline_content_sync_dialog_title">Samhæfa efni án nettengingar?</string>
+    <string name="offline_content_sync_dialog_message">Þetta mun samhæfa ~%s efni. Það getur leitt til viðbótargjalda frá gagnaveitunni þinni ef þú ert ekki tengd(ur) við Wi-Fi net.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Þetta mun eingöngu samhæfa ~%s efni á meðan þú ert tengd(ur) við Wi-Fi net.</string>
+    <string name="offline_content_sync_dialog_positive">Samhæfa</string>
+    <string name="offline_content_sync_loading_title">Hleður...</string>
+    <string name="offline_content_sync_loading_message">Bíddu við, við erum að gera hlutina tilbúna fyrir þig.</string>
+    <string name="content_description_expand_content">Víkka efni</string>
+    <string name="content_description_collapse_content">Fella saman efni</string>
     <string name="syncSettings_autoContentSyncDescription">Með því að virkja sjálfvirka samstillingu efnis mun hún sjá um að hlaða niður völdu efni byggt á stillingunum hér að neðan. Samstilling efnis mun gerast jafnvel þótt forritið sé ekki í gangi. Ef slökkt er á stillingunni mun engin samstilling eiga sér stað. Efni sem þegar hefur verið hlaðið niður verður ekki eytt.</string>
     <string name="syncSettings_syncFrequencyTitle">Samstillingartíðni</string>
     <string name="syncSettings_autoContentSyncTitle">Sjálfvirk samstilling efnis</string>
@@ -1452,7 +1506,6 @@
         <item quantity="one">%d námskeið er að samstillast.</item>
         <item quantity="other">%d námskeið eru að samstillast.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Myndir af innihaldi námskeiðs</string>
     <string name="assignmentNoLongerAvailable">Þetta verkefni er ekki lengur tiltækt.</string>
     <string name="editDashboardOfflineMode">Þú ert án nettengingar</string>
     <string name="editDashboardOfflineModeMessage">Þú ert ekki með nein námskeið sem eru í boði án nettengingar.</string>
@@ -1464,4 +1517,78 @@
         <item quantity="one">%d námskeið hefur verið samstillt.</item>
         <item quantity="other">%d námskeið hafa verið samstillt.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Viðbótar námskeiðsefni</string>
+    <string name="failedToUpdateDashboardOrder">Ekki tókst að uppfæra röð Skjáborðsspjalda</string>
+    <string name="publishAllModulesAndItems">Birta allt námsefni og atriði</string>
+    <string name="publishModulesOnly">Birta eingöngu námsefni</string>
+    <string name="unpublishAllModulesAndItems">Fela allt námsefni og atriði</string>
+    <string name="moduleOptions">Valkostir námsefnis</string>
+    <string name="publishModuleAndItems">Birta námsefni og öll atriði</string>
+    <string name="publishModuleOnly">Birta eingöngu námsefni</string>
+    <string name="unpublishModuleAndItems">Fela námsefni og öll atriði</string>
+    <string name="a11y_contentDescription_moduleOptions">Valkostir námsefnis fyrir %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Valkostir námsefnisatriðis fyrir %s</string>
+    <string name="publishModuleItem">Birta námsefnisatriði</string>
+    <string name="unpublishModuleItem">Fela námsefnisatriði</string>
+    <string name="publishDialogTitle">Birta?</string>
+    <string name="publishModuleDialogMessage">Þetta mun gera aðeins námsefnið sýnilegt nemendum.</string>
+    <string name="publishModuleAndItemsDialogMessage">Þetta mun gera námsefnið og öll atriði sýnileg nemendum.</string>
+    <string name="unpublishDialogTitle">Fela?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">Þetta mun gera námsefnið og öll atriði ósýnileg nemendum.</string>
+    <string name="publishModuleItemDialogMessage">Þetta mun aðeins gera þetta atriði sýnilegt nemendum.</string>
+    <string name="unpublishModuleItemDialogMessage">Þetta mun aðeins gera þetta atriði ósýnilegt nemendum.</string>
+    <string name="publishModulesAndItemsDialogMessage">Þetta mun gera allt námsefni og atriði sýnileg nemendum.</string>
+    <string name="publishModulesDialogMessage">Þetta mun aðeins gera námsefnið sýnilegar nemendum.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">Þetta mun gera allt námsefni og atriði ósýnileg nemendum.</string>
+    <string name="only_available_with_link">Eingöngu tiltækt með tengli</string>
+    <string name="schedule_availability">Áætla tiltækileika</string>
+    <string name="moduleItemPublished">Atriði birt</string>
+    <string name="moduleItemUnpublished">Atriði falið</string>
+    <string name="onlyModulePublished">Aðeins námsefni birt</string>
+    <string name="moduleAndAllItemsPublished">Námsefni og öll atriði birt</string>
+    <string name="moduleAndAllItemsUnpublished">Námsefni og öll atriði óbirt</string>
+    <string name="onlyModulesPublished">Aðeins námsefni birt</string>
+    <string name="allModulesAndAllItemsPublished">Allt námsefni og öll atriði birt</string>
+    <string name="allModulesAndAllItemsUnpublished">Allt námsefni og öll atriði falin</string>
+    <string name="inherit_from_course">Erft frá námskeiði</string>
+    <string name="course_members">Meðlimir námskeiðs</string>
+    <string name="institution_members">Meðlimir stofnunar</string>
+    <string name="public_title">Opinbert</string>
+    <string name="edit_permissions">Breyta aðgangsheimildum</string>
+    <string name="update">Uppfæra</string>
+    <string name="availability_title">Tiltækileiki</string>
+    <string name="visibility_title">Sýnileiki</string>
+    <string name="available_from">Tiltækt frá</string>
+    <string name="available_until">Tiltækt til</string>
+    <string name="from">Frá</string>
+    <string name="until">Þar til</string>
+    <string name="date">Dagsetning</string>
+    <string name="time">Tími</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Hreinsa frá dagsetningu</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Hreinsa til dagsetningu</string>
+    <string name="progressMessage">Þetta ferli getur tekið nokkrar mínútur. Þú getur lokað staðfestingarglugganum eða farið af síðunni meðan á þessu ferli stendur.</string>
+    <string name="noteTitle">Athugasemd</string>
+    <string name="allModules">Allt námsefni</string>
+    <string name="allModulesAndItems">Allt námsefni og atriði</string>
+    <string name="selectedModulesAndItems">Valið námsefni og atriði</string>
+    <string name="selectedModules">Valið námsefni</string>
+    <string name="publishing">Birtir</string>
+    <string name="unpublishing">Felur</string>
+    <string name="moduleBulkUpdateNote">Námsefni og atriði sem þegar hafa verið unnin verða ekki færð í fyrra ástand þegar ferlinu er hætt.</string>
+    <string name="success">Tókst!</string>
+    <string name="updateFailed">Uppfærsla mistókst</string>
+    <string name="updateCancelled">Hætt við uppfærslu</string>
+    <string name="a11y_hidden">Falið</string>
+    <string name="a11y_scheduled">Tímasett</string>
+    <string name="a11y_published">Birt</string>
+    <string name="a11y_unpublished">Falið</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f punktur</item>
+        <item quantity="other">%.0f punktar</item>
+    </plurals>
+    <string name="publishModuleItemAction">Birta</string>
+    <string name="unpublishModuleItemAction">Fela</string>
+    <string name="publishDialogPositiveButton">Birta</string>
+    <string name="unpublishDialogPositiveButton">Fela</string>
+    <string name="discussionMenuRefresh">Glæða</string>
 </resources>

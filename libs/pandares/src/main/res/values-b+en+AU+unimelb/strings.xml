@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">Missing</string>
     <string name="gradedSubmissionLabel">Graded</string>
 
+    <string name="reminderTitle">Reminder</string>
+    <string name="reminderDescription">Add due date reminder notifications about this assignment on this device.</string>
+    <string name="a11y_addReminder">Add reminder</string>
+    <string name="a11y_removeReminder">Remove reminder</string>
+    <string name="reminderBefore">%s Before</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 Minute</item>
+        <item quantity="other">%d Minutes</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 Hour</item>
+        <item quantity="other">%d Hours</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 Day</item>
+        <item quantity="other">%d Days</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 Week</item>
+        <item quantity="other">%d Weeks</item>
+    </plurals>
+    <string name="reminderCustom">Custom</string>
+    <string name="customReminderTitle">Custom Reminder</string>
+    <string name="customReminderQuantityHint">Quantity</string>
+    <string name="customReminderMinutes">Minutes Before</string>
+    <string name="customReminderHours">Hours Before</string>
+    <string name="customReminderDays">Days Before</string>
+    <string name="customReminderWeeks">Weeks Before</string>
+    <string name="reminderNotificationChannelName">Reminder Notifications</string>
+    <string name="reminderNotificationChannelDescription">Canvas Notifications for assignment reminders.</string>
+    <string name="reminderNotificationTitle">Due Date Reminder</string>
+    <string name="reminderNotificationDescription">This assignment is due in %s: %s</string>
+    <string name="reminderInPast">Please choose a future time for your reminder!</string>
+    <string name="reminderAlreadySet">You have already set a reminder for this time</string>
+    <string name="deleteReminderTitle">Delete Reminder</string>
+    <string name="deleteReminderMessage">Are you sure you would like to delete this reminder?</string>
+    <string name="reminderPermissionNotGrantedError">You need to enable exact alarm permission for this action</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
@@ -957,6 +994,8 @@
     <string name="inviteAccepted">Invite accepted!</string>
     <string name="inviteDeclined">Invite declined.</string>
     <string name="latePenalty">Late penalty (-%s)</string>
+    <string name="latePenaltyUpdated">Late Penalty: -%s pts</string>
+    <string name="yourGrade">Your Grade: %s pts</string>
     <string name="finalGrade">Final Grade</string>
 
     <string name="max_count">99+</string>
@@ -1410,6 +1449,21 @@
     <string name="offline_content_select_all">Select All</string>
     <string name="offline_content_deselect_all">Deselect All</string>
     <string name="offline_content_loading_error">An error occurred while loading the content.</string>
+    <string name="offline_content_empty_title">No Subjects</string>
+    <string name="offline_content_empty_message">Your subjects will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_empty_course_title">No Subject Content</string>
+    <string name="offline_content_empty_course_message">The subject content will be listed here, and then you can make them available for offline usage.</string>
+    <string name="offline_content_discard_dialog_title">Discard Changes?</string>
+    <string name="offline_content_discard_dialog_message">If you choose to discard, the changes will not be saved.</string>
+    <string name="offline_content_discard_dialog_positive">Discard</string>
+    <string name="offline_content_sync_dialog_title">Sync Offline Content?</string>
+    <string name="offline_content_sync_dialog_message">This will sync ~%s content. It may result in additional charges from your data provider if you are not connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">This will sync ~%s content only while you are connected to a Wi-Fi network.</string>
+    <string name="offline_content_sync_dialog_positive">Sync</string>
+    <string name="offline_content_sync_loading_title">Loading...</string>
+    <string name="offline_content_sync_loading_message">Hang tight, we\'re getting things ready for you.</string>
+    <string name="content_description_expand_content">Expand content</string>
+    <string name="content_description_collapse_content">Collapse content</string>
     <string name="syncSettings_autoContentSyncDescription">Enabling the Auto Content Sync will take care of downloading the selected content based on the below settings. The content synchronisation will happen even if the application is not running. If the setting is switched off, then no synchronisation will happen. The already downloaded content will not be deleted.</string>
     <string name="syncSettings_syncFrequencyTitle">Sync Frequency</string>
     <string name="syncSettings_autoContentSyncTitle">Auto Content Sync</string>
@@ -1452,7 +1506,6 @@
         <item quantity="one">%d subject is syncing.</item>
         <item quantity="other">%d subjects are syncing.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Subject content images</string>
     <string name="assignmentNoLongerAvailable">This assignment is no longer available.</string>
     <string name="editDashboardOfflineMode">You are offline</string>
     <string name="editDashboardOfflineModeMessage">You currently don\'t have any subjects that are available offline.</string>
@@ -1464,4 +1517,78 @@
         <item quantity="one">%d subject has been synced.</item>
         <item quantity="other">%d subjects have been synced.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Additional subject content</string>
+    <string name="failedToUpdateDashboardOrder">Failed to update Dashboard cards order</string>
+    <string name="publishAllModulesAndItems">Publish all Modules and Items</string>
+    <string name="publishModulesOnly">Publish Modules only</string>
+    <string name="unpublishAllModulesAndItems">Unpublish all Modules and Items</string>
+    <string name="moduleOptions">Module Options</string>
+    <string name="publishModuleAndItems">Publish Module and all Items</string>
+    <string name="publishModuleOnly">Publish Module only</string>
+    <string name="unpublishModuleAndItems">Unpublish Module and all Items</string>
+    <string name="a11y_contentDescription_moduleOptions">Module options for %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Module item options for %s</string>
+    <string name="publishModuleItem">Publish Module Item</string>
+    <string name="unpublishModuleItem">Unpublish Module Item</string>
+    <string name="publishDialogTitle">Publish?</string>
+    <string name="publishModuleDialogMessage">This will make only the module visible to students.</string>
+    <string name="publishModuleAndItemsDialogMessage">This will make the module and all items visible to students.</string>
+    <string name="unpublishDialogTitle">Unpublish?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">This will make the module and all items invisible to students.</string>
+    <string name="publishModuleItemDialogMessage">This will make only this item visible to students.</string>
+    <string name="unpublishModuleItemDialogMessage">This will make only this item invisible to students.</string>
+    <string name="publishModulesAndItemsDialogMessage">This will make all modules and items visible to students.</string>
+    <string name="publishModulesDialogMessage">This will make only the modules visible to students.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">This will make all modules and items invisible to students.</string>
+    <string name="only_available_with_link">Only available with link</string>
+    <string name="schedule_availability">Schedule availability</string>
+    <string name="moduleItemPublished">Item published</string>
+    <string name="moduleItemUnpublished">Item unpublished</string>
+    <string name="onlyModulePublished">Only Module published</string>
+    <string name="moduleAndAllItemsPublished">Module and all Items published</string>
+    <string name="moduleAndAllItemsUnpublished">Module and all Items unpublished</string>
+    <string name="onlyModulesPublished">Only Modules published</string>
+    <string name="allModulesAndAllItemsPublished">All Modules and all Items published</string>
+    <string name="allModulesAndAllItemsUnpublished">All Modules and all Items unpublished</string>
+    <string name="inherit_from_course">Inherit from Subject</string>
+    <string name="course_members">Subject Members</string>
+    <string name="institution_members">Institution Members</string>
+    <string name="public_title">Public</string>
+    <string name="edit_permissions">Edit Permissions</string>
+    <string name="update">Update</string>
+    <string name="availability_title">Availability</string>
+    <string name="visibility_title">Visibility</string>
+    <string name="available_from">Available From</string>
+    <string name="available_until">Available Until</string>
+    <string name="from">From</string>
+    <string name="until">Until</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Clear From Date</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Clear Until Date</string>
+    <string name="progressMessage">This process could take a few minutes. You may close the modal or navigate away from the page during this process.</string>
+    <string name="noteTitle">Note</string>
+    <string name="allModules">All Modules</string>
+    <string name="allModulesAndItems">All Modules and Items</string>
+    <string name="selectedModulesAndItems">Selected Modules and Items</string>
+    <string name="selectedModules">Selected Modules</string>
+    <string name="publishing">Publishing</string>
+    <string name="unpublishing">Unpublishing</string>
+    <string name="moduleBulkUpdateNote">Modules and items that have already been processed will not be reverted to their previous state when the process is discontinued.</string>
+    <string name="success">Success!</string>
+    <string name="updateFailed">Update failed</string>
+    <string name="updateCancelled">Update cancelled</string>
+    <string name="a11y_hidden">Hidden</string>
+    <string name="a11y_scheduled">Scheduled</string>
+    <string name="a11y_published">Published</string>
+    <string name="a11y_unpublished">Unpublished</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f pt</item>
+        <item quantity="other">%.0f pts</item>
+    </plurals>
+    <string name="publishModuleItemAction">Publish</string>
+    <string name="unpublishModuleItemAction">Unpublish</string>
+    <string name="publishDialogPositiveButton">Publish</string>
+    <string name="unpublishDialogPositiveButton">Unpublish</string>
+    <string name="discussionMenuRefresh">Refresh</string>
 </resources>

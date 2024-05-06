@@ -43,6 +43,7 @@ sealed class GradeCellViewState {
         val gradeCellContentDescription: String = "",
         val outOf: String = "",
         val outOfContentDescription: String = "",
+        val yourGrade: String = "",
         val latePenalty: String = "",
         val finalGrade: String = "",
         val stats: GradeStats? = null
@@ -132,8 +133,8 @@ sealed class GradeCellViewState {
                 )
             }
 
-            val score = NumberHelper.formatDecimal(submission.enteredScore, 2, true)
-            val graphPercent = (submission.enteredScore / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
+            val score = NumberHelper.formatDecimal(submission.score, 2, true)
+            val graphPercent = (submission.score / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
 
             // If grading type is Points, don't show the grade since we're already showing it as the score
             var grade = if (assignment.gradingType != Assignment.POINTS_TYPE) submission.grade.orEmpty() else ""
@@ -148,12 +149,15 @@ sealed class GradeCellViewState {
 
             var latePenalty = ""
             var finalGrade = ""
+            var yourGrade = ""
 
             // Adjust for late penalty, if any
-            if (submission.pointsDeducted ?: 0.0 > 0.0) {
+            if ((submission.pointsDeducted ?: 0.0) > 0.0) {
                 grade = "" // Grade will be shown in the 'final grade' text
                 val pointsDeducted = NumberHelper.formatDecimal(submission.pointsDeducted!!, 2, true)
-                latePenalty = context.getString(R.string.latePenalty, pointsDeducted)
+                val achievedScore = NumberHelper.formatDecimal(submission.enteredScore, 2, true)
+                yourGrade = context.getString(R.string.yourGrade, achievedScore)
+                latePenalty = context.getString(R.string.latePenaltyUpdated, pointsDeducted)
                 finalGrade = context.getString(R.string.finalGradeFormatted, submission.grade)
             }
 
@@ -190,6 +194,7 @@ sealed class GradeCellViewState {
                 grade = grade,
                 gradeContentDescription = accessibleGradeString,
                 gradeCellContentDescription = gradeCellContentDescription,
+                yourGrade = yourGrade,
                 latePenalty = latePenalty,
                 finalGrade = finalGrade,
                 stats = stats

@@ -30,6 +30,8 @@ class _$GradeCellData extends GradeCellData {
   @override
   final String outOf;
   @override
+  final String yourGrade;
+  @override
   final String latePenalty;
   @override
   final String finalGrade;
@@ -49,6 +51,7 @@ class _$GradeCellData extends GradeCellData {
       required this.grade,
       required this.gradeContentDescription,
       required this.outOf,
+      required this.yourGrade,
       required this.latePenalty,
       required this.finalGrade})
       : super._() {
@@ -70,6 +73,8 @@ class _$GradeCellData extends GradeCellData {
     BuiltValueNullFieldError.checkNotNull(
         gradeContentDescription, r'GradeCellData', 'gradeContentDescription');
     BuiltValueNullFieldError.checkNotNull(outOf, r'GradeCellData', 'outOf');
+    BuiltValueNullFieldError.checkNotNull(
+        yourGrade, r'GradeCellData', 'yourGrade');
     BuiltValueNullFieldError.checkNotNull(
         latePenalty, r'GradeCellData', 'latePenalty');
     BuiltValueNullFieldError.checkNotNull(
@@ -98,6 +103,7 @@ class _$GradeCellData extends GradeCellData {
         grade == other.grade &&
         gradeContentDescription == other.gradeContentDescription &&
         outOf == other.outOf &&
+        yourGrade == other.yourGrade &&
         latePenalty == other.latePenalty &&
         finalGrade == other.finalGrade;
   }
@@ -116,6 +122,7 @@ class _$GradeCellData extends GradeCellData {
     _$hash = $jc(_$hash, grade.hashCode);
     _$hash = $jc(_$hash, gradeContentDescription.hashCode);
     _$hash = $jc(_$hash, outOf.hashCode);
+    _$hash = $jc(_$hash, yourGrade.hashCode);
     _$hash = $jc(_$hash, latePenalty.hashCode);
     _$hash = $jc(_$hash, finalGrade.hashCode);
     _$hash = $jf(_$hash);
@@ -136,6 +143,7 @@ class _$GradeCellData extends GradeCellData {
           ..add('grade', grade)
           ..add('gradeContentDescription', gradeContentDescription)
           ..add('outOf', outOf)
+          ..add('yourGrade', yourGrade)
           ..add('latePenalty', latePenalty)
           ..add('finalGrade', finalGrade))
         .toString();
@@ -195,6 +203,10 @@ class GradeCellDataBuilder
   String? get outOf => _$this._outOf;
   set outOf(String? outOf) => _$this._outOf = outOf;
 
+  String? _yourGrade;
+  String? get yourGrade => _$this._yourGrade;
+  set yourGrade(String? yourGrade) => _$this._yourGrade = yourGrade;
+
   String? _latePenalty;
   String? get latePenalty => _$this._latePenalty;
   set latePenalty(String? latePenalty) => _$this._latePenalty = latePenalty;
@@ -221,6 +233,7 @@ class GradeCellDataBuilder
       _grade = $v.grade;
       _gradeContentDescription = $v.gradeContentDescription;
       _outOf = $v.outOf;
+      _yourGrade = $v.yourGrade;
       _latePenalty = $v.latePenalty;
       _finalGrade = $v.finalGrade;
       _$v = null;
@@ -264,6 +277,7 @@ class GradeCellDataBuilder
             grade: BuiltValueNullFieldError.checkNotNull(grade, r'GradeCellData', 'grade'),
             gradeContentDescription: BuiltValueNullFieldError.checkNotNull(gradeContentDescription, r'GradeCellData', 'gradeContentDescription'),
             outOf: BuiltValueNullFieldError.checkNotNull(outOf, r'GradeCellData', 'outOf'),
+            yourGrade: BuiltValueNullFieldError.checkNotNull(yourGrade, r'GradeCellData', 'yourGrade'),
             latePenalty: BuiltValueNullFieldError.checkNotNull(latePenalty, r'GradeCellData', 'latePenalty'),
             finalGrade: BuiltValueNullFieldError.checkNotNull(finalGrade, r'GradeCellData', 'finalGrade'));
     replace(_$result);

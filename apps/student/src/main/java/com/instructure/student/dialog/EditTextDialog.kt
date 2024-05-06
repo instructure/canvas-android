@@ -66,7 +66,14 @@ class EditTextDialog : AppCompatDialogFragment() {
 
         ViewStyler.themeEditText(requireContext(), binding.textInput, ThemePrefs.brandColor)
         binding.textInput.setText(mDefaultText)
-        binding.textInput.selectAll()
+
+        val endIndex = mDefaultText.lastIndexOf(".")
+        if (endIndex != -1) {
+            binding.textInput.setSelection(0, endIndex)
+        } else {
+            binding.textInput.selectAll()
+        }
+        binding.textInput.requestFocus()
 
         val dialog = AlertDialog.Builder(requireContext())
             .setCancelable(true)

@@ -145,7 +145,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
             hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
         onView(matcher).scrollTo().assertDisplayed()
-
     }
 
     fun assertConversationNotStarred(subject: String) {
@@ -154,9 +153,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
             hasSibling(withId(R.id.userName)),
             hasSibling(withId(R.id.date)),
             hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
-        waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
         onView(matcher).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
-
     }
 
     fun assertUnreadMarkerVisibility(conversation: Conversation, visibility: ViewMatchers.Visibility) {
@@ -192,7 +189,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
         }
     }
 
-        fun assertInboxEmpty() {
+    fun assertInboxEmpty() {
         waitForView(withId(R.id.emptyInboxView)).assertDisplayed()
     }
 
@@ -301,6 +298,10 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun assertEditToolbarIs(visibility: ViewMatchers.Visibility) {
         editToolbar.assertVisibility(visibility)
+    }
+
+    fun assertConversationSubject(expectedSubject: String) {
+        onView(withId(R.id.subjectView) + withText(expectedSubject) + withAncestor(R.id.inboxRecyclerView)).assertDisplayed()
     }
 
 }

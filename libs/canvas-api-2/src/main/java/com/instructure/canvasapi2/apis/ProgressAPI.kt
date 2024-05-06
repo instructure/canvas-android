@@ -32,6 +32,9 @@ object ProgressAPI {
 
         @GET("progress/{progressId}")
         suspend fun getProgress(@Path("progressId") progressId: String, @Tag params: RestParams): DataResult<Progress>
+
+        @POST("progress/{progressId}/cancel")
+        suspend fun cancelProgress(@Path("progressId") progressId: String, @Tag params: RestParams): DataResult<Progress>
     }
 
     fun getProgress(adapter: RestBuilder, params: RestParams, progressId: String, callback: StatusCallback<Progress>) {

@@ -67,6 +67,7 @@ class GradeCellView @JvmOverloads constructor(
                 pointsLabel.setVisible(state.showPointsLabel)
                 completeIcon.setVisible(state.showCompleteIcon)
                 incompleteIcon.setVisible(state.showIncompleteIcon)
+                yourGrade.setTextForVisibility(state.yourGrade)
                 latePenalty.setTextForVisibility(state.latePenalty)
                 finalGrade.setTextForVisibility(state.finalGrade)
                 grade.setTextForVisibility(state.grade)
@@ -75,7 +76,6 @@ class GradeCellView @JvmOverloads constructor(
                 outOf.contentDescription = state.outOfContentDescription
 
                 // Accent color
-                latePenalty.setTextColor(state.accentColor)
                 chart.setColor(state.accentColor)
                 completeIcon.imageTintList = ColorStateList.valueOf(state.accentColor)
                 incompleteIcon.imageTintList = ColorStateList.valueOf(state.accentColor)

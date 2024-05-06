@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">No presentado</string>
     <string name="gradedSubmissionLabel">Evaluado</string>
 
+    <string name="reminderTitle">Recordatorio</string>
+    <string name="reminderDescription">Añadir notificaciones para el recordatorio de la fecha de entrega sobre esta actividad en este dispositivo.</string>
+    <string name="a11y_addReminder">Añadir recordatorio</string>
+    <string name="a11y_removeReminder">Eliminar recordatorio</string>
+    <string name="reminderBefore">%s antes</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minuto</item>
+        <item quantity="other">%d minutos</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 hora</item>
+        <item quantity="other">%d horas</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 semana</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
+    <string name="reminderCustom">Personalizar</string>
+    <string name="customReminderTitle">Personalizar recordatorio</string>
+    <string name="customReminderQuantityHint">Cantidad</string>
+    <string name="customReminderMinutes">Minutos antes</string>
+    <string name="customReminderHours">Horas antes</string>
+    <string name="customReminderDays">Días antes</string>
+    <string name="customReminderWeeks">Semanas antes</string>
+    <string name="reminderNotificationChannelName">Recordar notificaciones</string>
+    <string name="reminderNotificationChannelDescription">Notificaciones de Canvas para los recordatorios de la actividad.</string>
+    <string name="reminderNotificationTitle">Recordatorio de la fecha de entrega</string>
+    <string name="reminderNotificationDescription">Esta actividad debe entregarse el %s: %s</string>
+    <string name="reminderInPast">¡Elige una hora posterior para tu recordatorio!</string>
+    <string name="reminderAlreadySet">Ya has configurado un recordatorio para esta hora</string>
+    <string name="deleteReminderTitle">Eliminar recordatorio</string>
+    <string name="deleteReminderMessage">¿Estás seguro de que quieres eliminar este recordatorio?</string>
+    <string name="reminderPermissionNotGrantedError">Necesitas habilitar el permiso de alarma exacta para realizar esta acción</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No hay vistas previas disponibles para las URL que usan \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Introduce una URL válida</string>
@@ -957,6 +994,8 @@
     <string name="inviteAccepted">Invitación aceptada.</string>
     <string name="inviteDeclined">Invitación rechazada.</string>
     <string name="latePenalty">Sanción por entrega con retraso (-%s)</string>
+    <string name="latePenaltyUpdated">Sanción por entrega con retraso: -%s puntos</string>
+    <string name="yourGrade">Tu puntuación: %s puntos</string>
     <string name="finalGrade">Nota final</string>
 
     <string name="max_count">99+</string>
@@ -1412,6 +1451,21 @@
     <string name="offline_content_select_all">Seleccionar todo</string>
     <string name="offline_content_deselect_all">Deseleccionar todo</string>
     <string name="offline_content_loading_error">Ha habido un error al cargar el contenido.</string>
+    <string name="offline_content_empty_title">No hay cursos</string>
+    <string name="offline_content_empty_message">Tus cursos aparecerán aquí y luego, podrás habilitarlos para utilizarlos sin conexión.</string>
+    <string name="offline_content_empty_course_title">No hay contenido del curso</string>
+    <string name="offline_content_empty_course_message">El contenido del curso aparecerá aquí y luego, podrás habilitarlo para utilizarlo sin conexión.</string>
+    <string name="offline_content_discard_dialog_title">¿Descartar los cambios?</string>
+    <string name="offline_content_discard_dialog_message">Si optas por descartar, los cambios no se guardarán.</string>
+    <string name="offline_content_discard_dialog_positive">Descartar</string>
+    <string name="offline_content_sync_dialog_title">¿Sincronizar contenido sin conexión?</string>
+    <string name="offline_content_sync_dialog_message">Esto sincronizará ~%s contenido. Si no estás conectado a una red wifi, es posible que tu proveedor de datos cobre cargos adicionales.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Esto sincronizará ~%s contenido, pero solo mientras estés conectado a una red wifi.</string>
+    <string name="offline_content_sync_dialog_positive">Sincronización</string>
+    <string name="offline_content_sync_loading_title">Cargando...</string>
+    <string name="offline_content_sync_loading_message">Ponte cómodo, estamos preparando todo para ti.</string>
+    <string name="content_description_expand_content">Expandir contenido</string>
+    <string name="content_description_collapse_content">Colapsar contenido</string>
     <string name="syncSettings_autoContentSyncDescription">Con la acción de habilitar la sincronización automática de contenidos, se descargará el contenido seleccionado según los siguientes ajustes. La sincronización del contenido se realizará incluso aunque la aplicación no esté en funcionamiento. Si los ajustes están apagados, no se realizará la sincronización. El contenido ya descargado no podrá eliminarse.</string>
     <string name="syncSettings_syncFrequencyTitle">Frecuencia de sincronización</string>
     <string name="syncSettings_autoContentSyncTitle">Sincronización automática del contenido</string>
@@ -1454,7 +1508,6 @@
         <item quantity="one">%d curso se está sincronizando.</item>
         <item quantity="other">%d cursos se están sincronizando.</item>
     </plurals>
-    <string name="syncProgressAdditionalFiles">Contenido de las imágenes del curso</string>
     <string name="assignmentNoLongerAvailable">Esta actividad ya no está disponible.</string>
     <string name="editDashboardOfflineMode">No tienes conexión</string>
     <string name="editDashboardOfflineModeMessage">Actualmente no tienes ningún curso disponible sin conexión.</string>
@@ -1466,4 +1519,78 @@
         <item quantity="one">%d curso se ha sincronizado.</item>
         <item quantity="other">%d cursos se han sincronizado.</item>
     </plurals>
+    <string name="syncProgressAdditionalCourseContent">Contenido del curso adicional</string>
+    <string name="failedToUpdateDashboardOrder">Error al actualizar el orden de las tarjetas en el cuadro de mando</string>
+    <string name="publishAllModulesAndItems">Publicar todos los módulos e ítems</string>
+    <string name="publishModulesOnly">Publicar solo módulos</string>
+    <string name="unpublishAllModulesAndItems">No publicar ni todos los módulos ni ítems</string>
+    <string name="moduleOptions">Opciones del módulo</string>
+    <string name="publishModuleAndItems">Publicar módulo y todos los ítems</string>
+    <string name="publishModuleOnly">Publicar solo el módulo</string>
+    <string name="unpublishModuleAndItems">No publicar ni el módulo ni todos los ítems</string>
+    <string name="a11y_contentDescription_moduleOptions">Opciones del módulo para %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Opciones de los ítems del módulo para %s</string>
+    <string name="publishModuleItem">Publicar el ítem del módulo</string>
+    <string name="unpublishModuleItem">No publicar el ítem del módulo</string>
+    <string name="publishDialogTitle">¿Publicar?</string>
+    <string name="publishModuleDialogMessage">Esto hará que solo el módulo sea visible para los estudiantes.</string>
+    <string name="publishModuleAndItemsDialogMessage">Esto hará que el módulo y todos los ítems sean visibles para los estudiantes.</string>
+    <string name="unpublishDialogTitle">¿No publicar?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">Esto hará que el módulo y todos los ítems sean invisibles para los estudiantes.</string>
+    <string name="publishModuleItemDialogMessage">Esto hará que solo este ítem sea visible para los estudiantes.</string>
+    <string name="unpublishModuleItemDialogMessage">Esto hará que solo este ítem sea invisible para los estudiantes.</string>
+    <string name="publishModulesAndItemsDialogMessage">Esto hará que todos los módulos e ítems sean visibles para los estudiantes.</string>
+    <string name="publishModulesDialogMessage">Esto hará que solo el módulo sea invisible para los estudiantes.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">Esto hará que todos los módulos e ítems sean invisibles para los estudiantes.</string>
+    <string name="only_available_with_link">Disponible solo con enlace</string>
+    <string name="schedule_availability">Programar la disponibilidad</string>
+    <string name="moduleItemPublished">Ítem publicado</string>
+    <string name="moduleItemUnpublished">Ítem no publicado</string>
+    <string name="onlyModulePublished">Solo módulo publicado</string>
+    <string name="moduleAndAllItemsPublished">Módulo y todos los ítems publicados</string>
+    <string name="moduleAndAllItemsUnpublished">Módulo y todos los ítems no publicados</string>
+    <string name="onlyModulesPublished">Solo módulos publicados</string>
+    <string name="allModulesAndAllItemsPublished">Todos los módulos y todos los ítems publicados</string>
+    <string name="allModulesAndAllItemsUnpublished">Todos los módulos y todos los ítems no publicados</string>
+    <string name="inherit_from_course">Heredar del curso</string>
+    <string name="course_members">Miembros del curso</string>
+    <string name="institution_members">Miembros de la institución</string>
+    <string name="public_title">Público</string>
+    <string name="edit_permissions">Editar permisos</string>
+    <string name="update">Actualizar</string>
+    <string name="availability_title">Disponibilidad</string>
+    <string name="visibility_title">Visibilidad</string>
+    <string name="available_from">Disponible desde</string>
+    <string name="available_until">Disponible hasta</string>
+    <string name="from">Desde</string>
+    <string name="until">Hasta</string>
+    <string name="date">Fecha</string>
+    <string name="time">Hora</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Borrar fecha desde</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Borrar fecha hasta</string>
+    <string name="progressMessage">Esto podría tardar unos minutos. Puede cerrar el modal o salir de la página durante este proceso.</string>
+    <string name="noteTitle">Nota</string>
+    <string name="allModules">Todos los contenidos</string>
+    <string name="allModulesAndItems">Todos los módulos e ítems</string>
+    <string name="selectedModulesAndItems">Módulos e ítems seleccionados</string>
+    <string name="selectedModules">Módulos seleccionados</string>
+    <string name="publishing">Publicando</string>
+    <string name="unpublishing">Cancelando publicación</string>
+    <string name="moduleBulkUpdateNote">Los módulos e ítems que ya se hayan procesado no volverán a su estado anterior cuando el proceso esté interrumpido.</string>
+    <string name="success">Hecho</string>
+    <string name="updateFailed">No se ha podido actualizar</string>
+    <string name="updateCancelled">Actualización cancelada</string>
+    <string name="a11y_hidden">Oculto</string>
+    <string name="a11y_scheduled">Programado</string>
+    <string name="a11y_published">Publicado</string>
+    <string name="a11y_unpublished">No publicado</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f punto</item>
+        <item quantity="other">%.0f puntos</item>
+    </plurals>
+    <string name="publishModuleItemAction">Publicar</string>
+    <string name="unpublishModuleItemAction">Cancelar publicación</string>
+    <string name="publishDialogPositiveButton">Publicar</string>
+    <string name="unpublishDialogPositiveButton">Cancelar publicación</string>
+    <string name="discussionMenuRefresh">Actualizar</string>
 </resources>

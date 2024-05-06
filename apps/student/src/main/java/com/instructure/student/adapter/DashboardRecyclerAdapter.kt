@@ -135,6 +135,8 @@ class DashboardRecyclerAdapter(
             val dashboardCards = repository.getDashboardCourses(isRefresh)
             val syncedCourseIds = repository.getSyncedCourseIds()
 
+            resetData()
+
             mCourseMap = courses.associateBy { it.id }
 
             // Map not null is needed because the dashboard api can return unpublished courses
@@ -158,10 +160,10 @@ class DashboardRecyclerAdapter(
 
             notifyDataSetChanged()
             isAllPagesLoaded = true
-            if (itemCount == 0) adapterToRecyclerViewCallback.setIsEmpty(true)
+            if (itemCount == 0) adapterToRecyclerViewCallback?.setIsEmpty(true)
             mAdapterToFragmentCallback.onRefreshFinished()
         } catch {
-            adapterToRecyclerViewCallback.setDisplayNoConnection(true)
+            adapterToRecyclerViewCallback?.setDisplayNoConnection(true)
             mAdapterToFragmentCallback.onRefreshFinished()
         }
     }

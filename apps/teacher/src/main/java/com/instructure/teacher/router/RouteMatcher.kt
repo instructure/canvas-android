@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.router
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.os.Bundle
@@ -49,8 +50,12 @@ import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentList
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.*
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
@@ -81,7 +86,54 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java))
 
+        routes.add(Route(courseOrGroup("/:course_id/modules/:module_id"), ModuleListFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"),
+                ModuleProgressionFragment::class.java
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                ModuleProgressionFragment::class.java,
+                null,
+                listOf(":${RouterParams.MODULE_ITEM_ID}")
+            )
+        )
+
         routes.add(Route(courseOrGroup("/:course_id/assignments"), AssignmentListFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:course_id/assignments/:assignment_id"),
+                AssignmentListFragment::class.java,
+                ModuleProgressionFragment::class.java
+            )
+        )
         routes.add(
             Route(
                 courseOrGroup("/:course_id/assignments/:assignment_id"),
@@ -92,9 +144,17 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/assignments/:assignment_id/submissions/:submission_id"), RouteContext.SPEED_GRADER))
 
         routes.add(Route(courseOrGroup("/:course_id/quizzes"), QuizListFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/quizzes/:quiz_id"), QuizListFragment::class.java, ModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/quizzes/:quiz_id"), QuizListFragment::class.java, QuizDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/discussion_topics"), DiscussionsListFragment::class.java))
+        routes.add(
+            Route(
+                courseOrGroup("/:course_id/discussion_topics/:message_id"),
+                DiscussionsListFragment::class.java,
+                ModuleProgressionFragment::class.java
+            )
+        )
         routes.add(
             Route(
                 courseOrGroup("/:course_id/discussion_topics/:message_id"),
@@ -113,11 +173,10 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/files/folder(\\/.*)*", RouteContext.FILE))
         routes.add(Route("/files/:${RouterParams.FILE_ID}", RouteContext.FILE)) // Triggered by new RCE content file links
         routes.add(Route("/files/:${RouterParams.FILE_ID}/download", RouteContext.FILE))
-
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
 
-        routes.add(Route(courseOrGroup("/:course_id/modules/:module_id"), ModuleListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/pages/"), PageListFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/pages/:page_id/"), PageListFragment::class.java, ModuleProgressionFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/pages/:page_id/"), PageListFragment::class.java, PageDetailsFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/wiki/"), PageListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/wiki/:page_id/"), PageListFragment::class.java, PageDetailsFragment::class.java))
@@ -145,6 +204,7 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(ViewHtmlFragment::class.java)
         fullscreenFragments.add(EditDashboardFragment::class.java)
         fullscreenFragments.add(CourseBrowserFragment::class.java)
+        fullscreenFragments.add(ModuleProgressionFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)
@@ -273,6 +333,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private fun handleFullscreenRoute(context: Context, route: Route) {
         Logger.i("RouteMatcher:handleFullscreenRoute()")
+        if (route.removePreviousScreen) (context as? Activity)?.finish()
         context.startActivity(FullscreenActivity.createIntent(context, route))
     }
 

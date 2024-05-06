@@ -19,6 +19,7 @@ package com.instructure.teacher.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.Toast
@@ -31,11 +32,19 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_UPDATE
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
@@ -53,9 +62,11 @@ import com.instructure.teacher.viewinterface.DiscussionsUpdateView
 
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}/edit")
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_UPDATE)
-class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresenter, DiscussionsUpdateView>(), DiscussionsUpdateView {
-
-    private val binding by viewBinding(FragmentDiscussionsEditBinding::bind)
+class DiscussionsUpdateFragment : BasePresenterFragment<
+        DiscussionsUpdatePresenter,
+        DiscussionsUpdateView,
+        FragmentDiscussionsEditBinding>(),
+    DiscussionsUpdateView {
 
     private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
     @get:PageViewUrlParam("topicId")
@@ -73,7 +84,7 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
 
-    override fun layoutResId(): Int = R.layout.fragment_discussions_edit
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentDiscussionsEditBinding = FragmentDiscussionsEditBinding::inflate
 
     override fun getPresenterFactory() = DiscussionsUpdatePresenterFactory(canvasContext, discussionTopicHeaderId, discussionEntry, discussionTopic)
 

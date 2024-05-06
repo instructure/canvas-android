@@ -26,14 +26,16 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.StubCoverage
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -91,7 +93,8 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the user's device
     // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @StubCoverage("Cannot init FileUploadWorker and OfflineSyncWorker")
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testUpload_deviceFile() {
         goToFilePicker()
 
@@ -120,7 +123,8 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the camera
     // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @StubCoverage("Cannot init FileUploadWorker and OfflineSyncWorker")
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testUpload_fileFromCamera() {
 
         goToFilePicker()
@@ -161,7 +165,8 @@ class UserFilesInteractionTest : StudentTest() {
     // Should be able to upload a file from the user's photo gallery
     // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION, false)
+    @StubCoverage("Cannot init FileUploadWorker and OfflineSyncWorker")
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testUpload_gallery() {
         goToFilePicker()
 
@@ -191,28 +196,28 @@ class UserFilesInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testView_previewAudio() {
         // Should be able to preview an audio file
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testView_previewVideo() {
         // Should be able to preview a video file
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testView_createDirectory() {
         // Should be able to create a directory and upload a file to that directory
     }
 
     @Stub
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.COMMON, FeatureCategory.FILES, TestCategory.INTERACTION)
     fun testView_previewImage() {
         // Should be able to preview an image file
     }
@@ -222,6 +227,9 @@ class UserFilesInteractionTest : StudentTest() {
     // Set up some rudimentary mock data, navigate to the file list page, then
     // initiate a file upload
     private fun goToFilePicker() : MockCanvas {
+
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+
         val data = MockCanvas.init(
                 courseCount = 1,
                 favoriteCourseCount = 1,

@@ -42,6 +42,7 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.lang.IllegalStateException
 import java.util.*
 
 @HiltWorker
@@ -127,7 +128,7 @@ class FileUploadWorker @AssistedInject constructor(
                         updateSubmissionComplete(notificationId)
                         attemptId = it.attempt
                         Result.success()
-                    } ?: Result.retry()
+                    } ?: throw IllegalStateException("Failed to attach file to submission")
                 }
                 ACTION_MESSAGE_ATTACHMENTS -> {
                     updateNotificationComplete(notificationId)

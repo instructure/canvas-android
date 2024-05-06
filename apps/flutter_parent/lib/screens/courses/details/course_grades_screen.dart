@@ -255,22 +255,25 @@ class _CourseGradeHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(L10n(context).courseTotalGradeLabel, style: textTheme.bodyMedium),
-          Text(_courseGrade(context, grade), style: textTheme.bodyMedium, key: Key("total_grade")),
+          Text(_courseGrade(context, grade, model.courseSettings?.restrictQuantitativeData ?? false), style: textTheme.bodyMedium, key: Key("total_grade")),
         ],
       ),
     );
   }
 
-  String _courseGrade(BuildContext context, CourseGrade grade) {
+  String _courseGrade(BuildContext context, CourseGrade grade, bool restrictQuantitativeData) {
     final format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
     if (grade.noCurrentGrade()) {
       return L10n(context).noGrade;
     } else {
+      var formattedScore = (grade.currentScore() != null && restrictQuantitativeData == false)
+          ? format.format(grade.currentScore()! / 100)
+          : '';
       return grade.currentGrade()?.isNotEmpty == true
-          ? grade.currentGrade()!
-          : format.format(grade.currentScore()! / 100); // format multiplies by 100 for percentages
+          ? "${grade.currentGrade()}${formattedScore.isNotEmpty ? ' $formattedScore' : ''}"
+          : formattedScore;
     }
   }
 }
@@ -375,7 +378,7 @@ class _AssignmentRow extends StatelessWidget {
 
     final submission = assignment.submission(studentId);
 
-    final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
+    final restrictQuantitativeData = course.settings?.restrictQuantitativeData ?? false;
 
     if (submission?.excused ?? false) {
       text = restrictQuantitativeData

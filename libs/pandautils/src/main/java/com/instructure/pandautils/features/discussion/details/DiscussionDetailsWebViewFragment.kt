@@ -75,7 +75,7 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.data.observe(viewLifecycleOwner) {
-            applyTheme(it.title)
+            setupToolbar(it.title)
         }
         setupFilePicker()
         binding.discussionWebView.addVideoClient(requireActivity())
@@ -91,22 +91,17 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 viewModel.setLoading(false)
-                binding.discussionSwipeRefreshLayout?.isRefreshing = false
             }
 
             override fun routeInternallyCallback(url: String) {
                 if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
-                    webViewRouter.routeInternally(url)
+                    webViewRouter.routeExternally(url)
                 }
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
                 return viewModel.data.value?.url?.substringBefore("?") != url.substringBefore("?")
             }
-        }
-
-        binding.discussionSwipeRefreshLayout.setOnRefreshListener {
-            binding.discussionWebView.reload()
         }
     }
 
@@ -148,9 +143,14 @@ class DiscussionDetailsWebViewFragment : Fragment() {
         }
     }
 
-    private fun applyTheme(title: String) = with(binding) {
+    private fun setupToolbar(title: String) = with(binding) {
         toolbar.title = title
         toolbar.setupAsBackButton(this@DiscussionDetailsWebViewFragment)
+        binding.toolbar.setMenu(R.menu.menu_discussion_details) {
+            when (it.itemId) {
+                R.id.refresh -> binding.discussionWebView.reload()
+            }
+        }
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 

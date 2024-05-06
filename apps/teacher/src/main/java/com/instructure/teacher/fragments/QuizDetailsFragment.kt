@@ -24,18 +24,32 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
@@ -46,10 +60,19 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.QuizDetailsPresenterFactory
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.presenters.QuizDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.anonymousSubmissionsDisplayable
+import com.instructure.teacher.utils.getColorCompat
+import com.instructure.teacher.utils.isPracticeOrUngraded
+import com.instructure.teacher.utils.isUngradedSurvey
+import com.instructure.teacher.utils.quizTypeDisplayable
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
+import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.shuffleAnswersDisplayable
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.QuizDetailsView
 import kotlinx.coroutines.Job
@@ -59,16 +82,16 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
-import java.util.*
+import java.util.Date
 
 @PageView
 @ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
 class QuizDetailsFragment : BasePresenterFragment<
         QuizDetailsPresenter,
-        QuizDetailsView>(),
-        QuizDetailsView, Identity {
-
-    private val binding by viewBinding(FragmentQuizDetailsBinding::bind)
+        QuizDetailsView,
+        FragmentQuizDetailsBinding>(),
+    QuizDetailsView,
+    Identity {
 
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -84,7 +107,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     @PageViewUrl
     fun makePageViewUrl() = "${ApiPrefs.fullDomain}/${course.contextId.replace("_", "s/")}/quizzes/${quizId}"
 
-    override fun layoutResId(): Int = R.layout.fragment_quiz_details
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentQuizDetailsBinding = FragmentQuizDetailsBinding::inflate
 
     override fun getPresenterFactory() = QuizDetailsPresenterFactory(course, quiz)
 

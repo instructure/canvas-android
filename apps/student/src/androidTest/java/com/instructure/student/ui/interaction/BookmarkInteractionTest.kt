@@ -16,16 +16,16 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addBookmark
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,7 +38,7 @@ class BookmarkInteractionTest : StudentTest() {
 
     // Test that we can create a bookmark via the UI and see it in the bookmark list
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION)
     fun testBookmark_create() {
         val data = init()
         val course = data.courses.values.first()
@@ -60,7 +60,7 @@ class BookmarkInteractionTest : StudentTest() {
 
     // Tests that we can click a bookmark and end up in the bookmarked location
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION)
     fun testBookmark_click() {
         val data = init()
         val student = data.students.first()
@@ -83,7 +83,7 @@ class BookmarkInteractionTest : StudentTest() {
 
     // Tests that we can change the name of a bookmark and still click through to the intended location
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION, false)
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.BOOKMARKS, TestCategory.INTERACTION)
     fun testBookmark_changeName() {
         val data = init()
         val student = data.students.first()
@@ -115,7 +115,7 @@ class BookmarkInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
         val token = data.tokenFor(student)!!
