@@ -274,7 +274,7 @@ class ScheduleInteractionTest : StudentTest() {
         try {
             schedulePage.assertTodayButtonDisplayed()
         } catch(e: AssertionFailedError) {
-            schedulePage.swipeDown()
+            schedulePage.swipeUp()
             schedulePage.assertTodayButtonDisplayed()
         }
         schedulePage.clickOnTodayButton()
