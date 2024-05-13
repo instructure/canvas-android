@@ -25,8 +25,6 @@ open class TestAppManager : BaseAppManager() {
     var workerFactory: WorkerFactory? = null
 
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory?.let {
-            it
-        } ?: WorkerFactory.getDefaultWorkerFactory()
+        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
     }
 }

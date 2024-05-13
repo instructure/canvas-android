@@ -17,9 +17,7 @@
 package com.instructure.teacher.ui.utils
 
 import android.app.Activity
-import android.util.Log
 import android.view.View
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers
@@ -32,7 +30,6 @@ import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.ui.espresso.TeacherHiltTestApplication_Application
 import com.instructure.teacher.ui.pages.AboutPage
 import com.instructure.teacher.ui.pages.AddMessagePage
 import com.instructure.teacher.ui.pages.AnnouncementsListPage
@@ -88,12 +85,8 @@ import com.instructure.teacher.ui.pages.SyllabusPage
 import com.instructure.teacher.ui.pages.TodoPage
 import com.instructure.teacher.ui.pages.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.WebViewLoginPage
-import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
-import org.junit.Before
-import org.junit.Rule
-import javax.inject.Inject
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -103,26 +96,6 @@ abstract class TeacherTest : CanvasTest() {
     override val isTesting = BuildConfig.IS_TESTING
 
     val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    @get:Rule(order = 0)
-    var hiltRule = HiltAndroidRule(this)
-
-    @Before
-    fun baseSetup() {
-        try {
-            hiltRule.inject()
-        } catch (e: IllegalStateException) {
-            // Catch this exception to avoid multiple injection
-            Log.w("Test Inject", e.message ?: "")
-        }
-
-        val originalActivity = activityRule.activity
-        val application = originalActivity.application as? TeacherHiltTestApplication_Application
-        application?.workerFactory = workerFactory
-    }
 
     /**
      * Required for auto complete of page objects within tests

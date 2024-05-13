@@ -20,6 +20,8 @@ package com.instructure.canvasapi2
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Bundle
+import androidx.work.Configuration
+import androidx.work.WorkerFactory
 import com.google.firebase.FirebaseApp
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasAuthError
@@ -32,7 +34,12 @@ import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import retrofit2.Response
 
-abstract class AppManager : Application() {
+abstract class AppManager : Application(), Configuration.Provider {
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setWorkerFactory(getWorkManagerFactory())
+            .build()
 
     @SuppressLint("MissingPermission")
     override fun onCreate() {
@@ -93,5 +100,7 @@ abstract class AppManager : Application() {
     }
 
     abstract fun performLogoutOnAuthError()
+
+    abstract fun getWorkManagerFactory(): WorkerFactory
 
 }

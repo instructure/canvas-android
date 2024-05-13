@@ -20,8 +20,6 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import androidx.work.Configuration
-import androidx.work.WorkerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.heapanalytics.android.config.Options
@@ -42,12 +40,7 @@ import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import com.zynksoftware.documentscanner.ui.DocumentScanner
 
-abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling, Configuration.Provider {
-
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(getWorkManagerFactory())
-            .build()
+abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
 
     override fun onCreate() {
         super.onCreate()
@@ -136,6 +129,4 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
     }
 
     override fun performLogoutOnAuthError() = Unit
-
-    abstract fun getWorkManagerFactory(): WorkerFactory
 }

@@ -78,6 +78,7 @@ android {
 }
 
 dependencies {
+    implementation project(':pandautils')
     // last update: Sept 30 2017
     // old versions: $ANDROID_HOME/extras/android/m2repository/com/android/support/test/
     // new versions: https://maven.google.com
@@ -160,7 +161,14 @@ dependencies {
     kapt Libs.HILT_COMPILER
     implementation Libs.HILT_TESTING
     kapt Libs.HILT_TESTING_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
 
+    implementation Libs.COMPOSE_UI_TEST_MANIFEST
+    implementation Libs.COMPOSE_UI_TEST
+    implementation Libs.COMPOSE_UI
+
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 }
 
 
