@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages.compose
 
-import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -30,22 +29,7 @@ import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextReplacement
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
-import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.getText
-import androidx.test.espresso.web.webdriver.Locator
-import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.pandautils.R
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.Matchers
 
 class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
