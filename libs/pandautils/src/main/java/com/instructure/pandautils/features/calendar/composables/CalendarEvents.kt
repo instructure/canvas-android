@@ -117,9 +117,15 @@ fun CalendarEvents(
             }
 
             if (page >= settledPage - 1 && page <= settledPage + 1 && !calendarEventsPageUiState.loading) {
-                CalendarEventsPage(calendarEventsPageUiState = calendarEventsPageUiState, actionHandler, Modifier.testTag("calendarEventsPage"))
+                CalendarEventsPage(
+                    calendarEventsPageUiState = calendarEventsPageUiState,
+                    actionHandler,
+                    modifier = Modifier.testTag("CalendarEventsPage$monthOffset")
+                )
             } else {
-                Loading(modifier = Modifier.fillMaxSize())
+                Loading(modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("Loading$monthOffset"))
             }
         }
     )

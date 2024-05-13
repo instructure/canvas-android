@@ -42,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -181,7 +182,8 @@ private fun ToDoContent(
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = toDoUiState.title,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp)
+                    .testTag("title"),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 22.sp
             )
@@ -206,7 +208,7 @@ private fun ToDoContent(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = toDoUiState.date,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp).testTag("date"),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp
             )
@@ -223,7 +225,7 @@ private fun ToDoContent(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = toDoUiState.description,
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp).testTag("description"),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )

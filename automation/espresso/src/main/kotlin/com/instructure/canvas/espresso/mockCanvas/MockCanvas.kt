@@ -2153,3 +2153,22 @@ fun MockCanvas.addTodo(name: String, userId: Long, courseId: Long? = null, date:
     todos.add(todo)
     return todo
 }
+
+fun MockCanvas.addPlannable(name: String, userId: Long, course: Course? = null, date: Date? = null, details: String? = null, type: PlannableType): PlannerItem {
+    val todo = PlannerItem(
+        course?.id,
+        null,
+        userId,
+        null,
+        course?.name,
+        plannableType = type,
+        Plannable(newItemId(), name, course?.id, null, userId, null, date, null, date.toApiString(), null, null, details, null),
+        date ?: Date(),
+        null,
+        null,
+        null
+    )
+
+    todos.add(todo)
+    return todo
+}
