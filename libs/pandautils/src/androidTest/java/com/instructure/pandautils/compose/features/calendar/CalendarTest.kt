@@ -26,9 +26,7 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarStateMapper
@@ -68,7 +66,6 @@ class CalendarTest {
             )
         }
 
-        composeTestRule.onRoot().printToLog("TAG")
         val yearMonthTitle = composeTestRule.onNodeWithTag("yearMonthTitle")
         yearMonthTitle
             .assertIsDisplayed()
