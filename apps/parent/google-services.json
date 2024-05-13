@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "191083992402",
+    "firebase_url": "https://automatic-rite-88319.firebaseio.com",
+    "project_id": "automatic-rite-88319",
+    "storage_bucket": "automatic-rite-88319.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191083992402:android:8a7bd8d8b983d164",
+        "android_client_info": {
+          "package_name": "com.instructure.parentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "191083992402-79d43thnnronh43i8iaamlr4co8ra1tr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAdiKSwd7FObebkZdxkiM8EMQh572kPIU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
