@@ -27,13 +27,13 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.parentapp.R
@@ -70,9 +70,6 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(setOf(R.id.courses, R.id.calendar, R.id.alerts), drawerLayout)
 
-        val toolbar = binding.toolbar
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-
         val navView = binding.navView
         navView.setNavigationItemSelectedListener {
             closeNavigationDrawer()
@@ -87,7 +84,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                else -> NavigationUI.onNavDestinationSelected(it, navController)
+                else -> {
+                    navController.navigate(it.itemId)
+                    true
+                }
             }
         }
         val header = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
@@ -103,6 +103,10 @@ class MainActivity : AppCompatActivity() {
                 else -> binding.bottomNav.hide()
             }
         }
+    }
+
+    private fun openNavigationDrawer() {
+        binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
     private fun closeNavigationDrawer() {
@@ -137,6 +141,21 @@ class MainActivity : AppCompatActivity() {
             header.navHeaderName.text = Pronouns.span(it.shortName, it.pronouns)
             header.navHeaderEmail.text = it.primaryEmail
             ProfileUtils.loadAvatarForUser(header.navHeaderImage, it.shortName, it.avatarUrl)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            closeNavigationDrawer()
+            return
+        }
+
+        // supportFragmentManager.fragments.last() is always the NavHostFragment
+        val topFragment = supportFragmentManager.fragments.last().childFragmentManager.fragments.last()
+        if (topFragment is NavigationCallbacks && topFragment.onHandleBackPressed()) {
+            return
+        } else {
+            super.onBackPressed()
         }
     }
 

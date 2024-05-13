@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.utils.setupAsBackButton
 import org.greenrobot.eventbus.Subscribe
 
 
@@ -33,7 +34,9 @@ class ParentInboxRouter(private val activity: FragmentActivity, private val frag
     }
 
     override fun attachNavigationIcon(toolbar: Toolbar) {
-        // TODO: Implement
+        toolbar.setupAsBackButton {
+            activity.onBackPressed()
+        }
     }
 
     override fun routeToNewMessage() {
