@@ -196,7 +196,6 @@ fun CanvasTest.tokenLogin(domain: String, token: String, user: User) {
             ViewMatchers.isDisplayed()
         )
     )
-//    dashboardPage.assertPageObjects()
 }
 
 fun StudentTest.tokenLoginElementary(domain: String, token: String, user: User) {
