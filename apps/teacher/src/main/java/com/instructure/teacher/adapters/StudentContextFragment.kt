@@ -282,9 +282,11 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
 
                 val studentSubmission = GradeableStudentSubmission(StudentAssignee(user), null)
                 val bundle = SpeedGraderActivity.makeBundle(
-                    course.id.toLongOrNull() ?: 0,
-                    submission.assignment?.id?.toLongOrNull() ?: 0,
-                    listOf(studentSubmission), 0)
+                    courseId = course.id.toLongOrNull() ?: 0,
+                    assignmentId = submission.assignment?.id?.toLongOrNull() ?: 0,
+                    anonymousGrading = false,
+                    filteredSubmissionIds = longArrayOf(studentSubmission.id),
+                    selectedIdx = 0)
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
             binding.submissionListContainer.addView(view)
