@@ -83,6 +83,7 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpda
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -99,6 +100,8 @@ internal fun CreateUpdateEventScreenWrapper(
     actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     CanvasTheme {
         if (uiState.selectFrequencyUiState.customFrequencyUiState.show) {
             CustomFrequencyScreen(
@@ -114,7 +117,11 @@ internal fun CreateUpdateEventScreenWrapper(
                 uiState = uiState.selectCalendarUiState,
                 onCalendarSelected = {
                     actionHandler(CreateUpdateEventAction.UpdateCanvasContext(it))
-                    actionHandler(CreateUpdateEventAction.HideSelectCalendarScreen)
+                    coroutineScope.launch {
+                        // We need to add this delay to give the user some feedback about the selection before closing the screen
+                        delay(100)
+                        actionHandler(CreateUpdateEventAction.HideSelectCalendarScreen)
+                    }
                 },
                 navigationActionClick = {
                     actionHandler(CreateUpdateEventAction.HideSelectCalendarScreen)
