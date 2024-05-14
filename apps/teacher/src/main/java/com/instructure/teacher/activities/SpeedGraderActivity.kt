@@ -98,7 +98,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
     private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable(Const.DISCUSSION_HEADER) }
     private val anonymousGrading: Boolean? by lazy { intent.extras?.getBoolean(Const.ANONYMOUS_GRADING) }
-    private val filteredSubmissionIds: LongArray by lazy { intent.extras!!.getLongArray(FILTERED_SUBMISSION_IDS) ?: longArrayOf() }
+    private val filteredSubmissionIds: LongArray by lazy { intent.extras?.getLongArray(FILTERED_SUBMISSION_IDS) ?: longArrayOf() }
     private val filter: SubmissionListFilter by lazy {
         intent.extras!!.getSerializable(
             FILTER
