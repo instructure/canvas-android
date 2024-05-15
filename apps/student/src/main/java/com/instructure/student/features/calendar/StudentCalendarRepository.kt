@@ -60,13 +60,13 @@ class StudentCalendarRepository(
     override suspend fun getCanvasContexts(): DataResult<Map<CanvasContext.Type, List<CanvasContext>>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)
 
-        val coursesResult = coursesApi.getFirstPageCourses(params)
+        val coursesResult = coursesApi.getFirstPageCoursesCalendar(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
         if (coursesResult.isFail) return DataResult.Fail()
 
         val courses = (coursesResult as DataResult.Success).data
-        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
+        val validCourses = courses.filter { !it.accessRestrictedByDate && it.hasActiveEnrollment() }
 
         val groupsResult = groupsApi.getFirstPageGroups(params)
             .depaginate { nextUrl -> groupsApi.getNextPageGroups(nextUrl, params) }

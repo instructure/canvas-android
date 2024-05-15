@@ -42,7 +42,7 @@ class TeacherCreateUpdateEventRepositoryTest {
 
     @Test
     fun `Get contexts returns the user only if course request is failed`() = runTest {
-        coEvery { coursesApi.getFirstPageCoursesTeacher(any()) } returns DataResult.Fail()
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Fail()
 
         val result = repository.getCanvasContexts()
 
@@ -61,7 +61,7 @@ class TeacherCreateUpdateEventRepositoryTest {
                 enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE, type = Enrollment.EnrollmentType.Student))
             )
         )
-        coEvery { coursesApi.getFirstPageCoursesTeacher(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { apiPrefs.user } returns User(1, "Test User")
 
         val canvasContextsResults = repository.getCanvasContexts()

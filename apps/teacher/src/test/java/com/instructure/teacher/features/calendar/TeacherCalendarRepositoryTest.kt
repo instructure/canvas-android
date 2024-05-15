@@ -132,7 +132,7 @@ class TeacherCalendarRepositoryTest {
 
     @Test
     fun `Get contexts return failed results and don't request groups if course request is failed`() = runTest {
-        coEvery { coursesApi.getFirstPageCoursesTeacher(any()) } returns DataResult.Fail()
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Fail()
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
 
@@ -142,7 +142,7 @@ class TeacherCalendarRepositoryTest {
     @Test
     fun `Get contexts adds user context and returns it with courses when course request is successful`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
-        coEvery { coursesApi.getFirstPageCoursesTeacher(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { apiPrefs.user } returns User(1, "Test User")
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
