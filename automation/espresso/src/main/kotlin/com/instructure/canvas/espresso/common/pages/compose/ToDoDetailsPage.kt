@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvas.espresso.common.page
+package com.instructure.canvas.espresso.common.pages.compose
 
 import android.content.Context
 import androidx.compose.ui.graphics.Color

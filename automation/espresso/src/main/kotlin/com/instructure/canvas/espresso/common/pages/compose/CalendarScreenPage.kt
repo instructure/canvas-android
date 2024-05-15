@@ -14,21 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.ui.pages.compose
+package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.filter
-import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.pandautils.R
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 
 class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePage() {

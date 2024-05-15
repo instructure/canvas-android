@@ -18,7 +18,7 @@ package com.instructure.teacher.ui
 import android.app.Activity
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.performClick
-import com.instructure.canvas.espresso.common.ToDoDetailsInteractionTest
+import com.instructure.canvas.espresso.common.interaction.ToDoDetailsInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.espresso.InstructureActivityTestRule

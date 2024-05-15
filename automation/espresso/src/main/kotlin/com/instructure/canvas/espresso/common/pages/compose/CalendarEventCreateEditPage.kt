@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.ui.pages.compose
+package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -23,12 +23,32 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import androidx.test.espresso.web.assertion.WebViewAssertions
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withId
+import com.instructure.pandautils.R
+import org.hamcrest.Matchers
 
 class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertTitle(title: String) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
+    }
+
+    fun verifyDescription(description: String) {
+        Web.onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
+            .withElement(DriverAtoms.findElement(Locator.ID, "content"))
+            .check(
+                WebViewAssertions.webMatches(
+                    DriverAtoms.getText(),
+                    Matchers.comparesEqualTo(description)
+                )
+            )
     }
 
     fun typeTitle(title: String) {

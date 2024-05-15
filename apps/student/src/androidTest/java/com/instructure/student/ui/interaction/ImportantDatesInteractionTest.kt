@@ -123,8 +123,8 @@ class ImportantDatesInteractionTest : StudentComposeTest() {
 
         //Opening the calendar event
         importantDatesPage.clickImportantDatesItem(event.title!!)
-        calendarEventPage.assertTitle(event.title!!)
-        calendarEventPage.verifyDescription(event.description!!)
+        calendarEventCreateEditPage.assertTitle(event.title!!)
+        calendarEventCreateEditPage.verifyDescription(event.description!!)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(event.startDate))
     }
 

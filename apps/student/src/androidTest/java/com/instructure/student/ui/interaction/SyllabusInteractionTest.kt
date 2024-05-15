@@ -55,8 +55,8 @@ class SyllabusInteractionTest : StudentComposeTest() {
         syllabusPage.selectSummaryTab()
         syllabusPage.assertItemDisplayed(event.title!!)
         syllabusPage.selectSummaryEvent(event.title!!)
-        calendarEventPage.assertTitle(event.title!!)
-        calendarEventPage.verifyDescription(event.description!!)
+        calendarEventCreateEditPage.assertTitle(event.title!!)
+        calendarEventCreateEditPage.verifyDescription(event.description!!)
     }
 
     private fun goToSyllabus(eventCount: Int, assignmentCount: Int) : MockCanvas {

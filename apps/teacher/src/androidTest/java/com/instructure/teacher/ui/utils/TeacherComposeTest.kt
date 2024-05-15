@@ -19,11 +19,12 @@
 package com.instructure.teacher.ui.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.ui.pages.compose.CalendarEventCreateEditPage
 import com.instructure.teacher.ui.pages.ProgressPage
-import com.instructure.teacher.ui.pages.compose.CalendarEventDetailsPage
-import com.instructure.teacher.ui.pages.compose.CalendarScreenPage
+
 import org.junit.Rule
 
 abstract class TeacherComposeTest : TeacherTest() {
