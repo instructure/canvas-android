@@ -29,8 +29,11 @@ import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
+import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
@@ -45,6 +48,17 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
 
     fun assertEventDetailsPageTitle() {
         composeTestRule.onNodeWithText("Event").assertIsDisplayed()
+    }
+
+    fun verifyDescription(description: String) {
+        Web.onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
+            .withElement(DriverAtoms.findElement(Locator.ID, "content"))
+            .check(
+                WebViewAssertions.webMatches(
+                    DriverAtoms.getText(),
+                    Matchers.comparesEqualTo(description)
+                )
+            )
     }
 
     fun assertEventTitle(title: String) {

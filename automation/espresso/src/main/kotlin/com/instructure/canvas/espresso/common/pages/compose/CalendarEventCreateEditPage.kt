@@ -40,17 +40,6 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
     }
 
-    fun verifyDescription(description: String) {
-        Web.onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
-            .withElement(DriverAtoms.findElement(Locator.ID, "content"))
-            .check(
-                WebViewAssertions.webMatches(
-                    DriverAtoms.getText(),
-                    Matchers.comparesEqualTo(description)
-                )
-            )
-    }
-
     fun typeTitle(title: String) {
         composeTestRule.onNodeWithTag("addTitleField").assertExists().performTextReplacement(title)
         composeTestRule.waitForIdle()
