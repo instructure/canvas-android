@@ -134,7 +134,7 @@ fun CalendarScreen(
                 ) {
                     Column {
                         Calendar(calendarScreenUiState.calendarUiState, actionHandler, Modifier.fillMaxWidth())
-                        CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler)
+                        CalendarEvents(calendarScreenUiState.calendarEventsUiState, actionHandler, Modifier.testTag("calendarEvents"))
                     }
                 }
             },

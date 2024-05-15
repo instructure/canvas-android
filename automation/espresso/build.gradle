@@ -78,7 +78,11 @@ android {
 }
 
 dependencies {
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
+
     implementation project(':pandautils')
+
     // last update: Sept 30 2017
     // old versions: $ANDROID_HOME/extras/android/m2repository/com/android/support/test/
     // new versions: https://maven.google.com
