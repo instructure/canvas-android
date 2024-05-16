@@ -23,7 +23,6 @@ import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Plannable
-import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
@@ -34,7 +33,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
-import java.time.OffsetDateTime
 
 @ExperimentalCoroutinesApi
 class CreateUpdateToDoRepositoryTest {
@@ -48,7 +46,7 @@ class CreateUpdateToDoRepositoryTest {
 
     @Test
     fun `Returns empty list when request fails`() = runTest {
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Fail()
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Fail()
 
         val courses = createUpdateToDoRepository.getCourses()
 
@@ -56,15 +54,13 @@ class CreateUpdateToDoRepositoryTest {
     }
 
     @Test
-    fun `Returns courses filtered by enrollment state and term`() = runTest {
-        val endDate = OffsetDateTime.now().minusDays(1).withNano(0).toString()
+    fun `Returns courses filtered by enrollment state`() = runTest {
         val courses = listOf(
             Course(id = 1),
-            Course(id = 2, term = Term(1, endAt = endDate), enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),
             Course(id = 3, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE)))
         )
 
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
 
         val result = createUpdateToDoRepository.getCourses()
 
@@ -76,7 +72,7 @@ class CreateUpdateToDoRepositoryTest {
         val courses1 = listOf(Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         val courses2 = listOf(Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
 
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses1, linkHeaders = LinkHeaders(nextUrl = "next"))
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses1, linkHeaders = LinkHeaders(nextUrl = "next"))
         coEvery { coursesApi.next("next", any()) } returns DataResult.Success(courses2)
 
         val result = createUpdateToDoRepository.getCourses()

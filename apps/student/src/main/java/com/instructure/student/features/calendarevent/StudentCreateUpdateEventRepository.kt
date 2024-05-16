@@ -39,11 +39,11 @@ class StudentCreateUpdateEventRepository(
     override suspend fun getCanvasContexts(): List<CanvasContext> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = false)
 
-        val coursesResult = coursesApi.getFirstPageCourses(params)
+        val coursesResult = coursesApi.getFirstPageCoursesCalendar(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
         val courses = coursesResult.dataOrNull.orEmpty()
-        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
+        val validCourses = courses.filter { !it.accessRestrictedByDate && it.hasActiveEnrollment() }
 
         val groupsResult = groupsApi.getFirstPageGroups(params)
             .depaginate { nextUrl -> groupsApi.getNextPageGroups(nextUrl, params) }

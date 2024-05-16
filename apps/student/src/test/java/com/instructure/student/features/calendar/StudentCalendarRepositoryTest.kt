@@ -103,7 +103,7 @@ class StudentCalendarRepositoryTest {
 
     @Test
     fun `Get contexts return failed results and don't request groups if course request is failed`() = runTest {
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Fail()
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Fail()
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
 
@@ -114,7 +114,7 @@ class StudentCalendarRepositoryTest {
     @Test
     fun `Get contexts returns only courses if group request is failed`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Fail()
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
@@ -127,7 +127,7 @@ class StudentCalendarRepositoryTest {
     @Test
     fun `Get contexts adds user context when course request is successful`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Fail()
         coEvery { apiPrefs.user } returns User(1, "Test User")
 
@@ -143,7 +143,7 @@ class StudentCalendarRepositoryTest {
     fun `Get contexts returns courses and groups if successful`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
         val groups = listOf(Group(id = 63, courseId = 44, name = "First group"))
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
@@ -164,7 +164,7 @@ class StudentCalendarRepositoryTest {
             Course(11) // no active enrollment
         )
         val groups = listOf(Group(id = 63, courseId = 44, name = "First group"))
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
@@ -181,7 +181,7 @@ class StudentCalendarRepositoryTest {
             Group(id = 63, courseId = 44, name = "First group"),
             Group(id = 63, courseId = 33, name = "First group"), // Invalid course id
         )
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()

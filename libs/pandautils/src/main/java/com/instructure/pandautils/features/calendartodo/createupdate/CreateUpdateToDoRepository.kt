@@ -32,13 +32,13 @@ class CreateUpdateToDoRepository(
 ) {
     suspend fun getCourses(): List<Course> {
         val params = RestParams()
-        return coursesApi.getFirstPageCourses(params)
+        return coursesApi.getFirstPageCoursesCalendar(params)
             .depaginate { nextUrl ->
                 coursesApi.next(nextUrl, params)
             }
             .map {
                 it.filter { course ->
-                    course.isValidTerm() && course.hasActiveEnrollment()
+                    !course.accessRestrictedByDate && course.hasActiveEnrollment()
                 }
             }
             .dataOrNull
