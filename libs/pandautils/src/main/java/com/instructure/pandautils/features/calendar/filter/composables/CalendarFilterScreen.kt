@@ -15,7 +15,6 @@
  */
 package com.instructure.pandautils.features.calendar.filter.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Checkbox
@@ -54,6 +52,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.ListHeaderItem
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
@@ -150,7 +149,7 @@ private fun CalendarFiltersContent(
         }
         if (uiState.courses.isNotEmpty()) {
             item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
-                HeaderItem(text = stringResource(id = R.string.calendarFilterCourse))
+                ListHeaderItem(text = stringResource(id = R.string.calendarFilterCourse))
             }
             items(uiState.courses, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
                 CalendarFilterItem(course, actionHandler, Modifier.fillMaxWidth())
@@ -158,7 +157,7 @@ private fun CalendarFiltersContent(
         }
         if (uiState.groups.isNotEmpty()) {
             item(key = GROUPS_KEY, contentType = HEADER_CONTENT_TYPE) {
-                HeaderItem(text = stringResource(id = R.string.calendarFilterGroup))
+                ListHeaderItem(text = stringResource(id = R.string.calendarFilterGroup))
             }
             items(uiState.groups, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { group ->
                 CalendarFilterItem(group, actionHandler, Modifier.fillMaxWidth())
@@ -192,21 +191,6 @@ private fun CalendarFilterItem(
         )
         Text(uiState.name, color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
     }
-}
-
-@Composable
-private fun HeaderItem(text: String, modifier: Modifier = Modifier) {
-    Text(
-        text,
-        fontSize = 14.sp,
-        color = colorResource(id = R.color.textDark),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(54.dp)
-            .background(colorResource(id = R.color.backgroundLight))
-            .padding(horizontal = 16.dp)
-            .wrapContentHeight(align = Alignment.CenterVertically)
-    )
 }
 
 @Composable
