@@ -34,8 +34,10 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.ViewUtils
 import com.instructure.espresso.retry
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
 import com.instructure.teacher.ui.utils.seedAssignments
@@ -114,6 +116,20 @@ class SpeedGraderE2ETest : TeacherTest() {
         assignmentDetailsPage.openNotSubmittedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(noSubStudent)
         Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Click on 'View All Submission' arrow icon.")
+        assignmentDetailsPage.viewAllSubmission()
+
+        Log.d(STEP_TAG, "Click on '${student.name}' student's avatar and assert if it's navigating to the Student Context Page.")
+        assignmentSubmissionListPage.clickOnStudentAvatar(student.name)
+        studentContextPage.assertDisplaysStudentInfo(student)
+        studentContextPage.assertDisplaysCourseInfo(course)
+        studentContextPage.assertStudentGrade("--")
+        studentContextPage.assertStudentSubmission("1")
+        studentContextPage.assertSectionNameView(PersonContextPage.UserRole.STUDENT)
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page.")
+        ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG,"Open 'Graded' submissions and assert that the submission of '${gradedStudent.name}' student is displayed. Navigate back.")
         assignmentDetailsPage.openGradedSubmissions()
