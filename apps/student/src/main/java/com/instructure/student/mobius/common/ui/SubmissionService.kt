@@ -48,13 +48,16 @@ import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.ChannelSource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.threeten.bp.OffsetDateTime
 import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SubmissionService : IntentService(SubmissionService::class.java.simpleName) {
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
@@ -135,7 +138,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         }
     }
 
-    private fun uploadMedia(db: StudentDb, submission: com.instructure.student.Submission) {
+    private fun uploadMedia(db: com.instructure.student.db.StudentDb, submission: com.instructure.student.Submission) {
         showProgressNotification(submission.assignmentName, submission.id)
 
         // Upload file

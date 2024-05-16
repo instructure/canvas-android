@@ -145,6 +145,7 @@ import com.instructure.student.navigation.AccountMenuItem
 import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.NavigationMenuItem
 import com.instructure.student.navigation.OptionsMenuItem
+import com.instructure.student.room.StudentDb
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -176,6 +177,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
     private lateinit var canvasLoadingBinding: LoadingCanvasViewBinding
+
+    @Inject
+    lateinit var studentDb: StudentDb
 
     @Inject
     lateinit var navigationBehavior: NavigationBehavior
@@ -307,6 +311,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
+        lifecycleScope.launch {
+            val pending = studentDb.pendingSubmissionCommentDao().findAll()
+            Logger.d("Pending submission comments: $pending")
+        }
     }
 
     private fun checkAppUpdates() {

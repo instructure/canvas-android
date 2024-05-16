@@ -5,8 +5,9 @@ import androidx.room.Room
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.appDatabaseMigrations
 import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.studentDbMigrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +29,15 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideSqlDelightDatabase(@ApplicationContext context: Context): StudentDb {
+    fun provideSqlDelightDatabase(@ApplicationContext context: Context): com.instructure.student.db.StudentDb {
         return Db.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStudentDb(@ApplicationContext context: Context): StudentDb {
+        return Room.databaseBuilder(context, StudentDb::class.java, "student.db")
+            .addMigrations(*studentDbMigrations)
+            .build()
     }
 }
