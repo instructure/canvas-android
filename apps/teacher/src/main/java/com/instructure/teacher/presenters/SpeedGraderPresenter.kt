@@ -56,6 +56,7 @@ class SpeedGraderPresenter(
     private var submissionId: Long,
     private var discussion: DiscussionTopicHeader?,
     private val repository: AssignmentSubmissionRepository,
+    private val filteredSubmissionIds: LongArray,
     private val filter: SubmissionListFilter,
     private val filterValue: Double
 ) : Presenter<SpeedGraderView> {
@@ -146,6 +147,10 @@ class SpeedGraderPresenter(
                 val submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(course.id, assignment.id, submissionId, it, false) }
                 val user = awaitApi<User> { UserManager.getUser(submissionId, it, false) }
                 submissions = listOf(GradeableStudentSubmission(StudentAssignee(user), submission))
+            }
+
+            if (filteredSubmissionIds.isNotEmpty()) {
+                submissions = submissions.filter { it.id in filteredSubmissionIds }
             }
 
             mView?.onDataSet(assignment, submissions)

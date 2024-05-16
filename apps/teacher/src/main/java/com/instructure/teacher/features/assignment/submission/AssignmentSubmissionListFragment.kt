@@ -151,12 +151,12 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
                 val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
                 val bundle = SpeedGraderActivity.makeBundle(
-                    course.id,
-                    assignment.id,
-                    selectedIdx,
-                    assignment.anonymousGrading,
-                    presenter.getFilter(),
-                    presenter.getFilterPoints()
+                    courseId = course.id,
+                    assignmentId = assignment.id,
+                    selectedIdx = selectedIdx,
+                    anonymousGrading = assignment.anonymousGrading,
+                    filter = presenter.getFilter(),
+                    filterValue = presenter.getFilterPoints()
                 )
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }
