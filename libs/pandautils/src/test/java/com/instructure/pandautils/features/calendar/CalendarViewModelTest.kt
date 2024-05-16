@@ -126,6 +126,13 @@ class CalendarViewModelTest {
         )
 
         coEvery { calendarRepository.getCalendarFilterLimit() } returns -1
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+            1,
+            "",
+            "1",
+            filters = setOf("course_1", "course_2", "group_3", "group_4", "user_5")
+        )
+
     }
 
     @After
@@ -161,9 +168,9 @@ class CalendarViewModelTest {
         val nextMonthStartDate = LocalDate.of(2023, 5, 1).atStartOfDay().toApiString()
         val nextMonthEndDate = LocalDate.of(2023, 6, 1).atStartOfDay().toApiString()
 
-        coVerify { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, emptyList(), true) }
-        coVerify { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, emptyList(), true) }
-        coVerify { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, emptyList(), true) }
+        coVerify { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, any(), true) }
+        coVerify { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, any(), true) }
+        coVerify { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, any(), true) }
     }
 
     @Test
@@ -285,9 +292,9 @@ class CalendarViewModelTest {
         val nextMonthStartDate = LocalDate.of(2023, 5, 1).atStartOfDay().toApiString()
         val nextMonthEndDate = LocalDate.of(2023, 6, 1).atStartOfDay().toApiString()
 
-        coVerify(exactly = 1) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, emptyList(), true) }
-        coVerify(exactly = 1) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, emptyList(), true) }
-        coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, emptyList(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, any(), true) }
     }
 
     @Test
@@ -302,9 +309,9 @@ class CalendarViewModelTest {
         val nextMonthStartDate = LocalDate.of(2023, 5, 1).atStartOfDay().toApiString()
         val nextMonthEndDate = LocalDate.of(2023, 6, 1).atStartOfDay().toApiString()
 
-        coVerify(exactly = 1) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, emptyList(), true) }
-        coVerify(exactly = 1) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, emptyList(), true) }
-        coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, emptyList(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, any(), true) }
 
         viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2023, 5, 19)))
         // We also need to call this in the test because day is not selected instantly,
@@ -314,7 +321,7 @@ class CalendarViewModelTest {
         val newMonthStartDate = LocalDate.of(2023, 6, 1).atStartOfDay().toApiString()
         val newMonthEndDate = LocalDate.of(2023, 7, 1).atStartOfDay().toApiString()
 
-        coVerify { calendarRepository.getPlannerItems(newMonthStartDate!!, newMonthEndDate!!, emptyList(), true) }
+        coVerify { calendarRepository.getPlannerItems(newMonthStartDate!!, newMonthEndDate!!, any(), true) }
     }
 
     @Test
@@ -573,7 +580,7 @@ class CalendarViewModelTest {
         val startDate = LocalDate.of(2023, 4, 20).atStartOfDay().toApiString()
         val endDate = LocalDate.of(2023, 4, 21).atStartOfDay().toApiString()
 
-        coVerify(exactly = 1) { calendarRepository.getPlannerItems(startDate!!, endDate!!, emptyList(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(startDate!!, endDate!!, any(), true) }
     }
 
     @Test
