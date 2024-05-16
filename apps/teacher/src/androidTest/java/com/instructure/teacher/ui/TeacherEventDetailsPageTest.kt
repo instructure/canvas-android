@@ -15,11 +15,9 @@
  */
 package com.instructure.teacher.ui
 
-import android.app.Activity
-import com.instructure.canvas.espresso.common.interaction.ToDoDetailsInteractionTest
+import com.instructure.canvas.espresso.common.interaction.EventDetailsInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.DashboardPage
@@ -28,27 +26,27 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 
 @HiltAndroidTest
-class TeacherToDoDetailsPageTest : ToDoDetailsInteractionTest() {
+class TeacherEventDetailsPageTest : EventDetailsInteractionTest() {
 
-    override val activityRule: InstructureActivityTestRule<out Activity> = TeacherActivityTestRule(LoginActivity::class.java)
+    override val activityRule = TeacherActivityTestRule(LoginActivity::class.java)
 
     override val isTesting = BuildConfig.IS_TESTING
 
-    val dashboardPage = DashboardPage()
+    private val dashboardPage = DashboardPage()
 
     override fun displaysPageObjects() = Unit
 
-    override fun goToToDoDetails(data: MockCanvas) {
+    override fun goToEventDetails(data: MockCanvas) {
         val teacher = data.teachers[0]
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
 
         dashboardPage.openCalendar()
 
-        val todo = data.todos.first()
+        val event = data.courseCalendarEvents.values.first().first()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.clickOnItem(todo.plannable.title)
+        calendarScreenPage.clickOnItem(event.title!!)
     }
 
     override fun initData(): MockCanvas {

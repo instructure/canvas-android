@@ -117,8 +117,7 @@ internal fun EventScreen(
                     contentColor = Color.White,
                     navigationActionClick = {
                         navigationAction()
-                    },
-                    modifier = modifier.testTag("canvasThemedAppBar")
+                    }
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },

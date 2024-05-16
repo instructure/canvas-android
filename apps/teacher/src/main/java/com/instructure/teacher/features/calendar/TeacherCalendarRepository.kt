@@ -21,12 +21,11 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.toPlannerItems
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
@@ -143,61 +142,6 @@ class TeacherCalendarRepository(
                     plannerOverride = null
                 )
             }
-        }
-    }
-}
-
-private fun List<ScheduleItem>.toPlannerItems(type: PlannableType): List<PlannerItem> {
-    return mapNotNull {
-        val plannableType = if (type == PlannableType.ASSIGNMENT) {
-            when {
-                it.assignment?.getSubmissionTypes()
-                    ?.contains(Assignment.SubmissionType.DISCUSSION_TOPIC) == true -> PlannableType.DISCUSSION_TOPIC
-
-                it.assignment?.getSubmissionTypes()?.contains(Assignment.SubmissionType.ONLINE_QUIZ) == true -> PlannableType.QUIZ
-                else -> PlannableType.ASSIGNMENT
-            }
-        } else {
-            type
-        }
-        val plannableDate = if (type == PlannableType.ASSIGNMENT) it.assignment?.dueDate else it.startDate
-        val plannableId = if (plannableType == PlannableType.DISCUSSION_TOPIC && it.assignment?.discussionTopicHeader?.id != null) {
-            it.assignment?.discussionTopicHeader?.id!!
-        } else {
-            it.id
-        } // Plannable id is the discussion id for the students so we make this the same for the teachers as well.
-
-        if (plannableDate == null) {
-            null
-        } else {
-            PlannerItem(
-                if (it.courseId != -1L) it.courseId else null,
-                if (it.groupId != -1L) it.groupId else null,
-                if (it.userId != -1L) it.userId else null,
-                it.contextType?.apiString,
-                it.contextName,
-                plannableType,
-                Plannable(
-                    plannableId,
-                    it.title.orEmpty(),
-                    it.courseId,
-                    it.groupId,
-                    it.userId,
-                    null,
-                    if (type == PlannableType.ASSIGNMENT) it.assignment?.dueDate else null,
-                    it.assignment?.id,
-                    null,
-                    it.startDate,
-                    it.endDate,
-                    it.description,
-                    it.isAllDay
-                ),
-                plannableDate,
-                it.htmlUrl,
-                null,
-                null,
-                null,
-            )
         }
     }
 }

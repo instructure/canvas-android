@@ -18,6 +18,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvas.espresso.CanvasComposeTest
+import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.ToDoDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPlannable
@@ -29,6 +30,7 @@ import java.util.Date
 
 abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
 
+    val calendarScreenPage = CalendarScreenPage(composeTestRule)
     private val toDoDetailsPage = ToDoDetailsPage(composeTestRule)
 
     @Test

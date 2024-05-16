@@ -42,6 +42,7 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.toDate
+import com.instructure.pandautils.utils.orDefault
 import okio.Buffer
 
 /**
@@ -101,19 +102,42 @@ object ApiEndpoint : Endpoint(
     ),
     Segment("groups") to GroupsEndpoint,
     Segment("calendar_events") to Endpoint(
+        LongId(PathVars::eventId) to Endpoint(
+            response = {
+                GET {
+                    val event = data.courseCalendarEvents.values.flatten().find { it.id == pathVars.eventId }
+                    if (event != null) {
+                        request.successResponse(event)
+                    } else {
+                        request.unauthorizedResponse()
+                    }
+                }
+                DELETE {
+                    val event = data.courseCalendarEvents.values.flatten().find { it.id == pathVars.eventId }
+                    if (event != null) {
+                        data.courseCalendarEvents[event.courseId]?.remove(event)
+                        request.successResponse(event)
+                    } else {
+                        request.unauthorizedResponse()
+                    }
+                }
+            }
+        ),
         Segment("") to Endpoint( // Our call has an extra "/" at the end, thus the blank segment
             response = {
                 GET {
-                    val contextCodes = request.url.queryParameter("context_codes[]")
+                    val contextCodes = request.url.queryParameterValues("context_codes[]")
                     // TODO: Assumes that the context prefix is "course".  We may need to support other possibilities.
-                    val courseId = contextCodes?.substringAfter("_")?.toLong()
+                    val courseIds = contextCodes
+                        .filter { it?.startsWith("course_").orDefault() }
+                        .map { it?.substringAfter("course_")?.toLong() }
                     val eventType = request.url.queryParameter("type") ?: "event"
-                    if (courseId != null) {
+                    if (courseIds.isNotEmpty()) {
                         val events = when (eventType) {
                             "assignment" -> data
                                 .assignments
                                 .values
-                                .filter { a -> a.courseId == courseId }
+                                .filter { a -> a.courseId in courseIds }
                                 .map { a ->
                                     ScheduleItem(
                                         title = a.name,
@@ -124,8 +148,7 @@ object ApiEndpoint : Endpoint(
                                 }
 
                             // default handler assumes "event" event type
-                            else -> data.courseCalendarEvents[courseId]
-                                ?: mutableListOf<ScheduleItem>()
+                            else -> data.courseCalendarEvents.filter { it.key in courseIds }.values.flatten()
                         }
                         request.successResponse(events)
                     } else {

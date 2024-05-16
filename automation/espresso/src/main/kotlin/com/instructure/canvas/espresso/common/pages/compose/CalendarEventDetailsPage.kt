@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2024 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  *
  */
 package com.instructure.canvas.espresso.common.pages.compose
@@ -20,20 +20,15 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onChildren
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
-import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
@@ -51,14 +46,18 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
     }
 
     fun verifyDescription(description: String) {
-        Web.onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
-            .withElement(DriverAtoms.findElement(Locator.ID, "content"))
+        onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
+            .withElement(findElement(Locator.ID, "content"))
             .check(
-                WebViewAssertions.webMatches(
-                    DriverAtoms.getText(),
+                webMatches(
+                    getText(),
                     Matchers.comparesEqualTo(description)
                 )
             )
+    }
+
+    fun assertEventCalendar(calendar: String) {
+        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText(calendar))).assertIsDisplayed()
     }
 
     fun assertEventTitle(title: String) {
@@ -100,10 +99,7 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
     }
 
     fun clickOverflowMenu() {
-        composeTestRule.waitForIdle()
-        val canvasThemedAppBar = composeTestRule.onNodeWithTag("canvasThemedAppBar").assertIsDisplayed()
-        canvasThemedAppBar.onChildren().filterToOne(hasContentDescription("More options")).performClick()
-        composeTestRule.waitForIdle()
+        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("More options"))).performClick()
     }
 
     fun clickEditMenu() {
@@ -120,5 +116,4 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
         composeTestRule.onNodeWithText("Delete").performClick()
         composeTestRule.waitForIdle()
     }
-
 }

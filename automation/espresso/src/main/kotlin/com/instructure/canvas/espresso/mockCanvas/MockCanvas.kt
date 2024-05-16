@@ -620,22 +620,38 @@ fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdat
     user?.permissions = CanvasContextPermission(canUpdateAvatar = canUpdateAvatar, canUpdateName = canUpdateName)
 }
 
-fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: String, description: String, isImportantDate: Boolean = false) : ScheduleItem {
+fun MockCanvas.addCourseCalendarEvent(
+    courseId: Long,
+    date: String,
+    title: String,
+    description: String,
+    isImportantDate: Boolean = false,
+    rrule: String? = null,
+    location: String? = null,
+    address: String? = null
+): ScheduleItem {
     val newScheduleItem = ScheduleItem(
-            itemId = newItemId().toString(),
-            title = title,
-            description = description,
-            itemType = ScheduleItem.Type.TYPE_CALENDAR,
-            isAllDay = true,
-            allDayAt = date,
-            startAt = date,
-            contextCode = "course_$courseId",
-            importantDates = isImportantDate
+        itemId = newItemId().toString(),
+        title = title,
+        description = description,
+        itemType = ScheduleItem.Type.TYPE_CALENDAR,
+        isAllDay = true,
+        allDayAt = date,
+        startAt = date,
+        endAt = date,
+        contextCode = "course_$courseId",
+        contextName = "Course $courseId",
+        importantDates = isImportantDate,
+        rrule = rrule,
+        seriesNaturalLanguage = rrule,
+        locationName = location,
+        locationAddress = address,
+        workflowState = "active"
     )
 
     var calendarEventList = courseCalendarEvents[courseId]
-    if(calendarEventList == null) {
-        calendarEventList = mutableListOf<ScheduleItem>()
+    if (calendarEventList == null) {
+        calendarEventList = mutableListOf()
         courseCalendarEvents[courseId] = calendarEventList
     }
     calendarEventList.add(newScheduleItem)
