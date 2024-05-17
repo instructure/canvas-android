@@ -87,7 +87,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         goToEventDetails(data)
 
         composeTestRule.waitForIdle()
-        evenDetailsPage.assertEventDate(DateHelper.getFormattedDate(activityRule.activity, event.endDate)!!)
+        evenDetailsPage.assertEventDateContains(DateHelper.getFormattedDate(activityRule.activity, event.endDate)!!)
     }
 
     @Test

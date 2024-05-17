@@ -150,6 +150,9 @@ class MockCanvas {
     /** Map of course ids to course calendar events */
     val courseCalendarEvents = mutableMapOf<Long, MutableList<ScheduleItem>>()
 
+    /** Map of user ids to user calendar events */
+    val userCalendarEvents = mutableMapOf<Long, MutableList<ScheduleItem>>()
+
     /** Map of enrollment id to enrollment object */
     val enrollments = mutableMapOf<Long, Enrollment>()
 
@@ -655,6 +658,45 @@ fun MockCanvas.addCourseCalendarEvent(
         courseCalendarEvents[courseId] = calendarEventList
     }
     calendarEventList.add(newScheduleItem)
+
+    return newScheduleItem
+}
+
+fun MockCanvas.addUserCalendarEvent(
+    userId: Long,
+    date: String,
+    title: String,
+    description: String,
+    isImportantDate: Boolean = false,
+    rrule: String? = null,
+    location: String? = null,
+    address: String? = null
+): ScheduleItem {
+    val newScheduleItem = ScheduleItem(
+        itemId = newItemId().toString(),
+        title = title,
+        description = description,
+        itemType = ScheduleItem.Type.TYPE_CALENDAR,
+        isAllDay = true,
+        allDayAt = date,
+        startAt = date,
+        endAt = date,
+        contextCode = "user_$userId",
+        contextName = "User $userId",
+        importantDates = isImportantDate,
+        rrule = rrule,
+        seriesNaturalLanguage = rrule,
+        locationName = location,
+        locationAddress = address,
+        workflowState = "active"
+    )
+
+    var eventList = userCalendarEvents[userId]
+    if (eventList == null) {
+        eventList = mutableListOf()
+        userCalendarEvents[userId] = eventList
+    }
+    eventList.add(newScheduleItem)
 
     return newScheduleItem
 }

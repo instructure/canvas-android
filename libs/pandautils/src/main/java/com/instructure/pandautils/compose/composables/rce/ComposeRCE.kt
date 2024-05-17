@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -204,7 +205,8 @@ fun ComposeRCE(
             modifier = Modifier
                 .nestedScroll(rememberNestedScrollInteropConnection())
                 .height(280.dp)
-                .padding(top = 8.dp),
+                .padding(top = 8.dp)
+                .testTag("rce"),
             factory = {
                 rceTextEditor
             },

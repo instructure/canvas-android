@@ -80,7 +80,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Assert that the event title is '$newEventTitle' and the date is the current day (and current year).")
         calendarEventDetailsPage.assertEventTitle(newEventTitle)
         currentDate += ", " + Year.now().toString()
-        calendarEventDetailsPage.assertEventDate(currentDate)
+        calendarEventDetailsPage.assertEventDateContains(currentDate)
 
         Log.d(STEP_TAG, "Assert that neither the 'Location' and 'Address' sections are not displayed since they are not filled.")
         calendarEventDetailsPage.assertLocationNotDisplayed()

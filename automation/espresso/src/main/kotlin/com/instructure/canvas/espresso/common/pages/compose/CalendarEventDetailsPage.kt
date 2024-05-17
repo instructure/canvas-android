@@ -64,7 +64,7 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
         composeTestRule.onNode(hasTestTag("eventTitle") and hasText(title)).assertIsDisplayed()
     }
 
-    fun assertEventDate(date: String) {
+    fun assertEventDateContains(date: String) {
         composeTestRule.onNode(hasTestTag("eventDate")).assertTextContains(date, substring = true)
     }
 

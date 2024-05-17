@@ -91,6 +91,10 @@ object UserEndpoint : Endpoint(
                         .flatten()
                         .toPlannerItems(PlannableType.CALENDAR_EVENT)
 
+                    val userEvents = data.userCalendarEvents[userId]
+                        .orEmpty()
+                        .toPlannerItems(PlannableType.CALENDAR_EVENT)
+
                     // Gather our assignments
                     // Currently we assume all the assignments are due today
                     val plannerItemsList = data.assignments.values
@@ -103,6 +107,7 @@ object UserEndpoint : Endpoint(
                         }
                         .plus(todos)
                         .plus(events)
+                        .plus(userEvents)
 
                     request.successResponse(plannerItemsList)
                 }

@@ -15,8 +15,6 @@
  */
 package com.instructure.student.ui.interaction
 
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.performClick
 import com.instructure.canvas.espresso.common.interaction.CreateUpdateEventInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
@@ -38,18 +36,31 @@ class StudentCreateUpdateEventInteractionTest : CreateUpdateEventInteractionTest
 
     override fun displaysPageObjects() = Unit
 
-    override fun goToEventDetails(data: MockCanvas) {
+    override fun goToCreateEvent(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
 
         dashboardPage.clickCalendarTab()
 
-        val event = data.courseCalendarEvents.values.first().first()
-
-        //TODO: Update when the CalendarPage is ready
         composeTestRule.waitForIdle()
-        composeTestRule.onNode(hasText(event.title!!)).performClick()
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddEvent()
+    }
+
+    override fun goToEditEvent(data: MockCanvas) {
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+
+        dashboardPage.clickCalendarTab()
+
+        val event = data.userCalendarEvents.values.first().first()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnItem(event.title!!)
+        calendarEventDetailsPage.clickOverflowMenu()
+        calendarEventDetailsPage.clickEditMenu()
     }
 
     override fun initData(): MockCanvas {

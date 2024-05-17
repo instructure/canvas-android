@@ -49,6 +49,11 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         composeTestRule.waitForIdle()
     }
 
+    fun selectDay(day: String) {
+        composeTestRule.onNodeWithText(day).performClick()
+        composeTestRule.waitForIdle()
+    }
+
     fun assertEventDetails(eventTitle: String, contextName: String, eventDate: String? = null, eventStatus: String? = null) {
         composeTestRule.onNodeWithText(eventTitle).assertIsDisplayed()
         composeTestRule.onNodeWithText(contextName).assertIsDisplayed()

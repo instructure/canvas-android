@@ -231,23 +231,6 @@ class EventScreenTest {
         composeTestRule.onNode(hasText("Test address")).assertIsDisplayed()
     }
 
-//    @Test
-//    fun assertDescription() {
-//        composeTestRule.setContent {
-//            EventScreen(
-//                title = "Event",
-//                eventUiState = EventUiState(
-//                    formattedDescription = "Test description"
-//                ),
-//                actionHandler = {},
-//                navigationAction = {},
-//                applyOnWebView = {}
-//            )
-//        }
-//
-//        composeTestRule.onNode(hasText("Test description")).assertIsDisplayed()
-//    }
-
     @Test
     fun assertSnackbar() {
         composeTestRule.setContent {
