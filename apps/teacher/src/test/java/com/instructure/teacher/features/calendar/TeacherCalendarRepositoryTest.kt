@@ -58,14 +58,14 @@ class TeacherCalendarRepositoryTest {
     fun `Throw exception when calendar event request fails`() = runTest {
         coEvery { calendarEventApi.getCalendarEvents(any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
-        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
     }
 
     @Test(expected = Exception::class)
     fun `Throw exception when planner items request fails`() = runTest {
         coEvery { plannerApi.getPlannerNotes(any(), any(), any(), any()) } returns DataResult.Fail()
 
-        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
     }
 
     @Test
@@ -108,7 +108,7 @@ class TeacherCalendarRepositoryTest {
 
         coEvery { plannerApi.getPlannerNotes(any(), any(), any(), any()) } returns DataResult.Success(listOf(plannerNote))
 
-        val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
 
         assertEquals(3, result.size)
         val assignmentResult = result.find { it.plannableType == PlannableType.ASSIGNMENT }!!
@@ -128,6 +128,29 @@ class TeacherCalendarRepositoryTest {
         coVerify(exactly = 1) { calendarEventApi.getCalendarEvents(any(), CalendarEventAPI.CalendarEventType.CALENDAR.apiName, any(), any(), any(), any()) }
         coVerify(exactly = 1) { calendarEventApi.getCalendarEvents(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName, any(), any(), any(), any()) }
         coVerify(exactly = 1) { plannerApi.getPlannerNotes(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `getPlannerItems returns empty list when no canvas contexts are given`() = runTest {
+        val assignment = ScheduleItem(
+            itemId = "123",
+            title = "assignment",
+            assignment = Assignment(id = 123L, dueAt = LocalDateTime.now().toApiString()),
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            contextCode = "course_1"
+        )
+
+        coEvery {
+            calendarEventApi.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
+                any(), any(), any(), any()
+            )
+        } returns DataResult.Success(listOf(assignment))
+
+        val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+
+        assertEquals(0, result.size)
     }
 
     @Test

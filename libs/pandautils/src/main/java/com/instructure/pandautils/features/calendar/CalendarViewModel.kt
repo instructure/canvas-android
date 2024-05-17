@@ -232,7 +232,7 @@ class CalendarViewModel @Inject constructor(
         val eventIndicators = eventsByDay
             .mapValues {
                 min(3, it.value.filter { plannerItem ->
-                    contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
+                    contextIdFilters.contains(plannerItem.canvasContext.contextId)
                 }.size)
             }
         return CalendarUiState(
@@ -252,7 +252,7 @@ class CalendarViewModel @Inject constructor(
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
         val eventUiStates = eventsByDay[date]
             ?.filter { plannerItem ->
-                contextIdFilters.isEmpty() || contextIdFilters.contains(plannerItem.canvasContext.contextId)
+                contextIdFilters.contains(plannerItem.canvasContext.contextId)
             }
             ?.map {
             EventUiState(

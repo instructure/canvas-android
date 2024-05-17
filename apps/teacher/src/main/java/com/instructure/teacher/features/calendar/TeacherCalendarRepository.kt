@@ -52,6 +52,8 @@ class TeacherCalendarRepository(
         contextCodes: List<String>,
         forceNetwork: Boolean
     ): List<PlannerItem> {
+        if (contextCodes.isEmpty()) return emptyList()
+
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         val allItems = coroutineScope {

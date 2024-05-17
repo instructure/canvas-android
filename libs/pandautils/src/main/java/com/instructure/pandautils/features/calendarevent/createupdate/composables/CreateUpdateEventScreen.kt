@@ -85,6 +85,7 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpda
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -342,7 +343,8 @@ private fun CreateUpdateEventContent(
             // Since we cannot track the focus of the RCE correctly we track the focus of all the other text fields.
             // When no text field is focused but the scroll state maxValue is changed that means that the RCE is focused.
             // In this case we just scroll to the bottom.
-            snapshotFlow { scrollState.maxValue }.collect { maxValue ->
+            // We need to drop the first value in case the screen is not tall enough and the initial scroll state is not 0.
+            snapshotFlow { scrollState.maxValue }.drop(1).collect { maxValue ->
                 if (maxValue != 0 && maxValue != Int.MAX_VALUE && focusedTextFields.isEmpty()) {
                     scrollState.scrollTo((maxValue))
                 }
