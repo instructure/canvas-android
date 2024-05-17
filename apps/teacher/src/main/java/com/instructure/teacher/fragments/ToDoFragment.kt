@@ -106,7 +106,8 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     private fun setupToolbar() = with(binding) {
         val activity = requireActivity()
         if (activity is InitActivity) {
-            activity.attachNavigationDrawer(toDoToolbar)
+            activity.attachNavigationDrawer()
+            activity.attachToolbar(toDoToolbar)
         } else {
             toDoToolbar.setupBackButtonAsBackPressedOnly(this@ToDoFragment)
         }

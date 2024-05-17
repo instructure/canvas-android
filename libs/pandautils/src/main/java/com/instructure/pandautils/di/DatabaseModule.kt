@@ -2,6 +2,8 @@ package com.instructure.pandautils.di
 
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,5 +66,11 @@ class DatabaseModule {
     @Singleton
     fun provideReminderDao(appDatabase: AppDatabase): ReminderDao {
         return appDatabase.reminderDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCalendarFilterDao(calendarFilterDatabase: CalendarFilterDatabase): CalendarFilterDao {
+        return calendarFilterDatabase.calendarFilterDao()
     }
 }

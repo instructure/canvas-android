@@ -95,7 +95,7 @@ class ModulesE2ETest: StudentTest() {
         Log.d(PREPARATION_TAG,"Associate '${quiz1.title}' page with '${module2.name}' module.")
         ModulesApi.createModuleItem(course.id, teacher.token, module2.id, page1.title, ModuleItemTypes.PAGE.stringVal, pageUrl = page1.url)
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 

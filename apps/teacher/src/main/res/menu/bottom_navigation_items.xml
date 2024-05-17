@@ -16,16 +16,24 @@
   -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/tab_courses"
+    <item
+        android:id="@+id/tab_courses"
         android:title="@string/dashboard"
         android:icon="@drawable/bottom_nav_dashboard"
         android:checked="true" />
 
-    <item android:id="@+id/tab_todo"
+    <item
+        android:id="@+id/tab_calendar"
+        android:icon="@drawable/bottom_nav_calendar"
+        android:title="@string/calendar" />
+
+    <item
+        android:id="@+id/tab_todo"
         android:title="@string/tab_todo"
         android:icon="@drawable/bottom_nav_todo" />
 
-    <item android:id="@+id/tab_inbox"
+    <item
+        android:id="@+id/tab_inbox"
         android:title="@string/tab_inbox"
         android:icon="@drawable/bottom_nav_inbox" />
 

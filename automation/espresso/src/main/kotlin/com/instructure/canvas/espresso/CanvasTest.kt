@@ -30,6 +30,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
@@ -43,6 +44,7 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.UiControllerSingleton
 import com.instructure.espresso.page.InstructureTestingContract
+import dagger.hilt.android.testing.HiltAndroidRule
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -64,6 +66,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.inject.Inject
 
 // InstructureTest wrapper for Canvas code
 abstract class CanvasTest : InstructureTestingContract {
@@ -80,11 +83,36 @@ abstract class CanvasTest : InstructureTestingContract {
 
     val connectivityManager = InstrumentationRegistry.getInstrumentation().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+    lateinit var originalActivity : Activity
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
     @Rule(order = 2)
     override fun chain(): TestRule {
         return RuleChain
                 .outerRule(ScreenshotTestRule())
                 .around(activityRule)
+    }
+
+    // Sometimes activityRule.activity can get nulled out over time, probably as we
+    // navigate away from the original login screen.  Capture the activity here so
+    // that we can reference it safely later.
+    @Before
+    fun recordOriginalActivity() {
+        originalActivity = activityRule.activity
+        try {
+            hiltRule.inject()
+        } catch (e: IllegalStateException) {
+            // Catch this exception to avoid multiple injection
+            Log.w("Test Inject", e.message ?: "")
+        }
+
+        val application = originalActivity.application as? TestAppManager
+        application?.workerFactory = workerFactory
     }
 
     @Before
