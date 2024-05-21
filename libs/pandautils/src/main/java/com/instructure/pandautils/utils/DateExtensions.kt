@@ -16,11 +16,16 @@
  */
 package com.instructure.pandautils.utils
 
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 fun OffsetDateTime.getShortMonthAndDay(): String {
     // Get year if the year of the due date isn't the current year
@@ -70,4 +75,12 @@ fun Date.getNextSaturday(): Date {
     calendar.time = this
     calendar.add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - calendar.get(Calendar.DAY_OF_WEEK))
     return calendar.time
+}
+
+fun Date.toLocalDate(): LocalDate {
+    return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDate()
+}
+
+fun Date.toLocalTime(): LocalTime {
+    return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalTime()
 }

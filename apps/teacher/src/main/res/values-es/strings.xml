@@ -716,7 +716,6 @@
     <string name="changeUser">Cambiar usuario</string>
     <string name="general">General</string>
     <string name="sendFeedback">Enviar los comentarios</string>
-    <string name="rateOnTheAppStore">Califique en App Store</string>
     <string name="privacyPolicy">Política de privacidad</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Términos de uso</string>
@@ -873,7 +872,6 @@
         <item quantity="one">-%s punto</item>
         <item quantity="other">-%s puntos</item>
     </plurals>
-    <string name="todoUnreadCount">Por hacer %d sin leer</string>
     <string name="profileSettings">Configuración del perfil</string>
     <string name="downloadingFile">Descargando el archivo&#8230;</string>
     <string name="fileDownloadedSuccessfully">Archivo descargado exitosamente.</string>
@@ -898,4 +896,5 @@
     <string name="no_grade">Sin calificación</string>
     <string name="excuse">Justificación</string>
     <string name="speed_grader_overgraded_by">Sobrecalificado por %s</string>
+    <string name="error_unpublishable_module_item">No se puede cancelar la publicación %s si hay entregas de los estudiantes</string>
 </resources>

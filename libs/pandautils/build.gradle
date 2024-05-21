@@ -133,6 +133,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODEL
+    implementation project(':rceditor')
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT
@@ -211,8 +212,11 @@ dependencies {
     debugImplementation Libs.COMPOSE_TOOLING
     implementation Libs.COMPOSE_VIEW_MODEL
     implementation Libs.COMPOSE_UI
+    implementation Libs.COMPOSE_ACTIVITY
 
     implementation Libs.FLEXBOX_LAYOUT
+
+    implementation Libs.RRULE
 
     // We need to add this dependency if we update ExoPlayer to 2.12.0
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905

@@ -106,7 +106,8 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     private fun setupToolbar() = with(binding) {
         val activity = requireActivity()
         if (activity is InitActivity) {
-            activity.attachNavigationDrawer(toDoToolbar)
+            activity.attachNavigationDrawer()
+            activity.attachToolbar(toDoToolbar)
         } else {
             toDoToolbar.setupBackButtonAsBackPressedOnly(this@ToDoFragment)
         }
@@ -152,8 +153,9 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
             showToast(R.string.toDoNoSubmissions)
             return
         }
+        val submissionIds = submissions.map { it.id }.toLongArray()
         val anonymousGrading = assignment.anonymousGrading || assignment.anonymousSubmissions
-        val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, submissions, 0, anonymousGrading)
+        val bundle = SpeedGraderActivity.makeBundle(courseId = course.id, assignmentId = assignment.id, filteredSubmissionIds = submissionIds, anonymousGrading = anonymousGrading, selectedIdx = 0)
         RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
     }
 

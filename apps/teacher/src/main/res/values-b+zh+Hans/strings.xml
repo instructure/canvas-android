@@ -703,7 +703,6 @@
     <string name="changeUser">更改用户</string>
     <string name="general">一般</string>
     <string name="sendFeedback">发送反馈</string>
-    <string name="rateOnTheAppStore">给应用商店评分</string>
     <string name="privacyPolicy">隐私政策</string>
     <string name="EULA">最终用户许可协议</string>
     <string name="termsOfUse">使用条款</string>
@@ -858,7 +857,6 @@
     <plurals name="latePolicyPenaltyFull">
         <item quantity="other">-%s 分</item>
     </plurals>
-    <string name="todoUnreadCount">待办%d未读</string>
     <string name="profileSettings">个人资料设置</string>
     <string name="downloadingFile">正在下载文件&#8230;</string>
     <string name="fileDownloadedSuccessfully">文件下载成功</string>
@@ -883,4 +881,5 @@
     <string name="no_grade">无评分</string>
     <string name="excuse">原因</string>
     <string name="speed_grader_overgraded_by">%s 评分过高</string>
+    <string name="error_unpublishable_module_item">如果有学生提交文件，将无法取消发布%s</string>
 </resources>

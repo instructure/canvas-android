@@ -313,7 +313,6 @@
     <string name="assignments_list">Llista d\'activitats</string>
     <string name="syllabus">Temari</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dates de lliurament múltiples</string>
     <string name="everyone">Tothom</string>
@@ -718,7 +717,6 @@
     <string name="changeUser">Canvia l\'usuari</string>
     <string name="general">General</string>
     <string name="sendFeedback">Envia els comentaris</string>
-    <string name="rateOnTheAppStore">Puntuació a App Store</string>
     <string name="privacyPolicy">Política de privacitat</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Condicions d\'ús</string>
@@ -875,7 +873,6 @@
         <item quantity="one">-%s punt</item>
         <item quantity="other">-%s punts</item>
     </plurals>
-    <string name="todoUnreadCount">La tasca pendent %d no s\'ha llegit</string>
     <string name="profileSettings">Configuració del perfil</string>
     <string name="downloadingFile">S\'està baixant el fitxer&#8230;</string>
     <string name="fileDownloadedSuccessfully">S\'ha baixat correctament el fitxer.</string>
@@ -901,4 +898,5 @@
     <string name="excuse">Excusa</string>
     <string name="speed_grader_overgraded_by">Sobrequalificat per %s</string>
 
+    <string name="error_unpublishable_module_item">No es pot anul·lar la publicació de %s si hi ha entregues d\'estudiants</string>
 </resources>

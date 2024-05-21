@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment

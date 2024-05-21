@@ -715,7 +715,6 @@
     <string name="changeUser">Spremeni uporabnika</string>
     <string name="general">Splošno</string>
     <string name="sendFeedback">Pošlji povratne informacije</string>
-    <string name="rateOnTheAppStore">Oceni v trgovini App Store</string>
     <string name="privacyPolicy">Pravilnik o zasebnosti</string>
     <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
     <string name="termsOfUse">Pogoji uporabe</string>
@@ -872,7 +871,6 @@
         <item quantity="one">– %s točka</item>
         <item quantity="other">– %s točk</item>
     </plurals>
-    <string name="todoUnreadCount">Seznam opravil, %d neprebranih</string>
     <string name="profileSettings">Nastavitve profila</string>
     <string name="downloadingFile">Prenos datoteke&#8230;</string>
     <string name="fileDownloadedSuccessfully">Datoteka je uspešno prenesena.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Ni ocene</string>
     <string name="excuse">Opravičilo</string>
     <string name="speed_grader_overgraded_by">Ponovno ocenil(a) %s</string>
+    <string name="error_unpublishable_module_item">Preklic objave %s ni mogoč, če obstajajo oddaje študentov</string>
 </resources>

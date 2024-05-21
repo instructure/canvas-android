@@ -19,12 +19,29 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.utils.LongId
+import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.UserId
+import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.Bookmark
+import com.instructure.canvasapi2.models.Favorite
+import com.instructure.canvasapi2.models.FileUploadParams
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.PairingCode
+import com.instructure.canvasapi2.models.Plannable
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.models.SubmissionState
+import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import okio.Buffer
 import java.nio.charset.Charset
-import java.util.*
+import java.util.Date
 
 /**
  * ROUTES:
@@ -75,7 +92,7 @@ object UserEndpoint : Endpoint(
                         .map {
                             val plannableDate = it.dueDate ?: Date()
                             val plannable = Plannable(it.id, it.name
-                                ?: "", it.courseId, null, userId, null, it.dueDate, it.id, null)
+                                ?: "", it.courseId, null, userId, null, it.dueDate, it.id, null, null, null, null, null)
                             PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, plannableDate, null, SubmissionState(), false)
                         }
                         .plus(todos)

@@ -24,10 +24,13 @@ import android.net.Uri
 import android.os.Environment
 import androidx.fragment.app.FragmentActivity
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.*
@@ -176,6 +179,23 @@ fun StudentTest.tokenLogin(domain: String, token: String, user: User) {
     // up after a token login.  Add some tolerance for that.
     waitForMatcherWithSleeps(withId(R.id.dashboardPage), 20000).check(matches(isDisplayed()))
     dashboardPage.assertPageObjects()
+}
+
+fun CanvasTest.tokenLogin(domain: String, token: String, user: User) {
+    activityRule.runOnUiThread {
+        (originalActivity as LoginActivity).loginWithToken(
+            token,
+            domain,
+            user
+        )
+    }
+    // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
+    // up after a token login.  Add some tolerance for that.
+    waitForMatcherWithSleeps(ViewMatchers.withId(R.id.dashboardPage), 20000).check(
+        ViewAssertions.matches(
+            ViewMatchers.isDisplayed()
+        )
+    )
 }
 
 fun StudentTest.tokenLoginElementary(domain: String, token: String, user: User) {
