@@ -74,6 +74,7 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -86,13 +87,19 @@ internal fun CreateUpdateToDoScreenWrapper(
     actionHandler: (CreateUpdateToDoAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     CanvasTheme {
         if (uiState.selectCalendarUiState.show) {
             SelectCalendarScreen(
                 uiState = uiState.selectCalendarUiState,
                 onCalendarSelected = {
                     actionHandler(CreateUpdateToDoAction.UpdateCanvasContext(it))
-                    actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
+                    coroutineScope.launch {
+                        // We need to add this delay to give the user some feedback about the selection before closing the screen
+                        delay(100)
+                        actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)
+                    }
                 },
                 navigationActionClick = {
                     actionHandler(CreateUpdateToDoAction.HideSelectCalendarScreen)

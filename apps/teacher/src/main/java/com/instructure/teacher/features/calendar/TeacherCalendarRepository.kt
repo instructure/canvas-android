@@ -51,6 +51,8 @@ class TeacherCalendarRepository(
         contextCodes: List<String>,
         forceNetwork: Boolean
     ): List<PlannerItem> {
+        if (contextCodes.isEmpty()) return emptyList()
+
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         val allItems = coroutineScope {
@@ -95,7 +97,7 @@ class TeacherCalendarRepository(
     override suspend fun getCanvasContexts(): DataResult<Map<CanvasContext.Type, List<CanvasContext>>> {
         val params = RestParams(usePerPageQueryParam = true)
 
-        val coursesResult = coursesApi.getFirstPageCoursesTeacher(params)
+        val coursesResult = coursesApi.getFirstPageCoursesCalendar(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
         return if (coursesResult is DataResult.Success) {

@@ -35,7 +35,7 @@ class TeacherCreateUpdateEventRepository(
     override suspend fun getCanvasContexts(): List<CanvasContext> {
         val params = RestParams(usePerPageQueryParam = true)
 
-        val coursesResult = coursesApi.getFirstPageCoursesTeacher(params)
+        val coursesResult = coursesApi.getFirstPageCoursesCalendar(params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
             .dataOrNull
             .orEmpty()

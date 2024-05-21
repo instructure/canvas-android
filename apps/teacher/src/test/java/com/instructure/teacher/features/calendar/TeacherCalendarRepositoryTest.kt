@@ -58,14 +58,14 @@ class TeacherCalendarRepositoryTest {
     fun `Throw exception when calendar event request fails`() = runTest {
         coEvery { calendarEventApi.getCalendarEvents(any(), any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
-        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
     }
 
     @Test(expected = Exception::class)
     fun `Throw exception when planner items request fails`() = runTest {
         coEvery { plannerApi.getPlannerNotes(any(), any(), any(), any()) } returns DataResult.Fail()
 
-        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
     }
 
     @Test
@@ -108,7 +108,7 @@ class TeacherCalendarRepositoryTest {
 
         coEvery { plannerApi.getPlannerNotes(any(), any(), any(), any()) } returns DataResult.Success(listOf(plannerNote))
 
-        val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
 
         assertEquals(3, result.size)
         val assignmentResult = result.find { it.plannableType == PlannableType.ASSIGNMENT }!!
@@ -131,8 +131,31 @@ class TeacherCalendarRepositoryTest {
     }
 
     @Test
+    fun `getPlannerItems returns empty list when no canvas contexts are given`() = runTest {
+        val assignment = ScheduleItem(
+            itemId = "123",
+            title = "assignment",
+            assignment = Assignment(id = 123L, dueAt = LocalDateTime.now().toApiString()),
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            contextCode = "course_1"
+        )
+
+        coEvery {
+            calendarEventApi.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
+                any(), any(), any(), any()
+            )
+        } returns DataResult.Success(listOf(assignment))
+
+        val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+
+        assertEquals(0, result.size)
+    }
+
+    @Test
     fun `Get contexts return failed results and don't request groups if course request is failed`() = runTest {
-        coEvery { coursesApi.getFirstPageCoursesTeacher(any()) } returns DataResult.Fail()
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Fail()
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
 
@@ -142,7 +165,7 @@ class TeacherCalendarRepositoryTest {
     @Test
     fun `Get contexts adds user context and returns it with courses when course request is successful`() = runTest {
         val courses = listOf(Course(44, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
-        coEvery { coursesApi.getFirstPageCoursesTeacher(any()) } returns DataResult.Success(courses)
+        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
         coEvery { apiPrefs.user } returns User(1, "Test User")
 
         val canvasContextsResults = calendarRepository.getCanvasContexts()
