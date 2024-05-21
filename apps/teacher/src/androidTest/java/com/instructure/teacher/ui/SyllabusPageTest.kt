@@ -29,13 +29,13 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SyllabusPageTest : TeacherTest() {
+class SyllabusPageTest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -63,8 +63,8 @@ class SyllabusPageTest : TeacherTest() {
         syllabusPage.selectSummaryTab()
         syllabusPage.assertItemDisplayed(calendarEvent.title!!)
         syllabusPage.selectSummaryEvent(calendarEvent.title!!)
-        calendarEventPage.verifyTitle(calendarEvent.title!!)
-        calendarEventPage.verifyDescription(calendarEvent.description!!)
+        calendarEventDetailsPage.assertEventTitle(calendarEvent.title!!)
+        calendarEventDetailsPage.assertDescription(calendarEvent.description!!)
     }
 
     // Tests that we can open the edit syllabus.

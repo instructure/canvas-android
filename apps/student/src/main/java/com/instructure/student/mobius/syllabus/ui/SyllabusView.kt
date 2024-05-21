@@ -24,14 +24,19 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSyllabusBinding
 import com.instructure.student.databinding.FragmentSyllabusEventsBinding
 import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
-import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
@@ -147,7 +152,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
-        RouteMatcher.route(activity as FragmentActivity, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
+        RouteMatcher.route(activity as FragmentActivity, EventFragment.makeRoute(canvasContext, scheduleItem))
     }
 
     private fun getTabTitles(): List<String> = listOf(

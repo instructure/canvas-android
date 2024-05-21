@@ -3,21 +3,31 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
-import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
 object PlannerAPI {
 
-    internal interface PlannerInterface {
+    interface PlannerInterface {
 
         @GET("users/self/planner/items")
-        fun getPlannerItems(@Query("start_date") startDate: String?,
-                            @Query("end_date") endDate: String?): Call<List<PlannerItem>>
+        fun getPlannerItems(@Query("start_date") startDate: String?, @Query("end_date") endDate: String?): Call<List<PlannerItem>>
+
+        @GET("users/self/planner/items")
+        suspend fun getPlannerItems(
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?,
+            @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>,
+            @Tag restParams: RestParams
+        ): DataResult<List<PlannerItem>>
+
+        @GET
+        suspend fun nextPagePlannerItems(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<PlannerItem>>
 
         @POST("planner/overrides")
         fun createPlannerOverride(@Body plannerOverride: PlannerOverride): Call<PlannerOverride>
@@ -25,6 +35,26 @@ object PlannerAPI {
         @FormUrlEncoded
         @PUT("planner/overrides/{overrideId}")
         fun updatePlannerOverride(@Path("overrideId") plannerOverrideId: Long, @Field("marked_complete") complete: Boolean): Call<PlannerOverride>
+
+        @DELETE("planner_notes/{noteId}")
+        suspend fun deletePlannerNote(@Path("noteId") noteId: Long, @Tag params: RestParams): DataResult<Unit>
+
+        @POST("planner_notes")
+        suspend fun createPlannerNote(@Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
+
+        @PUT("planner_notes/{noteId}")
+        suspend fun updatePlannerNote(@Path("noteId") noteId: Long, @Body noteBody: PlannerNoteBody, @Tag params: RestParams): DataResult<Plannable>
+
+        @GET("planner_notes")
+        suspend fun getPlannerNotes(
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?,
+            @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>,
+            @Tag restParams: RestParams
+        ): DataResult<List<Plannable>>
+
+        @GET
+        suspend fun nextPagePlannerNotes(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<Plannable>>
     }
 
     fun getPlannerItems(adapter: RestBuilder, callback: StatusCallback<List<PlannerItem>>, params: RestParams, startDate: String? = null, endDate: String? = null) {

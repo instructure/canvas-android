@@ -21,13 +21,31 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CalendarEventManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.PlannerManager
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Plannable
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.*
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleCourseItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleDayGroupItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleEmptyItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemViewModel
+import com.instructure.pandautils.features.elementary.schedule.itemviewmodels.ScheduleMissingItemsGroupItemViewModel
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.MissingItemsPrefs
 import com.instructure.pandautils.utils.ThemedColor
@@ -49,7 +67,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
+import java.util.Date
 
 @ExperimentalCoroutinesApi
 class ScheduleViewModelTest {
@@ -921,7 +939,11 @@ class ScheduleViewModelTest {
             pointsPossible,
             date,
             assignmentId,
-            todoDate
+            todoDate,
+            null,
+            null,
+            null,
+            null
         )
         return PlannerItem(
             courseId,
@@ -976,7 +998,7 @@ class ScheduleViewModelTest {
     }
 
     private fun createToDoItem(id: Long, title: String): PlannerItem {
-        val plannable = Plannable(id = id, title = title, null, null, null, null, Date(), null, null)
+        val plannable = Plannable(id = id, title = title, null, null, null, null, Date(), null, null, null, null, null, null)
         return PlannerItem(
             plannable = plannable,
             plannableType = PlannableType.PLANNER_NOTE,

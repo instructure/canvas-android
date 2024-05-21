@@ -28,7 +28,6 @@ import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.student.features.dashboard.DashboardRepository
-import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.holders.*
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import org.threeten.bp.OffsetDateTime
@@ -125,7 +124,6 @@ class DashboardRecyclerAdapter(
         mApiCalls = tryWeave {
             if (isRefresh && repository.isOnline()) {
                 ColorApiHelper.awaitSync()
-                FlutterComm.sendUpdatedTheme()
             }
 
             isOfflineEnabled = repository.isOfflineEnabled()

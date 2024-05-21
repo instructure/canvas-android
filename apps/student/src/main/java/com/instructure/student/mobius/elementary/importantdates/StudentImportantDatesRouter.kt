@@ -19,14 +19,14 @@ package com.instructure.student.mobius.elementary.importantdates
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
-import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentImportantDatesRouter(private val activity: FragmentActivity) : ImportantDatesRouter {
     override fun openCalendarEvent(canvasContext: CanvasContext, scheduleItem: ScheduleItem) {
-        RouteMatcher.route(activity, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
+        RouteMatcher.route(activity, EventFragment.makeRoute(canvasContext, scheduleItem))
     }
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {

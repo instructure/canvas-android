@@ -42,6 +42,9 @@ object FeaturesAPI {
 
         @GET("features/environment")
         suspend fun getEnvironmentFeatureFlags(@Tag restParams: RestParams): DataResult<Map<String, Boolean>>
+
+        @GET("settings/environment")
+        suspend fun getAccountSettingsFeatures(@Tag restParams: RestParams): DataResult<Map<String, Boolean>>
     }
 
     fun getEnabledFeaturesForCourse(adapter: RestBuilder, courseId: Long, callback: StatusCallback<List<String>>, params: RestParams) {

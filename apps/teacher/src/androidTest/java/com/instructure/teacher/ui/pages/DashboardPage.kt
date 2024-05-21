@@ -69,6 +69,7 @@ class DashboardPage : BasePage() {
     private val bottomBar by OnViewWithId(R.id.bottomBar)
     private val coursesTab by WaitForViewWithId(R.id.tab_courses)
     private val todoTab by WaitForViewWithId(R.id.tab_todo)
+    private val calendarTab by WaitForViewWithId(R.id.tab_calendar)
     private val inboxTab by WaitForViewWithId(R.id.tab_inbox)
     private val previousLoginTitleText by OnViewWithId(
         R.id.previousLoginTitleText,
@@ -225,6 +226,10 @@ class DashboardPage : BasePage() {
      */
     fun openInbox() {
         inboxTab.click()
+    }
+
+    fun openCalendar() {
+        calendarTab.click()
     }
 
     /**

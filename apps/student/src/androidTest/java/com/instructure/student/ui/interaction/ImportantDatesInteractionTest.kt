@@ -27,19 +27,21 @@ import com.instructure.canvas.espresso.mockCanvas.addAssignmentCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @HiltAndroidTest
-class ImportantDatesInteractionTest : StudentTest() {
+class ImportantDatesInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     @Test
@@ -111,6 +113,7 @@ class ImportantDatesInteractionTest : StudentTest() {
     fun testOpenCalendarEvent() {
         val data = createMockData(courseCount = 1)
         val course = data.courses.values.toList()[0]
+        data.coursePermissions[course.id] = CanvasContextPermission(manageCalendar = true)
         val event = data.addCourseCalendarEvent(course.id, 2.days.fromNow.iso8601, "Important event", "Important event description", true)
 
         goToImportantDatesTab(data)
@@ -120,8 +123,8 @@ class ImportantDatesInteractionTest : StudentTest() {
 
         //Opening the calendar event
         importantDatesPage.clickImportantDatesItem(event.title!!)
-        calendarEventPage.verifyTitle(event.title!!)
-        calendarEventPage.verifyDescription(event.description!!)
+        calendarEventDetailsPage.assertEventTitle(event.title!!)
+        calendarEventDetailsPage.verifyDescription(event.description!!)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(event.startDate))
     }
 
