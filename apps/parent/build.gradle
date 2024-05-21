@@ -40,6 +40,8 @@ android {
         versionCode 50
         versionName "3.10.0"
 
+        /* Add private data */
+        PrivateData.merge(project, "parent")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
