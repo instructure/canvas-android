@@ -30,7 +30,7 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 
 @HiltAndroidTest
-class TeacherToDoDetailsPageTest : ToDoDetailsInteractionTest() {
+class TeacherCalendarToDoDetailsPageTest : ToDoDetailsInteractionTest() {
 
     override val activityRule: InstructureActivityTestRule<out Activity>
             = TeacherActivityTestRule(LoginActivity::class.java)

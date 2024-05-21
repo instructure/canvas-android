@@ -69,7 +69,7 @@ class CalendarE2ETest: TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         var currentDate = getCurrentDateInCanvasCalendarFormat()
-        calendarScreenPage.assertEventDetails(newEventTitle, teacher.name, currentDate)
+        calendarScreenPage.assertItemDetails(newEventTitle, teacher.name, currentDate)
 
         Log.d(STEP_TAG, "Click on the previously created '$newEventTitle' event and assert the event details.")
         calendarScreenPage.clickOnItem(newEventTitle)
@@ -102,7 +102,7 @@ class CalendarE2ETest: TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding modified details (title, context name, date) on the page.")
         currentDate = getCurrentDateInCanvasCalendarFormat()
-        calendarScreenPage.assertEventDetails(modifiedEventTitle, teacher.name, currentDate)
+        calendarScreenPage.assertItemDetails(modifiedEventTitle, teacher.name, currentDate)
 
         Log.d(STEP_TAG, "Click on the previously created '$modifiedEventTitle' event and assert the event details.")
         calendarScreenPage.clickOnItem(modifiedEventTitle)
@@ -116,7 +116,96 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarEventDetailsPage.clickDeleteMenu()
         calendarEventDetailsPage.confirmDelete()
 
+        Log.d(STEP_TAG, "Assert that the deleted item does not exist anymore on the Calendar Screen Page.")
+        calendarScreenPage.assertItemNotExist(modifiedEventTitle)
+
         Log.d(STEP_TAG, "Assert that after the deletion the empty view will be displayed since we don't have any events on the current day.")
-        calendarScreenPage.assertEmptyEventsView()
+        calendarScreenPage.assertEmptyView()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E)
+    fun testCalendarToDoScreenE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page. Assert that the page title is 'Calendar'.")
+        dashboardPage.clickCalendarTab()
+        calendarScreenPage.assertCalendarPageTitle()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddTodo()
+
+        Log.d(STEP_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+
+        val testTodoTitle = "Test ToDo Title"
+        val testTodoDescription = "Details of ToDo"
+        Log.d(STEP_TAG, "Fill the title with '$testTodoTitle' and the details/description with '$testTodoDescription' and click on the 'Save' button.")
+        calendarToDoCreateUpdatePage.typeTodoTitle(testTodoTitle)
+        calendarToDoCreateUpdatePage.typeDetails(testTodoDescription)
+        calendarToDoCreateUpdatePage.clickSave()
+
+        Log.d(STEP_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously created To Do item is displayed with the corresponding title, context and date.")
+        val currentDate = getCurrentDateInCanvasCalendarFormat()
+        calendarScreenPage.assertItemDetails(testTodoTitle, "To Do", "$currentDate at 12:00 PM")
+
+        Log.d(STEP_TAG, "Clicks on the '$testTodoTitle' To Do item.")
+        calendarScreenPage.clickOnItem(testTodoTitle)
+
+        Log.d(STEP_TAG, "Assert that the title is '$testTodoTitle', the context is 'To Do', the date is the current day with 12:00 PM time and the description is '$testTodoDescription'.")
+        calendarToDoDetailsPage.assertTitle(testTodoTitle)
+        calendarToDoDetailsPage.assertPageTitle("To Do")
+        calendarToDoDetailsPage.assertDate("$currentDate at 12:00 PM")
+        calendarToDoDetailsPage.assertDescription(testTodoDescription)
+
+        Log.d(STEP_TAG, "Click on the 'Edit To Do' within the toolbar more menu and confirm the editing.")
+        calendarToDoDetailsPage.clickToolbarMenu()
+        calendarToDoDetailsPage.clickEditMenu()
+
+        Log.d(STEP_TAG, "Assert that the page title is 'Edit To Do' as we are editing an existing To Do item.")
+        calendarToDoCreateUpdatePage.assertPageTitle("Edit To Do")
+
+        Log.d(STEP_TAG, "Assert that the 'original' To Do Title and details has been filled into the input fields as we on the edit screen.")
+        calendarToDoCreateUpdatePage.assertTodoTitle(testTodoTitle)
+        calendarToDoCreateUpdatePage.assertDetails(testTodoDescription)
+
+        val modifiedTestTodoTitle = "Test ToDo Title Mod"
+        val modifiedTestTodoDescription = "Details of ToDo Mod"
+        Log.d(STEP_TAG, "Modify the title with '$modifiedTestTodoTitle' and the details/description with '$modifiedTestTodoDescription' and click on the 'Save' button.")
+        calendarToDoCreateUpdatePage.typeTodoTitle(modifiedTestTodoTitle)
+        calendarToDoCreateUpdatePage.typeDetails(modifiedTestTodoDescription)
+        calendarToDoCreateUpdatePage.clickSave()
+
+        Log.d(STEP_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously modified To Do item is displayed with the corresponding title, context and with the same date as we haven't changed it.")
+        calendarScreenPage.assertItemDetails(modifiedTestTodoTitle, "To Do", "$currentDate at 12:00 PM")
+
+        Log.d(STEP_TAG, "Clicks on the '$modifiedTestTodoTitle' To Do item.")
+        calendarScreenPage.clickOnItem(modifiedTestTodoTitle)
+
+        Log.d(STEP_TAG, "Assert that the To Do title is '$modifiedTestTodoTitle', the page title is 'To Do', the date remained current day with 12:00 PM time (as we haven't modified it) and the description is '$modifiedTestTodoDescription'.")
+        calendarToDoDetailsPage.assertTitle(modifiedTestTodoTitle)
+        calendarToDoDetailsPage.assertPageTitle("To Do")
+        calendarToDoDetailsPage.assertDate("$currentDate at 12:00 PM")
+        calendarToDoDetailsPage.assertDescription(modifiedTestTodoDescription)
+
+        Log.d(STEP_TAG, "Click on the 'Delete To Do' within the toolbar more menu and confirm the deletion.")
+        calendarToDoDetailsPage.clickToolbarMenu()
+        calendarToDoDetailsPage.clickDeleteMenu()
+        calendarToDoDetailsPage.confirmDeletion()
+
+        Log.d(STEP_TAG, "Assert that the deleted item does not exist anymore on the Calendar Screen Page.")
+        calendarScreenPage.assertItemNotExist(modifiedTestTodoTitle)
+
+        Log.d(STEP_TAG, "Assert that after the deletion the empty view will be displayed since we don't have any To Do items on the current day.")
+        calendarScreenPage.assertEmptyView()
     }
 }

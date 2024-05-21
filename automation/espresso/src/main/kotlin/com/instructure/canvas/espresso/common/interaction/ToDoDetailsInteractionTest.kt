@@ -18,7 +18,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvas.espresso.CanvasComposeTest
-import com.instructure.canvas.espresso.common.pages.compose.ToDoDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPlannable
 import com.instructure.canvasapi2.models.PlannableType
@@ -29,7 +29,7 @@ import java.util.Date
 
 abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
 
-    private val toDoDetailsPage = ToDoDetailsPage(composeTestRule)
+    private val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
 
     @Test
     fun assertTitle() {
@@ -47,7 +47,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.assertTitle(data.todos.first().plannable.title)
+        calendarToDoDetailsPage.assertTitle(data.todos.first().plannable.title)
     }
 
     @Test
@@ -66,7 +66,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.assertCanvasContext(course.name, course.textAndIconColor)
+        calendarToDoDetailsPage.assertCanvasContext(course.name, course.textAndIconColor)
     }
 
     @Test
@@ -85,7 +85,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.assertDate(originalActivity, data.todos.first().plannable.todoDate.toDate()!!)
+        calendarToDoDetailsPage.assertDate(originalActivity, data.todos.first().plannable.todoDate.toDate()!!)
     }
 
     @Test
@@ -105,7 +105,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.assertDescription("Test Description")
+        calendarToDoDetailsPage.assertDescription("Test Description")
     }
 
     @Test
@@ -124,8 +124,8 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.clickToolbarMenu()
-        toDoDetailsPage.clickEditMenu()
+        calendarToDoDetailsPage.clickToolbarMenu()
+        calendarToDoDetailsPage.clickEditMenu()
 
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Edit To Do").assertIsDisplayed()
@@ -147,8 +147,8 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.clickToolbarMenu()
-        toDoDetailsPage.clickDeleteMenu()
+        calendarToDoDetailsPage.clickToolbarMenu()
+        calendarToDoDetailsPage.clickDeleteMenu()
 
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
@@ -170,8 +170,8 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        toDoDetailsPage.clickToolbarMenu()
-        toDoDetailsPage.clickDeleteMenu()
+        calendarToDoDetailsPage.clickToolbarMenu()
+        calendarToDoDetailsPage.clickDeleteMenu()
 
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
