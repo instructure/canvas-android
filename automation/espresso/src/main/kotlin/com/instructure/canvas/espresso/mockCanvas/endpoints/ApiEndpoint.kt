@@ -163,7 +163,11 @@ object ApiEndpoint : Endpoint(
                         else -> {}
                     }
 
-                    request.successResponse(event)
+                    if (params?.rrule?.isNotEmpty().orDefault()) {
+                        request.successResponse(listOf(event))
+                    } else {
+                        request.successResponse(event)
+                    }
                 }
             }
         ),

@@ -25,8 +25,11 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetails
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addUserCalendarEvent
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import org.junit.Test
+import java.util.Calendar
 import java.util.Date
 
 
@@ -36,8 +39,8 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
     private val createUpdateEventDetailsPage = CalendarEventCreateEditPage(composeTestRule)
 
+    override fun displaysPageObjects() = Unit
 
-    /*
     @Test
     fun assertNewTitle() {
         val data = initData()
@@ -190,8 +193,6 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
 //        calendarEventDetailsPage.assertDescription("New Description")
 //    }
 
-     */
-
     @Test
     fun assertUpdatedTitle() {
         val data = initData()
@@ -211,6 +212,151 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Updated Title").assertIsDisplayed()
+    }
+
+    @Test
+    fun assertUpdatedDate() {
+        val data = initData()
+        val user = data.users.values.first()
+        val event = data.addUserCalendarEvent(
+            userId = user.id,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        goToEditEvent(data)
+
+        composeTestRule.waitForIdle()
+        val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }
+        createUpdateEventDetailsPage.selectDate(calendar)
+        createUpdateEventDetailsPage.clickSave()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
+        composeTestRule.onNodeWithText(event.title!!).assertIsDisplayed()
+    }
+
+    @Test
+    fun assertUpdatedFrom() {
+        val data = initData()
+        val user = data.users.values.first()
+        val event = data.addUserCalendarEvent(
+            userId = user.id,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        goToEditEvent(data)
+
+        composeTestRule.waitForIdle()
+        val calendar = Calendar.getInstance().apply {
+            time = event.startDate
+            add(Calendar.HOUR_OF_DAY, -1)
+            add(Calendar.MINUTE, 15)
+        }
+        createUpdateEventDetailsPage.selectTime("From", calendar)
+        createUpdateEventDetailsPage.clickSave()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnItem(event.title!!)
+        val expectedTime = DateHelper.getFormattedTime(activityRule.activity, calendar.time)
+        calendarEventDetailsPage.assertEventDateContains(expectedTime!!)
+    }
+
+    @Test
+    fun assertUpdatedTo() {
+        val data = initData()
+        val user = data.users.values.first()
+        val event = data.addUserCalendarEvent(
+            userId = user.id,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        goToEditEvent(data)
+
+        composeTestRule.waitForIdle()
+        val calendar = Calendar.getInstance().apply {
+            time = event.endDate
+            add(Calendar.HOUR_OF_DAY, 1)
+            add(Calendar.MINUTE, 15)
+        }
+        createUpdateEventDetailsPage.selectTime("To", calendar)
+        createUpdateEventDetailsPage.clickSave()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnItem(event.title!!)
+        val expectedTime = DateHelper.getFormattedTime(activityRule.activity, calendar.time)
+        calendarEventDetailsPage.assertEventDateContains(expectedTime!!)
+    }
+
+    @Test
+    fun assertUpdatedFrequency() {
+        val data = initData()
+        val user = data.users.values.first()
+        val event = data.addUserCalendarEvent(
+            userId = user.id,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        goToEditEvent(data)
+
+        composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.selectFrequency("Daily")
+        createUpdateEventDetailsPage.clickSave()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnItem(event.title!!)
+        calendarEventDetailsPage.assertRecurrence("FREQ=DAILY;COUNT=365;INTERVAL=1")
+    }
+
+    @Test
+    fun assertUpdatedLocation() {
+        val data = initData()
+        val user = data.users.values.first()
+        val event = data.addUserCalendarEvent(
+            userId = user.id,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        goToEditEvent(data)
+
+        composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.typeLocation("Updated Location")
+        createUpdateEventDetailsPage.clickSave()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnItem(event.title!!)
+        calendarEventDetailsPage.assertLocationDisplayed("Updated Location")
+    }
+
+    @Test
+    fun assertUpdatedAddress() {
+        val data = initData()
+        val user = data.users.values.first()
+        val event = data.addUserCalendarEvent(
+            userId = user.id,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        goToEditEvent(data)
+
+        composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.typeAddress("Updated Address")
+        createUpdateEventDetailsPage.clickSave()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnItem(event.title!!)
+        calendarEventDetailsPage.assertAddressDisplayed("Updated Address")
     }
 
     abstract fun goToCreateEvent(data: MockCanvas)

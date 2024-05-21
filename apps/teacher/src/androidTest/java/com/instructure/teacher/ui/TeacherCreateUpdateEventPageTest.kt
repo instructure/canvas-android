@@ -34,8 +34,6 @@ class TeacherCreateUpdateEventPageTest : CreateUpdateEventInteractionTest() {
 
     val dashboardPage = DashboardPage()
 
-    override fun displaysPageObjects() = Unit
-
     override fun goToCreateEvent(data: MockCanvas) {
         val teacher = data.teachers[0]
         val token = data.tokenFor(teacher)!!
@@ -55,15 +53,17 @@ class TeacherCreateUpdateEventPageTest : CreateUpdateEventInteractionTest() {
 
         dashboardPage.openCalendar()
 
-        val event = data.courseCalendarEvents.values.first().first()
+        val event = data.userCalendarEvents.values.first().first()
 
         composeTestRule.waitForIdle()
         calendarScreenPage.clickOnItem(event.title!!)
+        calendarEventDetailsPage.clickOverflowMenu()
+        calendarEventDetailsPage.clickEditMenu()
     }
 
     override fun initData(): MockCanvas {
         return MockCanvas.init(
-            studentCount = 1,
+            studentCount = 0,
             teacherCount = 1,
             courseCount = 1,
             favoriteCourseCount = 1

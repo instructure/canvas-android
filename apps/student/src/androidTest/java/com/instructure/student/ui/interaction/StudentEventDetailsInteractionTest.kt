@@ -34,8 +34,6 @@ class StudentEventDetailsInteractionTest : EventDetailsInteractionTest() {
 
     private val dashboardPage = DashboardPage()
 
-    override fun displaysPageObjects() = Unit
-
     override fun goToEventDetails(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!

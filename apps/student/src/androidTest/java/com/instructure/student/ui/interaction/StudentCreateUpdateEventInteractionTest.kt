@@ -34,8 +34,6 @@ class StudentCreateUpdateEventInteractionTest : CreateUpdateEventInteractionTest
 
     val dashboardPage = DashboardPage()
 
-    override fun displaysPageObjects() = Unit
-
     override fun goToCreateEvent(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
@@ -66,7 +64,7 @@ class StudentCreateUpdateEventInteractionTest : CreateUpdateEventInteractionTest
     override fun initData(): MockCanvas {
         return MockCanvas.init(
             studentCount = 1,
-            teacherCount = 1,
+            teacherCount = 0,
             courseCount = 1,
             favoriteCourseCount = 1
         )

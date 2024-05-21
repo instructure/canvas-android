@@ -36,6 +36,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
     val calendarScreenPage = CalendarScreenPage(composeTestRule)
     private val evenDetailsPage = CalendarEventDetailsPage(composeTestRule)
 
+    override fun displaysPageObjects() = Unit
+
     @Test
     fun assertCanvasContext() {
         val data = initData()
