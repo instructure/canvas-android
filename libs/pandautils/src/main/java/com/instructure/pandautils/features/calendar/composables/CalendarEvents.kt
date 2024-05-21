@@ -140,7 +140,7 @@ fun CalendarEventsPage(
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = calendarEventsPageUiState.refreshing,
-        onRefresh = { actionHandler(CalendarAction.RefreshDay(calendarEventsPageUiState.date)) },
+        onRefresh = { actionHandler(CalendarAction.PullToRefresh) },
         refreshThreshold = PullRefreshDefaults.RefreshingOffset
     )
 
