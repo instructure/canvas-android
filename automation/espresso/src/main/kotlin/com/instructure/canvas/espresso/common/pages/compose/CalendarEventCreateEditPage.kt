@@ -24,6 +24,7 @@ import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import androidx.test.espresso.contrib.PickerActions
 import com.instructure.espresso.click
@@ -45,7 +46,7 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
     }
 
     fun selectDate(calendar: Calendar) {
-        composeTestRule.onNodeWithText("Date").performClick()
+        composeTestRule.onNodeWithText("Date").performScrollTo().performClick()
         waitForViewWithClassName(Matchers.equalTo(DatePicker::class.java.name)).perform(
             PickerActions.setDate(
                 calendar.get(Calendar.YEAR),
@@ -58,7 +59,7 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
     }
 
     fun selectTime(label: String, calendar: Calendar) {
-        composeTestRule.onNodeWithText(label).performClick()
+        composeTestRule.onNodeWithText(label).performScrollTo().performClick()
         waitForViewWithClassName(Matchers.equalTo(TimePicker::class.java.name)).perform(
             PickerActions.setTime(
                 calendar.get(Calendar.HOUR_OF_DAY),
@@ -70,7 +71,7 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
     }
 
     fun selectFrequency(frequency: String) {
-        composeTestRule.onNodeWithText("Frequency").performClick()
+        composeTestRule.onNodeWithText("Frequency").performScrollTo().performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText(frequency).performClick()
         composeTestRule.waitForIdle()

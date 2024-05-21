@@ -140,7 +140,6 @@ class EventScreenTest {
             )
         }
 
-        // TODO Verify toolbar has the correct background color
         composeTestRule.onNode(hasText("Canvas Context")).assertIsDisplayed()
     }
 

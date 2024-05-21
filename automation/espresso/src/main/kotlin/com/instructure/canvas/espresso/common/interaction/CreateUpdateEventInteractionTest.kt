@@ -175,24 +175,6 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         calendarEventDetailsPage.assertAddressDisplayed("New Address")
     }
 
-//    @Test
-//    fun assertNewDescription() {
-//        val data = initData()
-//        val course = data.courses.values.first()
-//        data.coursePermissions[course.id] = CanvasContextPermission(manageCalendar = true)
-//
-//        goToCreateEvent(data)
-//
-//        composeTestRule.waitForIdle()
-//        createUpdateEventDetailsPage.typeTitle("New Title")
-//
-//        createUpdateEventDetailsPage.clickSave()
-//
-//        composeTestRule.waitForIdle()
-//        calendarScreenPage.clickOnItem("New Title")
-//        calendarEventDetailsPage.assertDescription("New Description")
-//    }
-
     @Test
     fun assertUpdatedTitle() {
         val data = initData()

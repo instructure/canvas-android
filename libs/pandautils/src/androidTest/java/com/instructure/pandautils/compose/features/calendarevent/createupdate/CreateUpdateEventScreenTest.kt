@@ -18,19 +18,17 @@
 package com.instructure.pandautils.compose.features.calendarevent.createupdate
 
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
@@ -92,17 +90,17 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Add title").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Date").assertIsDisplayed()
-        composeTestRule.onNodeWithText("From").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Start Time").assertIsDisplayed()
-        composeTestRule.onNodeWithText("To").assertIsDisplayed()
-        composeTestRule.onNodeWithText("End Time").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Frequency").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Calendar").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Location").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Address").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Details").assertIsDisplayed()
+        composeTestRule.onNode(hasText("Add title")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Date")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("From")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Start Time")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("To")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("End Time")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Frequency")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Calendar")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Location")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Address")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Details")).assertIsDisplayed()
     }
 
     @Test
@@ -150,7 +148,7 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Jan 5").assertIsDisplayed()
+        composeTestRule.onNode(hasText("Jan 5")).assertIsDisplayed()
     }
 
     @Test
@@ -166,7 +164,7 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("10:30 AM").assertIsDisplayed()
+        composeTestRule.onNode(hasText("10:30 AM")).assertIsDisplayed()
     }
 
     @Test
@@ -182,7 +180,7 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("11:30 AM").assertIsDisplayed()
+        composeTestRule.onNode(hasText("11:30 AM")).assertIsDisplayed()
     }
 
     @Test
@@ -201,7 +199,7 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Daily").assertIsDisplayed()
+        composeTestRule.onNode(hasText("Daily")).assertIsDisplayed()
     }
 
     @Test
@@ -224,13 +222,14 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        val dialog = composeTestRule.onNodeWithTag("SingleChoiceAlertDialog").assertIsDisplayed()
-        dialog.onChildAt(0).assert(hasText("Frequency")).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Cancel")
+        composeTestRule.onNodeWithTag("SingleChoiceAlertDialog").assertIsDisplayed()
+        val matcher = hasAnyAncestor(hasTestTag("SingleChoiceAlertDialog"))
+        composeTestRule.onNode(matcher.and(hasText("Frequency"))).assertIsDisplayed()
+        composeTestRule.onNode(matcher.and(hasText("Cancel")))
             .assertIsDisplayed()
             .assertHasClickAction()
-        composeTestRule.onNodeWithText("Does Not Repeat")
-        composeTestRule.onNodeWithText("Daily")
+        composeTestRule.onNode(matcher.and(hasText("Does Not Repeat"))).assertIsDisplayed()
+        composeTestRule.onNode(matcher.and(hasText("Daily"))).assertIsDisplayed()
     }
 
     @Test
@@ -248,7 +247,7 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("User Name").assertIsDisplayed()
+        composeTestRule.onNode(hasText("User Name")).assertIsDisplayed()
     }
 
     @Test
@@ -264,7 +263,7 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Location Name").assertIsDisplayed()
+        composeTestRule.onNode(hasText("Location Name")).assertIsDisplayed()
     }
 
     @Test
@@ -280,7 +279,7 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText("Address Name").assertIsDisplayed()
+        composeTestRule.onNode(hasText("Address Name")).assertIsDisplayed()
     }
 
     @Test
