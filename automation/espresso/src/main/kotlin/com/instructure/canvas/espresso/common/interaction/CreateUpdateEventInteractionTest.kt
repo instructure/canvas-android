@@ -17,8 +17,6 @@
 
 package com.instructure.canvas.espresso.common.interaction
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.onNodeWithText
 import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
@@ -48,11 +46,12 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         goToCreateEvent(data)
 
         composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.assertScreenTitle("New Event")
         createUpdateEventDetailsPage.typeTitle("New Title")
         createUpdateEventDetailsPage.clickSave()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("New Title").assertIsDisplayed()
+        createUpdateEventDetailsPage.assertTitle("New Title")
     }
 
     @Test
@@ -69,7 +68,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
-        composeTestRule.onNodeWithText("New Title").assertIsDisplayed()
+        createUpdateEventDetailsPage.assertTitle("New Title")
     }
 
     @Test
@@ -189,11 +188,12 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         goToEditEvent(data)
 
         composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.assertScreenTitle("Edit Event")
         createUpdateEventDetailsPage.typeTitle("Updated Title")
         createUpdateEventDetailsPage.clickSave()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Updated Title").assertIsDisplayed()
+        createUpdateEventDetailsPage.assertTitle("Updated Title")
     }
 
     @Test
@@ -216,7 +216,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
-        composeTestRule.onNodeWithText(event.title!!).assertIsDisplayed()
+        createUpdateEventDetailsPage.assertTitle(event.title!!)
     }
 
     @Test

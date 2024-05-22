@@ -19,6 +19,9 @@ package com.instructure.canvas.espresso.common.pages.compose
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
@@ -35,6 +38,10 @@ import org.hamcrest.Matchers
 import java.util.Calendar
 
 class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) : BasePage() {
+
+    fun assertScreenTitle(title: String) {
+        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText(title))).assertIsDisplayed()
+    }
 
     fun assertTitle(title: String) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()

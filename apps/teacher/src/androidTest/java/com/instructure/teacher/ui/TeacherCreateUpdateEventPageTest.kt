@@ -32,7 +32,7 @@ class TeacherCreateUpdateEventPageTest : CreateUpdateEventInteractionTest() {
 
     override val isTesting = BuildConfig.IS_TESTING
 
-    val dashboardPage = DashboardPage()
+    private val dashboardPage = DashboardPage()
 
     override fun goToCreateEvent(data: MockCanvas) {
         val teacher = data.teachers[0]

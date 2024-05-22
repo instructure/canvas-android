@@ -17,9 +17,8 @@
 
 package com.instructure.canvas.espresso.common.interaction
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.onNodeWithText
 import com.instructure.canvas.espresso.CanvasComposeTest
+import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -35,6 +34,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
 
     val calendarScreenPage = CalendarScreenPage(composeTestRule)
     private val evenDetailsPage = CalendarEventDetailsPage(composeTestRule)
+    private val createUpdateEventDetailsPage = CalendarEventCreateEditPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 
@@ -186,7 +186,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         evenDetailsPage.clickEditMenu()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Edit Event").assertIsDisplayed()
+        createUpdateEventDetailsPage.assertScreenTitle("Edit Event")
     }
 
     @Test
@@ -208,12 +208,11 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         evenDetailsPage.clickDeleteMenu()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Delete Event?").assertIsDisplayed()
+        evenDetailsPage.assertDeleteDialog()
         evenDetailsPage.confirmDelete()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(event.title!!).assertDoesNotExist()
-
+        calendarScreenPage.assertItemNotExits(event.title!!)
     }
 
     abstract fun goToEventDetails(data: MockCanvas)

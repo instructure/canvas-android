@@ -45,7 +45,6 @@ import com.instructure.canvasapi2.models.UpdateFileFolder
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.orDefault
 import okio.Buffer
-import kotlin.random.Random
 
 /**
  * Base endpoint for the Canvas API
@@ -138,7 +137,7 @@ object ApiEndpoint : Endpoint(
                         seriesNaturalLanguage = params?.rrule,
                         locationName = params?.locationName,
                         locationAddress = params?.locationAddress,
-                        itemId = Random(42).nextLong().toString(),
+                        itemId = data.newItemId().toString(),
                     )
 
                     when (event.contextType) {
@@ -221,7 +220,7 @@ object ApiEndpoint : Endpoint(
                         seriesNaturalLanguage = params?.rrule,
                         locationName = params?.locationName,
                         locationAddress = params?.locationAddress,
-                        itemId = Random(42).nextLong().toString(),
+                        itemId = data.newItemId().toString(),
                     )
 
                     when (event.contextType) {

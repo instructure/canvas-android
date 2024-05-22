@@ -57,12 +57,15 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     fun assertEventDetails(eventTitle: String, contextName: String, eventDate: String? = null, eventStatus: String? = null) {
         composeTestRule.onNodeWithText(eventTitle).assertIsDisplayed()
         composeTestRule.onNodeWithText(contextName).assertIsDisplayed()
-        if(eventDate != null) composeTestRule.onNodeWithText(eventDate).assertIsDisplayed()
-        if(eventStatus != null) composeTestRule.onNodeWithText(eventStatus).assertIsDisplayed()
+        if (eventDate != null) composeTestRule.onNodeWithText(eventDate).assertIsDisplayed()
+        if (eventStatus != null) composeTestRule.onNodeWithText(eventStatus).assertIsDisplayed()
     }
 
     fun assertEmptyEventsView() {
         assertTrue(composeTestRule.onAllNodesWithTag("calendarEventsEmpty").fetchSemanticsNodes().isNotEmpty())
     }
 
+    fun assertItemNotExits(itemTitle: String) {
+        composeTestRule.onNodeWithText(itemTitle).assertDoesNotExist()
+    }
 }

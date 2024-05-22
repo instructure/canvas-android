@@ -112,6 +112,10 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
         composeTestRule.waitForIdle()
     }
 
+    fun assertDeleteDialog() {
+        composeTestRule.onNodeWithText("Delete Event?").assertIsDisplayed()
+    }
+
     fun confirmDelete() {
         composeTestRule.onNodeWithText("Delete").performClick()
         composeTestRule.waitForIdle()

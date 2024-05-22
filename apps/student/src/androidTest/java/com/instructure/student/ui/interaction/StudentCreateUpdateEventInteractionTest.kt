@@ -32,7 +32,7 @@ class StudentCreateUpdateEventInteractionTest : CreateUpdateEventInteractionTest
 
     override val activityRule = StudentActivityTestRule(LoginActivity::class.java)
 
-    val dashboardPage = DashboardPage()
+    private val dashboardPage = DashboardPage()
 
     override fun goToCreateEvent(data: MockCanvas) {
         val student = data.students[0]
