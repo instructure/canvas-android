@@ -29,6 +29,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
@@ -90,17 +91,39 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNode(hasText("Add title")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("Date")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("From")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("Start Time")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("To")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("End Time")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("Frequency")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("Calendar")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("Location")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("Address")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("Details")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Add title"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("Date"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("From"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("Start Time"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("To"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("End Time"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("Frequency"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("Calendar"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("Location"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("Address"))
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasText("Details"))
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test
@@ -131,6 +154,7 @@ class CreateUpdateEventScreenTest {
         }
 
         composeTestRule.onNodeWithTag("addTitleField")
+            .performScrollTo()
             .assertIsDisplayed()
             .assertTextEquals("Title")
     }
@@ -148,7 +172,9 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNode(hasText("Jan 5")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("Jan 5"))
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test
@@ -164,7 +190,9 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNode(hasText("10:30 AM")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("10:30 AM"))
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test
@@ -180,7 +208,9 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNode(hasText("11:30 AM")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("11:30 AM"))
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     @Test
