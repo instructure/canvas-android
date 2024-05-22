@@ -15,33 +15,22 @@
  *
  */
 
-package com.instructure.parentapp.util
+package com.instructure.parentapp.di.feature
 
-import androidx.hilt.work.HiltWorkerFactory
-import com.instructure.canvasapi2.AppManager
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
+@Module
+@InstallIn(FragmentComponent::class)
+class EventModule {
 
-@HiltAndroidApp
-class AppManager : AppManager() {
-
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    override fun onCreate() {
-        super.onCreate()
-        init()
-    }
-
-    override fun performLogoutOnAuthError() {
+    @Provides
+    fun provideEventRouter(activity: FragmentActivity): EventRouter {
         // TODO: Implement
-    }
-
-    override fun getWorkManagerFactory() = workerFactory
-
-    private fun init() {
-        RemoteConfigUtils.initialize()
+        throw NotImplementedError()
     }
 }

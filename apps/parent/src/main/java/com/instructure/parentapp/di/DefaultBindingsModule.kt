@@ -27,6 +27,7 @@ import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
 import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
+import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
 import com.instructure.pandautils.utils.ToolbarSetupBehavior
 import dagger.Module
@@ -96,6 +97,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideShareExtensionRouter(): ShareExtensionRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideSyncRouter(): SyncRouter {
         throw NotImplementedError()
     }
 }

@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.room.Room
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.appDatabaseMigrations
+import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +39,12 @@ class DatabaseModule {
         return Room.databaseBuilder(context, AppDatabase::class.java, "db-canvas-parent")
             .addMigrations(*appDatabaseMigrations)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCalendarDatabase(@ApplicationContext context: Context): CalendarFilterDatabase {
+        // TODO: Implement
+        throw NotImplementedError()
     }
 }
