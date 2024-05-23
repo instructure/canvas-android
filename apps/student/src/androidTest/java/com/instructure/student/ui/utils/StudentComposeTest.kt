@@ -23,6 +23,8 @@ import com.instructure.student.activity.LoginActivity
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
 import org.junit.Rule
 
 abstract class StudentComposeTest : StudentTest() {
@@ -33,4 +35,6 @@ abstract class StudentComposeTest : StudentTest() {
     val calendarEventCreateEditPage = CalendarEventCreateEditPage(composeTestRule)
     val calendarScreenPage = CalendarScreenPage(composeTestRule)
     val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
+    val calendarToDoCreateUpdatePage = CalendarToDoCreateUpdatePage(composeTestRule)
+    val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
 }

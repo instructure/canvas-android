@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -288,7 +289,8 @@ private fun CreateUpdateToDoContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .testTag("addTitleField"),
                 cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                 textStyle = TextStyle(
                     color = colorResource(id = R.color.textDarkest),
@@ -345,7 +347,8 @@ private fun CreateUpdateToDoContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
-                        .focusRequester(detailsFocusRequester),
+                        .focusRequester(detailsFocusRequester)
+                        .testTag("TodoDetailsTextField"),
                     cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                     textStyle = TextStyle(
                         color = colorResource(id = R.color.textDarkest),
