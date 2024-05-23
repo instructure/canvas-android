@@ -45,10 +45,12 @@ class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
             .assertTextEquals(title).isDisplayed()
     }
 
-    fun assertCanvasContext(title: String, color: Int? = null) {
-        composeTestRule.onNodeWithText(title)
-            .assertIsDisplayed()
-            .assertTextColor(Color(color!!))
+    fun assertCanvasContext(title: String) {
+        composeTestRule.onNodeWithText(title).assertIsDisplayed()
+    }
+
+    fun assertTextColor(title: String, color: Int) {
+        composeTestRule.onNodeWithText(title).assertTextColor(Color(color))
     }
 
     fun assertDate(context: Context, date: Date) {

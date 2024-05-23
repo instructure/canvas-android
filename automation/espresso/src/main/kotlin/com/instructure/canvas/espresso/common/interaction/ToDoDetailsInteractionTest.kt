@@ -66,7 +66,8 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         goToToDoDetails(data)
 
         composeTestRule.waitForIdle()
-        calendarToDoDetailsPage.assertCanvasContext(course.name, course.textAndIconColor)
+        calendarToDoDetailsPage.assertCanvasContext(course.name)
+        calendarToDoDetailsPage.assertTextColor(course.name, course.textAndIconColor)
     }
 
     @Test
