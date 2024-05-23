@@ -15,6 +15,7 @@ pluginManagement {
 /* Top-level project modules */
 include ':student'
 include ':teacher'
+include ':parent'
 
 /* Library modules */
 include ':annotations'

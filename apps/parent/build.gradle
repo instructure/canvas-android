@@ -1,0 +1,130 @@
+/*
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.firebase.crashlytics'
+    id 'dagger.hilt.android.plugin'
+}
+
+configurations {
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+    all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+}
+
+android {
+    namespace 'com.instructure.parentapp'
+    compileSdk Versions.COMPILE_SDK
+
+    defaultConfig {
+        applicationId "com.instructure.parentapp"
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        versionCode 50
+        versionName "3.10.0"
+
+        /* Add private data */
+        PrivateData.merge(project, "parent")
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+    hilt {
+        enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /* Project Modules */
+    implementation project(path: ':login-api-2')
+
+    /* Android Test Dependencies */
+    androidTestImplementation project(path: ':espresso')
+    androidTestImplementation project(':dataseedingapi')
+
+    /* Unit Test Dependencies */
+    testImplementation Libs.JUNIT
+    testImplementation Libs.ROBOLECTRIC
+    testImplementation Libs.ANDROIDX_TEST_JUNIT
+    testImplementation Libs.MOCKK
+    androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
+    testImplementation Libs.THREETEN_BP
+    testImplementation Libs.ANDROIDX_CORE_TESTING
+
+    /* Firebase */
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
+    }
+    implementation Libs.FIREBASE_MESSAGING
+    implementation Libs.FIREBASE_CRASHLYTICS_NDK
+    implementation(Libs.FIREBASE_CRASHLYTICS) {
+        transitive = true
+    }
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    kapt Libs.HILT_ANDROIDX_COMPILER
+
+    /* ROOM */
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+    implementation Libs.ROOM_COROUTINES
+
+    /* Navigation */
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
+
+    /* Support dependencies */
+    implementation Libs.ANDROIDX_ANNOTATION
+    implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_BROWSER
+    implementation Libs.ANDROIDX_CARDVIEW
+    implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
+    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.ANDROIDX_RECYCLERVIEW
+    implementation Libs.ANDROIDX_PALETTE
+    implementation Libs.PLAY_IN_APP_UPDATES
+}

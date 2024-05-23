@@ -26,28 +26,29 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.loginapi.login.api.MobileVerifyAPI
-import com.instructure.loginapi.login.model.DomainVerificationResult
 import com.instructure.loginapi.login.model.SignedInUser
+import com.instructure.pandautils.utils.AppType
 
 object QRLogin {
 
     private const val QR_DOMAIN = "domain"
     private const val QR_AUTH_CODE_STUDENT = "code_android"
     private const val QR_AUTH_CODE_TEACHER = "code_android_teacher"
+    private const val QR_AUTH_CODE_PARENT = "code_android_parent"
     private const val QR_HOST = "sso.canvaslms.com"
     private const val QR_HOST_BETA = "sso.beta.canvaslms.com"
     private const val QR_HOST_TEST = "sso.test.canvaslms.com"
 
     // Returns True if Masquerading, false otherwise
-    suspend fun performSSOLogin(data: Uri, context: Context, isTeacher: Boolean = false): OAuthTokenResponse {
+    suspend fun performSSOLogin(data: Uri, context: Context, appType: AppType = AppType.STUDENT): OAuthTokenResponse {
         val domain = data.getQueryParameter(QR_DOMAIN)
-        val code = if(isTeacher) {
-            data.getQueryParameter(QR_AUTH_CODE_TEACHER)
-        } else {
-            data.getQueryParameter(QR_AUTH_CODE_STUDENT)
+        val code = when (appType) {
+            AppType.STUDENT -> data.getQueryParameter(QR_AUTH_CODE_STUDENT)
+            AppType.TEACHER -> data.getQueryParameter(QR_AUTH_CODE_TEACHER)
+            AppType.PARENT -> data.getQueryParameter(QR_AUTH_CODE_PARENT)
         }
 
-        val domainVerificationResult = awaitApi<DomainVerificationResult> {
+        val domainVerificationResult = awaitApi {
             MobileVerifyAPI.mobileVerify(domain, it)
         }
 
@@ -101,9 +102,13 @@ object QRLogin {
         return tokenResponse
     }
 
-    fun verifySSOLoginUri(uri: Uri?, isTeacher: Boolean = false): Boolean {
+    fun verifySSOLoginUri(uri: Uri?, appType: AppType = AppType.STUDENT): Boolean {
         if (uri == null) return false
-        val codeParam = if(isTeacher) QR_AUTH_CODE_TEACHER else QR_AUTH_CODE_STUDENT
+        val codeParam = when (appType) {
+            AppType.STUDENT -> QR_AUTH_CODE_STUDENT
+            AppType.TEACHER -> QR_AUTH_CODE_TEACHER
+            AppType.PARENT -> QR_AUTH_CODE_PARENT
+        }
         val hostList = listOf(QR_HOST, QR_HOST_BETA, QR_HOST_TEST)
         return hostList.contains(uri.host.orEmpty())
                 && uri.queryParameterNames.contains(QR_DOMAIN)

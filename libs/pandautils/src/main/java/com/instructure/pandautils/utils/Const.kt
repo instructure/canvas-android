@@ -162,6 +162,7 @@ object Const {
     const val STUDIO_LTI_TOOL = "studioLTITool"
     const val STUDENT_USER_AGENT = "candroid"
     const val TEACHER_USER_AGENT = "androidTeacher"
+    const val PARENT_USER_AGENT = "androidParent"
 
     // Intent String for QR Code Masquerading
     const val QR_CODE_MASQUERADE_ID = "qrCodeMasqueradeId"
