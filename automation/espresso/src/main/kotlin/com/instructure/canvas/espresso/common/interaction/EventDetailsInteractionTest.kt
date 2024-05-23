@@ -212,7 +212,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         evenDetailsPage.confirmDelete()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.assertItemNotExits(event.title!!)
+        calendarScreenPage.assertItemNotExist(event.title!!)
     }
 
     abstract fun goToEventDetails(data: MockCanvas)
