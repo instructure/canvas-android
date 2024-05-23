@@ -213,7 +213,7 @@ private fun CreateUpdateEventTopAppBar(
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.textDarkest),
                     strokeWidth = 3.dp,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(32.dp).testTag("savingProgressIndicator")
                 )
             } else {
                 ActionsSegment(

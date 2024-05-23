@@ -12,12 +12,15 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.canvas.espresso.common.interaction
+ */
+package com.instructure.canvas.espresso.common.interaction
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.canvas.espresso.CanvasComposeTest
+import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
+import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addPlannable
@@ -29,7 +32,9 @@ import java.util.Date
 
 abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
 
+    val calendarScreenPage = CalendarScreenPage(composeTestRule)
     private val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
+    private val calendarToDoCreateUpdatePage = CalendarToDoCreateUpdatePage(composeTestRule)
 
     @Test
     fun assertTitle() {
@@ -129,7 +134,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         calendarToDoDetailsPage.clickEditMenu()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Edit To Do").assertIsDisplayed()
+        calendarToDoCreateUpdatePage.assertPageTitle("Edit To Do")
     }
 
     @Test
@@ -152,7 +157,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         calendarToDoDetailsPage.clickDeleteMenu()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
+        calendarToDoDetailsPage.assertDeleteDialog()
     }
 
     @Test
@@ -179,7 +184,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.onNodeWithText("Delete").performClick()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Test Todo").assertDoesNotExist()
+        calendarScreenPage.assertItemNotExist("Test Todo")
     }
 
     abstract fun goToToDoDetails(data: MockCanvas)

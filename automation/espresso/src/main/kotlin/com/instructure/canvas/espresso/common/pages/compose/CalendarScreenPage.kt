@@ -53,11 +53,16 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         composeTestRule.waitForIdle()
     }
 
+    fun selectDay(day: String) {
+        composeTestRule.onNodeWithText(day).performClick()
+        composeTestRule.waitForIdle()
+    }
+
     fun assertItemDetails(eventTitle: String, contextName: String, eventDate: String? = null, eventStatus: String? = null) {
         composeTestRule.onNodeWithText(eventTitle).assertIsDisplayed()
         composeTestRule.onNodeWithText(contextName).assertIsDisplayed()
-        if(eventDate != null) composeTestRule.onNodeWithText(eventDate).assertIsDisplayed()
-        if(eventStatus != null) composeTestRule.onNodeWithText(eventStatus).assertIsDisplayed()
+        if (eventDate != null) composeTestRule.onNodeWithText(eventDate).assertIsDisplayed()
+        if (eventStatus != null) composeTestRule.onNodeWithText(eventStatus).assertIsDisplayed()
     }
 
     fun assertEmptyView() {
@@ -67,5 +72,4 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     fun assertItemNotExist(itemTitle: String) {
         composeTestRule.onNodeWithText(itemTitle).assertDoesNotExist()
     }
-
 }

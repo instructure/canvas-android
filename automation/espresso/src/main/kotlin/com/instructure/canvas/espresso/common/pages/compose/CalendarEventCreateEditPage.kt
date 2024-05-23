@@ -15,25 +15,32 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
-import androidx.test.espresso.web.assertion.WebViewAssertions
-import androidx.test.espresso.web.sugar.Web
-import androidx.test.espresso.web.webdriver.DriverAtoms
-import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.espresso.contrib.PickerActions
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withId
-import com.instructure.pandautils.R
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.waitForViewWithClassName
 import org.hamcrest.Matchers
+import java.util.Calendar
 
-class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) {
+class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) : BasePage() {
+
+    fun assertScreenTitle(title: String) {
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText(title))).assertIsDisplayed()
+    }
 
     fun assertTitle(title: String) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
@@ -44,6 +51,38 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
         composeTestRule.waitForIdle()
     }
 
+    fun selectDate(calendar: Calendar) {
+        composeTestRule.onNodeWithText("Date").performScrollTo().performClick()
+        waitForViewWithClassName(Matchers.equalTo(DatePicker::class.java.name)).perform(
+            PickerActions.setDate(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+        )
+        onViewWithId(android.R.id.button1).click()
+        composeTestRule.waitForIdle()
+    }
+
+    fun selectTime(label: String, calendar: Calendar) {
+        composeTestRule.onNodeWithText(label).performScrollTo().performClick()
+        waitForViewWithClassName(Matchers.equalTo(TimePicker::class.java.name)).perform(
+            PickerActions.setTime(
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE)
+            )
+        )
+        onViewWithId(android.R.id.button1).click()
+        composeTestRule.waitForIdle()
+    }
+
+    fun selectFrequency(frequency: String) {
+        composeTestRule.onNodeWithText("Frequency").performScrollTo().performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(frequency).performClick()
+        composeTestRule.waitForIdle()
+    }
+
     fun typeLocation(location: String) {
         composeTestRule.onNodeWithTag("locationTextField").onChildAt(0).performTextReplacement(location)
         composeTestRule.waitForIdle()
@@ -51,11 +90,6 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
 
     fun typeAddress(address: String) {
         composeTestRule.onNodeWithTag("addressTextField").onChildAt(0).performTextReplacement(address)
-        composeTestRule.waitForIdle()
-    }
-
-    fun typeDetails(details: String) {
-        composeTestRule.onNodeWithTag("detailsComposeRCE").performTextReplacement(details)
         composeTestRule.waitForIdle()
     }
 

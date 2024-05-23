@@ -22,7 +22,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
-import com.instructure.espresso.page.BasePage
 
 class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule) {
 
@@ -40,12 +39,12 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
     }
 
     fun typeDetails(details: String) {
-        composeTestRule.onNodeWithTag("TodoDetailsTextField").performTextReplacement(details)
+        composeTestRule.onNodeWithTag("todoDetailsTextField").performTextReplacement(details)
         composeTestRule.waitForIdle()
     }
 
     fun assertDetails(details: String) {
-        composeTestRule.onNodeWithTag("TodoDetailsTextField").assertTextEquals(details)
+        composeTestRule.onNodeWithTag("todoDetailsTextField").assertTextEquals(details)
     }
 
     fun clickSave() {

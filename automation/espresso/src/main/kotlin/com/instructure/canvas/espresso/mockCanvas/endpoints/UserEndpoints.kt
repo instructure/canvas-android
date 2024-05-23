@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.models.ToDo
+import com.instructure.canvasapi2.models.toPlannerItems
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import okio.Buffer
 import java.nio.charset.Charset
@@ -81,9 +82,18 @@ object UserEndpoint : Endpoint(
             response = {
                 GET {
                     val userId = pathVars.userId
-                    val userCourseIds = data.enrollments.values.filter {it.userId == userId}.map {it -> it.courseId}
+                    val userCourseIds = data.enrollments.values.filter { it.userId == userId }.map { it.courseId }
 
                     val todos = data.todos.filter { it.userId == userId }
+
+                    val events = data.courseCalendarEvents
+                        .filterKeys { it in userCourseIds }.values
+                        .flatten()
+                        .toPlannerItems(PlannableType.CALENDAR_EVENT)
+
+                    val userEvents = data.userCalendarEvents[userId]
+                        .orEmpty()
+                        .toPlannerItems(PlannableType.CALENDAR_EVENT)
 
                     // Gather our assignments
                     // Currently we assume all the assignments are due today
@@ -96,6 +106,8 @@ object UserEndpoint : Endpoint(
                             PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, plannableDate, null, SubmissionState(), false)
                         }
                         .plus(todos)
+                        .plus(events)
+                        .plus(userEvents)
 
                     request.successResponse(plannerItemsList)
                 }

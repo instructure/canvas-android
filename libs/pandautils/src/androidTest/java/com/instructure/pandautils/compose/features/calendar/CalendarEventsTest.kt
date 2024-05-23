@@ -59,7 +59,7 @@ class CalendarEventsTest {
             ), actionHandler = {})
         }
 
-        val loading = composeTestRule.onNode(hasTestTag("Loading0"))
+        val loading = composeTestRule.onNode(hasTestTag("loading0"))
         loading.assertIsDisplayed()
     }
 
@@ -76,7 +76,7 @@ class CalendarEventsTest {
             ), actionHandler = {})
         }
 
-        val parentMatcher = (hasAnyAncestor(hasTestTag("CalendarEventsPage0")))
+        val parentMatcher = (hasAnyAncestor(hasTestTag("calendarEventsPage0")))
         val errorText = composeTestRule.onNode(parentMatcher.and(hasText("There was an error loading your calendar")))
         errorText.assertIsDisplayed()
         val retryButton = composeTestRule.onNode(parentMatcher.and(hasText("Retry")))
@@ -98,7 +98,7 @@ class CalendarEventsTest {
             ), actionHandler = { actions.add(it) })
         }
 
-        val parentMatcher = (hasAnyAncestor(hasTestTag("CalendarEventsPage0")))
+        val parentMatcher = (hasAnyAncestor(hasTestTag("calendarEventsPage0")))
         val retryButton = composeTestRule.onNode(parentMatcher.and(hasText("Retry")))
         retryButton.performClick()
         composeTestRule.waitForIdle()
@@ -118,7 +118,7 @@ class CalendarEventsTest {
             ), actionHandler = {})
         }
 
-        val parentMatcher = (hasAnyAncestor(hasTestTag("CalendarEventsPage0")))
+        val parentMatcher = (hasAnyAncestor(hasTestTag("calendarEventsPage0")))
         val emptyTitle = composeTestRule.onNode(parentMatcher.and(hasText("No Events Today!")))
         emptyTitle.assertIsDisplayed()
         val emptyDescription = composeTestRule.onNode(parentMatcher.and(hasText("It looks like a great day to rest, relax, and recharge.")))

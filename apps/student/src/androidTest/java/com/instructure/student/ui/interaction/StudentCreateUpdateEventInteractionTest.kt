@@ -15,11 +15,9 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.app.Activity
-import com.instructure.canvas.espresso.common.interaction.ToDoDetailsInteractionTest
+import com.instructure.canvas.espresso.common.interaction.CreateUpdateEventInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.DashboardPage
@@ -28,34 +26,45 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 
 @HiltAndroidTest
-class StudentToDoDetailsInteractionTest : ToDoDetailsInteractionTest() {
+class StudentCreateUpdateEventInteractionTest : CreateUpdateEventInteractionTest() {
 
     override val isTesting = BuildConfig.IS_TESTING
 
-    override val activityRule: InstructureActivityTestRule<out Activity> =
-        StudentActivityTestRule(LoginActivity::class.java)
+    override val activityRule = StudentActivityTestRule(LoginActivity::class.java)
 
     private val dashboardPage = DashboardPage()
 
-    override fun displaysPageObjects() = Unit
-
-    override fun goToToDoDetails(data: MockCanvas) {
+    override fun goToCreateEvent(data: MockCanvas) {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
 
         dashboardPage.clickCalendarTab()
 
-        val todo = data.todos.first()
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddEvent()
+    }
+
+    override fun goToEditEvent(data: MockCanvas) {
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+
+        dashboardPage.clickCalendarTab()
+
+        val event = data.userCalendarEvents.values.first().first()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.clickOnItem(todo.plannable.title)
+        calendarScreenPage.clickOnItem(event.title!!)
+        calendarEventDetailsPage.clickOverflowMenu()
+        calendarEventDetailsPage.clickEditMenu()
     }
 
     override fun initData(): MockCanvas {
         return MockCanvas.init(
             studentCount = 1,
-            teacherCount = 1,
+            teacherCount = 0,
             courseCount = 1,
             favoriteCourseCount = 1
         )

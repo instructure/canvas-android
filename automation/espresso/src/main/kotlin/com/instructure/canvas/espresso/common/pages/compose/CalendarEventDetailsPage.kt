@@ -19,20 +19,15 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onChildren
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
-import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
@@ -50,21 +45,25 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
     }
 
     fun verifyDescription(description: String) {
-        Web.onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
-            .withElement(DriverAtoms.findElement(Locator.ID, "content"))
+        onWebView(withId(R.id.contentWebView) + withAncestor(withId(R.id.eventFragment)))
+            .withElement(findElement(Locator.ID, "content"))
             .check(
-                WebViewAssertions.webMatches(
-                    DriverAtoms.getText(),
+                webMatches(
+                    getText(),
                     Matchers.comparesEqualTo(description)
                 )
             )
+    }
+
+    fun assertEventCalendar(calendar: String) {
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText(calendar))).assertIsDisplayed()
     }
 
     fun assertEventTitle(title: String) {
         composeTestRule.onNode(hasTestTag("eventTitle") and hasText(title)).assertIsDisplayed()
     }
 
-    fun assertEventDate(date: String) {
+    fun assertEventDateContains(date: String) {
         composeTestRule.onNode(hasTestTag("eventDate")).assertTextContains(date, substring = true)
     }
 
@@ -99,10 +98,7 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
     }
 
     fun clickOverflowMenu() {
-        composeTestRule.waitForIdle()
-        val canvasThemedAppBar = composeTestRule.onNodeWithTag("canvasThemedAppBar").assertIsDisplayed()
-        canvasThemedAppBar.onChildren().filterToOne(hasContentDescription("More options")).performClick()
-        composeTestRule.waitForIdle()
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("More options"))).performClick()
     }
 
     fun clickEditMenu() {
@@ -115,9 +111,12 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
         composeTestRule.waitForIdle()
     }
 
+    fun assertDeleteDialog() {
+        composeTestRule.onNodeWithText("Delete Event?").assertIsDisplayed()
+    }
+
     fun confirmDelete() {
         composeTestRule.onNodeWithText("Delete").performClick()
         composeTestRule.waitForIdle()
     }
-
 }

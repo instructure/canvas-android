@@ -348,7 +348,7 @@ private fun CreateUpdateToDoContent(
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
                         .focusRequester(detailsFocusRequester)
-                        .testTag("TodoDetailsTextField"),
+                        .testTag("todoDetailsTextField"),
                     cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                     textStyle = TextStyle(
                         color = colorResource(id = R.color.textDarkest),
