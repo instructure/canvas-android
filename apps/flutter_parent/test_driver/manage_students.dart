@@ -30,17 +30,17 @@ void main() async {
   await ApiPrefs.init();
 
   // Create parent and two students, one of which is paired to the parent.
-  var parent = await UserSeedApi.createUser();
-  var student1 = await UserSeedApi.createUser();
-  var student2 = await UserSeedApi.createUser();
-  var teacher = await UserSeedApi.createUser();
+  var parent = (await UserSeedApi.createUser())!;
+  var student1 = (await UserSeedApi.createUser())!;
+  var student2 = (await UserSeedApi.createUser())!;
+  var teacher = (await UserSeedApi.createUser())!;
   var course1 = await AppSeedUtils.seedCourseAndEnrollments(student: student1, teacher: teacher);
   var course2 = await AppSeedUtils.seedCourseAndEnrollments(student: student2, teacher: teacher);
   await AppSeedUtils.seedPairing(parent, student1);
 
   // Get a pairing code for student2
   var pairingCodeStructure = await UserSeedApi.createObserverPairingCode(student2.id);
-  var pairingCode = pairingCodeStructure.code;
+  var pairingCode = pairingCodeStructure?.code;
   print("PAIRING CODE: $pairingCode");
 
   // Sign in the parent

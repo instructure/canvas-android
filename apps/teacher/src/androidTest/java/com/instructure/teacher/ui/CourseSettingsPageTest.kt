@@ -17,7 +17,6 @@ package com.instructure.teacher.ui
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.espresso.TestRail
 import com.instructure.espresso.randomString
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -28,14 +27,12 @@ import org.junit.Test
 class CourseSettingsPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3108914")
     override fun displaysPageObjects() {
         navigateToCourseSettings()
         courseSettingsPage.assertPageObjects()
     }
 
     @Test
-    @TestRail(ID = "C3108915")
     fun editCourseName() {
         navigateToCourseSettings()
         courseSettingsPage.clickCourseName()
@@ -45,7 +42,6 @@ class CourseSettingsPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3108916")
     fun editCourseHomePage() {
         navigateToCourseSettings()
         courseSettingsPage.clickSetHomePage()
@@ -64,7 +60,7 @@ class CourseSettingsPageTest : TeacherTest() {
         val token = data.tokenFor(teacher)!!
 
         tokenLogin(data.domain, token, teacher)
-        dashboardPage.openCourse(course!!)
+        dashboardPage.openCourse(course)
         courseBrowserPage.clickSettingsButton()
     }
 }

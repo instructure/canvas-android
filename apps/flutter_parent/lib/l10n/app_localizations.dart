@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/generated/messages_all.dart';
 import 'package:intl/intl.dart';
@@ -78,8 +79,8 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   @override
   bool shouldReload(LocalizationsDelegate<AppLocalizations> old) => false;
 
-  LocaleResolutionCallback resolution({Locale fallback, bool matchCountry = true}) {
-    return (Locale locale, Iterable<Locale> supported) {
+  LocaleResolutionCallback resolution({Locale? fallback, bool matchCountry = true}) {
+    return (Locale? locale, Iterable<Locale> supported) {
       return _resolve(locale, fallback, supported, matchCountry);
     };
   }
@@ -87,29 +88,25 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   ///
   /// Returns true if the specified locale is supported, false otherwise.
   ///
-  Locale _isSupported(Locale locale, bool shouldMatchCountry) {
-    if (locale == null) {
-      return null;
-    }
-
+  Locale? _isSupported(Locale? locale, bool shouldMatchCountry) {
     // Must match language code and script code.
     // Must match country code if specified or will fall back to the generic language pack if we don't match country code.
     // i.e., match a passed in 'zh-Hans' to the supported 'zh' if [matchCountry] is false
-    return supportedLocales.firstWhere((Locale supportedLocale) {
-      final matchLanguage = (supportedLocale.languageCode == locale.languageCode);
-      final matchScript = (locale.scriptCode == supportedLocale.scriptCode);
-      final matchCountry = (supportedLocale.countryCode == locale.countryCode);
+    return supportedLocales.firstWhereOrNull((Locale supportedLocale) {
+      final matchLanguage = (supportedLocale.languageCode == locale?.languageCode);
+      final matchScript = (locale?.scriptCode == supportedLocale.scriptCode);
+      final matchCountry = (supportedLocale.countryCode == locale?.countryCode);
       final matchCountryFallback =
-          (true != shouldMatchCountry && (supportedLocale.countryCode == null || supportedLocale.countryCode.isEmpty));
+          (true != shouldMatchCountry && (supportedLocale.countryCode == null || supportedLocale.countryCode?.isEmpty == true));
 
       return matchLanguage && matchScript && (matchCountry || matchCountryFallback);
-    }, orElse: () => null);
+    });
   }
 
   ///
   /// Internal method to resolve a locale from a list of locales.
   ///
-  Locale _resolve(Locale locale, Locale fallback, Iterable<Locale> supported, bool matchCountry) {
+  Locale? _resolve(Locale? locale, Locale? fallback, Iterable<Locale> supported, bool matchCountry) {
     if (locale == Locale('zh', 'Hant')) {
       // Special case Traditional Chinese (server sends us zh-Hant but translators give us zh-HK)
       locale = Locale('zh', 'HK');
@@ -122,7 +119,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 }
 
-AppLocalizations L10n(BuildContext context) => Localizations.of<AppLocalizations>(context, AppLocalizations);
+AppLocalizations L10n(BuildContext context) => Localizations.of<AppLocalizations>(context, AppLocalizations) ?? AppLocalizations();
 
 ///
 /// App Localization class.
@@ -250,6 +247,15 @@ class AppLocalizations {
         name: 'pointsPossible',
         args: [points],
         desc: 'Screen reader label used for the points possible for an assignment, quiz, etc.',
+      );
+
+  String calendarDaySemanticsLabel(String date, int eventCount) => Intl.plural(
+        eventCount,
+        one: '$date, $eventCount event',
+        other: '$date, $eventCount events',
+        name: 'calendarDaySemanticsLabel',
+        args: [date, eventCount],
+        desc: 'Screen reader label used for calendar day, reads the date and count of events',
       );
 
   String get noEventsTitle => Intl.message(
@@ -983,11 +989,18 @@ class AppLocalizations {
         desc: 'Screen reader-friendly replacement for the "-" character in letter grades like "A-"',
       );
 
-  String latePenalty(String pointsLost) => Intl.message(
-        'Late penalty (-$pointsLost)',
+  String yourGrade(String pointsAchieved) => Intl.message(
+    'Your grade: $pointsAchieved',
+    desc: 'Text displayed when a late penalty has been applied to the assignment, this is the achieved score without the penalty',
+    args: [pointsAchieved],
+    name: 'yourGrade',
+  );
+
+  String latePenaltyUpdated(String pointsLost) => Intl.message(
+        'Late Penalty: -$pointsLost pts',
         desc: 'Text displayed when a late penalty has been applied to the assignment',
         args: [pointsLost],
-        name: 'latePenalty',
+        name: 'latePenaltyUpdated',
       );
 
   String finalGrade(String grade) => Intl.message(
@@ -1666,4 +1679,40 @@ class AppLocalizations {
 
   String get messageSent =>
       Intl.message('Message sent', desc: 'confirmation message on the screen when the user succesfully sends a message');
+
+  String get acceptableUsePolicyTitle =>
+      Intl.message('Acceptable Use Policy', desc: 'title for the acceptable use policy screen');
+
+  String get acceptableUsePolicyConfirm =>
+      Intl.message('Submit', desc: 'submit button title for acceptable use policy screen');
+
+  String get acceptableUsePolicyDescription =>
+      Intl.message('Either you\'re a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.', desc: 'acceptable use policy screen description');
+
+  String get acceptableUsePolicyAgree =>
+      Intl.message('I agree to the Acceptable Use Policy.', desc: 'acceptable use policy switch title');
+
+  String get about =>
+      Intl.message('About', desc: 'Title for about menu item in settings');
+
+  String get aboutAppTitle =>
+      Intl.message('App', desc: 'Title for App field on about page');
+
+  String get aboutDomainTitle =>
+      Intl.message('Domain', desc: 'Title for Domain field on about page');
+
+  String get aboutLoginIdTitle =>
+      Intl.message('Login ID', desc: 'Title for Login ID field on about page');
+
+  String get aboutEmailTitle =>
+      Intl.message('Email', desc: 'Title for Email field on about page');
+
+  String get aboutVersionTitle =>
+      Intl.message('Version', desc: 'Title for Version field on about page');
+
+  String get aboutLogoSemanticsLabel =>
+      Intl.message('Instructure logo', desc: 'Semantics label for the Instructure logo on the about page');
+
+  String get needToEnablePermission =>
+      Intl.message('You need to enable exact alarm permission for this action', desc: 'Error message when the user tries to set a reminder without the permission');
 }

@@ -14,58 +14,57 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:animateLayoutChanges="true"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/backgroundLightestElevated">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageButton
-        android:id="@+id/sendCommentButton"
-        android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_alignBottom="@+id/commentEditText"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/commentEditText"
-        android:layout_below="@id/sendingErrorTextView"
-        android:layout_centerVertical="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/send"
-        android:src="@drawable/ic_send"
-        app:tint="@color/textInfo"/>
-
-
-    <ImageButton
-        android:id="@+id/addMediaAttachment"
-        android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_alignBottom="@+id/commentEditText"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/commentEditText"
-        android:layout_below="@id/sendingErrorTextView"
-        android:layout_centerVertical="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/addMediaComment"
-        android:src="@drawable/ic_attachment"
-        app:tint="@color/textInfo"/>
-
-    <EditText
-        android:id="@+id/commentEditText"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/sendCommentButton"
-        android:layout_toEndOf="@id/addMediaAttachment"
-        android:background="@color/transparent"
-        android:hint="@string/speedGraderCommentHint"
-        android:inputType="textCapSentences|textMultiLine"
-        android:maxLines="5"
-        android:minHeight="50dp"
-        android:paddingBottom="0dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:paddingTop="0dp"
-        android:textSize="16sp"/>
+        android:animateLayoutChanges="true"
+        android:background="@color/backgroundLightestElevated">
 
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/sendCommentButton"
+            android:layout_width="56dp"
+            android:layout_height="0dp"
+            android:layout_alignTop="@+id/commentEditText"
+            android:layout_alignBottom="@+id/commentEditText"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/send"
+            android:src="@drawable/ic_send"
+            app:tint="@color/textInfo" />
+
+        <ImageButton
+            android:id="@+id/addAttachment"
+            android:layout_width="56dp"
+            android:layout_height="0dp"
+            android:layout_alignTop="@+id/commentEditText"
+            android:layout_alignBottom="@+id/commentEditText"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/addMediaComment"
+            android:src="@drawable/ic_attachment"
+            app:tint="@color/textInfo" />
+
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/sendCommentButton"
+            android:layout_toEndOf="@id/addAttachment"
+            android:background="@color/transparent"
+            android:hint="@string/speedGraderCommentHint"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="5"
+            android:minHeight="50dp"
+            android:paddingStart="16dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="0dp"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+</layout>

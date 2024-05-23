@@ -5,9 +5,14 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
+import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
@@ -16,13 +21,56 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
-import com.instructure.teacher.features.calendar.event.CalendarEventFragment
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
+import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
-import com.instructure.teacher.fragments.*
+import com.instructure.teacher.fragments.AddMessageFragment
+import com.instructure.teacher.fragments.AnnouncementListFragment
+import com.instructure.teacher.fragments.AssigneeListFragment
+import com.instructure.teacher.fragments.AttendanceListFragment
+import com.instructure.teacher.fragments.ChooseRecipientsFragment
+import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
+import com.instructure.teacher.fragments.CourseBrowserFragment
+import com.instructure.teacher.fragments.CourseSettingsFragment
+import com.instructure.teacher.fragments.CreateDiscussionFragment
+import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
+import com.instructure.teacher.fragments.CreateOrEditPageDetailsFragment
+import com.instructure.teacher.fragments.DashboardFragment
+import com.instructure.teacher.fragments.DiscussionsListFragment
+import com.instructure.teacher.fragments.DiscussionsReplyFragment
+import com.instructure.teacher.fragments.DiscussionsUpdateFragment
+import com.instructure.teacher.fragments.DueDatesFragment
+import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
+import com.instructure.teacher.fragments.EditFileFolderFragment
+import com.instructure.teacher.fragments.EditQuizDetailsFragment
+import com.instructure.teacher.fragments.FeatureFlagsFragment
+import com.instructure.teacher.fragments.FileListFragment
+import com.instructure.teacher.fragments.FullscreenInternalWebViewFragment
+import com.instructure.teacher.fragments.InternalWebViewFragment
+import com.instructure.teacher.fragments.LtiLaunchFragment
+import com.instructure.teacher.fragments.MessageThreadFragment
+import com.instructure.teacher.fragments.PageDetailsFragment
+import com.instructure.teacher.fragments.PageListFragment
+import com.instructure.teacher.fragments.PeopleListFragment
+import com.instructure.teacher.fragments.ProfileEditFragment
+import com.instructure.teacher.fragments.ProfileFragment
+import com.instructure.teacher.fragments.QuizDetailsFragment
+import com.instructure.teacher.fragments.QuizListFragment
+import com.instructure.teacher.fragments.QuizPreviewWebviewFragment
+import com.instructure.teacher.fragments.SettingsFragment
+import com.instructure.teacher.fragments.SpeedGraderQuizWebViewFragment
+import com.instructure.teacher.fragments.ViewHtmlFragment
+import com.instructure.teacher.fragments.ViewImageFragment
+import com.instructure.teacher.fragments.ViewMediaFragment
+import com.instructure.teacher.fragments.ViewPdfFragment
+import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 
 object RouteResolver {
 
@@ -117,7 +165,7 @@ object RouteResolver {
         } else if(DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = DiscussionDetailsWebViewFragment.newInstance(route)
         } else if (InboxFragment::class.java.isAssignableFrom(cls)) {
-            fragment = InboxFragment()
+            fragment = InboxFragment.newInstance(route)
         } else if (AddMessageFragment::class.java.isAssignableFrom(cls)) {
             fragment = AddMessageFragment.newInstance(route.arguments)
         } else if (MessageThreadFragment::class.java.isAssignableFrom(cls)) {
@@ -182,8 +230,16 @@ object RouteResolver {
             fragment = SyllabusFragment.newInstance(canvasContext ?: route.canvasContext)
         } else if (EditSyllabusFragment::class.java.isAssignableFrom(cls)) {
             fragment = EditSyllabusFragment.newInstance(route.arguments)
-        } else if (CalendarEventFragment::class.java.isAssignableFrom(cls)) {
-            fragment = CalendarEventFragment.newInstance(route.arguments)
+        } else if (EventFragment::class.java.isAssignableFrom(cls)) {
+            fragment = EventFragment.newInstance(route)
+        } else if (ToDoFragment::class.java.isAssignableFrom(cls)) {
+            fragment = ToDoFragment.newInstance(route)
+        } else if (CreateUpdateToDoFragment::class.java.isAssignableFrom(cls)) {
+            fragment = CreateUpdateToDoFragment.newInstance(route)
+        } else if (CreateUpdateEventFragment::class.java.isAssignableFrom(cls)) {
+            fragment = CreateUpdateEventFragment.newInstance(route)
+        } else if (ModuleProgressionFragment::class.java.isAssignableFrom(cls)) {
+            fragment = ModuleProgressionFragment.newInstance(route.copy(canvasContext = canvasContext))
         } else if (FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = FullscreenInternalWebViewFragment.newInstance(route.arguments)
         } else if (InternalWebViewFragment::class.java.isAssignableFrom(cls)) {

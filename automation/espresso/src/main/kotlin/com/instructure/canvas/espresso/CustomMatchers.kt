@@ -18,18 +18,26 @@ package com.instructure.canvas.espresso
 
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textfield.TextInputLayout
 import com.instructure.espresso.ActivityHelper
 import junit.framework.AssertionFailedError
@@ -196,6 +204,30 @@ fun withIndex(matcher: Matcher<View>, index: Int): Matcher<View> {
     }
 }
 
+fun withRotation(rotation: Float): Matcher<View> {
+    return object : TypeSafeMatcher<View>() {
+        override fun matchesSafely(item: View): Boolean {
+            return item.rotation == rotation
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("with rotation: $rotation")
+        }
+    }
+}
+
+fun hasCheckedState(checkedState: Int) : Matcher<View> {
+    return object : TypeSafeMatcher<View>() {
+        override fun matchesSafely(item: View): Boolean {
+            return item is MaterialCheckBox && item.checkedState == checkedState
+        }
+
+        override fun describeTo(description: Description?) {
+            description?.appendText("has the proper checked state.")
+        }
+    }
+}
+
 // A matcher for views whose width is less than the specified amount (in dp),
 // but whose height is at least the specified amount.
 // This is used to suppress accessibility failures related to overflow menus
@@ -221,4 +253,63 @@ fun withOnlyWidthLessThan(dimInDp: Int) : BaseMatcher<AccessibilityViewCheckResu
         }
 
     }
+}
+fun getViewChildCountWithoutId(viewMatcher: Matcher<View>): Int {
+    var count = 0
+    onView(viewMatcher).perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(RecyclerView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Count RecyclerView children without ID"
+        }
+
+        override fun perform(uiController: UiController?, view: View?) {
+            if (view is RecyclerView) {
+                val childCount = view.childCount
+                for (i in 0 until childCount) {
+                    val child = view.getChildAt(i)
+                    if (child.id == View.NO_ID) {
+                        count++
+                    }
+                }
+            }
+        }
+    })
+    return count
+}
+
+
+fun countConstraintLayoutsInRecyclerView(recyclerViewId: ViewInteraction): Int {
+    var count = 0
+    recyclerViewId.perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(RecyclerView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Counting ConstraintLayouts in RecyclerView"
+        }
+
+        override fun perform(uiController: UiController, view: View) {
+            if (view is RecyclerView) {
+                count = countConstraintLayoutsInViewGroup(view)
+            }
+        }
+    })
+    return count
+}
+
+private fun countConstraintLayoutsInViewGroup(viewGroup: ViewGroup): Int {
+    var count = 0
+    for (i in 0 until viewGroup.childCount) {
+        val child = viewGroup.getChildAt(i)
+        if (child is ConstraintLayout) {
+            count++
+        } else if (child is ViewGroup) {
+            count += countConstraintLayoutsInViewGroup(child)
+        }
+    }
+    return count
 }

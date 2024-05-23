@@ -16,7 +16,9 @@
 
 package com.instructure.pandautils.utils
 
+import androidx.work.Data
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
 import java.util.*
 import kotlin.math.ln
 import kotlin.math.pow
@@ -51,4 +53,42 @@ fun Boolean?.orDefault(default: Boolean = false): Boolean {
 
 fun Double?.orDefault(default: Double = 0.0): Double {
     return this ?: default
+}
+
+fun Data.newBuilder(): Data.Builder {
+    return Data.Builder()
+        .putAll(this)
+}
+
+suspend fun retry(retryCount: Int = 5, initialDelay: Long = 100, factor: Float = 2f, maxDelay: Long = 1000, block: suspend () -> Unit) {
+    var currentDelay = initialDelay
+    repeat(retryCount.coerceAtLeast(1)) {
+        try {
+            block()
+            return
+        } catch (e: Exception) {
+            delay(currentDelay)
+            currentDelay = (currentDelay * factor).toLong().coerceAtMost(maxDelay)
+        }
+    }
+}
+
+suspend fun <T> poll(
+    pollInterval: Long = 1000,
+    maxAttempts: Int = 10,
+    block: suspend () -> T?,
+    validate: suspend (T) -> Boolean
+): T? {
+    var attempts = 0
+    while (attempts < maxAttempts || maxAttempts == -1) {
+        val result = block()
+        result?.let {
+            if (validate(it)) {
+                return result
+            }
+        }
+        attempts++
+        delay(pollInterval)
+    }
+    return null
 }

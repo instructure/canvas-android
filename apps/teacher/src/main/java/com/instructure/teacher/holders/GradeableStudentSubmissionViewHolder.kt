@@ -22,6 +22,7 @@ import android.util.TypedValue
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -33,29 +34,24 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.AdapterGradeableStudentSubmissionBinding
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getResForSubmission
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
-import kotlinx.android.synthetic.main.adapter_gradeable_student_submission.view.*
 import java.util.*
 
-class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_gradeable_student_submission
-    }
-
+class GradeableStudentSubmissionViewHolder(private val binding: AdapterGradeableStudentSubmissionBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         context: Context,
         gradeableStudentSubmission: GradeableStudentSubmission,
         assignment: Assignment,
         courseId: Long,
         callback: (GradeableStudentSubmission) -> Unit
-    ) = with(itemView) {
+    ) = with(binding) {
         // Set item a11y action to "view submission details"
-        accessibilityDelegate = object : View.AccessibilityDelegate() {
+        itemView.accessibilityDelegate = object : View.AccessibilityDelegate() {
             override fun onInitializeAccessibilityNodeInfo(v: View, info: AccessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(v, info)
                 val description = context.getString(R.string.a11y_viewSubmissionAction)
@@ -78,7 +74,7 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                 studentAvatar.setupAvatarA11y(assignee.name)
                 studentAvatar.onClick {
                     val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
-                    RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                    RouteMatcher.route(context.getFragmentActivity(), Route(StudentContextFragment::class.java, null, bundle))
                 }
             }
             assignee is GroupAssignee -> {

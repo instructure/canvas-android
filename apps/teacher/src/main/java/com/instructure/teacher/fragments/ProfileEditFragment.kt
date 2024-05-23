@@ -22,6 +22,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
+import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
@@ -39,28 +40,46 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_EDIT
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AvatarCropActivity
+import com.instructure.pandautils.utils.AvatarCropConfig
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FilePrefs
+import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.pandautils.utils.MediaUploadUtils.chooseFromGalleryBecausePermissionsAlreadyGranted
 import com.instructure.pandautils.utils.MediaUploadUtils.takeNewPhotoBecausePermissionsAlreadyGranted
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentProfileEditBinding
 import com.instructure.teacher.factory.ProfileEditFragmentPresenterFactory
 import com.instructure.teacher.presenters.ProfileEditFragmentPresenter
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.ProfileEditFragmentView
-import kotlinx.android.synthetic.main.fragment_profile_edit.*
 import retrofit2.Response
 import java.io.File
 
+@PageView(url = "profile/edit")
 @ScreenView(SCREEN_VIEW_PROFILE_EDIT)
 class ProfileEditFragment : BasePresenterFragment<
         ProfileEditFragmentPresenter,
-        ProfileEditFragmentView>(), ProfileEditFragmentView, LoaderManager.LoaderCallbacks<AvatarWrapper> {
-
+        ProfileEditFragmentView,
+        FragmentProfileEditBinding>(),
+    ProfileEditFragmentView,
+    LoaderManager.LoaderCallbacks<AvatarWrapper> {
 
     private var mLoaderBundle: Bundle? = null
 
@@ -72,9 +91,9 @@ class ProfileEditFragment : BasePresenterFragment<
 
     private val saveButton: TextView? get() = view?.findViewById(R.id.menu_save)
 
-    override fun layoutResId() = R.layout.fragment_profile_edit
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentProfileEditBinding = FragmentProfileEditBinding::inflate
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
 
         profileBanner.setImageResource(
@@ -93,7 +112,12 @@ class ProfileEditFragment : BasePresenterFragment<
         ViewStyler.themeProgressBar(profileCameraLoadingIndicator, ThemePrefs.brandColor)
 
         //Restore loader if necessary
-        LoaderUtils.restoreLoaderFromBundle(LoaderManager.getInstance(this), savedInstanceState, this, R.id.avatarLoaderId)
+        LoaderUtils.restoreLoaderFromBundle(
+            LoaderManager.getInstance(this@ProfileEditFragment),
+            savedInstanceState,
+            this@ProfileEditFragment,
+            R.id.avatarLoaderId
+        )
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
@@ -107,8 +131,8 @@ class ProfileEditFragment : BasePresenterFragment<
         setupToolbar()
     }
 
-    fun setupToolbar() {
-        toolbar.setupCloseButton(this)
+    fun setupToolbar() = with(binding) {
+        toolbar.setupCloseButton(this@ProfileEditFragment)
         toolbar.title = getString(R.string.editProfile)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveProfile() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
@@ -116,10 +140,10 @@ class ProfileEditFragment : BasePresenterFragment<
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
-    override fun readyToLoadUI(user: User?) {
+    override fun readyToLoadUI(user: User?) = with(binding) {
         profileCameraIconWrapper.setVisible(user?.canUpdateAvatar() == true)
         profileCameraIconWrapper.onClickWithRequireNetwork {
-            MediaUploadUtils.showPickImageDialog(this)
+            MediaUploadUtils.showPickImageDialog(this@ProfileEditFragment)
         }
         if(profileCameraLoadingIndicator.isShown) { profileCameraLoadingIndicator.announceForAccessibility(getString(R.string.loading))}
 
@@ -130,12 +154,12 @@ class ProfileEditFragment : BasePresenterFragment<
     }
 
     private fun saveProfile(){
-        val name = usersName.text.toString().validOrNull() ?: user?.shortName ?: ""
-        presenter.saveChanges(name, user?.bio ?: "")
+        val name = binding.usersName.text.toString().validOrNull() ?: user?.shortName.orEmpty()
+        presenter.saveChanges(name, user?.bio.orEmpty())
     }
 
     private fun updateAvatarImage(url: String?) {
-        ProfileUtils.loadAvatarForUser(usersAvatar, user?.shortName, url, 0)
+        ProfileUtils.loadAvatarForUser(binding.usersAvatar, user?.shortName, url, 0)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -148,7 +172,7 @@ class ProfileEditFragment : BasePresenterFragment<
             }
         } else if (requestCode == MediaUploadUtils.REQUEST_CODE_PERMISSIONS_GALLERY) {
             if (PermissionUtils.allPermissionsGrantedResultSummary(grantResults)) {
-                chooseFromGalleryBecausePermissionsAlreadyGranted(requireActivity())
+                chooseFromGalleryBecausePermissionsAlreadyGranted(this, requireActivity())
             } else {
                 Toast.makeText(requireActivity(), R.string.permissionDenied, Toast.LENGTH_LONG).show()
             }
@@ -218,13 +242,13 @@ class ProfileEditFragment : BasePresenterFragment<
 
     override fun onPresenterPrepared(presenter: ProfileEditFragmentPresenter) {}
 
-    private fun hideProgressBar() {
+    private fun hideProgressBar() = with(binding) {
         profileCameraLoadingIndicator.setGone()
         profileCameraIcon.setVisible()
         profileCameraIconWrapper.isClickable = true
     }
 
-    private fun showProgressBar() {
+    private fun showProgressBar() = with(binding) {
         profileCameraLoadingIndicator.setVisible()
         profileCameraIcon.setGone()
         profileCameraIconWrapper.isClickable = false

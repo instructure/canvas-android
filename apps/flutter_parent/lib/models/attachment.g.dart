@@ -15,114 +15,108 @@ class _$AttachmentSerializer implements StructuredSerializer<Attachment> {
   final String wireName = 'Attachment';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Attachment object,
+  Iterable<Object?> serialize(Serializers serializers, Attachment object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.jsonId,
           specifiedType: const FullType(JsonObject)),
       'size',
       serializers.serialize(object.size, specifiedType: const FullType(int)),
     ];
-    result.add('content-type');
-    if (object.contentType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.contentType,
-          specifiedType: const FullType(String)));
-    }
-    result.add('filename');
-    if (object.filename == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.filename,
-          specifiedType: const FullType(String)));
-    }
-    result.add('display_name');
-    if (object.displayName == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.displayName,
-          specifiedType: const FullType(String)));
-    }
-    result.add('url');
-    if (object.url == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('thumbnail_url');
-    if (object.thumbnailUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.thumbnailUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('preview_url');
-    if (object.previewUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.previewUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('created_at');
-    if (object.createdAt == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.createdAt,
+    Object? value;
+    value = object.contentType;
+
+    result
+      ..add('content-type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.filename;
+
+    result
+      ..add('filename')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.displayName;
+
+    result
+      ..add('display_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.url;
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.thumbnailUrl;
+
+    result
+      ..add('thumbnail_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.previewUrl;
+
+    result
+      ..add('preview_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.createdAt;
+
+    result
+      ..add('created_at')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(DateTime)));
-    }
+
     return result;
   }
 
   @override
-  Attachment deserialize(Serializers serializers, Iterable<Object> serialized,
+  Attachment deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AttachmentBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.jsonId = serializers.deserialize(value,
-              specifiedType: const FullType(JsonObject)) as JsonObject;
+              specifiedType: const FullType(JsonObject))! as JsonObject;
           break;
         case 'content-type':
           result.contentType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'filename':
           result.filename = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'display_name':
           result.displayName = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'thumbnail_url':
           result.thumbnailUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'preview_url':
           result.previewUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'created_at':
           result.createdAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(DateTime)) as DateTime?;
           break;
         case 'size':
           result.size = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
       }
     }
@@ -135,27 +129,27 @@ class _$Attachment extends Attachment {
   @override
   final JsonObject jsonId;
   @override
-  final String contentType;
+  final String? contentType;
   @override
-  final String filename;
+  final String? filename;
   @override
-  final String displayName;
+  final String? displayName;
   @override
-  final String url;
+  final String? url;
   @override
-  final String thumbnailUrl;
+  final String? thumbnailUrl;
   @override
-  final String previewUrl;
+  final String? previewUrl;
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
   final int size;
 
-  factory _$Attachment([void Function(AttachmentBuilder) updates]) =>
-      (new AttachmentBuilder()..update(updates)).build();
+  factory _$Attachment([void Function(AttachmentBuilder)? updates]) =>
+      (new AttachmentBuilder()..update(updates))._build();
 
   _$Attachment._(
-      {this.jsonId,
+      {required this.jsonId,
       this.contentType,
       this.filename,
       this.displayName,
@@ -163,14 +157,10 @@ class _$Attachment extends Attachment {
       this.thumbnailUrl,
       this.previewUrl,
       this.createdAt,
-      this.size})
+      required this.size})
       : super._() {
-    if (jsonId == null) {
-      throw new BuiltValueNullFieldError('Attachment', 'jsonId');
-    }
-    if (size == null) {
-      throw new BuiltValueNullFieldError('Attachment', 'size');
-    }
+    BuiltValueNullFieldError.checkNotNull(jsonId, r'Attachment', 'jsonId');
+    BuiltValueNullFieldError.checkNotNull(size, r'Attachment', 'size');
   }
 
   @override
@@ -197,27 +187,23 @@ class _$Attachment extends Attachment {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc($jc(0, jsonId.hashCode),
-                                    contentType.hashCode),
-                                filename.hashCode),
-                            displayName.hashCode),
-                        url.hashCode),
-                    thumbnailUrl.hashCode),
-                previewUrl.hashCode),
-            createdAt.hashCode),
-        size.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, jsonId.hashCode);
+    _$hash = $jc(_$hash, contentType.hashCode);
+    _$hash = $jc(_$hash, filename.hashCode);
+    _$hash = $jc(_$hash, displayName.hashCode);
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, thumbnailUrl.hashCode);
+    _$hash = $jc(_$hash, previewUrl.hashCode);
+    _$hash = $jc(_$hash, createdAt.hashCode);
+    _$hash = $jc(_$hash, size.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Attachment')
+    return (newBuiltValueToStringHelper(r'Attachment')
           ..add('jsonId', jsonId)
           ..add('contentType', contentType)
           ..add('filename', filename)
@@ -232,59 +218,60 @@ class _$Attachment extends Attachment {
 }
 
 class AttachmentBuilder implements Builder<Attachment, AttachmentBuilder> {
-  _$Attachment _$v;
+  _$Attachment? _$v;
 
-  JsonObject _jsonId;
-  JsonObject get jsonId => _$this._jsonId;
-  set jsonId(JsonObject jsonId) => _$this._jsonId = jsonId;
+  JsonObject? _jsonId;
+  JsonObject? get jsonId => _$this._jsonId;
+  set jsonId(JsonObject? jsonId) => _$this._jsonId = jsonId;
 
-  String _contentType;
-  String get contentType => _$this._contentType;
-  set contentType(String contentType) => _$this._contentType = contentType;
+  String? _contentType;
+  String? get contentType => _$this._contentType;
+  set contentType(String? contentType) => _$this._contentType = contentType;
 
-  String _filename;
-  String get filename => _$this._filename;
-  set filename(String filename) => _$this._filename = filename;
+  String? _filename;
+  String? get filename => _$this._filename;
+  set filename(String? filename) => _$this._filename = filename;
 
-  String _displayName;
-  String get displayName => _$this._displayName;
-  set displayName(String displayName) => _$this._displayName = displayName;
+  String? _displayName;
+  String? get displayName => _$this._displayName;
+  set displayName(String? displayName) => _$this._displayName = displayName;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  String _thumbnailUrl;
-  String get thumbnailUrl => _$this._thumbnailUrl;
-  set thumbnailUrl(String thumbnailUrl) => _$this._thumbnailUrl = thumbnailUrl;
+  String? _thumbnailUrl;
+  String? get thumbnailUrl => _$this._thumbnailUrl;
+  set thumbnailUrl(String? thumbnailUrl) => _$this._thumbnailUrl = thumbnailUrl;
 
-  String _previewUrl;
-  String get previewUrl => _$this._previewUrl;
-  set previewUrl(String previewUrl) => _$this._previewUrl = previewUrl;
+  String? _previewUrl;
+  String? get previewUrl => _$this._previewUrl;
+  set previewUrl(String? previewUrl) => _$this._previewUrl = previewUrl;
 
-  DateTime _createdAt;
-  DateTime get createdAt => _$this._createdAt;
-  set createdAt(DateTime createdAt) => _$this._createdAt = createdAt;
+  DateTime? _createdAt;
+  DateTime? get createdAt => _$this._createdAt;
+  set createdAt(DateTime? createdAt) => _$this._createdAt = createdAt;
 
-  int _size;
-  int get size => _$this._size;
-  set size(int size) => _$this._size = size;
+  int? _size;
+  int? get size => _$this._size;
+  set size(int? size) => _$this._size = size;
 
   AttachmentBuilder() {
     Attachment._initializeBuilder(this);
   }
 
   AttachmentBuilder get _$this {
-    if (_$v != null) {
-      _jsonId = _$v.jsonId;
-      _contentType = _$v.contentType;
-      _filename = _$v.filename;
-      _displayName = _$v.displayName;
-      _url = _$v.url;
-      _thumbnailUrl = _$v.thumbnailUrl;
-      _previewUrl = _$v.previewUrl;
-      _createdAt = _$v.createdAt;
-      _size = _$v.size;
+    final $v = _$v;
+    if ($v != null) {
+      _jsonId = $v.jsonId;
+      _contentType = $v.contentType;
+      _filename = $v.filename;
+      _displayName = $v.displayName;
+      _url = $v.url;
+      _thumbnailUrl = $v.thumbnailUrl;
+      _previewUrl = $v.previewUrl;
+      _createdAt = $v.createdAt;
+      _size = $v.size;
       _$v = null;
     }
     return this;
@@ -292,22 +279,23 @@ class AttachmentBuilder implements Builder<Attachment, AttachmentBuilder> {
 
   @override
   void replace(Attachment other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Attachment;
   }
 
   @override
-  void update(void Function(AttachmentBuilder) updates) {
+  void update(void Function(AttachmentBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Attachment build() {
+  Attachment build() => _build();
+
+  _$Attachment _build() {
     final _$result = _$v ??
         new _$Attachment._(
-            jsonId: jsonId,
+            jsonId: BuiltValueNullFieldError.checkNotNull(
+                jsonId, r'Attachment', 'jsonId'),
             contentType: contentType,
             filename: filename,
             displayName: displayName,
@@ -315,10 +303,11 @@ class AttachmentBuilder implements Builder<Attachment, AttachmentBuilder> {
             thumbnailUrl: thumbnailUrl,
             previewUrl: previewUrl,
             createdAt: createdAt,
-            size: size);
+            size: BuiltValueNullFieldError.checkNotNull(
+                size, r'Attachment', 'size'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

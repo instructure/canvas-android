@@ -31,12 +31,16 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import java.util.*
 
 class UploadItemViewModel(
-    private val workerId: UUID,
+    val workerId: UUID,
     val workManager: WorkManager,
     val data: UploadViewData,
     @get:Bindable var progress: Int = 0,
-    val open: (UUID) -> Unit
+    val open: (UUID) -> Unit,
+    val remove: () -> Unit,
+    @get:Bindable var loading: Boolean = false
 ) : ItemViewModel, BaseObservable() {
+
+    override val layoutId = R.layout.item_dashboard_upload
 
     private val observer = Observer<WorkInfo> {
         val uploadedSize = it.progress.getLong(PROGRESS_DATA_UPLOADED_SIZE, 0L)
@@ -45,7 +49,6 @@ class UploadItemViewModel(
         progress = ((uploadedSize.toDouble() / fullSize.toDouble()) * 100.0).toInt()
         notifyPropertyChanged(BR.progress)
     }
-    override val layoutId = R.layout.item_dashboard_upload
 
     init {
         workManager.getWorkInfoByIdLiveData(workerId).observeForever(observer)
@@ -55,6 +58,7 @@ class UploadItemViewModel(
         workManager.getWorkInfoByIdLiveData(workerId).removeObserver(observer)
     }
 
-
     fun open() = open.invoke(workerId)
+
+    fun remove() = remove.invoke()
 }

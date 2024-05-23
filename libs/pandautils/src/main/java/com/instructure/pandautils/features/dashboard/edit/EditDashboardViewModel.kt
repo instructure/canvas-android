@@ -27,10 +27,16 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.*
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardDescriptionItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardEnrollmentItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel
+import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardNoteItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,7 +45,8 @@ import javax.inject.Inject
 class EditDashboardViewModel @Inject constructor(
     private val courseManager: CourseManager,
     private val groupManager: GroupManager,
-    private val repository: EditDashboardRepository
+    private val repository: EditDashboardRepository,
+    private val networkStateProvider: NetworkStateProvider
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -67,11 +74,16 @@ class EditDashboardViewModel @Inject constructor(
 
     private lateinit var groupHeader: EditDashboardHeaderViewModel
     private lateinit var courseHeader: EditDashboardHeaderViewModel
+    private var noteItem: EditDashboardNoteItemViewModel? = null
+    private var noteItemHidden = false
 
     private lateinit var currentCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var pastCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var futureCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var groupsViewData: List<EditDashboardGroupItemViewModel>
+
+    private var syncedCourseIds = emptySet<Long>()
+    private var offlineEnabled = false
 
     var hasChanges = false
 
@@ -83,10 +95,13 @@ class EditDashboardViewModel @Inject constructor(
     fun loadItems() {
         viewModelScope.launch {
             try {
-                val courses = repository.getCurses()
+                val courses = repository.getCourses()
                 currentCourses = courses.getOrNull(0).orEmpty()
                 pastCourses = courses.getOrNull(1).orEmpty()
                 futureCourses = courses.getOrNull(2).orEmpty()
+
+                syncedCourseIds = repository.getSyncedCourseIds()
+                offlineEnabled = repository.offlineEnabled()
 
                 courseMap = (currentCourses + pastCourses + futureCourses).associateBy { it.id }
 
@@ -97,7 +112,7 @@ class EditDashboardViewModel @Inject constructor(
                 val items = createListItems(currentCourses, pastCourses, futureCourses, groups)
                 _data.postValue(EditDashboardViewData(items))
                 if (items.isEmpty()) {
-                    _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+                    postEmptyState()
                 } else {
                     _state.postValue(ViewState.Success)
                 }
@@ -106,6 +121,15 @@ class EditDashboardViewModel @Inject constructor(
                 _state.postValue(ViewState.Error())
                 Logger.d("Failed to grab courses: ${e.printStackTrace()}")
             }
+        }
+    }
+
+    private fun postEmptyState() {
+        val offlineMode = offlineEnabled && !networkStateProvider.isOnline()
+        if (offlineMode) {
+            _state.postValue(ViewState.Empty(R.string.editDashboardOfflineMode, R.string.editDashboardOfflineModeMessage, R.drawable.ic_panda_nocourses))
+        } else {
+            _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title,R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
         }
     }
 
@@ -179,6 +203,7 @@ class EditDashboardViewModel @Inject constructor(
             is EditDashboardItemAction.ShowSnackBar -> {
                 _events.postValue(Event(action))
             }
+            is EditDashboardItemAction.OpenItem -> {}
         }
     }
 
@@ -282,7 +307,7 @@ class EditDashboardViewModel @Inject constructor(
     }
 
     private fun selectAllCourses() {
-        val coursesToFavorite = (currentCoursesViewData + futureCoursesViewData).filter { !it.isFavorite && it.favoriteable }
+        val coursesToFavorite = (currentCoursesViewData + futureCoursesViewData).filter { !it.isFavorite && it.favoritableOnline }
         var counter = 0
         coursesToFavorite.forEach {
             viewModelScope.launch {
@@ -326,46 +351,36 @@ class EditDashboardViewModel @Inject constructor(
     private fun getCurrentCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         favoriteCourseMap.clear()
         favoriteCourseMap.putAll(courses.filter { it.isFavorite }.associateBy { it.id })
-        return courses.map {
-            EditDashboardCourseItemViewModel(
-                    id = it.id,
-                    name = it.name,
-                    isFavorite = it.isFavorite,
-                    favoriteable = repository.isFavoriteable(it),
-                    openable = repository.isOpenable(it),
-                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
-                    actionHandler = ::handleAction
-            )
-        }
+        return courses.map { createCourseItem(it) }
     }
 
     private fun getPastCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        return courses.map {
-            EditDashboardCourseItemViewModel(
-                    id = it.id,
-                    name = it.name,
-                    isFavorite = it.isFavorite,
-                    favoriteable = repository.isFavoriteable(it),
-                    openable = repository.isOpenable(it),
-                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
-                    actionHandler = ::handleAction
-            )
-        }
+        return courses.map { createCourseItem(it) }
     }
 
     private fun getFutureCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         favoriteCourseMap.putAll(courses.filter { it.isFavorite }.associateBy { it.id })
-        return courses.map {
-            EditDashboardCourseItemViewModel(
-                    id = it.id,
-                    name = it.name,
-                    isFavorite = it.isFavorite,
-                    favoriteable = repository.isFavoriteable(it),
-                    openable = repository.isOpenable(it),
-                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
-                    actionHandler = ::handleAction
-            )
-        }
+        return courses.map { createCourseItem(it) }
+    }
+
+    private fun createCourseItem(course: Course): EditDashboardCourseItemViewModel {
+        val termName = course.term?.name
+        val enrollmentType = course.enrollments?.firstOrNull()?.type?.apiTypeString.orEmpty()
+        val termTitle = if (termName != null) "$termName | $enrollmentType" else enrollmentType
+        val availableOffline = syncedCourseIds.contains(course.id)
+
+        return EditDashboardCourseItemViewModel(
+            id = course.id,
+            name = course.name,
+            isFavorite = course.isFavorite,
+            favoritableOnline = repository.isFavoriteable(course),
+            openable = repository.isOpenable(course),
+            termTitle = termTitle,
+            online = networkStateProvider.isOnline(),
+            availableOffline = availableOffline,
+            enabled = !offlineEnabled || networkStateProvider.isOnline() || availableOffline,
+            actionHandler = ::handleAction
+        )
     }
 
     private fun getGroups(groups: List<Group>): List<EditDashboardGroupItemViewModel> {
@@ -385,8 +400,15 @@ class EditDashboardViewModel @Inject constructor(
 
         val items = mutableListOf<ItemViewModel>()
         if (currentCoursesViewData.isNotEmpty() || pastCoursesViewData.isNotEmpty() || futureCoursesViewData.isNotEmpty()) {
-            val courseHeaderTitle = if (isFiltered) R.string.courses else R.string.all_courses
-            courseHeader = EditDashboardHeaderViewModel(courseHeaderTitle, favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
+            createNoteItem()?.let { items.add(it) }
+
+            courseHeader = EditDashboardHeaderViewModel(
+                R.string.courses,
+                favoriteCourseMap.isNotEmpty(),
+                ::selectAllCourses,
+                ::deselectAllCourses,
+                networkStateProvider.isOnline()
+            )
             items.add(courseHeader)
             items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_course_description))
         }
@@ -404,14 +426,31 @@ class EditDashboardViewModel @Inject constructor(
             items.addAll(futureCoursesViewData)
         }
         if (groupsViewData.isNotEmpty()) {
-            val groupHeaderTitle = if (isFiltered) R.string.groups else R.string.all_groups
-            groupHeader = EditDashboardHeaderViewModel(groupHeaderTitle, favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
+            groupHeader = EditDashboardHeaderViewModel(
+                R.string.groups,
+                favoriteGroupMap.isNotEmpty(),
+                ::selectAllGroups,
+                ::deselectAllGroups,
+                networkStateProvider.isOnline()
+            )
             items.add(groupHeader)
             items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_group_description))
             items.addAll(groupsViewData)
         }
 
         return items
+    }
+
+    private fun createNoteItem(): EditDashboardNoteItemViewModel? {
+        noteItem = if (!networkStateProvider.isOnline() && offlineEnabled && !noteItemHidden) {
+            EditDashboardNoteItemViewModel {
+                val newItems = _data.value?.items?.minus(noteItem)?.filterNotNull()
+                _data.postValue(EditDashboardViewData(newItems.orEmpty()))
+                noteItemHidden = true
+            }
+        } else null
+
+        return noteItem
     }
 
     fun queryItems(query: String) {
@@ -426,7 +465,7 @@ class EditDashboardViewModel @Inject constructor(
             createListItems(queriedCurrentCourses, queriedPastCourses, queriedFutureCourses, queriedGroups, true)
         }
         if (items.isEmpty()) {
-            _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+            postEmptyState()
         } else {
             _state.postValue(ViewState.Success)
         }
@@ -434,8 +473,12 @@ class EditDashboardViewModel @Inject constructor(
     }
 
     fun refresh() {
-        _state.postValue(ViewState.Refresh)
-        loadItems()
+        if (networkStateProvider.isOnline()) {
+            _state.postValue(ViewState.Refresh)
+            loadItems()
+        } else {
+            _state.postValue(ViewState.Success)
+        }
     }
 
 }

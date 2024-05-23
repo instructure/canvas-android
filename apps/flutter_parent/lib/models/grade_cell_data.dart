@@ -16,6 +16,7 @@ import 'package:built_value/built_value.dart';
 import 'package:flutter/material.dart' hide Builder;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -39,6 +40,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
   String get grade;
   String get gradeContentDescription;
   String get outOf;
+  String get yourGrade;
   String get latePenalty;
   String get finalGrade;
 
@@ -57,38 +59,49 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     ..grade = ''
     ..gradeContentDescription = ''
     ..outOf = ''
+    ..yourGrade = ''
     ..latePenalty = ''
     ..finalGrade = '';
 
   static GradeCellData forSubmission(
-    Assignment assignment,
-    Submission submission,
+    Course? course,
+    Assignment? assignment,
+    Submission? submission,
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' grading type
+    final excused = submission?.excused ?? false;
+    final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
+
+    // Return empty state if null, unsubmitted and ungraded, or has a 'not graded' or restricted grading type
+    final restricted = restrictQuantitativeData &&
+        assignment?.isGradingTypeQuantitative() == true &&
+        (course?.gradingSchemeItems.isEmpty == true || assignment?.pointsPossible == 0) &&
+        !excused;
+
     if (assignment == null ||
         submission == null ||
-        (submission?.submittedAt == null && submission?.grade == null) ||
-        assignment.gradingType == GradingType.notGraded) {
+        (submission.submittedAt == null && !excused && submission.grade == null) ||
+        assignment.gradingType == GradingType.notGraded ||
+        restricted) {
       return GradeCellData();
     }
 
     // Return submitted state if the submission has not been graded
-    if (submission.submittedAt != null && submission.grade == null) {
+    if (submission.submittedAt != null && submission.grade == null && !excused) {
       return GradeCellData((b) => b
         ..state = GradeCellState.submitted
-        ..submissionText = submission.submittedAt.l10nFormat(
+        ..submissionText = submission.submittedAt!.l10nFormat(
           l10n.submissionStatusSuccessSubtitle,
           dateFormat: DateFormat.MMMMd(supportedDateLocale),
         ));
     }
 
-    var accentColor = theme.accentColor;
+    var accentColor = theme.colorScheme.secondary;
 
     var pointsPossibleText = NumberFormat.decimalPattern().format(assignment.pointsPossible);
 
-    var outOfText = l10n.outOfPoints(pointsPossibleText, assignment.pointsPossible);
+    var outOfText = restrictQuantitativeData ? '' : l10n.outOfPoints(pointsPossibleText, assignment.pointsPossible);
 
     // Excused
     if (submission.excused) {
@@ -114,38 +127,54 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
         ..graphPercent = 1.0);
     }
 
-    var score = NumberFormat.decimalPattern().format(submission.enteredScore);
-    var graphPercent = (submission.enteredScore / assignment.pointsPossible).clamp(0.0, 1.0);
+    var score = NumberFormat.decimalPattern().format(submission.score);
+    var graphPercent = (submission.score / assignment.pointsPossible).clamp(0.0, 1.0);
 
     // If grading type is Points, don't show the grade since we're already showing it as the score
     var grade = assignment.gradingType != GradingType.points ? submission.grade ?? '' : '';
 
+    if (restrictQuantitativeData && assignment.isGradingTypeQuantitative()) {
+      grade = course?.convertScoreToLetterGrade(submission.score, assignment.pointsPossible) ?? '';
+    }
+
     // Screen reader fails on letter grades with a minus (e.g. 'A-'), so we replace the dash with the word 'minus'
     var accessibleGradeString = grade.replaceAll('-', '. ${l10n.accessibilityMinus}');
 
+    var yourGrade = '';
     var latePenalty = '';
     var finalGrade = '';
+    var restrictedScore = grade;
 
     // Adjust for late penalty, if any
     if ((submission.pointsDeducted ?? 0.0) > 0.0) {
       grade = ''; // Grade will be shown in the 'final grade' text
       var pointsDeducted = NumberFormat.decimalPattern().format(submission.pointsDeducted ?? 0.0);
-      latePenalty = l10n.latePenalty(pointsDeducted);
-      finalGrade = l10n.finalGrade(submission.grade);
+      var pointsAchieved = NumberFormat.decimalPattern().format(submission.enteredScore);
+      yourGrade = l10n.yourGrade(pointsAchieved);
+      latePenalty = l10n.latePenaltyUpdated(pointsDeducted);
+      finalGrade = l10n.finalGrade(submission.grade ?? grade);
     }
 
-    return GradeCellData((b) => b
-      ..state = GradeCellState.graded
-      ..graphPercent = graphPercent
-      ..accentColor = accentColor
-      ..score = score
-      ..showPointsLabel = true
-      ..outOf = outOfText
-      ..grade = grade
-      ..gradeContentDescription = accessibleGradeString
-      ..latePenalty = latePenalty
-      ..finalGrade = finalGrade);
+    return restrictQuantitativeData
+        ? GradeCellData((b) => b
+          ..state = GradeCellState.gradedRestrictQuantitativeData
+          ..graphPercent = 1.0
+          ..accentColor = accentColor
+          ..score = restrictedScore
+          ..gradeContentDescription = accessibleGradeString)
+        : GradeCellData((b) => b
+          ..state = GradeCellState.graded
+          ..graphPercent = graphPercent
+          ..accentColor = accentColor
+          ..score = score
+          ..showPointsLabel = true
+          ..outOf = outOfText
+          ..grade = grade
+          ..gradeContentDescription = accessibleGradeString
+          ..yourGrade = yourGrade
+          ..latePenalty = latePenalty
+          ..finalGrade = finalGrade);
   }
 }
 
-enum GradeCellState { empty, submitted, graded }
+enum GradeCellState { empty, submitted, graded, gradedRestrictQuantitativeData }

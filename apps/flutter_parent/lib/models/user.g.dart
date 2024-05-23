@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of user;
+part of 'user.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
@@ -17,124 +17,128 @@ class _$UserSerializer implements StructuredSerializer<User> {
   final String wireName = 'User';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, User object,
+  Iterable<Object?> serialize(Serializers serializers, User object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
-    result.add('sortable_name');
-    if (object.sortableName == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.sortableName,
-          specifiedType: const FullType(String)));
-    }
-    result.add('short_name');
-    if (object.shortName == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.shortName,
-          specifiedType: const FullType(String)));
-    }
-    result.add('pronouns');
-    if (object.pronouns == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.pronouns,
-          specifiedType: const FullType(String)));
-    }
-    result.add('avatar_url');
-    if (object.avatarUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.avatarUrl,
-          specifiedType: const FullType(String)));
-    }
-    result.add('primary_email');
-    if (object.primaryEmail == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.primaryEmail,
-          specifiedType: const FullType(String)));
-    }
-    result.add('locale');
-    if (object.locale == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.locale,
-          specifiedType: const FullType(String)));
-    }
-    result.add('effective_locale');
-    if (object.effectiveLocale == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.effectiveLocale,
-          specifiedType: const FullType(String)));
-    }
-    result.add('permissions');
-    if (object.permissions == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.permissions,
+    Object? value;
+    value = object.sortableName;
+
+    result
+      ..add('sortable_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.shortName;
+
+    result
+      ..add('short_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.pronouns;
+
+    result
+      ..add('pronouns')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.avatarUrl;
+
+    result
+      ..add('avatar_url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.primaryEmail;
+
+    result
+      ..add('primary_email')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.locale;
+
+    result
+      ..add('locale')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.effectiveLocale;
+
+    result
+      ..add('effective_locale')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.permissions;
+
+    result
+      ..add('permissions')
+      ..add(serializers.serialize(value,
           specifiedType: const FullType(UserPermission)));
-    }
+    value = object.loginId;
+
+    result
+      ..add('login_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
-  User deserialize(Serializers serializers, Iterable<Object> serialized,
+  User deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new UserBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'sortable_name':
           result.sortableName = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'short_name':
           result.shortName = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'pronouns':
           result.pronouns = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'avatar_url':
           result.avatarUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'primary_email':
           result.primaryEmail = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'locale':
           result.locale = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'effective_locale':
           result.effectiveLocale = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'permissions':
           result.permissions.replace(serializers.deserialize(value,
-              specifiedType: const FullType(UserPermission)) as UserPermission);
+                  specifiedType: const FullType(UserPermission))!
+              as UserPermission);
+          break;
+        case 'login_id':
+          result.loginId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -151,9 +155,9 @@ class _$UserPermissionSerializer
   final String wireName = 'UserPermission';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, UserPermission object,
+  Iterable<Object?> serialize(Serializers serializers, UserPermission object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'become_user',
       serializers.serialize(object.become_user,
           specifiedType: const FullType(bool)),
@@ -173,32 +177,31 @@ class _$UserPermissionSerializer
 
   @override
   UserPermission deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new UserPermissionBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'become_user':
           result.become_user = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'can_update_name':
           result.canUpdateName = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'can_update_avatar':
           result.canUpdateAvatar = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
         case 'limit_parent_app_web_access':
           result.limitParentAppWebAccess = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool))! as bool;
           break;
       }
     }
@@ -213,28 +216,30 @@ class _$User extends User {
   @override
   final String name;
   @override
-  final String sortableName;
+  final String? sortableName;
   @override
-  final String shortName;
+  final String? shortName;
   @override
-  final String pronouns;
+  final String? pronouns;
   @override
-  final String avatarUrl;
+  final String? avatarUrl;
   @override
-  final String primaryEmail;
+  final String? primaryEmail;
   @override
-  final String locale;
+  final String? locale;
   @override
-  final String effectiveLocale;
+  final String? effectiveLocale;
   @override
-  final UserPermission permissions;
+  final UserPermission? permissions;
+  @override
+  final String? loginId;
 
-  factory _$User([void Function(UserBuilder) updates]) =>
-      (new UserBuilder()..update(updates)).build();
+  factory _$User([void Function(UserBuilder)? updates]) =>
+      (new UserBuilder()..update(updates))._build();
 
   _$User._(
-      {this.id,
-      this.name,
+      {required this.id,
+      required this.name,
       this.sortableName,
       this.shortName,
       this.pronouns,
@@ -242,14 +247,11 @@ class _$User extends User {
       this.primaryEmail,
       this.locale,
       this.effectiveLocale,
-      this.permissions})
+      this.permissions,
+      this.loginId})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('User', 'id');
-    }
-    if (name == null) {
-      throw new BuiltValueNullFieldError('User', 'name');
-    }
+    BuiltValueNullFieldError.checkNotNull(id, r'User', 'id');
+    BuiltValueNullFieldError.checkNotNull(name, r'User', 'name');
   }
 
   @override
@@ -272,32 +274,31 @@ class _$User extends User {
         primaryEmail == other.primaryEmail &&
         locale == other.locale &&
         effectiveLocale == other.effectiveLocale &&
-        permissions == other.permissions;
+        permissions == other.permissions &&
+        loginId == other.loginId;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc($jc($jc(0, id.hashCode), name.hashCode),
-                                    sortableName.hashCode),
-                                shortName.hashCode),
-                            pronouns.hashCode),
-                        avatarUrl.hashCode),
-                    primaryEmail.hashCode),
-                locale.hashCode),
-            effectiveLocale.hashCode),
-        permissions.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, name.hashCode);
+    _$hash = $jc(_$hash, sortableName.hashCode);
+    _$hash = $jc(_$hash, shortName.hashCode);
+    _$hash = $jc(_$hash, pronouns.hashCode);
+    _$hash = $jc(_$hash, avatarUrl.hashCode);
+    _$hash = $jc(_$hash, primaryEmail.hashCode);
+    _$hash = $jc(_$hash, locale.hashCode);
+    _$hash = $jc(_$hash, effectiveLocale.hashCode);
+    _$hash = $jc(_$hash, permissions.hashCode);
+    _$hash = $jc(_$hash, loginId.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('User')
+    return (newBuiltValueToStringHelper(r'User')
           ..add('id', id)
           ..add('name', name)
           ..add('sortableName', sortableName)
@@ -307,73 +308,80 @@ class _$User extends User {
           ..add('primaryEmail', primaryEmail)
           ..add('locale', locale)
           ..add('effectiveLocale', effectiveLocale)
-          ..add('permissions', permissions))
+          ..add('permissions', permissions)
+          ..add('loginId', loginId))
         .toString();
   }
 }
 
 class UserBuilder implements Builder<User, UserBuilder> {
-  _$User _$v;
+  _$User? _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  String? _id;
+  String? get id => _$this._id;
+  set id(String? id) => _$this._id = id;
 
-  String _name;
-  String get name => _$this._name;
-  set name(String name) => _$this._name = name;
+  String? _name;
+  String? get name => _$this._name;
+  set name(String? name) => _$this._name = name;
 
-  String _sortableName;
-  String get sortableName => _$this._sortableName;
-  set sortableName(String sortableName) => _$this._sortableName = sortableName;
+  String? _sortableName;
+  String? get sortableName => _$this._sortableName;
+  set sortableName(String? sortableName) => _$this._sortableName = sortableName;
 
-  String _shortName;
-  String get shortName => _$this._shortName;
-  set shortName(String shortName) => _$this._shortName = shortName;
+  String? _shortName;
+  String? get shortName => _$this._shortName;
+  set shortName(String? shortName) => _$this._shortName = shortName;
 
-  String _pronouns;
-  String get pronouns => _$this._pronouns;
-  set pronouns(String pronouns) => _$this._pronouns = pronouns;
+  String? _pronouns;
+  String? get pronouns => _$this._pronouns;
+  set pronouns(String? pronouns) => _$this._pronouns = pronouns;
 
-  String _avatarUrl;
-  String get avatarUrl => _$this._avatarUrl;
-  set avatarUrl(String avatarUrl) => _$this._avatarUrl = avatarUrl;
+  String? _avatarUrl;
+  String? get avatarUrl => _$this._avatarUrl;
+  set avatarUrl(String? avatarUrl) => _$this._avatarUrl = avatarUrl;
 
-  String _primaryEmail;
-  String get primaryEmail => _$this._primaryEmail;
-  set primaryEmail(String primaryEmail) => _$this._primaryEmail = primaryEmail;
+  String? _primaryEmail;
+  String? get primaryEmail => _$this._primaryEmail;
+  set primaryEmail(String? primaryEmail) => _$this._primaryEmail = primaryEmail;
 
-  String _locale;
-  String get locale => _$this._locale;
-  set locale(String locale) => _$this._locale = locale;
+  String? _locale;
+  String? get locale => _$this._locale;
+  set locale(String? locale) => _$this._locale = locale;
 
-  String _effectiveLocale;
-  String get effectiveLocale => _$this._effectiveLocale;
-  set effectiveLocale(String effectiveLocale) =>
+  String? _effectiveLocale;
+  String? get effectiveLocale => _$this._effectiveLocale;
+  set effectiveLocale(String? effectiveLocale) =>
       _$this._effectiveLocale = effectiveLocale;
 
-  UserPermissionBuilder _permissions;
+  UserPermissionBuilder? _permissions;
   UserPermissionBuilder get permissions =>
       _$this._permissions ??= new UserPermissionBuilder();
-  set permissions(UserPermissionBuilder permissions) =>
+  set permissions(UserPermissionBuilder? permissions) =>
       _$this._permissions = permissions;
+
+  String? _loginId;
+  String? get loginId => _$this._loginId;
+  set loginId(String? loginId) => _$this._loginId = loginId;
 
   UserBuilder() {
     User._initializeBuilder(this);
   }
 
   UserBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _name = _$v.name;
-      _sortableName = _$v.sortableName;
-      _shortName = _$v.shortName;
-      _pronouns = _$v.pronouns;
-      _avatarUrl = _$v.avatarUrl;
-      _primaryEmail = _$v.primaryEmail;
-      _locale = _$v.locale;
-      _effectiveLocale = _$v.effectiveLocale;
-      _permissions = _$v.permissions?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _name = $v.name;
+      _sortableName = $v.sortableName;
+      _shortName = $v.shortName;
+      _pronouns = $v.pronouns;
+      _avatarUrl = $v.avatarUrl;
+      _primaryEmail = $v.primaryEmail;
+      _locale = $v.locale;
+      _effectiveLocale = $v.effectiveLocale;
+      _permissions = $v.permissions?.toBuilder();
+      _loginId = $v.loginId;
       _$v = null;
     }
     return this;
@@ -381,25 +389,26 @@ class UserBuilder implements Builder<User, UserBuilder> {
 
   @override
   void replace(User other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$User;
   }
 
   @override
-  void update(void Function(UserBuilder) updates) {
+  void update(void Function(UserBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$User build() {
+  User build() => _build();
+
+  _$User _build() {
     _$User _$result;
     try {
       _$result = _$v ??
           new _$User._(
-              id: id,
-              name: name,
+              id: BuiltValueNullFieldError.checkNotNull(id, r'User', 'id'),
+              name:
+                  BuiltValueNullFieldError.checkNotNull(name, r'User', 'name'),
               sortableName: sortableName,
               shortName: shortName,
               pronouns: pronouns,
@@ -407,15 +416,16 @@ class UserBuilder implements Builder<User, UserBuilder> {
               primaryEmail: primaryEmail,
               locale: locale,
               effectiveLocale: effectiveLocale,
-              permissions: _permissions?.build());
+              permissions: _permissions?.build(),
+              loginId: loginId);
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'permissions';
         _permissions?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'User', _$failedField, e.toString());
+            r'User', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -434,28 +444,23 @@ class _$UserPermission extends UserPermission {
   @override
   final bool limitParentAppWebAccess;
 
-  factory _$UserPermission([void Function(UserPermissionBuilder) updates]) =>
-      (new UserPermissionBuilder()..update(updates)).build();
+  factory _$UserPermission([void Function(UserPermissionBuilder)? updates]) =>
+      (new UserPermissionBuilder()..update(updates))._build();
 
   _$UserPermission._(
-      {this.become_user,
-      this.canUpdateName,
-      this.canUpdateAvatar,
-      this.limitParentAppWebAccess})
+      {required this.become_user,
+      required this.canUpdateName,
+      required this.canUpdateAvatar,
+      required this.limitParentAppWebAccess})
       : super._() {
-    if (become_user == null) {
-      throw new BuiltValueNullFieldError('UserPermission', 'become_user');
-    }
-    if (canUpdateName == null) {
-      throw new BuiltValueNullFieldError('UserPermission', 'canUpdateName');
-    }
-    if (canUpdateAvatar == null) {
-      throw new BuiltValueNullFieldError('UserPermission', 'canUpdateAvatar');
-    }
-    if (limitParentAppWebAccess == null) {
-      throw new BuiltValueNullFieldError(
-          'UserPermission', 'limitParentAppWebAccess');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        become_user, r'UserPermission', 'become_user');
+    BuiltValueNullFieldError.checkNotNull(
+        canUpdateName, r'UserPermission', 'canUpdateName');
+    BuiltValueNullFieldError.checkNotNull(
+        canUpdateAvatar, r'UserPermission', 'canUpdateAvatar');
+    BuiltValueNullFieldError.checkNotNull(
+        limitParentAppWebAccess, r'UserPermission', 'limitParentAppWebAccess');
   }
 
   @override
@@ -478,15 +483,18 @@ class _$UserPermission extends UserPermission {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, become_user.hashCode), canUpdateName.hashCode),
-            canUpdateAvatar.hashCode),
-        limitParentAppWebAccess.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, become_user.hashCode);
+    _$hash = $jc(_$hash, canUpdateName.hashCode);
+    _$hash = $jc(_$hash, canUpdateAvatar.hashCode);
+    _$hash = $jc(_$hash, limitParentAppWebAccess.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('UserPermission')
+    return (newBuiltValueToStringHelper(r'UserPermission')
           ..add('become_user', become_user)
           ..add('canUpdateName', canUpdateName)
           ..add('canUpdateAvatar', canUpdateAvatar)
@@ -497,25 +505,25 @@ class _$UserPermission extends UserPermission {
 
 class UserPermissionBuilder
     implements Builder<UserPermission, UserPermissionBuilder> {
-  _$UserPermission _$v;
+  _$UserPermission? _$v;
 
-  bool _become_user;
-  bool get become_user => _$this._become_user;
-  set become_user(bool become_user) => _$this._become_user = become_user;
+  bool? _become_user;
+  bool? get become_user => _$this._become_user;
+  set become_user(bool? become_user) => _$this._become_user = become_user;
 
-  bool _canUpdateName;
-  bool get canUpdateName => _$this._canUpdateName;
-  set canUpdateName(bool canUpdateName) =>
+  bool? _canUpdateName;
+  bool? get canUpdateName => _$this._canUpdateName;
+  set canUpdateName(bool? canUpdateName) =>
       _$this._canUpdateName = canUpdateName;
 
-  bool _canUpdateAvatar;
-  bool get canUpdateAvatar => _$this._canUpdateAvatar;
-  set canUpdateAvatar(bool canUpdateAvatar) =>
+  bool? _canUpdateAvatar;
+  bool? get canUpdateAvatar => _$this._canUpdateAvatar;
+  set canUpdateAvatar(bool? canUpdateAvatar) =>
       _$this._canUpdateAvatar = canUpdateAvatar;
 
-  bool _limitParentAppWebAccess;
-  bool get limitParentAppWebAccess => _$this._limitParentAppWebAccess;
-  set limitParentAppWebAccess(bool limitParentAppWebAccess) =>
+  bool? _limitParentAppWebAccess;
+  bool? get limitParentAppWebAccess => _$this._limitParentAppWebAccess;
+  set limitParentAppWebAccess(bool? limitParentAppWebAccess) =>
       _$this._limitParentAppWebAccess = limitParentAppWebAccess;
 
   UserPermissionBuilder() {
@@ -523,11 +531,12 @@ class UserPermissionBuilder
   }
 
   UserPermissionBuilder get _$this {
-    if (_$v != null) {
-      _become_user = _$v.become_user;
-      _canUpdateName = _$v.canUpdateName;
-      _canUpdateAvatar = _$v.canUpdateAvatar;
-      _limitParentAppWebAccess = _$v.limitParentAppWebAccess;
+    final $v = _$v;
+    if ($v != null) {
+      _become_user = $v.become_user;
+      _canUpdateName = $v.canUpdateName;
+      _canUpdateAvatar = $v.canUpdateAvatar;
+      _limitParentAppWebAccess = $v.limitParentAppWebAccess;
       _$v = null;
     }
     return this;
@@ -535,28 +544,34 @@ class UserPermissionBuilder
 
   @override
   void replace(UserPermission other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$UserPermission;
   }
 
   @override
-  void update(void Function(UserPermissionBuilder) updates) {
+  void update(void Function(UserPermissionBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$UserPermission build() {
+  UserPermission build() => _build();
+
+  _$UserPermission _build() {
     final _$result = _$v ??
         new _$UserPermission._(
-            become_user: become_user,
-            canUpdateName: canUpdateName,
-            canUpdateAvatar: canUpdateAvatar,
-            limitParentAppWebAccess: limitParentAppWebAccess);
+            become_user: BuiltValueNullFieldError.checkNotNull(
+                become_user, r'UserPermission', 'become_user'),
+            canUpdateName: BuiltValueNullFieldError.checkNotNull(
+                canUpdateName, r'UserPermission', 'canUpdateName'),
+            canUpdateAvatar: BuiltValueNullFieldError.checkNotNull(
+                canUpdateAvatar, r'UserPermission', 'canUpdateAvatar'),
+            limitParentAppWebAccess: BuiltValueNullFieldError.checkNotNull(
+                limitParentAppWebAccess,
+                r'UserPermission',
+                'limitParentAppWebAccess'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

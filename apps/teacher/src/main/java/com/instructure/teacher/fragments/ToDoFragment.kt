@@ -24,20 +24,19 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getDrawableCompat
-import com.instructure.pandautils.utils.requestAccessibilityFocus
-import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.ToDoAdapter
+import com.instructure.teacher.databinding.FragmentTodoBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.ToDoPresenterFactory
 import com.instructure.teacher.holders.ToDoViewHolder
@@ -45,29 +44,31 @@ import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.ToDoPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
-import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.viewinterface.ToDoView
-import kotlinx.android.synthetic.main.fragment_todo.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView
 @ScreenView(SCREEN_VIEW_TO_DO)
 class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHolder, ToDoAdapter>(), ToDoView {
+
+    private val binding by viewBinding(FragmentTodoBinding::bind)
+
     private var mNeedToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_todo
     override fun withPagination() = true
-    override val recyclerView: RecyclerView get() = toDoRecyclerView
+    override val recyclerView: RecyclerView get() = binding.toDoRecyclerView
     override fun checkIfEmpty() {
-        emptyPandaView.setMessageText(R.string.noTodosSubtext)
-        RecyclerViewUtils.checkIfEmpty(emptyPandaView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+        binding.emptyPandaView.setMessageText(R.string.noTodosSubtext)
+        RecyclerViewUtils.checkIfEmpty(binding.emptyPandaView, recyclerView, binding.swipeRefreshLayout, adapter, presenter.isEmpty)
     }
     override fun getPresenterFactory() = ToDoPresenterFactory()
     override fun onCreateView(view: View) {}
 
-    override fun onPresenterPrepared(presenter: ToDoPresenter) {
+    override fun onPresenterPrepared(presenter: ToDoPresenter) = with(binding) {
         RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.toDoRecyclerView, R.id.emptyPandaView, getString(R.string.noTodos))
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_sleeping))
@@ -102,12 +103,13 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
         setupToolbar()
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         val activity = requireActivity()
         if (activity is InitActivity) {
-            activity.attachNavigationDrawer(toDoToolbar)
+            activity.attachNavigationDrawer()
+            activity.attachToolbar(toDoToolbar)
         } else {
-            toDoToolbar.setupBackButtonAsBackPressedOnly(this)
+            toDoToolbar.setupBackButtonAsBackPressedOnly(this@ToDoFragment)
         }
 
         ViewStyler.themeToolbarColored(requireActivity(), toDoToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
@@ -121,7 +123,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     private val mAdapterCallback = object : AdapterToFragmentCallback<ToDo> {
         override fun onRowClicked(model: ToDo, position: Int) {
             // if the layout is refreshing we don't want them to select a different item
-            if (swipeRefreshLayout.isRefreshing) return
+            if (binding.swipeRefreshLayout.isRefreshing) return
 
             if (model.assignment == null) {
                 toast(R.string.errorOccurred)
@@ -131,7 +133,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
         }
     }
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted() = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.visibility  = View.VISIBLE
@@ -140,8 +142,8 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     }
 
     override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
-        emptyPandaView.visibility = View.GONE
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.emptyPandaView.visibility = View.GONE
     }
 
     override fun perPageCount(): Int = ApiPrefs.perPageCount
@@ -151,9 +153,10 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
             showToast(R.string.toDoNoSubmissions)
             return
         }
+        val submissionIds = submissions.map { it.id }.toLongArray()
         val anonymousGrading = assignment.anonymousGrading || assignment.anonymousSubmissions
-        val bundle = SpeedGraderActivity.makeBundle(course.id, assignment.id, submissions, 0, anonymousGrading)
-        RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
+        val bundle = SpeedGraderActivity.makeBundle(courseId = course.id, assignmentId = assignment.id, filteredSubmissionIds = submissionIds, anonymousGrading = anonymousGrading, selectedIdx = 0)
+        RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
     }
 
     override fun onRouteFailed() {

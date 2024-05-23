@@ -15,11 +15,13 @@
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final launcher = MockUrlLauncher();
@@ -55,7 +57,7 @@ void main() {
   test('launchPrivacyPolicy calls the url launcher', () {
     AccountCreationInteractor().launchPrivacyPolicy();
     verify(
-      launcher.launch('https://www.instructure.com/canvas/privacy'),
+      launcher.launch('https://www.instructure.com/policies/product-privacy-policy'),
     ).called(1);
   });
 }

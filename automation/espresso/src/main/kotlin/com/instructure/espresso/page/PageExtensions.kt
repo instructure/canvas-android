@@ -18,6 +18,7 @@
 package com.instructure.espresso.page
 
 import android.view.View
+import androidx.annotation.PluralsRes
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
@@ -41,6 +42,8 @@ fun BasePage.waitForView(matcher: Matcher<View>): ViewInteraction = WaitForViewM
 fun BasePage.withId(id: Int): Matcher<View> = ViewMatchers.withId(id)
 
 fun BasePage.withParent(id: Int): Matcher<View> = ViewMatchers.withParent(withId(id))
+
+fun BasePage.withParent(matcher: Matcher<View>): Matcher<View> = ViewMatchers.withParent(matcher)
 
 fun BasePage.withAncestor(id: Int): Matcher<View> = ViewMatchers.isDescendantOfA(withId(id))
 
@@ -156,6 +159,11 @@ fun BasePage.getStringFromResource(stringResource: Int): String{
 fun BasePage.getStringFromResource(stringResource: Int, vararg params: Any): String {
     val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
     return targetContext.resources.getString(stringResource, *params)
+}
+
+fun BasePage.getPluralFromResource(@PluralsRes pluralsResource: Int, quantity: Int, vararg params: Any): String {
+    val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+    return targetContext.resources.getQuantityString(pluralsResource, quantity, *params)
 }
 
 fun BasePage.callOnClick(matcher: Matcher<View>) = ViewCallOnClick.callOnClick(matcher)

@@ -26,21 +26,24 @@ import 'package:flutter_parent/utils/common_widgets/web_view/html_description_ti
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/permission_handler.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../../utils/veneers/flutter_snackbar_veneer.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
   final String courseId;
   final String assignmentId;
 
   const AssignmentDetailsScreen({
-    Key key,
-    @required this.courseId,
-    @required this.assignmentId,
-  })  : assert(courseId != null),
-        assert(assignmentId != null),
-        super(key: key);
+    required this.courseId,
+    required this.assignmentId,
+    super.key
+  });
 
   @override
   _AssignmentDetailsScreenState createState() => _AssignmentDetailsScreenState();
@@ -50,10 +53,10 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   // State variables
-  Future<AssignmentDetails> _assignmentFuture;
-  Future<Reminder> _reminderFuture;
-  Future<void> _animationFuture;
-  User _currentStudent;
+  late Future<AssignmentDetails?> _assignmentFuture;
+  late Future<Reminder?> _reminderFuture;
+  Future<void>? _animationFuture;
+  User? _currentStudent;
 
   @override
   void initState() {
@@ -65,22 +68,24 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
   AssignmentDetailsInteractor get _interactor => locator<AssignmentDetailsInteractor>();
 
-  Future<AssignmentDetails> _loadAssignment({bool forceRefresh = false}) => _interactor.loadAssignmentDetails(
+  Future<AssignmentDetails?> _loadAssignment({bool forceRefresh = false}) => _interactor.loadAssignmentDetails(
         forceRefresh,
         widget.courseId,
         widget.assignmentId,
-        _currentStudent.id,
+        _currentStudent?.id,
       );
 
-  Future<Reminder> _loadReminder() => _interactor.loadReminder(widget.assignmentId);
+  Future<Reminder?> _loadReminder() => _interactor.loadReminder(widget.assignmentId);
+
+  PermissionHandler get _permissionHandler => locator<PermissionHandler>();
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _assignmentFuture,
-      builder: (context, AsyncSnapshot<AssignmentDetails> snapshot) => Scaffold(
+      builder: (context, AsyncSnapshot<AssignmentDetails?> snapshot) => Scaffold(
         appBar: _appBar(snapshot),
-        floatingActionButton: snapshot.hasData && snapshot.data.assignment != null ? _fab(snapshot) : null,
+        floatingActionButton: snapshot.hasData && snapshot.data?.assignment != null ? _fab(snapshot) : null,
         body: RefreshIndicator(
           key: _refreshKey,
           child: _body(snapshot),
@@ -96,32 +101,32 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     );
   }
 
-  Widget _appBar(AsyncSnapshot<AssignmentDetails> snapshot) => AppBar(
-        bottom: ParentTheme.of(context).appBarDivider(),
+  AppBar _appBar(AsyncSnapshot<AssignmentDetails?> snapshot) => AppBar(
+        bottom: ParentTheme.of(context)?.appBarDivider(),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(L10n(context).assignmentDetailsTitle),
             if (snapshot.hasData)
-              Text(snapshot.data.course?.name ?? '',
-                  style: Theme.of(context).primaryTextTheme.caption, key: Key("assignment_details_coursename")),
+              Text(snapshot.data?.course?.name ?? '',
+                  style: Theme.of(context).primaryTextTheme.bodySmall?.copyWith(color: Colors.white), key: Key("assignment_details_coursename")),
           ],
         ),
       );
 
-  Widget _fab(AsyncSnapshot<AssignmentDetails> snapshot) {
+  Widget _fab(AsyncSnapshot<AssignmentDetails?> snapshot) {
     return FloatingActionButton(
-      onPressed: () => _sendMessage(snapshot.data),
+      onPressed: () => _sendMessage(snapshot.data!),
       tooltip: L10n(context).assignmentMessageHint,
       child: Padding(padding: const EdgeInsets.only(left: 4, top: 4), child: Icon(CanvasIconsSolid.comment)),
     );
   }
 
-  Widget _body(AsyncSnapshot<AssignmentDetails> snapshot) {
+  Widget _body(AsyncSnapshot<AssignmentDetails?> snapshot) {
     if (snapshot.hasError) {
       return ErrorPandaWidget(
         L10n(context).unexpectedError,
-        () => _refreshKey.currentState.show(),
+        () => _refreshKey.currentState?.show(),
       );
     }
 
@@ -132,12 +137,15 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     final l10n = L10n(context);
-    final assignment = snapshot.data.assignment;
-    final submission = assignment.submission(_currentStudent.id);
+    final course = snapshot.data?.course;
+    final restrictQuantitativeData = course?.settings?.restrictQuantitativeData ?? false;
+    final assignment = snapshot.data!.assignment!;
+    final submission = assignment.submission(_currentStudent?.id);
     final fullyLocked = assignment.isFullyLocked;
-    final showStatus = assignment.isSubmittable() || submission?.isGraded() == true;
+    final missing = submission?.missing == true;
+    final showStatus = missing || assignment.isSubmittable() || submission?.isGraded() == true;
     final submitted = submission?.submittedAt != null;
-    final submittedColor = submitted ? ParentTheme.of(context).successColor : textTheme.caption.color;
+    final submittedColor = submitted ? ParentTheme.of(context)?.successColor : textTheme.bodySmall?.color;
 
     final points = (assignment.pointsPossible.toInt() == assignment.pointsPossible)
         ? assignment.pointsPossible.toInt().toString()
@@ -151,23 +159,24 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ..._rowTile(
-            title: assignment.name,
-            titleStyle: textTheme.headline4,
+            title: assignment.name ?? '',
+            titleStyle: textTheme.headlineMedium!,
             child: Row(
               children: <Widget>[
-                Text(l10n.assignmentTotalPoints(points),
-                    style: textTheme.caption,
-                    semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
-                    key: Key("assignment_details_total_points")),
-                if (showStatus) SizedBox(width: 16),
-                if (showStatus) _statusIcon(submitted, submittedColor),
+                if (!restrictQuantitativeData)
+                  Text(l10n.assignmentTotalPoints(points),
+                      style: textTheme.bodySmall,
+                      semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
+                      key: Key("assignment_details_total_points")),
+                if (showStatus && !restrictQuantitativeData) SizedBox(width: 16),
+                if (showStatus) _statusIcon(submitted, submittedColor!),
                 if (showStatus) SizedBox(width: 8),
                 if (showStatus)
                   Text(
-                      !submitted
-                          ? l10n.assignmentNotSubmittedLabel
-                          : submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
-                      style: textTheme.caption.copyWith(
+                      missing ? l10n.assignmentMissingSubmittedLabel :
+                      !submitted ? l10n.assignmentNotSubmittedLabel :
+                      submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
+                      style: textTheme.bodySmall?.copyWith(
                         color: submittedColor,
                       ),
                       key: Key("assignment_details_status")),
@@ -178,19 +187,19 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             Divider(),
             ..._rowTile(
               title: l10n.assignmentDueLabel,
-              child: Text(_dateFormat(assignment?.dueAt?.toLocal()) ?? l10n.noDueDate,
-                  style: textTheme.subtitle1, key: Key("assignment_details_due_date")),
+              child: Text(_dateFormat(assignment.dueAt?.toLocal()) ?? l10n.noDueDate,
+                  style: textTheme.titleMedium, key: Key("assignment_details_due_date")),
             ),
           ],
-          GradeCell.forSubmission(context, assignment, submission),
+          GradeCell.forSubmission(context, course, assignment, submission),
           ..._lockedRow(assignment),
           Divider(),
           ..._rowTile(
             title: l10n.assignmentRemindMeLabel,
             child: FutureBuilder(
               future: _reminderFuture,
-              builder: (BuildContext context, AsyncSnapshot<Reminder> snapshot) {
-                Reminder reminder = snapshot.data;
+              builder: (BuildContext context, AsyncSnapshot<Reminder?> snapshot) {
+                Reminder? reminder = snapshot.data;
                 return SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   value: reminder != null,
@@ -198,15 +207,15 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                     reminder?.date == null
                         ? L10n(context).assignmentRemindMeDescription
                         : L10n(context).assignmentRemindMeSet,
-                    style: textTheme.subtitle1,
+                    style: textTheme.titleMedium,
                   ),
                   subtitle: reminder == null
                       ? null
                       : Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
-                            _dateFormat(reminder?.date?.toLocal()),
-                            style: textTheme.subtitle1.copyWith(color: ParentTheme.of(context).studentColor),
+                            _dateFormat(reminder.date?.toLocal()) ?? '',
+                            style: textTheme.titleMedium?.copyWith(color: ParentTheme.of(context)?.studentColor),
                           ),
                         ),
                   onChanged: (checked) => _handleAlarmSwitch(context, assignment, checked, reminder),
@@ -267,24 +276,24 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       width: 18,
       height: 18,
       decoration: BoxDecoration(shape: BoxShape.circle, color: submittedColor),
-      child: Icon(CanvasIconsSolid.check, color: Theme.of(context).accentIconTheme.color, size: 8),
+      child: Icon(CanvasIconsSolid.check, color: Theme.of(context).colorScheme.onPrimary, size: 8),
     );
   }
 
-  List<Widget> _rowTile({String title, TextStyle titleStyle, Widget child}) {
+  List<Widget> _rowTile({String? title, TextStyle? titleStyle, Widget? child}) {
     return [
       SizedBox(height: 16),
-      Text(title ?? '', style: titleStyle ?? Theme.of(context).textTheme.overline),
+      Text(title ?? '', style: titleStyle ?? Theme.of(context).textTheme.labelSmall),
       SizedBox(height: 8),
-      child,
+      if (child != null) child,
       SizedBox(height: 16),
     ];
   }
 
   List<Widget> _lockedRow(Assignment assignment) {
-    String message = null;
-    if (assignment.lockInfo.hasModuleName) {
-      message = L10n(context).assignmentLockedModule(assignment.lockInfo.contextModule.name);
+    String? message = null;
+    if (assignment.lockInfo?.hasModuleName == true) {
+      message = L10n(context).assignmentLockedModule(assignment.lockInfo!.contextModule!.name!);
     } else if (assignment.isFullyLocked ||
         (assignment.lockExplanation?.isNotEmpty == true && assignment.lockAt?.isBefore(DateTime.now()) == true)) {
       message = assignment.lockExplanation;
@@ -296,21 +305,30 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       Divider(),
       ..._rowTile(
         title: L10n(context).assignmentLockLabel,
-        child: Text(message, style: Theme.of(context).textTheme.subtitle1),
+        child: Text(message!, style: Theme.of(context).textTheme.titleMedium),
       ),
     ];
   }
 
-  String _dateFormat(DateTime time) => time.l10nFormat(L10n(context).dateAtTime);
+  String? _dateFormat(DateTime? time) => time?.l10nFormat(L10n(context).dateAtTime);
 
-  _handleAlarmSwitch(BuildContext context, Assignment assignment, bool checked, Reminder reminder) async {
+  _handleAlarmSwitch(BuildContext context, Assignment assignment, bool checked, Reminder? reminder) async {
     if (reminder != null) await _interactor.deleteReminder(reminder);
     if (checked) {
       var now = DateTime.now();
-      var initialDate = assignment.dueAt?.isAfter(now) == true ? assignment.dueAt.toLocal() : now;
+      var initialDate = assignment.dueAt?.isAfter(now) == true ? assignment.dueAt!.toLocal() : now;
 
-      DateTime date;
-      TimeOfDay time;
+      DateTime? date;
+      TimeOfDay? time;
+
+      final permissionResult = await _permissionHandler.checkPermissionStatus(Permission.scheduleExactAlarm);
+      if (permissionResult != PermissionStatus.granted) {
+        final permissionGranted = await locator<NotificationUtil>().requestScheduleExactAlarmPermission();
+        if (permissionGranted != true) {
+          locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).needToEnablePermission);
+          return;
+        }
+      }
 
       date = await showDatePicker(
         context: context,
@@ -325,13 +343,13 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
       if (date != null && time != null) {
         DateTime reminderDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
-        var body = assignment.dueAt.l10nFormat(L10n(context).dueDateAtTime) ?? L10n(context).noDueDate;
+        var body = assignment.dueAt?.l10nFormat(L10n(context).dueDateAtTime) ?? L10n(context).noDueDate;
         await _interactor.createReminder(
           L10n(context),
           reminderDate,
           assignment.id,
           assignment.courseId,
-          assignment.name,
+          assignment.name ?? '',
           body,
         );
       }
@@ -344,9 +362,14 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   }
 
   _sendMessage(AssignmentDetails details) {
-    String subject = L10n(context).assignmentSubjectMessage(_currentStudent.name, details.assignment.name);
-    String postscript = L10n(context).messageLinkPostscript(_currentStudent.name, details.assignment.htmlUrl);
-    Widget screen = CreateConversationScreen(widget.courseId, _currentStudent.id, subject, postscript);
-    locator.get<QuickNav>().push(context, screen);
+    if (_currentStudent != null) {
+      String subject = L10n(context).assignmentSubjectMessage(
+          _currentStudent?.name ?? '', details.assignment?.name ?? '');
+      String postscript = L10n(context).messageLinkPostscript(
+          _currentStudent?.name ?? '', details.assignment?.htmlUrl ?? '');
+      Widget screen = CreateConversationScreen(
+          widget.courseId, _currentStudent!.id, subject, postscript);
+      locator.get<QuickNav>().push(context, screen);
+    }
   }
 }

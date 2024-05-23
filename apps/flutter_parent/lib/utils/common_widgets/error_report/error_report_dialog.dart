@@ -11,15 +11,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../arrow_aware_focus_scope.dart';
 
@@ -29,9 +28,9 @@ class ErrorReportDialog extends StatefulWidget {
   static const Key emailKey = Key('email');
 
   final String title; // Used to specify different titles depending on how this dialog was shown
-  final String subject;
-  final ErrorReportSeverity severity;
-  final FlutterErrorDetails error;
+  final String? subject;
+  final ErrorReportSeverity? severity;
+  final FlutterErrorDetails? error;
   final bool includeEmail; // Used when shown during login, so that users can get responses from created service tickets
   final bool hideSeverityPicker;
 
@@ -42,19 +41,20 @@ class ErrorReportDialog extends StatefulWidget {
     this.includeEmail,
     this.hideSeverityPicker,
     this.error, {
-    Key key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _ErrorReportDialogState createState() => _ErrorReportDialogState();
 
-  static Future<void> asDialog(BuildContext context,
-      {String title,
-      String subject,
-      ErrorReportSeverity severity,
+  static Future<void> asDialog(
+      BuildContext context, {
+      String? title,
+      String? subject,
+      ErrorReportSeverity? severity,
       bool includeEmail = false,
       bool hideSeverityPicker = false,
-      FlutterErrorDetails error}) {
+      FlutterErrorDetails? error}) {
     return showDialog(
       context: context,
       builder: (context) => ErrorReportDialog._internal(
@@ -74,13 +74,13 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
 
   // Non state changing variables
   FocusScopeNode _focusScopeNode = FocusScopeNode();
-  String _subject;
-  String _email;
-  String _description;
+  String? _subject;
+  String? _email;
+  String? _description;
 
   // State changing variables
-  ErrorReportSeverity _selectedSeverity;
-  bool _autoValidate;
+  late ErrorReportSeverity? _selectedSeverity;
+  late bool _autoValidate;
 
   @override
   void initState() {
@@ -113,7 +113,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
             TextButton(
               child: Text(L10n(context).sendReport.toUpperCase()),
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
+                if (_formKey.currentState?.validate() == true) {
                   await _submitReport();
                   Navigator.of(context).pop();
                 } else {
@@ -134,7 +134,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
-        // autovalidate: _autoValidate,
+        autovalidateMode: _autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
         child: ArrowAwareFocusScope(
           node: _focusScopeNode,
           child: Column(
@@ -145,7 +145,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
                 key: ErrorReportDialog.subjectKey,
                 initialValue: _subject,
                 decoration: _decoration(L10n(context).reportProblemSubject),
-                validator: (text) => text.isEmpty ? L10n(context).reportProblemSubjectEmpty : null,
+                validator: (text) => text?.isEmpty == true ? L10n(context).reportProblemSubjectEmpty : null,
                 onChanged: (text) => _subject = text,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
@@ -156,7 +156,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
                   key: ErrorReportDialog.emailKey,
                   decoration: _decoration(L10n(context).reportProblemEmail),
                   validator: (text) =>
-                      (widget.includeEmail && text.isEmpty) ? L10n(context).reportProblemEmailEmpty : null,
+                      (widget.includeEmail && text?.isEmpty == true) ? L10n(context).reportProblemEmailEmpty : null,
                   onChanged: (text) => _email = text,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
@@ -167,21 +167,21 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
                 minLines: 3,
                 maxLines: null,
                 decoration: _decoration(L10n(context).reportProblemDescription, alignLabelWithHint: true),
-                validator: (text) => text.isEmpty ? L10n(context).reportProblemDescriptionEmpty : null,
+                validator: (text) => text?.isEmpty == true ? L10n(context).reportProblemDescriptionEmpty : null,
                 onChanged: (text) => _description = text,
               ),
               SizedBox(height: 16),
               if (!widget.hideSeverityPicker) Text(L10n(context).reportProblemSeverity),
               if (!widget.hideSeverityPicker)
                 Container(
-                  color: ParentTheme.of(context).nearSurfaceColor,
+                  color: ParentTheme.of(context)?.nearSurfaceColor,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: DropdownButton<_SeverityOption>(
                     itemHeight: null,
                     isExpanded: true,
                     underline: SizedBox(),
                     onChanged: (option) async {
-                      setState(() => _selectedSeverity = option.severity);
+                      setState(() => _selectedSeverity = option?.severity);
                       // Clear focus here, as it can go back to the text forms if they were previously selected
                       // NO!  This messes up dpad-nav
                       //_focusScopeNode.requestFocus(FocusNode());
@@ -201,15 +201,15 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
 
   _submitReport() async {
     final l10n = L10n(context);
-    final info = await Future.wait([PackageInfo.fromPlatform(), DeviceInfoPlugin().androidInfo]);
-    PackageInfo package = info[0];
-    AndroidDeviceInfo device = info[1];
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     // Add device and package info before the users description
     final comment = '' +
-        '${l10n.device}: ${device.manufacturer} ${device.model}\n' +
-        '${l10n.osVersion}: Android ${device.version.release}\n' +
-        '${l10n.versionNumber}: ${package.appName} v${package.version} (${package.buildNumber})\n\n' +
+        '${l10n.device}: ${androidInfo.manufacturer} ${androidInfo.model}\n' +
+        '${l10n.osVersion}: Android ${androidInfo.version.release}\n' +
+        '${l10n.versionNumber}: ${packageInfo.appName} v${packageInfo.version} (${packageInfo.buildNumber})\n\n' +
         '-------------------------\n\n' +
         '$_description';
 
@@ -221,7 +221,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
   InputDecoration _decoration(String label, {bool alignLabelWithHint = false}) => InputDecoration(
         labelText: label,
         alignLabelWithHint: alignLabelWithHint,
-        fillColor: ParentTheme.of(context).nearSurfaceColor,
+        fillColor: ParentTheme.of(context)?.nearSurfaceColor,
         filled: true,
       );
 

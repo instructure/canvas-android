@@ -21,17 +21,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
-import com.instructure.pandautils.utils.FileFolderDeletedEvent
-import com.instructure.pandautils.utils.FileFolderUpdatedEvent
-import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
-import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_PDF
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.models.EditableFile
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
+import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentViewPdfBinding
+import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
+import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.ViewPdfFragmentView
@@ -39,15 +40,17 @@ import com.pspdfkit.configuration.PdfConfiguration
 import com.pspdfkit.configuration.page.PageScrollDirection
 import com.pspdfkit.ui.PdfFragment
 import instructure.androidblueprint.PresenterFragment
-import kotlinx.android.synthetic.main.fragment_view_pdf.*
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_PDF)
 class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragmentView>(), ViewPdfFragmentView {
 
+    private val binding by viewBinding(FragmentViewPdfBinding::bind)
+
     private var mUrl by StringArg()
     private var mToolbarColor by IntArg()
     private var mEditableFile: EditableFile? by NullableParcelableArg()
+    private var isInModulesPager by BooleanArg()
 
     private val mPdfConfiguration: PdfConfiguration = PdfConfiguration.Builder().scrollDirection(PageScrollDirection.VERTICAL).build()
 
@@ -66,21 +69,24 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
         // If returning from editing this file, check if it was deleted so we can immediately go back
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
-        if (fileFolderDeletedEvent != null)
+        if (fileFolderDeletedEvent != null && fileFolderDeletedEvent.deletedFileFolder.id == mEditableFile?.file?.id) {
             requireActivity().finish()
+        }
     }
 
     private fun updateFileNameIfNeeded() {
         mEditableFile?.let { editableFile ->
             val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
             fileFolderUpdatedEvent?.let { event ->
-                editableFile.file = event.updatedFileFolder
+                if (editableFile.file.id == event.updatedFileFolder.id) {
+                    editableFile.file = event.updatedFileFolder
+                }
             }
-            toolbar.title = editableFile.file.displayName
+            binding.toolbar.title = editableFile.file.displayName
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
         toolbar.title = mUrl
 
@@ -89,7 +95,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
                 when (menu.itemId) {
                     R.id.edit -> {
                         val args = EditFileFolderFragment.makeBundle(it.file, it.usageRights, it.licenses, it.canvasContext!!.id)
-                        RouteMatcher.route(requireContext(), Route(EditFileFolderFragment::class.java, it.canvasContext, args))
+                        RouteMatcher.route(requireActivity(), Route(EditFileFolderFragment::class.java, it.canvasContext, args))
                     }
                     R.id.copyLink -> {
                         if(it.file.url != null) {
@@ -100,7 +106,14 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
             }
         }
 
-        if(isTablet && mToolbarColor != 0) {
+        if (isInModulesPager) {
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewPdfFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@ViewPdfFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
+        } else if (isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {
             toolbar.setupBackButton {
@@ -116,16 +129,18 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onReadySetGo(presenter: ViewPdfFragmentPresenter) { presenter.loadData(false) }
 
     override fun onLoadingStarted() {
-        pdfProgressBar.setVisible()
-        pdfProgressBar.announceForAccessibility(getString(R.string.loading))
+        binding.pdfProgressBar.apply {
+            setVisible()
+            announceForAccessibility(getString(R.string.loading))
+        }
     }
 
     override fun onLoadingProgress(progress: Float) {
-        pdfProgressBar.setVisible().setProgress(progress)
+        binding.pdfProgressBar.setVisible().setProgress(progress)
     }
 
     override fun onLoadingFinished(fileUri: Uri) {
-        pdfProgressBar.setGone()
+        binding.pdfProgressBar.setGone()
         val newPdfFragment = PdfFragment.newInstance(fileUri, mPdfConfiguration)
         childFragmentManager.beginTransaction().replace(R.id.pdfFragmentContainer, newPdfFragment).commit()
     }
@@ -136,12 +151,22 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     }
 
     companion object {
-        @JvmStatic @JvmOverloads fun newInstance(url: String, toolbarColor: Int = 0, editableFile: EditableFile? = null) = ViewPdfFragment().apply {
+        @JvmStatic
+        @JvmOverloads
+        fun newInstance(
+            url: String,
+            toolbarColor: Int = 0,
+            editableFile: EditableFile? = null,
+            isInModulesPager: Boolean = false
+        ) = ViewPdfFragment().apply {
             mUrl = url
             mToolbarColor = toolbarColor
             mEditableFile = editableFile
+            this.isInModulesPager = isInModulesPager
         }
-        @JvmStatic fun newInstance(bundle: Bundle) = ViewPdfFragment().apply { arguments = bundle }
+
+        @JvmStatic
+        fun newInstance(bundle: Bundle) = ViewPdfFragment().apply { arguments = bundle }
     }
 }
 

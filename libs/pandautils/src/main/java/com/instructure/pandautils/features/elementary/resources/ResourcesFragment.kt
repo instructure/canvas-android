@@ -26,7 +26,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_K5_RESOURCES
@@ -38,12 +40,11 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.CanvasWebViewWrapper
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_resources.*
-import kotlinx.android.synthetic.main.item_important_links.view.*
 import javax.inject.Inject
 
-@PageView("#resources")
+@PageView
 @ScreenView(SCREEN_VIEW_K5_RESOURCES)
 @AndroidEntryPoint
 class ResourcesFragment : Fragment() {
@@ -56,8 +57,10 @@ class ResourcesFragment : Fragment() {
 
     private val viewModel: ResourcesViewModel by viewModels()
 
+    private lateinit var binding: FragmentResourcesBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding = FragmentResourcesBinding.inflate(inflater, container, false)
+        binding = FragmentResourcesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -99,8 +102,8 @@ class ResourcesFragment : Fragment() {
     }
 
     private fun setupWebViews() {
-        importantLinksContainer.children.forEach {
-            val webView = it.importantLinksWebViewWrapper
+        binding.importantLinksContainer.children.forEach {
+            val webView = it.findViewById<CanvasWebViewWrapper>(R.id.importantLinksWebViewWrapper)
             if (webView != null) {
                 setupWebView(webView.webView)
             }
@@ -110,7 +113,6 @@ class ResourcesFragment : Fragment() {
     private fun setupWebView(webView: CanvasWebView) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
         webView.setBackgroundColor(requireContext().getColor(R.color.backgroundLightest))
-        webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun routeInternallyCallback(url: String) {
@@ -129,6 +131,9 @@ class ResourcesFragment : Fragment() {
 
         webView.addVideoClient(requireActivity())
     }
+
+    @PageViewUrl
+    private fun makePageViewUrl() = "${ApiPrefs.fullDomain}#resources"
 
     companion object {
         fun newInstance(): ResourcesFragment {

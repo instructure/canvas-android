@@ -24,10 +24,12 @@
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
         <item name="android:windowBackground">@color/backgroundLightest</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="android:datePickerStyle">@style/DatePickerStyle</item>
     </style>
 
     <style name="PSPDFKitTheme" parent="AppTheme.NoActionBar">
@@ -36,7 +38,8 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
-
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
@@ -115,6 +118,8 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="RoundedContextDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
@@ -124,6 +129,8 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:background">#00FFFFFF</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="TextInputLabel" parent="TextAppearance.Design.Hint">
@@ -155,6 +162,8 @@
         <item name="android:minWidth">140dp</item>
         <item name="android:textColorHint">@color/textDark</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="NotATeacher" />
@@ -172,7 +181,7 @@
         <item name="android:layout_marginStart">7dp</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:importantForAccessibility">no</item>
-        <item name="android:tint">@color/backgroundMedium</item>
+        <item name="android:tint">@color/textDarkest</item>
         <item name="android:src">@drawable/ic_canvas_wordmark</item>
     </style>
 
@@ -195,6 +204,8 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:editTextStyle">@style/NoGifEditText</item>
+        <item name="editTextStyle">@style/NoGifEditText</item>
     </style>
 
     <style name="ToolBarStyle" parent="AppTheme">
@@ -272,6 +283,11 @@
         <item name="android:textColor">@color/textDarkest</item>
         <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">4dp</item>
+    </style>
+
+    <style name="DatePickerStyle" parent="@android:style/Widget.DeviceDefault.DatePicker">
+        <item name="android:headerMonthTextAppearance">@style/DatePickerTextAppearance</item>
+        <item name="android:headerBackground">@color/ash</item>
     </style>
 
 </resources>

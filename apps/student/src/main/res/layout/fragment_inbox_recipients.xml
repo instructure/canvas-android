@@ -15,13 +15,21 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_layout"/>
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/textDarkest"
+        app:theme="@style/ToolBarStyle"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        android:layout_alignParentTop="true"
+        android:elevation="2dp" />
 
     <FrameLayout
         android:layout_width="match_parent"

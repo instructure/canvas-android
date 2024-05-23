@@ -26,12 +26,6 @@ abstract class ClassTransformer {
     abstract val transformName: String
 
     /**
-     *  Counts the number successful transforms performed by this Transformer and provides an assertion
-     *  that this count matches a given condition.
-     */
-    open val counter: TransformCounter = TransformCounter.Any
-
-    /**
      * Called once the [ClassPool] has been populated. At this point all source files have been scanned and it should be
      * safe to obtain [CtClass]es, add package imports, append the classpath, or otherwise interact with the [ClassPool].
      * Note that this will be called before [createFilter].
@@ -56,7 +50,6 @@ abstract class ClassTransformer {
     /** Invokes [transform] and updates the [counter] if the transform was successful */
     fun performTransform(cc: CtClass, classPool: ClassPool): Boolean {
         val transformed = transform(cc, classPool)
-        if (transformed) counter.increment()
         return transformed
     }
 
@@ -86,43 +79,5 @@ abstract class ClassTransformer {
         if (before) method.insertBefore(content) else method.insertAfter(content)
     }
 
-}
-
-sealed class TransformCounter {
-    internal var transformCount: Int = 0
-
-    abstract fun assertCount()
-
-    fun increment() {
-        transformCount++
-    }
-
-    object Any : TransformCounter() {
-        override fun assertCount() = Unit
-    }
-
-    class AtLest(private val atLeast: Int) : TransformCounter() {
-        override fun assertCount() {
-            if (transformCount < atLeast) {
-                throw IllegalStateException("Transformer ran $transformCount time(s) but was required to run at least $atLeast time(s)")
-            }
-        }
-    }
-
-    class AtMost(private val atMost: Int) : TransformCounter() {
-        override fun assertCount() {
-            if (transformCount > atMost) {
-                throw IllegalStateException("Transformer ran $transformCount time(s) but was required to run at most $atMost time(s)")
-            }
-        }
-    }
-
-    class Exactly(private val exactly: Int) : TransformCounter() {
-        override fun assertCount() {
-            if (transformCount != exactly) {
-                throw IllegalStateException("Transformer ran $transformCount time(s) but was required to run exactly $exactly time(s)")
-            }
-        }
-    }
 }
 

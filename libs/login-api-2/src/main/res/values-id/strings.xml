@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Halo dunia!</string>
+    <string name="action_settings">Pengaturan</string>
+    <string name="mobileVerifyGeneral">Aplikasi ini tidak diizinkan untuk digunakan</string>
+    <string name="mobileVerifyDomainUnauthorized">Server yang Anda masukkan tidak diizinkan untuk aplikasi ini.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Agen pengguna untuk aplikasi ini tidak diizinkan.</string>
+    <string name="mobileVerifyUnknownError">Kami tidak dapat memverifikasi server untuk digunakan bersama aplikasi ini.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Terjadi kesalahan yang tidak terduga.</string>
+    <string name="pageNotFound">Halaman tidak ditemukan</string>
+    <string name="confirm">Konfirmasi</string>
+    <string name="cancel">Batal</string>
+    <string name="help">Bantu</string>
+    <string name="enterURL">Masukkan URL Canvas Anda:</string>
+    <string name="signIntoCanvasNetwork">Coba masuk ke Canvas Network?</string>
+    <string name="remove">Hapus</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID Pengguna</string>
+    <string name="domain">Domain</string>
+    <string name="actAsUser">Bertindak sebagai Pengguna</string>
+    <string name="stopActAsUser">Stop Bertindak sebagai Pengguna</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Hapus pengguna ini?</string>
+    <string name="removedForever">Anda harus masuk kembali ke pengguna ini lagi untuk mengakses kontennya.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logo Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: HIDUP</string>
+    <string name="canvasLoginOff">Canvas_Login: MATI</string>
+    <string name="siteAdminLogin">Login Admin Situs: HIDUP</string>
+
+    <string name="username">Nama pengguna</string>
+    <string name="password">Kata sandi</string>
+    <string name="authenticationRequired">Autentikasi Dibutuhkan</string>
+    <string name="invalidEmailPassword">Email atau kata sandi tidak valid</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="matchingSchools">Mencocokkan Sekolah</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Anda yakin mau logout?</string>
+    <string name="logout_yes">Ya</string>
+    <string name="logout_no">Tidak</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Di Dekat Anda</string>
+    <string name="loginCanvasNetwork">Jaringan Canvas</string>
+    <string name="loginRightBehindYou">Tepat di belakang Anda</string>
+    <string name="loginCanvasHelp">Tidak melihat sekolah Anda? Masukkan URL sekolah atau ketuk di sini untuk mendapat bantuan.</string>
+    <string name="loginCanvasHelpWithUser">Masukkan URL sekolah atau ketuk di sini untuk mendapat bantuan.</string>
+    <string name="loginHint">Temukan sekolah atau distrik Anda</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Laporkan Masalah</string>
+    <string name="errorReportSubject">Subjek</string>
+    <string name="errorReportDescription">Deskripsi</string>
+    <string name="errorReportSend">Kirim</string>
+    <string name="errorReportThankyou">Terima kasih Anda sudah melaporkan masalah Anda kepada Tim Dukungan.  Anda akan menerima verifikasi dan info terbaru melalui email.</string>
+    <string name="errorReportSeverityText">Bagaimana ini berpengaruh pada Anda?</string>
+    <string name="errorSeverityCasualQuestion">Hanya pertanyaan biasa, komentar, ide, saran...</string>
+    <string name="errorSeverityNeedHelp">Saya butuh bantuan tetapi tidak mendesak.</string>
+    <string name="errorSeveritySomethingsBroken">Ada yang terputus tetapi bisa saya cari cara untuk mendapat apa yang saya butuhkan.</string>
+    <string name="errorSeverityCantGetThingsDone">Saya tidak bisa melakukan apa pun sampai saya mendapat info dari Anda.</string>
+    <string name="errorSeverityExtremelyCritical">DARURAT KRITIKAL EKSTREM!!</string>
+
+    <string name="errorReportEmailAddress">Alamat Email</string>
+    <string name="errorReportUnknown">Tidak dikenal</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mil (1,6 km)</string>
+    <string name="oneMile">1 mil (1,6 km)</string>
+    <string name="miles">mil</string>
+    <string name="kilometers">km</string>
+    <!-- String for submitting tickets -->
+    <string name="device">Perangkat</string>
+    <string name="osVersion">Versi OS</string>
+
+    <string name="previousLoginTitle">Login Sebelumnya</string>
+    <string name="findMySchool">Temukan sekolah saya</string>
+    <string name="loginWithQRCode">Kode QR</string>
+    <string name="locateQRCode">Temukan Kode QR</string>
+    <string name="qrCodeExplanation">Anda akan menemukan kode QR di web di profil akun Anda. Klik \'QR untuk Login Seluler\' di dalam daftar.</string>
+    <string name="qrCodeScanningPrompt">Pindai kode QR dari Canvas untuk login</string>
+    <string name="loginWithQRCodeError">Terjadi kesalahan saat login. Silakan buat Kode QR lain dan coba lagi.</string>
+    <string name="invalidQRCodeError">Silakan pindai kode QR yang dibuat oleh Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Tangkapan layar yang menampilkan lokasi pembuatan kode QR di browser</string>
+    <string name="whatsYourSchoolName">Apa nama sekolah Anda?</string>
+    <string name="next">Berikutnya</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Hapus Pengguna Sebelumnya</string>
+    <string name="accountDomainFooter">Tidak dapat menemukan sekolah Anda? Coba ketikkan URL sekolah lengkap.</string>
+    <string name="accountDomainFooterLoginHelp">Ketuk di sini untuk bantuan login.</string>
+    <string name="login_noInternetConnectionTitle">Tidak Ada Sambungan Internet</string>
+    <string name="login_noInternetConnectionMessage">Tindakan ini membutuhkan sambungan internet.</string>
+    <string name="empty_feedback">Subjek dan deskripsi harus ada untuk menyerahkan umpan balik.</string>
+    <string name="versionNum">Nomor Versi</string>
+    <string name="scrollInstructions">Gulirkan untuk melihat semua detail</string>
+
+    <string name="masqueradeErrorUserId">Anda harus memasukkan id pengguna.</string>
+    <string name="masqueradeErrorDomain">Anda harus memasukkan domain yang valid</string>
+    <string name="masqueradeError">Kesalahan saat mencoba bertindak sebagai pengguna.</string>
+    <string name="masqueradeInfo">\"Bertindak sebagai\" pada dasarnya adalah melakukan login sebagai pengguna ini tanpa kata sandi. Anda akan dapat melakukan tindakan apa pun jika Anda adalah pengguna ini, dan dari sudut pandang pengguna lain, ini seakan-akan pengguna ini melakukannya. Namun, log audit mencatat bahwa Anda lah orang yang melakukan tindakan atas nama pengguna ini.</string>
+    <string name="masqueradingAs">Anda bertindak sebagai %s</string>
+    <string name="stopActingAsTitle">Stop bertindak sebagai...</string>
+    <string name="stopActingAsMessage">Anda akan berhenti bertindak sebagai %s dan kembali ke akun Anda.</string>
+    <string name="weMadeChanges">Kami telah membuat beberapa perubahan.</string>
+    <string name="whatsNewText">Lihat apa yang baru</string>
+    <string name="findAnotherSchool">Temukan sekolah lain</string>
+</resources>

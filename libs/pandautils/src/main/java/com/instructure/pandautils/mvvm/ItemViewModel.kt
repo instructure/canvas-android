@@ -27,4 +27,6 @@ interface ItemViewModel {
     fun areItemsTheSame(other: ItemViewModel): Boolean = false
 
     fun areContentsTheSame(other: ItemViewModel): Boolean = false
+
+    fun onCleared() = Unit
 }

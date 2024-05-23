@@ -30,6 +30,4 @@ class TeacherHomeroomRouter : HomeroomRouter {
     override fun openAssignments(course: Course) = Unit
 
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
-
-    override fun updateColors() = Unit
 }

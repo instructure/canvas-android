@@ -22,23 +22,54 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBodyWrapper
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
 
 object AssignmentAPI {
-    internal interface AssignmentInterface {
+    interface AssignmentInterface {
         @GET("courses/{courseId}/external_tools/sessionless_launch")
         fun getExternalToolLaunchUrl(@Path("courseId") courseId: Long, @Query("id") externalToolId: Long, @Query("assignment_id") assignmentId: Long, @Query("launch_type") launchType: String = "assessment"): Call<LTITool>
+
+        @GET("courses/{courseId}/external_tools/sessionless_launch")
+        suspend fun getExternalToolLaunchUrl(
+            @Path("courseId") courseId: Long,
+            @Query("id") externalToolId: Long,
+            @Query("assignment_id") assignmentId: Long,
+            @Query("launch_type") launchType: String = "assessment",
+            @Tag restParams: RestParams
+        ): DataResult<LTITool>
 
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics")
         fun getAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics")
+        suspend fun getAssignment(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Tag params: RestParams
+        ): DataResult<Assignment>
+
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=submission_history")
         fun getAssignmentWithHistory(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics[]=submission_history")
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=submission_history")
+        suspend fun getAssignmentWithHistory(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<Assignment>
+
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
         fun getAssignmentIncludeObservees(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<ObserveeAssignment>
+
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
+        suspend fun getAssignmentIncludeObservees(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<ObserveeAssignment>
 
         @GET("courses/{courseId}/assignment_groups/{assignmentGroupId}")
         fun getAssignmentGroup(
@@ -48,15 +79,36 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long): Call<List<AssignmentGroup>>
 
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&include[]=rubric_assessment&override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=submission_history&include[]=submission_comments&include[]=score_statistics")
+        suspend fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<List<AssignmentGroup>>
+
         @GET
         fun getNextPageAssignmentGroupListWithAssignments(@Url nextUrl: String): Call<List<AssignmentGroup>>
+
+        @GET
+        suspend fun getNextPageAssignmentGroupListWithAssignments(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<AssignmentGroup>>
 
         // https://canvas-test.emeritus.org/doc/api/all_resources.html#method.submissions_api.for_students
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("grading_period_id") gradingPeriodId: Long, @Query("scope_assignments_to_student") scopeToStudent: Boolean, @Query("order") order: String = "id"): Call<List<AssignmentGroup>>
 
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
+        suspend fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
+            @Path("courseId") courseId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long,
+            @Query("scope_assignments_to_student") scopeToStudent: Boolean,
+            @Query("order") order: String = "id",
+            @Tag restParams: RestParams
+        ): DataResult<List<AssignmentGroup>>
+
         @GET
         fun getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(@Url nextUrl: String): Call<List<AssignmentGroup>>
+
+        @GET
+        suspend fun getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(
+            @Url nextUrl: String,
+            @Tag restParams: RestParams
+        ): DataResult<List<AssignmentGroup>>
 
         @GET
         fun getNextPage(@Url nextUrl: String): Call<List<AssignmentGroup>>
@@ -70,14 +122,30 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignments/{assignmentId}/gradeable_students")
         fun getFirstPageGradeableStudentsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<List<GradeableStudent>>
 
+        @GET("courses/{courseId}/assignments/{assignmentId}/gradeable_students")
+        suspend fun getFirstPageGradeableStudentsForAssignment(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<List<GradeableStudent>>
+
         @GET
         fun getNextPageGradeableStudents(@Url nextUrl: String): Call<List<GradeableStudent>>
+
+        @GET
+        suspend fun getNextPageGradeableStudents(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<GradeableStudent>>
 
         @GET("courses/{courseId}/assignments/{assignmentId}/submissions?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getFirstPageSubmissionsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<List<Submission>>
 
+        @GET("courses/{courseId}/assignments/{assignmentId}/submissions?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        suspend fun getFirstPageSubmissionsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long, @Tag params: RestParams): DataResult<List<Submission>>
+
         @GET
         fun getNextPageSubmissions(@Url nextUrl: String): Call<List<Submission>>
+
+        @GET
+        suspend fun getNextPageSubmissions(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Submission>>
 
         @GET("courses/{courseId}/assignments?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getAssignments(@Path("courseId") courseId: Long): Call<List<Assignment>>

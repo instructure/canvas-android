@@ -17,10 +17,30 @@
 package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitApis
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.events.SubmissionUpdatedEvent
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
+import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
+import com.instructure.teacher.utils.getState
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.instructure.teacher.viewinterface.SpeedGraderView
 import instructure.androidblueprint.Presenter
@@ -28,14 +48,20 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.Locale
 
 class SpeedGraderPresenter(
-        private var courseId: Long,
-        private var assignmentId: Long,
-        private var submissions: List<GradeableStudentSubmission>,
-        private var submissionId: Long,
-        private var discussion: DiscussionTopicHeader?
+    private var courseId: Long,
+    private var assignmentId: Long,
+    private var submissionId: Long,
+    private var discussion: DiscussionTopicHeader?,
+    private val repository: AssignmentSubmissionRepository,
+    private val filteredSubmissionIds: LongArray,
+    private val filter: SubmissionListFilter,
+    private val filterValue: Double
 ) : Presenter<SpeedGraderView> {
+
+    private var submissions: List<GradeableStudentSubmission> = emptyList()
 
     private var mView: SpeedGraderView? = null
     private var mApiJob: Job? = null
@@ -97,12 +123,34 @@ class SpeedGraderPresenter(
             )
             course = data.first
             assignment = data.second
+            val allSubmissions = repository.getGradeableStudentSubmissions(assignment, courseId, false).sortedBy {
+                (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(
+                    Locale.getDefault())
+            }
+            submissions = allSubmissions.filter {
+                when (filter) {
+                    SubmissionListFilter.ALL -> true
+                    SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
+                    SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
+                    SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING)  && it.isGradeMatchesCurrentSubmission} ?: false
+                    SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
+                    SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
+                    SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
+                }
+            }
 
             if (submissionId > 0 && submissions.isEmpty()) {
                 // We don't have all the data we need (we came from a push notification), get all the stuffs first
                 val submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(course.id, assignment.id, submissionId, it, false) }
                 val user = awaitApi<User> { UserManager.getUser(submissionId, it, false) }
                 submissions = listOf(GradeableStudentSubmission(StudentAssignee(user), submission))
+            }
+
+            if (filteredSubmissionIds.isNotEmpty()) {
+                submissions = submissions.filter { it.id in filteredSubmissionIds }
             }
 
             mView?.onDataSet(assignment, submissions)

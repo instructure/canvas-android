@@ -17,7 +17,7 @@
 package com.instructure.teacher.models
 
 import com.instructure.canvasapi2.models.CanvasComparable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 enum class AssigneeCategory { SECTIONS, GROUPS, STUDENTS }
 

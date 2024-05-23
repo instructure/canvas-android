@@ -17,7 +17,6 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attendance
@@ -28,17 +27,16 @@ import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.AdapterAttendanceBinding
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
-import kotlinx.android.synthetic.main.adapter_attendance.view.*
 
-class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+class AttendanceViewHolder(private val binding: AdapterAttendanceBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
         attendance: Attendance,
         callback: AttendanceToFragmentCallback<Attendance>,
         position: Int,
-        context: Context,
-    ) = with(itemView) {
+        context: Context
+    ) = with(binding) {
         // Set student avatar
         val basicUser = BasicUser()
         basicUser.name = attendance.student?.name
@@ -60,9 +58,5 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
         attendanceIndicator.setImageResource(drawable)
         attendanceIndicator.imageTintList = ContextCompat.getColor(context, color).asStateList()
-    }
-
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_attendance
     }
 }

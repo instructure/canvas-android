@@ -29,10 +29,10 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
-import com.instructure.pandautils.room.daos.*
-import com.instructure.pandautils.room.entities.FileUploadInputEntity
-import com.instructure.pandautils.room.entities.PendingSubmissionCommentEntity
-import com.instructure.pandautils.room.model.SubmissionCommentWithAttachments
+import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.model.SubmissionCommentWithAttachments
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
@@ -57,13 +57,15 @@ class SpeedGraderCommentsPresenter(
     val authorDao: AuthorDao,
     val mediaCommentDao: MediaCommentDao,
     val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
-    val fileUploadInputDao: FileUploadInputDao
+    val fileUploadInputDao: FileUploadInputDao,
+    var selectedAttemptId: Long?,
+    val assignmentEnhancementsEnabled: Boolean
 ) : ListPresenter<SubmissionCommentWrapper, SpeedGraderCommentsView>(SubmissionCommentWrapper::class.java) {
 
     val mPageId = "${ApiPrefs.domain}-$courseId-$assignmentId-${assignee.id}"
     var selectedFilePaths: List<String>? = null
 
-    private val comments = rawComments.map { CommentWrapper(it) }
+    private val comments = rawComments.map { CommentWrapper(it) }.toMutableList()
     private var fileUploadJob: Job? = null
     private var pendingSubmissionCommentFetchJob: Job? = null
     private var sendCommentJob: Job? = null
@@ -81,14 +83,17 @@ class SpeedGraderCommentsPresenter(
             // Grab new submission comments
             tryWeave {
                 // Get updated submission
-                val updatedSubmission: Submission =
-                    awaitApi { SubmissionManager.getSingleSubmission(courseId, assignmentId, assignee.id, it, true) }
+                val updatedSubmission: Submission = awaitApi {
+                    SubmissionManager.getSingleSubmission(courseId, assignmentId, assignee.id, it, true)
+                }
 
                 // Add normal comments
-                addNormalComments(updatedSubmission.submissionComments)
+                addNormalComments(updatedSubmission.submissionComments.filter { it.attempt == selectedAttemptId || !assignmentEnhancementsEnabled })
 
                 // Add submission history as comments
-                addSubmissionHistoryAsComments(updatedSubmission.submissionHistory.mapNotNull { it })
+                addSubmissionHistoryAsComments(updatedSubmission.submissionHistory
+                    .mapNotNull { it }
+                    .filter { it.attempt == selectedAttemptId || !assignmentEnhancementsEnabled })
 
                 // Add pending comments
                 addPendingComments()
@@ -102,26 +107,27 @@ class SpeedGraderCommentsPresenter(
             // Use cached comments
 
             // Add normal comments
-            data.addOrUpdate(comments)
+            data.addOrUpdate(comments.filter { it.comment.attempt == selectedAttemptId || !assignmentEnhancementsEnabled })
 
             // Add submission history as comments
-            addSubmissionHistoryAsComments(submissionHistory)
+            addSubmissionHistoryAsComments(submissionHistory.filter { it.attempt == selectedAttemptId || !assignmentEnhancementsEnabled })
 
             // Add pending comments
             addPendingComments()
-            subscribePendingWorkers()
 
             viewCallback?.onRefreshFinished()
             viewCallback?.checkIfEmpty()
         }
+
+        subscribePendingWorkers()
     }
 
-    fun addNormalComments(comments: List<SubmissionComment>) = data.addOrUpdate(comments.map { CommentWrapper(it) })
+    private fun addNormalComments(comments: List<SubmissionComment>) = data.addOrUpdate(comments.map { CommentWrapper(it) })
 
-    fun addSubmissionHistoryAsComments(submissionHistory: List<Submission>) =
+    private fun addSubmissionHistoryAsComments(submissionHistory: List<Submission>) =
         data.addOrUpdate(submissionHistory.map { SubmissionWrapper(it) })
 
-    fun addPendingComments() {
+    private fun addPendingComments() {
         // Add pending comments
         pendingSubmissionCommentFetchJob = weave {
             val (drafts, pending) =  pendingSubmissionCommentDao.findByPageId(mPageId)
@@ -131,7 +137,7 @@ class SpeedGraderCommentsPresenter(
                 .partition { it.pendingComment.status == CommentSendStatus.DRAFT }
 
             drafts.firstOrNull()?.let { viewCallback?.setDraftText(it.pendingComment.comment) }
-            data.addOrUpdate(pending)
+            data.addOrUpdate(pending.filter { it.pendingComment.attemptId == selectedAttemptId || !assignmentEnhancementsEnabled })
         }
     }
 
@@ -150,9 +156,11 @@ class SpeedGraderCommentsPresenter(
             viewCallback?.setDraftText("")
             val drafts = pendingSubmissionCommentDao.findByPageId(mPageId)
                 .orEmpty()
-                .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }.orEmpty()
+                .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }
             pendingSubmissionCommentDao.deleteAll(drafts.map { it.pendingSubmissionCommentEntity })
-            val newComment = PendingSubmissionComment(mPageId, text)
+            val newComment = PendingSubmissionComment(mPageId, text).apply {
+                attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
+            }
             pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
             val commentWrapper = PendingCommentWrapper(newComment)
             data.add(commentWrapper)
@@ -188,7 +196,8 @@ class SpeedGraderCommentsPresenter(
                         comment.pendingComment.comment ?: "",
                         groupMessage,
                         arrayListOf(),
-                        it
+                        it,
+                        comment.pendingComment.attemptId.takeIf { assignmentEnhancementsEnabled }
                     )
                 }
 
@@ -202,7 +211,9 @@ class SpeedGraderCommentsPresenter(
                     data.remove(comment)
 
                     // Add new comment to list
-                    data.add(CommentWrapper(it))
+                    val wrappedComment = CommentWrapper(it)
+                    comments.add(wrappedComment)
+                    data.add(wrappedComment)
                     viewCallback?.checkIfEmpty()
                 }
                 SubmissionUpdatedEvent(submission).post()
@@ -233,7 +244,9 @@ class SpeedGraderCommentsPresenter(
                     data.remove(PendingCommentWrapper(pendingComment))
 
                     // Add new comment to list
-                    data.add(CommentWrapper(submissionComment))
+                    val comment = CommentWrapper(submissionComment)
+                    this@SpeedGraderCommentsPresenter.comments.add(comment)
+                    data.add(comment)
                     viewCallback?.checkIfEmpty()
                 } else {
                     // submissionComment is null if there was an error sending the pending intent
@@ -244,7 +257,9 @@ class SpeedGraderCommentsPresenter(
     }
 
     suspend fun createPendingMediaComment(filePath: String): Long {
-        val newComment = PendingSubmissionComment(mPageId)
+        val newComment = PendingSubmissionComment(mPageId).apply {
+            attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
+        }
         newComment.filePath = filePath
         newComment.status = CommentSendStatus.SENDING
         val id = pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
@@ -281,7 +296,9 @@ class SpeedGraderCommentsPresenter(
 
             pendingSubmissionCommentDao.deleteAll(currentDrafts.map { it.pendingSubmissionCommentEntity })
 
-            val newComment = PendingSubmissionComment(mPageId, text)
+            val newComment = PendingSubmissionComment(mPageId, text).apply {
+                attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
+            }
             if (text.isNotBlank()) pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
 
         }
@@ -297,7 +314,8 @@ class SpeedGraderCommentsPresenter(
                     assignmentId = assignmentId,
                     userId = assignee.id,
                     filePaths = selectedFilePaths.orEmpty(),
-                    action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT
+                    action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
+                    attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
                 )
                 fileUploadInputDao.insert(fileUploadInput)
             }
@@ -315,6 +333,7 @@ class SpeedGraderCommentsPresenter(
                         assignmentId,
                         assignee.id
                     )
+                    this.attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
                 }
                 pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
                 PendingCommentWrapper(newComment)
@@ -355,7 +374,10 @@ class SpeedGraderCommentsPresenter(
                 submissionCommentDao.findById(submissionCommentId)?.let {
                     val submissionComment = it.toApiModel()
                     dbCleanUp(it)
-                    data.add(CommentWrapper(submissionComment))
+                    val comment = CommentWrapper(submissionComment)
+                    comments.add(comment)
+                    data.add(comment)
+                    viewCallback?.scrollToBottom()
                     SubmissionCommentsUpdated().post()
                 }
             }

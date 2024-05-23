@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2022-01-28T12:37:40.360857",
+  "@@last_modified": "2023-08-25T11:04:20.901151",
   "alertsLabel": "التنبيهات",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -180,6 +180,19 @@
     ],
     "placeholders": {
       "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}، {eventCount} حدث}other{{date}، {eventCount} أحداث}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
     }
   },
   "No Events Today!": "لا توجد أحداث اليوم!",
@@ -2663,6 +2676,76 @@
   "Message sent": "تم إرسال الرسالة",
   "@Message sent": {
     "description": "confirmation message on the screen when the user succesfully sends a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Acceptable Use Policy": "سياسة الاستخدام المقبول",
+  "@Acceptable Use Policy": {
+    "description": "title for the acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submit": "إرسال",
+  "@Submit": {
+    "description": "submit button title for acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": "إما أنك مستخدم جديد أو أن سياسة الاستخدام المقبول قد تغيرت منذ أن وافقت عليها آخر مرة. الرجاء الموافقة على سياسة الاستخدام المقبول قبل المتابعة.",
+  "@Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": {
+    "description": "acceptable use policy screen description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I agree to the Acceptable Use Policy.": "أوافق على سياسة الاستخدام المقبول",
+  "@I agree to the Acceptable Use Policy.": {
+    "description": "acceptable use policy switch title",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "About": "نبذة",
+  "@About": {
+    "description": "Title for about menu item in settings",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "App": "التطبيق",
+  "@App": {
+    "description": "Title for App field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login ID": "معرف تسجيل الدخول",
+  "@Login ID": {
+    "description": "Title for Login ID field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email": "البريد الإلكتروني",
+  "@Email": {
+    "description": "Title for Email field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version": "الإصدار",
+  "@Version": {
+    "description": "Title for Version field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructure logo": "شعار Instructure",
+  "@Instructure logo": {
+    "description": "Semantics label for the Instructure logo on the about page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

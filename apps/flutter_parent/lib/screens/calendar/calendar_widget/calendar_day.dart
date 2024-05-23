@@ -15,6 +15,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
@@ -32,11 +33,11 @@ class CalendarDay extends StatelessWidget {
   final DaySelectedCallback onDaySelected;
 
   const CalendarDay({
-    Key key,
-    @required this.date,
-    @required this.selectedDay,
-    @required this.onDaySelected,
-  }) : super(key: key);
+    required this.date,
+    required this.selectedDay,
+    required this.onDaySelected,
+    super.key
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,104 +46,104 @@ class CalendarDay extends StatelessWidget {
     final isToday = date.isSameDayAs(DateTime.now());
     final isSelected = date.isSameDayAs(selectedDay);
 
-    TextStyle textStyle = theme.textTheme.headline5;
+    TextStyle textStyle = theme.textTheme.headlineSmall!;
     if (date.isWeekend() || date.month != selectedDay.month) textStyle = textStyle.copyWith(color: ParentColors.ash);
-    BoxDecoration decoration = null;
+    BoxDecoration? decoration = null;
 
     if (isToday) {
-      textStyle = Theme.of(context).accentTextTheme.headline5;
-      decoration = BoxDecoration(color: theme.accentColor, shape: BoxShape.circle);
+      textStyle = Theme.of(context).textTheme.headlineSmall!.copyWith(color: theme.colorScheme.onPrimary);
+      decoration = BoxDecoration(color: theme.colorScheme.secondary, shape: BoxShape.circle);
     } else if (isSelected) {
-      textStyle = textStyle.copyWith(color: Theme.of(context).accentColor);
+      textStyle = textStyle.copyWith(color: Theme.of(context).colorScheme.secondary);
       decoration = BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: theme.accentColor,
+          color: theme.colorScheme.secondary,
           width: 2,
         ),
       );
     }
 
-    return InkResponse(
-      enableFeedback: true,
-      highlightColor: theme.accentColor.withOpacity(0.35),
-      splashColor: theme.accentColor.withOpacity(0.35),
-      onTap: () => onDaySelected(date),
-      child: Container(
-        height: dayHeight,
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 6),
-            Container(
-              height: 32,
-              width: 32,
-              decoration: decoration,
-              child: Center(
-                child: AnimatedDefaultTextStyle(
-                  style: textStyle,
-                  duration: Duration(milliseconds: 300),
-                  child: Text(
-                    date.day.toString(),
-                    semanticsLabel: DateFormat.MMMMEEEEd(supportedDateLocale).format(date),
-                    key: ValueKey('day_of_month_${date.day}'),
+    return Selector<PlannerFetcher, AsyncSnapshot<List<PlannerItem>>>(
+        selector: (_, fetcher) => fetcher.getSnapshotForDate(date),
+        builder: (_, snapshot, __) {
+          int eventCount = snapshot.hasData ? snapshot.data!.length : 0;
+          return InkResponse(
+            enableFeedback: true,
+            highlightColor: theme.colorScheme.secondary.withOpacity(0.35),
+            splashColor: theme.colorScheme.secondary.withOpacity(0.35),
+            onTap: () => onDaySelected(date),
+            child: Container(
+              height: dayHeight,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 6),
+                  Container(
+                    height: 32,
+                    width: 32,
+                    decoration: decoration,
+                    child: Center(
+                      child: AnimatedDefaultTextStyle(
+                        style: textStyle,
+                        duration: Duration(milliseconds: 300),
+                        child: Text(
+                          date.day.toString(),
+                          semanticsLabel: L10n(context).calendarDaySemanticsLabel(DateFormat.MMMMEEEEd(supportedDateLocale).format(date), eventCount),
+                          key: ValueKey('day_of_month_${date.day}'),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(height: 4),
+                  _eventIndicator(context, snapshot),
+                ],
               ),
             ),
-            SizedBox(height: 4),
-            _eventIndicator(context),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 
-  Widget _eventIndicator(BuildContext context) {
-    return Selector<PlannerFetcher, AsyncSnapshot<List<PlannerItem>>>(
-      selector: (_, fetcher) => fetcher.getSnapshotForDate(date),
-      builder: (_, snapshot, __) {
-        /// On error, show nothing
-        if (snapshot.hasError) return Container();
+  Widget _eventIndicator(BuildContext context, AsyncSnapshot<List<PlannerItem>> snapshot) {
+    /// On error, show nothing
+    if (snapshot.hasError) return Container();
 
-        /// On success, show dots for activities
-        if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
-          // Show at most three dots for events
-          int count = min(snapshot.data.length, 3);
-          int itemCount = count < 1 ? count : (count * 2) - 1;
-          if (count == 0) return Container();
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(itemCount, (index) {
-              if (index % 2 == 1) return SizedBox(width: 4);
-              return Container(
-                width: 4,
-                height: 4,
-                decoration: BoxDecoration(color: Theme.of(context).accentColor, shape: BoxShape.circle),
-              );
-            }),
+    /// On success, show dots for activities
+    if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+      // Show at most three dots for events
+      int count = min(snapshot.data!.length, 3);
+      int itemCount = count < 1 ? count : (count * 2) - 1;
+      if (count == 0) return Container();
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(itemCount, (index) {
+          if (index % 2 == 1) return SizedBox(width: 4);
+          return Container(
+            width: 4,
+            height: 4,
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, shape: BoxShape.circle),
           );
-        }
+        }),
+      );
+    }
 
-        /// Otherwise, show loading
-        return Container(
-          width: 4,
-          height: 4,
-          child: _RepeatTween(
-            duration: Duration(milliseconds: 350),
-            delay: Duration(milliseconds: 100 * (date.localDayOfWeek)),
-            builder: (BuildContext context, Animation animation) {
-              return ScaleTransition(
-                scale: animation,
-                child: Container(
-                  width: 4,
-                  height: 4,
-                  decoration: BoxDecoration(color: ParentColors.ash, shape: BoxShape.circle),
-                ),
-              );
-            },
-          ),
-        );
-      },
+    /// Otherwise, show loading
+    return Container(
+      width: 4,
+      height: 4,
+      child: _RepeatTween(
+        duration: Duration(milliseconds: 350),
+        delay: Duration(milliseconds: 100 * (date.localDayOfWeek!)),
+        builder: (BuildContext context, Animation animation) {
+          return ScaleTransition(
+            scale: animation as Animation<double>,
+            child: Container(
+              width: 4,
+              height: 4,
+              decoration: BoxDecoration(color: ParentColors.ash, shape: BoxShape.circle),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -150,18 +151,18 @@ class CalendarDay extends StatelessWidget {
 class _RepeatTween extends StatefulWidget {
   final Duration duration;
 
-  final Duration delay;
+  final Duration? delay;
 
   final Widget Function(BuildContext context, Animation<double> animation) builder;
 
-  const _RepeatTween({Key key, @required this.duration, this.delay = null, @required this.builder}) : super(key: key);
+  const _RepeatTween({required this.duration, this.delay = null, required this.builder, super.key});
 
   @override
   __RepeatTweenState createState() => __RepeatTweenState();
 }
 
 class __RepeatTweenState extends State<_RepeatTween> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
   Tween<double> tween = Tween<double>(begin: 0.0, end: 1.0);
 
   @override
@@ -172,7 +173,7 @@ class __RepeatTweenState extends State<_RepeatTween> with SingleTickerProviderSt
   }
 
   _startWithDelay() async {
-    if (widget.delay != null) await Future.delayed(widget.delay);
+    if (widget.delay != null) await Future.delayed(widget.delay!);
     if (mounted) _controller.repeat(reverse: true);
   }
 

@@ -17,25 +17,28 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
-import com.instructure.teacher.R
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.teacher.router.RouteMatcher
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentSpeedGraderLtiSubmissionBinding
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.ExternalToolContent
-import kotlinx.android.synthetic.main.fragment_speed_grader_lti_submission.*
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_LTI_SUBMISSION)
 class SpeedGraderLtiSubmissionFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentSpeedGraderLtiSubmissionBinding::bind)
 
     private var mUrl by StringArg()
     private var mCanvasContext by ParcelableArg<CanvasContext>()
@@ -50,10 +53,10 @@ class SpeedGraderLtiSubmissionFragment : Fragment() {
     }
 
     private fun setupViews() {
-        ViewStyler.themeButton(viewLtiButton)
-        viewLtiButton.onClick {
-            val args = InternalWebViewFragment.makeBundle(mUrl, getString(R.string.canvasAPI_externalTool))
-            RouteMatcher.route(requireContext(), Route(InternalWebViewFragment::class.java, mCanvasContext, args))
+        ViewStyler.themeButton(binding.viewLtiButton)
+        binding.viewLtiButton.onClick {
+            val args = InternalWebViewFragment.makeBundle(mUrl, getString(R.string.canvasAPI_externalTool), shouldAuthenticate = true, shouldRouteInternally = false)
+            RouteMatcher.route(requireActivity(), Route(InternalWebViewFragment::class.java, mCanvasContext, args))
         }
     }
 

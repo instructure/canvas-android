@@ -56,8 +56,8 @@ class QuizListPageTest : TeacherTest() {
         val quizzes = getToQuizzesPage(quizCount = 3)
         val searchQuiz = quizzes[2]
         quizListPage.assertQuizCount(quizzes.size + 1) // +1 to account for header
-        quizListPage.openSearch()
-        quizListPage.enterSearchQuery(searchQuiz.title!!.take(searchQuiz.title!!.length / 2))
+        quizListPage.searchable.clickOnSearchButton()
+        quizListPage.searchable.typeToSearchBar(searchQuiz.title!!.take(searchQuiz.title!!.length / 2))
         quizListPage.assertQuizCount(2) // header + single search result
         quizListPage.assertHasQuiz(searchQuiz)
     }

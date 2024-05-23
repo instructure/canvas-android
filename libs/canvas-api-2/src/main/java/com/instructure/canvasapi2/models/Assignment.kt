@@ -22,14 +22,14 @@ import android.content.res.Resources
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.utils.toDate
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
 data class Assignment(
         override var id: Long = 0,
         var name: String? = null,
-        val description: String? = null,
+        var description: String? = null,
         @SerializedName("submission_types")
         val submissionTypesRaw: List<String> = arrayListOf(),
         @SerializedName("due_at")
@@ -111,6 +111,8 @@ data class Assignment(
         // For quizzes we need to use this field instead of anonymous_grading to determine if it's anonymous
         @SerializedName("anonymous_submissions")
         val anonymousSubmissions: Boolean = false,
+        @SerializedName("omit_from_final_grade")
+        val omitFromFinalGrade: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
@@ -157,6 +159,12 @@ data class Assignment(
                 else -> false
             }
 
+        }
+
+    val isGradingTypeQuantitative: Boolean
+        get() {
+            val gradingType = getGradingTypeFromAPIString(this.gradingType ?: "")
+            return gradingType == GradingType.PERCENT || gradingType == GradingType.POINTS
         }
 
     enum class SubmissionType(val apiString: String) {
@@ -221,7 +229,7 @@ data class Assignment(
     override fun describeContents(): Int = 0
 
     fun isMissing(): Boolean {
-        return !isSubmitted && dueDate?.before(Date()) ?: false
+        return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null)
     }
 
     companion object {

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -22,8 +23,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29"
-        tools:replace="android:maxSdkVersion" />
+        tools:replace="android:maxSdkVersion"
+        android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- Needed for Conferences (web audio capture) -->
@@ -38,25 +39,19 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />
 
 
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <instrumentation
         android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
         android:targetPackage="com.emeritus.candroid" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false"
-        tools:replace="required" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false"
-        tools:replace="required" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" tools:replace="required"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" tools:replace="required"/>
 
-    <uses-feature
-        android:name="android.hardware.screen.portrait"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
@@ -155,45 +150,46 @@
             android:exported="true"
             android:label="@string/student_app_name"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Transparent.NoAnimationOrBackground">
-            <intent-filter>
+            android:theme="@style/Theme.Transparent.NoAnimationOrBackground"
+            >
+            <intent-filter  android:autoVerify="true">
                 <data
                     android:host="*.instructure.com"
-                    android:scheme="https" />
+                    android:scheme="https"/>
                 <data
                     android:host="*.instructure.com"
-                    android:scheme="http" />
+                    android:scheme="http"/>
                 <data
                     android:host="*.canvas.net"
-                    android:scheme="https" />
+                    android:scheme="https"/>
                 <data
                     android:host="*.canvas.net"
-                    android:scheme="http" />
+                    android:scheme="http"/>
 
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
             <intent-filter>
                 <data
                     android:host="*"
-                    android:scheme="canvas-courses" />
+                    android:scheme="canvas-courses"/>
 
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
             <intent-filter>
                 <data
                     android:host="*"
-                    android:scheme="canvas-student" />
+                    android:scheme="canvas-student"/>
 
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -202,38 +198,37 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
+                    android:scheme="https"
                     android:host="sso.canvaslms.com"
-                    android:pathPattern="/canvas/login"
-                    android:scheme="https" />
+                    android:pathPattern="/canvas/login" />
 
                 <data
+                    android:scheme="https"
                     android:host="sso.test.canvaslms.com"
-                    android:pathPattern="/canvas/login"
-                    android:scheme="https" />
+                    android:pathPattern="/canvas/login" />
 
                 <data
+                    android:scheme="https"
                     android:host="sso.beta.canvaslms.com"
-                    android:pathPattern="/canvas/login"
-                    android:scheme="https" />
+                    android:pathPattern="/canvas/login" />
             </intent-filter>
         </activity>
 
         <activity
             android:name="com.emeritus.student.features.shareextension.StudentShareExtensionActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
+            android:theme="@style/CanvasMaterialTheme_Default.Translucent"
             android:label="@string/canvas"
-            android:theme="@style/CanvasMaterialTheme_Default.Translucent">
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND"/>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="audio/*" />
-                <data android:mimeType="video/*" />
-                <data android:mimeType="image/*" />
-                <data android:mimeType="application/*" />
+                <data android:mimeType="audio/*"/>
+                <data android:mimeType="video/*"/>
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="application/*"/>
             </intent-filter>
         </activity>
 
@@ -259,10 +254,10 @@
 
         <activity
             android:name="com.emeritus.student.activity.BookmarkShortcutActivity"
-            android:exported="true"
             android:icon="@drawable/ic_bookmark_shortcut"
             android:label="@string/student_app_name"
-            android:theme="@style/CanvasMaterialTheme_DefaultNoTransparency">
+            android:theme="@style/CanvasMaterialTheme_DefaultNoTransparency"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
@@ -316,6 +311,11 @@
             </intent-filter>
         </service>
 
+        <!--Reminder-->
+        <receiver
+            android:name=".receivers.AlarmReceiver"
+            android:exported="false" />
+
         <!-- To do widget -->
         <receiver
             android:name="com.emeritus.student.widget.TodoWidgetProvider"
@@ -351,7 +351,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/grades_widget_info" />
+                android:resource="@xml/grades_widget_info"/>
         </receiver>
 
         <service
@@ -372,7 +372,7 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/notification_widget_info" />
+                android:resource="@xml/notification_widget_info"/>
         </receiver>
 
         <service
@@ -399,7 +399,8 @@
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove"></provider>
+            tools:node="remove">
+        </provider>
 
     </application>
 

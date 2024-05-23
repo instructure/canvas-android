@@ -19,7 +19,7 @@ import java.security.MessageDigest
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -86,11 +86,8 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 configurations {
@@ -120,7 +117,8 @@ dependencies {
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
 
-    implementation Libs.JOURNEY_ZXING
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 
     implementation Libs.FRAGMENT_KTX
     implementation Libs.HILT

@@ -48,18 +48,21 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.DomainAdapter
+import com.instructure.loginapi.login.databinding.ActivityFindSchoolBinding
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
-import kotlinx.android.synthetic.main.activity_find_school.*
 import retrofit2.Response
 import java.util.Locale
 import java.util.regex.Pattern
 
 abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
+
+    private val binding by viewBinding(ActivityFindSchoolBinding::inflate)
 
     private var mDomainAdapter: DomainAdapter? = null
     private var mNextActionButton: TextView? = null
@@ -71,10 +74,8 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
      * Worker thread for fetching account domains.
      */
     private val mFetchAccountsWorker = Runnable {
-        if (domainInput != null) {
-            val query = domainInput!!.text.toString()
-            AccountDomainManager.searchAccounts(query, mAccountDomainCallback)
-        }
+        val query = binding.domainInput.text.toString()
+        AccountDomainManager.searchAccounts(query, mAccountDomainCallback)
     }
 
     private val mAccountDomainCallback = object : StatusCallback<List<AccountDomain>>() {
@@ -98,7 +99,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
             if (mDomainAdapter != null) {
                 mDomainAdapter!!.setItems(domains)
-                mDomainAdapter!!.filter.filter(domainInput!!.text.toString())
+                mDomainAdapter!!.filter.filter(binding.domainInput!!.text.toString())
             }
         }
     }
@@ -110,12 +111,12 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_find_school)
+        setContentView(binding.root)
         bindViews()
         applyTheme()
     }
 
-    private fun bindViews() {
+    private fun bindViews() = with(binding) {
         mWhatsYourSchoolName = findViewById(R.id.whatsYourSchoolName)
         mLoginFlowLogout = findViewById(R.id.loginFlowLogout)
         toolbar.apply {
@@ -152,7 +153,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         domainInput.requestFocus()
         domainInput.setOnEditorActionListener { _, _, _ ->
-            validateDomain(AccountDomain(domainInput!!.text.toString()))
+            validateDomain(AccountDomain(domainInput.text.toString()))
             true
         }
 
@@ -195,8 +196,8 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         })
 
         val recyclerView = findViewById<RecyclerView>(R.id.findSchoolRecyclerView)
-        recyclerView.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
-        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.addItemDecoration(DividerItemDecoration(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL))
+        recyclerView.layoutManager = LinearLayoutManager(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mDomainAdapter
     }
 
@@ -264,7 +265,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         val icon = view.findViewById<ImageView>(R.id.loginLogo)
         icon.setImageDrawable(ColorUtils.colorIt(color, icon.drawable))
 
-        toolbar!!.addView(view)
+        binding.toolbar.addView(view)
 
         ViewStyler.themeStatusBar(this)
     }

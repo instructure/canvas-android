@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/grade_cell_data.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -158,11 +159,13 @@ void main() {
     GradeCellData data = GradeCellData((b) => b
       ..state = GradeCellState.graded
       ..accentColor = Colors.pinkAccent
-      ..latePenalty = 'Late penalty: (-25)');
+      ..yourGrade = 'Your grade: 85'
+      ..latePenalty = 'Late penalty: -25');
     await setupWithData(tester, data);
 
     expect(find.byKey(Key('grade-cell-late-penalty')).evaluate(), find.text(data.latePenalty).evaluate());
-    expect(tester.widget<Text>(find.byKey(Key('grade-cell-late-penalty'))).style.color, data.accentColor);
+    expect(find.byKey(Key('grade-cell-your-grade')).evaluate(), find.text(data.yourGrade).evaluate());
+    expect(tester.widget<Text>(find.byKey(Key('grade-cell-late-penalty'))).style!.color, ParentColors.failure);
   });
 
   testWidgetsWithAccessibilityChecks('Displays final grade text', (tester) async {

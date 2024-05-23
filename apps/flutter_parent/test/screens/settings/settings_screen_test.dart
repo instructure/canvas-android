@@ -13,7 +13,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
@@ -24,11 +23,12 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../../utils/test_utils.dart';
 
 void main() {
-  SettingsInteractor interactor;
-  final analytics = _MockAnalytics();
+  late MockSettingsInteractor interactor;
+  final analytics = MockAnalytics();
   AppLocalizations l10n = AppLocalizations();
 
   themeViewerButton() => find.byKey(Key('theme-viewer'));
@@ -39,13 +39,13 @@ void main() {
   webViewDarkModeToggle() => find.text(l10n.webViewDarkModeLabel);
 
   setUpAll(() {
-    interactor = _MockInteractor();
+    interactor = MockSettingsInteractor();
     when(interactor.isDebugMode()).thenReturn(true);
     when(interactor.toggleDarkMode(any, any)).thenAnswer((invocation) {
-      ParentTheme.of(invocation.positionalArguments[0]).toggleDarkMode();
+      ParentTheme.of(invocation.positionalArguments[0])?.toggleDarkMode();
     });
     when(interactor.toggleHCMode(any)).thenAnswer((invocation) {
-      ParentTheme.of(invocation.positionalArguments[0]).toggleHC();
+      ParentTheme.of(invocation.positionalArguments[0])?.toggleHC();
     });
     setupTestLocator((locator) {
       locator.registerFactory<SettingsInteractor>(() => interactor);
@@ -55,6 +55,18 @@ void main() {
 
   setUp(() {
     reset(analytics);
+  });
+
+  testWidgetsWithAccessibilityChecks('Displays about button', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.about), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Displays legal button', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.helpLegalLabel), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Displays theme viewer button in debug mode', (tester) async {
@@ -120,13 +132,13 @@ void main() {
     await tester.pumpAndSettle();
 
     var state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isDarkMode, isFalse);
+    expect(ParentTheme.of(state.context)?.isDarkMode, isFalse);
 
     await tester.tap(darkModeButton());
     await tester.pumpAndSettle();
 
     state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isDarkMode, isTrue);
+    expect(ParentTheme.of(state.context)?.isDarkMode, isTrue);
   });
 
   testWidgetsWithAccessibilityChecks('Switches to light mode', (tester) async {
@@ -134,13 +146,13 @@ void main() {
     await tester.pumpAndSettle();
 
     var state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isDarkMode, isTrue);
+    expect(ParentTheme.of(state.context)?.isDarkMode, isTrue);
 
     await tester.tap(lightModeButton());
     await tester.pumpAndSettle();
 
     state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isDarkMode, isFalse);
+    expect(ParentTheme.of(state.context)?.isDarkMode, isFalse);
   });
 
   testWidgetsWithAccessibilityChecks('Enables high contrast mode', (tester) async {
@@ -148,13 +160,13 @@ void main() {
     await tester.pumpAndSettle();
 
     var state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isHC, isFalse);
+    expect(ParentTheme.of(state.context)?.isHC, isFalse);
 
     await tester.tap(hcToggle());
     await tester.pumpAndSettle();
 
     state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isHC, isTrue);
+    expect(ParentTheme.of(state.context)?.isHC, isTrue);
   });
 
   testWidgetsWithAccessibilityChecks('Hides WebView dark mode toggle in light mode', (tester) async {
@@ -176,25 +188,21 @@ void main() {
     await tester.pumpAndSettle();
 
     var state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isWebViewDarkMode, isFalse);
+    expect(ParentTheme.of(state.context)?.isWebViewDarkMode, isFalse);
 
     await tester.tap(webViewDarkModeToggle());
     await tester.pumpAndSettle();
 
     state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isWebViewDarkMode, isTrue);
+    expect(ParentTheme.of(state.context)?.isWebViewDarkMode, isTrue);
 
     await tester.tap(webViewDarkModeToggle());
     await tester.pumpAndSettle();
 
     state = tester.state(find.byType(SettingsScreen));
-    expect(ParentTheme.of(state.context).isWebViewDarkMode, isFalse);
+    expect(ParentTheme.of(state.context)?.isWebViewDarkMode, isFalse);
 
     verify(analytics.logEvent(AnalyticsEventConstants.DARK_WEB_MODE_ON)).called(1);
     verify(analytics.logEvent(AnalyticsEventConstants.DARK_WEB_MODE_OFF)).called(1);
   });
 }
-
-class _MockInteractor extends Mock implements SettingsInteractor {}
-
-class _MockAnalytics extends Mock implements Analytics {}

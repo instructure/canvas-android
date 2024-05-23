@@ -149,6 +149,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         return Retrofit.Builder()
                 .baseUrl(params.domain + params.apiVersion + apiContext)
                 .addConverterFactory(GsonConverterFactory.create(GsonBuilder().serializeNulls().create()))
+                .addCallAdapterFactory(DataResultCallAdapterFactory())
                 .callFactory { request ->
                     // Tag this request with the rest params so we can access them later in RequestInterceptor
                     okHttpClient.newCall(request.newBuilder().tag(restParams).build())

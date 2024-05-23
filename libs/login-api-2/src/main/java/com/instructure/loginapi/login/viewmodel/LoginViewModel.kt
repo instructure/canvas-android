@@ -25,7 +25,9 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,14 +41,17 @@ class LoginViewModel @Inject constructor(
     private val featureFlagProvider: FeatureFlagProvider,
     private val userManager: UserManager,
     private val oauthManager: OAuthManager,
-    private val apiPrefs: ApiPrefs) : ViewModel() {
+    private val apiPrefs: ApiPrefs,
+    private val networkStateProvider: NetworkStateProvider) : ViewModel() {
 
     private val loginResultAction = MutableLiveData<Event<LoginResultAction>>()
 
     fun checkLogin(checkToken: Boolean, checkElementary: Boolean): LiveData<Event<LoginResultAction>> {
         viewModelScope.launch {
             try {
-                if (checkToken) {
+                val offlineEnabled = featureFlagProvider.offlineEnabled()
+                val offlineLogin = offlineEnabled && !networkStateProvider.isOnline()
+                if (checkToken && !offlineLogin) {
                     val selfResult = userManager.getSelfAsync(true).await()
                     if (selfResult.isSuccess) {
                         val canvasForElementary = checkCanvasElementary(checkElementary)
@@ -56,7 +61,7 @@ class LoginViewModel @Inject constructor(
                     }
                 } else {
                     val canvasForElementary = checkCanvasElementary(checkElementary)
-                    checkTermsAcceptance(canvasForElementary)
+                    checkTermsAcceptance(canvasForElementary, offlineLogin)
                 }
             } catch (e: Exception) {
                 loginResultAction.value = Event(LoginResultAction.TokenNotValid)
@@ -65,12 +70,13 @@ class LoginViewModel @Inject constructor(
         return loginResultAction
     }
 
-    private suspend fun checkTermsAcceptance(canvasForElementary: Boolean) {
+    private suspend fun checkTermsAcceptance(canvasForElementary: Boolean, offlineLogin: Boolean = false) {
         val authenticatedSession = oauthManager.getAuthenticatedSessionAsync("${apiPrefs.fullDomain}/users/self").await()
         val requiresTermsAcceptance = authenticatedSession.dataOrNull?.requiresTermsAcceptance ?: false
         if (requiresTermsAcceptance) {
             loginResultAction.value = Event(LoginResultAction.ShouldAcceptPolicy(canvasForElementary))
         } else {
+            apiPrefs.checkTokenAfterOfflineLogin = offlineLogin
             loginResultAction.value = Event(LoginResultAction.Login(canvasForElementary))
         }
     }

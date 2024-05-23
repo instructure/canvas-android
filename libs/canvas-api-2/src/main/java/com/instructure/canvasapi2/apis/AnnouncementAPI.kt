@@ -22,21 +22,29 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Tag
 import retrofit2.http.Url
 
 
 object AnnouncementAPI {
 
-    internal interface AnnouncementInterface {
+    interface AnnouncementInterface {
         @GET("{contextType}/{contextId}/discussion_topics?only_announcements=1&include[]=sections")
         fun getFirstPageAnnouncementsList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long): Call<List<DiscussionTopicHeader>>
 
+        @GET("{contextType}/{contextId}/discussion_topics?only_announcements=1&include[]=sections")
+        suspend fun getFirstPageAnnouncementsList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
+
         @GET
         fun getNextPageAnnouncementsList(@Url nextUrl: String): Call<List<DiscussionTopicHeader>>
+
+        @GET
+        suspend fun getNextPageAnnouncementsList(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
 
         /**
          * This API call returns the latest announcement. The current implementation is the latest announcement from the last 14 days.

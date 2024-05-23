@@ -17,11 +17,11 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
@@ -33,23 +33,22 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
-
-  WidgetsFlutterBinding.ensureInitialized();
+  await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
   setupLocator();
   runZonedGuarded<Future<void>>(() async {
-    await Future.wait([
-      ApiPrefs.init(),
-      ThemePrefs.init(),
-      RemoteConfigUtils.initialize(),
-      CrashUtils.init(),
-      FlutterDownloader.initialize(),
-      DbUtil.init()
-    ]);
+
+    await ApiPrefs.init();
+    await ThemePrefs.init();
+    await RemoteConfigUtils.initialize();
+    await CrashUtils.init();
+    await FlutterDownloader.initialize();
+    await DbUtil.init();
+
     PandaRouter.init();
 
     await FlutterDownloader.registerCallback(downloadCallback);
@@ -60,13 +59,6 @@ void main() async {
 
     await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
-    if (Platform.isAndroid) {
-      final AndroidDeviceInfo info = await DeviceInfoPlugin().androidInfo;
-      if (info.version.sdkInt >= 29) {
-        WebView.platform = SurfaceAndroidWebView();
-      }
-    }
-
     // Set environment properties for analytics. No need to await this.
     locator<Analytics>().setEnvironmentProperties();
 
@@ -75,8 +67,8 @@ void main() async {
 }
 
 @pragma('vm:entry-point')
-void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-  final SendPort send =
+void downloadCallback(String id, int status, int progress) {
+  final SendPort? send =
       IsolateNameServer.lookupPortByName('downloader_send_port');
-  send.send([id, status, progress]);
+  send?.send([id, status, progress]);
 }

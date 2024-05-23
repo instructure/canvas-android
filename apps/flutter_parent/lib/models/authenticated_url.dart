@@ -26,6 +26,9 @@ abstract class AuthenticatedUrl implements Built<AuthenticatedUrl, Authenticated
   @BuiltValueField(wireName: 'session_url')
   String get sessionUrl;
 
+  @BuiltValueField(wireName: 'requires_terms_acceptance')
+  bool get requiresTermsAcceptance;
+
   AuthenticatedUrl._();
   factory AuthenticatedUrl([void Function(AuthenticatedUrlBuilder) updates]) = _$AuthenticatedUrl;
 

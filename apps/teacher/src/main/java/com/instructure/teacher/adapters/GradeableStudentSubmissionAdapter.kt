@@ -17,26 +17,30 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.teacher.databinding.AdapterGradeableStudentSubmissionBinding
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
-import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class GradeableStudentSubmissionAdapter(
-        private val mAssignment: Assignment,
-        private val mCourseId: Long,
-        private val mContext: Context,
-        private val presenter: AssignmentSubmissionListPresenter,
-        val mCallback: (GradeableStudentSubmission) -> Unit) : SyncRecyclerAdapter<GradeableStudentSubmission, GradeableStudentSubmissionViewHolder, AssignmentSubmissionListView>(mContext, presenter){
+    private val mAssignment: Assignment,
+    private val mCourseId: Long,
+    private val mContext: Context,
+    private val presenter: AssignmentSubmissionListPresenter,
+    val mCallback: (GradeableStudentSubmission) -> Unit
+) : SyncRecyclerAdapter<GradeableStudentSubmission, GradeableStudentSubmissionViewHolder, AssignmentSubmissionListView>(mContext, presenter) {
 
-
-    override fun bindHolder(model: GradeableStudentSubmission, holderSubmission: GradeableStudentSubmissionViewHolder, position: Int) {
-        holderSubmission.bind(mContext, model, mAssignment, mCourseId, mCallback)
+    override fun bindHolder(model: GradeableStudentSubmission, holder: GradeableStudentSubmissionViewHolder, position: Int) {
+        holder.bind(mContext, model, mAssignment, mCourseId, mCallback)
     }
 
-    override fun createViewHolder(v: View, viewType: Int) = GradeableStudentSubmissionViewHolder(v)
-    override fun itemLayoutResId(viewType: Int) = GradeableStudentSubmissionViewHolder.HOLDER_RES_ID
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = GradeableStudentSubmissionViewHolder(binding as AdapterGradeableStudentSubmissionBinding)
+
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = AdapterGradeableStudentSubmissionBinding::inflate
 }

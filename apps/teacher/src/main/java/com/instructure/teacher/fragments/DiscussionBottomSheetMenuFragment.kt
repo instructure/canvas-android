@@ -21,33 +21,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.BottomSheetDiscussionMenuBinding
 import com.instructure.teacher.events.DiscussionOverflowMenuClickedEvent
-import kotlinx.android.synthetic.main.bottom_sheet_discussion_menu.view.*
 import org.greenrobot.eventbus.EventBus
 
 class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
+
+    private val binding by viewBinding(BottomSheetDiscussionMenuBinding::bind)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_discussion_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.markAsUnread.setOnClickListener {
+        binding.markAsUnread.setOnClickListener {
             EventBus.getDefault().post(DiscussionOverflowMenuClickedEvent(DiscussionBottomSheetChoice.MARK_AS_UNREAD, entryId))
             this.dismiss()
         }
 
-        view.edit.setOnClickListener {
+        binding.edit.setOnClickListener {
             EventBus.getDefault().post(DiscussionOverflowMenuClickedEvent(DiscussionBottomSheetChoice.EDIT, entryId))
             this.dismiss()
         }
 
-        view.delete.setOnClickListener {
+        binding.delete.setOnClickListener {
             EventBus.getDefault().post(DiscussionOverflowMenuClickedEvent(DiscussionBottomSheetChoice.DELETE, entryId))
             this.dismiss()
+        }
+
+        (dialog as? BottomSheetDialog)?.behavior?.let {
+            it.state = BottomSheetBehavior.STATE_EXPANDED
+            it.skipCollapsed = true
         }
     }
 
@@ -60,6 +71,7 @@ class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
             entryId = id
             manager.dismissExisting<DiscussionBottomSheetMenuFragment>()
             val dialog = newInstance()
+
             dialog.show(manager, DiscussionBottomSheetMenuFragment::class.java.simpleName)
         }
     }

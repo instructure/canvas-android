@@ -32,24 +32,18 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   factory Enrollment([void Function(EnrollmentBuilder) updates]) = _$Enrollment;
 
   // The enrollment role, for course-level permissions - this field will match `type` if the enrollment role has not been customized
-  @nullable
-  String get role;
+  String? get role;
 
-  @nullable
-  String get type;
+  String? get type;
 
   String get id;
 
   // Only included when we get enrollments using the user's url: /users/self/enrollments
-  @nullable
   @BuiltValueField(wireName: 'course_id')
-  @nullable
-  String get courseId;
+  String? get courseId;
 
-  @nullable
   @BuiltValueField(wireName: 'course_section_id')
-  @nullable
-  String get courseSectionId;
+  String? get courseSectionId;
 
   @BuiltValueField(wireName: 'enrollment_state')
   String get enrollmentState;
@@ -57,25 +51,23 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   @BuiltValueField(wireName: 'user_id')
   String get userId;
 
-  @nullable
-  Grade get grades;
+  Grade? get grades;
 
   // Only included when we get the enrollment with a course object
-  @nullable
   @BuiltValueField(wireName: 'computed_current_score')
-  double get computedCurrentScore;
+  double? get computedCurrentScore;
 
-  @nullable
   @BuiltValueField(wireName: 'computed_final_score')
-  double get computedFinalScore;
+  double? get computedFinalScore;
 
-  @nullable
   @BuiltValueField(wireName: 'computed_current_grade')
-  String get computedCurrentGrade;
+  String? get computedCurrentGrade;
 
-  @nullable
   @BuiltValueField(wireName: 'computed_final_grade')
-  String get computedFinalGrade;
+  String? get computedFinalGrade;
+
+  @BuiltValueField(wireName: 'computed_current_letter_grade')
+  String? get computedCurrentLetterGrade;
 
   @BuiltValueField(wireName: 'multiple_grading_periods_enabled')
   bool get multipleGradingPeriodsEnabled;
@@ -83,46 +75,37 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   @BuiltValueField(wireName: 'totals_for_all_grading_periods_option')
   bool get totalsForAllGradingPeriodsOption;
 
-  @nullable
   @BuiltValueField(wireName: 'current_period_computed_current_score')
-  double get currentPeriodComputedCurrentScore;
+  double? get currentPeriodComputedCurrentScore;
 
-  @nullable
   @BuiltValueField(wireName: 'current_period_computed_final_score')
-  double get currentPeriodComputedFinalScore;
+  double? get currentPeriodComputedFinalScore;
 
-  @nullable
   @BuiltValueField(wireName: 'current_period_computed_current_grade')
-  String get currentPeriodComputedCurrentGrade;
+  String? get currentPeriodComputedCurrentGrade;
 
-  @nullable
   @BuiltValueField(wireName: 'current_period_computed_final_grade')
-  String get currentPeriodComputedFinalGrade;
+  String? get currentPeriodComputedFinalGrade;
 
-  @nullable
   @BuiltValueField(wireName: 'current_grading_period_id')
-  String get currentGradingPeriodId;
+  String? get currentGradingPeriodId;
 
-  @nullable
   @BuiltValueField(wireName: 'current_grading_period_title')
-  String get currentGradingPeriodTitle;
+  String? get currentGradingPeriodTitle;
 
   @BuiltValueField(wireName: 'associated_user_id')
   String get associatedUserId; // The unique id of the associated user. Will be null unless type is ObserverEnrollment.
 
-  @nullable
   @BuiltValueField(wireName: 'last_activity_at')
-  DateTime get lastActivityAt;
+  DateTime? get lastActivityAt;
 
   @BuiltValueField(wireName: 'limit_privileges_to_course_section')
   bool get limitPrivilegesToCourseSection;
 
-  @nullable
   @BuiltValueField(wireName: 'observed_user')
-  User get observedUser;
+  User? get observedUser;
 
-  @nullable
-  User get user;
+  User? get user;
 
   // Helper functions
   bool _matchesEnrollment(value) => value == type || value == role;
@@ -140,7 +123,7 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   bool hasActiveGradingPeriod() =>
       multipleGradingPeriodsEnabled &&
       currentGradingPeriodId != null &&
-      currentGradingPeriodId.isNotEmpty &&
+      currentGradingPeriodId?.isNotEmpty == true &&
       currentGradingPeriodId != '0';
 
   // NOTE: Looks like the API will never return multipleGradingPeriodsEnabled for observer enrollments, still checking just in case

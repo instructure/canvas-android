@@ -16,19 +16,25 @@
  */
 package com.instructure.teacher.holders
 
-import android.view.View
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.AdapterSubmissionCommentBinding
 import com.instructure.teacher.models.CommentWrapper
 import com.instructure.teacher.models.PendingCommentWrapper
 import com.instructure.teacher.models.SubmissionCommentWrapper
@@ -39,35 +45,34 @@ import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getSubmissionFormattedDate
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
-import com.instructure.teacher.view.*
-import kotlinx.android.synthetic.main.adapter_submission_comment.view.*
-import kotlinx.android.synthetic.main.view_comment.view.*
+import com.instructure.teacher.view.CommentAttachmentsView
+import com.instructure.teacher.view.CommentDirection
+import com.instructure.teacher.view.CommentMediaAttachmentView
+import com.instructure.teacher.view.CommentSubmissionView
+import com.instructure.teacher.view.CommentView
 
-class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
-    companion object {
-        const val HOLDER_RES_ID = R.layout.adapter_submission_comment
-    }
-
+class SpeedGraderCommentHolder(private val binding: AdapterSubmissionCommentBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(
-            wrapper: SubmissionCommentWrapper,
-            currentUser: User,
-            courseId: Long,
-            assignee: Assignee,
-            gradeAnonymously: Boolean,
-            onAttachmentClicked: (Attachment) -> Unit,
-            presenter: SpeedGraderCommentsPresenter
-    ): Unit = with(itemView.commentHolder) {
+        wrapper: SubmissionCommentWrapper,
+        currentUser: User,
+        courseId: Long,
+        assignee: Assignee,
+        gradeAnonymously: Boolean,
+        onAttachmentClicked: (Attachment) -> Unit,
+        presenter: SpeedGraderCommentsPresenter
+    ): Unit = with(binding.commentHolder) {
 
         // Reset extra view container
         setExtraView(null)
 
         // Reset status
         alpha = 1f
-        itemView.errorLayout.setGone()
-        itemView.sendingLayout.setGone()
+        binding.errorLayout.setGone()
+        binding.sendingLayout.setGone()
         setOnClickListener(null)
         isClickable = false
 
+        val avatarView = binding.commentHolder.findViewById<ImageView>(R.id.avatarView)
 
         val (text, authorName, avatarUrl) = when (wrapper) {
 
@@ -86,7 +91,7 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                         avatarView.setupAvatarA11y(comment.authorName)
                         avatarView.onClick {
                             val bundle = StudentContextFragment.makeBundle(comment.authorId, courseId)
-                            RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                            RouteMatcher.route(context.getFragmentActivity(), Route(StudentContextFragment::class.java, null, bundle))
                         }
                     }
                     Triple(
@@ -116,9 +121,9 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                 alpha = 0.35f
                 setDirection(CommentDirection.OUTGOING)
                 when (wrapper.pendingComment.status) {
-                    CommentSendStatus.SENDING -> itemView.sendingLayout.setVisible()
+                    CommentSendStatus.SENDING -> binding.sendingLayout.setVisible()
                     CommentSendStatus.ERROR -> {
-                        itemView.errorLayout.setVisible()
+                        binding.errorLayout.setVisible()
                         onClick {
                             wrapper.pendingComment.workerInputData?.let {
                                 presenter.retryFileUpload(wrapper.pendingComment)
@@ -146,7 +151,7 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                         avatarView.setupAvatarA11y(assignee.name)
                         avatarView.onClick {
                             val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
-                            RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
+                            RouteMatcher.route(context.getFragmentActivity(), Route(StudentContextFragment::class.java, null, bundle))
                         }
                         Triple(null, Pronouns.span(assignee.name, assignee.pronouns), assignee.student.avatarUrl)
                     }

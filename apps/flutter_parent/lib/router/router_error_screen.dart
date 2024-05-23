@@ -52,7 +52,7 @@ class RouterErrorScreen extends StatelessWidget {
               child: Text(
                 L10n(context).routerErrorMessage,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
               ),
             ),
             Padding(
@@ -62,11 +62,13 @@ class RouterErrorScreen extends StatelessWidget {
                   locator<UrlLauncher>().launch(_route);
                 },
                 child: Text(L10n(context).openInBrowser,
-                    style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
-                // shape: RoundedRectangleBorder(
-                //   borderRadius: new BorderRadius.circular(4.0),
-                //   side: BorderSide(color: ParentColors.tiara),
-                // ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16)),
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(4.0),
+                    side: BorderSide(color: ParentColors.tiara),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 28),
@@ -77,21 +79,23 @@ class RouterErrorScreen extends StatelessWidget {
                   _switchUsers(context);
                 },
                 child:
-                    Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
-                // shape: RoundedRectangleBorder(
-                //   borderRadius: new BorderRadius.circular(4.0),
-                //   side: BorderSide(color: ParentColors.tiara),
-                // ),
+                    Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16)),
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(4.0),
+                    side: BorderSide(color: ParentColors.tiara),
+                  ),
+                ),
               ),
             ),
           ]),
     );
   }
 
-  _switchUsers(BuildContext context) async {
-    await ParentTheme.of(context).setSelectedStudent(null); // TODO - Test this, do we need it here?
+  Future<void> _switchUsers(BuildContext context) async {
+    await ParentTheme.of(context)?.setSelectedStudent(null); // TODO - Test this, do we need it here?
     await ApiPrefs.performLogout(switchingLogins: true, app: ParentApp.of(context));
     await FeaturesUtils.performLogout();
-    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
+    await locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 }

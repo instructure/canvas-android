@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder?>(var context: Context) : RecyclerView.Adapter<T>() {
+abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder>(var context: Context) : RecyclerView.Adapter<T>() {
     abstract fun createViewHolder(v: View, viewType: Int): T
     abstract fun itemLayoutResId(viewType: Int): Int
     abstract fun loadData()
@@ -44,7 +44,7 @@ abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder?>(var context: Co
         fun refresh()
     }
 
-    lateinit var adapterToRecyclerViewCallback: AdapterToRecyclerViewCallback
+    var adapterToRecyclerViewCallback: AdapterToRecyclerViewCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): T {
         context = parent.context
@@ -56,7 +56,7 @@ abstract class BaseRecyclerAdapter<T : RecyclerView.ViewHolder?>(var context: Co
     open val isPaginated: Boolean get() = false
 
     open fun refresh() {
-        adapterToRecyclerViewCallback.refresh()
+        adapterToRecyclerViewCallback?.refresh()
     }
 
     open fun cancel() {}

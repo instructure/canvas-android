@@ -37,9 +37,10 @@ import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.databinding.AvatarCropActivityBinding
 import com.instructure.pandautils.utils.AvatarCropActivity.Companion.createIntent
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.avatar_crop_activity.*
+import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.io.FileOutputStream
 
@@ -86,6 +87,8 @@ data class AvatarCropConfig(
  */
 class AvatarCropActivity : AppCompatActivity() {
 
+    private val binding by viewBinding(AvatarCropActivityBinding::inflate)
+
     /** Crop configuration. Throws an IllegalArgumentException if not present in the Activity's intent */
     private val mConfig: AvatarCropConfig by lazy {
         intent?.extras?.getParcelable<AvatarCropConfig>(KEY_CONFIG) ?: throw IllegalArgumentException("Missing or invalid config")
@@ -99,7 +102,7 @@ class AvatarCropActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.avatar_crop_activity)
+        setContentView(binding.root)
         setupViews()
         obtainSourceImage()
     }
@@ -113,7 +116,7 @@ class AvatarCropActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         // Listen for image loaded event so we can set the toolbar menu and update the UI
         imageView.setOnImageEventListener(object : SubsamplingScaleImageView.OnImageEventListener {
             override fun onPreviewReleased() = Unit
@@ -155,7 +158,7 @@ class AvatarCropActivity : AppCompatActivity() {
     }
 
     /** Configures the [SubsamplingScaleImageView] and sets the source image. */
-    private fun setImage() {
+    private fun setImage() = with(binding) {
         cropRoot.visibility = View.VISIBLE
         imageView.orientation = SubsamplingScaleImageView.ORIENTATION_USE_EXIF
         imageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP)
@@ -164,7 +167,7 @@ class AvatarCropActivity : AppCompatActivity() {
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    private fun performCrop() {
+    private fun performCrop() = with(binding) {
         mCropJob = weave {
             // Show loading state
             cropRoot.visibility = View.GONE
@@ -195,9 +198,9 @@ class AvatarCropActivity : AppCompatActivity() {
      * Maps the current image scale and position to a [RectF] where each coordinate represents its
      * crop boundary as a percentage (0f to 1f) of the source image dimensions.
      */
-    private fun getCropInfo(): RectF {
-        val origin = imageView.viewToSourceCoord(0f, 0f)
-        val dimen = imageView.viewToSourceCoord(imageView.width.toFloat(), imageView.height.toFloat())
+    private fun getCropInfo(): RectF = with(binding) {
+        val origin = imageView.viewToSourceCoord(0f, 0f) ?: return RectF(0f, 0f, 1f, 1f)
+        val dimen = imageView.viewToSourceCoord(imageView.width.toFloat(), imageView.height.toFloat()) ?: return RectF(0f, 0f, 1f, 1f)
         val (appliedWidth, appliedHeight) = when (imageView.appliedOrientation) {
             90, 270 -> imageView.sHeight to imageView.sWidth
             else -> imageView.sWidth to imageView.sHeight

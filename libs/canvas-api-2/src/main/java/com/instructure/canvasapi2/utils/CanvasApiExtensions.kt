@@ -16,11 +16,16 @@
 package com.instructure.canvasapi2.utils
 
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @JvmOverloads
 fun Date?.toApiString(timeZone: TimeZone? = null): String {
@@ -40,6 +45,12 @@ fun OffsetDateTime?.toApiString(): String? {
 fun LocalDate?.toApiString(): String? {
     this ?: return null
     return DateTimeFormatter.ISO_LOCAL_DATE.format(this)
+}
+
+fun LocalDateTime?.toApiString(): String? {
+    this ?: return null
+    val zonedDateTime = this.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC)
+    return DateTimeFormatter.ISO_INSTANT.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS))
 }
 
 fun String?.toDate(): Date? {

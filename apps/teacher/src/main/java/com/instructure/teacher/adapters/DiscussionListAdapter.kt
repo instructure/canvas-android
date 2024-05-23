@@ -17,10 +17,15 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandarecycler.util.Types
+import com.instructure.teacher.databinding.AdapterDiscussionBinding
+import com.instructure.teacher.databinding.AdapterEmptyBinding
+import com.instructure.teacher.databinding.ViewholderHeaderExpandableBinding
 import com.instructure.teacher.holders.DiscussionExpandableViewHolder
 import com.instructure.teacher.holders.DiscussionListHolder
 import com.instructure.teacher.holders.EmptyViewHolder
@@ -41,31 +46,39 @@ class DiscussionListAdapter(
         setExpandedByDefault(true)
     }
 
-    override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            Types.TYPE_ITEM -> DiscussionListHolder(v)
-            else -> if (mIsAnnouncement) EmptyViewHolder(v) else DiscussionExpandableViewHolder(v)
-        }
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> DiscussionListHolder(binding as AdapterDiscussionBinding)
+        else -> if (mIsAnnouncement) EmptyViewHolder(binding.root) else DiscussionExpandableViewHolder(binding as ViewholderHeaderExpandableBinding)
     }
 
-    override fun itemLayoutResId(viewType: Int): Int {
-        return when (viewType) {
-            Types.TYPE_ITEM -> DiscussionListHolder.HOLDER_RES_ID
-            else -> if (mIsAnnouncement) EmptyViewHolder.HOLDER_RES_ID else DiscussionExpandableViewHolder.HOLDER_RES_ID
-        }
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
+        Types.TYPE_ITEM -> AdapterDiscussionBinding::inflate
+        else -> if (mIsAnnouncement) AdapterEmptyBinding::inflate else ViewholderHeaderExpandableBinding::inflate
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: String, isExpanded: Boolean) {
-        if(!mIsAnnouncement) {
+        if (!mIsAnnouncement) {
             context?.let {
-                (holder as DiscussionExpandableViewHolder).bind(isExpanded, holder, group) { discussionGroup ->
-                    expandCollapseGroup(discussionGroup)
-                }
+                (holder as DiscussionExpandableViewHolder).bind(
+                    isExpanded,
+                    holder,
+                    group
+                ) { discussionGroup -> expandCollapseGroup(discussionGroup) }
             }
         }
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, item: DiscussionTopicHeader) {
-        context?.let { (holder as DiscussionListHolder).bind(it, item, group, iconColor, mIsAnnouncement, mCallback, mOverflowCallback) }
+        context?.let {
+            (holder as DiscussionListHolder).bind(
+                it,
+                item,
+                group,
+                iconColor,
+                mIsAnnouncement,
+                mCallback,
+                mOverflowCallback
+            )
+        }
     }
 }

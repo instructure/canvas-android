@@ -32,7 +32,7 @@ class OldAppMigration {
 
     // Get the list of logins from the native side
     List<dynamic> data = await channel.invokeMethod(methodGetLogins);
-    List<Login> logins = data.map((it) => deserialize<Login>(json.decode(it))).toList();
+    List<Login> logins = data.map((it) => deserialize<Login>(json.decode(it))).toList().nonNulls.toList();
 
     if (logins.isNotEmpty) {
       // Save the list of logins to prefs

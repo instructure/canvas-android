@@ -12,7 +12,9 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */    package com.instructure.annotations
+ */
+
+package com.instructure.annotations
 
 import android.content.Context
 import android.util.LayoutDirection
@@ -30,117 +32,87 @@ import java.util.*
  */
 class CanvasPdfMenuGrouping(context: Context) : PresetMenuItemGroupingRule(context) {
 
-    override fun getGroupPreset(p0: Int, p1: Int): List<MenuItem> {
-        return emptyList()
-    }
-
-
-    override fun groupMenuItems(toolbarMenuItems: MutableList<ContextualToolbarMenuItem>, capacity: Int): MutableList<ContextualToolbarMenuItem> {
-        val isRTL = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == LayoutDirection.RTL
-        //There are 7 items total, and always need to leave room for the color, it has to show.
-        //First we need to get all of the items and store them in variables for readability.... rip
-        var freeText: ContextualToolbarMenuItem? = null
-        var stamp: ContextualToolbarMenuItem? = null
-        var strikeOut: ContextualToolbarMenuItem? = null
-        var highlight: ContextualToolbarMenuItem? = null
-        var ink: ContextualToolbarMenuItem? = null
-        var rectangle: ContextualToolbarMenuItem? = null
-        var color: ContextualToolbarMenuItem? = null
-        var undo: ContextualToolbarMenuItem? = null
-        var redo: ContextualToolbarMenuItem? = null
-        var eraser: ContextualToolbarMenuItem? = null
-
-        for (item in toolbarMenuItems) {
-            when (item.id) {
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext -> {
-                    freeText = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_note -> {
-                    stamp = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout -> {
-                    strikeOut = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight -> {
-                    highlight = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen -> {
-                    ink = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square -> {
-                    rectangle = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker -> {
-                    color = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo -> {
-                    // There are two menu items called undo, we want the first one.
-                    if (undo == null) undo = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo -> {
-                    redo = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser -> {
-                    eraser = item
-                }
-            }
-        }
-
-        //check to make sure we have all of our items
-        if (freeText != null && stamp != null && strikeOut != null && highlight != null
-                && ink != null && rectangle != null && undo != null && redo != null && color != null && eraser != null) {
-            when {
-                capacity >= 8 -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    return if (isRTL) {
-                        mutableListOf(redo, undo, color, eraser, inkGroup, strikeOut, freeText, highlight, stamp)
-                    } else {
-                        mutableListOf(stamp, highlight, freeText, strikeOut, inkGroup, eraser, color, undo, redo)
-                    }
-                }
-                capacity == 7 || capacity == 6  -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    val highlightGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), highlight.position, true, mutableListOf(highlight, strikeOut), highlight)
-                    return if (isRTL) {
-                        mutableListOf(redo, undo, color, eraser, inkGroup, highlightGroup, freeText, stamp)
-                    } else {
-                        mutableListOf(stamp, freeText, highlightGroup, inkGroup, eraser, color, undo, redo)
-                    }
-
-                }
-                capacity == 5 -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    val textGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), freeText.position, true, mutableListOf(freeText, stamp, highlight, strikeOut), freeText)
-                    return if (isRTL) {
-                        mutableListOf(redo, undo, color, eraser, inkGroup, textGroup)
-                    } else {
-                        mutableListOf(textGroup, inkGroup, eraser, color, undo, redo)
-                    }
-                }
-                capacity == 4 -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    val textGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), freeText.position, true, mutableListOf(freeText, stamp, highlight, strikeOut), freeText)
-                    val undoGroupList = if (isRTL) {
-                        mutableListOf(redo, undo)
-                    } else {
-                        mutableListOf(undo, redo)
-                    }
-                    val undoGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), undo.position, true, undoGroupList, if(isRTL) redo else undo)
-                    return if (isRTL) {
-                        mutableListOf(undoGroup, color, eraser, inkGroup, textGroup)
-                    } else {
-                        return mutableListOf(textGroup, inkGroup, eraser, color, undoGroup)
-                    }
-                }
-                //if all else fails, return default grouping unchanged
-                else -> {
-                    return toolbarMenuItems
-                }
-            }
-        } else {
-            //if we dont have all items, just return the default that we have
-            return toolbarMenuItems
+    override fun getGroupPreset(capacity: Int, itemsCount: Int): List<MenuItem> {
+        return when {
+            capacity >= 8 -> eightItemGrouping
+            capacity == 7 -> sevenItemGrouping
+            capacity == 6 -> sixItemGrouping
+            //if all else fails, return the smallest grouping we can
+            else -> minItemGrouping
         }
     }
+
+    override fun areGeneratedGroupItemsSelectable(): Boolean = true
+
+    private val eightItemGrouping = listOf(
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_note),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_drawing,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square)),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_undo_redo,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo))
+    )
+    private val sevenItemGrouping = listOf(
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_note),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_markup,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout)),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_drawing,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square)),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_undo_redo,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo))
+    )
+    private val sixItemGrouping = listOf(
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_note),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_markup,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout)),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_drawing,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square)),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_undo_redo,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo))
+    )
+    private val minItemGrouping = listOf(
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_markup,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_note,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout)),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_drawing,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser)),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker),
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_undo_redo,
+            intArrayOf(
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo,
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo))
+    )
 
 }

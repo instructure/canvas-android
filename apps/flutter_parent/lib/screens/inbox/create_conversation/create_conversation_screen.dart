@@ -40,14 +40,12 @@ class CreateConversationScreen extends StatefulWidget {
     this.studentId,
     this.subjectTemplate,
     this.postscript,
-  )   : assert(courseId != null),
-        assert(studentId != null),
-        assert(subjectTemplate != null);
+  );
 
   final String courseId;
-  final String studentId;
+  final String? studentId;
   final String subjectTemplate;
-  final String postscript;
+  final String? postscript;
 
   static final sendKey = Key('sendButton');
   static final attachmentKey = Key('attachmentButton');
@@ -66,13 +64,13 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
   String _subjectText = '';
   String _bodyText = '';
 
-  TextEditingController _subjectController;
+  late TextEditingController _subjectController;
   TextEditingController _bodyController = TextEditingController();
 
   List<Recipient> _allRecipients = [];
   List<Recipient> _selectedRecipients = [];
   List<AttachmentHandler> _attachments = [];
-  Course course;
+  Course? course;
 
   bool _loading = false;
   bool _error = false;
@@ -124,10 +122,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
     });
     _interactor.loadData(widget.courseId, widget.studentId).then((data) {
       course = data.course;
-      _allRecipients = data.recipients;
+      _allRecipients = data.recipients ?? [];
       String courseId = widget.courseId;
       _selectedRecipients =
-          _allRecipients.where((it) => it.commonCourses[courseId]?.contains('TeacherEnrollment')).toList();
+          _allRecipients.where((it) => it.commonCourses?[courseId]?.contains('TeacherEnrollment') == true).toList();
       setState(() {
         _loading = false;
       });
@@ -144,7 +142,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
     setState(() => _sending = true);
     try {
       var recipientIds = _selectedRecipients.map((it) => it.id).toList();
-      var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
+      var attachmentIds = _attachments.map((it) => it.attachment!.id).toList();
       if (widget.postscript != null) {
         _bodyText += '\n\n${widget.postscript}';
       }
@@ -154,26 +152,26 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
           .showSnackBar(SnackBar(content: Text(L10n(context).messageSent)));
     } catch (e) {
       setState(() => _sending = false);
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(L10n(context).errorSendingMessage)),
       );
     }
   }
 
-  Future<bool> _onWillPop(BuildContext context) {
+  Future<bool> _onWillPop(BuildContext context) async {
     if (_sending) return Future.value(false);
     if (_bodyText.isEmpty && _attachments.isEmpty) return Future.value(true);
-    return showDialog(
+    return await showDialog(
           context: context,
-          builder: (context) => new AlertDialog(
+          builder: (Bucontext) => new AlertDialog(
             title: new Text(L10n(context).unsavedChangesDialogTitle),
             content: new Text(L10n(context).unsavedChangesDialogBody),
             actions: <Widget>[
-              new FlatButton(
+              new TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: new Text(L10n(context).no),
               ),
-              new FlatButton(
+              new TextButton(
                 onPressed: () {
                   _attachments.forEach((it) => it.deleteAttachment());
                   Navigator.of(context).pop(true);
@@ -203,15 +201,15 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
     );
   }
 
-  Widget _appBar(BuildContext context) {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
-      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+      bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(L10n(context).newMessageTitle),
-          Text(course?.courseCode ?? '', style: Theme.of(context).textTheme.caption),
+          Text(course?.courseCode ?? '', style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
       actions: [
@@ -252,8 +250,8 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
             tooltip: L10n(context).sendMessage,
             key: CreateConversationScreen.sendKey,
             icon: Icon(Icons.send),
-            color: Theme.of(context).accentColor,
-            disabledColor: Theme.of(context).iconTheme.color.withOpacity(0.25),
+            color: Theme.of(context).colorScheme.secondary,
+            disabledColor: Theme.of(context).iconTheme.color?.withOpacity(0.25),
             onPressed: _canSend() ? _send : null,
           )
       ],
@@ -327,20 +325,22 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
                     child: Text(
                       L10n(context).errorLoadingRecipients,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
                     ),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: _loadRecipients,
                     child: Text(
                       L10n(context).retry,
-                      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(24.0),
-                      side: BorderSide(color: ParentColors.tiara),
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(24.0),
+                        side: BorderSide(color: ParentColors.tiara),
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -352,7 +352,6 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
 
   Widget _recipientsWidget(BuildContext context) {
     return AnimatedSize(
-      vsync: this,
       alignment: Alignment.topLeft,
       curve: Curves.easeInOutBack,
       duration: Duration(milliseconds: 350),
@@ -398,7 +397,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
       return [
         Chip(
           label: Text(L10n(context).noRecipientsSelected),
-          backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+          backgroundColor: ParentTheme.of(context)?.nearSurfaceColor,
           avatar: Icon(
             CanvasIcons.warning,
             color: Colors.redAccent,
@@ -420,7 +419,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
     }
   }
 
-  Widget _chip(Recipient user, {bool ellipsize: false}) {
+  Widget _chip(Recipient user, {bool ellipsize = false}) {
     return Chip(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       key: ValueKey("user_chip_${user.id}"),
@@ -448,7 +447,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         ),
       ),
       avatar: Avatar(user.avatarUrl, name: user.name),
-      backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+      backgroundColor: ParentTheme.of(context)?.nearSurfaceColor,
     );
   }
 
@@ -460,10 +459,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         key: CreateConversationScreen.subjectKey,
         controller: _subjectController,
         enabled: !_sending,
-        style: Theme.of(context).textTheme.bodyText1,
+        style: Theme.of(context).textTheme.bodyLarge,
         textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
-          hintText: L10n(context).messageSubjectInputHint,
+          labelText: L10n(context).messageSubjectInputHint,
           contentPadding: EdgeInsets.all(16),
           border: InputBorder.none,
         ),
@@ -480,11 +479,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
         controller: _bodyController,
         enabled: !_sending,
         textCapitalization: TextCapitalization.sentences,
-        minLines: 4,
         maxLines: null,
-        style: Theme.of(context).textTheme.bodyText2,
+        // style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
-          hintText: L10n(context).messageBodyInputHint,
+          labelText: L10n(context).messageBodyInputHint,
           contentPadding: EdgeInsets.all(16),
           border: InputBorder.none,
         ),
@@ -504,7 +502,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
                   L10n(context).recipients,
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               Expanded(
@@ -523,7 +521,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
                           name: user.name,
                           overlay: selected
                               ? Container(
-                                  color: Theme.of(context).accentColor.withOpacity(0.8),
+                                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
                                   child: Icon(Icons.check, color: Colors.white),
                                 )
                               : null,
@@ -550,7 +548,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
   }
 
   String _enrollmentType(BuildContext context, Recipient user) {
-    var type = user.commonCourses[widget.courseId].first;
+    var type = user.commonCourses?[widget.courseId]?.first;
     switch (type) {
       case 'TeacherEnrollment':
         return L10n(context).enrollmentTypeTeacher;
@@ -567,9 +565,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
 }
 
 class AttachmentWidget extends StatelessWidget {
-  AttachmentWidget({Key key, this.onDelete}) : super(key: key);
+  AttachmentWidget({this.onDelete, super.key});
 
-  final Function(AttachmentHandler) onDelete;
+  final Function(AttachmentHandler)? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -616,12 +614,12 @@ class AttachmentWidget extends StatelessWidget {
             height: 48,
             child: CircularProgressIndicator(
               value: handler.progress,
-              backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+              backgroundColor: ParentTheme.of(context)?.nearSurfaceColor,
             ),
           ),
           Text(
             handler.progress == null ? '' : NumberFormat.percentPattern().format(handler.progress),
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: Theme.of(context).textTheme.bodySmall,
           )
         ],
       ),
@@ -642,22 +640,24 @@ class AttachmentWidget extends StatelessWidget {
           child: Text(L10n(context).delete),
         ),
       ],
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 6),
-          Icon(
-            CanvasIcons.warning,
-            size: 27,
-            color: Colors.red,
-          ),
-          SizedBox(height: 15),
-          Text(
-            L10n(context).attachmentFailed,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12),
-          ),
-        ],
+      child: Align(
+        alignment: Alignment.center,
+        child: ListView(
+          children: <Widget>[
+            SizedBox(height: 6),
+            Icon(
+              CanvasIcons.warning,
+              size: 27,
+              color: Colors.red,
+            ),
+            SizedBox(height: 15),
+            Text(
+              L10n(context).attachmentFailed,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -679,13 +679,13 @@ class AttachmentWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                handler.attachment.getIcon(),
-                color: Theme.of(context).accentColor,
+                handler.attachment?.getIcon(),
+                color: Theme.of(context).colorScheme.secondary,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 11, 12, 0),
                 child: Text(
-                  handler.attachment.displayName,
+                  handler.attachment?.displayName ?? '',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -694,13 +694,13 @@ class AttachmentWidget extends StatelessWidget {
               )
             ],
           ),
-          if (handler.attachment?.thumbnailUrl != null && handler.attachment.thumbnailUrl.isNotEmpty)
+          if (handler.attachment?.thumbnailUrl != null && handler.attachment?.thumbnailUrl?.isNotEmpty == true)
             ClipRRect(
               borderRadius: new BorderRadius.circular(4),
               child: FadeInImage.memoryNetwork(
                 fadeInDuration: const Duration(milliseconds: 300),
                 fit: BoxFit.cover,
-                image: handler.attachment.thumbnailUrl,
+                image: handler.attachment!.thumbnailUrl!,
                 placeholder: kTransparentImage,
               ),
             ),
@@ -716,7 +716,7 @@ class AttachmentWidget extends StatelessWidget {
     switch (option) {
       case 'delete':
         handler.deleteAttachment();
-        if (onDelete != null) onDelete(handler);
+        if (onDelete != null) onDelete!(handler);
         break;
       case 'retry':
         handler.performUpload();

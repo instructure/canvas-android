@@ -14,14 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import com.instructure.android.buildtools.transform.LocaleTransformer
-import com.instructure.android.buildtools.transform.MasqueradeUITransformer
-import com.instructure.android.buildtools.transform.ProjectTransformer
-import com.instructure.android.buildtools.transform.ScreenViewTransformer
+
+import com.instructure.android.buildtools.transform.*
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -41,8 +39,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 55
-        versionName = '1.22.0'
+        versionCode = 67
+        versionName = '1.30.2'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
@@ -113,6 +111,15 @@ android {
                 heapEnabled = true
             }
         }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
@@ -132,6 +139,12 @@ android {
             ext {
                 heapEnabled = true
             }
+
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
+                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+            }
         }
     }
 
@@ -140,6 +153,8 @@ android {
             force 'android.arch.lifecycle:runtime:1.0.3'
 
             force Libs.KOTLIN_COROUTINES_CORE
+
+            force Libs.KOTLIN_STD_LIB
         }
     }
 
@@ -181,6 +196,7 @@ android {
             new ProjectTransformer(
                     android,
                     new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
+                    new PageViewTransformer(),
                     new LocaleTransformer(project),
                     new ScreenViewTransformer("teacher")
             )
@@ -197,15 +213,12 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 
     hilt {
         enableAggregatingTask = false
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 dependencies {
@@ -236,7 +249,6 @@ dependencies {
     androidTestImplementation project(':espresso')
     androidTestImplementation project(':dataseedingapi')
     androidTestImplementation Libs.JUNIT
-    androidTestImplementation project(path: ':panda_annotations')
 
     androidTestUtil(Libs.TEST_ORCHESTRATOR) {
         exclude module: 'support-annotations'
@@ -264,8 +276,7 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
-    implementation Libs.PLAY_CORE
-    implementation Libs.PLAY_CORE_KTX
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Firebase */
     implementation platform(Libs.FIREBASE_BOM) {
@@ -301,11 +312,16 @@ dependencies {
 
     implementation Libs.HEAP
 
+    implementation Libs.CAMERA_VIEW
+
     /* ROOM */
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
-    testImplementation Libs.ROOM_TEST
+
+    testImplementation Libs.HAMCREST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }
 
 apply plugin: 'com.google.gms.google-services'

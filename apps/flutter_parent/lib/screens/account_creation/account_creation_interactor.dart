@@ -21,7 +21,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 
 class AccountCreationInteractor {
-  Future<TermsOfService> getToSForAccount(String accountId, String domain) {
+  Future<TermsOfService?> getToSForAccount(String accountId, String domain) {
     return locator<AccountsApi>().getTermsOfServiceForAccount(accountId, domain);
   }
 
@@ -35,6 +35,6 @@ class AccountCreationInteractor {
   }
 
   launchPrivacyPolicy() {
-    locator<UrlLauncher>().launch('https://www.instructure.com/canvas/privacy');
+    locator<UrlLauncher>().launch('https://www.instructure.com/policies/product-privacy-policy');
   }
 }

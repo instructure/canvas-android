@@ -18,7 +18,6 @@ package com.instructure.teacher.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -29,15 +28,18 @@ import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_RUBRIC_COMMENT
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ViewEditGradeCommentBinding
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.view.edit_rubric.RubricCommentEditedEvent
-import kotlinx.android.synthetic.main.view_edit_grade_comment.*
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_EDIT_RUBRIC_COMMENT)
 class EditRubricCommentDialog : AppCompatDialogFragment() {
+
+    private lateinit var binding: ViewEditGradeCommentBinding
 
     var mCriterionId by StringArg()
     var mStudentId by LongArg(-1L)
@@ -72,31 +74,32 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = AppCompatDialog(requireContext(), R.style.Theme_AppCompat_DayNight_Translucent).apply {
-        setContentView(R.layout.view_edit_grade_comment)
+        binding = ViewEditGradeCommentBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
 
         // Send event bus on save, dismiss dialog. Send null if text is blank (i.e. delete comment)
-        saveCommentButton.onClick {
-            val text = commentEditText.text.toString()
+        binding.saveCommentButton.onClick {
+            val text = binding.commentEditText.text.toString()
             EventBus.getDefault().post(RubricCommentEditedEvent(mCriterionId, if (text.isBlank()) null else text, mStudentId))
             dismiss()
         }
 
-        ViewStyler.themeButton(dismissEditCommentButton)
+        ViewStyler.themeButton(binding.dismissEditCommentButton)
         // Dismiss on outside click
-        dismissEditCommentButton.onClick { dismiss() }
+        binding.dismissEditCommentButton.onClick { dismiss() }
 
         // Set up EditText
-        if (!mGradeAnonymously) commentEditText.hint = Pronouns.resource(
+        if (!mGradeAnonymously) binding.commentEditText.hint = Pronouns.resource(
             context,
             R.string.sendMessageToHint,
             mAssigneePronouns,
             Pronouns.span(mAssigneeName, mAssigneePronouns)
         )
-        commentEditText.highlightColor = ThemePrefs.increaseAlpha(ThemePrefs.brandColor)
-        commentEditText.setText(mDefaultString)
+        binding.commentEditText.highlightColor = ThemePrefs.increaseAlpha(ThemePrefs.brandColor)
+        binding.commentEditText.setText(mDefaultString)
 
         // Theme save button
-        DrawableCompat.setTint(saveCommentButton.drawable, ThemePrefs.textButtonColor)
+        DrawableCompat.setTint(binding.saveCommentButton.drawable, ThemePrefs.textButtonColor)
 
         // Style the dialog
         window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)

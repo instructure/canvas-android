@@ -17,33 +17,46 @@ class _$CourseSettingsSerializer
   final String wireName = 'CourseSettings';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, CourseSettings object,
+  Iterable<Object?> serialize(Serializers serializers, CourseSettings object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[];
-    if (object.courseSummary != null) {
+    final result = <Object?>[];
+    Object? value;
+    value = object.courseSummary;
+    if (value != null) {
       result
         ..add('syllabus_course_summary')
-        ..add(serializers.serialize(object.courseSummary,
-            specifiedType: const FullType(bool)));
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.restrictQuantitativeData;
+    if (value != null) {
+      result
+        ..add('restrict_quantitative_data')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
     }
     return result;
   }
 
   @override
   CourseSettings deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CourseSettingsBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'syllabus_course_summary':
           result.courseSummary = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
+          break;
+        case 'restrict_quantitative_data':
+          result.restrictQuantitativeData = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool?;
           break;
       }
     }
@@ -54,12 +67,15 @@ class _$CourseSettingsSerializer
 
 class _$CourseSettings extends CourseSettings {
   @override
-  final bool courseSummary;
+  final bool? courseSummary;
+  @override
+  final bool? restrictQuantitativeData;
 
-  factory _$CourseSettings([void Function(CourseSettingsBuilder) updates]) =>
-      (new CourseSettingsBuilder()..update(updates)).build();
+  factory _$CourseSettings([void Function(CourseSettingsBuilder)? updates]) =>
+      (new CourseSettingsBuilder()..update(updates))._build();
 
-  _$CourseSettings._({this.courseSummary}) : super._();
+  _$CourseSettings._({this.courseSummary, this.restrictQuantitativeData})
+      : super._();
 
   @override
   CourseSettings rebuild(void Function(CourseSettingsBuilder) updates) =>
@@ -72,36 +88,50 @@ class _$CourseSettings extends CourseSettings {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is CourseSettings && courseSummary == other.courseSummary;
+    return other is CourseSettings &&
+        courseSummary == other.courseSummary &&
+        restrictQuantitativeData == other.restrictQuantitativeData;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, courseSummary.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, courseSummary.hashCode);
+    _$hash = $jc(_$hash, restrictQuantitativeData.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CourseSettings')
-          ..add('courseSummary', courseSummary))
+    return (newBuiltValueToStringHelper(r'CourseSettings')
+          ..add('courseSummary', courseSummary)
+          ..add('restrictQuantitativeData', restrictQuantitativeData))
         .toString();
   }
 }
 
 class CourseSettingsBuilder
     implements Builder<CourseSettings, CourseSettingsBuilder> {
-  _$CourseSettings _$v;
+  _$CourseSettings? _$v;
 
-  bool _courseSummary;
-  bool get courseSummary => _$this._courseSummary;
-  set courseSummary(bool courseSummary) =>
+  bool? _courseSummary;
+  bool? get courseSummary => _$this._courseSummary;
+  set courseSummary(bool? courseSummary) =>
       _$this._courseSummary = courseSummary;
+
+  bool? _restrictQuantitativeData;
+  bool? get restrictQuantitativeData => _$this._restrictQuantitativeData;
+  set restrictQuantitativeData(bool? restrictQuantitativeData) =>
+      _$this._restrictQuantitativeData = restrictQuantitativeData;
 
   CourseSettingsBuilder();
 
   CourseSettingsBuilder get _$this {
-    if (_$v != null) {
-      _courseSummary = _$v.courseSummary;
+    final $v = _$v;
+    if ($v != null) {
+      _courseSummary = $v.courseSummary;
+      _restrictQuantitativeData = $v.restrictQuantitativeData;
       _$v = null;
     }
     return this;
@@ -109,24 +139,26 @@ class CourseSettingsBuilder
 
   @override
   void replace(CourseSettings other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CourseSettings;
   }
 
   @override
-  void update(void Function(CourseSettingsBuilder) updates) {
+  void update(void Function(CourseSettingsBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CourseSettings build() {
-    final _$result =
-        _$v ?? new _$CourseSettings._(courseSummary: courseSummary);
+  CourseSettings build() => _build();
+
+  _$CourseSettings _build() {
+    final _$result = _$v ??
+        new _$CourseSettings._(
+            courseSummary: courseSummary,
+            restrictQuantitativeData: restrictQuantitativeData);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

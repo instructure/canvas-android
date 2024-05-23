@@ -17,28 +17,12 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
-import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.utils.LongId
-import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
-import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.UserId
-import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
-import com.instructure.canvas.espresso.mockCanvas.utils.noContentResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.user
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.Author
-import com.instructure.canvasapi2.models.FileUploadParams
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvas.espresso.mockCanvas.utils.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.type.SubmissionType
-import okio.Buffer
-import java.net.URL
-import java.nio.charset.Charset
 import java.util.*
+import kotlin.random.Random
 
 /**
  * Submission index for a specific course/assignment
@@ -84,7 +68,8 @@ object SubmissionIndexEndpoint : Endpoint(
                     type = submissionType!!,
                     body = submissionBody,
                     url = submissionUrl,
-                    attachment = attachment
+                    attachment = attachment,
+                    attempt = Random.nextLong()
             )
 
             assignment.submission = submission
@@ -166,6 +151,7 @@ object SubmissionUserEndpoint : Endpoint(
             val submission = data.submissions[pathVars.assignmentId]?.find { it.userId == pathVars.userId }
             if (submission != null) {
                 val comment = request.url.queryParameter("comment[text_comment]")
+                val attempt = request.url.queryParameter("comment[attempt]")
                 val user = request.user!!
                 val grade = request.url.queryParameter("submission[posted_grade]")
                 val excused = request.url.queryParameter("submission[excuse]")
@@ -180,7 +166,8 @@ object SubmissionUserEndpoint : Endpoint(
                             author = Author(
                                     id = user.id,
                                     displayName = user.shortName
-                            )
+                            ),
+                            attempt = attempt?.toLongOrNull()
                     ))
                     submission.submissionComments = newCommentList
                     Log.d("<--", "put-submission-user comments: ${submission.submissionComments.joinToString()}")

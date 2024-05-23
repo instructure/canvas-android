@@ -16,11 +16,13 @@
 
 package com.instructure.pandautils.features.discussion.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
@@ -29,6 +31,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_DETAILS_REDESIGN
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentDiscussionDetailsWebViewBinding
@@ -36,7 +39,8 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_discussion_details_web_view.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
@@ -53,12 +57,14 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
     private val viewModel: DiscussionDetailsWebViewViewModel by viewModels()
 
+    private lateinit var binding: FragmentDiscussionDetailsWebViewBinding
+
     @PageViewUrlParam("topicId")
     private fun getTopicId() = discussionTopicHeader?.id ?: discussionTopicHeaderId
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val binding = FragmentDiscussionDetailsWebViewBinding.inflate(inflater, container, false)
+        binding = FragmentDiscussionDetailsWebViewBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -69,10 +75,12 @@ class DiscussionDetailsWebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.data.observe(viewLifecycleOwner) {
-            applyTheme(it.title)
+            setupToolbar(it.title)
         }
-        discussionWebView.setDarkModeSupport()
-        discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+        setupFilePicker()
+        binding.discussionWebView.addVideoClient(requireActivity())
+        binding.discussionWebView.enableAlgorithmicDarkening()
+        binding.discussionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 webViewRouter.openMedia(url)
             }
@@ -83,12 +91,11 @@ class DiscussionDetailsWebViewFragment : Fragment() {
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 viewModel.setLoading(false)
-                discussionSwipeRefreshLayout?.isRefreshing = false
             }
 
             override fun routeInternallyCallback(url: String) {
                 if (!webViewRouter.canRouteInternally(url, routeIfPossible = true)) {
-                    webViewRouter.routeInternally(url)
+                    webViewRouter.routeExternally(url)
                 }
             }
 
@@ -96,15 +103,54 @@ class DiscussionDetailsWebViewFragment : Fragment() {
                 return viewModel.data.value?.url?.substringBefore("?") != url.substringBefore("?")
             }
         }
+    }
 
-        discussionSwipeRefreshLayout.setOnRefreshListener {
-            discussionWebView.reload()
+    private fun setupFilePicker() {
+        binding.discussionWebView.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+            override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
+                startActivityForResult(intent, requestCode)
+            }
+
+            override fun permissionsGranted(): Boolean {
+                return if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    true
+                } else {
+                    requestFilePermissions()
+                    false
+                }
+            }
+        })
+    }
+
+    private fun requestFilePermissions() {
+        requestPermissions(
+            PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA),
+            PermissionUtils.PERMISSION_REQUEST_CODE
+        )
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRequestPermissionsResult(result: PermissionRequester.PermissionResult) {
+        if (PermissionUtils.allPermissionsGrantedResultSummary(result.grantResults)) {
+            binding.discussionWebView.clearPickerCallback()
+            Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun applyTheme(title: String) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!binding.discussionWebView.handleOnActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun setupToolbar(title: String) = with(binding) {
         toolbar.title = title
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsBackButton(this@DiscussionDetailsWebViewFragment)
+        binding.toolbar.setMenu(R.menu.menu_discussion_details) {
+            when (it.itemId) {
+                R.id.refresh -> binding.discussionWebView.reload()
+            }
+        }
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 

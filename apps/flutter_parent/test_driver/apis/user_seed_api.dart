@@ -37,7 +37,7 @@ const _createUserEndpoint = "accounts/self/users";
 class UserSeedApi {
   static const authCodeChannel = const MethodChannel("GET_AUTH_CODE");
 
-  static Future<SeededUser> createUser() async {
+  static Future<SeededUser?> createUser() async {
     var url = baseSeedingUrl + _createUserEndpoint;
 
     var lastName = faker.person.lastName();
@@ -46,8 +46,8 @@ class UserSeedApi {
       ..user.name = "$firstName $lastName"
       ..user.shortName = firstName
       ..user.sortableName = "$lastName, $firstName"
-      ..pseudonym.uniqueId = Guid().guid()
-      ..pseudonym.password = Guid().guid()
+      ..pseudonym.uniqueId = Guid(RandomGenerator()).guid()
+      ..pseudonym.password = Guid(RandomGenerator()).guid()
       // Don't care about CommunicationChannel initialization for now
       ..build());
 
@@ -63,19 +63,19 @@ class UserSeedApi {
     if (response.statusCode == 200) {
       //print("Create User response: ${response.data}");
       var result = deserialize<SeededUser>(response.data);
-      result = result.rebuild((b) => b
+      result = result!.rebuild((b) => b
         ..loginId = userData.pseudonym.uniqueId
         ..password = userData.pseudonym.password
-        ..domain = response.request.uri.host);
+        ..domain = response.requestOptions.uri.host);
 
-      var verifyResult = await AuthApi().mobileVerify(result.domain, forceBetaDomain: true);
+      var verifyResult = await AuthApi().mobileVerify(result.domain!, forceBetaDomain: true);
       var authCode = await _getAuthCode(result, verifyResult);
-      var token = await _getToken(result, verifyResult, authCode);
+      var token = await _getToken(result, verifyResult, authCode!);
 
       result = result.rebuild((b) => b..token = token);
       return result;
     } else {
-      print("error request:" + response.request.toString() + ", headers: ${response.request.headers.toString()}");
+      print("error request:" + response.requestOptions.toString() + ", headers: ${response.requestOptions.headers.toString()}");
       print(
           "error response body: ${response.data}, status: ${response.statusCode}, message: ${response.statusMessage} ");
       return null;
@@ -83,19 +83,19 @@ class UserSeedApi {
   }
 
   // Get the token for the SeededUser, given MobileVerifyResult and authCode
-  static Future<String> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
-    var dio = seedingDio(baseUrl: "https://${user.domain}/");
+  static Future<String?> _getToken(SeededUser user, MobileVerifyResult? verifyResult, String authCode) async {
+    var dio = await seedingDio(baseUrl: "https://${user.domain}/");
 
     var response = await dio.post('login/oauth2/token', queryParameters: {
-      "client_id": verifyResult.clientId,
-      "client_secret": verifyResult.clientSecret,
+      "client_id": verifyResult?.clientId,
+      "client_secret": verifyResult?.clientSecret,
       "code": authCode,
       "redirect_uri": _REDIRECT_URI
     });
 
     if (response.statusCode == 200) {
       var parsedResponse = deserialize<OAuthToken>(response.data);
-      var token = parsedResponse.accessToken;
+      var token = parsedResponse?.accessToken;
 
       return token;
     } else {
@@ -106,11 +106,11 @@ class UserSeedApi {
 
   // Get the authCode for the SeededUser, using the clientId from verifyResult.
   // This one is a little tricky as we have to call into native Android jsoup logic.
-  static Future<String> _getAuthCode(SeededUser user, MobileVerifyResult verifyResult) async {
+  static Future<String?> _getAuthCode(SeededUser user, MobileVerifyResult? verifyResult) async {
     try {
       var result = await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
         'domain': user.domain,
-        'clientId': verifyResult.clientId,
+        'clientId': verifyResult?.clientId,
         'redirectUrl': _REDIRECT_URI,
         'login': user.loginId,
         'password': user.password
@@ -129,15 +129,16 @@ class UserSeedApi {
   /// Obtain a pairing code for the indicated observee.
   /// Will only work if the observee has been enrolled in a course as a student.
   /// Returns a PairingCode structure, which contains a "code" field.
-  static Future<PairingCode> createObserverPairingCode(String observeeId) async {
-    var dio = seedingDio();
+  static Future<PairingCode?> createObserverPairingCode(String observeeId) async {
+    var dio = await seedingDio();
     return fetch(dio.post('users/$observeeId/observer_pairing_codes'));
   }
 
   /// Add [observer] as an observer for [observee], using the indicated pairingCode.
-  static Future<bool> addObservee(SeededUser observer, SeededUser observee, String pairingCode) async {
+  static Future<bool> addObservee(SeededUser observer, SeededUser observee, String? pairingCode) async {
     try {
-      var pairingResponse = await seedingDio().post('users/${observer.id}/observees',
+      var dio = await seedingDio();
+      var pairingResponse = await dio.post('users/${observer.id}/observees',
           queryParameters: {'pairing_code': pairingCode, 'access_token': observee.token});
       return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
     } on DioError {

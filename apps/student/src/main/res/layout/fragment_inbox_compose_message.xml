@@ -120,22 +120,26 @@
 
             <include layout="@layout/view_divider"/>
 
-
-            <EditText
-                android:id="@+id/editSubject"
-                style="@style/TextFont.Regular"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:background="@android:color/transparent"
-                android:ellipsize="end"
-                android:hint="@string/subject"
-                android:inputType="textCapSentences"
-                android:lines="1"
-                android:padding="16dp"
-                android:textColorHint="@color/textDark"
-                android:textSize="16sp"
-                android:visibility="gone"/>
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editSubject"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
+                    android:hint="@string/subject"
+                    android:inputType="textCapSentences"
+                    android:lines="1"
+                    android:padding="16dp"
+                    android:textColorHint="@color/textDark"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/subjectView"
@@ -194,22 +198,28 @@
                 android:background="@color/backgroundMedium"
                 android:visibility="gone"/>
 
-            <EditText
-                android:id="@+id/message"
-                style="@style/TextFont.Regular"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/messageContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:gravity="top"
-                android:hint="@string/message"
-                android:inputType="textCapSentences|textMultiLine|textImeMultiLine"
-                android:minLines="2"
-                android:padding="16dp"
-                android:scrollHorizontally="false"
-                android:singleLine="false"
-                android:textColor="@color/textDarkest"
-                android:textColorHint="@color/textDark"
-                android:textSize="16sp"/>
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/message"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:gravity="top"
+                    android:hint="@string/message"
+                    android:inputType="textCapSentences|textMultiLine|textImeMultiLine"
+                    android:minLines="2"
+                    android:padding="16dp"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
+                    android:textColor="@color/textDarkest"
+                    android:textColorHint="@color/textDark"
+                    android:textSize="16sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.emeritus.student.view.AttachmentLayout
                 android:id="@+id/attachmentLayout"

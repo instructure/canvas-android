@@ -139,35 +139,45 @@
                 android:textColor="@color/textDarkest"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                tools:text="89%"/>
+                tools:text="89%" />
 
             <TextView
                 android:id="@+id/outOf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:textColor="@color/textDarkest"
-                tools:text="Out of 100 pts"/>
+                tools:text="Out of 100 pts" />
+
+            <TextView
+                android:id="@+id/yourGrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:textColor="@color/textDarkest"
+                tools:text="Your Grade: 56 pts" />
 
             <TextView
                 android:id="@+id/latePenalty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:textColor="@color/textInfo"
-                android:textSize="12sp"
-                tools:text="Late Penalty (-2 pts)"/>
+                android:textColor="@color/textWarning"
+                tools:text="Late Penalty: -46 pts" />
 
             <TextView
                 android:id="@+id/finalGrade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:textColor="@color/textDarkest"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="Final Grade: 89 pts"/>
+                tools:text="Final Grade: 89 pts" />
 
         </LinearLayout>
 
@@ -191,9 +201,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/minLabel"

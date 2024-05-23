@@ -59,11 +59,12 @@ object SubmissionsApi {
     private fun submissionsService(token: String): SubmissionsService
             = CanvasNetworkAdapter.retrofitWithToken(token).create(SubmissionsService::class.java)
 
-    fun submitCourseAssignment(submissionType: SubmissionType,
-                               courseId: Long,
+    fun submitCourseAssignment(courseId: Long,
+                               studentToken: String,
                                assignmentId: Long,
-                               fileIds: MutableList<Long>,
-                               studentToken: String): SubmissionApiModel {
+                               submissionType: SubmissionType,
+                               fileIds: MutableList<Long> = mutableListOf()
+                               ): SubmissionApiModel {
 
         val submission = Randomizer.randomSubmission(submissionType, fileIds)
 
@@ -73,12 +74,13 @@ object SubmissionsApi {
                 .body()!!
     }
 
-    fun commentOnSubmission(studentToken: String,
-                            courseId: Long,
+    fun commentOnSubmission(courseId: Long,
+                            studentToken: String,
                             assignmentId: Long,
-                            fileIds: MutableList<Long>): AssignmentApiModel {
+                            fileIds: MutableList<Long> = mutableListOf(),
+                            attempt: Int = 1): AssignmentApiModel {
 
-        val comment = Randomizer.randomSubmissionComment(fileIds)
+        val comment = Randomizer.randomSubmissionComment(fileIds, attempt)
 
         return submissionsService(studentToken)
                 .commentOnSubmission(courseId, assignmentId, CreateSubmissionCommentWrapper(comment))
@@ -100,8 +102,8 @@ object SubmissionsApi {
                         courseId: Long,
                         assignmentId: Long,
                         studentId: Long,
-                        postedGrade: String,
-                        excused: Boolean): SubmissionApiModel {
+                        excused: Boolean = false,
+                        postedGrade: String? = null): SubmissionApiModel {
 
         return submissionsService(teacherToken)
                 .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused)))
@@ -143,69 +145,69 @@ object SubmissionsApi {
     /** Seed one or more submissions for an assignment.  Accepts a SubmissionSeedRequest, returns a
      * list of SubmissionApiModel objects.
      */
-    fun seedAssignmentSubmission(request: SubmissionsApi.SubmissionSeedRequest) : List<SubmissionApiModel> {
+    fun seedAssignmentSubmission(courseId: Long, studentToken: String, assignmentId: Long, commentSeedsList: List<CommentSeedInfo> = listOf(), submissionSeedsList: List<SubmissionSeedInfo> = listOf()): List<SubmissionApiModel> {
         val submissionsList = mutableListOf<SubmissionApiModel>()
-        with(request) {
-            for (seed in submissionSeedsList) {
-                for (t in 0 until seed.amount) {
 
-                    // Submit an assignment
+        for (seed in submissionSeedsList) {
+            for (t in 0 until seed.amount) {
 
-                    // Canvas will only record submissions with unique "submitted_at" values.
-                    // Sleep for 1 second to ensure submissions are recorded!!!
-                    //
-                    // https://github.com/instructure/mobile_qa/blob/7f985a08161f457e9b5d60987bd6278d21e2557e/SoSeedy/lib/so_seedy/canvas_models/account_admin.rb#L357-L359
-                    Thread.sleep(1000)
-                    var submission = SubmissionsApi.submitCourseAssignment(
-                            submissionType = seed.submissionType,
-                            courseId = courseId,
-                            assignmentId = assignmentId,
-                            fileIds = seed.attachmentsList.map { it.id }.toMutableList(),
-                            studentToken = studentToken
-                    )
+                // Submit an assignment
 
-                    if (seed.checkForLateStatus) {
-                        val maxAttempts = 6
-                        var attempts = 1
-                        while (attempts < maxAttempts) {
-                            val submissionResponse = SubmissionsApi.getSubmission (
+                // Canvas will only record submissions with unique "submitted_at" values.
+                // Sleep for 1 second to ensure submissions are recorded!!!
+                //
+                // https://github.com/instructure/mobile_qa/blob/7f985a08161f457e9b5d60987bd6278d21e2557e/SoSeedy/lib/so_seedy/canvas_models/account_admin.rb#L357-L359
+                Thread.sleep(1000)
+                var submission = submitCourseAssignment(
+                        submissionType = seed.submissionType,
+                        courseId = courseId,
+                        assignmentId = assignmentId,
+                        fileIds = seed.attachmentsList.map { it.id }.toMutableList(),
+                        studentToken = studentToken
+                )
+
+                if (seed.checkForLateStatus) {
+                    val maxAttempts = 6
+                    var attempts = 1
+                    while (attempts < maxAttempts) {
+                        val submissionResponse = getSubmission (
+                                studentToken = studentToken,
+                                courseId = courseId,
+                                assignmentId = assignmentId,
+                                studentId = submission.userId
+                        )
+                        if (submissionResponse.late) break
+                        RetryBackoff.wait(attempts)
+                        attempts++
+                    }
+                }
+
+                // Create comments on the submitted assignment
+                submission = commentSeedsList
+                        .map {
+                            // Create comments with any assigned upload file types
+                            val assignment = commentOnSubmission(
                                     studentToken = studentToken,
                                     courseId = courseId,
                                     assignmentId = assignmentId,
-                                    studentId = submission.userId
+                                    fileIds = it.attachmentsList.filter { it.id != -1L }.map { it.id }.toMutableList())
+
+                            // Apparently, we only care about id and submissionComments
+                            SubmissionApiModel(
+                                    id = assignment.id,
+                                    submissionComments = assignment.submissionComments!!,
+                                    url = null,
+                                    body = null,
+                                    userId = 0,
+                                    grade = null,
+                                    attempt = assignment.attempt!!
+
                             )
-                            if (submissionResponse.late) break
-                            RetryBackoff.wait(attempts)
-                            attempts++
                         }
-                    }
+                        .lastOrNull() ?: submission // Last one (if it exists) will have all the comments loaded up on it
 
-                    // Create comments on the submitted assignment
-                    submission = commentSeedsList
-                            .map {
-                                // Create comments with any assigned upload file types
-                                val assignment = SubmissionsApi.commentOnSubmission(
-                                        studentToken = studentToken,
-                                        courseId = courseId,
-                                        assignmentId = assignmentId,
-                                        fileIds = it.attachmentsList.filter { it.id != -1L }.map { it.id }.toMutableList())
-
-                                // Apparently, we only care about id and submissionComments
-                                SubmissionApiModel(
-                                        id = assignment.id,
-                                        submissionComments = assignment.submissionComments!!,
-                                        url = null,
-                                        body = null,
-                                        userId = 0,
-                                        grade = null
-
-                                )
-                            }
-                            .lastOrNull() ?: submission // Last one (if it exists) will have all the comments loaded up on it
-
-                    // Add submission to our collection
-                    submissionsList.add(submission)
-                }
+                // Add submission to our collection
+                submissionsList.add(submission)
             }
         }
 

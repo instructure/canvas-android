@@ -408,7 +408,7 @@
         <item>@string/gpa_scale</item>
     </string-array>
 
-    <string name="not_a_teacher">不是教師？</string>
+  <string name="not_a_teacher">不是教師？</string>
     <string name="not_a_teacher_tap_to_visit_play_store">我們其他應用程式可能更適合您。按一查看 Play Store。</string>
     <string name="sg_tab_grade">評分</string>
     <string name="sg_tab_comments">評論</string>
@@ -703,7 +703,6 @@
     <string name="changeUser">變更使用者</string>
     <string name="general">一般</string>
     <string name="sendFeedback">發送回饋</string>
-    <string name="rateOnTheAppStore">前往 App Store 評分</string>
     <string name="privacyPolicy">《隱私政策》</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">《使用條款》</string>
@@ -858,7 +857,6 @@
     <plurals name="latePolicyPenaltyFull">
         <item quantity="other">-%s 分</item>
     </plurals>
-    <string name="todoUnreadCount">待辦 %d 未讀</string>
     <string name="profileSettings">個人檔案設定</string>
     <string name="downloadingFile">下載檔案&#8230;</string>
     <string name="fileDownloadedSuccessfully">檔案已成功下載。</string>
@@ -883,4 +881,5 @@
     <string name="no_grade">無評分</string>
     <string name="excuse">豁免</string>
     <string name="speed_grader_overgraded_by">已由%s重寫評分</string>
+    <string name="error_unpublishable_module_item">如果有學生提交，則無法取消發佈 %s</string>
 </resources>

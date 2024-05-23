@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.instructure.pandautils.utils.ThemePrefs" />
+
+        <variable
+            name="viewModel"
+            type="com.instructure.pandautils.features.offline.offlinecontent.OfflineContentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/manageOfflineContentPage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:background="@color/textDarkest"
+            android:elevation="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ToolBarPopupStyle"
+            app:theme="@style/ToolBarStyle"
+            app:title="@string/offline_content_toolbar_title" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/syncButton"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="0dp">
+
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/backgroundLightest"
+                    app:layout_scrollFlags="scroll|enterAlways">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/storageInfoContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/bg_rounded_outline_6dp"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/storageLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/offline_content_storage"
+                            android:textColor="@color/textDarkest"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/storageInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.data.storageInfo.storageInfoText}"
+                            android:textColor="@color/textDark"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ProgressBar
+                            android:id="@+id/progress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:layout_marginTop="16dp"
+                            android:max="100"
+                            android:progress="@{viewModel.data.storageInfo.otherAppsReservedPercent}"
+                            android:progressDrawable="@drawable/storage_progress_bar_background"
+                            android:secondaryProgress="@{viewModel.data.storageInfo.allAppsReservedPercent}"
+                            app:layout_constraintTop_toBottomOf="@id/storageLabel" />
+
+                        <LinearLayout
+                            android:id="@+id/otherContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toStartOf="@id/canvasContainer"
+                            app:layout_constraintHorizontal_chainStyle="spread_inside"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/progress">
+
+                            <View
+                                android:id="@+id/otherIndicator"
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/ic_circle"
+                                android:backgroundTint="@color/backgroundDarkest" />
+
+                            <TextView
+                                android:id="@+id/otherLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:ellipsize="end"
+                                android:lines="1"
+                                android:text="@string/offline_content_other"
+                                android:textColor="@color/textDark"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/canvasContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginTop="16dp"
+                            app:layout_constraintEnd_toStartOf="@id/remainingContainer"
+                            app:layout_constraintStart_toEndOf="@id/otherContainer"
+                            app:layout_constraintTop_toBottomOf="@id/progress">
+
+                            <View
+                                android:id="@+id/canvasIndicator"
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/ic_circle"
+                                android:backgroundTint="@color/backgroundInfo" />
+
+                            <TextView
+                                android:id="@+id/canvasLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:ellipsize="end"
+                                android:lines="1"
+                                android:text="@string/offline_content_canvas_student"
+                                android:textColor="@color/textDark" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/remainingContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginTop="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/canvasContainer"
+                            app:layout_constraintTop_toBottomOf="@id/progress">
+
+                            <View
+                                android:id="@+id/remainingIndicator"
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/ic_circle"
+                                android:backgroundTint="#33008EE2" />
+
+                            <TextView
+                                android:id="@+id/remainingLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:ellipsize="end"
+                                android:lines="1"
+                                android:text="@string/offline_content_remaining"
+                                android:textColor="@color/textDark"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintBottom_toTopOf="@id/syncButton"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:onRefreshListener="@{() -> viewModel.onRefresh()}"
+                app:refreshState="@{viewModel.state}">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/offlineContentRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:recyclerViewItemViewModels="@{viewModel.data.courseItems}" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <Button
+            android:id="@+id/syncButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroundInfo"
+            android:backgroundTint="@{ThemePrefs.INSTANCE.buttonColor}"
+            android:foreground="?attr/selectableItemBackground"
+            android:minHeight="48dp"
+            android:onClick="@{() -> viewModel.onSyncClicked()}"
+            android:text="@string/offline_content_sync"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Sync" />
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/backgroundLightest"
+            android:translationZ="100dp"
+            app:emptyViewState="@{viewModel.state}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

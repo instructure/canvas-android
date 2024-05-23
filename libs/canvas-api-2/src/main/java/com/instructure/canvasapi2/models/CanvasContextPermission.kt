@@ -18,7 +18,7 @@ package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CanvasContextPermission(
@@ -47,7 +47,9 @@ data class CanvasContextPermission(
         @SerializedName(MANAGE_CONTENT)
         val canManageContent: Boolean = false,
         @SerializedName(MANAGE_COURSE_CONTENT_EDIT)
-        val canEditCourseContent: Boolean = false
+        val canEditCourseContent: Boolean = false,
+        @SerializedName(MANAGE_CALENDAR)
+        val manageCalendar: Boolean = false
 ) : Parcelable {
     companion object {
         const val BECOME_USER = "become_user"
@@ -64,5 +66,6 @@ data class CanvasContextPermission(
         const val STUDENT_VIEW = "use_student_view"
         const val MANAGE_CONTENT = "manage_content"
         const val MANAGE_COURSE_CONTENT_EDIT = "manage_course_content_edit"
+        const val MANAGE_CALENDAR = "manage_calendar"
     }
 }

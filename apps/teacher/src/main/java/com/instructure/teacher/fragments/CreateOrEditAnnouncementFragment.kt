@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -28,6 +29,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.Identity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT
@@ -39,10 +41,27 @@ import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentCreateOrEditAnnouncementBinding
 import com.instructure.teacher.dialog.SectionPickerDialog
 import com.instructure.teacher.events.SectionsUpdatedEvent
 import com.instructure.teacher.factory.CreateOrEditAnnouncementPresenterFactory
@@ -51,38 +70,41 @@ import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
-import kotlinx.android.synthetic.main.fragment_create_or_edit_announcement.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
+@PageView("courses/{canvasContext}/discussion_topics/new?is_announcement=true")
 @ScreenView(SCREEN_VIEW_CREATE_OR_EDIT_ANNOUNCEMENT)
-class CreateOrEditAnnouncementFragment :
-        BasePresenterFragment<CreateOrEditAnnouncementPresenter, CreateOrEditAnnouncementView>(),
+class CreateOrEditAnnouncementFragment : BasePresenterFragment<
+        CreateOrEditAnnouncementPresenter,
         CreateOrEditAnnouncementView,
-        Identity,
-        FileUploadDialogParent {
+        FragmentCreateOrEditAnnouncementBinding>(),
+    CreateOrEditAnnouncementView,
+    Identity,
+    FileUploadDialogParent {
 
     /* The course this announcement belongs to */
-    private var mCanvasContext by ParcelableArg<CanvasContext>(Course())
+    private var canvasContext by ParcelableArg<CanvasContext>(Course())
 
     /* The announcement to be edited. This will be null if we're creating a new announcement */
-    private var mEditAnnouncement by NullableParcelableArg<DiscussionTopicHeader>()
+    private var editAnnouncement by NullableParcelableArg<DiscussionTopicHeader>()
 
     /* Menu buttons. We don't cache these because the toolbar is reconstructed on configuration change. */
-    private val mSaveMenuButton get() = toolbar.menu.findItem(R.id.menuSaveAnnouncement)
-    private val mAttachmentButton get() = toolbar.menu.findItem(R.id.menuAddAttachment)
-    private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
+    private val saveMenuButton get() = binding.toolbar.menu.findItem(R.id.menuSaveAnnouncement)
+    private val attachmentButton get() = binding.toolbar.menu.findItem(R.id.menuAddAttachment)
+    private val saveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
 
     /* Formats for displaying the delayed post date */
-    private val mDateFormat by lazy { DateHelper.fullMonthNoLeadingZeroDateFormat }
-    private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
+    private val dateFormat by lazy { DateHelper.fullMonthNoLeadingZeroDateFormat }
+    private val timeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
 
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
 
     /* The default date to show when the user enables delayed posting (the current date just before midnight) */
-    private val mDefaultDate: Date
+    private val defaultDate: Date
         get() = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 23)
             set(Calendar.MINUTE, 59)
@@ -96,9 +118,9 @@ class CreateOrEditAnnouncementFragment :
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
     override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter) {}
-    override fun layoutResId(): Int = R.layout.fragment_create_or_edit_announcement
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCreateOrEditAnnouncementBinding = FragmentCreateOrEditAnnouncementBinding::inflate
 
-    override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(mCanvasContext, mEditAnnouncement?.parcelCopy())
+    override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(canvasContext, editAnnouncement?.parcelCopy())
 
     override fun onStart() {
         super.onStart()
@@ -137,9 +159,9 @@ class CreateOrEditAnnouncementFragment :
         setSectionText()
     }
 
-    fun setupToolbar() {
+    fun setupToolbar() = with(binding) {
         toolbar.setupCloseButton {
-            if(presenter.announcement.message == announcementRCEView?.html) {
+            if(presenter.announcement.message == announcementRCEView.html) {
                 activity?.onBackPressed()
             } else {
                 UnsavedChangesExitDialog.show(requireFragmentManager()) {
@@ -159,12 +181,12 @@ class CreateOrEditAnnouncementFragment :
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
 
-        if (presenter.isEditing) with(mSaveMenuButton) {
+        if (presenter.isEditing) with(saveMenuButton) {
             setIcon(0)
             setTitle(R.string.save)
         }
 
-        mSaveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
+        saveButtonTextView?.setTextColor(ThemePrefs.textButtonColor)
     }
 
     private fun setupViews() {
@@ -177,11 +199,11 @@ class CreateOrEditAnnouncementFragment :
         updateAttachmentUI()
         setSectionText()
 
-        announcementRCEView.hideEditorToolbar()
-        announcementRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        binding.announcementRCEView.hideEditorToolbar()
+        binding.announcementRCEView.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
     }
 
-    private fun setupTitle() {
+    private fun setupTitle() = with(binding) {
         ViewStyler.themeEditText(requireContext(), announcementNameEditText, ThemePrefs.brandColor)
         announcementNameTextInput.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         announcementNameEditText.setText(presenter.announcement.title)
@@ -191,7 +213,7 @@ class CreateOrEditAnnouncementFragment :
         }
     }
 
-    private fun setupDescription() {
+    private fun setupDescription() = with(binding) {
         if (CanvasWebView.containsLTI(presenter.announcement.message.orEmpty(), "UTF-8")) {
             announcementRCEView.setHtml(
                     DiscussionUtils.createLTIPlaceHolders(requireContext(), presenter.announcement.message.orEmpty()) { _, placeholder ->
@@ -215,7 +237,7 @@ class CreateOrEditAnnouncementFragment :
 
     private fun setupDeleteButton() {
         // Only show delete button in editing mode
-        deleteAnnouncementButton
+        binding.deleteAnnouncementButton
                 .setVisible(presenter.isEditing)
                 .onClickWithRequireNetwork {
                     AlertDialog.Builder(requireContext())
@@ -229,13 +251,13 @@ class CreateOrEditAnnouncementFragment :
                 }
     }
 
-    private fun setupDelaySwitch() {
+    private fun setupDelaySwitch() = with(binding) {
         delaySwitch.applyTheme()
         delaySwitch.isChecked = presenter.announcement.delayedPostDate != null
         updatePostDate()
 
         delaySwitch.setOnCheckedChangeListener { _, isChecked ->
-            presenter.announcement.delayedPostDate = if (isChecked) mDefaultDate else null
+            presenter.announcement.delayedPostDate = if (isChecked) defaultDate else null
             updatePostDate()
         }
 
@@ -267,7 +289,7 @@ class CreateOrEditAnnouncementFragment :
 
     private fun updateAttachmentUI() {
         updateAttachmentButton()
-        attachmentLayout.clearAttachmentViews()
+        binding.attachmentLayout.clearAttachmentViews()
 
         // Show attachment waiting to upload (if any)
         presenter.attachment?.let { attachment ->
@@ -279,7 +301,7 @@ class CreateOrEditAnnouncementFragment :
                     }
                 }
 
-            attachmentLayout.addView(attachmentView)
+            binding.attachmentLayout.addView(attachmentView)
         }
 
         // Show existing attachment (if any)
@@ -292,22 +314,22 @@ class CreateOrEditAnnouncementFragment :
                 }
             }
 
-            attachmentLayout.addView(attachmentView)
+            binding.attachmentLayout.addView(attachmentView)
         }
     }
 
-    private fun updatePostDate() {
+    private fun updatePostDate() = with(binding) {
         val date = presenter.announcement.delayedPostDate
         if (date == null) {
             postDateWrapper.setGone()
         } else {
             postDateWrapper.setVisible()
-            postDate.setText(mDateFormat.format(date))
-            postTime.setText(mTimeFormat.format(date))
+            postDate.setText(dateFormat.format(date))
+            postTime.setText(timeFormat.format(date))
         }
     }
 
-    private fun enableUsersMustPostSwitch(enabled: Boolean) {
+    private fun enableUsersMustPostSwitch(enabled: Boolean) = with(binding) {
         if (enabled) {
             usersMustPostWrapper.alpha = 1f
             usersMustPostSwitch.isEnabled = true
@@ -318,7 +340,7 @@ class CreateOrEditAnnouncementFragment :
         }
     }
 
-    private fun setupAllowCommentsSwitch() {
+    private fun setupAllowCommentsSwitch() = with(binding) {
         allowCommentsSwitch.applyTheme()
         allowCommentsSwitch.isChecked = !presenter.announcement.locked
         allowCommentsSwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -328,7 +350,7 @@ class CreateOrEditAnnouncementFragment :
     }
 
     private fun setupUsersMustPostSwitch() {
-        with (usersMustPostSwitch) {
+        with (binding.usersMustPostSwitch) {
             applyTheme()
             isChecked = presenter.announcement.requireInitialPost
             enableUsersMustPostSwitch(!presenter.announcement.locked)
@@ -340,10 +362,10 @@ class CreateOrEditAnnouncementFragment :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter.announcement.message = announcementRCEView.html
+        presenter.announcement.message = binding.announcementRCEView.html
     }
 
-    private fun saveAnnouncement() {
+    private fun saveAnnouncement() = with(binding) {
         val description = announcementRCEView.html
         if (description.isBlank()) {
             toast(R.string.create_announcement_no_description)
@@ -361,28 +383,28 @@ class CreateOrEditAnnouncementFragment :
     }
 
     override fun onSaveStarted() {
-        mSaveMenuButton.isVisible = false
+        saveMenuButton.isVisible = false
         updateAttachmentButton(show = false)
-        savingProgressBar.announceForAccessibility(getString(R.string.saving))
-        savingProgressBar.setVisible()
+        binding.savingProgressBar.announceForAccessibility(getString(R.string.saving))
+        binding.savingProgressBar.setVisible()
     }
 
     private fun updateAttachmentButton(show: Boolean = true) {
         // Only show if (1) we're in creation mode and (2) we don't already have an attachment
-        mAttachmentButton?.isVisible = show && !presenter.isEditing && presenter.attachment == null
+        attachmentButton?.isVisible = show && !presenter.isEditing && presenter.attachment == null
     }
 
     override fun onSaveError() {
-        mSaveMenuButton.isVisible = true
+        saveMenuButton.isVisible = true
         updateAttachmentButton()
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
         toast(R.string.errorSavingAnnouncement)
     }
 
     override fun onDeleteError() {
-        mSaveMenuButton.isVisible = true
+        saveMenuButton.isVisible = true
         updateAttachmentButton()
-        savingProgressBar.setGone()
+        binding.savingProgressBar.setGone()
         toast(R.string.errorDeletingAnnouncement)
     }
 
@@ -393,13 +415,13 @@ class CreateOrEditAnnouncementFragment :
             toast(R.string.announcementSuccessfullyCreated)
         }
 
-        announcementNameEditText.hideKeyboard() // Close the keyboard
+        binding.announcementNameEditText.hideKeyboard() // Close the keyboard
         requireActivity().onBackPressed() // Close this fragment
     }
 
     override fun onDeleteSuccess() {
         toast(R.string.announcementDeleted)
-        announcementNameEditText.hideKeyboard() // Close the keyboard
+        binding.announcementNameEditText.hideKeyboard() // Close the keyboard
         requireActivity().onBackPressed() // Close this fragment
     }
 
@@ -417,7 +439,7 @@ class CreateOrEditAnnouncementFragment :
 
     override fun onSectionsLoaded() {
         setSectionText()
-        sections?.onClick { _ ->
+        binding.sections.onClick { _ ->
             SectionPickerDialog.show(requireFragmentManager(), presenter.courseSections, presenter.getSelectedSections()) {
                 presenter.announcement.specificSections = if (it.isNotEmpty()) it else "all"
                 EventBus.getDefault().post(SectionsUpdatedEvent())
@@ -426,13 +448,13 @@ class CreateOrEditAnnouncementFragment :
     }
 
     private fun setSectionText() {
-        sections.setText(
+        binding.sections.setText(
                 if (presenter.getSelectedSections().isNotEmpty())
                     presenter.getSelectedSections().joinToString(", ") { it.name }
                 else getString(R.string.allSections))
     }
 
-    override fun insertImageIntoRCE(imageUrl: String) = announcementRCEView.insertImage(requireActivity(), imageUrl)
+    override fun insertImageIntoRCE(imageUrl: String) = binding.announcementRCEView.insertImage(requireActivity(), imageUrl)
 
     companion object {
         fun newInstance(bundle: Bundle) =
@@ -442,13 +464,13 @@ class CreateOrEditAnnouncementFragment :
 
         fun newInstanceCreate(canvasContext: CanvasContext) =
                 CreateOrEditAnnouncementFragment().apply {
-                    mCanvasContext = canvasContext
+                    this.canvasContext = canvasContext
                 }
 
         fun newInstanceEdit(canvasContext: CanvasContext, editAnnouncement: DiscussionTopicHeader) =
                 CreateOrEditAnnouncementFragment().apply {
-                    mCanvasContext = canvasContext
-                    mEditAnnouncement = editAnnouncement
+                    this.canvasContext = canvasContext
+                    this.editAnnouncement = editAnnouncement
                 }
     }
 }

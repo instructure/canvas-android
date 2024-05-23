@@ -28,6 +28,7 @@ import 'package:mockito/mockito.dart';
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/test_app.dart';
 import '../../../utils/test_helpers/mock_helpers.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   group('Render', () {
@@ -161,7 +162,7 @@ void main() {
       expect(find.byWidgetPredicate((widget) {
         if (widget is Checkbox) {
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       }), findsNWidgets(3));
@@ -184,7 +185,7 @@ void main() {
       expect(find.byWidgetPredicate((widget) {
         if (widget is Checkbox) {
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       }), findsNWidgets(1));
@@ -213,7 +214,7 @@ void main() {
         if (widget is Checkbox) {
           // Check for a checkbox widgets that are checked
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       });
@@ -311,7 +312,7 @@ void main() {
         if (widget is Checkbox) {
           // Check for a checkbox widgets that are checked
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       });
@@ -329,62 +330,6 @@ void main() {
 
       // Make sure the selected list was updated
       expect(state.selectedContextIds.length, 1);
-    });
-
-    testWidgetsWithAccessibilityChecks('selecting more than 10 shows an error', (tester) async {
-      var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => Future.value(_mockCoursesBigList()));
-
-      Set<String> selectedContexts = {
-        'course_1',
-        'course_2',
-        'course_3',
-        'course_4',
-        'course_5',
-        'course_6',
-        'course_7',
-        'course_8',
-        'course_9',
-        'course_10',
-      };
-      setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
-
-      await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(selectedContexts),
-      ));
-      await tester.pump();
-      await tester.pump();
-
-      CalendarFilterListScreenState state = await tester.state(find.byType(CalendarFilterListScreen));
-
-      expect(find.byType(Checkbox, skipOffstage: false), findsNWidgets(11));
-
-      var checkedCheckBoxFinder = find.byWidgetPredicate((widget) {
-        if (widget is Checkbox) {
-          // Check for a checkbox widgets that are checked
-          final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
-        }
-        return false;
-      }, skipOffstage: false);
-
-      // Make sure we've got the correct selected number of items
-      expect(checkedCheckBoxFinder, findsNWidgets(10));
-
-      var attachmentList = find.byKey(Key('calendar_filter_list_key'));
-      await tester.drag(attachmentList, Offset(0, -300));
-      await tester.pump();
-
-      // Click on the last course, the only unselected context, to add it to the selected list
-      expect(find.text('Course11', skipOffstage: false), findsOneWidget);
-      await tester.tap(find.text('Course11', skipOffstage: false));
-      await tester.pump();
-
-      expect(find.text(AppLocalizations().tooManyCalendarsError), findsOneWidget);
-
-      var selectedCount = state.selectedContextIds.length;
-      expect(selectedCount, 10);
     });
 
     testWidgetsWithAccessibilityChecks('attempting to deselect the last calendar shows an error', (tester) async {
@@ -411,7 +356,7 @@ void main() {
         if (widget is Checkbox) {
           // Check for a checkbox widgets that are checked
           final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
+          return checkboxWidget.value!;
         }
         return false;
       }, skipOffstage: false);

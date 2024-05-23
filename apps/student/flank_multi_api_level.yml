@@ -12,7 +12,7 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.StubMultiAPILevel, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
+  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.StubMultiAPILevel, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug, com.instructure.canvas.espresso.OfflineE2E
   device:
   - model: NexusLowRes
     version: 27
@@ -23,7 +23,7 @@ gcloud:
     locale: en_US
     orientation: portrait
   - model: NexusLowRes
-    version: 29
+    version: 30
     locale: en_US
     orientation: portrait
 

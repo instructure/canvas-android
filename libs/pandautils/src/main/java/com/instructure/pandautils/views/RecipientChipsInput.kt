@@ -42,9 +42,9 @@ import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.AdapterRecipientSearchResultBinding
+import com.instructure.pandautils.databinding.ViewRecipientChipsInputBinding
 import com.instructure.pandautils.utils.*
-import kotlinx.android.synthetic.main.adapter_recipient_search_result.view.*
-import kotlinx.android.synthetic.main.view_recipient_chips_input.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -53,9 +53,11 @@ import kotlinx.coroutines.withContext
 class RecipientChipsInput @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+    private val binding: ViewRecipientChipsInputBinding
+
     var onRecipientsChanged: ((List<Recipient>) -> Unit)? = null
     var canvasContext: CanvasContext? = null
-    val recipients: List<Recipient> get() = chipGroup.children<RecipientChip>().map { it.recipient }
+    val recipients: List<Recipient> get() = binding.chipGroup.children<RecipientChip>().map { it.recipient }
 
     private val searchResults: MutableList<Recipient> = mutableListOf()
     private var searchJob: Job? = null
@@ -79,8 +81,9 @@ class RecipientChipsInput @JvmOverloads constructor(
             val user = getItem(position)!!
             val view = convertView
                 ?: LayoutInflater.from(context).inflate(R.layout.adapter_recipient_search_result, parent, false)
-            ProfileUtils.loadAvatarForUser(view.recipientAvatar, user.name, user.avatarURL)
-            view.recipientName.text = Pronouns.span(user.name, user.pronouns)
+            val itemBinding = AdapterRecipientSearchResultBinding.bind(view)
+            ProfileUtils.loadAvatarForUser(itemBinding.recipientAvatar, user.name, user.avatarURL)
+            itemBinding.recipientName.text = Pronouns.span(user.name, user.pronouns)
             return view
         }
 
@@ -88,7 +91,7 @@ class RecipientChipsInput @JvmOverloads constructor(
     }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_recipient_chips_input, this, true)
+        binding = ViewRecipientChipsInputBinding.inflate(LayoutInflater.from(context), this, true)
         if (isInEditMode) {
             addRecipients(
                 listOf(
@@ -106,33 +109,33 @@ class RecipientChipsInput @JvmOverloads constructor(
     fun addRecipients(recipients: List<Recipient>) {
         recipients.forEach {
             val chip = RecipientChip(context, it) { updateAndNotify() }
-            chipGroup.addView(chip)
+            binding.chipGroup.addView(chip)
         }
         updateAndNotify()
     }
 
     private fun updateAndNotify() {
         with(recipients) {
-            chipGroup.setVisible(isNotEmpty())
+            binding.chipGroup.setVisible(isNotEmpty())
             onRecipientsChanged?.invoke(this)
         }
     }
 
     fun removeRecipient(recipientId: String) {
-        chipGroup.children<RecipientChip>()
+        binding.chipGroup.children<RecipientChip>()
             .find { it.recipient.stringId == recipientId }
             ?.let {
-                chipGroup.removeView(it)
+                binding.chipGroup.removeView(it)
                 updateAndNotify()
             }
     }
 
     fun clearRecipients() {
-        chipGroup.removeAllViews()
+        binding.chipGroup.removeAllViews()
         updateAndNotify()
     }
 
-    private fun setupSearchAdapter() {
+    private fun setupSearchAdapter() = with(binding) {
         searchField.onTextChanged { performSearch(it) }
         searchAdapter.setNotifyOnChange(true)
         searchField.setAdapter(searchAdapter)
@@ -193,7 +196,7 @@ class RecipientChip(context: Context, val recipient: Recipient, onRemoved: (Stri
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
-                    target: Target<Drawable>?,
+                    target: Target<Drawable>,
                     isFirstResource: Boolean
                 ): Boolean {
                     chipIcon = placeholder
@@ -201,10 +204,10 @@ class RecipientChip(context: Context, val recipient: Recipient, onRemoved: (Stri
                 }
 
                 override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
+                    resource: Drawable,
+                    model: Any,
                     target: Target<Drawable>?,
-                    source: DataSource?,
+                    source: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
                     chipIcon = resource

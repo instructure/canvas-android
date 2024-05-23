@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hallo verden!</string>
+    <string name="action_settings">Innstillinger</string>
+    <string name="mobileVerifyGeneral">Denne appen er ikke godkjent for bruk</string>
+    <string name="mobileVerifyDomainUnauthorized">Serveren du oppga er ikke tillatt for denne appen.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Brukeragenten for denne appen er uautorisert.</string>
+    <string name="mobileVerifyUnknownError">Vi klarte ikke å verifisere serveren for bruk med denne appen.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Det oppsto en uventet feil.</string>
+    <string name="pageNotFound">Siden finnes ikke.</string>
+    <string name="confirm">Bekreft</string>
+    <string name="cancel">Avbryt</string>
+    <string name="help">Hjelp</string>
+    <string name="enterURL">Skriv inn din Canvas URL:</string>
+    <string name="signIntoCanvasNetwork">Prøve å logge på Canvas Network?</string>
+    <string name="remove">Fjern</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">Bruker-ID</string>
+    <string name="domain">Domene</string>
+    <string name="actAsUser">Opptre som bruker</string>
+    <string name="stopActAsUser">Avslutt opptre som bruker</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Fjerne denne brukeren?</string>
+    <string name="removedForever">Du må logge inn på denne brukeren på nytt for å få tilgang til innholdet deres.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas-logo</string>
+
+    <string name="canvasLoginOn">Canvas_Login: PÅ</string>
+    <string name="canvasLoginOff">Canvas_Login: AV</string>
+    <string name="siteAdminLogin">Admin-login for siden: PÅ</string>
+
+    <string name="username">Brukernavn</string>
+    <string name="password">Passord</string>
+    <string name="authenticationRequired">Behøver autentisering</string>
+    <string name="invalidEmailPassword">Ugyldig e-post eller passord</string>
+    <string name="login">Logg på</string>
+    <string name="logout">Logg Ut</string>
+    <string name="matchingSchools">Matchende skoler</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Er du sikker på at du vil logge ut?</string>
+    <string name="logout_yes">Ja</string>
+    <string name="logout_no">Nei</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Nær deg</string>
+    <string name="loginCanvasNetwork">Canvas Nettverk</string>
+    <string name="loginRightBehindYou">Rett bak deg</string>
+    <string name="loginCanvasHelp">Ser du ikke skolen din? Skriv in skolens URL eller tappe her for hjelp.</string>
+    <string name="loginCanvasHelpWithUser">Skriv in skolens URL eller tappe her for hjelp.</string>
+    <string name="loginHint">Finn din skole eller ditt distrikt</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Rapporter et problem</string>
+    <string name="errorReportSubject">Tema</string>
+    <string name="errorReportDescription">Beskrivelse</string>
+    <string name="errorReportSend">Send</string>
+    <string name="errorReportThankyou">Takk for at du rapporterte problemet ditt til brukerstøtteteamet.  Du vil motta bekreftelse og oppdateringer via e-post.</string>
+    <string name="errorReportSeverityText">Hvordan påvirker dette deg?</string>
+    <string name="errorSeverityCasualQuestion">Bare et tilfeldig spørsmål, kommentar, idé eller forslag&#8230;</string>
+    <string name="errorSeverityNeedHelp">Jeg trenger litt hjelp men det haster ikke.</string>
+    <string name="errorSeveritySomethingsBroken">Noe er ødelagt men jeg kan jobbe rundt det for å få det jeg trenger å få unnagjort.</string>
+    <string name="errorSeverityCantGetThingsDone">Jeg får ikke gjort det jeg skal gjøre før jeg hører fra dere.</string>
+    <string name="errorSeverityExtremelyCritical">EKSTREMT KRITISK NØDSITUASJON!!</string>
+
+    <string name="errorReportEmailAddress">E-postadresse</string>
+    <string name="errorReportUnknown">Ukjent</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
+    <string name="oneMile">1 mile (1.6 km)</string>
+    <string name="miles">miles</string>
+    <string name="kilometers">km</string>
+    <!-- String for submitting tickets -->
+    <string name="device">Enhet</string>
+    <string name="osVersion">OS-versjon</string>
+
+    <string name="previousLoginTitle">Tidligere innlogginger</string>
+    <string name="findMySchool">Finne skolen min</string>
+    <string name="loginWithQRCode">QR-kode</string>
+    <string name="locateQRCode">Lokalisere QR-kode</string>
+    <string name="qrCodeExplanation">Du finner QR-koden på nettet i kontoprofilen din. Klikk \'QR for mobil-innlogging\' i listen.</string>
+    <string name="qrCodeScanningPrompt">Skann en QR-kode fra Canvas for å begynne.</string>
+    <string name="loginWithQRCodeError">Det oppsto en feil ved innlogging. Vennligst lag en ny QR-kode og prøv på nytt.</string>
+    <string name="invalidQRCodeError">Skann en QR-kode generert av Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Skjermbilde som viser plassering av QR-kodegenerering i nettleser</string>
+    <string name="whatsYourSchoolName">Hva er navnet på skolen din?</string>
+    <string name="next">Neste</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Fjerne forrige bruker</string>
+    <string name="accountDomainFooter">Finner du ikke skolen din? Prøv å skrive hele skolens URL.</string>
+    <string name="accountDomainFooterLoginHelp">Trykk her for innloggingshjelp.</string>
+    <string name="login_noInternetConnectionTitle">Ingen Internett-tilkobling</string>
+    <string name="login_noInternetConnectionMessage">Denne handlingen krever Internett-tilkobling.</string>
+    <string name="empty_feedback">Et tittel og en beskrivelse må sende inn tilbakemelding.</string>
+    <string name="versionNum">Versjon nummer</string>
+    <string name="scrollInstructions">Rull for å se detaljer</string>
+
+    <string name="masqueradeErrorUserId">Du må skrive inn en bruker-ID.</string>
+    <string name="masqueradeErrorDomain">Du må oppgi et gyldig domene.</string>
+    <string name="masqueradeError">Det oppsto en feil da du prøvde å opptre som bruker.</string>
+    <string name="masqueradeInfo">\"Opptre som\" er i praksis å logge inn som denne brukeren uten et passord. Du vil ha muligheten til å utføre enhver handling som om du var denne brukeren, og fra andre brukeres perspektiv vil det se ut som om denne brukeren har utført dem. Overvåkingloggen vil likevel notere at det var du som utførte handlingene på vegne av denne brukeren.</string>
+    <string name="masqueradingAs">Du opptrer som %s</string>
+    <string name="stopActingAsTitle">Slutt å opptre som&#8230;</string>
+    <string name="stopActingAsMessage">Du vil slutte å opptre som %s og gå tilbake til din egen konto.</string>
+    <string name="weMadeChanges">Vi har gjort noen endringer.</string>
+    <string name="whatsNewText">Se hva som er nytt</string>
+    <string name="findAnotherSchool">Finn en annen skole</string>
+</resources>

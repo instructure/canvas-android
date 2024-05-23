@@ -23,26 +23,31 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSION_LIST
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DiscussionListAdapter
+import com.instructure.teacher.databinding.FragmentDiscussionListBinding
 import com.instructure.teacher.dialog.DiscussionsMoveToDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
+import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.presenters.DiscussionListPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
-import kotlinx.android.synthetic.main.fragment_discussion_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@PageView(url = "{canvasContext}/{type}")
 @ScreenView(SCREEN_VIEW_DISCUSSION_LIST)
 open class DiscussionsListFragment : BaseExpandableSyncFragment<
         String,
@@ -52,22 +57,24 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerView.ViewHolder,
         DiscussionListAdapter>(), DiscussionListView {
 
-    protected var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    private val binding by viewBinding(FragmentDiscussionListBinding::bind)
 
-    private val mLinearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
+    protected var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+
+    private val linearLayoutManager by lazy { LinearLayoutManager(requireContext()) }
     private lateinit var mRecyclerView: RecyclerView
 
-    private var mNeedToForceNetwork = false
-    private var mForceRefresh = false
-    protected var mIsAnnouncements by BooleanArg()
+    private var needToForceNetwork = false
+    private var forceRefresh = false
+    protected var isAnnouncements by BooleanArg()
 
     override fun layoutResId(): Int = R.layout.fragment_discussion_list
-    override val recyclerView: RecyclerView get() = discussionRecyclerView
+    override val recyclerView: RecyclerView get() = binding.discussionRecyclerView
 
-    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements)
+    override fun getPresenterFactory() = DiscussionListPresenterFactory(canvasContext, isAnnouncements)
 
-    override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
-        val emptyTitle = getString(if (mIsAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
+    override fun onPresenterPrepared(presenter: DiscussionListPresenter) = with(binding) {
+        val emptyTitle = getString(if (isAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
             rootView = rootView,
             context = requireContext(),
@@ -94,17 +101,17 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onCreateView(view: View) {
-        mLinearLayoutManager.orientation = RecyclerView.VERTICAL
+        linearLayoutManager.orientation = RecyclerView.VERTICAL
     }
 
     override fun onReadySetGo(presenter: DiscussionListPresenter) {
         mRecyclerView.adapter = adapter
-        if (mForceRefresh) {
+        if (forceRefresh) {
             presenter.refresh(true)
-            mForceRefresh = false
+            forceRefresh = false
         } else {
-            presenter.loadData(mNeedToForceNetwork)
-            mNeedToForceNetwork = false
+            presenter.loadData(needToForceNetwork)
+            needToForceNetwork = false
         }
     }
 
@@ -124,18 +131,18 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun createAdapter(): DiscussionListAdapter {
-        return DiscussionListAdapter(requireContext(), presenter, mCanvasContext.textAndIconColor, mIsAnnouncements,
+        return DiscussionListAdapter(requireContext(), presenter, canvasContext.textAndIconColor, isAnnouncements,
             { discussionTopicHeader ->
                 val route = presenter.getDetailsRoute(discussionTopicHeader)
                 RouteMatcher.route(
-                    requireContext(),
+                    requireActivity(),
                     route
                 )
             },
             { group, discussionTopicHeaderOverflow ->
                 if (group != null) {
                     DiscussionsMoveToDialog.show(
-                        requireFragmentManager(),
+                        parentFragmentManager,
                         group,
                         discussionTopicHeaderOverflow
                     ) { newGroup ->
@@ -147,7 +154,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     override fun perPageCount() = ApiPrefs.perPageCount
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted(): Unit = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyPandaView.setVisible()
@@ -156,7 +163,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.setGone()
     }
 
-    override fun onRefreshFinished() {
+    override fun onRefreshFinished(): Unit = with(binding) {
         emptyPandaView.setGone()
         swipeRefreshLayout.isRefreshing = false
 
@@ -170,11 +177,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.setVisible()
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         // We don't want to leave the fab hidden if the list is empty
         if(presenter.isEmpty) {
             createNewDiscussion.show()
-            if (mIsAnnouncements) {
+            if (isAnnouncements) {
                 emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_noannouncements))
                 emptyPandaView.setMessageText(R.string.noAnnouncementsSubtext)
             } else {
@@ -185,33 +192,33 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
-    private fun setupToolbar() {
-        discussionListToolbar.title = if(mIsAnnouncements) getString(R.string.tab_announcements) else getString(R.string.tab_discussions)
-        discussionListToolbar.subtitle = mCanvasContext.name
-        discussionListToolbar.setupBackButton(this)
-        val searchHint = getString(if (mIsAnnouncements) R.string.searchAnnouncementsHint else R.string.searchDiscussionsHint)
+    private fun setupToolbar() = with(binding) {
+        discussionListToolbar.title = if(isAnnouncements) getString(R.string.tab_announcements) else getString(R.string.tab_discussions)
+        discussionListToolbar.subtitle = canvasContext.name
+        discussionListToolbar.setupBackButton(this@DiscussionsListFragment)
+        val searchHint = getString(if (isAnnouncements) R.string.searchAnnouncementsHint else R.string.searchDiscussionsHint)
         discussionListToolbar.addSearch(searchHint) { query ->
             if (query.isBlank()) {
-                emptyPandaView?.emptyViewText(R.string.no_items_to_display_short)
+                emptyPandaView.emptyViewText(R.string.no_items_to_display_short)
             } else {
-                emptyPandaView?.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
+                emptyPandaView.emptyViewText(getString(R.string.noItemsMatchingQuery, query))
             }
             presenter.searchQuery = query
         }
-        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, mCanvasContext.backgroundColor, requireContext().getColor(R.color.white))
+        ViewStyler.themeToolbarColored(requireActivity(), discussionListToolbar, canvasContext.backgroundColor, requireContext().getColor(R.color.white))
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         createNewDiscussion.setGone()
         createNewDiscussion.backgroundTintList = ViewStyler.makeColorStateListForButton()
         createNewDiscussion.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewDiscussion.drawable))
         createNewDiscussion.onClickWithRequireNetwork {
-            if(mIsAnnouncements) {
-                val args = CreateOrEditAnnouncementFragment.newInstanceCreate(mCanvasContext).nonNullArgs
-                RouteMatcher.route(requireContext(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
+            if(isAnnouncements) {
+                val args = CreateOrEditAnnouncementFragment.newInstanceCreate(canvasContext).nonNullArgs
+                RouteMatcher.route(requireActivity(), Route(CreateOrEditAnnouncementFragment::class.java, null, args))
             } else {
-                val args = CreateDiscussionFragment.makeBundle(mCanvasContext)
-                RouteMatcher.route(requireContext(), Route(CreateDiscussionFragment::class.java, null, args))
+                val args = CreateDiscussionFragment.makeBundle(canvasContext)
+                RouteMatcher.route(requireActivity(), Route(CreateDiscussionFragment::class.java, null, args))
             }
         }
     }
@@ -232,7 +239,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     override fun discussionDeletedSuccessfully(discussionTopicHeader: DiscussionTopicHeader) {
-        adapter.removeItem(discussionTopicHeader, false)
         DiscussionTopicHeaderDeletedEvent(discussionTopicHeader.id, (DiscussionsDetailsFragment::class.java.toString() + ".onPost()")).post()
     }
 
@@ -245,7 +251,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
             // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
             // overwrite the data from the network if we refresh the presenter from here.
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
         }
     }
 
@@ -265,7 +271,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             // need to set a flag here. Because we use the event bus in the fragment instead of the presenter for unit testing purposes,
             // when we come back to this fragment it will go through the life cycle events again and the cached data will immediately
             // overwrite the data from the network if we refresh the presenter from here.
-            mNeedToForceNetwork = true
+            needToForceNetwork = true
         }
     }
 
@@ -274,18 +280,24 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     fun onDiscussionTopicHeaderDeleted(event: DiscussionTopicHeaderDeletedEvent) {
         event.get {
             val discussionTopicHeader = adapter.getItem(it)
-            if(discussionTopicHeader != null) {
-                adapter.removeItem(discussionTopicHeader, false)
-                mNeedToForceNetwork = true
+            if (discussionTopicHeader != null) {
+                adapter.removeItem(discussionTopicHeader, true)
+                needToForceNetwork = true
+                if (adapter.itemCount == 0) {
+                    presenter.refresh(true)
+                }
             }
         }
     }
 
-    override fun onHandleBackPressed() = discussionListToolbar.closeSearch()
+    override fun onHandleBackPressed() = binding.discussionListToolbar.closeSearch()
+
+    @PageViewUrlParam("type")
+    open fun makePageViewUrl(): String = "discussion_topics"
 
     companion object {
         fun newInstance(canvasContext: CanvasContext) = DiscussionsListFragment().apply {
-            mCanvasContext = canvasContext
+            this.canvasContext = canvasContext
         }
     }
 }

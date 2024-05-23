@@ -67,6 +67,39 @@
     <string name="missingSubmissionLabel">缺失</string>
     <string name="gradedSubmissionLabel">已评分</string>
 
+    <string name="reminderTitle">提醒</string>
+    <string name="reminderDescription">在本设备上添加关于此作业的截止日期提醒通知。</string>
+    <string name="a11y_addReminder">添加提醒</string>
+    <string name="a11y_removeReminder">删除提醒</string>
+    <string name="reminderBefore">提前的%s</string>
+    <plurals name="reminderMinute">
+        <item quantity="other">%d 分钟</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="other">%d 小时</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="other">%d 天</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="other">%d 周</item>
+    </plurals>
+    <string name="reminderCustom">自定义</string>
+    <string name="customReminderTitle">自定义提醒</string>
+    <string name="customReminderQuantityHint">数量</string>
+    <string name="customReminderMinutes">提前的分钟数</string>
+    <string name="customReminderHours">提前的小时数</string>
+    <string name="customReminderDays">提前的天数</string>
+    <string name="customReminderWeeks">提前的周数</string>
+    <string name="reminderNotificationChannelName">提醒通知</string>
+    <string name="reminderNotificationChannelDescription">Canvas 作业提醒通知。</string>
+    <string name="reminderNotificationTitle">截止日期提醒</string>
+    <string name="reminderNotificationDescription">此作业在%s后截止：%s</string>
+    <string name="reminderInPast">请选择未来的提醒日期！</string>
+    <string name="reminderAlreadySet">您已经为该时间设置提醒</string>
+    <string name="deleteReminderTitle">删除提醒</string>
+    <string name="deleteReminderMessage">是否确实要删除此提醒？</string>
+    <string name="reminderPermissionNotGrantedError">您需要为此操作启用精确警报许可</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">使用“http://”的 URL 无可用预览</string>
     <string name="submissionUrlNotAUrlError">请输入有效的 URL</string>
@@ -426,6 +459,7 @@
     <!-- Notifications -->
     <string name="deleted">已删除</string>
 
+    <string name="gradeUpdated">评分已更新</string>
     <string name="loadingCanvas">正在加载Canvas内容&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -947,6 +981,8 @@
     <string name="inviteAccepted">已接受邀请！</string>
     <string name="inviteDeclined">已拒绝邀请。</string>
     <string name="latePenalty">迟交罚分 (-%s)</string>
+    <string name="latePenaltyUpdated">迟交罚分：-%s 分</string>
+    <string name="yourGrade">您的等级：%s 分</string>
     <string name="finalGrade">最终评分</string>
 
     <string name="max_count">99+</string>
@@ -1104,6 +1140,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s，%s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">您可以从此处打开提交详情</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">评分：%s</string>
     <plurals name="minutes">
         <item quantity="other">%s 分钟</item>
     </plurals>
@@ -1276,9 +1315,16 @@
     <string name="a11y_closeProgress">关闭进度对话框</string>
     <string name="fileUploadProgress">%1$s，共%2$s</string>
     <string name="fileUploadProgressSubtitle">上传到文件</string>
+    <string name="fileUploadFailedSubtitle">一份或多个文件上传失败。请检查网络连接，并再次尝试提交。</string>
     <string name="submissionProgressSubtitle">上传提交项到\"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">正在上传提交作业</string>
-    <string name="dashboardNotificationUploadingFilesTitle">上传文件</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">提交成功</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">提交文件失败</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="other">正在上传文件</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">文件上传成功</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">文件上传失败</string>
     <string name="cancelSubmissionDialogTitle">取消提交</string>
     <string name="cancelSubmissionDialogMessage">此操作将取消并删除您的提交项。</string>
     <string name="fileUploadError">文件上传失败</string>
@@ -1315,4 +1361,209 @@
     <string name="acceptableUsePolicyAgree">我同意“可接受的使用政策”。</string>
     <string name="acceptableUsePolicySubmit">提交</string>
     <string name="acceptFail">无法提交同意条款。</string>
+    <string name="attempt">尝试次数 %d</string>
+    <string name="quizQuestions">问题：%d</string>
+    <string name="quizTimeLimit">次数限制：%s</string>
+    <string name="allowedAttempts">允许的尝试次数%s</string>
+    <string name="usedAttempts">已使用的尝试次数：%d</string>
+    <string name="generalUnexpectedError">发生意外错误。</string>
+
+    <string name="deleteSelected">删除</string>
+    <string name="archiveSelected">归档</string>
+    <string name="unarchiveSelected">取消存档</string>
+    <string name="markAsReadSelected">标记为已读</string>
+    <string name="markAsUnreadSelected">标记为未读</string>
+    <string name="starSelected">星形标记</string>
+    <string name="unstarSelected">取消标记</string>
+
+    <string name="inboxOperationFailed">无法执行操作</string>
+    <string name="inboxDeletedConfirmation">%s 已删除</string>
+    <string name="inboxArchivedConfirmation">%s 已归档</string>
+    <string name="inboxUnarchivedConfirmation">%s 取消归档</string>
+    <string name="inboxMarkAsReadConfirmation">%s 标记为已读</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s 标记为未读</string>
+    <string name="inboxStarredConfirmation">%s 星形标记</string>
+    <string name="inboxUnstarredConfirmation">%s 取消标记</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="other">将从所有设备的收件箱中删除这些会话。无法撤消此操作。</item>
+    </plurals>
+    <string name="failedToLoadNextPage">无法加载下一页。请检查您的网络连接。</string>
+    <string name="conversationsRefreshFailed">无法刷新会话。请检查您的网络连接。</string>
+    <string name="inboxScopeInbox">收件箱</string>
+    <string name="inboxContextSelectorTitle">选择课程或小组</string>
+    <string name="inboxClearFilter">清除</string>
+    <string name="a11y_courseFilterContentDescription">课程过滤器：%s</string>
+    <string name="a11y_inboxEntryLongClickDescription">选择</string>
+    <string name="a11y_itemSelectedSwipeForActions">已选择会话。选择模式已激活。导航操作。</string>
+    <string name="a11y_conversationSelected">已选择会话</string>
+    <string name="a11y_conversationDeselected">已取消选择会话</string>
+    <string name="a11y_exitSelectionMode">退出选择模式</string>
+    <string name="a11y_selectionModeDeactivated">选择模式已被禁用。</string>
+    <string name="a11y_avatarContentDescription">%s头像</string>
+    <string name="inboxUndo">后退</string>
+    <string name="aboutAppTitle">应用程序</string>
+    <string name="aboutDomainTitle">域</string>
+    <string name="aboutLoginTitle">登录 ID</string>
+    <string name="aboutEmailTitle">电子邮件</string>
+    <string name="aboutVersionTitle">版本</string>
+    <string name="assignmentRefreshError">重新加载此作业时出错。请检查连接，然后重试。</string>
+    <string name="instructure_logo">Instructure 徽标</string>
+    <string name="preferences">首选项</string>
+    <string name="offlineContent">离线内容</string>
+    <string name="offlineSyncSettingsTitle">同步</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">离线内容</string>
+    <string name="course_menu_manage_offline_content">管理离线内容</string>
+    <string name="offline_content_storage">存储空间</string>
+    <string name="offline_content_storage_info">%s/%s 个已使用</string>
+    <string name="offline_content_other">其他应用程序</string>
+    <string name="offline_content_canvas_student">Canvas 学生</string>
+    <string name="offline_content_remaining">剩余</string>
+    <string name="offline_content_all_courses">所有课程</string>
+    <string name="offline_content_sync">同步</string>
+    <string name="offline_content_selected">%d 已选择</string>
+    <string name="offline_content_select_all">全选</string>
+    <string name="offline_content_deselect_all">取消全选</string>
+    <string name="offline_content_loading_error">加载内容时出错。</string>
+    <string name="offline_content_empty_title">没有课程</string>
+    <string name="offline_content_empty_message">此处将列出您的课程，然后您可以使内容离线可用。</string>
+    <string name="offline_content_empty_course_title">无课程内容</string>
+    <string name="offline_content_empty_course_message">此处将列出课程内容，然后您可以使内容离线可用。</string>
+    <string name="offline_content_discard_dialog_title">放弃更改？</string>
+    <string name="offline_content_discard_dialog_message">如果您选择放弃，更改将不会保存。</string>
+    <string name="offline_content_discard_dialog_positive">放弃</string>
+    <string name="offline_content_sync_dialog_title">同步离线内容？</string>
+    <string name="offline_content_sync_dialog_message">大约会有 %s 项内容同步。如果未连接到无线网络，您的数据流量提供商可能会额外收费。</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">仅当连接到无线网络时，大约会有 %s 项内容同步。</string>
+    <string name="offline_content_sync_dialog_positive">同步</string>
+    <string name="offline_content_sync_loading_title">加载中...</string>
+    <string name="offline_content_sync_loading_message">正在准备中，请稍等。</string>
+    <string name="content_description_expand_content">扩展内容</string>
+    <string name="content_description_collapse_content">折叠内容</string>
+    <string name="syncSettings_autoContentSyncDescription">如果启用“自动同步内容”，将根据以下设置下载所选内容。即使应用程序没有运行，内容也会同步。如果关闭该设置，将不会同步。已下载的内容不会被删除。</string>
+    <string name="syncSettings_syncFrequencyTitle">同步周期</string>
+    <string name="syncSettings_autoContentSyncTitle">自动同步内容</string>
+    <string name="syncSettings_syncFrequencyDescription">指定内容同步的周期。系统将根据此处指定的周期下载所选内容。</string>
+    <string name="syncSettings_wifiOnlyTitle">仅通过无线网络同步内容</string>
+    <string name="syncSettings_wifiOnlyDescription">如果启用该设置，将只在设备连接无线网络的情况下同步内容，否则将推迟到连接无线网络后再同步。</string>
+    <string name="syncSettings_toolbarTitle">同步</string>
+    <string name="daily">每天</string>
+    <string name="weekly">每周</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">同步周期</string>
+    <string name="syncSettings_wifiConfirmationTitle">是否关闭仅通过无线网络同步内容？</string>
+    <string name="synySettings_wifiConfirmationMessage">如果启用该设置，将只在设备连接无线网络的情况下同步内容，否则将推迟到连接无线网络后再同步。</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">关闭</string>
+    <string name="syncSettings_manualDescription">手动</string>
+    <string name="offlineModeSnackbar">离线模式</string>
+    <string name="notAvailableOfflineScreenTitle">离线时不可用</string>
+    <string name="notAvailableOfflineDescription">此内容不能在离线模式下使用。</string>
+    <string name="notAvailableOfflineDescriptionForTabs">此内容不能在离线模式下使用。如需更改设置，请在连接网络后从控制面板打开离线内容屏幕。</string>
+    <string name="offline">离线</string>
+    <string name="syncProgress_syncFailed">同步失败</string>
+    <string name="syncProgress_downloadProgress">正在下载 %1$s/%2$s 项</string>
+    <string name="syncProgress_syncQueued">已加入队列</string>
+    <string name="syncProgress_offlineContentSyncCompleted">离线内容同步已完成</string>
+    <string name="syncProgress_offlineContentSyncFailed">离线同步内容失败</string>
+    <string name="syncProgress_cancelConfirmationTitle">是否取消同步？</string>
+    <string name="syncProgress_cancelConfirmationMessage">将停止离线同步内容。您可以稍后再次操作。</string>
+    <string name="syncProgress_syncErrorSubtitle">一个或多个文件未能同步。请检查网络连接，并再次尝试提交。</string>
+    <string name="syncProgress_downloadStarting">正在开始下载</string>
+    <string name="coursesCannotBeFavoritedOffline">无法离线将课程添加到收藏</string>
+    <string name="allCoursesScreenHeader">所有课程</string>
+    <string name="allCoursesCourseHeader">课程</string>
+    <string name="allCoursesGroupHeader">小组</string>
+    <string name="dashboardAllCoursesButton">所有课程</string>
+    <string name="allCoursesOfflineNote">控制面板选择课程只能在离线模式下进行。您可以导航到离线课程详情。</string>
+    <string name="allCoursesOfflineNoteTitle">注</string>
+    <string name="syncProgress_downloadSuccess">成功！已下载 %1$s/%2$s 项</string>
+    <string name="syncProgress_syncingOfflineContent">正在同步脱机内容</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">解散通知</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="other">%d 门课程正在同步。</item>
+    </plurals>
+    <string name="assignmentNoLongerAvailable">此作业不再可用。</string>
+    <string name="editDashboardOfflineMode">您已离线</string>
+    <string name="editDashboardOfflineModeMessage">您目前没有任何可离线使用的课程。</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">离线同步内容成功</string>
+    <string name="offlineContentSyncFailureNotificationTitle">离线同步内容失败</string>
+    <string name="notificationChannelNameSyncUpdates">离线同步更新</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">Canvas 离线同步更新通知。</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="other">%d 门课程已同步。</item>
+    </plurals>
+    <string name="syncProgressAdditionalCourseContent">更多课程内容</string>
+    <string name="failedToUpdateDashboardOrder">无法更新控制面板卡片顺序</string>
+    <string name="publishAllModulesAndItems">发布所有模块和项目</string>
+    <string name="publishModulesOnly">仅发布模块</string>
+    <string name="unpublishAllModulesAndItems">取消发布所有模块和项目</string>
+    <string name="moduleOptions">模块选项</string>
+    <string name="publishModuleAndItems">发布模块和所有项目</string>
+    <string name="publishModuleOnly">仅发布模块</string>
+    <string name="unpublishModuleAndItems">取消发布模块和所有项目</string>
+    <string name="a11y_contentDescription_moduleOptions">%s 的模块选项</string>
+    <string name="a11y_contentDescription_moduleItemOptions">%s 的模块项目选项</string>
+    <string name="publishModuleItem">发布模块项目</string>
+    <string name="unpublishModuleItem">取消发布模块项目</string>
+    <string name="publishDialogTitle">是否发布？</string>
+    <string name="publishModuleDialogMessage">这将仅使模块对学生可见。</string>
+    <string name="publishModuleAndItemsDialogMessage">这将使模块和所有项目对学生可见。</string>
+    <string name="unpublishDialogTitle">是否取消发布？</string>
+    <string name="unpublishModuleAndItemsDialogMessage">这将使模块和所有项目对学生不可见。</string>
+    <string name="publishModuleItemDialogMessage">这将仅使该项目对学生可见。</string>
+    <string name="unpublishModuleItemDialogMessage">这将仅使该项目对学生不可见。</string>
+    <string name="publishModulesAndItemsDialogMessage">这将使所有模块和项目对学生可见。</string>
+    <string name="publishModulesDialogMessage">这将仅使模块对学生可见。</string>
+    <string name="unpublishModulesAndItemsDialogMessage">这将使所有模块和项目对学生不可见。</string>
+    <string name="only_available_with_link">仅提供链接</string>
+    <string name="schedule_availability">计划表可用性</string>
+    <string name="moduleItemPublished">已发布项目</string>
+    <string name="moduleItemUnpublished">已取消发布项目</string>
+    <string name="onlyModulePublished">已仅发布模块</string>
+    <string name="moduleAndAllItemsPublished">已发布模块和所有项目</string>
+    <string name="moduleAndAllItemsUnpublished">已取消发布模块和所有项目</string>
+    <string name="onlyModulesPublished">已仅发布模块</string>
+    <string name="allModulesAndAllItemsPublished">已发布所有模块和所有项目</string>
+    <string name="allModulesAndAllItemsUnpublished">已取消发布所有模块和所有项目</string>
+    <string name="inherit_from_course">从课程继承</string>
+    <string name="course_members">课程成员</string>
+    <string name="institution_members">机构成员</string>
+    <string name="public_title">公开</string>
+    <string name="edit_permissions">编辑权限</string>
+    <string name="update">更新</string>
+    <string name="availability_title">可用性</string>
+    <string name="visibility_title">可见性</string>
+    <string name="available_from">开始日期</string>
+    <string name="available_until">截止时间</string>
+    <string name="from">开始日期</string>
+    <string name="until">直至</string>
+    <string name="date">日期</string>
+    <string name="time">时间</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">清除开始日期</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">清除截止日期</string>
+    <string name="progressMessage">该过程可能需要几分钟。在此期间，您可以关闭该模式或离开页面。</string>
+    <string name="noteTitle">注</string>
+    <string name="allModules">所有模块</string>
+    <string name="allModulesAndItems">所有模块和项目</string>
+    <string name="selectedModulesAndItems">已选的模块和项目</string>
+    <string name="selectedModules">已选的模块</string>
+    <string name="publishing">正在发布</string>
+    <string name="unpublishing">正在取消发布</string>
+    <string name="moduleBulkUpdateNote">停止处理后，已经处理的模块和项目不会退回到之前的状态。</string>
+    <string name="success">成功！</string>
+    <string name="updateFailed">更新失败</string>
+    <string name="updateCancelled">更新已取消</string>
+    <string name="a11y_hidden">隐藏</string>
+    <string name="a11y_scheduled">已计划</string>
+    <string name="a11y_published">已发布</string>
+    <string name="a11y_unpublished">未发布</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="other">%.0f 分</item>
+    </plurals>
+    <string name="publishModuleItemAction">发布</string>
+    <string name="unpublishModuleItemAction">取消发布</string>
+    <string name="publishDialogPositiveButton">发布</string>
+    <string name="unpublishDialogPositiveButton">取消发布</string>
+    <string name="discussionMenuRefresh">刷新</string>
 </resources>

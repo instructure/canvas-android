@@ -31,7 +31,9 @@ data class SubmissionApiModel (
         val submissionComments: List<SubmissionCommentApiModel>,
         var grade: String?,
         @SerializedName("attachments")
-        var submissionAttachments: List<AttachmentApiModel>? = null
+        var submissionAttachments: List<AttachmentApiModel>? = null,
+        @SerializedName("attempt")
+        var attempt: Int
 )
 
 data class SubmitCourseAssignmentSubmissionWrapper(
@@ -51,7 +53,10 @@ data class CreateSubmissionComment(
         val comment: String,
 
         @SerializedName("file_ids")
-        val fileIds: List<Long>? = null
+        val fileIds: List<Long>? = null,
+
+        @SerializedName("attempt")
+        val attempt: Int
 )
 
 data class CreateSubmissionCommentWrapper(
@@ -70,7 +75,7 @@ data class SubmitCourseAssignmentSubmission(
 
 data class GradeSubmission(
         @SerializedName("posted_grade")
-        val grade: String,
+        val grade: String? = null,
 
         @SerializedName("excuse")
         val excused: Boolean

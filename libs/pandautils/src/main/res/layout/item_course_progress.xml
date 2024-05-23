@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2023 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  ~
+  -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.offline.sync.progress.itemviewmodels.CourseProgressItemViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="com.instructure.pandautils.features.offline.sync.ProgressState" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/backgroundLight"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:onClick="@{() -> itemViewModel.toggleItems()}"
+            android:clickable="@{itemViewModel.data.tabs != null}">
+
+            <TextView
+                android:id="@+id/courseName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="@{itemViewModel.data.courseName}"
+                android:textColor="@color/textDarkest"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/courseSize"
+                app:layout_constraintEnd_toStartOf="@id/toggleButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Astronomy" />
+
+            <TextView
+                android:id="@+id/courseSize"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{itemViewModel.data.size}"
+                android:textColor="@color/textDark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/courseName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseName"
+                tools:text="1.28 GB" />
+
+            <ImageView
+                android:id="@+id/toggleButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:padding="12dp"
+                android:rotation="@{itemViewModel.collapsed ? 0 : 180}"
+                android:src="@drawable/ic_arrow_down"
+                android:visibility="@{itemViewModel.data.tabs != null ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/actionContainer"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/textDarkest" />
+
+            <FrameLayout
+                android:id="@+id/actionContainer"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progressBar"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:indeterminate="true"
+                    android:visibility="@{itemViewModel.data.state.isFinished() ? View.GONE : View.VISIBLE}"
+                    app:indicatorColor="@color/backgroundInfo"
+                    app:indicatorSize="16dp"
+                    app:trackThickness="1.5dp" />
+
+                <ImageView
+                    android:id="@+id/errorIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_close"
+                    android:visibility="@{itemViewModel.data.failed ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@color/textDarkest" />
+
+                <ImageView
+                    android:id="@+id/successIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_checkmark"
+                    android:visibility="@{itemViewModel.data.state == ProgressState.COMPLETED ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:tint="@color/textDarkest" />
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</layout>

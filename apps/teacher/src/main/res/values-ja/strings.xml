@@ -173,7 +173,7 @@
     <string name="archive">アーカイブ</string>
     <string name="delete">削除</string>
     <string name="message">メッセージ</string>
-    <string name="unarchive">アーカイブ解凍</string>
+    <string name="unarchive">アーカイブの解除</string>
     <string name="message_options">メッセージオプション</string>
     <string name="markAsUnread">未読としてマークする</string>
     <string name="message_delete_warning">このメッセージのコピーを本当に削除しますか？この操作は元に戻すことはできません。</string>
@@ -187,7 +187,7 @@
     <string name="no_users_in_group">グループ内にユーザーなし</string>
 
     <string name="published">公開済み</string>
-    <string name="not_published">未公開</string>
+    <string name="not_published">非公開</string>
     <string name="published_content_description">公開されたチェックマーク</string>
     <string name="points_with_value">ポイント</string>
     <string name="point_with_value">ポイント</string>
@@ -556,7 +556,7 @@
 
     <string name="quiz_settings_label_quiz_type">保留中のレビュー</string>
     <string name="quiz_settings_label_assignment_group">課題グループ：</string>
-    <string name="quiz_settings_label_shuffle_answers">回答のシャッフル：</string>
+    <string name="quiz_settings_label_shuffle_answers">解答をシャッフルする：</string>
     <string name="quiz_settings_label_multiple_attempts">複数の試行：</string>
     <string name="quiz_settings_label_time_limit">制限時間：</string>
     <string name="quiz_settings_label_score_to_keep">保存するスコア：</string>
@@ -677,7 +677,7 @@
 
     <string name="createDiscussion">新しいディスカッション</string>
     <string name="options">オプション</string>
-    <string name="subscribe">定期購読</string>
+    <string name="subscribe">常に通知</string>
     <string name="allowThreadedReplies">スレッドでの返信を許可する</string>
     <string name="usersMustPost">ユーザは返信を表示する前に投稿しなければなりません</string>
     <string name="allowUserComments">ユーザーにコメントを許可する</string>
@@ -703,7 +703,6 @@
     <string name="changeUser">ユーザーを変更する</string>
     <string name="general">一般</string>
     <string name="sendFeedback">フィードバックを送る</string>
-    <string name="rateOnTheAppStore">App Storeでレート</string>
     <string name="privacyPolicy">プライバシーポリシー</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">利用規約</string>
@@ -806,7 +805,7 @@
     <string name="createAFile">ファイルを作成する</string>
     <string name="createFileFolderFabContentDesc">ファイルの作成オタンとフォルダの作成ボタンを表示する</string>
     <string name="hideCreateFileFolderFabContentDesc">ファイルの作成とフォルダの作成ボタンを非表示にする</string>
-    <string name="unpublish">未公開</string>
+    <string name="unpublish">非公開</string>
     <string name="restrictedAccess">制限されたアクセス</string>
     <string name="restricted">部外秘</string>
     <string name="hidden">非表示の内部ファイルはリンクで利用できます。</string>
@@ -826,7 +825,7 @@
     <string name="pageDelete">ページを削除</string>
     <string name="pageDeleteMessage">これにより、ページは削除されます。この操作は元に戻すことはできません。</string>
     <string name="errorSavingPage">この発表を保存しようとしてエラーが発生しました。もう一度試してください。</string>
-    <string name="frontPageUnpublishedError">ページを先フロントページにした場合、未公開にすることはできません。</string>
+    <string name="frontPageUnpublishedError">ページを先フロントページにした場合、非公開にすることはできません。</string>
 
     <string name="onlyTeachers">教員のみ</string>
     <string name="teachersAndStudents">教員と受講者</string>
@@ -858,7 +857,6 @@
     <plurals name="latePolicyPenaltyFull">
         <item quantity="other">-%s 点</item>
     </plurals>
-    <string name="todoUnreadCount">未読の「するべきこと」%d</string>
     <string name="profileSettings">プロファイル設定</string>
     <string name="downloadingFile">ファイルをダウンロード中&#8230;</string>
     <string name="fileDownloadedSuccessfully">ファイルのダウンロードに成功しました。</string>
@@ -883,4 +881,5 @@
     <string name="no_grade">評定なし</string>
     <string name="excuse">免除</string>
     <string name="speed_grader_overgraded_by">採点が %s 過剰</string>
+    <string name="error_unpublishable_module_item">受講生の提出がある場合は%sの公開を取り消すことはできません</string>
 </resources>

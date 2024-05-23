@@ -18,7 +18,15 @@
 package com.instructure.dataseeding.util
 
 import com.github.javafaker.Faker
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.CreateAssignment
+import com.instructure.dataseeding.model.CreateDiscussionTopic
+import com.instructure.dataseeding.model.CreateGroup
+import com.instructure.dataseeding.model.CreateModule
+import com.instructure.dataseeding.model.CreateQuiz
+import com.instructure.dataseeding.model.CreateSubmissionComment
+import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.SubmitCourseAssignmentSubmission
 import java.util.*
 
 object Randomizer {
@@ -59,6 +67,10 @@ object Randomizer {
 
     fun randomConversationSubject(): String = faker.chuckNorris().fact()
     fun randomConversationBody(): String = faker.lorem().paragraph()
+
+    fun randomConferenceTitle(): String = faker.chuckNorris().fact()
+    fun randomConferenceDescription(): String = faker.lorem().paragraph()
+
 
     fun randomEnrollmentTitle(): String = "${faker.pokemon()} Term"
 
@@ -110,16 +122,19 @@ object Randomizer {
                     published = published
             )
 
-    fun randomSubmissionComment(fileIds: MutableList<Long>): CreateSubmissionComment =
+    fun randomSubmissionComment(fileIds: MutableList<Long>, attemptId: Int): CreateSubmissionComment =
             CreateSubmissionComment(
                     comment = faker.lorem().paragraph(),
-                    fileIds = if (fileIds.isNotEmpty()) fileIds else null
+                    fileIds = if (fileIds.isNotEmpty()) fileIds else null,
+                    attempt = attemptId
             )
 
     fun randomTextFileName(dir: String) =
         faker.file().fileName(dir, faker.letterify("${faker.lorem().word()}-????????"), "txt", null)
 
     fun randomTextFileContents() = faker.lorem().paragraph(20)
+
+    fun randomLargeTextFileContents() = faker.lorem().paragraph(100000)
 
     /** Creates a random page title with a UUID to avoid Canvas URL collisions */
     fun randomPageTitle(): String = faker.gameOfThrones().house() + " " + randomUUID()
@@ -129,6 +144,8 @@ object Randomizer {
 
     /** Creates a random Course Group Category name */
     fun randomCourseGroupCategoryName(): String = faker.harryPotter().character()
+
+    fun randomModuleName(): String = faker.lordOfTheRings().location()
 
     /** Creates random Group */
     fun randomGroup() = CreateGroup(name = faker.harryPotter().location(), description = faker.harryPotter().quote())

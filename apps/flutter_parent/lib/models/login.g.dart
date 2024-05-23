@@ -15,9 +15,9 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
   final String wireName = 'Login';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Login object,
+  Iterable<Object?> serialize(Serializers serializers, Login object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'uuid',
       serializers.serialize(object.uuid, specifiedType: const FullType(String)),
       'domain',
@@ -32,117 +32,108 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
       'user',
       serializers.serialize(object.user, specifiedType: const FullType(User)),
     ];
-    result.add('clientId');
-    if (object.clientId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.clientId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('clientSecret');
-    if (object.clientSecret == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.clientSecret,
-          specifiedType: const FullType(String)));
-    }
-    result.add('selectedStudentId');
-    if (object.selectedStudentId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.selectedStudentId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('canMasquerade');
-    if (object.canMasquerade == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.canMasquerade,
-          specifiedType: const FullType(bool)));
-    }
-    result.add('masqueradeUser');
-    if (object.masqueradeUser == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.masqueradeUser,
-          specifiedType: const FullType(User)));
-    }
-    result.add('masqueradeDomain');
-    if (object.masqueradeDomain == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.masqueradeDomain,
-          specifiedType: const FullType(String)));
-    }
-    result.add('isMasqueradingFromQRCode');
-    if (object.isMasqueradingFromQRCode == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.isMasqueradingFromQRCode,
-          specifiedType: const FullType(bool)));
-    }
+    Object? value;
+    value = object.clientId;
+
+    result
+      ..add('clientId')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.clientSecret;
+
+    result
+      ..add('clientSecret')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.selectedStudentId;
+
+    result
+      ..add('selectedStudentId')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.canMasquerade;
+
+    result
+      ..add('canMasquerade')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+    value = object.masqueradeUser;
+
+    result
+      ..add('masqueradeUser')
+      ..add(serializers.serialize(value, specifiedType: const FullType(User)));
+    value = object.masqueradeDomain;
+
+    result
+      ..add('masqueradeDomain')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.isMasqueradingFromQRCode;
+
+    result
+      ..add('isMasqueradingFromQRCode')
+      ..add(serializers.serialize(value, specifiedType: const FullType(bool)));
+
     return result;
   }
 
   @override
-  Login deserialize(Serializers serializers, Iterable<Object> serialized,
+  Login deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new LoginBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'uuid':
           result.uuid = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'domain':
           result.domain = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'clientId':
           result.clientId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'clientSecret':
           result.clientSecret = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'accessToken':
           result.accessToken = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'refreshToken':
           result.refreshToken = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'user':
           result.user.replace(serializers.deserialize(value,
-              specifiedType: const FullType(User)) as User);
+              specifiedType: const FullType(User))! as User);
           break;
         case 'selectedStudentId':
           result.selectedStudentId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'canMasquerade':
           result.canMasquerade = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case 'masqueradeUser':
           result.masqueradeUser.replace(serializers.deserialize(value,
-              specifiedType: const FullType(User)) as User);
+              specifiedType: const FullType(User))! as User);
           break;
         case 'masqueradeDomain':
           result.masqueradeDomain = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'isMasqueradingFromQRCode':
           result.isMasqueradingFromQRCode = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
       }
     }
@@ -157,9 +148,9 @@ class _$Login extends Login {
   @override
   final String domain;
   @override
-  final String clientId;
+  final String? clientId;
   @override
-  final String clientSecret;
+  final String? clientSecret;
   @override
   final String accessToken;
   @override
@@ -167,48 +158,39 @@ class _$Login extends Login {
   @override
   final User user;
   @override
-  final String selectedStudentId;
+  final String? selectedStudentId;
   @override
-  final bool canMasquerade;
+  final bool? canMasquerade;
   @override
-  final User masqueradeUser;
+  final User? masqueradeUser;
   @override
-  final String masqueradeDomain;
+  final String? masqueradeDomain;
   @override
-  final bool isMasqueradingFromQRCode;
+  final bool? isMasqueradingFromQRCode;
 
-  factory _$Login([void Function(LoginBuilder) updates]) =>
-      (new LoginBuilder()..update(updates)).build();
+  factory _$Login([void Function(LoginBuilder)? updates]) =>
+      (new LoginBuilder()..update(updates))._build();
 
   _$Login._(
-      {this.uuid,
-      this.domain,
+      {required this.uuid,
+      required this.domain,
       this.clientId,
       this.clientSecret,
-      this.accessToken,
-      this.refreshToken,
-      this.user,
+      required this.accessToken,
+      required this.refreshToken,
+      required this.user,
       this.selectedStudentId,
       this.canMasquerade,
       this.masqueradeUser,
       this.masqueradeDomain,
       this.isMasqueradingFromQRCode})
       : super._() {
-    if (uuid == null) {
-      throw new BuiltValueNullFieldError('Login', 'uuid');
-    }
-    if (domain == null) {
-      throw new BuiltValueNullFieldError('Login', 'domain');
-    }
-    if (accessToken == null) {
-      throw new BuiltValueNullFieldError('Login', 'accessToken');
-    }
-    if (refreshToken == null) {
-      throw new BuiltValueNullFieldError('Login', 'refreshToken');
-    }
-    if (user == null) {
-      throw new BuiltValueNullFieldError('Login', 'user');
-    }
+    BuiltValueNullFieldError.checkNotNull(uuid, r'Login', 'uuid');
+    BuiltValueNullFieldError.checkNotNull(domain, r'Login', 'domain');
+    BuiltValueNullFieldError.checkNotNull(accessToken, r'Login', 'accessToken');
+    BuiltValueNullFieldError.checkNotNull(
+        refreshToken, r'Login', 'refreshToken');
+    BuiltValueNullFieldError.checkNotNull(user, r'Login', 'user');
   }
 
   @override
@@ -238,33 +220,26 @@ class _$Login extends Login {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc($jc(0, uuid.hashCode),
-                                                domain.hashCode),
-                                            clientId.hashCode),
-                                        clientSecret.hashCode),
-                                    accessToken.hashCode),
-                                refreshToken.hashCode),
-                            user.hashCode),
-                        selectedStudentId.hashCode),
-                    canMasquerade.hashCode),
-                masqueradeUser.hashCode),
-            masqueradeDomain.hashCode),
-        isMasqueradingFromQRCode.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, uuid.hashCode);
+    _$hash = $jc(_$hash, domain.hashCode);
+    _$hash = $jc(_$hash, clientId.hashCode);
+    _$hash = $jc(_$hash, clientSecret.hashCode);
+    _$hash = $jc(_$hash, accessToken.hashCode);
+    _$hash = $jc(_$hash, refreshToken.hashCode);
+    _$hash = $jc(_$hash, user.hashCode);
+    _$hash = $jc(_$hash, selectedStudentId.hashCode);
+    _$hash = $jc(_$hash, canMasquerade.hashCode);
+    _$hash = $jc(_$hash, masqueradeUser.hashCode);
+    _$hash = $jc(_$hash, masqueradeDomain.hashCode);
+    _$hash = $jc(_$hash, isMasqueradingFromQRCode.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Login')
+    return (newBuiltValueToStringHelper(r'Login')
           ..add('uuid', uuid)
           ..add('domain', domain)
           ..add('clientId', clientId)
@@ -282,60 +257,60 @@ class _$Login extends Login {
 }
 
 class LoginBuilder implements Builder<Login, LoginBuilder> {
-  _$Login _$v;
+  _$Login? _$v;
 
-  String _uuid;
-  String get uuid => _$this._uuid;
-  set uuid(String uuid) => _$this._uuid = uuid;
+  String? _uuid;
+  String? get uuid => _$this._uuid;
+  set uuid(String? uuid) => _$this._uuid = uuid;
 
-  String _domain;
-  String get domain => _$this._domain;
-  set domain(String domain) => _$this._domain = domain;
+  String? _domain;
+  String? get domain => _$this._domain;
+  set domain(String? domain) => _$this._domain = domain;
 
-  String _clientId;
-  String get clientId => _$this._clientId;
-  set clientId(String clientId) => _$this._clientId = clientId;
+  String? _clientId;
+  String? get clientId => _$this._clientId;
+  set clientId(String? clientId) => _$this._clientId = clientId;
 
-  String _clientSecret;
-  String get clientSecret => _$this._clientSecret;
-  set clientSecret(String clientSecret) => _$this._clientSecret = clientSecret;
+  String? _clientSecret;
+  String? get clientSecret => _$this._clientSecret;
+  set clientSecret(String? clientSecret) => _$this._clientSecret = clientSecret;
 
-  String _accessToken;
-  String get accessToken => _$this._accessToken;
-  set accessToken(String accessToken) => _$this._accessToken = accessToken;
+  String? _accessToken;
+  String? get accessToken => _$this._accessToken;
+  set accessToken(String? accessToken) => _$this._accessToken = accessToken;
 
-  String _refreshToken;
-  String get refreshToken => _$this._refreshToken;
-  set refreshToken(String refreshToken) => _$this._refreshToken = refreshToken;
+  String? _refreshToken;
+  String? get refreshToken => _$this._refreshToken;
+  set refreshToken(String? refreshToken) => _$this._refreshToken = refreshToken;
 
-  UserBuilder _user;
+  UserBuilder? _user;
   UserBuilder get user => _$this._user ??= new UserBuilder();
-  set user(UserBuilder user) => _$this._user = user;
+  set user(UserBuilder? user) => _$this._user = user;
 
-  String _selectedStudentId;
-  String get selectedStudentId => _$this._selectedStudentId;
-  set selectedStudentId(String selectedStudentId) =>
+  String? _selectedStudentId;
+  String? get selectedStudentId => _$this._selectedStudentId;
+  set selectedStudentId(String? selectedStudentId) =>
       _$this._selectedStudentId = selectedStudentId;
 
-  bool _canMasquerade;
-  bool get canMasquerade => _$this._canMasquerade;
-  set canMasquerade(bool canMasquerade) =>
+  bool? _canMasquerade;
+  bool? get canMasquerade => _$this._canMasquerade;
+  set canMasquerade(bool? canMasquerade) =>
       _$this._canMasquerade = canMasquerade;
 
-  UserBuilder _masqueradeUser;
+  UserBuilder? _masqueradeUser;
   UserBuilder get masqueradeUser =>
       _$this._masqueradeUser ??= new UserBuilder();
-  set masqueradeUser(UserBuilder masqueradeUser) =>
+  set masqueradeUser(UserBuilder? masqueradeUser) =>
       _$this._masqueradeUser = masqueradeUser;
 
-  String _masqueradeDomain;
-  String get masqueradeDomain => _$this._masqueradeDomain;
-  set masqueradeDomain(String masqueradeDomain) =>
+  String? _masqueradeDomain;
+  String? get masqueradeDomain => _$this._masqueradeDomain;
+  set masqueradeDomain(String? masqueradeDomain) =>
       _$this._masqueradeDomain = masqueradeDomain;
 
-  bool _isMasqueradingFromQRCode;
-  bool get isMasqueradingFromQRCode => _$this._isMasqueradingFromQRCode;
-  set isMasqueradingFromQRCode(bool isMasqueradingFromQRCode) =>
+  bool? _isMasqueradingFromQRCode;
+  bool? get isMasqueradingFromQRCode => _$this._isMasqueradingFromQRCode;
+  set isMasqueradingFromQRCode(bool? isMasqueradingFromQRCode) =>
       _$this._isMasqueradingFromQRCode = isMasqueradingFromQRCode;
 
   LoginBuilder() {
@@ -343,19 +318,20 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
   }
 
   LoginBuilder get _$this {
-    if (_$v != null) {
-      _uuid = _$v.uuid;
-      _domain = _$v.domain;
-      _clientId = _$v.clientId;
-      _clientSecret = _$v.clientSecret;
-      _accessToken = _$v.accessToken;
-      _refreshToken = _$v.refreshToken;
-      _user = _$v.user?.toBuilder();
-      _selectedStudentId = _$v.selectedStudentId;
-      _canMasquerade = _$v.canMasquerade;
-      _masqueradeUser = _$v.masqueradeUser?.toBuilder();
-      _masqueradeDomain = _$v.masqueradeDomain;
-      _isMasqueradingFromQRCode = _$v.isMasqueradingFromQRCode;
+    final $v = _$v;
+    if ($v != null) {
+      _uuid = $v.uuid;
+      _domain = $v.domain;
+      _clientId = $v.clientId;
+      _clientSecret = $v.clientSecret;
+      _accessToken = $v.accessToken;
+      _refreshToken = $v.refreshToken;
+      _user = $v.user.toBuilder();
+      _selectedStudentId = $v.selectedStudentId;
+      _canMasquerade = $v.canMasquerade;
+      _masqueradeUser = $v.masqueradeUser?.toBuilder();
+      _masqueradeDomain = $v.masqueradeDomain;
+      _isMasqueradingFromQRCode = $v.isMasqueradingFromQRCode;
       _$v = null;
     }
     return this;
@@ -363,29 +339,33 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
 
   @override
   void replace(Login other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$Login;
   }
 
   @override
-  void update(void Function(LoginBuilder) updates) {
+  void update(void Function(LoginBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Login build() {
+  Login build() => _build();
+
+  _$Login _build() {
     _$Login _$result;
     try {
       _$result = _$v ??
           new _$Login._(
-              uuid: uuid,
-              domain: domain,
+              uuid:
+                  BuiltValueNullFieldError.checkNotNull(uuid, r'Login', 'uuid'),
+              domain: BuiltValueNullFieldError.checkNotNull(
+                  domain, r'Login', 'domain'),
               clientId: clientId,
               clientSecret: clientSecret,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
+              accessToken: BuiltValueNullFieldError.checkNotNull(
+                  accessToken, r'Login', 'accessToken'),
+              refreshToken: BuiltValueNullFieldError.checkNotNull(
+                  refreshToken, r'Login', 'refreshToken'),
               user: user.build(),
               selectedStudentId: selectedStudentId,
               canMasquerade: canMasquerade,
@@ -393,7 +373,7 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
               masqueradeDomain: masqueradeDomain,
               isMasqueradingFromQRCode: isMasqueradingFromQRCode);
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'user';
         user.build();
@@ -402,7 +382,7 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
         _masqueradeUser?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Login', _$failedField, e.toString());
+            r'Login', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -411,4 +391,4 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

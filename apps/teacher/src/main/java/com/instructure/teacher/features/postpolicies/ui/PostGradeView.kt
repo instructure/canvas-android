@@ -16,34 +16,38 @@
  */
 package com.instructure.teacher.features.postpolicies.ui
 
-import android.app.Activity
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.positionOnScreen
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.DialogPostGradedEveryoneBinding
+import com.instructure.teacher.databinding.FragmentPostGradeBinding
+import com.instructure.teacher.events.AssignmentGradedEvent
+import com.instructure.teacher.events.post
 import com.instructure.teacher.features.postpolicies.PostGradeEvent
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.adapter_post_policy_section.view.*
-import kotlinx.android.synthetic.main.fragment_post_grade.*
-import com.instructure.pandautils.utils.applyTheme
-import android.view.*
-import androidx.appcompat.app.AlertDialog
-import com.instructure.teacher.events.AssignmentGradedEvent
-import com.instructure.teacher.events.post
-import kotlinx.android.synthetic.main.dialog_post_graded_everyone.*
 
-class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<PostGradeViewState, PostGradeEvent>(R.layout.fragment_post_grade, inflater, parent) {
+class PostGradeView(
+    inflater: LayoutInflater, parent: ViewGroup
+) : MobiusView<PostGradeViewState, PostGradeEvent, FragmentPostGradeBinding>(inflater, FragmentPostGradeBinding::inflate, parent) {
 
     private var adapter: PostGradeSectionRecyclerAdapter? = null
 
     init {
-        postPolicyRecycler.layoutManager = LinearLayoutManager(context)
+        binding.postPolicyRecycler.layoutManager = LinearLayoutManager(context)
     }
 
-    override fun onConnect(output: Consumer<PostGradeEvent>) {
+    override fun onConnect(output: Consumer<PostGradeEvent>) = with(binding) {
 
         postGradeButton.setOnClickListener {
             output.accept(PostGradeEvent.PostGradesClicked)
@@ -65,31 +69,34 @@ class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<Po
 
     private fun showOnlyGradedDialog(view: View, output: Consumer<PostGradeEvent>) {
         val builder = AlertDialog.Builder(context, R.style.RoundedContextDialog)
-        builder.setView(R.layout.dialog_post_graded_everyone)
+        val dialogBinding = DialogPostGradedEveryoneBinding.inflate(LayoutInflater.from(context))
+        builder.setView(dialogBinding.root)
 
         val dialog = builder.create()
         dialog.setOnShowListener {
-            dialog.postDialogEveryone.setOnClickListener {
+            dialogBinding.postDialogEveryone.setOnClickListener {
                 output.accept(PostGradeEvent.GradedOnlySelected(false))
                 dialog.cancel()
             }
-            dialog.postDialogGraded.setOnClickListener {
+            dialogBinding.postDialogGraded.setOnClickListener {
                 output.accept(PostGradeEvent.GradedOnlySelected(true))
                 dialog.cancel()
             }
         }
         val wmlp = dialog.window?.attributes
 
-        wmlp?.gravity = Gravity.TOP or Gravity.END
-        wmlp?.x = (view.x).toInt()
-        wmlp?.y = (view.y + view.height * 2).toInt()
+        val (offsetX, offsetY) = binding.postPolicyOnlyGradedSelection.positionOnScreen
+
+        wmlp?.gravity = Gravity.TOP or Gravity.START
+        wmlp?.x = offsetX
+        wmlp?.y = offsetY
 
         dialog.show()
     }
 
     override fun onDispose() {
         adapter = null
-        postPolicyRecycler.adapter = null
+        binding.postPolicyRecycler.adapter = null
     }
 
     override fun render(state: PostGradeViewState) {
@@ -102,7 +109,7 @@ class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<Po
         }
     }
 
-    private fun renderVisibilities(visibilities: PostGradeVisibilities) {
+    private fun renderVisibilities(visibilities: PostGradeVisibilities) = with(binding) {
         postGradeLoading.setVisible(visibilities.loading)
         postEmptyLayout.setVisible(visibilities.emptyView)
         postPolicyLayout.setVisible(visibilities.policyView)
@@ -112,16 +119,16 @@ class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<Po
     }
 
     private fun renderLoading(state: PostGradeViewState.Loading) {
-        ViewStyler.themeProgressBar(postGradeLoading, state.courseColor)
+        ViewStyler.themeProgressBar(binding.postGradeLoading, state.courseColor)
     }
 
-    private fun renderEmpty(state: PostGradeViewState.EmptyViewState) {
+    private fun renderEmpty(state: PostGradeViewState.EmptyViewState) = with(binding) {
         postEmptyPanda.setImageResource(state.imageResId)
         postEmptyTitle.text = state.emptyTitle
         postEmptyMessage.text = state.emptyMessage
     }
 
-    private fun renderData(state: PostGradeViewState.LoadedViewState) {
+    private fun renderData(state: PostGradeViewState.LoadedViewState) = with(binding) {
         postPolicyStatusCount.text = state.statusText
         postPolicyOnlyGradedSelection.text = state.gradedOnlyText
 
@@ -140,7 +147,7 @@ class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<Po
     fun showGradesPosted(isHidingGrades: Boolean, assignmentId: Long) {
         Toast.makeText(context, if (isHidingGrades) R.string.postPolicyHiddenToast else R.string.postPolicyPostedToast, Toast.LENGTH_SHORT).show()
         AssignmentGradedEvent(assignmentId).post() //post bus event
-        (context as Activity).onBackPressed()
+        activity.onBackPressed()
     }
 
     fun showPostFailed(isHidingGrades: Boolean) {

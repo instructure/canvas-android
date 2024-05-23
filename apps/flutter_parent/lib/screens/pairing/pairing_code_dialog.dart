@@ -23,9 +23,9 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class PairingCodeDialog extends StatefulWidget {
   final _interactor = locator<PairingInteractor>();
 
-  final String _pairingCode;
+  final String? _pairingCode;
 
-  PairingCodeDialog(this._pairingCode, {Key key});
+  PairingCodeDialog(this._pairingCode, {super.key});
 
   @override
   State<StatefulWidget> createState() => PairingCodeDialogState();
@@ -60,14 +60,14 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                 padding: const EdgeInsets.only(bottom: 20.0),
                 child: Text(
                   L10n(context).pairingCodeEntryExplanation,
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 12.0),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12.0),
                 ),
               ),
               TextFormField(
                 key: _formKey,
                 autofocus: true,
                 autocorrect: false,
-                // autovalidate: false,
+                autovalidateMode: AutovalidateMode.disabled,
                 initialValue: widget._pairingCode,
                 onChanged: (value) {
                   _showPairingCodeError(false);
@@ -102,7 +102,7 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                   });
                 },
                 onFieldSubmitted: (code) async {
-                  _formKey.currentState.save();
+                  _formKey.currentState?.save();
                 },
                 decoration: InputDecoration(
                   hintText: L10n(context).pairingCode,
@@ -115,9 +115,9 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
           ),
         ),
         actions: <Widget>[
-          FlatButton(
-            disabledTextColor: ParentColors.parentApp.withAlpha(100),
+          TextButton(
             child: Text(L10n(context).cancel.toUpperCase()),
+            style: TextButton.styleFrom(disabledForegroundColor: Theme.of(context).primaryColor.withAlpha(100)),
             onPressed: _makingApiCall
                 ? null
                 : () {
@@ -125,14 +125,14 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
                     Navigator.of(context).pop(false);
                   },
           ),
-          FlatButton(
-            disabledTextColor: ParentColors.parentApp.withAlpha(100),
+          TextButton(
+            style: TextButton.styleFrom(disabledForegroundColor: Theme.of(context).primaryColor.withAlpha(100)),
             child: Text(L10n(context).ok),
             onPressed: _makingApiCall
                 ? null
                 : () async {
                     _showPairingCodeError(false);
-                    _formKey.currentState.save();
+                    _formKey.currentState?.save();
                   },
           ),
         ],
@@ -141,7 +141,7 @@ class PairingCodeDialogState extends State<PairingCodeDialog> {
   }
 
   void _showPairingCodeError(bool show) {
-    _formKey.currentState.validate();
+    _formKey.currentState?.validate();
     // Update the UI with the error state
     setState(() {
       _pairingCodeError = show;

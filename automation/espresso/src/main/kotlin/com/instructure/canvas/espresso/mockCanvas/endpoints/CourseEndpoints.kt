@@ -21,6 +21,8 @@ import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.BulkUpdateProgress
+import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
 import com.instructure.canvasapi2.utils.globalName
 import com.instructure.canvasapi2.utils.toApiString
@@ -43,7 +45,16 @@ object CourseListEndpoint : Endpoint(
                 val courses = data.enrollments
                         .values
                         .filter { it.userId == user.id }
-                        .map { data.courses[it.courseId]!! }
+                        .map {
+                            var course = data.courses[it.courseId]!!
+                            if (request.url.queryParameterValues("include[]").contains("tabs")) {
+                                course = course.copy(tabs = data.courseTabs[course.id])
+                            }
+                            if (request.url.queryParameterValues("include[]").contains("permissions")) {
+                                course.permissions = data.coursePermissions[course.id]
+                            }
+                            course
+                        }
                         .filter {
                             when (enrollmentState) {
                                 "active" -> it.isCurrentEnrolment()
@@ -112,7 +123,14 @@ object CourseEndpoint : Endpoint(
 
         response = {
             GET {
-                val course = data.courses[pathVars.courseId]!!
+                val courseId = pathVars.courseId
+                var course = data.courses[courseId]!!
+                if (request.url.queryParameterValues("include[]").contains("tabs")) {
+                    course = course.copy(tabs = data.courseTabs[courseId])
+                }
+                if (request.url.queryParameterValues("include[]").contains("permissions")) {
+                    course.permissions = data.coursePermissions[courseId]
+                }
                 val userId = request.user!!.id
                 if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
                     request.successResponse(course)
@@ -161,7 +179,7 @@ object CourseEndpoint : Endpoint(
  */
 object CourseEnabledFeaturesEndpoint : Endpoint( response = {
     GET {
-        request.successResponse(listOf<String>()) // Empty string for now.
+        request.successResponse(listOf("assignments_2_student"))
     }
 })
 
@@ -801,6 +819,35 @@ object CourseModuleListEndpoint : Endpoint(
                     request.unauthorizedResponse()
                 }
             }
+            PUT {
+                val moduleIds = request.url.queryParameterValues("module_ids[]").filterNotNull().map { it.toLong() }
+                val event = request.url.queryParameter("event")
+                val skipContentTags = request.url.queryParameter("skip_content_tags").toBoolean()
+
+                val modules = data.courseModules[pathVars.courseId]?.filter { moduleIds.contains(it.id) }
+
+                val updatedModules = modules?.map {
+                    val updatedItems = if (skipContentTags) {
+                        it.items
+                    } else {
+                        it.items.map { it.copy(published = event == "publish") }
+                    }
+                    it.copy(
+                        published = event == "publish",
+                        items = updatedItems
+                    )
+                }
+
+                data.courseModules[pathVars.courseId]?.map { moduleObject ->
+                    updatedModules?.find { updatedModuleObject ->
+                        updatedModuleObject.id == moduleObject.id
+                    } ?: moduleObject
+                }?.let {
+                    data.courseModules[pathVars.courseId] = it.toMutableList()
+                }
+
+                request.successResponse(BulkUpdateResponse(BulkUpdateProgress(Progress(1L, workflowState = "running"))))
+            }
         }
 )
 
@@ -849,7 +896,42 @@ object CourseModuleItemsListEndpoint : Endpoint(
                 } else {
                     request.unauthorizedResponse()
                 }
+            }
 
+            PUT {
+                val isPublished = request.url.queryParameter("module_item[published]").toBoolean()
+                val moduleList = data.courseModules[pathVars.courseId]
+                val moduleObject = moduleList?.find { it.id == pathVars.moduleId }
+                val itemList = moduleObject?.items
+                val moduleItem = itemList?.find { it.id == pathVars.moduleItemId }
+
+                if (moduleItem != null) {
+                    val updatedItem = moduleItem.copy(published = isPublished)
+
+                    val updatedModule = moduleObject.copy(
+                        items = itemList.map {
+                            if (it.id == updatedItem.id) {
+                                updatedItem
+                            } else {
+                                it
+                            }
+                        }
+                    )
+
+                    data.courseModules[pathVars.courseId]?.map {
+                        if (it.id == updatedModule.id) {
+                            updatedModule
+                        } else {
+                            it
+                        }
+                    }?.let {
+                        data.courseModules[pathVars.courseId] = it.toMutableList()
+                    }
+
+                    request.successResponse(updatedItem)
+                } else {
+                    request.unauthorizedResponse()
+                }
             }
         },
         response = {

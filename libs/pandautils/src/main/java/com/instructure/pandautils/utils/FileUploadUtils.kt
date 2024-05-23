@@ -43,6 +43,12 @@ object FileUploadUtils {
     private const val FILE_SCHEME = "file"
     private const val CONTENT_SCHEME = "content"
 
+    private val APPLE_EXTENSIONS_MIME_TYPES = mapOf<String, String> (
+        "pages" to "application/vnd.apple.pages",
+        "numbers" to "application/vnd.apple.numbers",
+        "key" to "application/vnd.apple.keynote",
+    )
+
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
@@ -184,6 +190,15 @@ object FileUploadUtils {
                 fileName = "$fileName.$extension"
             }
 
+            // add file version if needed
+            var version = 1
+            var fileNameFile = File(getTempFilePath(context, fileName))
+            val ext = fileName.substring(fileName.lastIndexOf("."))
+            while (fileNameFile.exists()) {
+                fileName = "${filename.dropLast(ext.length)}(${version++})$ext"
+                fileNameFile = File(getTempFilePath(context, fileName))
+            }
+
             // create a temp file to copy the uri contents into
             val tempFilePath = getTempFilePath(context, fileName)
             output = FileOutputStream(tempFilePath)
@@ -212,6 +227,18 @@ object FileUploadUtils {
         return if (file != null) {
             FileSubmitObject(fileName, file.length(), mimeType!!, file.absolutePath, errorMessage, FileSubmitObject.STATE.NORMAL)
         } else FileSubmitObject(fileName, 0, mimeType!!, "", errorMessage, FileSubmitObject.STATE.NORMAL)
+    }
+
+    fun getFileSubmitObjectByFileUri(uri: Uri?, filename: String, mimeType: String?): FileSubmitObject? {
+        return uri?.path?.let {
+            val file = File(it)
+            FileSubmitObject(
+                name = filename,
+                size = file.length(),
+                contentType = mimeType.orEmpty(),
+                fullPath = file.absolutePath
+            )
+        }
     }
 
     fun getFileNameWithDefault(resolver: ContentResolver, uri: Uri): String {
@@ -246,10 +273,16 @@ object FileUploadUtils {
         var mimeType: String? = null
         if (FILE_SCHEME.equals(scheme, ignoreCase = true)) {
             if (uri.lastPathSegment != null) {
-                mimeType = getMimeTypeFromFileNameWithExtension(uri.lastPathSegment!!)
+                val extension = uri.lastPathSegment!!
+                mimeType = getMimeTypeFromFileNameWithExtension(extension)
             }
         } else if (CONTENT_SCHEME.equals(scheme, ignoreCase = true)) {
             mimeType = resolver.getType(uri)
+            val fileName = getFileNameFromUri(resolver, uri)
+            val extension = fileName?.substringAfterLast('.')?.substringBefore(' ')
+            if (APPLE_EXTENSIONS_MIME_TYPES.keys.contains(extension)) {
+                mimeType = APPLE_EXTENSIONS_MIME_TYPES[extension]
+            }
         }
         return mimeType ?: "*/*"
     }
@@ -261,7 +294,12 @@ object FileUploadUtils {
         if (index != -1) {
             ext = fileNameWithExtension.substring(index + 1).lowercase(Locale.getDefault()) // Add one so the dot isn't included
         }
-        return mime.getMimeTypeFromExtension(ext).orEmpty()
+        var mimeType = mime.getMimeTypeFromExtension(ext).orEmpty()
+        val extension = fileNameWithExtension.substringAfterLast('.')
+        if (APPLE_EXTENSIONS_MIME_TYPES.keys.contains(extension)) {
+            mimeType = APPLE_EXTENSIONS_MIME_TYPES[extension].orEmpty()
+        }
+        return mimeType
     }
 
     private fun getTempFilename(fileName: String?): String {

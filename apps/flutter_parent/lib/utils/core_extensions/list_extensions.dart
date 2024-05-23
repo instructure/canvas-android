@@ -27,19 +27,19 @@ enum NullSortOrder {
   none,
 }
 
-typedef Comparable Selector<T>(T element);
+typedef Comparable? Selector<T>(T? element);
 
-extension ListUtils<T> on List<T> {
+extension ListUtils<T> on List<T?>? {
   /// Sorts elements in-place according to the natural sort order of the value returned by the specified [selectors].
   /// Subsequent selectors will only be used when elements returned by preceding selectors have the same sort order.
-  List<T> sortBy(
-    List<Selector<T>> selectors, {
+  List<T?>? sortBySelector(
+    List<Selector<T?>> selectors, {
     bool descending = false,
     NullSortOrder nullSortOrder = NullSortOrder.greaterThan,
   }) {
-    if (this == null || this.isEmpty || selectors.isEmpty) return this;
-    sort((a, b) {
-      int result;
+    if (this == null || this?.isEmpty == true || selectors.isEmpty) return this;
+    this!.sort((a, b) {
+      int result = 0;
       for (int i = 0; i < selectors.length; i++) {
         var selector = selectors[i];
 
@@ -64,7 +64,6 @@ extension ListUtils<T> on List<T> {
             case NullSortOrder.none:
               var validValue = value1 ?? value2;
               throw ArgumentError('Cannot compare null to $validValue. Consider using a different NullSortOrder.');
-              break;
           }
         } else {
           // Both values are null; treat them as equal.
@@ -80,20 +79,20 @@ extension ListUtils<T> on List<T> {
   }
 
   /// Returns the number of elements matching the given [predicate].
-  int count(bool Function(T) predicate) {
+  int count(bool Function(T?) predicate) {
     if (this == null) return 0;
     var count = 0;
-    this.forEach((element) {
+    this!.forEach((element) {
       if (predicate(element)) ++count;
     });
     return count;
   }
 
-  List<R> mapIndexed<R>(R transform(int index, T t)) {
+  List<R>? mapIndexed<R>(R transform(int index, T? t)) {
     if (this == null) return null;
     final List<R> list = [];
-    for (int i = 0; i < this.length; i++) {
-      list.add(transform(i, this[i]));
+    for (int i = 0; i < this!.length; i++) {
+      list.add(transform(i, this![i]));
     }
     return list;
   }

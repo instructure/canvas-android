@@ -15,6 +15,7 @@
   ~
   -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -77,7 +78,6 @@
                 style="@style/TextFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingStart="20dp"
@@ -85,9 +85,39 @@
                 android:textColor="@color/textDark"
                 tools:text="allen-thomas187@gmail.com" />
 
+            <LinearLayout
+                android:id="@+id/navigationDrawerOfflineIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:importantForAccessibility="no"
+                    android:paddingTop="3dp"
+                    android:textColor="@color/textDarkest"
+                    android:tint="@color/textDarkest"
+                    app:srcCompat="@drawable/ic_offline" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/offline"
+                    android:textColor="@color/textDarkest"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@color/backgroundMedium" />
 

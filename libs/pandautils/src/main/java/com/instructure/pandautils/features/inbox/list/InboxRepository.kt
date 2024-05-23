@@ -17,27 +17,24 @@
 package com.instructure.pandautils.features.inbox.list
 
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isValidTerm
 import kotlinx.coroutines.delay
 
 private const val POLLING_TIMEOUT = 5000L
 private const val POLLING_INTERVAL = 500L
 
-class InboxRepository(
+abstract class InboxRepository(
     private val inboxApi: InboxApi.InboxInterface,
-    private val coursesApi: CourseAPI.CoursesInterface,
     private val groupsApi: GroupAPI.GroupInterface,
     private val progressApi: ProgressAPI.ProgressInterface
 ) {
@@ -66,8 +63,7 @@ class InboxRepository(
     suspend fun getCanvasContexts(): DataResult<List<CanvasContext>> {
         val params = RestParams(usePerPageQueryParam = true)
 
-        val coursesResult = coursesApi.getFirstPageCourses(params)
-            .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
+        val coursesResult = getCourses(params)
 
         if (coursesResult.isFail) return coursesResult
 
@@ -77,12 +73,13 @@ class InboxRepository(
         val courses = (coursesResult as DataResult.Success).data
         val groups = groupsResult.dataOrNull ?: emptyList()
 
-        val validCourses = courses.filter { it.isValidTerm() && it.hasActiveEnrollment() }
-        val courseMap = validCourses.associateBy { it.id }
+        val courseMap = courses.associateBy { it.id }
         val validGroups = groups.filter { it.courseId == 0L || courseMap[it.courseId] != null }
 
-        return DataResult.Success(validCourses + validGroups)
+        return DataResult.Success(courses + validGroups)
     }
+
+    protected abstract suspend fun getCourses(params: RestParams): DataResult<List<Course>>
 
     suspend fun batchUpdateConversations(conversationIds: List<Long>, conversationEvent: String): DataResult<Progress> {
         return inboxApi.batchUpdateConversations(conversationIds, conversationEvent)
@@ -113,5 +110,9 @@ class InboxRepository(
         } else {
             DataResult.Fail(Failure.Network("Progress timed out"))
         }
+    }
+
+    suspend fun updateConversation(id: Long, workflowState: Conversation.WorkflowState? = null, starred: Boolean? = null): DataResult<Conversation> {
+        return inboxApi.updateConversation(id, workflowState?.apiString, starred, RestParams(isForceReadFromNetwork = true))
     }
 }

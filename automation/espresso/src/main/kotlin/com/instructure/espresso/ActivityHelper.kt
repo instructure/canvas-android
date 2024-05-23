@@ -25,16 +25,11 @@
 package com.instructure.espresso
 
 import android.app.Activity
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.espresso.core.internal.deps.guava.base.Preconditions
 import androidx.test.espresso.core.internal.deps.guava.collect.Iterables
-import androidx.test.espresso.core.internal.deps.guava.collect.Sets
-import androidx.test.runner.lifecycle.ActivityLifecycleMonitor
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
-
-import java.util.Collections
-import java.util.HashSet
 import java.util.concurrent.atomic.AtomicReference
 
 /**
@@ -44,7 +39,7 @@ object ActivityHelper {
     fun currentActivity(): Activity {
         // fix: java.lang.IllegalStateException: Querying activity state off main thread is not allowed.
         val activity = AtomicReference<Activity>(null)
-        InstrumentationRegistry.getInstrumentation().runOnMainSync { activity.set(Iterables.getOnlyElement(getActivitiesInStages(Stage.RESUMED))) }
+        InstrumentationRegistry.getInstrumentation().runOnMainSync { activity.set(Iterables.getOnlyElement(getActivitiesInStages(Stage.RESUMED)) as Activity?) }
 
         val result = activity.get()
         Preconditions.checkNotNull(result)

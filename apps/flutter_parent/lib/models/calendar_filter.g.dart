@@ -8,7 +8,7 @@ part of 'calendar_filter.dart';
 
 class _$CalendarFilter extends CalendarFilter {
   @override
-  final int id;
+  final int? id;
   @override
   final String userDomain;
   @override
@@ -18,24 +18,23 @@ class _$CalendarFilter extends CalendarFilter {
   @override
   final BuiltSet<String> filters;
 
-  factory _$CalendarFilter([void Function(CalendarFilterBuilder) updates]) =>
-      (new CalendarFilterBuilder()..update(updates)).build();
+  factory _$CalendarFilter([void Function(CalendarFilterBuilder)? updates]) =>
+      (new CalendarFilterBuilder()..update(updates))._build();
 
   _$CalendarFilter._(
-      {this.id, this.userDomain, this.userId, this.observeeId, this.filters})
+      {this.id,
+      required this.userDomain,
+      required this.userId,
+      required this.observeeId,
+      required this.filters})
       : super._() {
-    if (userDomain == null) {
-      throw new BuiltValueNullFieldError('CalendarFilter', 'userDomain');
-    }
-    if (userId == null) {
-      throw new BuiltValueNullFieldError('CalendarFilter', 'userId');
-    }
-    if (observeeId == null) {
-      throw new BuiltValueNullFieldError('CalendarFilter', 'observeeId');
-    }
-    if (filters == null) {
-      throw new BuiltValueNullFieldError('CalendarFilter', 'filters');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        userDomain, r'CalendarFilter', 'userDomain');
+    BuiltValueNullFieldError.checkNotNull(userId, r'CalendarFilter', 'userId');
+    BuiltValueNullFieldError.checkNotNull(
+        observeeId, r'CalendarFilter', 'observeeId');
+    BuiltValueNullFieldError.checkNotNull(
+        filters, r'CalendarFilter', 'filters');
   }
 
   @override
@@ -59,15 +58,19 @@ class _$CalendarFilter extends CalendarFilter {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc($jc(0, id.hashCode), userDomain.hashCode), userId.hashCode),
-            observeeId.hashCode),
-        filters.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, id.hashCode);
+    _$hash = $jc(_$hash, userDomain.hashCode);
+    _$hash = $jc(_$hash, userId.hashCode);
+    _$hash = $jc(_$hash, observeeId.hashCode);
+    _$hash = $jc(_$hash, filters.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('CalendarFilter')
+    return (newBuiltValueToStringHelper(r'CalendarFilter')
           ..add('id', id)
           ..add('userDomain', userDomain)
           ..add('userId', userId)
@@ -79,40 +82,41 @@ class _$CalendarFilter extends CalendarFilter {
 
 class CalendarFilterBuilder
     implements Builder<CalendarFilter, CalendarFilterBuilder> {
-  _$CalendarFilter _$v;
+  _$CalendarFilter? _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  int? _id;
+  int? get id => _$this._id;
+  set id(int? id) => _$this._id = id;
 
-  String _userDomain;
-  String get userDomain => _$this._userDomain;
-  set userDomain(String userDomain) => _$this._userDomain = userDomain;
+  String? _userDomain;
+  String? get userDomain => _$this._userDomain;
+  set userDomain(String? userDomain) => _$this._userDomain = userDomain;
 
-  String _userId;
-  String get userId => _$this._userId;
-  set userId(String userId) => _$this._userId = userId;
+  String? _userId;
+  String? get userId => _$this._userId;
+  set userId(String? userId) => _$this._userId = userId;
 
-  String _observeeId;
-  String get observeeId => _$this._observeeId;
-  set observeeId(String observeeId) => _$this._observeeId = observeeId;
+  String? _observeeId;
+  String? get observeeId => _$this._observeeId;
+  set observeeId(String? observeeId) => _$this._observeeId = observeeId;
 
-  SetBuilder<String> _filters;
+  SetBuilder<String>? _filters;
   SetBuilder<String> get filters =>
       _$this._filters ??= new SetBuilder<String>();
-  set filters(SetBuilder<String> filters) => _$this._filters = filters;
+  set filters(SetBuilder<String>? filters) => _$this._filters = filters;
 
   CalendarFilterBuilder() {
     CalendarFilter._initializeBuilder(this);
   }
 
   CalendarFilterBuilder get _$this {
-    if (_$v != null) {
-      _id = _$v.id;
-      _userDomain = _$v.userDomain;
-      _userId = _$v.userId;
-      _observeeId = _$v.observeeId;
-      _filters = _$v.filters?.toBuilder();
+    final $v = _$v;
+    if ($v != null) {
+      _id = $v.id;
+      _userDomain = $v.userDomain;
+      _userId = $v.userId;
+      _observeeId = $v.observeeId;
+      _filters = $v.filters.toBuilder();
       _$v = null;
     }
     return this;
@@ -120,36 +124,39 @@ class CalendarFilterBuilder
 
   @override
   void replace(CalendarFilter other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$CalendarFilter;
   }
 
   @override
-  void update(void Function(CalendarFilterBuilder) updates) {
+  void update(void Function(CalendarFilterBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$CalendarFilter build() {
+  CalendarFilter build() => _build();
+
+  _$CalendarFilter _build() {
     _$CalendarFilter _$result;
     try {
       _$result = _$v ??
           new _$CalendarFilter._(
               id: id,
-              userDomain: userDomain,
-              userId: userId,
-              observeeId: observeeId,
+              userDomain: BuiltValueNullFieldError.checkNotNull(
+                  userDomain, r'CalendarFilter', 'userDomain'),
+              userId: BuiltValueNullFieldError.checkNotNull(
+                  userId, r'CalendarFilter', 'userId'),
+              observeeId: BuiltValueNullFieldError.checkNotNull(
+                  observeeId, r'CalendarFilter', 'observeeId'),
               filters: filters.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'filters';
         filters.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'CalendarFilter', _$failedField, e.toString());
+            r'CalendarFilter', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -158,4 +165,4 @@ class CalendarFilterBuilder
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

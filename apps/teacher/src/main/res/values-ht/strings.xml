@@ -715,7 +715,6 @@
     <string name="changeUser">Chanje Itilizatè</string>
     <string name="general">Jeneral</string>
     <string name="sendFeedback">Voye Kòmantè</string>
-    <string name="rateOnTheAppStore">Evalye nan App Store</string>
     <string name="privacyPolicy">Politik Konfidansyalite</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Kondisyon Itilizasyon</string>
@@ -872,7 +871,6 @@
         <item quantity="one">-%s pwen</item>
         <item quantity="other">-%s pwen yo</item>
     </plurals>
-    <string name="todoUnreadCount">Pou fè %d poko li</string>
     <string name="profileSettings">Paramèt  Pwofi</string>
     <string name="downloadingFile">Telechajman fichye&#8230;</string>
     <string name="fileDownloadedSuccessfully">Fichye telechaje kòrèkteman.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Okenn nòt</string>
     <string name="excuse">Eskiz</string>
     <string name="speed_grader_overgraded_by">Evalyasyon depase pa %s</string>
+    <string name="error_unpublishable_module_item">Yo paka depibliye %s si elèv yo gentan fè soumisyon</string>
 </resources>

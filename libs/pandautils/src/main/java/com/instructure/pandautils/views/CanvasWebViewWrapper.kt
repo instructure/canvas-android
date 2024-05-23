@@ -21,6 +21,7 @@ import android.content.res.Configuration
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.annotation.ColorRes
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ViewCanvasWebViewWrapperBinding
 import com.instructure.pandautils.utils.ColorUtils
@@ -62,7 +63,7 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
             }
         }
 
-        val layoutParams = LinearLayout.LayoutParams(context, attrs)
+        val layoutParams = attrs?.let { LayoutParams(context, attrs) } ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         val webViewLayoutParams = binding.contentWebView.layoutParams
         webViewLayoutParams.height = layoutParams.height
         binding.contentWebView.layoutParams = webViewLayoutParams
@@ -125,26 +126,25 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
     }
 
     private fun formatHtml(data: String): String {
-        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES && !themeSwitched
+        val textDarkest = colorResToHexString(if (themeSwitched) R.color.licorice else R.color.textDarkest)
+        val textDark = colorResToHexString(if (themeSwitched) R.color.ash else R.color.textDark)
+        val backgroundInfo = colorResToHexString(if (themeSwitched) R.color.electric else R.color.backgroundInfo)
+        val backgroundMedium = colorResToHexString(if (themeSwitched) R.color.tiara else R.color.backgroundMedium)
+        val backgroundLight = colorResToHexString(if (themeSwitched) R.color.porcelain else R.color.backgroundLight)
+        val backgroundLightest = colorResToHexString(if (themeSwitched) R.color.white else R.color.backgroundLightest)
 
-        val style = if (darkTheme) {
-            """
-                @media (prefers-color-scheme: dark) {
-                        html {
-                            filter: invert(100%) hue-rotate(180deg);
-                        }
-                        img:not(.ignore-color-scheme), video:not(.ignore-color-scheme), iframe:not(.ignore-color-scheme), .ignore-color-scheme {
-                            filter: invert(100%) hue-rotate(180deg) !important;
-                        }
-                    }
-            """.trimIndent()
-        } else {
-            ""
-        }
+        val result = data
+            .replace("{\$TEXT_DARKEST$}", textDarkest)
+            .replace("{\$TEXT_DARK$}", textDark)
+            .replace("{\$BACKGROUND_INFO$}", backgroundInfo)
+            .replace("{\$BACKGROUND_MEDIUM$}", backgroundMedium)
+            .replace("{\$BACKGROUND_LIGHT$}", backgroundLight)
+            .replace("{\$BACKGROUND_LIGHTEST$}", backgroundLightest)
 
-        return data
-            .replace("{\$DARK_THEME}", style)
+        return result
     }
 
+    private fun colorResToHexString(@ColorRes colorRes: Int): String {
+        return "#" + Integer.toHexString(context.getColor(colorRes)).substring(2)
+    }
 }

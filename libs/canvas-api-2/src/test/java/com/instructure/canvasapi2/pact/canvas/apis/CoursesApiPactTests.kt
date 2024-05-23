@@ -102,7 +102,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //region Test grabbing all courses
     //
 
-    val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available"
+    val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&include[]=settings&state[]=completed&state[]=available"
     val allCoursesPath = "/api/v1/courses"
     val allCoursesFieldInfo = listOf(
             // Evidently, permissions info is *not* returned from this call, even though include[]=permissions is specified
@@ -210,7 +210,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //region Test grabbing a single course with a grade
     //
 
-    val courseWithGradeQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image"
+    val courseWithGradeQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image&include[]=settings&include[]=grading_scheme"
     val courseWithGradePath = "/api/v1/courses/3"
     val courseWithGradeFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 3, isFavorite = true, query = courseWithGradeQuery)
     val courseWithGradeResponseBody = LambdaDsl.newJsonBody { obj ->

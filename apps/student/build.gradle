@@ -19,7 +19,6 @@ import com.instructure.android.buildtools.transform.*
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.squareup.sqldelight'
@@ -43,10 +42,6 @@ configurations {
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
 }
 
-androidExtensions {
-    experimental = true
-}
-
 def RELEASE_PROPERTIES = new Properties()
 RELEASE_PROPERTIES.load(new FileInputStream(file('./buildconfig/release-build.properties')))
 def DEBUG_PROPERTIES = new Properties()
@@ -60,8 +55,9 @@ android {
         applicationId "com.emeritus.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 108
-        versionName = '0.0.6'
+        versionCode = 261
+        versionName = '7.3.0'
+
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner 'com.emeritus.student.espresso.StudentHiltTestRunner'
@@ -96,13 +92,9 @@ android {
 
     lintOptions {
         abortOnError false
-        // Work around for AGP issue related to release mode, see:
-        // https://github.com/flutter/flutter/issues/58247#issuecomment-636253593
-        checkReleaseBuilds false
     }
 
     signingConfigs {
-
         release {
             storeFile file(RELEASE_PROPERTIES['KEYSTORE_FILE'])
             storePassword RELEASE_PROPERTIES['KEYSTORE_PASSWORD']
@@ -133,16 +125,19 @@ android {
                 mappingFileUploadEnabled false
             }
 
-            ndk {
-                // Filter for architectures supported by Flutter. Include x86 in debug builds so we don't crash on FTL.
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64', 'x86'
-            }
-
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
 
             ext {
                 heapEnabled = true
             }
+        }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
         }
 
         release {
@@ -155,12 +150,9 @@ android {
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
+                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
+                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
             }
-
-//            ndk {
-//                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
-//                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
-//            }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
 
@@ -232,6 +224,7 @@ android {
         resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
 
         resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
+        resolutionStrategy.force Libs.KOTLIN_STD_LIB
     }
 
     /*
@@ -257,9 +250,7 @@ android {
                     new MasqueradeUITransformer('com.emeritus.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
                     new ScreenViewTransformer("student"),
-                    new LocaleTransformer(project),
-                    new FlutterA11yOffsetTransformer(),
-                    new FlutterTextureDisconnectFix()
+                    new LocaleTransformer(project)
             )
     )
 
@@ -280,12 +271,11 @@ android {
     hilt {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
     }
 }
 
 dependencies {
-    implementation project(path: ':panda_annotations')
-    kaptAndroidTestQa project(path: ':panda_processor')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -295,12 +285,6 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
     implementation project(path: ':DocumentScanner')
-
-    /* Flutter embed */
-    implementation(project(path: ':flutter-student-embed')) {
-        exclude group: 'com.google.firebase'
-        exclude group: 'com.google.android.gms'
-    }
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')
@@ -313,7 +297,6 @@ dependencies {
     testImplementation Libs.MOCKK
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
-    testImplementation Libs.FIREBASE_CORE
     testImplementation Libs.THREETEN_BP
     testImplementation Libs.ANDROIDX_CORE_TESTING
 
@@ -323,7 +306,7 @@ dependencies {
     }
     implementation Libs.FIREBASE_MESSAGING
     implementation Libs.FIREBASE_CRASHLYTICS_NDK
-    implementation(Libs.FIREBASE_CRASHLYTICS) {
+    implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
 
@@ -355,13 +338,14 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
-    implementation Libs.PLAY_CORE
+    implementation Libs.PLAY_IN_APP_UPDATES
 
     /* Database */
     implementation Libs.SQLDELIGHT
 
     /* Qr Code */
-    implementation Libs.JOURNEY_ZXING
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 
     /* AAC */
     implementation Libs.VIEW_MODEL
@@ -390,7 +374,10 @@ dependencies {
     implementation Libs.ROOM
     kapt Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
-    testImplementation Libs.ROOM_TEST
+
+    testImplementation Libs.HAMCREST
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }
 
 // Comment out this line if the reporting logic starts going wonky.
@@ -430,10 +417,9 @@ if (coverageEnabled) {
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
             html.enabled true
-            csv.enabled false
-            xml.enabled false
+            csv.enabled  false
+            xml.enabled  false
         }
     }
 
 }
-

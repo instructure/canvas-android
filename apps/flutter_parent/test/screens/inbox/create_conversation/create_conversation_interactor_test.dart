@@ -26,13 +26,14 @@ import 'package:mockito/mockito.dart';
 import '../../../utils/canvas_model_utils.dart';
 import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   String studentId = 'student_123';
   var user = CanvasModelTestUtils.mockUser(id: 'user_123');
 
-  final inboxApi = _MockInboxApi();
-  final courseApi = _MockCourseApi();
+  final inboxApi = MockInboxApi();
+  final courseApi = MockCourseApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<InboxApi>(() => inboxApi);
@@ -185,7 +186,3 @@ void main() {
     expect(actual.recipients, expectedRecipients);
   });
 }
-
-class _MockInboxApi extends Mock implements InboxApi {}
-
-class _MockCourseApi extends Mock implements CourseApi {}

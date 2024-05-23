@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -17,8 +16,8 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -41,7 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar">
 
-        <include layout="@layout/panda_recycler_refresh_layout" />
+        <include
+            layout="@layout/panda_recycler_refresh_layout" />
 
     </FrameLayout>
 
@@ -51,26 +51,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/backgroundMedium"
-        android:orientation="horizontal"
-        android:visibility="gone"
+        android:elevation="6dp"
         android:minHeight="42dp"
-        android:elevation="6dp">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/confirmButton"
+            style="?android:borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/confirm"
-            style="?android:borderlessButtonStyle"/>
+            android:text="@string/confirm" />
 
         <Button
             android:id="@+id/cancelButton"
+            style="?android:borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/cancel"
-            style="?android:borderlessButtonStyle"/>
+            android:text="@string/cancel" />
 
     </LinearLayout>
 

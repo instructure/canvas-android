@@ -21,15 +21,21 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import androidx.test.uiautomator.UiDevice
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
@@ -38,22 +44,29 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.UiControllerSingleton
 import com.instructure.espresso.page.InstructureTestingContract
+import dagger.hilt.android.testing.HiltAndroidRule
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
+import org.hamcrest.Matchers.`is`
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
-import java.io.*
+import java.io.BufferedOutputStream
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.inject.Inject
 
 // InstructureTest wrapper for Canvas code
 abstract class CanvasTest : InstructureTestingContract {
@@ -68,11 +81,38 @@ abstract class CanvasTest : InstructureTestingContract {
 
     var extraAccessibilitySupressions: Matcher<in AccessibilityViewCheckResult>? = Matchers.anyOf()
 
-    @Rule(order = 1)
+    val connectivityManager = InstrumentationRegistry.getInstrumentation().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    lateinit var originalActivity : Activity
+
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
+    @Rule(order = 2)
     override fun chain(): TestRule {
         return RuleChain
                 .outerRule(ScreenshotTestRule())
                 .around(activityRule)
+    }
+
+    // Sometimes activityRule.activity can get nulled out over time, probably as we
+    // navigate away from the original login screen.  Capture the activity here so
+    // that we can reference it safely later.
+    @Before
+    fun recordOriginalActivity() {
+        originalActivity = activityRule.activity
+        try {
+            hiltRule.inject()
+        } catch (e: IllegalStateException) {
+            // Catch this exception to avoid multiple injection
+            Log.w("Test Inject", e.message ?: "")
+        }
+
+        val application = originalActivity.application as? TestAppManager
+        application?.workerFactory = workerFactory
     }
 
     @Before
@@ -101,70 +141,20 @@ abstract class CanvasTest : InstructureTestingContract {
             // Only continue if we're on Bitrise
             // (More accurately, if we are on FTL launched from Bitrise.)
             if(splunkToken != null && !splunkToken.isEmpty()) {
-                val bitriseWorkflow = InstrumentationRegistry.getArguments().getString("BITRISE_TRIGGERED_WORKFLOW_ID")
-                val bitriseApp = InstrumentationRegistry.getArguments().getString("BITRISE_APP_TITLE")
-                val bitriseBranch = InstrumentationRegistry.getArguments().getString("BITRISE_GIT_BRANCH")
-                val bitriseBuildNumber = InstrumentationRegistry.getArguments().getString("BITRISE_BUILD_NUMBER")
+                 val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 
-                val eventObject = JSONObject()
-                eventObject.put("workflow", bitriseWorkflow)
-                eventObject.put("branch", bitriseBranch)
-                eventObject.put("bitriseApp", bitriseApp)
-                eventObject.put("status", disposition)
-                eventObject.put("testName", testMethod)
-                eventObject.put("testClass", testClass)
-                eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
-                eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
-                // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
-                // they contain a view hierarchy, and there is typically not much useful info after the
-                // first few lines.
-                eventObject.put("message", error.toString().take(4096))
-
-                val payloadObject = JSONObject()
-                payloadObject.put("sourcetype", "mobile-android-qa-testresult")
-                payloadObject.put("event", eventObject)
-
-                val payload = payloadObject.toString()
-                Log.d("CanvasTest", "payload = $payload")
-
-                // Can't run a curl command from FTL, so let's do this the hard way
-                var os : OutputStream? = null
-                var inputStream : InputStream? = null
-                var conn : HttpURLConnection? = null
-
-                try {
-
-                    // Set up our url/connection
-                    val url = URL("https://http-inputs-inst.splunkcloud.com:443/services/collector")
-                    conn = url.openConnection() as HttpURLConnection
-                    conn.requestMethod = "POST"
-                    conn.setRequestProperty("Authorization", "Splunk $splunkToken")
-                    conn.setRequestProperty("Content-Type", "application/json; utf-8")
-                    conn.setRequestProperty("Accept", "application/json")
-                    conn.setDoInput(true)
-                    conn.setDoOutput(true)
-
-                    // Connect
-                    conn.connect()
-
-                    // Send out our post body
-                    os = BufferedOutputStream(conn.outputStream)
-                    os.write(payload.toByteArray())
-                    os.flush()
-
-                    // Report the result summary
-                    Log.d("CanvasTest", "Response code: ${conn.responseCode}, message: ${conn.responseMessage}")
-
-                    // Report the splunk result JSON
-                    inputStream = conn.inputStream
-                    val content = inputStream.bufferedReader().use(BufferedReader::readText)
-                    Log.d("CanvasTest", "Response: $content")
-                }
-                finally {
-                    // Clean up our mess
-                    if(os != null) os.close()
-                    if(inputStream != null) inputStream.close()
-                    if(conn != null) conn.disconnect()
+                if (hasActiveNetwork) {
+                    reportToSplunk(disposition, testMethod, testClass, error, splunkToken)
+                } else {
+                    turnOnConnectionViaADB()
+                    connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+                        override fun onAvailable(network: Network) {
+                            super.onAvailable(network)
+                            connectivityManager.unregisterNetworkCallback(this)
+                            reportToSplunk(disposition, testMethod, testClass, error, splunkToken)
+                        }
+                    })
                 }
 
             }
@@ -173,6 +163,84 @@ abstract class CanvasTest : InstructureTestingContract {
             }
         })
 
+    }
+
+    private fun reportToSplunk(
+        disposition: String,
+        testMethod: String,
+        testClass: String,
+        error: Throwable,
+        splunkToken: String?
+    ) {
+        val bitriseWorkflow =
+            InstrumentationRegistry.getArguments().getString("BITRISE_TRIGGERED_WORKFLOW_ID")
+        val bitriseApp = InstrumentationRegistry.getArguments().getString("BITRISE_APP_TITLE")
+        val bitriseBranch = InstrumentationRegistry.getArguments().getString("BITRISE_GIT_BRANCH")
+        val bitriseBuildNumber =
+            InstrumentationRegistry.getArguments().getString("BITRISE_BUILD_NUMBER")
+
+        val eventObject = JSONObject()
+        eventObject.put("workflow", bitriseWorkflow)
+        eventObject.put("branch", bitriseBranch)
+        eventObject.put("bitriseApp", bitriseApp)
+        eventObject.put("status", disposition)
+        eventObject.put("testName", testMethod)
+        eventObject.put("testClass", testClass)
+        eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
+        eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
+        // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
+        // they contain a view hierarchy, and there is typically not much useful info after the
+        // first few lines.
+        eventObject.put("message", error.toString().take(4096))
+
+        val payloadObject = JSONObject()
+        payloadObject.put("sourcetype", "mobile-android-qa-testresult")
+        payloadObject.put("event", eventObject)
+
+        val payload = payloadObject.toString()
+        Log.d("CanvasTest", "payload = $payload")
+
+        // Can't run a curl command from FTL, so let's do this the hard way
+        var os: OutputStream? = null
+        var inputStream: InputStream? = null
+        var conn: HttpURLConnection? = null
+
+        try {
+
+            // Set up our url/connection
+            val url = URL("https://http-inputs-inst.splunkcloud.com:443/services/collector")
+            conn = url.openConnection() as HttpURLConnection
+            conn.requestMethod = "POST"
+            conn.setRequestProperty("Authorization", "Splunk $splunkToken")
+            conn.setRequestProperty("Content-Type", "application/json; utf-8")
+            conn.setRequestProperty("Accept", "application/json")
+            conn.setDoInput(true)
+            conn.setDoOutput(true)
+
+            // Connect
+            conn.connect()
+
+            // Send out our post body
+            os = BufferedOutputStream(conn.outputStream)
+            os.write(payload.toByteArray())
+            os.flush()
+
+            // Report the result summary
+            Log.d(
+                "CanvasTest",
+                "Response code: ${conn.responseCode}, message: ${conn.responseMessage}"
+            )
+
+            // Report the splunk result JSON
+            inputStream = conn.inputStream
+            val content = inputStream.bufferedReader().use(BufferedReader::readText)
+            Log.d("CanvasTest", "Response: $content")
+        } finally {
+            // Clean up our mess
+            if (os != null) os.close()
+            if (inputStream != null) inputStream.close()
+            if (conn != null) conn.disconnect()
+        }
     }
 
     // Creates an /sdcard/coverage folder if it does not already exist.
@@ -290,9 +358,14 @@ abstract class CanvasTest : InstructureTestingContract {
         }
     }
 
-    // Does the test device have particularly low screen resolution?
-    fun isLowResDevice() : Boolean {
-        return activityRule.activity.resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
+    fun isTabletDevice(): Boolean {
+
+        val metrics = activityRule.activity.resources.displayMetrics
+        val screenWidth = metrics.widthPixels / metrics.density
+        val screenHeight = metrics.heightPixels / metrics.density
+
+        // Assuming a tablet has a minimum width of 720dp and height of 720dp
+        return screenWidth >= 720 && screenHeight >= 720
     }
 
     // Copying this matcher from the shared espresso lib to here.  In the espresso lib, we had
@@ -344,7 +417,8 @@ abstract class CanvasTest : InstructureTestingContract {
             override fun matches(item: Any?): Boolean {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        var result = item.view?.contentDescription?.contains("More options", ignoreCase = true) ?: false
+                        val contentDescription = item.view?.contentDescription
+                        var result = (contentDescription?.contains("Overflow", ignoreCase = true) ?: false) || (contentDescription?.contains("More options", ignoreCase = true) ?: false)
                         //Log.v("overflowWidth", "isOverflowMenu: contentDescription=${item.view?.contentDescription ?: "unknown"}, result=$result ")
                         return result
                     }
@@ -415,12 +489,6 @@ abstract class CanvasTest : InstructureTestingContract {
         return resourceName
     }
 
-    // Allow tests to know whether they are in landscape mode
-    fun inLandscape() : Boolean {
-        var activity = activityRule.activity
-        return activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    }
-
     // Copy an asset file to the external cache, typically for use in uploading the asset
     // file via mocked intents.
     fun copyAssetFileToExternalCache(context: Context, fileName: String) {
@@ -457,6 +525,42 @@ abstract class CanvasTest : InstructureTestingContract {
         )
 
         private var configChecked = false
+
+        private const val ENABLE_WIFI_COMMAND: String = "svc wifi enable"
+        private const val DISABLE_WIFI_COMMAND: String = "svc wifi disable"
+
+        private const val ENABLE_MOBILE_DATA_COMMAND: String = "svc data enable"
+        private const val DISABLE_MOBILE_DATA_COMMAND: String = "svc data disable"
+
+        private fun getDeviceOrientation(context: Context): Int {
+            val configuration = context.resources.configuration
+            return configuration.orientation
+        }
+
+        fun isLandscapeDevice(): Boolean {
+            return getDeviceOrientation(ApplicationProvider.getApplicationContext()) == Configuration.ORIENTATION_LANDSCAPE
+        }
+
+        fun isPortraitDevice(): Boolean {
+            return getDeviceOrientation(ApplicationProvider.getApplicationContext()) == Configuration.ORIENTATION_PORTRAIT
+        }
+
+        // Does the test device have particularly low screen resolution?
+        fun isLowResDevice() : Boolean {
+            return ApplicationProvider.getApplicationContext<Context?>().resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
+        }
+
+        fun turnOffConnectionViaADB() {
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            device.executeShellCommand(DISABLE_WIFI_COMMAND)
+            device.executeShellCommand(DISABLE_MOBILE_DATA_COMMAND)
+        }
+
+        fun turnOnConnectionViaADB() {
+            val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            device.executeShellCommand(ENABLE_WIFI_COMMAND)
+            device.executeShellCommand(ENABLE_MOBILE_DATA_COMMAND)
+        }
 
     }
 

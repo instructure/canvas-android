@@ -39,15 +39,16 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.interactions.BottomSheetInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.ActivityBottomSheetBinding
 import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.utils.getColorCompat
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_bottom_sheet.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar
 import retrofit2.Response
@@ -55,16 +56,17 @@ import retrofit2.Response
 @AndroidEntryPoint
 class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
 
+    private val binding by viewBinding(ActivityBottomSheetBinding::inflate)
+
     private var mRoute: Route? = null
     private var mWindowHeight = 0
     private var mKeyboardEventListener: Unregistrar? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bottom_sheet)
+        setContentView(root)
 
-
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             bottomSheetRootView.post {
                 bottom.visibility = View.VISIBLE
                 bottomSheetRootView.setBackgroundColor(getColorCompat(R.color.semiTransparentDark))
@@ -105,9 +107,9 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
             mWindowHeight = bottomSheetRootView.height
         }
 
-        mKeyboardEventListener = KeyboardVisibilityEvent.registerEventListener(this, { isOpen ->
+        mKeyboardEventListener = KeyboardVisibilityEvent.registerEventListener(this@BottomSheetActivity) { isOpen ->
             if (isOpen) { keyboardVisible() } else keyboardHidden()
-        })
+        }
     }
 
     override fun onDestroy() {
@@ -127,7 +129,7 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
         if(fragment == null) throw IllegalStateException("BottomSheetActivity.class addFragment was null")
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
-        val currentFragment = fm.findFragmentById(bottom.id)
+        val currentFragment = fm.findFragmentById(binding.bottom.id)
         if(currentFragment != null) {
             //Add to back stack if a fragment exists
             ft.addToBackStack(fragment.javaClass.simpleName)
@@ -137,7 +139,7 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     }
 
     private fun animateBottomSheetIntoView() {
-        bottom.post {
+        binding.bottom.post {
             fadeInBackground()
             animateBottomIn()
         }
@@ -151,7 +153,7 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
                 return
             }
         }
-        bottom.post {
+        binding.bottom.post {
             animateBottomOut()
             fadeOutBackground()
         }
@@ -160,7 +162,7 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     private fun fadeOutBackground() {
         ValueAnimator.ofObject(ArgbEvaluator(), getColorCompat(R.color.semiTransparentDark), Color.TRANSPARENT).apply {
             duration = 380
-            addUpdateListener { animator -> bottomSheetRootView.setBackgroundColor(animator.animatedValue as Int) }
+            addUpdateListener { animator -> binding.bottomSheetRootView.setBackgroundColor(animator.animatedValue as Int) }
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {}
                 override fun onAnimationEnd(animation: Animator) {
@@ -173,13 +175,13 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     }
 
     private fun animateBottomOut() {
-        ObjectAnimator.ofFloat<View>(bottom, View.TRANSLATION_Y, 0F, bottom.height.toFloat()).apply {
+        ObjectAnimator.ofFloat(binding.bottom, View.TRANSLATION_Y, 0F, binding.bottom.height.toFloat()).apply {
             duration = 280
             interpolator = AccelerateInterpolator()
             addListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {}
                 override fun onAnimationEnd(animation: Animator) {
-                    bottom.setGone()
+                    binding.bottom.setGone()
                 }
                 override fun onAnimationCancel(animation: Animator) {}
                 override fun onAnimationRepeat(animation: Animator) {}
@@ -190,11 +192,11 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     private fun fadeInBackground() {
         ValueAnimator.ofObject(ArgbEvaluator(), Color.TRANSPARENT, getColorCompat(R.color.semiTransparentDark)).apply {
             duration = 280
-            addUpdateListener { animator -> bottomSheetRootView.setBackgroundColor(animator.animatedValue as Int) }
+            addUpdateListener { animator -> binding.bottomSheetRootView.setBackgroundColor(animator.animatedValue as Int) }
         }.start()
     }
 
-    private fun animateBottomIn() {
+    private fun animateBottomIn() = with(binding) {
         ObjectAnimator.ofFloat<View>(bottom, View.TRANSLATION_Y, bottom.height.toFloat(), 0F).apply {
             duration = 380
             interpolator = DecelerateInterpolator()
@@ -210,12 +212,12 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(ANIMATION_COMPLETE, bottom.visibility == View.VISIBLE)
+        outState.putBoolean(ANIMATION_COMPLETE, binding.bottom.visibility == View.VISIBLE)
         super.onSaveInstanceState(outState)
     }
 
     companion object {
-        private val ANIMATION_COMPLETE = "ANIMATION_COMPLETE"
+        private const val ANIMATION_COMPLETE = "ANIMATION_COMPLETE"
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, BottomSheetActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
@@ -243,20 +245,20 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
     }
 
     private fun keyboardHidden() {
-        val params = bottom.layoutParams as PercentRelativeLayout.LayoutParams
+        val params = binding.bottom.layoutParams as PercentRelativeLayout.LayoutParams
         params.removeRule(RelativeLayout.ALIGN_PARENT_TOP)
         val heightPercent = resources.getFraction(R.dimen.tabletHeightPercent, 1, 1)
         val widthPercent = resources.getFraction(R.dimen.tabletWidthPercent, 1, 1)
         params.percentLayoutInfo.heightPercent = heightPercent
         params.percentLayoutInfo.widthPercent = widthPercent
         params.setMargins(0, 0, 0, resources.getDimensionPixelOffset(R.dimen.bottomSheetCardBottomPadding))
-        bottom.layoutParams = params
+        binding.bottom.layoutParams = params
     }
 
     private fun keyboardVisible() {
-        val params = bottom.layoutParams as PercentRelativeLayout.LayoutParams
+        val params = binding.bottom.layoutParams as PercentRelativeLayout.LayoutParams
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP)
         params.setMargins(0, 0, 0, 0)
-        bottom.layoutParams = params
+        binding.bottom.layoutParams = params
     }
 }

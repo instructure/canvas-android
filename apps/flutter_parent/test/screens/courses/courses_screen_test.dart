@@ -41,12 +41,12 @@ import 'package:provider/provider.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
-import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
 
-  _setupLocator(CoursesInteractor mockInteractor, {SelectedStudentNotifier notifier}) {
+  _setupLocator(CoursesInteractor mockInteractor, {SelectedStudentNotifier? notifier}) {
     setupTestLocator((locator) {
       locator.registerFactory<CoursesInteractor>(() => mockInteractor);
       locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
@@ -60,7 +60,7 @@ void main() {
     });
   }
 
-  Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null}) => TestApp(
+  Widget _testableMaterialWidget({Widget? widget, SelectedStudentNotifier? notifier = null}) => TestApp(
         ChangeNotifierProvider<SelectedStudentNotifier>(
             create: (context) => notifier ?? SelectedStudentNotifier()
               ..value = _mockStudent('1'),
@@ -173,6 +173,48 @@ void main() {
       expect(gradeWidget, findsNWidgets(courses.length));
     });
 
+    testWidgetsWithAccessibilityChecks('shows grade and score if there is a current grade and score', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A', computedCurrentScore: 75)],
+          ),
+        ),
+      );
+
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('A 75%');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('shows grade only if there is a current grade and score and restricted', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A', computedCurrentScore: 75)],
+          ),
+        ).rebuild((b) => b..settings = (b.settings..restrictQuantitativeData = true)),
+      );
+
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('A');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
     testWidgetsWithAccessibilityChecks('shows score if there is a grade but no grade string', (tester) async {
       var student = _mockStudent('1');
       var courses = List.generate(
@@ -191,6 +233,69 @@ void main() {
       await tester.pumpAndSettle();
 
       final gradeWidget = find.text('90%');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('hides score if there is a grade but no grade string and score is restricted', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
+          ),
+        ).rebuild((b) => b..settings = (b.settings..restrictQuantitativeData = true)),
+      );
+
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('90%');
+      expect(gradeWidget, findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('shows score if there is a grade but no grade string and score is not restricted', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
+          ),
+        ).rebuild((b) => b..settings = (b.settings..restrictQuantitativeData = false)),
+      );
+
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('90%');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('shows grade if restricted and its a letter grade', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A')],
+          ),
+        ).rebuild((b) => b..settings = (b.settings..restrictQuantitativeData = true)),
+      );
+
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('A');
       expect(gradeWidget, findsNWidgets(courses.length));
     });
   });
@@ -242,20 +347,20 @@ void main() {
 
       expect(find.byType(CourseDetailsScreen), findsOneWidget);
 
-      ApiPrefs.clean();
+      await ApiPrefs.clean();
     });
   });
 }
 
 class _MockedCoursesInteractor extends CoursesInteractor {
-  List<Course> courses;
+  List<Course>? courses;
 
   bool error = false;
 
   _MockedCoursesInteractor({this.courses});
 
   @override
-  Future<List<Course>> getCourses({bool isRefresh = false, String studentId = null}) async {
+  Future<List<Course>> getCourses({bool isRefresh = false, String? studentId = null}) async {
     if (error) throw '';
     return courses ?? [_mockCourse('1')];
   }
@@ -279,8 +384,8 @@ List<Course> generateCoursesForStudent(String userId, {int numberOfCourses = 1})
 Enrollment _mockEnrollment(
   String courseId, {
   String userId = '0',
-  String computedCurrentGrade,
-  double computedCurrentScore,
+  String? computedCurrentGrade,
+  double? computedCurrentScore,
 }) =>
     Enrollment((b) => b
       ..courseId = courseId
@@ -292,7 +397,7 @@ Enrollment _mockEnrollment(
       ..build());
 
 Course _mockCourse(String courseId,
-        {ListBuilder<Enrollment> enrollments, bool hasActiveGradingPeriod, double currentScore, String currentGrade}) =>
+        {ListBuilder<Enrollment>? enrollments, bool? hasActiveGradingPeriod, double? currentScore, String? currentGrade}) =>
     Course((b) => b
       ..id = courseId
       ..name = 'CourseName'

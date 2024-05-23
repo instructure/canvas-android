@@ -28,20 +28,20 @@ class CalendarMonth extends StatefulWidget {
   final MonthExpansionNotifier monthExpansionListener;
 
   CalendarMonth({
-    Key key,
-    @required this.year,
-    @required this.month,
-    @required this.selectedDay,
-    @required this.onDaySelected,
-    @required this.monthExpansionListener,
-  }) : super(key: key);
+    required this.year,
+    required this.month,
+    required this.selectedDay,
+    required this.onDaySelected,
+    required this.monthExpansionListener,
+    super.key,
+  });
 
   /// The maximum possible height of this widget
   static double maxHeight = DayOfWeekHeaders.headerHeight + (6 * CalendarDay.dayHeight);
 
   static List<DateTime> generateWeekStarts(int year, int month) {
     DateTime firstDayOfMonth = DateTime(year, month);
-    DateTime firstDayOfWeek = firstDayOfMonth.withFirstDayOfWeek();
+    DateTime firstDayOfWeek = firstDayOfMonth.withFirstDayOfWeek()!;
 
     List<DateTime> weekStarts = [firstDayOfWeek];
 
@@ -62,7 +62,7 @@ class CalendarMonth extends StatefulWidget {
 }
 
 class _CalendarMonthState extends State<CalendarMonth> {
-  List<DateTime> weekStarts;
+  late List<DateTime> weekStarts;
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class _CalendarMonthState extends State<CalendarMonth> {
   Widget build(BuildContext context) {
     final weekWidgets = weekStarts.mapIndexed<Widget>((index, weekStart) {
       final weekWidget = CalendarWeek(
-        firstDay: weekStart,
+        firstDay: weekStart!,
         selectedDay: widget.selectedDay,
         onDaySelected: widget.onDaySelected,
         displayDayOfWeekHeader: false,
@@ -83,7 +83,7 @@ class _CalendarMonthState extends State<CalendarMonth> {
       return ValueListenableBuilder<double>(
         child: weekWidget,
         valueListenable: widget.monthExpansionListener,
-        builder: (BuildContext context, double value, Widget child) {
+        builder: (BuildContext context, double value, Widget? child) {
           final top = DayOfWeekHeaders.headerHeight + (value * index * CalendarDay.dayHeight);
           return Positioned(
             top: top,
@@ -103,7 +103,7 @@ class _CalendarMonthState extends State<CalendarMonth> {
     return Stack(
       children: [
         DayOfWeekHeaders(),
-        ...weekWidgets,
+        ...weekWidgets!,
       ],
     );
   }

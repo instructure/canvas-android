@@ -1,7 +1,9 @@
 package com.instructure.pandautils.di
 
-import com.instructure.pandautils.room.AppDatabase
-import com.instructure.pandautils.room.daos.*
+import com.instructure.pandautils.room.appdatabase.AppDatabase
+import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -46,5 +48,29 @@ class DatabaseModule {
     @Singleton
     fun providePendingSubmissionCommentDao(appDatabase: AppDatabase): PendingSubmissionCommentDao {
         return appDatabase.pendingSubmissionCommentDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDashboardFileUploadDao(appDatabase: AppDatabase): DashboardFileUploadDao {
+        return appDatabase.dashboardFileUploadDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEnvironmentFeatureFlagsDao(appDatabase: AppDatabase): EnvironmentFeatureFlagsDao {
+        return appDatabase.environmentFeatureFlagsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideReminderDao(appDatabase: AppDatabase): ReminderDao {
+        return appDatabase.reminderDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCalendarFilterDao(calendarFilterDatabase: CalendarFilterDatabase): CalendarFilterDao {
+        return calendarFilterDatabase.calendarFilterDao()
     }
 }

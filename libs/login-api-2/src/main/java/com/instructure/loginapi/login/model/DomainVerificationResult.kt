@@ -19,7 +19,7 @@ package com.instructure.loginapi.login.model
 import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class DomainVerificationResult(

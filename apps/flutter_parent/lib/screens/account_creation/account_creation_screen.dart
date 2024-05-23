@@ -39,25 +39,21 @@ class AccountCreationScreen extends StatefulWidget {
 
   final QRPairingInfo pairingInfo;
 
-  const AccountCreationScreen(this.pairingInfo, {Key key}) : super(key: key);
+  const AccountCreationScreen(this.pairingInfo, {super.key});
 
   @override
   _AccountCreationScreenState createState() => _AccountCreationScreenState();
 }
 
 class _AccountCreationScreenState extends State<AccountCreationScreen> {
-  TextStyle _defaultSpanStyle = TextStyle(
-      color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
-  TextStyle _linkSpanStyle = TextStyle(
-      color: ParentColors.parentApp,
-      fontSize: 14.0,
-      fontWeight: FontWeight.normal);
+  TextStyle _defaultSpanStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
+  TextStyle _linkSpanStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
 
-  Future<TermsOfService> _tosFuture;
+  Future<TermsOfService?>? _tosFuture;
 
-  Future<TermsOfService> _getToS() {
-    return locator<AccountCreationInteractor>().getToSForAccount(
-        widget.pairingInfo.accountId, widget.pairingInfo.domain);
+  Future<TermsOfService?> _getToS() {
+    return locator<AccountCreationInteractor>()
+        .getToSForAccount(widget.pairingInfo.accountId, widget.pairingInfo.domain);
   }
 
   final FocusNode _nameFocus = FocusNode();
@@ -65,7 +61,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   final FocusNode _emailFocus = FocusNode();
   final _emailController = TextEditingController();
-  String _emailErrorText = null;
+  String? _emailErrorText = null;
 
   final FocusNode _passwordFocus = FocusNode();
   final _passwordController = TextEditingController();
@@ -130,11 +126,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         alignment: Alignment.centerLeft,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
-          child: Text(text,
-              style: TextStyle(
-                  color: ParentColors.licorice,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500)),
+          child: Text(text, style: TextStyle(color: ParentColors.licorice, fontSize: 16, fontWeight: FontWeight.w500)),
         ));
   }
 
@@ -145,19 +137,13 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
       autocorrect: false,
       controller: _nameController,
       decoration: InputDecoration(
-          errorStyle: TextStyle(
-              color: ParentColors.failure,
-              fontSize: 14,
-              fontWeight: FontWeight.w500),
+          errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
           errorBorder: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(color: ParentColors.failure),
           ),
           hintText: L10n(context).qrCreateAccountHintName,
-          hintStyle: TextStyle(
-              color: ParentColors.tiara,
-              fontSize: 16,
-              fontWeight: FontWeight.normal),
+          hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
           border: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(),
@@ -166,7 +152,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         _fieldFocusChange(_nameFocus, _emailFocus);
       },
       validator: (value) {
-        if (value.isEmpty) {
+        if (value == null || value.isEmpty) {
           return L10n(context).qrCreateAccountNameError;
         } else {
           return null;
@@ -184,19 +170,13 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         controller: _emailController,
         decoration: InputDecoration(
             errorText: _emailErrorText,
-            errorStyle: TextStyle(
-                color: ParentColors.failure,
-                fontSize: 14,
-                fontWeight: FontWeight.w500),
+            errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
             errorBorder: OutlineInputBorder(
               borderRadius: new BorderRadius.circular(4.0),
               borderSide: new BorderSide(color: ParentColors.failure),
             ),
             hintText: L10n(context).qrCreateAccountHintEmail,
-            hintStyle: TextStyle(
-                color: ParentColors.tiara,
-                fontSize: 16,
-                fontWeight: FontWeight.normal),
+            hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
             border: OutlineInputBorder(
               borderRadius: new BorderRadius.circular(4.0),
               borderSide: new BorderSide(),
@@ -207,10 +187,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         validator: (value) => _validateEmail(value));
   }
 
-  String _validateEmail(String value, {bool apiError = false}) {
+  String? _validateEmail(String? value, {bool apiError = false}) {
     if (apiError) {
       return L10n(context).qrCreateAccountInvalidEmailError;
-    } else if (value.isEmpty) {
+    } else if (value == null || value.isEmpty) {
       return L10n(context).qrCreateAccountEmailError;
     } else if (!EmailValidator.validate(value)) {
       return L10n(context).qrCreateAccountInvalidEmailError;
@@ -240,29 +220,23 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
               });
             },
           ),
-          errorStyle: TextStyle(
-              color: ParentColors.failure,
-              fontSize: 14,
-              fontWeight: FontWeight.w500),
+          errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
           errorBorder: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(color: ParentColors.failure),
           ),
           hintText: L10n(context).qrCreateAccountHintPassword,
-          hintStyle: TextStyle(
-              color: ParentColors.tiara,
-              fontSize: 16,
-              fontWeight: FontWeight.normal),
+          hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
           border: OutlineInputBorder(
             borderRadius: new BorderRadius.circular(4.0),
             borderSide: new BorderSide(),
           )),
       onFieldSubmitted: (term) {
         _clearFieldFocus();
-        _formKey.currentState.validate();
+        _formKey.currentState?.validate();
       },
       validator: (value) {
-        if (value.isEmpty) {
+        if (value == null || value.isEmpty) {
           return L10n(context).qrCreateAccountPasswordError;
         } else if (value.length < 8) {
           return L10n(context).qrCreateAccountPasswordLengthError;
@@ -275,8 +249,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   Widget _passwordIcon(bool obscurePassword) {
     if (obscurePassword) {
-      return Icon(CanvasIcons.eye,
-          semanticLabel: L10n(context).qrCreateAccountEyeSemantics);
+      return Icon(CanvasIcons.eye, semanticLabel: L10n(context).qrCreateAccountEyeSemantics);
     } else {
       return Padding(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
@@ -302,18 +275,16 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   Widget _createAccountTOS() {
     return FutureBuilder(
         future: _tosFuture,
-        builder: (context, AsyncSnapshot<TermsOfService> snapshot) {
+        builder: (context, AsyncSnapshot<TermsOfService?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: LoadingIndicator());
+            return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
           }
 
           if (snapshot.hasError || snapshot.data == null) {
             return _getTosSpan(null);
           } else {
             var terms = snapshot.data;
-            if (terms.passive) {
+            if (terms == null || terms.passive) {
               return _getPrivacyPolicySpan();
             } else {
               return _getTosSpan(snapshot.data);
@@ -336,10 +307,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     );
   }
 
-  TextSpan _getTosSpanHelper(
-      {@required String text, @required List<TextSpan> inputSpans}) {
-    var indexedSpans =
-        inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
+  TextSpan _getTosSpanHelper({required String text, required List<TextSpan> inputSpans}) {
+    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text!), it)).toList();
     indexedSpans.sort((a, b) => a.key.compareTo(b.key));
 
     int index = 0;
@@ -348,14 +317,14 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     for (var indexedSpan in indexedSpans) {
       spans.add(TextSpan(text: text.substring(index, indexedSpan.key)));
       spans.add(indexedSpan.value);
-      index = indexedSpan.key + indexedSpan.value.text.length;
+      index = indexedSpan.key + indexedSpan.value.text!.length;
     }
     spans.add(TextSpan(text: text.substring(index)));
 
     return TextSpan(children: spans);
   }
 
-  Widget _getTosSpan(TermsOfService terms) {
+  Widget _getTosSpan(TermsOfService? terms) {
     var termsOfService = L10n(context).qrCreateAccountTermsOfService;
     var privacyPolicy = L10n(context).qrCreateAccountPrivacyPolicy;
     var body = L10n(context).qrCreateAccountTos(termsOfService, privacyPolicy);
@@ -374,8 +343,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                       locator<QuickNav>().pushRoute(
                           context,
                           PandaRouter.termsOfUse(
-                              accountId: widget.pairingInfo.accountId,
-                              domain: widget.pairingInfo.domain));
+                              accountId: widget.pairingInfo.accountId, domain: widget.pairingInfo.domain));
                     }
                   },
               ),
@@ -383,8 +351,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   text: privacyPolicy,
                   style: _linkSpanStyle,
                   recognizer: TapGestureRecognizer()
-                    ..onTap = () => locator<AccountCreationInteractor>()
-                        .launchPrivacyPolicy()),
+                    ..onTap = () => locator<AccountCreationInteractor>().launchPrivacyPolicy()),
             ]),
             style: _defaultSpanStyle,
             key: AccountCreationScreen.accountCreationTextSpanKey));
@@ -396,17 +363,17 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: _isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
+              ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
               : Text(
                   L10n(context).qrCreateAccount,
-                  style: TextStyle(fontSize: 16),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 16, color: Colors.white),
                 ),
         ),
-        // color: Theme.of(context).accentColor,
-        // textColor: Colors.white,
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        ),
         onPressed: () {
           if (!_isLoading) _handleCreateAccount();
         },
@@ -417,20 +384,20 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   Widget _alreadyHaveAnAccount() {
     // Since this one is always alone, the touch target size has been boosted
     return GestureDetector(
-      onTap: () => locator<QuickNav>()
-          .pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain)),
+      onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain)),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 14, 0, 14),
-        child: Center(
-          child: RichText(
-            text: TextSpan(
-              style: _defaultSpanStyle,
-              children: <TextSpan>[
-                TextSpan(text: L10n(context).qrCreateAccountSignIn1),
-                TextSpan(
-                    text: L10n(context).qrCreateAccountSignIn2,
-                    style: _linkSpanStyle)
-              ],
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: 48),
+          child: Center(
+            child: RichText(
+              text: TextSpan(
+                style: _defaultSpanStyle,
+                children: <TextSpan>[
+                  TextSpan(text: L10n(context).qrCreateAccountSignIn1),
+                  TextSpan(text: L10n(context).qrCreateAccountSignIn2, style: _linkSpanStyle)
+                ],
+              ),
             ),
           ),
         ),
@@ -439,40 +406,34 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   }
 
   void _handleCreateAccount() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState?.validate() == true) {
       setState(() => _isLoading = true);
       try {
-        var response = await locator<AccountCreationInteractor>()
-            .createNewAccount(
-                widget.pairingInfo.accountId,
-                widget.pairingInfo.code,
-                _nameController.text,
-                _emailController.text,
-                _passwordController.text,
-                widget.pairingInfo.domain);
+        var response = await locator<AccountCreationInteractor>().createNewAccount(
+            widget.pairingInfo.accountId,
+            widget.pairingInfo.code,
+            _nameController.text,
+            _emailController.text,
+            _passwordController.text,
+            widget.pairingInfo.domain);
 
         if (response.statusCode == 200) {
           setState(() => _isLoading = false);
 
           locator<Analytics>().logEvent(
             AnalyticsEventConstants.QR_ACCOUNT_SUCCESS,
-            extras: {
-              AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain
-            },
+            extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
           );
 
           // Route them to the login page with their domain
-          locator<QuickNav>().pushRoute(
-              context, PandaRouter.loginWeb(widget.pairingInfo.domain));
+          locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain));
         }
       } catch (e) {
         setState(() => _isLoading = false);
 
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.QR_ACCOUNT_FAILURE,
-          extras: {
-            AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain
-          },
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
         );
 
         if (e is DioError) {
@@ -490,8 +451,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     String emailError = '';
     String pairingError = '';
     try {
-      emailError =
-          e.response.data['errors']['user']['pseudonyms'][0]['message'];
+      emailError = e.response?.data['errors']['user']['pseudonyms'][0]['message'];
       if (emailError.isNotEmpty) {
         setState(() {
           _emailErrorText = _validateEmail('', apiError: true);
@@ -502,8 +462,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
 
     try {
-      pairingError =
-          e.response.data['errors']['pairing_code']['code'][0]['message'];
+      pairingError = e.response?.data['errors']['pairing_code']['code'][0]['message'];
       if (pairingError.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(L10n(context).errorPairingFailed)),

@@ -65,7 +65,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     /* Non-masquerading Prefs */
     internal var originalDomain by StringPref("", "domain")
-    private var originalUser: User? by GsonPref(User::class.java, null, "user")
+    private var originalUser: User? by GsonPref(User::class.java, null, "user", false)
 
     var selectedLocale by StringPref(ACCOUNT_LOCALE)
 
@@ -74,7 +74,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
             return selectedLocale.takeUnless { it == ACCOUNT_LOCALE }
                     ?: user?.effective_locale
                     ?: user?.locale
-                    ?: ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0].language
+                    ?: ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]?.language ?: ""
         }
 
     /* Masquerading Prefs */
@@ -84,7 +84,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var isMasqueradingFromQRCode by BooleanPref()
     var masqueradeId by LongPref(-1L)
     internal var masqueradeDomain by StringPref()
-    internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user")
+    internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user", false)
 
     // Used to determine if a student can generate a pairing code, saved during splash
     var canGeneratePairingCode by NBooleanPref()
@@ -139,6 +139,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     // Switch that lets the user manually override and turn off the elementary view in the settings
     var elementaryDashboardEnabledOverride by BooleanPref(true)
 
+    var checkTokenAfterOfflineLogin by BooleanPref()
+
     val showElementaryView
         get() = canvasForElementary && elementaryDashboardEnabledOverride
 
@@ -153,6 +155,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
         // Clear PageView session ID
         PageViewUtils.session.clear()
+        pandataInfo = null
 
         // Clear http cache
         RestBuilder.clearCacheDirectory()

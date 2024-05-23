@@ -31,6 +31,8 @@ import androidx.cardview.widget.CardView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.ViewFloatingMediaRecorderBinding
+import com.instructure.pandautils.databinding.ViewFloatingMediaRecorderVideoBinding
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -39,9 +41,6 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.VideoResult
-import kotlinx.android.synthetic.main.view_floating_media_recorder.view.*
-import kotlinx.android.synthetic.main.view_floating_media_recorder_audio.view.*
-import kotlinx.android.synthetic.main.view_floating_media_recorder_video.view.*
 import java.io.File
 import java.util.UUID
 
@@ -50,11 +49,13 @@ class FloatingRecordingView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
 
+    private val binding: ViewFloatingMediaRecorderBinding
+    /** The binding of the view used to record video. This must be inflated separately from the main layout in
+     * order to capture exceptions during inflation and disable the video functionality */
+    private var videoViewBinding: ViewFloatingMediaRecorderVideoBinding?
+
     private val timerHandler = Handler()
     private var startTime = 0L
-
-    @Suppress("JoinDeclarationAndAssignment")
-    private var recordingView: ViewGroup
 
     private var videoFile: File? = null
     private var isRecording = false
@@ -63,10 +64,6 @@ class FloatingRecordingView @JvmOverloads constructor(
     lateinit var replayCallback: (File?) -> Unit
 
     lateinit var videoCaptureCallback: CameraListener
-
-    /** The View used to record video. This must be inflated separately from the main layout in
-     * order to capture exceptions during inflation and disable the video functionality */
-    private var videoView: View? = null
 
     /** Whether there was an error when initializing the video view. If this is true then
      * all video functionality should be considered disabled. */
@@ -82,16 +79,17 @@ class FloatingRecordingView @JvmOverloads constructor(
     lateinit var recordingCallback: (File?) -> Unit
 
     init {
-        recordingView = View.inflate(context, R.layout.view_floating_media_recorder, this) as ViewGroup
+        val recordingView = View.inflate(context, R.layout.view_floating_media_recorder, this) as ViewGroup
+        binding = ViewFloatingMediaRecorderBinding.bind(recordingView)
 
         /* CameraView will throw an exception during inflation on some devices. We capture
            that exception here and show an error view instead when we try to record video. */
         try {
-            videoView = LayoutInflater.from(context)
-                .inflate(R.layout.view_floating_media_recorder_video, recordingView.dragView, false)
-            recordingView.dragView.addView(videoView)
+            videoViewBinding = ViewFloatingMediaRecorderVideoBinding.inflate(LayoutInflater.from(context), binding.dragDetectLayout, false)
+            binding.dragDetectLayout.addView(videoViewBinding?.root)
         } catch (e: InflateException) {
             hasVideoError = true
+            videoViewBinding = null
             if (BuildConfig.DEBUG) e.printStackTrace() else FirebaseCrashlytics.getInstance().recordException(e)
         }
 
@@ -107,24 +105,25 @@ class FloatingRecordingView @JvmOverloads constructor(
         when(mediaType) {
             is RecordingMediaType.Video -> stopVideoView()
             is RecordingMediaType.Audio -> cleanupMediaObjects()
+            else -> {}
         }
     }
 
     fun startVideoView() {
-        recordingView.setVisible()
+        binding.root.setVisible()
         if (hasVideoError) return
         resetVideoViews()
-        recordingView.camera.open()
+        videoViewBinding?.camera?.open()
     }
 
     private fun stopVideoView() {
         videoFile?.delete()
-        recordingView.setGone()
+        binding.root.setGone()
         if(isRecording) {
             isRecording = false
-            recordingView.camera.stopVideo()
+            videoViewBinding?.camera?.stopVideo()
         }
-        recordingView.camera.close()
+        videoViewBinding?.camera?.close()
         timerHandler.removeCallbacks(timerRunnable)
         stoppedCallback()
     }
@@ -148,7 +147,7 @@ class FloatingRecordingView @JvmOverloads constructor(
     }
 
     private fun setupFloatingAction() {
-        recordingView.dragView.setOnTouchListener(object : View.OnTouchListener {
+        binding.dragDetectLayout.setOnTouchListener(object : View.OnTouchListener {
             private var lastAction: Int = 0
             var windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             var display = windowManager.defaultDisplay
@@ -164,8 +163,8 @@ class FloatingRecordingView @JvmOverloads constructor(
                     MotionEvent.ACTION_DOWN -> {
 
                         // Remember the initial position.
-                        initialX = recordingView.x
-                        initialY = recordingView.y
+                        initialX = binding.root.x
+                        initialY = binding.root.y
 
                         // Remember the initial position.
                         initialTouchX = event.rawX
@@ -189,8 +188,8 @@ class FloatingRecordingView @JvmOverloads constructor(
                         display.getSize(size)
                         val newX = (initialX + (event.rawX - initialTouchX)).coerceIn(0f, size.x - v.width.toFloat())
                         val newY = (initialY + (event.rawY - initialTouchY)).coerceIn(0f, size.y - v.height.toFloat())
-                        recordingView.x = newX
-                        recordingView.y = newY
+                        binding.root.x = newX
+                        binding.root.y = newY
                         lastAction = event.action
                         return true
                     }
@@ -208,7 +207,7 @@ class FloatingRecordingView @JvmOverloads constructor(
             val hours = minutes / 60
 
             // Mod the seconds by 60 so they reset every minute
-            recordingView.toolbarTitle?.text = "%02d:%02d:%02d".format(hours, minutes, seconds % 60)
+            binding.toolbarTitle.text = "%02d:%02d:%02d".format(hours, minutes, seconds % 60)
             setA11yStringForTitle(hours, minutes, seconds % 60)
             timerHandler.postDelayed(this, 500)
         }
@@ -229,7 +228,7 @@ class FloatingRecordingView @JvmOverloads constructor(
             val totalDurationHours = totalDurationMinutes / 60
 
             // Mod the seconds by 60 so they reset every minute
-            recordingView.toolbarTitle?.text = "%02d:%02d:%02d / %02d:%02d:%02d".format(hours, minutes, seconds % 60, totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
+            binding.toolbarTitle.text = "%02d:%02d:%02d / %02d:%02d:%02d".format(hours, minutes, seconds % 60, totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
             setA11yStringForAudioReplayTitle(hours, minutes, seconds % 60, totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
             if (seconds <= totalDurationSeconds)
                 timerHandler.postDelayed(this, 500)
@@ -237,22 +236,24 @@ class FloatingRecordingView @JvmOverloads constructor(
     }
 
     private fun setupError() {
-        videoView?.setGone()
-        recordingView.audio.setGone()
-        recordingView.errorView.setVisible()
-        recordingView.deleteButton.setGone()
-        recordingView.toolbarTitle.text = ""
-        recordingView.closeButton.onClick {
-            recordingView.setGone()
+        videoViewBinding?.root?.setGone()
+        with(binding) {
+            audio.root.setGone()
+            errorView.setVisible()
+            deleteButton.setGone()
+            toolbarTitle.text = ""
+            closeButton.onClick {
+                setGone()
+            }
         }
         return
     }
 
     private fun setupVideo() {
-        videoView?.setVisible()
-        recordingView.audio.setGone()
-        recordingView.errorView.setGone()
-        recordingView.startRecordingButton.requestAccessibilityFocus()
+        videoViewBinding?.root?.setVisible()
+        binding.audio.root.setGone()
+        binding.errorView.setGone()
+        videoViewBinding?.startRecordingButton?.requestAccessibilityFocus()
 
         videoFile = File(context.cacheDir, "temp.mp4")
 
@@ -264,13 +265,13 @@ class FloatingRecordingView @JvmOverloads constructor(
         }
 
         // Set the close button.
-        recordingView.closeButton.onClick {
+        binding.closeButton.onClick {
             stopVideoView()
         }
 
-        recordingView.startRecordingButton.onClick {
+        videoViewBinding?.startRecordingButton?.onClick {
             videoFile?.let { file ->
-                recordingView.camera.takeVideo(file)
+                videoViewBinding?.camera?.takeVideo(file)
                 isRecording = true
                 startTime = System.currentTimeMillis()
                 timerHandler.postDelayed(timerRunnable, 0)
@@ -278,79 +279,79 @@ class FloatingRecordingView @JvmOverloads constructor(
             }
         }
 
-        recordingView.endRecordingButton.onClick {
-            recordingView.camera.stopVideo()
+        videoViewBinding?.endRecordingButton?.onClick {
+            videoViewBinding?.camera?.stopVideo()
             isRecording = false
             timerHandler.removeCallbacks(timerRunnable)
             setViewStateEndRecording()
         }
 
-        recordingView.deleteButton.onClick {
+        binding.deleteButton.onClick {
             videoFile?.delete()
             resetVideoViews()
-            recordingView.camera.close()
-            recordingView.camera.open()
+            videoViewBinding?.camera?.close()
+            videoViewBinding?.camera?.open()
         }
 
-        recordingView.replayButton.onClick {
+        videoViewBinding?.replayButton?.onClick {
             replayCallback(videoFile)
         }
 
-        recordingView.sendButton.onClickWithRequireNetwork {
+        videoViewBinding?.sendButton?.onClickWithRequireNetwork {
             val newFile = File(context.cacheDir, UUID.randomUUID().toString() + "video.mp4")
             newFile.createNewFile()
             videoFile?.renameTo(newFile)
             recordingCallback(newFile)
-            recordingView.setGone()
+            binding.root.setGone()
             if (isRecording) {
                 isRecording = false
-                recordingView.camera.stopVideo()
+                videoViewBinding?.camera?.stopVideo()
             }
-            recordingView.camera.close()
+            videoViewBinding?.camera?.close()
             timerHandler.removeCallbacks(timerRunnable)
         }
     }
 
     private fun resetVideoViews() {
-        recordingView.toolbarTitle.setText(R.string.recordingTimerDefault)
+        binding.toolbarTitle.setText(R.string.recordingTimerDefault)
         setA11yStringForTitle()
-        recordingView.deleteButton.setGone()
-        recordingView.replayButton.setGone()
-        recordingView.sendButton.setGone()
-        recordingView.startRecordingButton.setVisible()
-        recordingView.endRecordingButton.setGone()
-        recordingView.closeButton.setVisible()
+        binding.deleteButton.setGone()
+        videoViewBinding?.replayButton?.setGone()
+        videoViewBinding?.sendButton?.setGone()
+        videoViewBinding?.startRecordingButton?.setVisible()
+        videoViewBinding?.endRecordingButton?.setGone()
+        binding.closeButton.setVisible()
     }
 
     private fun setViewStateEndRecording() {
-        recordingView.endRecordingButton.setGone()
-        recordingView.replayButton.setVisible()
-        recordingView.sendButton.setVisible()
-        recordingView.deleteButton.setVisible()
-        recordingView.closeButton.setVisible()
-        recordingView.sendButton.requestAccessibilityFocus()
+        videoViewBinding?.endRecordingButton?.setGone()
+        videoViewBinding?.replayButton?.setVisible()
+        videoViewBinding?.sendButton?.setVisible()
+        binding.deleteButton.setVisible()
+        binding.closeButton.setVisible()
+        videoViewBinding?.sendButton?.requestAccessibilityFocus()
     }
 
     private fun setViewStateStartRecording() {
-        recordingView.startRecordingButton.setGone()
+        videoViewBinding?.startRecordingButton?.setGone()
         // We need to prevent them from stopping this before its finished being started
-        recordingView.endRecordingButton.postDelayed({
-            recordingView.endRecordingButton.setVisible()
-            recordingView.endRecordingButton.requestAccessibilityFocus()
+        videoViewBinding?.endRecordingButton?.postDelayed({
+            videoViewBinding?.endRecordingButton?.setVisible()
+            videoViewBinding?.endRecordingButton?.requestAccessibilityFocus()
         }, 500)
-        recordingView.closeButton.setGone()
-        recordingView.endRecordingButton.alpha = 0.5f
+        binding.closeButton.setGone()
+        videoViewBinding?.endRecordingButton?.alpha = 0.5f
     }
 
     private fun setupAudio() {
-        recordingView.audio.setVisible()
+        binding.audio.root.setVisible()
         setupAudioViews()
 
-        recordingView.recordAudioButton.onClick {
-            recordingView.recordAudioButton.setGone()
-            recordingView.closeButton.setGone()
-            recordingView.stopButton.setVisible()
-            recordingView.stopButton.requestAccessibilityFocus()
+        binding.audio.recordAudioButton.onClick {
+            binding.audio.recordAudioButton.setGone()
+            binding.closeButton.setGone()
+            binding.audio.stopButton.setVisible()
+            binding.audio.stopButton.requestAccessibilityFocus()
             val audioFile = File(context.externalCacheDir, TEMP_FILENAME)
             if (audioFile.exists())
             // File existed previously - delete old file
@@ -370,17 +371,17 @@ class FloatingRecordingView @JvmOverloads constructor(
             timerHandler.post(timerRunnable)
         }
 
-        recordingView.stopButton.onClick {
+        binding.audio.stopButton.onClick {
             cleanupMediaObjects()
 
             // Stop the timer
             timerHandler.removeCallbacks(timerRunnable)
 
-            recordingView.closeButton.setVisible()
-            recordingView.stopButton.setGone()
+            binding.closeButton.setVisible()
+            binding.audio.stopButton.setGone()
 
-            recordingView.deleteButton.setVisible()
-            recordingView.deleteButton.onClick {
+            binding.deleteButton.setVisible()
+            binding.deleteButton.onClick {
                 cleanupMediaObjects()
                 val audioFile = File(context.externalCacheDir, TEMP_FILENAME)
                 if (audioFile.exists()) {
@@ -389,9 +390,9 @@ class FloatingRecordingView @JvmOverloads constructor(
                 setupAudioViews()
             }
 
-            recordingView.sendAudioButton.setVisible()
-            recordingView.sendAudioButton.requestAccessibilityFocus()
-            recordingView.sendAudioButton.onClickWithRequireNetwork {
+            binding.audio.sendAudioButton.setVisible()
+            binding.audio.sendAudioButton.requestAccessibilityFocus()
+            binding.audio.sendAudioButton.onClickWithRequireNetwork {
                 cleanupMediaObjects()
                 val audioFile = File(context.externalCacheDir, TEMP_FILENAME)
                 if (audioFile.exists()) {
@@ -403,10 +404,10 @@ class FloatingRecordingView @JvmOverloads constructor(
                 stoppedCallback()
             }
 
-            recordingView.replayAudioButton.setVisible()
-            recordingView.replayAudioButton.onClick { // This button flips between Replay and Stop
-                if(recordingView.replayAudioButton.text == context.getString(R.string.replay)) {
-                    recordingView.dragIcon.setGone()
+            binding.audio.replayAudioButton.setVisible()
+            binding.audio.replayAudioButton.onClick { // This button flips between Replay and Stop
+                if(binding.audio.replayAudioButton.text == context.getString(R.string.replay)) {
+                    binding.dragIcon.setGone()
 
                     val audioFile = File(context.externalCacheDir, TEMP_FILENAME)
                     if (audioFile.exists()) {
@@ -416,7 +417,7 @@ class FloatingRecordingView @JvmOverloads constructor(
                             mediaPlayer?.prepare()
                         }
                         mediaPlayer?.start()
-                        recordingView.replayAudioButton.text = context.getString(R.string.stop)
+                        binding.audio.replayAudioButton.text = context.getString(R.string.stop)
                         timerHandler.post(playbackTimerRunnable)
                     }
                 } else {
@@ -425,16 +426,16 @@ class FloatingRecordingView @JvmOverloads constructor(
                         mediaPlayer?.seekTo(0)
                     }
                     // Reset view to "done" state (replay/send)
-                    recordingView.replayAudioButton.text = context.getString(R.string.replay)
+                    binding.audio.replayAudioButton.text = context.getString(R.string.replay)
                     timerHandler.removeCallbacks(playbackTimerRunnable)
                     setTimeForAudioRecording() // Resets the title to show the total duration of recording
-                    recordingView.dragIcon.setVisible()
+                    binding.dragIcon.setVisible()
                 }
 
             }
         }
 
-        recordingView.closeButton.onClick {
+        binding.closeButton.onClick {
             val audioFile = File(context.externalCacheDir, TEMP_FILENAME)
             if (audioFile.exists()) {
                 audioFile.delete()
@@ -448,18 +449,18 @@ class FloatingRecordingView @JvmOverloads constructor(
     }
 
     private fun setupAudioViews() {
-        recordingView.toolbarTitle.setText(R.string.recordingTimerDefault)
+        binding.toolbarTitle.setText(R.string.recordingTimerDefault)
         setA11yStringForTitle()
-        recordingView.recordAudioButton.setVisible()
-        videoView?.setGone()
-        recordingView.errorView.setGone()
-        recordingView.deleteButton.setGone()
-        recordingView.stopButton.setGone()
-        recordingView.replayAudioButton.setGone()
-        recordingView.sendAudioButton.setGone()
-        recordingView.dragIcon.setVisible()
+        binding.audio.recordAudioButton.setVisible()
+        videoViewBinding?.root?.setGone()
+        binding.errorView.setGone()
+        binding.deleteButton.setGone()
+        binding.audio.stopButton.setGone()
+        binding.audio.replayAudioButton.setGone()
+        binding.audio.sendAudioButton.setGone()
+        binding.dragIcon.setVisible()
 
-        recordingView.recordAudioButton.requestAccessibilityFocus()
+        binding.audio.recordAudioButton.requestAccessibilityFocus()
     }
 
     private fun cleanupMediaObjects() {
@@ -488,16 +489,16 @@ class FloatingRecordingView @JvmOverloads constructor(
         val totalDurationMinutes = totalDurationSeconds / 60
         val totalDurationHours = totalDurationMinutes / 60
 
-        recordingView.toolbarTitle?.text = "%02d:%02d:%02d".format(totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
+        binding.toolbarTitle.text = "%02d:%02d:%02d".format(totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
         setA11yStringForTitle(totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
     }
 
     private fun setA11yStringForTitle(hours: Int = 0, minutes: Int = 0, seconds: Int = 0) {
-        recordingView.toolbarTitle?.contentDescription = context.getString(R.string.recordingTimerContentDescription, hours, minutes, seconds)
+        binding.toolbarTitle.contentDescription = context.getString(R.string.recordingTimerContentDescription, hours, minutes, seconds)
     }
 
     private fun setA11yStringForAudioReplayTitle(hours: Int, minutes: Int, seconds: Int, totalHours: Int, totalMinutes: Int, totalSeconds: Int) {
-        recordingView.toolbarTitle?.contentDescription = context.getString(R.string.recordingTimerSpeechDivider,
+        binding.toolbarTitle.contentDescription = context.getString(R.string.recordingTimerSpeechDivider,
                 context.getString(R.string.recordingTimerContentDescription, hours, minutes, seconds),
                 context.getString(R.string.recordingTimerContentDescription, totalHours, totalMinutes, totalSeconds))
     }

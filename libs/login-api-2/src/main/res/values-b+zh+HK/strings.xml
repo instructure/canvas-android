@@ -109,8 +109,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">移除先前使用者</string>
     <string name="accountDomainFooter">找不到您的學校？請嘗試輸入學校完整URL。</string>
-    <string name="accountDomainFooterLink">點擊此處獲取支援。</string>
-
+    <string name="accountDomainFooterLoginHelp">點選此處獲得登入協助。</string>
     <string name="login_noInternetConnectionTitle">沒有網絡連線</string>
     <string name="login_noInternetConnectionMessage">此動作需要網絡連線。</string>
     <string name="empty_feedback">需有主題和描述方可提交反饋。</string>

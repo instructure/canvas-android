@@ -17,17 +17,27 @@
 package com.instructure.pandautils.mvvm
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 
 sealed class ViewState {
     object Loading : ViewState()
+    data class LoadingWithAnimation(
+        @StringRes val titleRes: Int,
+        @StringRes val messageRes: Int,
+        @RawRes val animationRes: Int
+    ) : ViewState()
     object Success : ViewState()
     object Refresh : ViewState()
     object LoadingNextPage : ViewState()
     data class Empty(@StringRes val emptyTitle: Int? = null, @StringRes val emptyMessage: Int? = null, @DrawableRes val emptyImage: Int? = null) : ViewState()
-    data class Error(val errorMessage: String = "") : ViewState()
+    data class Error(val errorMessage: String = "", @DrawableRes val errorImage: Int? = null) : ViewState()
 
     fun isInLoadingState(): Boolean {
         return this is Loading || this is Refresh || this is LoadingNextPage
+    }
+
+    fun isSuccessState(): Boolean {
+        return this is Success
     }
 }

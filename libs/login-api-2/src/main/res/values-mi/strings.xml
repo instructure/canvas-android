@@ -111,8 +111,7 @@
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Tango Kaiwhakmahi o mua</string>
     <string name="accountDomainFooter">Kaore e kitea tō kura? Ngana ki te pātō te nuinga o te kura url</string>
-    <string name="accountDomainFooterLink">Pātō ki kōnei mo te awhina</string>
-
+    <string name="accountDomainFooterLoginHelp">Pato ki konei mo te awhina takiuru.</string>
     <string name="login_noInternetConnectionTitle">Kaore he hononga ipurangi</string>
     <string name="login_noInternetConnectionMessage">Tēnei mahi ka mahi he hononga ipurangi</string>
     <string name="empty_feedback">E hiahiatia ana te kaupapa me te whakamārama ki te tuku urupare.</string>

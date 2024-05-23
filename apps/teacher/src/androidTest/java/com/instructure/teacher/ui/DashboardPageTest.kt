@@ -19,7 +19,6 @@ package com.instructure.teacher.ui
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -29,7 +28,6 @@ import org.junit.Test
 class DashboardPageTest : TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3108898")
     override fun displaysPageObjects() {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val teacher = data.teachers[0]
@@ -39,7 +37,6 @@ class DashboardPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3109494")
     fun displaysNoCoursesView() {
         val data = MockCanvas.init(teacherCount = 1, pastCourseCount = 1)
         val teacher = data.teachers[0]
@@ -49,7 +46,6 @@ class DashboardPageTest : TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3108898")
     fun displaysCourseList() {
         val data = MockCanvas.init(teacherCount = 1, favoriteCourseCount = 3, courseCount = 3)
         val teacher = data.teachers[0]
@@ -67,5 +63,17 @@ class DashboardPageTest : TeacherTest() {
         tokenLogin(data.domain, token, teacher)
 
         dashboardPage.assertHasCourses(data.courses.values.toList())
+    }
+
+    @Test
+    fun testGlobalAnnouncementInDashboard() {
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, accountNotificationCount = 1)
+
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+        val accountNotification = data.accountNotifications.values.first()
+
+        dashboardPage.assertNotificationDisplayed(accountNotification)
     }
 }

@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.NullableParcelableArg
 import instructure.androidblueprint.SyncExpandableFragment
 import instructure.androidblueprint.SyncExpandableManager
 import instructure.androidblueprint.SyncExpandablePresenter
@@ -41,7 +40,6 @@ abstract class BaseExpandableSyncFragment<
         HOLDER : RecyclerView.ViewHolder,
         ADAPTER : SyncExpandableRecyclerAdapter<GROUP, MODEL, HOLDER, VIEW>>
     : SyncExpandableFragment<GROUP, MODEL, VIEW, PRESENTER, HOLDER, ADAPTER>(), NavigationCallbacks {
-    var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
     protected lateinit var rootView: View
 
     abstract fun layoutResId(): Int

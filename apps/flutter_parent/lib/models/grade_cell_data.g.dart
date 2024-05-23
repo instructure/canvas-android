@@ -30,68 +30,55 @@ class _$GradeCellData extends GradeCellData {
   @override
   final String outOf;
   @override
+  final String yourGrade;
+  @override
   final String latePenalty;
   @override
   final String finalGrade;
 
-  factory _$GradeCellData([void Function(GradeCellDataBuilder) updates]) =>
-      (new GradeCellDataBuilder()..update(updates)).build();
+  factory _$GradeCellData([void Function(GradeCellDataBuilder)? updates]) =>
+      (new GradeCellDataBuilder()..update(updates))._build();
 
   _$GradeCellData._(
-      {this.state,
-      this.submissionText,
-      this.showCompleteIcon,
-      this.showIncompleteIcon,
-      this.showPointsLabel,
-      this.accentColor,
-      this.graphPercent,
-      this.score,
-      this.grade,
-      this.gradeContentDescription,
-      this.outOf,
-      this.latePenalty,
-      this.finalGrade})
+      {required this.state,
+      required this.submissionText,
+      required this.showCompleteIcon,
+      required this.showIncompleteIcon,
+      required this.showPointsLabel,
+      required this.accentColor,
+      required this.graphPercent,
+      required this.score,
+      required this.grade,
+      required this.gradeContentDescription,
+      required this.outOf,
+      required this.yourGrade,
+      required this.latePenalty,
+      required this.finalGrade})
       : super._() {
-    if (state == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'state');
-    }
-    if (submissionText == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'submissionText');
-    }
-    if (showCompleteIcon == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'showCompleteIcon');
-    }
-    if (showIncompleteIcon == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'showIncompleteIcon');
-    }
-    if (showPointsLabel == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'showPointsLabel');
-    }
-    if (accentColor == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'accentColor');
-    }
-    if (graphPercent == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'graphPercent');
-    }
-    if (score == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'score');
-    }
-    if (grade == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'grade');
-    }
-    if (gradeContentDescription == null) {
-      throw new BuiltValueNullFieldError(
-          'GradeCellData', 'gradeContentDescription');
-    }
-    if (outOf == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'outOf');
-    }
-    if (latePenalty == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'latePenalty');
-    }
-    if (finalGrade == null) {
-      throw new BuiltValueNullFieldError('GradeCellData', 'finalGrade');
-    }
+    BuiltValueNullFieldError.checkNotNull(state, r'GradeCellData', 'state');
+    BuiltValueNullFieldError.checkNotNull(
+        submissionText, r'GradeCellData', 'submissionText');
+    BuiltValueNullFieldError.checkNotNull(
+        showCompleteIcon, r'GradeCellData', 'showCompleteIcon');
+    BuiltValueNullFieldError.checkNotNull(
+        showIncompleteIcon, r'GradeCellData', 'showIncompleteIcon');
+    BuiltValueNullFieldError.checkNotNull(
+        showPointsLabel, r'GradeCellData', 'showPointsLabel');
+    BuiltValueNullFieldError.checkNotNull(
+        accentColor, r'GradeCellData', 'accentColor');
+    BuiltValueNullFieldError.checkNotNull(
+        graphPercent, r'GradeCellData', 'graphPercent');
+    BuiltValueNullFieldError.checkNotNull(score, r'GradeCellData', 'score');
+    BuiltValueNullFieldError.checkNotNull(grade, r'GradeCellData', 'grade');
+    BuiltValueNullFieldError.checkNotNull(
+        gradeContentDescription, r'GradeCellData', 'gradeContentDescription');
+    BuiltValueNullFieldError.checkNotNull(outOf, r'GradeCellData', 'outOf');
+    BuiltValueNullFieldError.checkNotNull(
+        yourGrade, r'GradeCellData', 'yourGrade');
+    BuiltValueNullFieldError.checkNotNull(
+        latePenalty, r'GradeCellData', 'latePenalty');
+    BuiltValueNullFieldError.checkNotNull(
+        finalGrade, r'GradeCellData', 'finalGrade');
   }
 
   @override
@@ -116,41 +103,35 @@ class _$GradeCellData extends GradeCellData {
         grade == other.grade &&
         gradeContentDescription == other.gradeContentDescription &&
         outOf == other.outOf &&
+        yourGrade == other.yourGrade &&
         latePenalty == other.latePenalty &&
         finalGrade == other.finalGrade;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc($jc(0, state.hashCode),
-                                                    submissionText.hashCode),
-                                                showCompleteIcon.hashCode),
-                                            showIncompleteIcon.hashCode),
-                                        showPointsLabel.hashCode),
-                                    accentColor.hashCode),
-                                graphPercent.hashCode),
-                            score.hashCode),
-                        grade.hashCode),
-                    gradeContentDescription.hashCode),
-                outOf.hashCode),
-            latePenalty.hashCode),
-        finalGrade.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, state.hashCode);
+    _$hash = $jc(_$hash, submissionText.hashCode);
+    _$hash = $jc(_$hash, showCompleteIcon.hashCode);
+    _$hash = $jc(_$hash, showIncompleteIcon.hashCode);
+    _$hash = $jc(_$hash, showPointsLabel.hashCode);
+    _$hash = $jc(_$hash, accentColor.hashCode);
+    _$hash = $jc(_$hash, graphPercent.hashCode);
+    _$hash = $jc(_$hash, score.hashCode);
+    _$hash = $jc(_$hash, grade.hashCode);
+    _$hash = $jc(_$hash, gradeContentDescription.hashCode);
+    _$hash = $jc(_$hash, outOf.hashCode);
+    _$hash = $jc(_$hash, yourGrade.hashCode);
+    _$hash = $jc(_$hash, latePenalty.hashCode);
+    _$hash = $jc(_$hash, finalGrade.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('GradeCellData')
+    return (newBuiltValueToStringHelper(r'GradeCellData')
           ..add('state', state)
           ..add('submissionText', submissionText)
           ..add('showCompleteIcon', showCompleteIcon)
@@ -162,6 +143,7 @@ class _$GradeCellData extends GradeCellData {
           ..add('grade', grade)
           ..add('gradeContentDescription', gradeContentDescription)
           ..add('outOf', outOf)
+          ..add('yourGrade', yourGrade)
           ..add('latePenalty', latePenalty)
           ..add('finalGrade', finalGrade))
         .toString();
@@ -170,84 +152,90 @@ class _$GradeCellData extends GradeCellData {
 
 class GradeCellDataBuilder
     implements Builder<GradeCellData, GradeCellDataBuilder> {
-  _$GradeCellData _$v;
+  _$GradeCellData? _$v;
 
-  GradeCellState _state;
-  GradeCellState get state => _$this._state;
-  set state(GradeCellState state) => _$this._state = state;
+  GradeCellState? _state;
+  GradeCellState? get state => _$this._state;
+  set state(GradeCellState? state) => _$this._state = state;
 
-  String _submissionText;
-  String get submissionText => _$this._submissionText;
-  set submissionText(String submissionText) =>
+  String? _submissionText;
+  String? get submissionText => _$this._submissionText;
+  set submissionText(String? submissionText) =>
       _$this._submissionText = submissionText;
 
-  bool _showCompleteIcon;
-  bool get showCompleteIcon => _$this._showCompleteIcon;
-  set showCompleteIcon(bool showCompleteIcon) =>
+  bool? _showCompleteIcon;
+  bool? get showCompleteIcon => _$this._showCompleteIcon;
+  set showCompleteIcon(bool? showCompleteIcon) =>
       _$this._showCompleteIcon = showCompleteIcon;
 
-  bool _showIncompleteIcon;
-  bool get showIncompleteIcon => _$this._showIncompleteIcon;
-  set showIncompleteIcon(bool showIncompleteIcon) =>
+  bool? _showIncompleteIcon;
+  bool? get showIncompleteIcon => _$this._showIncompleteIcon;
+  set showIncompleteIcon(bool? showIncompleteIcon) =>
       _$this._showIncompleteIcon = showIncompleteIcon;
 
-  bool _showPointsLabel;
-  bool get showPointsLabel => _$this._showPointsLabel;
-  set showPointsLabel(bool showPointsLabel) =>
+  bool? _showPointsLabel;
+  bool? get showPointsLabel => _$this._showPointsLabel;
+  set showPointsLabel(bool? showPointsLabel) =>
       _$this._showPointsLabel = showPointsLabel;
 
-  Color _accentColor;
-  Color get accentColor => _$this._accentColor;
-  set accentColor(Color accentColor) => _$this._accentColor = accentColor;
+  Color? _accentColor;
+  Color? get accentColor => _$this._accentColor;
+  set accentColor(Color? accentColor) => _$this._accentColor = accentColor;
 
-  double _graphPercent;
-  double get graphPercent => _$this._graphPercent;
-  set graphPercent(double graphPercent) => _$this._graphPercent = graphPercent;
+  double? _graphPercent;
+  double? get graphPercent => _$this._graphPercent;
+  set graphPercent(double? graphPercent) => _$this._graphPercent = graphPercent;
 
-  String _score;
-  String get score => _$this._score;
-  set score(String score) => _$this._score = score;
+  String? _score;
+  String? get score => _$this._score;
+  set score(String? score) => _$this._score = score;
 
-  String _grade;
-  String get grade => _$this._grade;
-  set grade(String grade) => _$this._grade = grade;
+  String? _grade;
+  String? get grade => _$this._grade;
+  set grade(String? grade) => _$this._grade = grade;
 
-  String _gradeContentDescription;
-  String get gradeContentDescription => _$this._gradeContentDescription;
-  set gradeContentDescription(String gradeContentDescription) =>
+  String? _gradeContentDescription;
+  String? get gradeContentDescription => _$this._gradeContentDescription;
+  set gradeContentDescription(String? gradeContentDescription) =>
       _$this._gradeContentDescription = gradeContentDescription;
 
-  String _outOf;
-  String get outOf => _$this._outOf;
-  set outOf(String outOf) => _$this._outOf = outOf;
+  String? _outOf;
+  String? get outOf => _$this._outOf;
+  set outOf(String? outOf) => _$this._outOf = outOf;
 
-  String _latePenalty;
-  String get latePenalty => _$this._latePenalty;
-  set latePenalty(String latePenalty) => _$this._latePenalty = latePenalty;
+  String? _yourGrade;
+  String? get yourGrade => _$this._yourGrade;
+  set yourGrade(String? yourGrade) => _$this._yourGrade = yourGrade;
 
-  String _finalGrade;
-  String get finalGrade => _$this._finalGrade;
-  set finalGrade(String finalGrade) => _$this._finalGrade = finalGrade;
+  String? _latePenalty;
+  String? get latePenalty => _$this._latePenalty;
+  set latePenalty(String? latePenalty) => _$this._latePenalty = latePenalty;
+
+  String? _finalGrade;
+  String? get finalGrade => _$this._finalGrade;
+  set finalGrade(String? finalGrade) => _$this._finalGrade = finalGrade;
 
   GradeCellDataBuilder() {
     GradeCellData._initializeBuilder(this);
   }
 
   GradeCellDataBuilder get _$this {
-    if (_$v != null) {
-      _state = _$v.state;
-      _submissionText = _$v.submissionText;
-      _showCompleteIcon = _$v.showCompleteIcon;
-      _showIncompleteIcon = _$v.showIncompleteIcon;
-      _showPointsLabel = _$v.showPointsLabel;
-      _accentColor = _$v.accentColor;
-      _graphPercent = _$v.graphPercent;
-      _score = _$v.score;
-      _grade = _$v.grade;
-      _gradeContentDescription = _$v.gradeContentDescription;
-      _outOf = _$v.outOf;
-      _latePenalty = _$v.latePenalty;
-      _finalGrade = _$v.finalGrade;
+    final $v = _$v;
+    if ($v != null) {
+      _state = $v.state;
+      _submissionText = $v.submissionText;
+      _showCompleteIcon = $v.showCompleteIcon;
+      _showIncompleteIcon = $v.showIncompleteIcon;
+      _showPointsLabel = $v.showPointsLabel;
+      _accentColor = $v.accentColor;
+      _graphPercent = $v.graphPercent;
+      _score = $v.score;
+      _grade = $v.grade;
+      _gradeContentDescription = $v.gradeContentDescription;
+      _outOf = $v.outOf;
+      _yourGrade = $v.yourGrade;
+      _latePenalty = $v.latePenalty;
+      _finalGrade = $v.finalGrade;
       _$v = null;
     }
     return this;
@@ -255,37 +243,46 @@ class GradeCellDataBuilder
 
   @override
   void replace(GradeCellData other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$GradeCellData;
   }
 
   @override
-  void update(void Function(GradeCellDataBuilder) updates) {
+  void update(void Function(GradeCellDataBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$GradeCellData build() {
+  GradeCellData build() => _build();
+
+  _$GradeCellData _build() {
     final _$result = _$v ??
         new _$GradeCellData._(
-            state: state,
-            submissionText: submissionText,
-            showCompleteIcon: showCompleteIcon,
-            showIncompleteIcon: showIncompleteIcon,
-            showPointsLabel: showPointsLabel,
-            accentColor: accentColor,
-            graphPercent: graphPercent,
-            score: score,
-            grade: grade,
-            gradeContentDescription: gradeContentDescription,
-            outOf: outOf,
-            latePenalty: latePenalty,
-            finalGrade: finalGrade);
+            state: BuiltValueNullFieldError.checkNotNull(
+                state, r'GradeCellData', 'state'),
+            submissionText: BuiltValueNullFieldError.checkNotNull(
+                submissionText, r'GradeCellData', 'submissionText'),
+            showCompleteIcon: BuiltValueNullFieldError.checkNotNull(
+                showCompleteIcon, r'GradeCellData', 'showCompleteIcon'),
+            showIncompleteIcon: BuiltValueNullFieldError.checkNotNull(
+                showIncompleteIcon, r'GradeCellData', 'showIncompleteIcon'),
+            showPointsLabel: BuiltValueNullFieldError.checkNotNull(
+                showPointsLabel, r'GradeCellData', 'showPointsLabel'),
+            accentColor: BuiltValueNullFieldError.checkNotNull(
+                accentColor, r'GradeCellData', 'accentColor'),
+            graphPercent: BuiltValueNullFieldError.checkNotNull(
+                graphPercent, r'GradeCellData', 'graphPercent'),
+            score: BuiltValueNullFieldError.checkNotNull(
+                score, r'GradeCellData', 'score'),
+            grade: BuiltValueNullFieldError.checkNotNull(grade, r'GradeCellData', 'grade'),
+            gradeContentDescription: BuiltValueNullFieldError.checkNotNull(gradeContentDescription, r'GradeCellData', 'gradeContentDescription'),
+            outOf: BuiltValueNullFieldError.checkNotNull(outOf, r'GradeCellData', 'outOf'),
+            yourGrade: BuiltValueNullFieldError.checkNotNull(yourGrade, r'GradeCellData', 'yourGrade'),
+            latePenalty: BuiltValueNullFieldError.checkNotNull(latePenalty, r'GradeCellData', 'latePenalty'),
+            finalGrade: BuiltValueNullFieldError.checkNotNull(finalGrade, r'GradeCellData', 'finalGrade'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

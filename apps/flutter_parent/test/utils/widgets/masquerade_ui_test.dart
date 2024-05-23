@@ -32,6 +32,7 @@ import '../canvas_model_utils.dart';
 import '../platform_config.dart';
 import '../test_app.dart';
 import '../test_helpers/mock_helpers.dart';
+import '../test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
@@ -45,7 +46,7 @@ void main() {
     ..masqueradeDomain = 'masqueradeDomain'
     ..masqueradeUser = CanvasModelTestUtils.mockUser(name: 'Masked User').toBuilder());
 
-  String masqueradeText = l10n.actingAsUser(masqueradeLogin.masqueradeUser.name);
+  String masqueradeText = l10n.actingAsUser(masqueradeLogin.masqueradeUser!.name);
 
   Key masqueradeContainerKey = Key('masquerade-ui-container');
 
@@ -94,7 +95,7 @@ void main() {
 
     // Foreground border
     Container container = tester.widget(find.byKey(masqueradeContainerKey));
-    Border border = (container.foregroundDecoration as BoxDecoration).border;
+    Border border = (container.foregroundDecoration as BoxDecoration).border as Border;
     expect(border.left, BorderSide(color: ParentColors.masquerade, width: 3));
     expect(border.top, BorderSide(color: ParentColors.masquerade, width: 3));
     expect(border.right, BorderSide(color: ParentColors.masquerade, width: 3));
@@ -116,14 +117,14 @@ void main() {
     expect(find.text(masqueradeText), findsOneWidget);
 
     ApiPrefs.switchLogins(normalLogin);
-    await tester.tap(find.byType(FlatButton));
+    await tester.tap(find.byType(TextButton));
     await tester.pumpAndSettle();
 
     // Should now be disabled
     expect(find.text(masqueradeText), findsNothing);
 
     ApiPrefs.switchLogins(masqueradeLogin);
-    await tester.tap(find.byType(FlatButton));
+    await tester.tap(find.byType(TextButton));
     await tester.pumpAndSettle();
 
     // Should be enabled again
@@ -139,7 +140,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.text(l10n.endMasqueradeMessage(masqueradeLogin.masqueradeUser.name)), findsOneWidget);
+    expect(find.text(l10n.endMasqueradeMessage(masqueradeLogin.masqueradeUser!.name)), findsOneWidget);
 
     // Close the dialog
     await tester.tap(find.text(l10n.cancel));
@@ -159,7 +160,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.text(l10n.endMasqueradeLogoutMessage(masqueradeLogin.masqueradeUser.name)), findsOneWidget);
+    expect(find.text(l10n.endMasqueradeLogoutMessage(masqueradeLogin.masqueradeUser!.name)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Accepting confirmation dialog stops masquerading', (tester) async {
@@ -184,8 +185,8 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Accepting logout confirmation performs logout', (tester) async {
     final reminderDb = MockReminderDb();
-    final calendarFilterDb = _MockCalendarFilterDb();
-    final notificationUtil = _MockNotificationUtil();
+    final calendarFilterDb = MockCalendarFilterDb();
+    final notificationUtil = MockNotificationUtil();
     when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
     setupTestLocator((locator) {
       locator.registerLazySingleton<ReminderDb>(() => reminderDb);
@@ -213,17 +214,13 @@ void main() {
   });
 }
 
-class _MockNotificationUtil extends Mock implements NotificationUtil {}
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
-
 Widget _childWithButton() {
   return Material(
     child: Builder(
-      builder: (context) => FlatButton(
+      builder: (context) => TextButton(
         child: Text('Tap to refresh'),
         onPressed: () {
-          MasqueradeUI.of(context).refresh();
+          MasqueradeUI.of(context)?.refresh();
         },
       ),
     ),

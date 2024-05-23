@@ -715,7 +715,6 @@
     <string name="changeUser">Benutzer*in wechseln</string>
     <string name="general">Allgemein</string>
     <string name="sendFeedback">Feedback senden</string>
-    <string name="rateOnTheAppStore">Im App Store bewerten</string>
     <string name="privacyPolicy">Datenschutzrichtlinien</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Nutzungsbedingungen</string>
@@ -872,7 +871,6 @@
         <item quantity="one">%s Punkt</item>
         <item quantity="other">%s Punkte</item>
     </plurals>
-    <string name="todoUnreadCount">%d Ungelesene erledigen</string>
     <string name="profileSettings">Profileinstellungen</string>
     <string name="downloadingFile">Datei herunterladen&#8230;</string>
     <string name="fileDownloadedSuccessfully">Datei erfolgreich heruntergeladen.</string>
@@ -897,4 +895,5 @@
     <string name="no_grade">Unbenotet</string>
     <string name="excuse">Entschuldigund</string>
     <string name="speed_grader_overgraded_by">Überbenotet von %s</string>
+    <string name="error_unpublishable_module_item">%s kann nicht unveröffentlicht werden, wenn Abgaben von Studierenden vorhanden sind</string>
 </resources>

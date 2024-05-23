@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -33,13 +33,16 @@ object UserAPI {
         STUDENT, TEACHER, TA, OBSERVER, DESIGNER
     }
 
-    internal interface UsersInterface {
+    interface UsersInterface {
 
         @GET("users/self/colors")
         fun getColors(): Call<CanvasColor>
 
         @GET("users/self/profile")
         fun getSelf(): Call<User>
+
+        @GET("users/self/profile")
+        suspend fun getSelf(@Tag params: RestParams): DataResult<User>
 
         @GET("users/self/settings")
         fun getSelfSettings(): Call<UserSettings>
@@ -74,17 +77,31 @@ object UserAPI {
         @GET("users/{userId}/profile")
         fun getUser(@Path("userId") userId: Long?): Call<User>
 
+        @GET("users/{userId}/profile")
+        suspend fun getUser(@Path("userId") userId: Long, @Tag params: RestParams): DataResult<User>
+
         @GET("{contextType}/{contextId}/users/{userId}?include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&include[]=enrollments")
         fun getUserForContextId(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("userId") userId: Long): Call<User>
 
+        @GET("{contextType}/{contextId}/users/{userId}?include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&include[]=enrollments")
+        suspend fun getUserForContextId(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("userId") userId: Long, @Tag params: RestParams): DataResult<User>
+
         @GET("{context_id}/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true")
         fun getFirstPagePeopleList(@Path("context_id") context_id: Long, @Query("enrollment_type") enrollmentType: String): Call<List<User>>
+
+        @GET("{contextType}/{context_id}/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true")
+        suspend fun getFirstPagePeopleList(@Path("context_id") context_id: Long, @Path("contextType") contextType: String, @Tag params: RestParams, @Query("enrollment_type") enrollmentType: String? = null): DataResult<List<User>>
 
         @GET("{context_id}/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true")
         fun getFirstPageAllPeopleList(@Path("context_id") context_id: Long): Call<List<User>>
 
         @GET
         fun next(@Url nextURL: String): Call<List<User>>
+
+        @GET
+        suspend fun getNextPagePeopleList(
+                @Url nextURL: String, @Tag params: RestParams
+        ): DataResult<List<User>>
 
         @GET("accounts/{accountId}/permissions?permissions[]=become_user")
         fun getBecomeUserPermission(@Path("accountId") accountId: Long): Call<BecomeUserPermission>
@@ -108,6 +125,9 @@ object UserAPI {
 
         @GET("courses/{courseId}/users?enrollment_type[]=teacher&enrollment_type[]=ta&include[]=avatar_url&include[]=bio&include[]=enrollments")
         fun getFirstPageTeacherListForCourse(@Path("courseId") courseId: Long): Call<List<User>>
+
+        @PUT("users/self/dashboard_positions")
+        suspend fun updateDashboardPositions(@Body positions: DashboardPositions, @Tag restParams: RestParams): DataResult<DashboardPositions>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {

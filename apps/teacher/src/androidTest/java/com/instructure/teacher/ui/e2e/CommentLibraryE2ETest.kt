@@ -18,21 +18,21 @@ package com.instructure.teacher.ui.e2e
 
 import android.util.Log
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CommentLibraryApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.UserSettingsApiModel
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -42,13 +42,9 @@ import org.junit.Test
 @HiltAndroidTest
 class CommentLibraryE2ETest : TeacherTest() {
 
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //Intentionally empty, because we don't check accessibility in E2E tests.
-    }
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
@@ -60,8 +56,8 @@ class CommentLibraryE2ETest : TeacherTest() {
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Preparing assignment and submit that with the student. Enable comment library in user settings.")
-        val testAssignment = prepareData(course.id, student.token, teacher.token, teacher.id)
+        Log.d(PREPARATION_TAG,"Make an assignment with a submission for the '${course.name}' course and '${student.name}' student. Set the 'Show suggestions when typing' setting to see the comment library itself.")
+        val testAssignment = prepareSettingsAndMakeAssignmentWithSubmission(course, student.token, teacher.token, teacher.id)
 
         Log.d(PREPARATION_TAG,"Generate comments for comment library.")
         val testComment = "Test Comment"
@@ -80,7 +76,7 @@ class CommentLibraryE2ETest : TeacherTest() {
         speedGraderPage.selectCommentsTab()
 
         val testText = "another"
-        Log.d(STEP_TAG,"Type $testText word and check if there is only one matching suggestion visible.")
+        Log.d(STEP_TAG,"Type '$testText' word and check if there is only one matching suggestion visible.")
         speedGraderCommentsPage.typeComment(testText)
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
@@ -93,7 +89,7 @@ class CommentLibraryE2ETest : TeacherTest() {
         commentLibraryPage.assertSuggestionsCount(2)
 
         val testText2 = "test"
-        Log.d(STEP_TAG,"Type $testText2 word and check if there are two matching suggestion visible.")
+        Log.d(STEP_TAG,"Type '$testText2' word and check if there are two matching suggestion visible.")
         commentLibraryPage.closeCommentLibrary()
         speedGraderCommentsPage.typeComment(testText2)
         commentLibraryPage.assertPageObjects()
@@ -121,30 +117,15 @@ class CommentLibraryE2ETest : TeacherTest() {
         commentLibraryPage.assertEmptyViewVisible()
     }
 
-    private fun prepareData(
-        courseId: Long,
+    private fun prepareSettingsAndMakeAssignmentWithSubmission(
+        course: CourseApiModel,
         studentToken: String,
         teacherToken: String,
         teacherId: Long
     ): AssignmentApiModel {
-        val testAssignment = AssignmentsApi.createAssignment(
-            AssignmentsApi.CreateAssignmentRequest(
-                courseId = courseId,
-                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-                gradingType = GradingType.POINTS,
-                teacherToken = teacherToken,
-                pointsPossible = 25.0,
-                dueAt = 1.days.fromNow.iso8601
-            )
-        )
 
-        SubmissionsApi.submitCourseAssignment(
-            submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
-            courseId = courseId,
-            assignmentId = testAssignment.id,
-            fileIds = emptyList<Long>().toMutableList(),
-            studentToken = studentToken
-        )
+        val testAssignment = AssignmentsApi.createAssignment(course.id, teacherToken, pointsPossible = 25.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        SubmissionsApi.submitCourseAssignment(course.id, studentToken, testAssignment.id, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)
 
         val request = UserSettingsApiModel(
             manualMarkAsRead = false,

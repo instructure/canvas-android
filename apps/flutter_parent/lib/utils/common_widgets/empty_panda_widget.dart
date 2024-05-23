@@ -20,42 +20,41 @@ import 'package:flutter_svg/svg.dart';
 /// A simple empty widget that shows a centered SVG above a title/subtitle. All components are optionally, though
 /// ideally all are present. Spacing is added based on which components are present.
 class EmptyPandaWidget extends StatelessWidget {
-  final String svgPath;
-  final String title;
-  final String subtitle;
-  final String buttonText;
-  final GestureTapCallback onButtonTap;
-  final Widget header;
+  final String? svgPath;
+  final String? title;
+  final String? subtitle;
+  final String? buttonText;
+  final GestureTapCallback? onButtonTap;
+  final Widget? header;
 
   const EmptyPandaWidget({
-    Key key,
     this.svgPath,
     this.title,
     this.subtitle,
     this.buttonText,
     this.onButtonTap,
     this.header,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return FullScreenScrollContainer(
-      header: header,
       children: <Widget>[
-        if (svgPath != null) SvgPicture.asset(svgPath, excludeFromSemantics: true),
+        if (svgPath != null) SvgPicture.asset(svgPath!, excludeFromSemantics: true),
         if (svgPath != null && (title != null || subtitle != null)) SizedBox(height: 64),
         if (title != null)
           Text(
-            title,
+            title!,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 20, fontWeight: FontWeight.normal),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 20, fontWeight: FontWeight.normal),
           ),
         if (title != null && subtitle != null) SizedBox(height: 8),
         if (subtitle != null)
           Text(
-            subtitle,
+            subtitle!,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.normal),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.normal),
           ),
         if (buttonText != null)
           Padding(
@@ -63,16 +62,19 @@ class EmptyPandaWidget extends StatelessWidget {
             child: TextButton(
               onPressed: onButtonTap,
               child: Text(
-                buttonText,
-                style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+                buttonText!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 16),
               ),
-              // shape: RoundedRectangleBorder(
-              //   borderRadius: new BorderRadius.circular(4),
-              //   side: BorderSide(color: ParentColors.tiara),
-              // ),
+              style: TextButton.styleFrom(
+                shape:RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4),
+                  side: BorderSide(color: ParentColors.tiara),
+                ),
             ),
           ),
+        ),
       ],
+      header: header,
     );
   }
 }

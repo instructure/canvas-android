@@ -23,22 +23,42 @@ import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 object ConversationsApi {
     interface ConversationsService {
         @POST("conversations")
         fun createConversation(@Body createConversation: CreateConversation): Call<List<ConversationApiModel>>
+
+        @FormUrlEncoded
+        @POST("conversations?group_conversation=true")
+        fun createConversationForCourse(
+            @Field("recipients[]") recipientIds: List<String>,
+            @Field("body") body: String,
+            @Field("context_code") contextCode: String?,
+            @Field("subject") subject: String,
+            @Field("bulk_message") isBulk: Int
+            ): Call<List<ConversationApiModel>>
     }
 
     private fun conversationsService(token: String): ConversationsService
-            = CanvasNetworkAdapter.retrofitWithToken(token).create(ConversationsApi.ConversationsService::class.java)
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(ConversationsService::class.java)
 
-    fun createConversation(token: String, recipients: List<String>): List<ConversationApiModel> {
-        val conversation = CreateConversation(recipients, Randomizer.randomConversationSubject(), Randomizer.randomConversationBody())
+    fun createConversation(token: String, recipients: List<String>, subject: String = Randomizer.randomConversationSubject(), body: String = Randomizer.randomConversationBody()): List<ConversationApiModel> {
+        val conversation = CreateConversation(recipients, subject, body)
         return conversationsService(token)
                 .createConversation(conversation)
                 .execute()
                 .body()!!
+    }
+
+    fun createConversationForCourse(token: String, courseId: Long, recipients: List<String>, subject: String = Randomizer.randomConversationSubject(), body: String = Randomizer.randomConversationBody()): List<ConversationApiModel> {
+        val conversation = CreateConversation(recipients, subject, body)
+        return conversationsService(token)
+            .createConversationForCourse(recipients, conversation.body, "course_$courseId", conversation.subject, 0)
+            .execute()
+            .body()!!
     }
 }

@@ -33,18 +33,30 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.MasterDetailInteractions
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentInternalWebviewBinding
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
-import kotlinx.android.synthetic.main.fragment_internal_webview.*
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import kotlinx.coroutines.Job
-import java.lang.NumberFormatException
 
 open class InternalWebViewFragment : BaseFragment() {
+
+    protected val binding by viewBinding(FragmentInternalWebviewBinding::bind)
 
     var toolbar: Toolbar? = null
 
@@ -53,8 +65,10 @@ open class InternalWebViewFragment : BaseFragment() {
     var title: String by StringArg()
     var darkToolbar: Boolean by BooleanArg()
     private var shouldAuthenticate: Boolean by BooleanArg(key = AUTHENTICATE)
+    var shouldRouteInternally: Boolean by BooleanArg(key = SHOULD_ROUTE_INTERNALLY, default = true)
+    private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
+    private var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, default = true)
 
-    private var shouldRouteInternally = true
     private var shouldLoadUrl = true
     private var mSessionAuthJob: Job? = null
     private var shouldCloseFragment = false
@@ -64,18 +78,14 @@ open class InternalWebViewFragment : BaseFragment() {
     // Used for external urls that reject the candroid user agent string
     var originalUserAgentString: String = ""
 
-    protected fun setShouldRouteInternally(shouldRouteInternally: Boolean) {
-        this.shouldRouteInternally = shouldRouteInternally
-    }
-
     override fun onPause() {
         super.onPause()
-        canvasWebView.onPause()
+        binding.canvasWebView.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        canvasWebView.onResume()
+        binding.canvasWebView.onResume()
     }
 
      override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,7 +95,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        canvasWebView?.saveState(outState)
+        if (view != null) binding.canvasWebView.saveState(outState)
     }
 
     override fun onCreateView(view: View) = Unit
@@ -95,7 +105,7 @@ open class InternalWebViewFragment : BaseFragment() {
         toolbar = view.findViewById(R.id.toolbar)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
 
         val courseId: String? = RouteMatcher.getCourseIdFromUrl(url)
@@ -126,7 +136,6 @@ open class InternalWebViewFragment : BaseFragment() {
 
         setupToolbar(courseBackgroundColor)
 
-        canvasWebView.setDarkModeSupport(webThemeDarkeningOnly = true)
         canvasWebView.settings.loadWithOverviewMode = true
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)
@@ -141,17 +150,24 @@ open class InternalWebViewFragment : BaseFragment() {
             }
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
-                loading?.setGone()
+                loading.setGone()
             }
 
             override fun onPageStartedCallback(webView: WebView, url: String) {
-                loading?.setVisible()
+                loading.setVisible()
             }
 
-            override fun canRouteInternallyDelegate(url: String): Boolean = shouldRouteInternally && RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
+            override fun canRouteInternallyDelegate(url: String): Boolean = shouldRouteInternally
+                    && shouldRouteIfUrlIsTheSame(url)
+                    && RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
 
             override fun routeInternallyCallback(url: String) {
                 RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
+            }
+
+            private fun shouldRouteIfUrlIsTheSame(url: String): Boolean {
+                val sameUrl = this@InternalWebViewFragment.url.contains(url)
+                return !sameUrl || allowRoutingTheSameUrlInternally
             }
         }
 
@@ -164,12 +180,20 @@ open class InternalWebViewFragment : BaseFragment() {
     }
 
     open fun setupToolbar(courseColor: Int) {
-        toolbar.setupCloseButton {
-            shouldCloseFragment = true
-            activity?.onBackPressed()
+        if (isInModulesPager) {
+            toolbar.setupBackButtonWithExpandCollapseAndBack(this@InternalWebViewFragment) {
+                toolbar.updateToolbarExpandCollapseIcon(this@InternalWebViewFragment)
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.white))
+                (activity as MasterDetailInteractions).toggleExpandCollapse()
+            }
+        } else {
+            toolbar.setupCloseButton {
+                shouldCloseFragment = true
+                activity?.onBackPressed()
+            }
         }
 
-        if(darkToolbar) {
+        if (darkToolbar) {
             if (courseColor != -1) {
                 // Use course colors for toolbar
                 ViewStyler.themeToolbarColored(requireActivity(), toolbar!!, courseColor, requireContext().getColor(R.color.white))
@@ -182,10 +206,6 @@ open class InternalWebViewFragment : BaseFragment() {
         }
     }
 
-    fun getCanvasWebView(): CanvasWebView? {
-        return canvasWebView
-    }
-
     ///////////////////////////////////////////////////////////////////////////
     // Logic
     ///////////////////////////////////////////////////////////////////////////
@@ -194,9 +214,9 @@ open class InternalWebViewFragment : BaseFragment() {
         this.shouldLoadUrl = shouldLoadUrl
     }
 
-    fun loadUrl(targetUrl: String) {
+    fun loadUrl(targetUrl: String) = with(binding) {
         if (html.isNotEmpty()) {
-            canvasWebView?.loadHtml(html, title)
+            canvasWebView.loadHtml(html, title)
             return
         }
 
@@ -226,18 +246,18 @@ open class InternalWebViewFragment : BaseFragment() {
 
     fun loadHtml(data: String, mimeType: String, encoding: String, historyUrl: String) {
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-        canvasWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
+        binding.canvasWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), data, mimeType, encoding, historyUrl)
     }
 
     // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-    fun loadHtml(html: String) = canvasWebView.loadDataWithBaseURL(ApiPrefs.fullDomain,
+    fun loadHtml(html: String) = binding.canvasWebView.loadDataWithBaseURL(ApiPrefs.fullDomain,
             FileUtils.getAssetsFile(requireContext(), "html_wrapper.html").replace("{\$CONTENT$}", html, ignoreCase = false),
             "text/html", "UTF-8", null)
 
     private fun getReferer(): Map<String, String> = mutableMapOf(Pair("Referer", ApiPrefs.domain))
 
-    fun canGoBack() = if (!shouldCloseFragment) canvasWebView.canGoBack() else false
-    fun goBack() = canvasWebView.goBack()
+    fun canGoBack() = if (!shouldCloseFragment) binding.canvasWebView.canGoBack() else false
+    fun goBack() = binding.canvasWebView.goBack()
 
     fun setShouldAuthenticateUponLoad(shouldAuthenticate: Boolean) {
         this.shouldAuthenticate = shouldAuthenticate
@@ -249,6 +269,9 @@ open class InternalWebViewFragment : BaseFragment() {
         const val HTML = "html"
         const val DARK_TOOLBAR = "darkToolbar"
         const val AUTHENTICATE = "authenticate"
+        private const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
+        private const val IS_IN_MODULES_PAGER = "isInModulesPager"
+        private const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
 
         fun newInstance(url: String) = InternalWebViewFragment().apply {
             this.url = url
@@ -270,6 +293,10 @@ open class InternalWebViewFragment : BaseFragment() {
             title = args.getString(TITLE)!!
             html = args.getString(HTML) ?: ""
             darkToolbar = args.getBoolean(DARK_TOOLBAR)
+            shouldAuthenticate = args.getBoolean(AUTHENTICATE)
+            shouldRouteInternally = args.getBoolean(SHOULD_ROUTE_INTERNALLY)
+            isInModulesPager = args.getBoolean(IS_IN_MODULES_PAGER)
+            allowRoutingTheSameUrlInternally = args.getBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
         }
 
         @JvmOverloads
@@ -282,13 +309,25 @@ open class InternalWebViewFragment : BaseFragment() {
             return args
         }
 
-        fun makeBundle(url: String, title: String, darkToolbar: Boolean = false, html: String = "", shouldAuthenticate: Boolean): Bundle {
+        fun makeBundle(
+            url: String,
+            title: String,
+            darkToolbar: Boolean = false,
+            html: String = "",
+            shouldRouteInternally: Boolean = true,
+            isInModulesPager: Boolean = false,
+            allowRoutingTheSameUrlInternally: Boolean = true,
+            shouldAuthenticate: Boolean
+        ): Bundle {
             val args = Bundle()
             args.putString(URL, url)
             args.putString(TITLE, title)
             args.putString(HTML, html)
             args.putBoolean(DARK_TOOLBAR, darkToolbar)
             args.putBoolean(AUTHENTICATE, shouldAuthenticate)
+            args.putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
+            args.putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
+            args.putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
             return args
         }
     }

@@ -18,9 +18,12 @@ package com.instructure.pandarecycler.interfaces
 
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import androidx.annotation.RawRes
+import androidx.annotation.StringRes
 
 interface EmptyViewInterface {
     fun setLoading()
+    fun setLoadingWithAnimation(@StringRes titleRes: Int, @StringRes messageRes: Int, @RawRes animationRes: Int) {}
     fun setDisplayNoConnection(isNoConnection: Boolean)
     fun setListEmpty()
     fun setVisibility(visibility: Int)

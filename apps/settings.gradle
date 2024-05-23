@@ -1,13 +1,20 @@
+pluginManagement {
+    buildscript {
+        repositories {
+            mavenCentral()
+            maven {
+                url = uri("https://storage.googleapis.com/r8-releases/raw")
+            }
+        }
+        dependencies {
+            classpath("com.android.tools:r8:8.2.47")
+        }
+    }
+}
+
 /* Top-level project modules */
 include ':student'
 //include ':teacher'
-
-/* Flutter embed modules */
-setBinding(new Binding([gradle: this]))
-
-evaluate(new File(settingsDir.parentFile, 'libs/flutter_student_embed/include_student_embed.groovy'))
-include ':flutter_student_embed'
-project(':flutter_student_embed').projectDir = new File(rootProject.projectDir, '/../libs/flutter_student_embed')
 
 /* Library modules */
 include ':annotations'
@@ -22,8 +29,6 @@ include ':pandautils'
 include ':rceditor'
 include ':recyclerview'
 include ':pandares'
-include ':panda_annotations'
-include ':panda_processor'
 include ':DocumentScanner'
 
 project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
@@ -38,6 +43,4 @@ project(':pandautils').projectDir = new File(rootProject.projectDir, '/../libs/p
 project(':rceditor').projectDir = new File(rootProject.projectDir, '/../libs/rceditor')
 project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../libs/recyclerview')
 project(':pandares').projectDir = new File(rootProject.projectDir, '/../libs/pandares')
-project(':panda_annotations').projectDir = new File(rootProject.projectDir, '/../libs/panda_annotations')
-project(':panda_processor').projectDir = new File(rootProject.projectDir, '/../libs/panda_processor')
 project(':DocumentScanner').projectDir = new File(rootProject.projectDir, '/../libs/DocumentScanner')

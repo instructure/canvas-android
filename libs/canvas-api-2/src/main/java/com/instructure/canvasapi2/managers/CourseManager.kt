@@ -69,6 +69,25 @@ object CourseManager {
         CourseAPI.getFirstPageCourses(adapter, depaginatedCallback, params)
     }
 
+    fun getCoursesWithGradingScheme(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        if (ApiPrefs.isStudentView) {
+            getCoursesTeacher(forceNetwork, callback)
+            return
+        }
+
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithGradingScheme(adapter, depaginatedCallback, params)
+    }
+
     fun getCoursesWithConcluded(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         if (ApiPrefs.isStudentView) {
             getCoursesTeacher(forceNetwork, callback)
@@ -87,23 +106,6 @@ object CourseManager {
         adapter.statusCallback = depaginatedCallback
         CourseAPI.getFirstPageCoursesWithConcluded(adapter, depaginatedCallback, params)
     }
-
-    fun getCoursesByEnrollmentState(enrollmentState: String, forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
-
-        val adapter = RestBuilder(callback)
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-
-        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
-            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
-                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
-            }
-        }
-
-        adapter.statusCallback = depaginatedCallback
-        CourseAPI.getFirstPageCoursesByEnrollmentState(enrollmentState, adapter, depaginatedCallback, params)
-    }
-
-    fun getCoursesByEnrollmentStateAsync(enrollmentState: String, forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesByEnrollmentState(enrollmentState, forceNetwork, it) }
 
     fun getCoursesWithConcludedAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithConcluded(forceNetwork, it) }
 
@@ -169,6 +171,8 @@ object CourseManager {
 
         CourseAPI.getGradingPeriodsForCourse(adapter, callback, params, courseId)
     }
+
+    fun getCourseAsync(courseId: Long, forceNetwork: Boolean) = apiAsync { getCourse(courseId, it, forceNetwork) }
 
     fun getCourse(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
@@ -339,11 +343,11 @@ object CourseManager {
     }
 
     @Throws(IOException::class)
-    fun getCoursesSynchronous(forceNetwork: Boolean): List<Course> {
+    fun getCoursesSynchronousWithGradingScheme(forceNetwork: Boolean): List<Course> {
         val adapter = RestBuilder()
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
-        val data = CourseAPI.getCoursesSynchronously(adapter, params)
+        val data = CourseAPI.getCoursesSynchronouslyWithGradingScheme(adapter, params)
         return data ?: ArrayList()
     }
 

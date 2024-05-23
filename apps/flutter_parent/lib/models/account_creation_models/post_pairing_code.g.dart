@@ -17,9 +17,9 @@ class _$PostPairingCodeSerializer
   final String wireName = 'PostPairingCode';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, PostPairingCode object,
+  Iterable<Object?> serialize(Serializers serializers, PostPairingCode object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'code',
       serializers.serialize(object.code, specifiedType: const FullType(String)),
     ];
@@ -29,19 +29,19 @@ class _$PostPairingCodeSerializer
 
   @override
   PostPairingCode deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PostPairingCodeBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'code':
           result.code = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -54,13 +54,11 @@ class _$PostPairingCode extends PostPairingCode {
   @override
   final String code;
 
-  factory _$PostPairingCode([void Function(PostPairingCodeBuilder) updates]) =>
-      (new PostPairingCodeBuilder()..update(updates)).build();
+  factory _$PostPairingCode([void Function(PostPairingCodeBuilder)? updates]) =>
+      (new PostPairingCodeBuilder()..update(updates))._build();
 
-  _$PostPairingCode._({this.code}) : super._() {
-    if (code == null) {
-      throw new BuiltValueNullFieldError('PostPairingCode', 'code');
-    }
+  _$PostPairingCode._({required this.code}) : super._() {
+    BuiltValueNullFieldError.checkNotNull(code, r'PostPairingCode', 'code');
   }
 
   @override
@@ -79,29 +77,33 @@ class _$PostPairingCode extends PostPairingCode {
 
   @override
   int get hashCode {
-    return $jf($jc(0, code.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, code.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('PostPairingCode')..add('code', code))
+    return (newBuiltValueToStringHelper(r'PostPairingCode')..add('code', code))
         .toString();
   }
 }
 
 class PostPairingCodeBuilder
     implements Builder<PostPairingCode, PostPairingCodeBuilder> {
-  _$PostPairingCode _$v;
+  _$PostPairingCode? _$v;
 
-  String _code;
-  String get code => _$this._code;
-  set code(String code) => _$this._code = code;
+  String? _code;
+  String? get code => _$this._code;
+  set code(String? code) => _$this._code = code;
 
   PostPairingCodeBuilder();
 
   PostPairingCodeBuilder get _$this {
-    if (_$v != null) {
-      _code = _$v.code;
+    final $v = _$v;
+    if ($v != null) {
+      _code = $v.code;
       _$v = null;
     }
     return this;
@@ -109,23 +111,26 @@ class PostPairingCodeBuilder
 
   @override
   void replace(PostPairingCode other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$PostPairingCode;
   }
 
   @override
-  void update(void Function(PostPairingCodeBuilder) updates) {
+  void update(void Function(PostPairingCodeBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$PostPairingCode build() {
-    final _$result = _$v ?? new _$PostPairingCode._(code: code);
+  PostPairingCode build() => _build();
+
+  _$PostPairingCode _build() {
+    final _$result = _$v ??
+        new _$PostPairingCode._(
+            code: BuiltValueNullFieldError.checkNotNull(
+                code, r'PostPairingCode', 'code'));
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

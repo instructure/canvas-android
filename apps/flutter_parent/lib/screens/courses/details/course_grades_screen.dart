@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
@@ -41,8 +42,8 @@ class CourseGradesScreen extends StatefulWidget {
 }
 
 class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticKeepAliveClientMixin {
-  Set<String> _collapsedGroupIds;
-  Future<GradeDetails> _detailsFuture;
+  late Set<String> _collapsedGroupIds;
+  Future<GradeDetails>? _detailsFuture;
   static final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
@@ -63,7 +64,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
         if (_detailsFuture == null) _detailsFuture = model.loadAssignments();
         return RefreshIndicator(
           key: _refreshIndicatorKey,
-          onRefresh: () => _refresh(model),
+          onRefresh: () => _refresh(model)!,
           child: FutureBuilder(
             future: _detailsFuture,
             builder: (context, AsyncSnapshot<GradeDetails> snapshot) => _body(snapshot, model),
@@ -73,12 +74,12 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
     );
   }
 
-  Future<GradeDetails> _refresh(CourseDetailsModel model) {
+  Future<GradeDetails>? _refresh(CourseDetailsModel model) {
     setState(() {
       _detailsFuture = model.loadAssignments(forceRefresh: model.forceRefresh);
       model.forceRefresh = true;
     });
-    return _detailsFuture.catchError((_) {});
+    return _detailsFuture?.catchError((_) {});
   }
 
   Widget _body(AsyncSnapshot<GradeDetails> snapshot, CourseDetailsModel model) {
@@ -93,13 +94,14 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
       return ErrorPandaWidget(
         L10n(context).unexpectedError,
         () {
-          _refreshIndicatorKey.currentState.show();
+          _refreshIndicatorKey.currentState?.show();
         },
       );
     } else if (!snapshot.hasData ||
-        snapshot.data.assignmentGroups == null ||
-        snapshot.data.assignmentGroups.isEmpty ||
-        snapshot.data.assignmentGroups.every((group) => group.assignments.isEmpty) == true) {
+        model.course == null ||
+        snapshot.data?.assignmentGroups == null ||
+        snapshot.data?.assignmentGroups?.isEmpty == true ||
+        snapshot.data?.assignmentGroups?.every((group) => group.assignments.isEmpty) == true) {
       return EmptyPandaWidget(
         svgPath: 'assets/svg/panda-space-no-assignments.svg',
         title: L10n(context).noAssignmentsTitle,
@@ -112,13 +114,13 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
     return ListView(
       children: [
         header,
-        ..._assignmentListChildren(context, snapshot.data.assignmentGroups),
+        ..._assignmentListChildren(context, snapshot.data!.assignmentGroups!, model.course!),
       ],
     );
   }
 
-  List<Widget> _assignmentListChildren(BuildContext context, List<AssignmentGroup> groups) {
-    final children = List<Widget>();
+  List<Widget> _assignmentListChildren(BuildContext context, List<AssignmentGroup> groups, Course course) {
+    List<Widget> children = [];
 
     for (AssignmentGroup group in groups) {
       if (group.assignments.length == 0) continue; // Don't show empty assignment groups
@@ -137,19 +139,19 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
             },
             title: Padding(
               padding: const EdgeInsetsDirectional.only(top: 16, start: 16, end: 16),
-              child: Text(group.name, style: Theme.of(context).textTheme.overline),
+              child: Text(group.name, style: Theme.of(context).textTheme.labelSmall),
             ),
             trailing: Padding(
               padding: const EdgeInsetsDirectional.only(top: 16, start: 16, end: 16),
               child: Icon(
                 isCollapsed ? CanvasIcons.mini_arrow_down : CanvasIcons.mini_arrow_up,
-                color: Theme.of(context).textTheme.overline.color,
+                color: Theme.of(context).textTheme.labelSmall!.color,
                 semanticLabel: isCollapsed ? L10n(context).allyCollapsed : L10n(context).allyExpanded,
               ),
             ),
             children: <Widget>[
               ...(group.assignments.toList()..sort((a, b) => a.position.compareTo(b.position)))
-                  .map((assignment) => _AssignmentRow(assignment: assignment))
+                  .map((assignment) => _AssignmentRow(assignment: assignment, course: course))
             ],
           ),
         ),
@@ -166,11 +168,10 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
 
 class _CourseGradeHeader extends StatelessWidget {
   final List<GradingPeriod> gradingPeriods;
-  final Enrollment termEnrollment;
+  final Enrollment? termEnrollment;
 
-  _CourseGradeHeader(BuildContext context, List<GradingPeriod> gradingPeriods, this.termEnrollment, {Key key})
-      : this.gradingPeriods = [GradingPeriod((b) => b..title = L10n(context).allGradingPeriods)] + gradingPeriods,
-        super(key: key);
+  _CourseGradeHeader(BuildContext context, List<GradingPeriod> gradingPeriods, this.termEnrollment, {super.key})
+      : this.gradingPeriods = [GradingPeriod((b) => b..title = L10n(context).allGradingPeriods)] + gradingPeriods;
 
   @override
   Widget build(BuildContext context) {
@@ -189,11 +190,11 @@ class _CourseGradeHeader extends StatelessWidget {
     );
   }
 
-  Widget _gradingPeriodHeader(BuildContext context, CourseDetailsModel model) {
+  Widget? _gradingPeriodHeader(BuildContext context, CourseDetailsModel model) {
     // Don't show this if there's no grading periods (we always add 1 for 'All grading periods')
     if (gradingPeriods.length <= 1) return null;
 
-    final studentColor = ParentTheme.of(context).studentColor;
+    final studentColor = ParentTheme.of(context)?.studentColor;
 
     final gradingPeriod = model.currentGradingPeriod() ?? gradingPeriods.first;
 
@@ -202,10 +203,9 @@ class _CourseGradeHeader extends StatelessWidget {
       padding: const EdgeInsetsDirectional.only(start: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.ideographic,
         children: <Widget>[
-          Text(gradingPeriod.title, style: Theme.of(context).textTheme.headline4),
+          Text(gradingPeriod.title!, style: Theme.of(context).textTheme.headlineMedium),
           InkWell(
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: 48, minWidth: 48), // For a11y
@@ -215,7 +215,7 @@ class _CourseGradeHeader extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Text(
                     L10n(context).filter,
-                    style: Theme.of(context).textTheme.caption.copyWith(color: studentColor),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: studentColor),
                   ),
                 ),
               ),
@@ -226,7 +226,7 @@ class _CourseGradeHeader extends StatelessWidget {
 
               // Don't force refresh when switching grading periods
               model.forceRefresh = false;
-              _CourseGradesScreenState._refreshIndicatorKey.currentState.show();
+              _CourseGradesScreenState._refreshIndicatorKey.currentState?.show();
             },
           ),
         ],
@@ -235,16 +235,18 @@ class _CourseGradeHeader extends StatelessWidget {
   }
 
   /// The total grade in the course/grading period
-  Widget _gradeTotal(BuildContext context, CourseDetailsModel model) {
-    final grade = model.course.getCourseGrade(
-      model.student.id,
+  Widget? _gradeTotal(BuildContext context, CourseDetailsModel model) {
+    final grade = model.course?.getCourseGrade(
+      model.student?.id,
       enrollment: termEnrollment,
       gradingPeriodId: model.currentGradingPeriod()?.id,
       forceAllPeriods: termEnrollment == null && model.currentGradingPeriod()?.id == null,
     );
 
     // Don't show the total if the grade is locked
-    if (grade.isCourseGradeLocked(forAllGradingPeriods: model.currentGradingPeriod()?.id == null)) return null;
+    if (grade == null || grade.isCourseGradeLocked(forAllGradingPeriods: model.currentGradingPeriod()?.id == null)) return null;
+
+    if ((model.courseSettings?.restrictQuantitativeData ?? false) && (grade.currentGrade() == null || grade.currentGrade()?.isEmpty == true)) return null;
 
     final textTheme = Theme.of(context).textTheme;
     return Padding(
@@ -252,36 +254,40 @@ class _CourseGradeHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(L10n(context).courseTotalGradeLabel, style: textTheme.bodyText2),
-          Text(_courseGrade(context, grade), style: textTheme.bodyText2, key: Key("total_grade")),
+          Text(L10n(context).courseTotalGradeLabel, style: textTheme.bodyMedium),
+          Text(_courseGrade(context, grade, model.courseSettings?.restrictQuantitativeData ?? false), style: textTheme.bodyMedium, key: Key("total_grade")),
         ],
       ),
     );
   }
 
-  String _courseGrade(BuildContext context, CourseGrade grade) {
+  String _courseGrade(BuildContext context, CourseGrade grade, bool restrictQuantitativeData) {
     final format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
     if (grade.noCurrentGrade()) {
       return L10n(context).noGrade;
     } else {
+      var formattedScore = (grade.currentScore() != null && restrictQuantitativeData == false)
+          ? format.format(grade.currentScore()! / 100)
+          : '';
       return grade.currentGrade()?.isNotEmpty == true
-          ? grade.currentGrade()
-          : format.format(grade.currentScore() / 100); // format multiplies by 100 for percentages
+          ? "${grade.currentGrade()}${formattedScore.isNotEmpty ? ' $formattedScore' : ''}"
+          : formattedScore;
     }
   }
 }
 
 class _AssignmentRow extends StatelessWidget {
   final Assignment assignment;
+  final Course course;
 
-  const _AssignmentRow({Key key, this.assignment}) : super(key: key);
+  const _AssignmentRow({required this.assignment, required this.course, super.key});
 
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<CourseDetailsModel>(context, listen: false);
-    final studentId = model.student.id;
+    final studentId = model.student?.id;
 
     final textTheme = Theme.of(context).textTheme;
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
@@ -298,7 +304,7 @@ class _AssignmentRow extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(top: 4),
               width: 20,
-              child: Icon(CanvasIcons.assignment, size: 20, color: ParentTheme.of(context).studentColor),
+              child: Icon(CanvasIcons.assignment, size: 20, color: ParentTheme.of(context)?.studentColor),
             ),
             SizedBox(width: 32),
             Expanded(
@@ -310,10 +316,10 @@ class _AssignmentRow extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(assignment.name, style: textTheme.subtitle1, key: Key("assignment_${assignment.id}_name")),
+                        Text(assignment.name!, style: textTheme.titleMedium, key: Key("assignment_${assignment.id}_name")),
                         SizedBox(height: 2),
                         Text(_formatDate(context, assignment.dueAt),
-                            style: textTheme.caption, key: Key("assignment_${assignment.id}_dueAt")),
+                            style: textTheme.bodySmall, key: Key("assignment_${assignment.id}_dueAt")),
                         if (assignmentStatus != null) SizedBox(height: 4),
                         if (assignmentStatus != null) assignmentStatus,
                       ],
@@ -330,7 +336,7 @@ class _AssignmentRow extends StatelessWidget {
     );
   }
 
-  Widget _assignmentStatus(BuildContext context, Assignment assignment, String studentId) {
+  Widget? _assignmentStatus(BuildContext context, Assignment assignment, String? studentId) {
     final localizations = L10n(context);
     final textTheme = Theme.of(context).textTheme;
     final status = assignment.getStatus(studentId: studentId);
@@ -340,24 +346,24 @@ class _AssignmentRow extends StatelessWidget {
         return null; // An 'invisible' status, just don't show anything
       case SubmissionStatus.LATE:
         return Text(localizations.assignmentLateSubmittedLabel,
-            style: textTheme.caption.copyWith(
+            style: textTheme.bodySmall?.copyWith(
               // Late will be orange, regardless of the current student
-              color: ParentTheme.of(context).getColorVariantForCurrentState(StudentColorSet.fire),
+              color: ParentTheme.of(context)?.getColorVariantForCurrentState(StudentColorSet.fire),
             ),
             key: key);
       case SubmissionStatus.MISSING:
         return Text(localizations.assignmentMissingSubmittedLabel,
-            style: textTheme.caption.copyWith(color: ParentColors.failure), key: key);
+            style: textTheme.bodySmall?.copyWith(color: ParentColors.failure), key: key);
       case SubmissionStatus.SUBMITTED:
-        return Text(localizations.assignmentSubmittedLabel, style: textTheme.caption, key: key);
+        return Text(localizations.assignmentSubmittedLabel, style: textTheme.bodySmall, key: key);
       case SubmissionStatus.NOT_SUBMITTED:
-        return Text(localizations.assignmentNotSubmittedLabel, style: textTheme.caption, key: key);
+        return Text(localizations.assignmentNotSubmittedLabel, style: textTheme.bodySmall, key: key);
       default:
         return null;
     }
   }
 
-  Widget _assignmentGrade(BuildContext context, Assignment assignment, String studentId) {
+  Widget _assignmentGrade(BuildContext context, Assignment assignment, String? studentId) {
     dynamic points = assignment.pointsPossible;
 
     // Store the points as an int if possible
@@ -371,24 +377,42 @@ class _AssignmentRow extends StatelessWidget {
     final localizations = L10n(context);
 
     final submission = assignment.submission(studentId);
+
+    final restrictQuantitativeData = course.settings?.restrictQuantitativeData ?? false;
+
     if (submission?.excused ?? false) {
-      text = localizations.gradeFormatScoreOutOfPointsPossible(localizations.excused, points);
-      semantics = localizations.contentDescriptionScoreOutOfPointsPossible('', points);
+      text = restrictQuantitativeData
+          ? localizations.excused
+          : localizations.gradeFormatScoreOutOfPointsPossible(localizations.excused, points);
+      semantics = restrictQuantitativeData
+          ? localizations.excused
+          : localizations.contentDescriptionScoreOutOfPointsPossible(localizations.excused, points);
     } else if (submission?.grade != null) {
-      text = localizations.gradeFormatScoreOutOfPointsPossible(submission.grade, points);
-      semantics = localizations.contentDescriptionScoreOutOfPointsPossible(submission.grade, points);
+      String grade = restrictQuantitativeData && assignment.isGradingTypeQuantitative()
+          ? course.convertScoreToLetterGrade(submission!.score, assignment.pointsPossible)
+          : submission!.grade!;
+      text = restrictQuantitativeData
+          ? grade
+          : localizations.gradeFormatScoreOutOfPointsPossible(grade, points);
+      semantics = restrictQuantitativeData
+          ? grade
+          : localizations.contentDescriptionScoreOutOfPointsPossible(grade, points);
     } else {
-      text = localizations.gradeFormatScoreOutOfPointsPossible(localizations.assignmentNoScore, points);
-      semantics = localizations.contentDescriptionScoreOutOfPointsPossible('', points); // Read as "out of x points"
+      text = restrictQuantitativeData
+          ? localizations.assignmentNoScore
+          : localizations.gradeFormatScoreOutOfPointsPossible(localizations.assignmentNoScore, points);
+      semantics = restrictQuantitativeData
+          ? ''
+          : localizations.contentDescriptionScoreOutOfPointsPossible('', points);
     }
 
     return Text(text,
         semanticsLabel: semantics,
-        style: Theme.of(context).textTheme.subtitle1,
+        style: Theme.of(context).textTheme.titleMedium,
         key: Key("assignment_${assignment.id}_grade"));
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
+  String _formatDate(BuildContext context, DateTime? date) {
     final l10n = L10n(context);
     return date.l10nFormat(l10n.dueDateAtTime) ?? l10n.noDueDate;
   }

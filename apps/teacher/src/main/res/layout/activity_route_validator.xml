@@ -23,6 +23,12 @@
     android:background="@color/backgroundLightest"
     android:orientation="vertical">
 
+    <com.instructure.pandautils.views.CanvasWebView
+        android:id="@+id/dummyWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
+
     <com.instructure.loginapi.login.view.CanvasLoadingView
         android:id="@+id/canvasLoadingView"
         android:layout_width="120dp"

@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.features.postpolicies.ui
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,25 +27,29 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentPostPolicySettingsBinding
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
-import kotlinx.android.synthetic.main.fragment_post_policy_settings.*
-import kotlinx.android.synthetic.main.fragment_post_policy_settings.view.*
 
 class PostPolicyFragment : Fragment() {
+
+    private val binding by viewBinding(FragmentPostPolicySettingsBinding::bind)
 
     private var assignment: Assignment by ParcelableArg(Assignment(), Const.ASSIGNMENT)
     private var course: Course by ParcelableArg(Course(), Const.CANVAS_CONTEXT)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_post_policy_settings, container, false)
+        return inflater.inflate(R.layout.fragment_post_policy_settings, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val titles = listOf(getString(R.string.postGradesTab), getString(R.string.hideGradesTab))
-        view.postPolicyPager.adapter = PostPolicyPagerAdapter(course, assignment, childFragmentManager, titles)
-        view.postPolicyTabLayout.setupWithViewPager(view.postPolicyPager, true)
-
-        return view
+        binding.postPolicyPager.adapter = PostPolicyPagerAdapter(course, assignment, childFragmentManager, titles)
+        binding.postPolicyTabLayout.setupWithViewPager(binding.postPolicyPager, true)
     }
 
     override fun onResume() {
@@ -54,9 +57,9 @@ class PostPolicyFragment : Fragment() {
         applyTheme()
     }
 
-    private fun applyTheme() {
+    private fun applyTheme() = with(binding) {
         postPolicyToolbar.subtitle = assignment.name
-        postPolicyToolbar.setupBackButtonAsBackPressedOnly(this)
+        postPolicyToolbar.setupBackButtonAsBackPressedOnly(this@PostPolicyFragment)
 
         ViewStyler.themeToolbarLight(requireActivity(), postPolicyToolbar)
 

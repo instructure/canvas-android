@@ -23,15 +23,15 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 /// See Also for more details:
 /// * [NumberBadge]
 /// * [IndicatorBadge]
-typedef String GetSemantics(BuildContext context, int count);
+typedef String GetSemantics(BuildContext context, int? count);
 
 /// A simple class to wrap options for [NumberBadge] and [WidgetBadge]
 class BadgeOptions {
   /// The initial count to show for the badge
-  final int count;
+  final int? count;
 
   /// The max count a badge can show, for counts greater than this the string shown will be '$maxCount+'
-  final int maxCount;
+  final int? maxCount;
 
   /// True if the badge should include a border
   final bool includeBorder;
@@ -54,18 +54,16 @@ class BadgeOptions {
 /// * [IndicatorBadge] for when a simple circle is all that is needed
 class WidgetBadge extends StatelessWidget {
   final Widget icon;
-  final BadgeOptions options;
-  final GetSemantics semantics;
-  final ValueListenable countListenable;
+  final BadgeOptions? options;
+  final GetSemantics? semantics;
+  final ValueListenable? countListenable;
 
-  const WidgetBadge(this.icon, {Key key, this.options = const BadgeOptions(), this.semantics, this.countListenable})
-      : assert(icon != null),
-        super(key: key);
+  const WidgetBadge(this.icon, {this.options = const BadgeOptions(), this.semantics, this.countListenable, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      // overflow: Overflow.visible,
+      clipBehavior: Clip.none,
       children: <Widget>[
         icon,
         _badge(),
@@ -81,7 +79,7 @@ class WidgetBadge extends StatelessWidget {
     return PositionedDirectional(
       end: -10,
       top: -10,
-      child: NumberBadge(options: options, semantics: semantics, listenable: countListenable),
+      child: NumberBadge(options: options!, semantics: semantics, listenable: countListenable),
     );
   }
 }
@@ -96,26 +94,26 @@ class NumberBadge extends StatelessWidget {
   static final borderKey = const ValueKey('borderKey');
 
   final BadgeOptions options;
-  final GetSemantics semantics;
-  final ValueListenable listenable;
+  final GetSemantics? semantics;
+  final ValueListenable? listenable;
 
-  const NumberBadge({Key key, this.options = const BadgeOptions(), this.semantics, this.listenable}) : super(key: key);
+  const NumberBadge({this.options = const BadgeOptions(), this.semantics, this.listenable, super.key});
 
   @override
   Widget build(BuildContext context) {
     if (listenable == null) return _badge(context, options.count);
     return ValueListenableBuilder(
-      valueListenable: listenable,
-      builder: (context, count, _) => _badge(context, count),
+      valueListenable: listenable!,
+      builder: (context, count, _) => _badge(context, count as int?),
     );
   }
 
-  Widget _badge(BuildContext context, int count) {
+  Widget _badge(BuildContext context, int? count) {
     // If there's no count, then don't show anything
     if (count == null || count <= 0) return SizedBox();
 
     final maxCount = options.maxCount;
-    final accentColor = (ParentTheme.of(context).isDarkMode ? Colors.black : Theme.of(context).accentColor);
+    final accentColor = (ParentTheme.of(context)?.isDarkMode == true ? Colors.black : Theme.of(context).colorScheme.secondary);
 
     // Wrap in another container to get the border around the badge, since using border for circles in a box decoration
     // has antialiasing issues.
@@ -133,10 +131,10 @@ class NumberBadge extends StatelessWidget {
           padding: const EdgeInsets.all(6.0),
           child: Text(
             maxCount != null && count > maxCount ? L10n(context).badgeNumberPlus(maxCount) : '$count',
-            semanticsLabel: semantics != null ? semantics(context, count) : L10n(context).unreadCount(count),
+            semanticsLabel: semantics != null ? semantics!(context, count) : L10n(context).unreadCount(count),
             style: TextStyle(
               fontSize: 10,
-              color: options.onPrimarySurface ? accentColor : Theme.of(context).accentIconTheme.color,
+              color: options.onPrimarySurface ? accentColor : Theme.of(context).scaffoldBackgroundColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -151,14 +149,14 @@ class NumberBadge extends StatelessWidget {
 /// Defaults semantics to [AppLocalizations.unread] if not provided, can be overridden to return null so no semantics
 /// label is added. Never provides a value for 'count' in the semantics function.
 class IndicatorBadge extends StatelessWidget {
-  final GetSemantics semantics;
+  final GetSemantics? semantics;
 
-  const IndicatorBadge({Key key, this.semantics}) : super(key: key);
+  const IndicatorBadge({this.semantics, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: semantics != null ? semantics(context, null) : L10n(context).unread,
+      label: semantics != null ? semantics!(context, null) : L10n(context).unread,
       child: Container(
         key: Key('unread-indicator'),
         width: 8,
@@ -173,7 +171,7 @@ class IndicatorBadge extends StatelessWidget {
 /// determine what color to make the background.
 Decoration _badgeDecoration(BuildContext context, BadgeOptions options) => BoxDecoration(
       shape: BoxShape.circle,
-      color: options.onPrimarySurface ? Theme.of(context).primaryIconTheme.color : Theme.of(context).accentColor,
+      color: options.onPrimarySurface ? Theme.of(context).primaryIconTheme.color : Theme.of(context).colorScheme.secondary,
       // Can't use border here as there is an antialiasing issue: https://github.com/flutter/flutter/issues/13675
 //      border: !options.includeBorder ? null : Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
     );

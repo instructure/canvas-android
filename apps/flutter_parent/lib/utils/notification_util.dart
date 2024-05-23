@@ -26,43 +26,43 @@ import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationUtil {
   static const notificationChannelReminders =
       'com.instructure.parentapp/reminders';
 
-  static FlutterLocalNotificationsPlugin _plugin;
+  static AndroidFlutterLocalNotificationsPlugin? _plugin;
 
   @visibleForTesting
-  static initForTest(FlutterLocalNotificationsPlugin plugin) {
+  static initForTest(AndroidFlutterLocalNotificationsPlugin plugin) {
     _plugin = plugin;
   }
 
-  static Future<void> init(Completer<void> appCompleter) async {
-    var initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings('ic_notification_canvas_logo')
-    );
+  static Future<void> init(Completer<void>? appCompleter) async {
+    var initializationSettings = AndroidInitializationSettings('ic_notification_canvas_logo');
 
     if (_plugin == null) {
-      _plugin = FlutterLocalNotificationsPlugin();
+      _plugin = AndroidFlutterLocalNotificationsPlugin();
     }
 
-    await _plugin.initialize(
+    await _plugin!.initialize(
       initializationSettings,
-      onSelectNotification: (rawPayload) async {
-        await handlePayload(rawPayload, appCompleter);
+      onDidReceiveNotificationResponse: (rawPayload) async {
+        await handlePayload(rawPayload.payload ?? '', appCompleter);
       },
     );
   }
 
   @visibleForTesting
   static Future<void> handlePayload(
-      String rawPayload, Completer<void> appCompleter) async {
+      String rawPayload, Completer<void>? appCompleter) async {
     try {
-      NotificationPayload payload = deserialize(json.decode(rawPayload));
-      switch (payload.type) {
+      NotificationPayload? payload = deserialize(json.decode(rawPayload));
+      switch (payload?.type) {
         case NotificationPayloadType.reminder:
-          await handleReminder(payload, appCompleter);
+          await handleReminder(payload!, appCompleter);
           break;
         case NotificationPayloadType.other:
           break;
@@ -74,41 +74,38 @@ class NotificationUtil {
 
   @visibleForTesting
   static Future<void> handleReminder(
-      NotificationPayload payload, Completer<void> appCompleter) async {
-    Reminder reminder = Reminder.fromNotification(payload);
+      NotificationPayload payload, Completer<void>? appCompleter) async {
+    Reminder? reminder = Reminder.fromNotification(payload);
 
     // Delete reminder from db
-    await locator<ReminderDb>().deleteById(reminder.id);
+    await locator<ReminderDb>().deleteById(reminder?.id);
 
     // Create route
-    String route;
-    switch (reminder.type) {
+    String? route;
+    switch (reminder?.type) {
       case Reminder.TYPE_ASSIGNMENT:
         route =
-            PandaRouter.assignmentDetails(reminder.courseId, reminder.itemId);
+            PandaRouter.assignmentDetails(reminder!.courseId, reminder.itemId);
         break;
       case Reminder.TYPE_EVENT:
-        route = PandaRouter.eventDetails(reminder.courseId, reminder.itemId);
+        route = PandaRouter.eventDetails(reminder!.courseId, reminder.itemId);
         break;
     }
 
     // Push route, but only after the app has finished building
-    appCompleter.future
-        .then((_) => WidgetsBinding.instance?.handlePushRoute(route));
+    if (route != null) appCompleter?.future.then((_) => WidgetsBinding.instance.handlePushRoute(route!));
   }
 
   Future<void> scheduleReminder(
-      AppLocalizations l10n, String title, String body, Reminder reminder) {
+      AppLocalizations l10n, String? title, String body, Reminder reminder) {
     final payload = NotificationPayload((b) => b
       ..type = NotificationPayloadType.reminder
       ..data = json.encode(serialize(reminder)));
 
-    final notificationDetails = NotificationDetails(
-      android: AndroidNotificationDetails(
+    final notificationDetails = AndroidNotificationDetails(
         notificationChannelReminders,
         l10n.remindersNotificationChannelName,
         channelDescription: l10n.remindersNotificationChannelDescription
-      )
     );
 
     if (reminder.type == Reminder.TYPE_ASSIGNMENT) {
@@ -119,19 +116,28 @@ class NotificationUtil {
           .logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
     }
 
-    return _plugin.schedule(
-      reminder.id,
+    tz.initializeTimeZones();
+    var d = reminder.date!.toUtc();
+    var date = tz.TZDateTime.utc(d.year, d.month, d.day, d.hour, d.minute, d.second);
+
+    return _plugin!.zonedSchedule(
+      reminder.id!,
       title,
       body,
-      reminder.date,
+      date,
       notificationDetails,
-      payload: json.encode(serialize(payload)),
+      scheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: json.encode(serialize(payload))
     );
   }
 
-  Future<void> deleteNotification(int id) => _plugin.cancel(id);
+  Future<void> deleteNotification(int id) => _plugin!.cancel(id);
 
   Future<void> deleteNotifications(List<int> ids) async {
-    for (int id in ids) await _plugin.cancel(id);
+    for (int id in ids) await _plugin!.cancel(id);
+  }
+
+  Future<bool?> requestScheduleExactAlarmPermission() async {
+    return await _plugin?.requestExactAlarmsPermission();
   }
 }

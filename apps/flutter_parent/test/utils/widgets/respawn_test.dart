@@ -70,16 +70,16 @@ class _RespawnTestWidgetState extends State<_RespawnTestWidget> {
             'Count: $_counter',
             key: _RespawnTestWidget.counterKey,
           ),
-          FlatButton(
+          TextButton(
             key: _RespawnTestWidget.incrementKey,
             child: Text('Tap to increment'),
             onPressed: () => setState(() => _counter++),
           ),
-          FlatButton(
+          TextButton(
             key: _RespawnTestWidget.respawnKey,
             child: Text('Tap to Respawn'),
             onPressed: () {
-              Respawn.of(context).restart();
+              Respawn.of(context)?.restart();
             },
           ),
         ],

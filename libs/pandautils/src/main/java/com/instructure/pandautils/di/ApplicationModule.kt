@@ -20,17 +20,27 @@ import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.res.Resources
+import android.webkit.CookieManager
 import androidx.work.WorkManager
+import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.offline.sync.HtmlParser
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.StorageUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.threeten.bp.Clock
 import javax.inject.Singleton
 
 /**
@@ -47,7 +57,10 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideCrashlytics(): FirebaseCrashlytics {
+    fun provideCrashlytics(@ApplicationContext context: Context): FirebaseCrashlytics {
+        // Have to initialize FirebaseApp because we inject DatabaseProvider into AppManager and DatabaseProvider uses FirebaseCrashlytics
+        // No-op if already initialized
+        FirebaseApp.initializeApp(context)
         return FirebaseCrashlytics.getInstance()
     }
 
@@ -83,5 +96,34 @@ class ApplicationModule {
     @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCookieManager(): CookieManager {
+        return CookieManager.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorageUtils(@ApplicationContext context: Context): StorageUtils {
+        return StorageUtils(context)
+    }
+
+    @Provides
+    fun provideHtmlParses(
+        localFileDao: LocalFileDao,
+        apiPrefs: ApiPrefs,
+        fileFolderDao: FileFolderDao,
+        @ApplicationContext context: Context,
+        fileSyncSettingsDao: FileSyncSettingsDao,
+        fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    ): HtmlParser {
+        return HtmlParser(localFileDao, apiPrefs, fileFolderDao, context, fileSyncSettingsDao, fileFolderApi)
+    }
+
+    @Provides
+    fun provideClock(): Clock {
+        return Clock.systemDefaultZone()
     }
 }

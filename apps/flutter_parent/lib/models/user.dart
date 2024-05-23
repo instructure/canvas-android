@@ -31,34 +31,29 @@ abstract class User implements Built<User, UserBuilder> {
 
   String get name;
 
-  @nullable
   @BuiltValueField(wireName: 'sortable_name')
-  String get sortableName;
+  String? get sortableName;
 
-  @nullable
   @BuiltValueField(wireName: 'short_name')
-  String get shortName;
+  String? get shortName;
 
-  @nullable
-  String get pronouns;
+  String? get pronouns;
 
-  @nullable
   @BuiltValueField(wireName: 'avatar_url')
-  String get avatarUrl;
+  String? get avatarUrl;
 
-  @nullable
   @BuiltValueField(wireName: 'primary_email')
-  String get primaryEmail;
+  String? get primaryEmail;
 
-  @nullable
-  String get locale;
+  String? get locale;
 
-  @nullable
   @BuiltValueField(wireName: 'effective_locale')
-  String get effectiveLocale;
+  String? get effectiveLocale;
 
-  @nullable
-  UserPermission get permissions;
+  UserPermission? get permissions;
+
+  @BuiltValueField(wireName: 'login_id')
+  String? get loginId;
 
   static void _initializeBuilder(UserBuilder b) => b
     ..id = ''

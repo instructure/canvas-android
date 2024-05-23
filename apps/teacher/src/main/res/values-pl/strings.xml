@@ -739,7 +739,6 @@
     <string name="changeUser">Zmień użytkownika</string>
     <string name="general">Ogólne</string>
     <string name="sendFeedback">Wyślij informację zwrotną</string>
-    <string name="rateOnTheAppStore">Pobierz w sklepie App Store</string>
     <string name="privacyPolicy">Polityka prywatności</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Warunki korzystania</string>
@@ -900,7 +899,6 @@
         <item quantity="many">-%s pkt</item>
         <item quantity="other">-%s pkt</item>
     </plurals>
-    <string name="todoUnreadCount">Lista zadań – nieprzeczytane %d</string>
     <string name="profileSettings">Ustawienia profilu</string>
     <string name="downloadingFile">Pobieranie pliku&#8230;</string>
     <string name="fileDownloadedSuccessfully">Pobrano plik.</string>
@@ -925,4 +923,5 @@
     <string name="no_grade">Brak oceny</string>
     <string name="excuse">Usprawiedliwienie</string>
     <string name="speed_grader_overgraded_by">Zawyżona ocena od %s</string>
+    <string name="error_unpublishable_module_item">Nie można cofnąć publikowania %s, jeśli występują przesłane materiały uczestnika</string>
 </resources>

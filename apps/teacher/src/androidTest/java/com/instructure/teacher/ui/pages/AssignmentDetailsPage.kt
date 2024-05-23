@@ -17,6 +17,7 @@ package com.instructure.teacher.ui.pages
 
 
 import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
@@ -28,8 +29,13 @@ import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 
+/**
+ * Assignment details page
+ *
+ * @constructor Create empty Assignment details page
+ */
 @Suppress("unused")
-class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
+class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(pageResId = R.id.assignmentDetailsPage) {
 
     private val backButton by OnViewWithContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description,false)
     private val toolbarTitle by OnViewWithText(R.string.assignment_details)
@@ -55,48 +61,94 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     private val ungradedDonutWrapper by OnViewWithId(R.id.ungradedWrapper, autoAssert = false)
     private val notSubmittedDonutWrapper by OnViewWithId(R.id.notSubmittedWrapper, autoAssert = false)
 
+    /**
+     * Assert that the description webview is visible within the content web view.
+     *
+     */
     fun assertDisplaysInstructions() {
         scrollTo(R.id.contentWebView)
         descriptionWebView.assertVisible()
     }
 
+    /**
+     * Assert displays no instructions view.
+     *
+     */
     fun assertDisplaysNoInstructionsView() {
         noDescriptionTextView.assertVisible()
     }
 
+    /**
+     * Open all dates page (by clicking on the due dates layout).
+     *
+     */
     fun openAllDatesPage() {
         dueDatesLayout.click()
     }
 
+    /**
+     * Open edit page (by clicking on the Edit button).
+     *
+     */
     fun openEditPage() {
         editButton.click()
     }
 
+    /**
+     * Open submissions page (by clicking on the View All Submissions button).
+     *
+     */
     fun openSubmissionsPage() {
         scrollTo(R.id.viewAllSubmissions)
         viewAllSubmissions.click()
     }
 
+    /**
+     * Open graded submissions
+     *
+     */
     fun openGradedSubmissions() {
         gradedDonutWrapper.click()
     }
 
+    /**
+     * Open ungraded submissions
+     *
+     */
     fun openUngradedSubmissions() {
         ungradedDonutWrapper.click()
     }
 
+    /**
+     * Open not submitted submissions
+     *
+     */
     fun openNotSubmittedSubmissions() {
         notSubmittedDonutWrapper.click()
     }
 
+    /**
+     * Assert assignment details
+     *
+     * @param assignment
+     */
     fun assertAssignmentDetails(assignment: Assignment) {
-        assertAssignmentDetails(assignment.name!!, assignment.published)
+        assertAssignmentDetails(assignmentNameTextView, assignment.name!!, assignment.published)
     }
 
+    /**
+     * Assert assignment details
+     *
+     * @param assignment
+     */
     fun assertAssignmentDetails(assignment: AssignmentApiModel) {
-        assertAssignmentDetails(assignment.name, assignment.published)
+        assertAssignmentDetails(assignmentNameTextView, assignment.name, assignment.published)
     }
 
+    /**
+     * Assert assignment closed
+     *
+     */
     fun assertAssignmentClosed() {
         availableFromTextView.assertNotDisplayed()
         availableToTextView.assertNotDisplayed()
@@ -104,49 +156,92 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         availabilityTextView.assertHasText(com.instructure.teacher.R.string.closed)
     }
 
+    /**
+     * Assert to filled and from empty
+     *
+     */
     fun assertToFilledAndFromEmpty() {
         availableFromTextView.assertDisplayed().assertHasText(R.string.no_date_filler)
         availableToTextView.assertDisplayed().assertNotHasText(R.string.no_date_filler)
     }
 
+    /**
+     * Assert from filled and to empty
+     *
+     */
     fun assertFromFilledAndToEmpty() {
         availableToTextView.assertDisplayed().assertHasText(R.string.no_date_filler)
         availableFromTextView.assertDisplayed().assertNotHasText(R.string.no_date_filler)
     }
 
+    /**
+     * Assert submission type none
+     *
+     */
     fun assertSubmissionTypeNone() {
         scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_none)
     }
 
+    /**
+     * Assert submission type on paper
+     *
+     */
     fun assertSubmissionTypeOnPaper() {
         scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onPaper)
     }
 
+    /**
+     * Assert submission type online text entry
+     *
+     */
     fun assertSubmissionTypeOnlineTextEntry() {
         scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineTextEntry)
     }
 
+    /**
+     * Assert submission type online url
+     *
+     */
     fun assertSubmissionTypeOnlineUrl() {
         scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineURL)
     }
 
+    /**
+     * Assert submission type online upload
+     *
+     */
     fun assertSubmissionTypeOnlineUpload() {
         scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineUpload)
     }
 
+    /**
+     * Assert assignment name changed
+     *
+     * @param newAssignmentName
+     */
     fun assertAssignmentNameChanged(newAssignmentName: String) {
         assignmentNameTextView.assertHasText(newAssignmentName)
     }
 
+    /**
+     * Assert assignment points changed
+     *
+     * @param newAssignmentPoints
+     */
     fun assertAssignmentPointsChanged(newAssignmentPoints: String) {
         pointsTextView.assertContainsText(newAssignmentPoints)
     }
 
+    /**
+     * Assert displays description
+     *
+     * @param text
+     */
     fun assertDisplaysDescription(text: String) {
         descriptionWebView.assertVisible()
         Web.onWebView().withElement(
@@ -156,21 +251,43 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
             )
         ).check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(text)))    }
 
+    /**
+     * Assert needs grading
+     *
+     * @param actual
+     * @param outOf
+     */
     fun assertNeedsGrading(actual: Int = 1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
         ungradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(actual, outOf))
     }
 
+    /**
+     * Assert not submitted
+     *
+     * @param actual
+     * @param outOf
+     */
     fun assertNotSubmitted(actual: Int = 1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
         notSubmittedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(actual, outOf))
     }
 
+    /**
+     * Assert has graded
+     *
+     * @param actual
+     * @param outOf
+     */
     fun assertHasGraded(actual: Int =1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
         gradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(actual, outOf))
     }
 
+    /**
+     * View all submission
+     *
+     */
     fun viewAllSubmission() {
         onView(withId(R.id.viewAllSubmissions)).click()
     }
@@ -179,14 +296,27 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         scrollTo(R.id.submissionTypesTextView)
     }
 
+    /**
+     * Wait for render
+     *
+     */
     fun waitForRender() {
         waitForView(withId(R.id.assignmentDetailsPage))
     }
 
+    /**
+     * Refresh
+     *
+     */
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout)).swipeDown()
     }
 
+    /**
+     * Assert published status
+     *
+     * @param published
+     */
     fun assertPublishedStatus(published: Boolean) {
         if (published) {
             publishStatusTextView.assertHasText(R.string.published)
@@ -195,12 +325,22 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         }
     }
 
+    /**
+     * Assert multiple due dates
+     *
+     */
     fun assertMultipleDueDates() {
         onView(withId(R.id.otherDueDateTextView) + withText(R.string.multiple_due_dates)).assertDisplayed()
     }
 
-    private fun assertAssignmentDetails(assignmentName: String, published: Boolean) {
-        assignmentNameTextView.assertHasText(assignmentName)
+    /**
+     * Assert module item details
+     *
+     * @param moduleItemName
+     * @param published
+     */
+    private fun assertAssignmentDetails(viewInteraction: ViewInteraction, moduleItemName: String, published: Boolean) {
+        viewInteraction.assertHasText(moduleItemName)
         assertPublishedStatus(published)
     }
 }

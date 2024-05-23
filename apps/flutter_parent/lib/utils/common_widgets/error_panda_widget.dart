@@ -24,16 +24,15 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 /// Use the [callback] to set what happens when the retry button is pressed
 /// Use the [errorString] to specify what was supposed to be loaded
 class ErrorPandaWidget extends StatelessWidget {
-  final Function callback;
+  final Function? callback;
   final String errorString;
-  final Widget header;
+  final Widget? header;
 
   ErrorPandaWidget(this.errorString, this.callback, {this.header});
 
   @override
   Widget build(BuildContext context) {
     return FullScreenScrollContainer(
-      header: header,
       children: <Widget>[
         Icon(CanvasIcons.warning, size: 40, color: ParentColors.failure),
         Padding(
@@ -41,20 +40,23 @@ class ErrorPandaWidget extends StatelessWidget {
           child: Text(
             errorString,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16),
           ),
         ),
         TextButton(
           onPressed: () {
-            callback();
+            if (callback != null) callback!();
           },
-          child: Text(L10n(context).retry, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
-          // shape: RoundedRectangleBorder(
-          //   borderRadius: new BorderRadius.circular(4.0),
-          //   side: BorderSide(color: ParentColors.tiara),
-          // ),
+          child: Text(L10n(context).retry, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16)),
+          style: TextButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(4.0),
+              side: BorderSide(color: ParentColors.tiara),
+            ),
+          )
         )
       ],
+      header: header,
     );
   }
 }

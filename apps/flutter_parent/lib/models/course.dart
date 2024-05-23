@@ -15,7 +15,11 @@ library course;
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter_parent/models/course_settings.dart';
+import 'package:flutter_parent/models/grading_scheme_item.dart';
 import 'package:flutter_parent/models/section.dart';
 import 'package:flutter_parent/models/term.dart';
 
@@ -35,45 +39,36 @@ abstract class Course implements Built<Course, CourseBuilder> {
   factory Course([void Function(CourseBuilder) updates]) = _$Course;
 
   // Helper variables
-  @nullable
   @BuiltValueField(serialize: false)
-  double get currentScore;
+  double? get currentScore;
 
-  @nullable
   @BuiltValueField(serialize: false)
-  double get finalScore;
+  double? get finalScore;
 
-  @nullable
   @BuiltValueField(serialize: false)
-  String get currentGrade;
+  String? get currentGrade;
 
-  @nullable
   @BuiltValueField(serialize: false)
-  String get finalGrade;
+  String? get finalGrade;
 
   String get id;
 
   String get name;
 
-  @nullable
   @BuiltValueField(wireName: 'original_name')
-  String get originalName;
+  String? get originalName;
 
-  @nullable
   @BuiltValueField(wireName: 'course_code')
-  String get courseCode;
+  String? get courseCode;
 
-  @nullable
   @BuiltValueField(wireName: 'start_at')
-  DateTime get startAt;
+  DateTime? get startAt;
 
-  @nullable
   @BuiltValueField(wireName: 'end_at')
-  DateTime get endAt;
+  DateTime? get endAt;
 
-  @nullable
   @BuiltValueField(wireName: 'syllabus_body')
-  String get syllabusBody;
+  String? get syllabusBody;
 
   @BuiltValueField(wireName: 'hide_final_grades')
   bool get hideFinalGrades;
@@ -81,7 +76,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'is_public')
   bool get isPublic;
 
-  BuiltList<Enrollment> get enrollments;
+  BuiltList<Enrollment>? get enrollments;
 
   @BuiltValueField(wireName: 'needs_grading_count')
   int get needsGradingCount;
@@ -95,10 +90,8 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'access_restricted_by_date')
   bool get accessRestrictedByDate;
 
-  @nullable
   @BuiltValueField(wireName: 'image_download_url')
-  @nullable
-  String get imageDownloadUrl;
+  String? get imageDownloadUrl;
 
   @BuiltValueField(wireName: 'has_weighted_grading_periods')
   bool get hasWeightedGradingPeriods;
@@ -109,19 +102,26 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'restrict_enrollments_to_course_dates')
   bool get restrictEnrollmentsToCourseDates;
 
-  @nullable
   @BuiltValueField(wireName: 'workflow_state')
-  String get workflowState;
+  String? get workflowState;
 
-  @nullable
   @BuiltValueField(wireName: 'default_view')
-  HomePage get homePage;
+  HomePage? get homePage;
 
-  @nullable
-  Term get term;
+  Term? get term;
 
-  @nullable
-  BuiltList<Section> get sections;
+  BuiltList<Section>? get sections;
+
+  CourseSettings? get settings;
+
+  @BuiltValueField(wireName: 'grading_scheme')
+  BuiltList<JsonObject>? get gradingScheme;
+
+  List<GradingSchemeItem> get gradingSchemeItems {
+    if (gradingScheme == null) return [];
+    return gradingScheme!.map((item) => GradingSchemeItem.fromJson(item)).nonNulls.where((element) => element.grade != null && element.value != null).toList()
+      ..sort((a, b) => b.value!.compareTo(a.value!));
+  }
 
   static void _initializeBuilder(CourseBuilder b) => b
     ..id = ''
@@ -147,21 +147,20 @@ abstract class Course implements Built<Course, CourseBuilder> {
   /// [gradingPeriodId] -> Only used when [enrollment] is not provided or is null, when pulling the student's enrollment
   ///   from the course will also match based on [Enrollment.currentGradingPeriodId]
   CourseGrade getCourseGrade(
-    String studentId, {
-    Enrollment enrollment,
-    String gradingPeriodId,
+    String? studentId, {
+    Enrollment? enrollment,
+    String? gradingPeriodId,
     bool forceAllPeriods = false,
   }) =>
       CourseGrade(
         this,
         enrollment ??
-            enrollments.firstWhere(
+            enrollments?.firstWhereOrNull(
               (enrollment) =>
                   enrollment.userId == studentId &&
                   (gradingPeriodId == null ||
                       gradingPeriodId.isEmpty ||
                       gradingPeriodId == enrollment.currentGradingPeriodId),
-              orElse: () => null,
             ),
         forceAllPeriods: forceAllPeriods,
       );
@@ -169,8 +168,14 @@ abstract class Course implements Built<Course, CourseBuilder> {
   String contextFilterId() => 'course_${this.id}';
 
   /// Filters enrollments by those associated with the currently selected user
-  bool isValidForCurrentStudent(String currentStudentId) {
+  bool isValidForCurrentStudent(String? currentStudentId) {
     return enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
+  }
+
+  String convertScoreToLetterGrade(double score, double maxScore) {
+    if (maxScore == 0.0 || gradingSchemeItems.isEmpty) return "";
+    double percent = score / maxScore;
+    return gradingSchemeItems.firstWhere((element) => percent >= element.value!, orElse: () => gradingSchemeItems.last).grade!;
   }
 }
 

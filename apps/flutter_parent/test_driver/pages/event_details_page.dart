@@ -17,17 +17,17 @@ import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:test/test.dart';
 
 class EventDetailsPage {
-  static Future<void> verifyEventDisplayed(FlutterDriver driver, ScheduleItem event) async {
-    var titleText = await driver.getText(find.byValueKey('event_details_title'));
+  static Future<void> verifyEventDisplayed(FlutterDriver? driver, ScheduleItem event) async {
+    var titleText = await driver?.getText(find.byValueKey('event_details_title'));
     expect(titleText, event.title, reason: 'Event title');
 
     if (event.locationName != null) {
-      var locationText = await driver.getText(find.byValueKey('event_details_location_line1'));
+      var locationText = await driver?.getText(find.byValueKey('event_details_location_line1'));
       expect(locationText, event.locationName, reason: 'event location name');
     }
 
     if (event.locationAddress != null) {
-      var locationAddressText = await driver.getText(find.byValueKey('event_details_location_line2'));
+      var locationAddressText = await driver?.getText(find.byValueKey('event_details_location_line2'));
       expect(locationAddressText, event.locationAddress, reason: 'event location address');
     }
   }

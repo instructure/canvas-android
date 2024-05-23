@@ -5,10 +5,10 @@ buildscript {
     }
 
     dependencies {
-        classpath Plugins.ANDROID_GRADLE_TOOLS
-        classpath Plugins.FIREBASE_CRASHLYTICS
-        classpath Plugins.GOOGLE_SERVICES
-        classpath Plugins.KOTLIN
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.2'
+        classpath "com.google.gms:google-services:4.3.14"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20"
     }
 }
 
@@ -27,6 +27,6 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-task clean(type: Delete) {
+tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

@@ -147,12 +147,16 @@ class InboxViewModel @Inject constructor(
     private fun createItemViewModelFromConversation(conversation: Conversation): InboxEntryItemViewModel {
         return inboxEntryItemCreator.createInboxEntryItem(
             conversation,
-            openConversationCallback = { starred ->
-                _events.value = Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred), scope))
+            openConversationCallback = { starred, unread ->
+                val workflowState = if (unread) Conversation.WorkflowState.UNREAD else conversation.workflowState
+                _events.value = Event(InboxAction.OpenConversation(conversation.copy(isStarred = starred, workflowState = workflowState), scope))
             },
             selectionModeCallback = { view, selected ->
                 _events.postValue(Event(InboxAction.ItemSelectionChanged(view, selected)))
                 handleSelectionMode()
+            },
+            avatarClickedCallback = { starred ->
+                _events.value = Event(InboxAction.AvatarClickedCallback(conversation.copy(isStarred = starred), scope))
             })
     }
 
@@ -172,7 +176,7 @@ class InboxViewModel @Inject constructor(
         val menuItems = mutableSetOf<InboxMenuItem>(InboxMenuItem.DELETE)
         when {
             scope == InboxApi.Scope.ARCHIVED -> menuItems.add(InboxMenuItem.UNARCHIVE)
-            scope != InboxApi.Scope.SENT -> menuItems.add(InboxMenuItem.ARCHIVE)
+            scope != InboxApi.Scope.SENT && scope != InboxApi.Scope.STARRED -> menuItems.add(InboxMenuItem.ARCHIVE)
         }
 
         if (selectedItems.any { it.data.unread }) {
@@ -228,17 +232,15 @@ class InboxViewModel @Inject constructor(
             _state.postValue(ViewState.Loading)
             _data.value = _data.value?.copy(scope = getTextForScope(scope))
             _itemViewModels.postValue(emptyList())
+            _events.value = Event(InboxAction.DismissSnackbar)
             fetchData()
         }
     }
 
     fun starSelected() {
         performBatchOperation("star") { ids, _ ->
-            _itemViewModels.value?.forEach {
-                if (ids.contains(it.data.id)) it.data = it.data.copy(starred = true)
-                it.notifyChange()
-                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size)))
-            }
+            updateItems(ids, starred = true)
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxStarredConfirmation, ids.size)))
         }
     }
 
@@ -247,12 +249,9 @@ class InboxViewModel @Inject constructor(
             if (scope == InboxApi.Scope.STARRED) {
                 removeItemsAndSilentUpdate(ids, progress)
             } else {
-                _itemViewModels.value?.forEach {
-                    if (ids.contains(it.data.id)) it.data = it.data.copy(starred = false)
-                    it.notifyChange()
-                    _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
-                }
+                updateItems(ids, starred = false)
             }
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, ids.size)))
         }
     }
 
@@ -261,24 +260,18 @@ class InboxViewModel @Inject constructor(
             if (scope == InboxApi.Scope.UNREAD) {
                 removeItemsAndSilentUpdate(ids, progress)
             } else {
-                _itemViewModels.value?.forEach {
-                    if (ids.contains(it.data.id)) it.data = it.data.copy(unread = false)
-                    it.notifyChange()
-                    _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
-                    _events.value = Event(InboxAction.UpdateUnreadCount)
-                }
+                updateItems(ids, unread = false)
             }
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, ids.size)))
+            _events.value = Event(InboxAction.UpdateUnreadCount)
         }
     }
 
     fun markAsUnreadSelected() {
-        performBatchOperation("mark_as_unread") { ids, progress ->
-            _itemViewModels.value?.forEach {
-                if (ids.contains(it.data.id)) it.data = it.data.copy(unread = true)
-                it.notifyChange()
-                _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
-                _events.value = Event(InboxAction.UpdateUnreadCount)
-            }
+        performBatchOperation("mark_as_unread") { ids, _ ->
+            updateItems(ids, unread = true)
+            _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
+            _events.value = Event(InboxAction.UpdateUnreadCount)
         }
     }
 
@@ -391,7 +384,125 @@ class InboxViewModel @Inject constructor(
         _data.value = _data.value?.copy(filterText = filterTitle)
         _state.postValue(ViewState.Loading)
         _itemViewModels.postValue(emptyList())
+        _events.value = Event(InboxAction.DismissSnackbar)
         fetchData()
+    }
+
+    fun archiveConversation(id: Long) {
+        val oldItems = _itemViewModels.value ?: emptyList()
+        val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+        _itemViewModels.value = newMessages
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxArchivedConfirmation, 1), undoAction = {
+            _itemViewModels.value = oldItems
+            _state.value = ViewState.Success // Set success state to avoid empty view when undoing last removed item
+            val workflowState = if (oldItems.find { id == it.data.id }?.data?.unread == true) Conversation.WorkflowState.UNREAD else Conversation.WorkflowState.READ
+            updateConversation(id, workflowState = workflowState)
+        }))
+
+        updateConversation(id, Conversation.WorkflowState.ARCHIVED) {
+            silentRefresh()
+        }
+    }
+
+    fun unarchiveConversation(id: Long) {
+        val oldItems = _itemViewModels.value ?: emptyList()
+        val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+        _itemViewModels.value = newMessages
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnarchivedConfirmation, 1), undoAction = {
+            _itemViewModels.value = oldItems
+            _state.value = ViewState.Success // Set success state to avoid empty view when undoing last removed item
+            updateConversation(id, workflowState = Conversation.WorkflowState.ARCHIVED)
+        }))
+
+        updateConversation(id, Conversation.WorkflowState.READ) {
+            silentRefresh()
+        }
+    }
+
+    fun markConversationAsRead(id: Long) {
+        val oldItems = _itemViewModels.value ?: emptyList()
+        if (scope == InboxApi.Scope.UNREAD) {
+            val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+            _itemViewModels.value = newMessages
+        } else {
+            updateItems(setOf(id), unread = false)
+        }
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsReadConfirmation, 1), undoAction = {
+            if (scope == InboxApi.Scope.UNREAD) {
+                _itemViewModels.value = oldItems
+                _state.value = ViewState.Success // Set success state to avoid empty view when undoing last removed item
+            } else {
+                updateItems(setOf(id), unread = true)
+            }
+            updateConversation(id, workflowState = Conversation.WorkflowState.UNREAD)
+        }))
+
+        updateConversation(id, Conversation.WorkflowState.READ) {
+            if (scope == InboxApi.Scope.UNREAD) {
+                silentRefresh()
+            }
+        }
+    }
+
+    fun markConversationAsUnread(id: Long) {
+        val oldItems = _itemViewModels.value ?: emptyList()
+        if (scope == InboxApi.Scope.ARCHIVED) {
+            val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+            _itemViewModels.value = newMessages
+        } else {
+            updateItems(setOf(id), unread = true)
+        }
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, 1), undoAction = {
+            if (scope == InboxApi.Scope.ARCHIVED) {
+                _itemViewModels.value = oldItems
+                _state.value = ViewState.Success // Set success state to avoid empty view when undoing last removed item
+                updateConversation(id, workflowState = Conversation.WorkflowState.ARCHIVED)
+            } else {
+                updateItems(setOf(id), unread = false)
+                updateConversation(id, workflowState = Conversation.WorkflowState.READ)
+            }
+        }))
+
+        updateConversation(id, Conversation.WorkflowState.UNREAD) {
+            if (scope == InboxApi.Scope.ARCHIVED) {
+                silentRefresh()
+            }
+        }
+    }
+
+    fun unstarConversation(id: Long) {
+        val oldItems = _itemViewModels.value ?: emptyList()
+        val newMessages = _itemViewModels.value?.filterNot { id == it.data.id } ?: emptyList()
+        _itemViewModels.value = newMessages
+
+        _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxUnstarredConfirmation, 1), undoAction = {
+            _itemViewModels.value = oldItems
+            _state.value = ViewState.Success // Set success state to avoid empty view when undoing last removed item
+            updateConversation(id, starred = true)
+        }))
+
+        updateConversation(id, starred = false) {
+            silentRefresh()
+        }
+    }
+
+    private fun updateConversation(id: Long, workflowState: Conversation.WorkflowState? = null, starred: Boolean? = null, onSuccess: suspend () -> Unit = {}) {
+        handleSelectionMode()
+        viewModelScope.launch {
+            val dataResult = inboxRepository.updateConversation(id, workflowState, starred)
+            if (dataResult.isSuccess) {
+                inboxRepository.invalidateCachedResponses()
+                _events.value = Event(InboxAction.UpdateUnreadCount)
+                onSuccess()
+            } else {
+                // The data we are showing is not valid so we should refresh as a fallback
+                refresh()
+            }
+        }
     }
 
     private fun pollProgress(progress: Progress) {
@@ -424,6 +535,16 @@ class InboxViewModel @Inject constructor(
             postEmptyState()
         } else {
             _state.postValue(ViewState.Success)
+        }
+    }
+
+    private fun updateItems(ids: Set<Long>, unread: Boolean? = null, starred: Boolean? = null) {
+        _itemViewModels.value?.forEach {
+            if (ids.contains(it.data.id)) {
+                if (unread != null) it.data = it.data.copy(unread = unread)
+                if (starred != null) it.data = it.data.copy(starred = starred)
+                it.notifyChange()
+            }
         }
     }
 

@@ -16,7 +16,15 @@
 
 package com.instructure.pandautils.features.dashboard.notifications
 
+import com.instructure.canvasapi2.models.CanvasContext
+
 interface DashboardRouter {
 
     fun routeToGlobalAnnouncement(subject: String, message: String)
+
+    fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long)
+
+    fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long)
+
+    fun routeToSyncProgress()
 }

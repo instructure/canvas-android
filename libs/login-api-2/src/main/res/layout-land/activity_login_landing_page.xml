@@ -55,7 +55,7 @@
                 android:layout_marginBottom="2dp"
                 android:adjustViewBounds="true"
                 android:importantForAccessibility="no"
-                android:tint="@color/tiara"
+                android:tint="@color/textDarkest"
                 app:srcCompat="@drawable/ic_canvas_wordmark" />
 
             <TextView
@@ -66,7 +66,7 @@
                 android:letterSpacing="0.1"
                 android:text="@string/appUserTypeTeacher"
                 android:textAllCaps="true"
-                android:textColor="@color/login_teacherAppTheme"
+                android:textColor="@color/textDarkest"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>

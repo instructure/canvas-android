@@ -91,12 +91,23 @@ internal class SvgDrawableTranscoder : ResourceTranscoder<SVG, PictureDrawable> 
  * can't render on a hardware backed [Canvas][android.graphics.Canvas].
  */
 internal class SvgSoftwareLayerSetter : RequestListener<PictureDrawable> {
-    override fun onResourceReady(resource: PictureDrawable?, model: Any?, target: Target<PictureDrawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+    override fun onResourceReady(
+        resource: PictureDrawable,
+        model: Any,
+        target: Target<PictureDrawable>?,
+        dataSource: DataSource,
+        isFirstResource: Boolean
+    ): Boolean {
         (target as? ImageViewTarget)?.view?.setLayerType(ImageView.LAYER_TYPE_SOFTWARE, null)
         return false
     }
 
-    override fun onLoadFailed(p0: GlideException?, model: Any?, target: Target<PictureDrawable>?, isFirstResource: Boolean): Boolean {
+    override fun onLoadFailed(
+        e: GlideException?,
+        model: Any?,
+        target: Target<PictureDrawable>,
+        isFirstResource: Boolean
+    ): Boolean {
         (target as? ImageViewTarget)?.view?.setLayerType(ImageView.LAYER_TYPE_NONE, null)
         return false
     }

@@ -19,19 +19,21 @@ class ErrorReportApi {
   static const DEFAULT_DOMAIN = 'https://canvas-test.emeritus.org';
 
   Future<void> submitErrorReport({
-    String subject,
-    String description,
-    String email,
-    String severity,
-    String stacktrace,
-    String domain,
-    String name,
-    String becomeUser,
-    String userRoles,
-  }) {
+    String? subject,
+    String? description,
+    String? email,
+    String? severity,
+    String? stacktrace,
+    String? domain,
+    String? name,
+    String? becomeUser,
+    String? userRoles,
+  }) async {
     var config = domain == DEFAULT_DOMAIN ? DioConfig.core() : DioConfig.canvas();
 
-    return config.dio.post(
+    var dio = config.dio;
+
+    await dio.post(
       '/error_reports.json',
       queryParameters: {
         'error[subject]': subject,

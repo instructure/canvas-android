@@ -19,7 +19,7 @@ package com.instructure.pandautils.mvvm
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
  */
-open class Event<out T>(private val content: T) {
+open class Event<out T>(private val content: T?) {
 
     private var hasBeenHandled = false
 
@@ -38,5 +38,5 @@ open class Event<out T>(private val content: T) {
     /**
      * Returns the content, even if it's already been handled.
      */
-    fun peekContent(): T = content
+    fun peekContent(): T? = content
 }

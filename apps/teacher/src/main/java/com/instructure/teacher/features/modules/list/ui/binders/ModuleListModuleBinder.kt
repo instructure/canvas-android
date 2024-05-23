@@ -16,12 +16,15 @@
  */
 package com.instructure.teacher.features.modules.list.ui.binders
 
+import android.view.Gravity
+import androidx.appcompat.widget.PopupMenu
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
+import com.instructure.teacher.databinding.AdapterModuleBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
-import kotlinx.android.synthetic.main.adapter_module.view.*
 
 class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, ModuleListCallback>() {
 
@@ -31,14 +34,42 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
 
     override val bindBehavior = Header(
         onExpand = { item, isExpanded, callback -> callback.markModuleExpanded(item.id, isExpanded) },
-        onBind = { item, view, isCollapsed, _ ->
-            with(view) {
+        onBind = { item, view, isCollapsed, callback ->
+            val binding = AdapterModuleBinding.bind(view)
+            with(binding) {
                 moduleName.text = item.name
-                publishedIcon.setVisible(item.isPublished == true)
-                unpublishedIcon.setVisible(item.isPublished == false)
-                collapseIcon.rotation = if (isCollapsed) 0f else 180f
+                publishedIcon.setVisible(item.isPublished == true && !item.isLoading)
+                unpublishedIcon.setVisible(item.isPublished == false && !item.isLoading)
+                collapseIcon.rotation = if (isCollapsed) 180f else 0f
+
+                loadingView.setVisible(item.isLoading)
+
+                publishActions.onClickWithRequireNetwork {
+                    val popup = PopupMenu(it.context, it, Gravity.START.and(Gravity.TOP))
+                    popup.inflate(R.menu.menu_module)
+
+                    popup.setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.itemId) {
+                            R.id.publishModuleItems -> {
+                                callback.publishModuleAndItems(item.id)
+                                true
+                            }
+                            R.id.publishModule -> {
+                                callback.publishModule(item.id)
+                                true
+                            }
+                            R.id.unpublishModuleItems -> {
+                                callback.unpublishModuleAndItems(item.id)
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+
+                    publishActions.contentDescription = it.context.getString(R.string.a11y_contentDescription_moduleOptions, item.name)
+                    popup.show()
+                }
             }
         }
     )
-
 }

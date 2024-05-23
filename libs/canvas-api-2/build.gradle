@@ -18,7 +18,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'au.com.dius.pact'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -60,10 +60,6 @@ android {
     hilt {
         enableAggregatingTask = false
     }
-}
-
-androidExtensions {
-    experimental = true
 }
 
 apollo {
@@ -142,7 +138,6 @@ dependencies {
     implementation platform(Libs.FIREBASE_BOM) {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
     }
-    implementation Libs.FIREBASE_CORE
     implementation Libs.FIREBASE_CONFIG
 
     implementation Libs.HILT
@@ -152,6 +147,9 @@ dependencies {
     kapt Libs.ROOM_COMPILER
 
     implementation Libs.HEAP
+
+    implementation Libs.ANDROIDX_WORK_MANAGER
+    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 }
 
 // Define our pact-publish object

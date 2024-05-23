@@ -33,8 +33,8 @@ import 'enrollment.dart';
  * represented in the UI with "N/A". See Course.noFinalGrade for logic.
  */
 class CourseGrade {
-  Course _course;
-  Enrollment _enrollment;
+  Course? _course;
+  Enrollment? _enrollment;
   bool _forceAllPeriods;
 
   CourseGrade(this._course, this._enrollment, {bool forceAllPeriods = false}) : _forceAllPeriods = forceAllPeriods;
@@ -43,7 +43,7 @@ class CourseGrade {
     if (!(other is CourseGrade)) {
       return false;
     }
-    final grade = other as CourseGrade;
+    final grade = other;
     return _course == grade._course && _enrollment == grade._enrollment && _forceAllPeriods == grade._forceAllPeriods;
   }
 
@@ -61,44 +61,31 @@ class CourseGrade {
 
   /// Current score value, a double representation of a percentage grade, for the current grading period or the current
   /// term (see Course.getCourseGrade, ignoreMGP). Needs formatting prior to use.
-  double currentScore() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentScore() : _getCurrentScore();
+  double? currentScore() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentScore() : _getCurrentScore();
 
   /// Current grade string value, for the current grading period or the current term. (see Course.getCourseGrade)
-  String currentGrade() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentGrade() : _getCurrentGrade();
+  String? currentGrade() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentGrade() : _getCurrentGrade();
 
   /// If the course contains no valid current grade or score, this flag will be true. This is usually represented in the
   /// UI with "N/A".
   bool noCurrentGrade() =>
-      currentScore() == null && (currentGrade() == null || currentGrade().contains('N/A') || currentGrade().isEmpty);
+      currentScore() == null && (currentGrade() == null || currentGrade()!.contains('N/A') || currentGrade()!.isEmpty);
 
   bool _hasActiveGradingPeriod() =>
       !_forceAllPeriods &&
-      (_course?.enrollments?.toList()?.any((enrollment) => enrollment.hasActiveGradingPeriod()) ?? false);
+      (_course?.enrollments?.toList().any((enrollment) => enrollment.hasActiveGradingPeriod()) ?? false);
 
   bool _isTotalsForAllGradingPeriodsEnabled() =>
-      _course?.enrollments?.toList()?.any((enrollment) => enrollment.isTotalsForAllGradingPeriodsEnabled()) ?? false;
+      _course?.enrollments?.toList().any((enrollment) => enrollment.isTotalsForAllGradingPeriodsEnabled()) ?? false;
 
-  double _getCurrentScore() => _enrollment?.grades?.currentScore ?? _enrollment?.computedCurrentScore;
+  double? _getCurrentScore() => _enrollment?.grades?.currentScore ?? _enrollment?.computedCurrentScore;
 
-//  double _getFinalScore() =>
-//      _enrollment.grade?.finalScore ?? _enrollment.computedFinalScore;
+  String? _getCurrentGrade() => _enrollment?.grades?.currentGrade ?? _enrollment?.computedCurrentGrade ?? _enrollment?.computedCurrentLetterGrade;
 
-  String _getCurrentGrade() => _enrollment?.grades?.currentGrade ?? _enrollment?.computedCurrentGrade;
-
-//  String _getFinalGrade() =>
-//      _enrollment.grade?.finalGrade ?? _enrollment.computedFinalGrade;
-
-  double _getCurrentPeriodComputedCurrentScore() =>
+  double? _getCurrentPeriodComputedCurrentScore() =>
       _enrollment?.grades?.currentScore ?? _enrollment?.currentPeriodComputedCurrentScore;
 
-  String _getCurrentPeriodComputedCurrentGrade() =>
+  String? _getCurrentPeriodComputedCurrentGrade() =>
       _enrollment?.grades?.currentGrade ?? _enrollment?.currentPeriodComputedCurrentGrade;
 
-//  double _getCurrentPeriodComputedFinalScore() =>
-//      _enrollment.grade?.finalScore ??
-//      _enrollment.currentPeriodComputedFinalScore;
-
-//  String _getCurrentPeriodComputedFinalGrade() =>
-//      _enrollment.grade?.finalGrade ??
-//      _enrollment.currentPeriodComputedFinalGrade;
 }

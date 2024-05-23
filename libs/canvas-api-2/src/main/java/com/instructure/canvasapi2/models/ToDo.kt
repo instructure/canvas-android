@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.toDate
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 import java.util.*
 
@@ -63,7 +63,7 @@ data class ToDo(
         }
 
     override val comparisonString get() = title
-    override val id: Long get() = assignment?.id ?: scheduleItem?.id ?: -1
+    override val id: Long get() = assignment?.id ?: quiz?.id ?: scheduleItem?.id ?: -1
 
     ///////////////////////////////////////////////////////////////////////////
     // Helpers

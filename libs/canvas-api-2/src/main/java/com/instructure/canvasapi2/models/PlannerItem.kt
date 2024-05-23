@@ -15,9 +15,12 @@
  */
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
+@Parcelize
 data class PlannerItem (
     @SerializedName("course_id")
     val courseId: Long?,
@@ -53,7 +56,7 @@ data class PlannerItem (
 
     @SerializedName("planner_override")
     var plannerOverride: PlannerOverride? = null
-) {
+): Parcelable {
 
     val canvasContext: CanvasContext
         get() {

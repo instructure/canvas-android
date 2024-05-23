@@ -21,15 +21,38 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import androidx.fragment.app.FragmentActivity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.api.*
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ConversationsApi
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.SeedApi
+import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.api.UserApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.ConversationListApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.EnrollmentTypes
+import com.instructure.dataseeding.model.FileType
+import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.PageApiModel
+import com.instructure.dataseeding.model.QuizListApiModel
+import com.instructure.dataseeding.model.QuizSubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.DataSeedingException
 import com.instructure.dataseeding.util.Randomizer
@@ -39,7 +62,11 @@ import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.router.RouteMatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers.anyOf
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.DataInputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileWriter
 
 
 fun TeacherTest.enterDomain(enrollmentType: String = EnrollmentTypes.TEACHER_ENROLLMENT): CanvasUserApiModel {
@@ -250,19 +277,10 @@ fun TeacherTest.seedAssignmentSubmission(
         it.attachmentsList.addAll(fileAttachments)
     }
 
-    // Seed the submissions
-    val submissionRequest = SubmissionsApi.SubmissionSeedRequest(
-            assignmentId = assignmentId,
-            courseId = courseId,
-            studentToken = studentToken,
-            submissionSeedsList = submissionSeeds,
-            commentSeedsList = commentSeeds
-    )
-
-    return SubmissionsApi.seedAssignmentSubmission(submissionRequest)
+    return SubmissionsApi.seedAssignmentSubmission(courseId, studentToken, assignmentId, commentSeeds, submissionSeeds)
 }
 
-fun TeacherTest.uploadTextFile(courseId: Long, assignmentId: Long, token: String, fileUploadType: FileUploadType): AttachmentApiModel {
+fun TeacherTest.uploadTextFile(courseId: Long, assignmentId: Long? = null, token: String, fileUploadType: FileUploadType): AttachmentApiModel {
 
     // Create the file
     val file = File(
@@ -357,6 +375,24 @@ fun TeacherTest.tokenLogin(domain: String, token: String, user: User) {
     dashboardPage.assertPageObjects()
 }
 
+fun CanvasTest.tokenLogin(domain: String, token: String, user: User) {
+    activityRule.runOnUiThread {
+        (activityRule.activity as LoginActivity).loginWithToken(
+            token,
+            domain,
+            user,
+            true
+        )
+    }
+    // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
+    // up after a token login.  Add some tolerance for that.
+    waitForMatcherWithSleeps(anyOf(
+        allOf(withId(R.id.courseRecyclerView), isDisplayed()),
+        allOf(withId(R.id.emptyCoursesView), isDisplayed())),
+        20000)
+        .check(matches(isDisplayed()))
+}
+
 fun TeacherTest.openOverflowMenu() {
     Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
 }
@@ -390,6 +426,6 @@ fun TeacherTest.routeTo(route: String) {
     context.startActivity(intent)
 }
 
-fun TeacherTest.routeTo(route: Route) {
-    RouteMatcher.route(InstrumentationRegistry.getInstrumentation().targetContext, route)
+fun TeacherTest.routeTo(route: Route, activity: FragmentActivity) {
+    RouteMatcher.route(activity, route)
 }

@@ -20,15 +20,12 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.webkit.CookieManager
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.apis.AttendanceAPI
 import com.instructure.canvasapi2.models.Attendance
 import com.instructure.canvasapi2.models.CanvasContext
@@ -42,25 +39,26 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.interactions.router.Route
+import com.instructure.pandautils.analytics.SCREEN_VIEW_ATTENDANCE_LIST
+import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AttendanceListRecyclerAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.FragmentAttendanceListBinding
+import com.instructure.teacher.databinding.RecyclerSwipeRefreshLayoutBinding
 import com.instructure.teacher.factory.AttendanceListPresenterFactory
 import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 import com.instructure.teacher.presenters.AttendanceListPresenter
-import com.instructure.interactions.router.Route
-import com.instructure.pandautils.analytics.SCREEN_VIEW_ATTENDANCE_LIST
-import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AttendanceListView
-import kotlinx.android.synthetic.main.fragment_attendance_list.*
-import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 import org.json.JSONObject
 import java.util.*
 import java.util.regex.Pattern
@@ -69,12 +67,21 @@ import java.util.regex.Pattern
 class AttendanceListFragment : BaseSyncFragment<
         Attendance, AttendanceListPresenter, AttendanceListView, AttendanceViewHolder, AttendanceListRecyclerAdapter>(), AttendanceListView {
 
+    private val binding by viewBinding(FragmentAttendanceListBinding::bind)
+
+    private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
+
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyCourseContext())
     private var mTab: Tab by ParcelableArg(default = Tab("", "", type = TYPE_INTERNAL))
 
     private lateinit var mRecyclerView: RecyclerView
 
     private var ltiJob: WeaveJob? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+    }
 
     override fun layoutResId(): Int = R.layout.fragment_attendance_list
 
@@ -92,8 +99,8 @@ class AttendanceListFragment : BaseSyncFragment<
         themeToolbar()
     }
 
-    private fun setupViews() {
-        webView?.setDarkModeSupport()
+    private fun setupViews() = with(binding) {
+        webView.enableAlgorithmicDarkening()
         toolbar.setupMenu(R.menu.menu_attendance) { menuItem ->
             when(menuItem.itemId) {
                 R.id.menuFilterSections -> { /* Do Nothing */ }
@@ -105,7 +112,7 @@ class AttendanceListFragment : BaseSyncFragment<
                         calendar.set(Calendar.MONTH, month)
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                         presenter.setSelectedDate(calendar)
-                        toolbar?.subtitle = DateHelper.getFormattedDate(requireContext(), calendar.time)
+                        toolbar.subtitle = DateHelper.getFormattedDate(requireContext(), calendar.time)
                     }, selectedDate.get(Calendar.YEAR),
                         selectedDate.get(Calendar.MONTH),
                         selectedDate.get(Calendar.DAY_OF_MONTH)).show()
@@ -119,7 +126,7 @@ class AttendanceListFragment : BaseSyncFragment<
 
         toolbar.setTitle(R.string.tab_attendance)
         toolbar.subtitle = DateHelper.getFormattedDate(requireContext(), presenter.getSelectedDate().time)
-        toolbar.setupBackButton(this)
+        toolbar.setupBackButton(this@AttendanceListFragment)
 
         markRestButton.setBackgroundColor(ThemePrefs.buttonColor)
         markRestButtonText.setTextColor(ThemePrefs.buttonTextColor)
@@ -129,7 +136,7 @@ class AttendanceListFragment : BaseSyncFragment<
         }
     }
 
-    private fun themeToolbar() {
+    private fun themeToolbar() = with(binding) {
         if(isTablet) {
             ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
@@ -143,7 +150,7 @@ class AttendanceListFragment : BaseSyncFragment<
     override fun onPresenterPrepared(presenter: AttendanceListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
-        addSwipeToRefresh(swipeRefreshLayout)
+        addSwipeToRefresh(swipeRefreshLayoutContainerBinding.swipeRefreshLayout)
     }
 
     override fun createAdapter(): AttendanceListRecyclerAdapter {
@@ -155,7 +162,7 @@ class AttendanceListFragment : BaseSyncFragment<
             override fun onAvatarClicked(model: Attendance?, position: Int) {
                 if(model != null && mCanvasContext.id != 0L) {
                     val bundle = StudentContextFragment.makeBundle(model.studentId, mCanvasContext.id, true)
-                    RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
+                    RouteMatcher.route(requireActivity(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
                 }
             }
         })
@@ -165,33 +172,42 @@ class AttendanceListFragment : BaseSyncFragment<
     override fun withPagination(): Boolean = true
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 
-    override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
-        emptyPandaView.setGone()
+    override fun onRefreshFinished() = with(binding) {
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setGone()
         toolbar.menu.findItem(R.id.menuCalendar)?.isEnabled = true
         toolbar.menu.findItem(R.id.menuFilterSections)?.isEnabled = true
         themeToolbar()
     }
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted(): Unit = with(binding) {
         toolbar.menu.findItem(R.id.menuCalendar)?.isEnabled = false
         toolbar.menu.findItem(R.id.menuFilterSections)?.isEnabled = false
-        emptyPandaView.setVisible(!swipeRefreshLayout.isRefreshing)
-        emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setVisible(!swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing)
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
         hideMarkRestButton()
     }
 
     override fun checkIfEmpty() {
-        RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+        RecyclerViewUtils.checkIfEmpty(
+            swipeRefreshLayoutContainerBinding.emptyPandaView,
+            mRecyclerView,
+            swipeRefreshLayoutContainerBinding.swipeRefreshLayout,
+            adapter,
+            presenter.isEmpty
+        )
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun launchHiddenAttendanceLTI(url: String) {
+    private fun launchHiddenAttendanceLTI(url: String) = with(binding) {
         // Tried this headless without adding to the root view but it ended up loading faster when the view exists in the view group.
         CookieManager.getInstance().acceptCookie()
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
-        webView.settings.javaScriptEnabled = true
-        webView.settings.useWideViewPort = true
+        webView.settings.apply {
+            javaScriptEnabled = true
+            useWideViewPort = true
+            domStorageEnabled = true
+        }
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object: WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -253,16 +269,18 @@ class AttendanceListFragment : BaseSyncFragment<
         activity?.runOnUiThread { list.addOrUpdate(attendance) }
     }
 
-    override fun updateMarkAllButton(atLeastOneMarkedPresentLateOrAbsent: Boolean) {
+    override fun updateMarkAllButton(atLeastOneMarkedPresentLateOrAbsent: Boolean): Unit = with(binding) {
         markRestButtonText.post {
             markRestButtonText.text = if (atLeastOneMarkedPresentLateOrAbsent) getString(R.string.markRemainingAsPresent)
             else getString(R.string.markAllAsPresent)
         }
     }
 
-    override fun updateMarkAllButtonVisibility(visible: Boolean) = if(visible) showMarkRestButton() else hideMarkRestButton()
+    override fun updateMarkAllButtonVisibility(visible: Boolean) {
+        if (visible) showMarkRestButton() else hideMarkRestButton()
+    }
 
-    private fun hideMarkRestButton() {
+    private fun hideMarkRestButton() = with(binding) {
         markRestButton.post {
             if(markRestButton.visibility == View.VISIBLE) {
                 val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down)
@@ -273,7 +291,7 @@ class AttendanceListFragment : BaseSyncFragment<
         }
     }
 
-    private fun showMarkRestButton() {
+    private fun showMarkRestButton() = with(binding) {
         markRestButton.post {
             if(markRestButton.visibility != View.VISIBLE) {
                 val animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up)
@@ -285,7 +303,7 @@ class AttendanceListFragment : BaseSyncFragment<
     }
 
     override fun addSectionMenu(selectedSection: Section?, sections: List<Section>?) {
-        val subMenu = toolbar.menu.findItem(R.id.menuFilterSections)?.subMenu
+        val subMenu = binding.toolbar.menu.findItem(R.id.menuFilterSections)?.subMenu
         subMenu?.clear()
         sections?.forEachIndexed { index, section ->
             subMenu?.add(Menu.NONE, index, Menu.NONE, section.name)
@@ -293,7 +311,7 @@ class AttendanceListFragment : BaseSyncFragment<
     }
 
     override fun updateSectionPicked(section: Section?) {
-        sectionFilterName.text = section?.name
+        binding.sectionFilterName.text = section?.name
     }
 
     companion object {

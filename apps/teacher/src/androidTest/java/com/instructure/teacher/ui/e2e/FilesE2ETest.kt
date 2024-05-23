@@ -20,10 +20,12 @@ import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.KnownBug
+import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.TestCategory
+import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -34,10 +36,6 @@ import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.espresso.ViewUtils
-import com.instructure.panda_annotations.FeatureCategory
-import com.instructure.panda_annotations.Priority
-import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -49,17 +47,13 @@ import java.io.FileWriter
 
 @HiltAndroidTest
 class FilesE2ETest: TeacherTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun enableAndConfigureAccessibilityChecks() {
-        //Intentionally empty, because we don't check accessibility in E2E tests.
-    }
+    override fun displaysPageObjects() = Unit
+
+    override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @E2E
     @Test
-    @KnownBug
     @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
     fun testFilesE2E() {
 
@@ -70,13 +64,7 @@ class FilesE2ETest: TeacherTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seed a text assignment/file/submission.")
-        val assignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                withDescription = false,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                allowedExtensions = listOf("txt"),
-                teacherToken = teacher.token
-        ))
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD), allowedExtensions = listOf("txt"))
 
         Log.d(PREPARATION_TAG, "Seed a text file.")
         val submissionUploadInfo = uploadTextFile(
@@ -86,14 +74,8 @@ class FilesE2ETest: TeacherTest() {
                 fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
         )
 
-        Log.d(PREPARATION_TAG, "Submit the ${assignment.name} assignment.")
-        SubmissionsApi.submitCourseAssignment(
-                submissionType = SubmissionType.ONLINE_UPLOAD,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(submissionUploadInfo.id),
-                studentToken = student.token
-        )
+        Log.d(PREPARATION_TAG, "Submit the '${assignment.name}' assignment.")
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, assignment.id, submissionType = SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(submissionUploadInfo.id))
 
         Log.d(PREPARATION_TAG,"Seed a comment attachment upload.")
         val commentUploadInfo = uploadTextFile(
@@ -103,18 +85,11 @@ class FilesE2ETest: TeacherTest() {
                 fileUploadType = FileUploadType.COMMENT_ATTACHMENT
         )
 
-        SubmissionsApi.commentOnSubmission(
-                studentToken = student.token,
-                courseId = course.id,
-                assignmentId = assignment.id,
-                fileIds = mutableListOf(commentUploadInfo.id)
-        )
+        Log.d(PREPARATION_TAG, "Comment a text file as a teacher to the '${student.name}' student's submission of the '${assignment.name}' assignment.")
+        SubmissionsApi.commentOnSubmission(course.id, student.token, assignment.id, fileIds = mutableListOf(commentUploadInfo.id))
 
         Log.d(PREPARATION_TAG,"Seed a discussion topic. Will add a reply with attachment below.")
-        val discussionTopic = DiscussionTopicsApi.createDiscussion(
-                courseId = course.id,
-                token = student.token
-        )
+        val discussionTopic= DiscussionTopicsApi.createDiscussion(course.id, student.token)
 
         Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
         tokenLogin(teacher)
@@ -134,7 +109,7 @@ class FilesE2ETest: TeacherTest() {
 
         Log.d(PREPARATION_TAG,"Use real API (rather than seeding) to create a reply to our discussion that contains an attachment.")
         tryWeave {
-            awaitApiResponse<DiscussionEntry> {
+            awaitApiResponse {
                 DiscussionManager.postToDiscussionTopic(
                         canvasContext = CanvasContext.emptyCourseContext(id = course.id),
                         topicId = discussionTopic.id,
@@ -147,32 +122,32 @@ class FilesE2ETest: TeacherTest() {
             Log.v(PREPARATION_TAG, "Discussion post error: $it")
         }
 
-        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menu.")
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
 
-        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
+        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that '${discussionAttachmentFile.name}' file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
 
         Log.d(STEP_TAG,"Navigate back to the Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to Assignments Page.")
+        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to Assignments Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openAssignmentsTab()
 
-        Log.d(STEP_TAG,"Click on ${assignment.name} assignment and navigate to Submissions Page.")
+        Log.d(STEP_TAG,"Click on '${assignment.name}' assignment and navigate to Submissions Page.")
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()
 
-        Log.d(STEP_TAG,"Click on ${student.name} student's submission and navigate to Files Tab.")
+        Log.d(STEP_TAG,"Click on '${student.name}' student's submission and navigate to Files Tab.")
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectFilesTab(1)
 
-        Log.d(STEP_TAG,"Assert that ${submissionUploadInfo.fileName} file. Navigate to Comments Tab and ${commentUploadInfo.fileName} comment attachment is displayed.")
+        Log.d(STEP_TAG,"Assert that '${submissionUploadInfo.fileName}' file. Navigate to Comments Tab and '${commentUploadInfo.fileName}' comment attachment is displayed.")
         assignmentSubmissionListPage.assertFileDisplayed(submissionUploadInfo.fileName)
         speedGraderPage.selectCommentsTab()
         assignmentSubmissionListPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
@@ -180,37 +155,67 @@ class FilesE2ETest: TeacherTest() {
         Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(5)
 
-        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menubar.")
-        dashboardPage.gotoGlobalFiles()
+        Log.d(STEP_TAG,"Navigate to 'Files' menu in user left-side menu.")
+        leftSideNavigationDrawerPage.clickFilesMenu()
 
         Log.d(STEP_TAG,"Assert that there is a directory called 'unfiled' is displayed.")
         fileListPage.assertItemDisplayed("unfiled")
 
-        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that ${discussionAttachmentFile.name} file is displayed on the File List Page.")
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${discussionAttachmentFile.name}', the file's name to the search input field.")
+        fileListPage.searchable.clickOnSearchButton()
+        fileListPage.searchable.typeToSearchBar(discussionAttachmentFile.name)
+
+        Log.d(STEP_TAG, "Assert that only 1 file matches for the search text, and it is '${discussionAttachmentFile.name}', and no directories has been shown in the result.")
+        fileListPage.assertSearchResultCount(1)
+        fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
+        fileListPage.assertItemNotDisplayed("unfiled")
+
+        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that all the root level directories and files are displayed (1).")
+        fileListPage.searchable.pressSearchBackButton()
+        fileListPage.assertFileListCount(1)
+
+        Log.d(STEP_TAG,"Select 'unfiled' directory. Assert that '${discussionAttachmentFile.name}' file is displayed on the File List Page.")
         fileListPage.selectItem("unfiled")
         fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
 
-        Log.d(STEP_TAG,"Select ${discussionAttachmentFile.name} file.")
+        Log.d(STEP_TAG,"Select '${discussionAttachmentFile.name}' file.")
         fileListPage.selectItem(discussionAttachmentFile.name)
 
         val newFileName = "newFileName.txt"
-        Log.d(STEP_TAG,"Rename ${discussionAttachmentFile.name} file to: $newFileName.")
+        Log.d(STEP_TAG,"Rename '${discussionAttachmentFile.name}' file to: '$newFileName'.")
         fileListPage.renameFile(newFileName)
 
         Log.d(STEP_TAG,"Navigate back to File List Page.")
         Espresso.pressBack()
         fileListPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Assert that the file is displayed with it's new file name: $newFileName.")
+        Log.d(STEP_TAG,"Assert that the file is displayed with it's new file name: '$newFileName'.")
         fileListPage.assertItemDisplayed(newFileName)
 
-        Log.d(STEP_TAG,"Delete $newFileName file.")
+        Log.d(STEP_TAG,"Delete '$newFileName' file.")
         fileListPage.deleteFile(newFileName)
-        //TODO bug: https://instructure.atlassian.net/browse/MBL-16108
         fileListPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Assert that empty view is displayed after deletion.")
+        Log.d(STEP_TAG,"Assert that empty view is displayed after deletion, because no file left to display.")
         fileListPage.assertViewEmpty()
+
+        val newFolderName = "testfolder"
+        Log.d(STEP_TAG, "Navigate back to File List Page and assert that '$newFolderName' (recently created) folder is displayed.")
+        Espresso.pressBack()
+        fileListPage.createFolder(newFolderName)
+        fileListPage.assertItemDisplayed(newFolderName)
+
+        Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '$newFolderName', the file's name to the search input field.")
+        fileListPage.searchable.clickOnSearchButton()
+        fileListPage.searchable.typeToSearchBar(newFolderName)
+
+        Log.d(STEP_TAG,"Assert that empty view is displayed after deletion, because no folders will not be displayed in search result. Press back button (top one) to escape from Search 'view'.")
+        fileListPage.assertViewEmpty()
+        fileListPage.searchable.pressSearchBackButton()
+
+        Log.d(STEP_TAG, "Select '$newFolderName' folder and delete it. Assert that it has been disappeared from the File List Page.")
+        fileListPage.deleteFolder(newFolderName)
+        fileListPage.assertItemNotDisplayed(newFolderName)
     }
 
 }

@@ -67,6 +67,39 @@
     <string name="missingSubmissionLabel">欠如</string>
     <string name="gradedSubmissionLabel">採点済み</string>
 
+    <string name="reminderTitle">事前通知</string>
+    <string name="reminderDescription">このデバイスにこの課題に関する期限リマインダ通知を追加します。</string>
+    <string name="a11y_addReminder">リマインダを追加する</string>
+    <string name="a11y_removeReminder">リマインダを削除する</string>
+    <string name="reminderBefore">%s前</string>
+    <plurals name="reminderMinute">
+        <item quantity="other">%d 分</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="other">%d時間</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="other">%d 日</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="other">%d 週間</item>
+    </plurals>
+    <string name="reminderCustom">カスタム</string>
+    <string name="customReminderTitle">カスタムリマインダ</string>
+    <string name="customReminderQuantityHint">数量</string>
+    <string name="customReminderMinutes">分前</string>
+    <string name="customReminderHours">時間前</string>
+    <string name="customReminderDays">日前</string>
+    <string name="customReminderWeeks">週前</string>
+    <string name="reminderNotificationChannelName">リマインダ通知</string>
+    <string name="reminderNotificationChannelDescription">Canvasの課題に関する通知</string>
+    <string name="reminderNotificationTitle">期日のリマインダ</string>
+    <string name="reminderNotificationDescription">この課題の提出期限は%s以内：%s</string>
+    <string name="reminderInPast">リマインダの時間には未来の時間を選択してください！</string>
+    <string name="reminderAlreadySet">あなたはすでにこの時間にリマインダを設定しています</string>
+    <string name="deleteReminderTitle">リマインダを削除する</string>
+    <string name="deleteReminderMessage">このリマインダ本当に削除しますか？</string>
+    <string name="reminderPermissionNotGrantedError">この操作を行うには、正確なアラーム許可を有効にする必要があります。</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">URL を \'http://\' でプレビューすることはできません</string>
     <string name="submissionUrlNotAUrlError">有効なURLを入力してください</string>
@@ -355,7 +388,7 @@
     <string name="messageOptions">メッセージオプション</string>
     <string name="forward">転送</string>
     <string name="replyAll">すべてに返信</string>
-    <string name="unarchive">アーカイブ解凍</string>
+    <string name="unarchive">アーカイブの解除</string>
     <string name="confirmDeleteMessage">このメッセージのコピーを本当に削除しますか？この操作は元に戻すことはできません。</string>
     <string name="confirmDeleteConversation">この会話のコピーを本当に削除しますか？この操作は元に戻すことはできません。</string>
     <string name="errorConversationGeneric">この操作を実行できません。接続を確認して、もう一度お試しください。</string>
@@ -426,6 +459,7 @@
     <!-- Notifications -->
     <string name="deleted">削除されました</string>
 
+    <string name="gradeUpdated">評定を更新しました</string>
     <string name="loadingCanvas">Canvas コンテンツ&#8230;を読み込み中</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -947,6 +981,8 @@
     <string name="inviteAccepted">招待が受け入れられました！</string>
     <string name="inviteDeclined">招待が拒否されました。</string>
     <string name="latePenalty">遅延ペナルティ (-%s)</string>
+    <string name="latePenaltyUpdated">遅延ペナルティ：-%s 点</string>
+    <string name="yourGrade">あなたの評定：%s 点</string>
     <string name="finalGrade">最終的な評定</string>
 
     <string name="max_count">99+</string>
@@ -1104,6 +1140,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">「提出」の詳細はここで開くことができます</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">評定：%s</string>
     <plurals name="minutes">
         <item quantity="other">%s 分</item>
     </plurals>
@@ -1276,9 +1315,16 @@
     <string name="a11y_closeProgress">進捗状況ダイアログを閉じる</string>
     <string name="fileUploadProgress">%1$s / %2$s</string>
     <string name="fileUploadProgressSubtitle">ファイルアップロード中</string>
+    <string name="fileUploadFailedSubtitle">1つ以上のファイルのアップロードに失敗しました。インターネット接続をチェックしてから、提出を再試行してください。</string>
     <string name="submissionProgressSubtitle">提出物を\"%s\"にアップロード中</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">提出物をアップロードしています</string>
-    <string name="dashboardNotificationUploadingFilesTitle">ファイルアップロード中</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">正常に提出しました</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">提出に失敗しました</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="other">ファイルアップロード中</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">ファイルのアップロードに成功しました</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">ファイルのアップロードに失敗しました</string>
     <string name="cancelSubmissionDialogTitle">提出をキャンセル</string>
     <string name="cancelSubmissionDialogMessage">これにより、送信がキャンセルおよび削除されます。</string>
     <string name="fileUploadError">ファイルのアップロードに失敗しました</string>
@@ -1306,7 +1352,7 @@
     <string name="unpublish_assignment_error">受講者の提出がある場合は課題を取り消すことはできません。</string>
     <string name="subscribeToCalendar">カレンダーフィードを購読する</string>
     <string name="subscribeToCalendarMessage">このダイアログで「定期購読」ボタンをクリックすると、CanvasカレンダーをGoogleカレンダーアカウントに同期させることができます。その後、デバイスのGoogleカレンダーアプリで、新しいカレンダーの設定で同期を有効にする必要があります。</string>
-    <string name="subscribeButton">定期購読</string>
+    <string name="subscribeButton">常に通知</string>
     <string name="switchToLightMode">ライトモードに切り替える</string>
     <string name="switchToDarkMode">ダークモードに切り替える</string>
     <string name="acceptableUsePolicyDescription">あなたは新しいユーザーであるか、最後に同意して以降、許可される使用ポリシーが変更されています。続行する前に許可される使用ポリシーに同意してください。</string>
@@ -1315,4 +1361,209 @@
     <string name="acceptableUsePolicyAgree">許可される使用ポリシーに合意します</string>
     <string name="acceptableUsePolicySubmit">提出</string>
     <string name="acceptFail">許可される使用ポリシーの提出に失敗しました。</string>
+    <string name="attempt">%d 試行</string>
+    <string name="quizQuestions">質問:%d</string>
+    <string name="quizTimeLimit">時間制限:%s</string>
+    <string name="allowedAttempts">試行許可回数：%s</string>
+    <string name="usedAttempts">試行した回数：%d</string>
+    <string name="generalUnexpectedError">予期しないエラーが発生しました。</string>
+
+    <string name="deleteSelected">削除</string>
+    <string name="archiveSelected">アーカイブ</string>
+    <string name="unarchiveSelected">アーカイブの解除</string>
+    <string name="markAsReadSelected">既読にする</string>
+    <string name="markAsUnreadSelected">未読にする</string>
+    <string name="starSelected">スター</string>
+    <string name="unstarSelected">スター取り消し</string>
+
+    <string name="inboxOperationFailed">オペレーションの実行に失敗しました</string>
+    <string name="inboxDeletedConfirmation">%sが削除されました</string>
+    <string name="inboxArchivedConfirmation">%sがアーカイブされました</string>
+    <string name="inboxUnarchivedConfirmation">%sがアーカイブ解除されました</string>
+    <string name="inboxMarkAsReadConfirmation">%sが赤でマークされました</string>
+    <string name="inboxMarkAsUnreadConfirmation">%s未読としてマークされました</string>
+    <string name="inboxStarredConfirmation">%sにスターが付けられました</string>
+    <string name="inboxUnstarredConfirmation">%sのスターが解除されました</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="other">これらの会話は、お使いのすべてのデバイスの受信トレイから削除されます。この操作は元に戻すことはできません。</item>
+    </plurals>
+    <string name="failedToLoadNextPage">次のページの読み込みに失敗しました。インターネット接続を確認してください。</string>
+    <string name="conversationsRefreshFailed">会話の更新に失敗しました。インターネット接続を確認してください。</string>
+    <string name="inboxScopeInbox">受信トレイ</string>
+    <string name="inboxContextSelectorTitle">コースまたはグループを選択する</string>
+    <string name="inboxClearFilter">クリア</string>
+    <string name="a11y_courseFilterContentDescription">コースフィルタ：%s</string>
+    <string name="a11y_inboxEntryLongClickDescription">選択する</string>
+    <string name="a11y_itemSelectedSwipeForActions">会話が選択されました。選択モードが有効にされました。アクションに移動します。</string>
+    <string name="a11y_conversationSelected">会話が選択されました</string>
+    <string name="a11y_conversationDeselected">会話が選択解除されました</string>
+    <string name="a11y_exitSelectionMode">選択モードを終了する</string>
+    <string name="a11y_selectionModeDeactivated">選択モードが解除されました。</string>
+    <string name="a11y_avatarContentDescription">%sのアバター</string>
+    <string name="inboxUndo">アンドゥーする</string>
+    <string name="aboutAppTitle">アプリ</string>
+    <string name="aboutDomainTitle">ドメイン</string>
+    <string name="aboutLoginTitle">ログイン ID</string>
+    <string name="aboutEmailTitle">E メール</string>
+    <string name="aboutVersionTitle">バージョン</string>
+    <string name="assignmentRefreshError">この課題のリロード中、問題がありました。接続を確認して、もう一度お試しください。</string>
+    <string name="instructure_logo">Instructure ロゴ</string>
+    <string name="preferences">優先設定</string>
+    <string name="offlineContent">オフラインコンテンツ</string>
+    <string name="offlineSyncSettingsTitle">同期</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">オフラインコンテンツ</string>
+    <string name="course_menu_manage_offline_content">オフラインコンテンツを管理する</string>
+    <string name="offline_content_storage">保管</string>
+    <string name="offline_content_storage_info">%s / %s を使用</string>
+    <string name="offline_content_other">その他アプリ</string>
+    <string name="offline_content_canvas_student">Canvas 受講者</string>
+    <string name="offline_content_remaining">残り</string>
+    <string name="offline_content_all_courses">すべてのコース</string>
+    <string name="offline_content_sync">同期化</string>
+    <string name="offline_content_selected">%d が選択されました</string>
+    <string name="offline_content_select_all">すべて選択</string>
+    <string name="offline_content_deselect_all">すべての選択を取り消し</string>
+    <string name="offline_content_loading_error">コンテンツ読み込み中にエラーが起こりました。</string>
+    <string name="offline_content_empty_title">コースはありません</string>
+    <string name="offline_content_empty_message">コースがここに表示され、オフラインで利用できるようにすることができます。</string>
+    <string name="offline_content_empty_course_title">コースコンテンツなし</string>
+    <string name="offline_content_empty_course_message">コースコンテンツはここに表示され、オフラインで利用できるようになります。</string>
+    <string name="offline_content_discard_dialog_title">変更を破棄しますか？</string>
+    <string name="offline_content_discard_dialog_message">破棄を選択した場合、変更は保存されません。</string>
+    <string name="offline_content_discard_dialog_positive">破棄する</string>
+    <string name="offline_content_sync_dialog_title">オフラインのコンテンツを同期化する</string>
+    <string name="offline_content_sync_dialog_message">これで、~%sのコンテンツが同期されます。Wi-Fiネットワークに接続していない、場合、データプロバイダから追加料金が請求される可能性があります。</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">これで、Wi-Fiネットワークに接続している間のみ、~%sのコンテンツが同期されます</string>
+    <string name="offline_content_sync_dialog_positive">同期化</string>
+    <string name="offline_content_sync_loading_title">読み込み中・・・</string>
+    <string name="offline_content_sync_loading_message">少々お待ちください。今、準備をしています。</string>
+    <string name="content_description_expand_content">コンテンツを拡大</string>
+    <string name="content_description_collapse_content">コンテンツを折りたたむ</string>
+    <string name="syncSettings_autoContentSyncDescription">コンテンツの自動同期を有効にすると、選択したコンテンツのダウンロードが以下の設定に基づいて行われます。コンテンツの同期は、アプリケーションが起動していなくても行われます。この設定をオフにすると、同期は行われません。すでにダウンロードされているコンテンツは削除されません。</string>
+    <string name="syncSettings_syncFrequencyTitle">同期の頻度</string>
+    <string name="syncSettings_autoContentSyncTitle">コンテンツ自動同期</string>
+    <string name="syncSettings_syncFrequencyDescription">コンテンツの同期を行う頻度を指定します。ここで指定した頻度に基づいて、選択したコンテンツをダウンロードします。</string>
+    <string name="syncSettings_wifiOnlyTitle">Wi-Fiでのみコンテンツを同期</string>
+    <string name="syncSettings_wifiOnlyDescription">この設定を有効にすると、コンテンツの同期はデバイスがWi-Fiネットワークに接続されている場合にのみ行われます（それ以外の場合は、Wi-Fiネットワークが利用可能になるまで延期されます）。</string>
+    <string name="syncSettings_toolbarTitle">同期</string>
+    <string name="daily">毎日</string>
+    <string name="weekly">毎週</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">同期の頻度</string>
+    <string name="syncSettings_wifiConfirmationTitle">Wi-fiのみでのコンテンツ同期をオフにしますか？</string>
+    <string name="synySettings_wifiConfirmationMessage">この設定を有効にすると、コンテンツの同期はデバイスがWi-Fiネットワークに接続されている場合にのみ行われます（それ以外の場合は、Wi-Fiネットワークが利用可能になるまで延期されます）。</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">オフにする</string>
+    <string name="syncSettings_manualDescription">マニュアル</string>
+    <string name="offlineModeSnackbar">オフラインモード</string>
+    <string name="notAvailableOfflineScreenTitle">オフラインでは利用できません</string>
+    <string name="notAvailableOfflineDescription">このコンテンツはオフラインでは利用できません。</string>
+    <string name="notAvailableOfflineDescriptionForTabs">このコンテンツはオフラインでは利用できません。設定を変更したい場合は、ネットワーク利用可能時にダッシュボードからオフラインコンテンツ画面を開いてください。</string>
+    <string name="offline">オフライン</string>
+    <string name="syncProgress_syncFailed">同期に失敗しました</string>
+    <string name="syncProgress_downloadProgress">%1$s / %2$s ダウンロード中</string>
+    <string name="syncProgress_syncQueued">キュー</string>
+    <string name="syncProgress_offlineContentSyncCompleted">オフラインコンテンツの同期が完了しました</string>
+    <string name="syncProgress_offlineContentSyncFailed">オフラインコンテンツの同期に失敗しました</string>
+    <string name="syncProgress_cancelConfirmationTitle">同期をキャンセルしますか？</string>
+    <string name="syncProgress_cancelConfirmationMessage">オフラインコンテンツの同期が中止されます。後でやり直すことができます。</string>
+    <string name="syncProgress_syncErrorSubtitle">1つまたは複数のファイルが同期に失敗しました。インターネット接続をチェックしてから、提出を再試行してください。</string>
+    <string name="syncProgress_downloadStarting">ダウンロード開始</string>
+    <string name="coursesCannotBeFavoritedOffline">オフラインでコースをお気に入りに追加することはできません。</string>
+    <string name="allCoursesScreenHeader">すべてのコース</string>
+    <string name="allCoursesCourseHeader">コース</string>
+    <string name="allCoursesGroupHeader">グループ</string>
+    <string name="dashboardAllCoursesButton">すべてのコース</string>
+    <string name="allCoursesOfflineNote">ダッシュボードのコース選択はオンラインでのみ可能です。オフラインのコース詳細に移動することができます。</string>
+    <string name="allCoursesOfflineNoteTitle">注</string>
+    <string name="syncProgress_downloadSuccess">成功！%1$s / %2$s をダウンロード完了</string>
+    <string name="syncProgress_syncingOfflineContent">オフラインコンテンツの同期</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">通知を閉じる</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="other">%dコースは同期中です。</item>
+    </plurals>
+    <string name="assignmentNoLongerAvailable">この機能はもう利用できません。</string>
+    <string name="editDashboardOfflineMode">現在オフラインです</string>
+    <string name="editDashboardOfflineModeMessage">現在、オフラインで利用可能なコースはありません。</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">オフラインコンテンツ同期成功</string>
+    <string name="offlineContentSyncFailureNotificationTitle">オフラインコンテンツの同期失敗</string>
+    <string name="notificationChannelNameSyncUpdates">オフライン同期更新</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">オフライン同期化更新の Canvas 通知。</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="other">%dコースが同期されました。</item>
+    </plurals>
+    <string name="syncProgressAdditionalCourseContent">追加のコースコンテンツ</string>
+    <string name="failedToUpdateDashboardOrder">ダッシュボードのカードの順番を更新できませんでした</string>
+    <string name="publishAllModulesAndItems">すべてのモジュールと項目を公開する</string>
+    <string name="publishModulesOnly">モジュールのみ公開する</string>
+    <string name="unpublishAllModulesAndItems">すべてのモジュールと項目の公開を解除する</string>
+    <string name="moduleOptions">モジュールオプション</string>
+    <string name="publishModuleAndItems">モジュールとすべての項目を公開する</string>
+    <string name="publishModuleOnly">モジュールのみ公開する</string>
+    <string name="unpublishModuleAndItems">モジュールとすべての項目の公開を解除する</string>
+    <string name="a11y_contentDescription_moduleOptions">%sモジュールオプション</string>
+    <string name="a11y_contentDescription_moduleItemOptions">%sモジュール項目オプション</string>
+    <string name="publishModuleItem">モジュール項目を公開する</string>
+    <string name="unpublishModuleItem">モジュール項目を非公開にする</string>
+    <string name="publishDialogTitle">公開しますか?</string>
+    <string name="publishModuleDialogMessage">これはモジュールのみを受講者に公開します。</string>
+    <string name="publishModuleAndItemsDialogMessage">これはモジュールおよびすべての項目を受講者に公開します。</string>
+    <string name="unpublishDialogTitle">非公開にしますか?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">モジュールとすべての項目を受講者に非公開にします。</string>
+    <string name="publishModuleItemDialogMessage">この項目のみ受講者に見えるようにします。</string>
+    <string name="unpublishModuleItemDialogMessage">これはこの項目のみを受講者に公開します。</string>
+    <string name="publishModulesAndItemsDialogMessage">これはすべてのモジュールおよび項目を受講者に公開します。</string>
+    <string name="publishModulesDialogMessage">これはモジュールのみを受講者に公開します。</string>
+    <string name="unpublishModulesAndItemsDialogMessage">これはすべてのモジュールと項目を受講者に非公開にします。</string>
+    <string name="only_available_with_link">リンクを知っている受講者のみ利用可能</string>
+    <string name="schedule_availability">期間を設定する</string>
+    <string name="moduleItemPublished">項目が公開</string>
+    <string name="moduleItemUnpublished">項目が非公開</string>
+    <string name="onlyModulePublished">モジュールのみ公開</string>
+    <string name="moduleAndAllItemsPublished">モジュールと全項目が公開</string>
+    <string name="moduleAndAllItemsUnpublished">モジュールと全項目が非公開</string>
+    <string name="onlyModulesPublished">モジュールのみ公開</string>
+    <string name="allModulesAndAllItemsPublished">すべてのモジュールとすべての項目が公開</string>
+    <string name="allModulesAndAllItemsUnpublished">すべてのモジュールとすべての項目が非公開</string>
+    <string name="inherit_from_course">コースから継承</string>
+    <string name="course_members">コースメンバー</string>
+    <string name="institution_members">教育機関メンバー</string>
+    <string name="public_title">公開</string>
+    <string name="edit_permissions">承認を編集</string>
+    <string name="update">更新</string>
+    <string name="availability_title">利用可能性</string>
+    <string name="visibility_title">可視性</string>
+    <string name="available_from">開始日時</string>
+    <string name="available_until">終了日時</string>
+    <string name="from">From（～から）</string>
+    <string name="until">利用終了日時</string>
+    <string name="date">日付</string>
+    <string name="time">制限時間</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">クリア開始日</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">クリア終了日</string>
+    <string name="progressMessage">この処理には数分かかることがあります。この処理の間、モーダルを閉じたり、ページから移動したりできます。</string>
+    <string name="noteTitle">注</string>
+    <string name="allModules">すべてのモジュール</string>
+    <string name="allModulesAndItems">すべてのモジュールと項目</string>
+    <string name="selectedModulesAndItems">モジュールおよび項目を選択</string>
+    <string name="selectedModules">モジュールを選択</string>
+    <string name="publishing">公開</string>
+    <string name="unpublishing">公開取り消し中</string>
+    <string name="moduleBulkUpdateNote">すでに処理されているモジュールや項目は、処理を中止しても以前の状態には戻りません。</string>
+    <string name="success">成功！</string>
+    <string name="updateFailed">更新失敗</string>
+    <string name="updateCancelled">更新がキャンセルされました。</string>
+    <string name="a11y_hidden">非表示</string>
+    <string name="a11y_scheduled">スケジュール済み</string>
+    <string name="a11y_published">公開済み</string>
+    <string name="a11y_unpublished">非公開</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="other">%.0f点</item>
+    </plurals>
+    <string name="publishModuleItemAction">公開</string>
+    <string name="unpublishModuleItemAction">非公開</string>
+    <string name="publishDialogPositiveButton">公開</string>
+    <string name="unpublishDialogPositiveButton">非公開</string>
+    <string name="discussionMenuRefresh">更新</string>
 </resources>

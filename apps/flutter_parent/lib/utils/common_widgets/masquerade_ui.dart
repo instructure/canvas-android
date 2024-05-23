@@ -33,20 +33,20 @@ class MasqueradeUI extends StatefulWidget {
   final Widget child;
   final GlobalKey<NavigatorState> navKey;
 
-  const MasqueradeUI({Key key, this.child, this.navKey}) : super(key: key);
+  const MasqueradeUI({required this.child, required this.navKey, super.key});
 
   @override
   MasqueradeUIState createState() => MasqueradeUIState();
 
-  static MasqueradeUIState of(BuildContext context) {
+  static MasqueradeUIState? of(BuildContext context) {
     return context.findAncestorStateOfType<MasqueradeUIState>();
   }
 
-  static void showMasqueradeCancelDialog(GlobalKey<NavigatorState> navKey) {
+  static void showMasqueradeCancelDialog(GlobalKey<NavigatorState> navKey, BuildContext context) {
     bool logout = ApiPrefs.getCurrentLogin()?.isMasqueradingFromQRCode == true;
-    User user = ApiPrefs.getUser();
-    showDialogWithNavigatorKey(
-      navKey: navKey,
+    User user = ApiPrefs.getUser()!;
+    showDialog(
+      context: navKey.currentContext ?? context,
       builder: (context) {
         AppLocalizations l10n = L10n(context);
         var nameText = UserName.fromUser(user).text;
@@ -57,22 +57,22 @@ class MasqueradeUI extends StatefulWidget {
           actions: [
             TextButton(
               child: new Text(L10n(context).cancel),
-              onPressed: () => navKey.currentState.pop(false),
+              onPressed: () => navKey.currentState?.pop(false),
             ),
             TextButton(
               child: new Text(L10n(context).ok),
               onPressed: () async {
                 if (logout) {
-                  await ParentTheme.of(context).setSelectedStudent(null);
+                  await ParentTheme.of(context)?.setSelectedStudent(null);
                   await ApiPrefs.performLogout();
                   await FeaturesUtils.performLogout();
-                  MasqueradeUI.of(context).refresh();
+                  MasqueradeUI.of(context)?.refresh();
                   locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
                 } else {
                   ApiPrefs.updateCurrentLogin((b) => b
                     ..masqueradeUser = null
                     ..masqueradeDomain = null);
-                  Respawn.of(context).restart();
+                  Respawn.of(context)?.restart();
                 }
               },
             ),
@@ -85,7 +85,7 @@ class MasqueradeUI extends StatefulWidget {
 
 class MasqueradeUIState extends State<MasqueradeUI> {
   bool _enabled = false;
-  User _user;
+  late User _user;
 
   GlobalKey _childKey = GlobalKey();
 
@@ -101,7 +101,7 @@ class MasqueradeUIState extends State<MasqueradeUI> {
     bool wasEnabled = _enabled;
     if (ApiPrefs.isLoggedIn() && ApiPrefs.isMasquerading()) {
       _enabled = true;
-      _user = ApiPrefs.getUser();
+      _user = ApiPrefs.getUser()!;
     } else {
       _enabled = false;
     }
@@ -144,7 +144,7 @@ class MasqueradeUIState extends State<MasqueradeUI> {
                         color: Colors.white,
                         semanticLabel: L10n(context).stopActAsUser,
                       ),
-                      onPressed: () => MasqueradeUI.showMasqueradeCancelDialog(widget.navKey),
+                      onPressed: () => MasqueradeUI.showMasqueradeCancelDialog(widget.navKey, context),
                     ),
                   ],
                 ),

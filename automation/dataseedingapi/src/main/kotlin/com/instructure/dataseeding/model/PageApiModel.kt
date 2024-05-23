@@ -26,7 +26,9 @@ data class PageApiModel(
         val body: String,
         val published: Boolean,
         @SerializedName("front_page")
-        val frontPage: Boolean
+        val frontPage: Boolean,
+        @SerializedName("editing_roles")
+        val editingRoles: String
 )
 
 data class CreatePage(
@@ -34,7 +36,9 @@ data class CreatePage(
         val body: String,
         val published: Boolean,
         @SerializedName("front_page")
-        val frontPage: Boolean
+        val frontPage: Boolean,
+        @SerializedName("editing_roles")
+        val editingRoles: String? = null
 )
 
 data class CreatePageWrapper(

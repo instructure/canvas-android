@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">No presentat</string>
     <string name="gradedSubmissionLabel">Qualificat</string>
 
+    <string name="reminderTitle">Recordatori</string>
+    <string name="reminderDescription">Afegiu notificacions de recordatori de dates de lliurament d\'aquesta activitat a aquest dispositiu.</string>
+    <string name="a11y_addReminder">Afegeix un recordatori</string>
+    <string name="a11y_removeReminder">Suprimeix el recordatori</string>
+    <string name="reminderBefore">%s anterior</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">1 minut</item>
+        <item quantity="other">%d minuts</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">1 hora</item>
+        <item quantity="other">%d hores</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">1 dia</item>
+        <item quantity="other">%d dies</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">1 setmana</item>
+        <item quantity="other">%d setmanes</item>
+    </plurals>
+    <string name="reminderCustom">Personalitzat</string>
+    <string name="customReminderTitle">Recordatori personalitzat</string>
+    <string name="customReminderQuantityHint">Quantitat</string>
+    <string name="customReminderMinutes">Minuts anteriors</string>
+    <string name="customReminderHours">Hores anteriors</string>
+    <string name="customReminderDays">Dies anteriors</string>
+    <string name="customReminderWeeks">Setmanes anteriors</string>
+    <string name="reminderNotificationChannelName">Notificacions de recordatoris</string>
+    <string name="reminderNotificationChannelDescription">Notificacions del Canvas per a recordatoris d’activitats.</string>
+    <string name="reminderNotificationTitle">Recordatori de data de lliurament</string>
+    <string name="reminderNotificationDescription">Aquesta activitat s’ha de lliurar el %s: %s</string>
+    <string name="reminderInPast">Trieu una data futura per al recordatori</string>
+    <string name="reminderAlreadySet">Ja heu establert un recordatori per a aquesta data</string>
+    <string name="deleteReminderTitle">Suprimeix el recordatori</string>
+    <string name="deleteReminderMessage">Segur que voleu suprimir aquest recordatori?</string>
+    <string name="reminderPermissionNotGrantedError">Heu d\'activar el permís d’alarma exacte per a aquesta acció</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Si es fa servir \'http://\', no hi ha cap visualització prèvia disponible dels URL</string>
     <string name="submissionUrlNotAUrlError">Introduïu un URL vàlid</string>
@@ -432,6 +469,7 @@
     <!-- Notifications -->
     <string name="deleted">Suprimit</string>
 
+    <string name="gradeUpdated">S’ha actualitzat la nota</string>
     <string name="loadingCanvas">S\'està carregant el contingut de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -570,7 +608,7 @@
     <string name="collaborations">Col·laboracions</string>
     <string name="conferences">Conferències</string>
     <string name="chat">Xat</string>
-    <string name="outcomes">Resultats</string>
+    <string name="outcomes">Competències</string>
 
     <!-- Submission View Strings -->
     <string name="visitPage">Ves a la pàgina:</string>
@@ -956,6 +994,8 @@
     <string name="inviteAccepted">Invitació acceptada.</string>
     <string name="inviteDeclined">Invitació rebutjada.</string>
     <string name="latePenalty">Sanció per endarreriment (-%s)</string>
+    <string name="latePenaltyUpdated">Penalització per entrega endarrerida: -%s punts</string>
+    <string name="yourGrade">La vostra nota: %s punts</string>
     <string name="finalGrade">Nota final</string>
 
     <string name="max_count">99+</string>
@@ -1117,6 +1157,9 @@
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
+    <string name="a11y_gradeCellContentDescriptionHint">Podeu obrir Informació de l’entrega des d\'aquí</string>
+
+    <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Nota: %s</string>
     <plurals name="minutes">
         <item quantity="one">%s minut</item>
         <item quantity="other">%s minuts</item>
@@ -1293,9 +1336,17 @@
     <string name="a11y_closeProgress">Tanqueu el quadre de diàleg de progrés</string>
     <string name="fileUploadProgress">%1$s de %2$s</string>
     <string name="fileUploadProgressSubtitle">S\'està penjant als fitxers</string>
+    <string name="fileUploadFailedSubtitle">No s\'han pogut penjar un o més fitxers. Reviseu la connexió a Internet i torneu a provar de fer l\'entrega.</string>
     <string name="submissionProgressSubtitle">S\'està penjant l\'entrega a \"%s\"</string>
     <string name="dashboardNotificationUploadingSubmissionTitle">S\'està carregant l\'entrega</string>
-    <string name="dashboardNotificationUploadingFilesTitle">S\'estan penjant els fitxers</string>
+    <string name="dashboardNotificationSubmissionUploadSuccessTitle">S’ha fet l’entrega correctament</string>
+    <string name="dashboardNotificationSubmissionUploadFailedTitle">S’ha produït un error en fer l\'entrega</string>
+    <plurals name="dashboardNotificationUploadingFilesTitle">
+        <item quantity="one">S\'està penjant el fitxer</item>
+        <item quantity="other">S\'estan penjant els fitxers</item>
+    </plurals>
+    <string name="dashboardNotificationUploadingFilesSuccessTitle">S’ha penjat el fitxer correctament</string>
+    <string name="dashboardNotificationUploadingFilesFailedTitle">No s\'ha pogut penjar el fitxer</string>
     <string name="cancelSubmissionDialogTitle">Cancel·la l\'entrega</string>
     <string name="cancelSubmissionDialogMessage">Amb aquesta acció es cancel·larà i se suprimirà l\'entrega.</string>
     <string name="fileUploadError">No s\'ha pogut penjar el fitxer</string>
@@ -1332,4 +1383,213 @@
     <string name="acceptableUsePolicyAgree">Accepto la política d’ús acceptable.</string>
     <string name="acceptableUsePolicySubmit">Entrega</string>
     <string name="acceptFail">No s’ha pogut enviar l’acceptació de les condicions.</string>
+    <string name="attempt">Intent %d</string>
+    <string name="quizQuestions">Preguntes: %d</string>
+    <string name="quizTimeLimit">Límit de temps: %s</string>
+    <string name="allowedAttempts">Intents permesos: %s</string>
+    <string name="usedAttempts">Intents utilitzats: %d</string>
+    <string name="generalUnexpectedError">S\'ha produït un error inesperat.</string>
+
+    <string name="deleteSelected">Suprimeix</string>
+    <string name="archiveSelected">Arxiva</string>
+    <string name="unarchiveSelected">Anul·la l’arxivament</string>
+    <string name="markAsReadSelected">Marca-ho com a llegit</string>
+    <string name="markAsUnreadSelected">Marca-ho com a no llegit</string>
+    <string name="starSelected">Marca amb una estrella</string>
+    <string name="unstarSelected">Suprimeix l\'estrella</string>
+
+    <string name="inboxOperationFailed">No s\'ha pogut realitzar l’operació</string>
+    <string name="inboxDeletedConfirmation">S\'ha suprimit %s</string>
+    <string name="inboxArchivedConfirmation">S’ha arxivat %s</string>
+    <string name="inboxUnarchivedConfirmation">S’ha anul·lat l’arxivament de %s</string>
+    <string name="inboxMarkAsReadConfirmation">S’ha marcat %s com a llegit</string>
+    <string name="inboxMarkAsUnreadConfirmation">S’ha marcat %s com a no llegit</string>
+    <string name="inboxStarredConfirmation">S’ha marcat %s amb una estrella</string>
+    <string name="inboxUnstarredConfirmation">S’ha suprimit l’estrella de %s</string>
+
+    <plurals name="inboxConfirmDelete">
+        <item quantity="one">Aquesta conversa se suprimirà de la safata d’entrada en tots els vostres dispositius. Aquesta acció no es pot desfer.</item>
+        <item quantity="other">Aquestes converses se suprimiran de la safata d’entrada en tots els vostres dispositius. Aquesta acció no es pot desfer.</item>
+    </plurals>
+    <string name="failedToLoadNextPage">No s’ha pogut carregar la pàgina següent. Comproveu la vostra connexió a Internet.</string>
+    <string name="conversationsRefreshFailed">No s\'han pogut actualitzar les converses. Comproveu la vostra connexió a Internet.</string>
+    <string name="inboxScopeInbox">Safata d\'entrada</string>
+    <string name="inboxContextSelectorTitle">Seleccioneu una assignatura o un grup</string>
+    <string name="inboxClearFilter">Suprimeix</string>
+    <string name="a11y_courseFilterContentDescription">Filtre de l’assignatura: %s</string>
+    <string name="a11y_inboxEntryLongClickDescription">seleccionada</string>
+    <string name="a11y_itemSelectedSwipeForActions">S’ha seleccionat la conversa. S’ha activat el mode de selecció. Navegueu per cercar accions.</string>
+    <string name="a11y_conversationSelected">S’ha seleccionat la conversa</string>
+    <string name="a11y_conversationDeselected">S’ha anul·lat la selecció de la conversa.</string>
+    <string name="a11y_exitSelectionMode">Surt del mode de selecció</string>
+    <string name="a11y_selectionModeDeactivated">S’ha desactivat el mode de selecció.</string>
+    <string name="a11y_avatarContentDescription">Avatar de %s</string>
+    <string name="inboxUndo">Desfés</string>
+    <string name="aboutAppTitle">Aplicació</string>
+    <string name="aboutDomainTitle">Domini</string>
+    <string name="aboutLoginTitle">ID d\'inici de sessió</string>
+    <string name="aboutEmailTitle">Correu electrònic</string>
+    <string name="aboutVersionTitle">Versió</string>
+    <string name="assignmentRefreshError">Hi ha hagut un problema en tornar a carregar aquesta activitat. Reviseu la connexió i torneu-ho a provar.</string>
+    <string name="instructure_logo">Logotip de l’Instructure</string>
+    <string name="preferences">Preferències</string>
+    <string name="offlineContent">Contingut sense connexió</string>
+    <string name="offlineSyncSettingsTitle">Sincronització</string>
+
+    <!--Offline-->
+    <string name="offline_content_toolbar_title">Contingut sense connexió</string>
+    <string name="course_menu_manage_offline_content">Gestiona el contingut sense connexió</string>
+    <string name="offline_content_storage">Emmagatzematge</string>
+    <string name="offline_content_storage_info">S’han utilitzat %s de %s</string>
+    <string name="offline_content_other">Altres aplicacions</string>
+    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_remaining">Restant</string>
+    <string name="offline_content_all_courses">Totes les assignatures</string>
+    <string name="offline_content_sync">Sincronitza</string>
+    <string name="offline_content_selected">S’ha seleccionat %d</string>
+    <string name="offline_content_select_all">Selecciona-ho tot</string>
+    <string name="offline_content_deselect_all">Anul·la la selecció de tot</string>
+    <string name="offline_content_loading_error">S\'ha produït un error en carregar el contingut.</string>
+    <string name="offline_content_empty_title">No hi ha cap assignatura</string>
+    <string name="offline_content_empty_message">Les vostres assignatures s’enumeraran aquí; posteriorment, podeu fer que estiguin disponibles per utilitzar-se sense connexió.</string>
+    <string name="offline_content_empty_course_title">No hi ha cap contingut de l’assignatura</string>
+    <string name="offline_content_empty_course_message">El contingut de l’assignatura s’enumerarà aquí; posteriorment, podeu fer que estigui disponible per utilitzar-se sense connexió.</string>
+    <string name="offline_content_discard_dialog_title">Voleu rebutjar els canvis?</string>
+    <string name="offline_content_discard_dialog_message">Si trieu rebutjar-los, no es desaran els canvis.</string>
+    <string name="offline_content_discard_dialog_positive">Rebutja</string>
+    <string name="offline_content_sync_dialog_title">Voleu sincronitzar el contingut sense connexió?</string>
+    <string name="offline_content_sync_dialog_message">Amb aquesta operació se sincronitzarà el contingut de ~%s. Si no us heu connectat a cap xarxa Wi-Fi, és possible que el proveïdor de dades us cobri algun import addicional.</string>
+    <string name="offline_content_sync_dialog_message_wifi_only">Amb aquesta operació se sincronitzarà el contingut de ~%s només mentre tingueu connexió a una xarxa Wi-Fi.</string>
+    <string name="offline_content_sync_dialog_positive">Sincronitza</string>
+    <string name="offline_content_sync_loading_title">S\'està carregant&#8230;</string>
+    <string name="offline_content_sync_loading_message">Un moment, us ho estem preparant.</string>
+    <string name="content_description_expand_content">Desplega el contingut</string>
+    <string name="content_description_collapse_content">Contrau el contingut</string>
+    <string name="syncSettings_autoContentSyncDescription">En activar la sincronització automàtica del contingut es baixarà el contingut seleccionat segons les opcions de configuració indicades a continuació. Se sincronitzarà el contingut encara que l’aplicació no s’estigui executant. Si el paràmetre està desactivat no es durà a terme la sincronització. No se suprimirà el contingut que ja s’hagi baixat.</string>
+    <string name="syncSettings_syncFrequencyTitle">Freqüència de sincronització</string>
+    <string name="syncSettings_autoContentSyncTitle">Sincronització automàtica del contingut</string>
+    <string name="syncSettings_syncFrequencyDescription">Especifiqueu la recurrència de la sincronització del contingut. El sistema baixarà el contingut seleccionat segons la freqüència especificada en aquest apartat.</string>
+    <string name="syncSettings_wifiOnlyTitle">Sincronitzeu el contingut només a través de Wi-Fi</string>
+    <string name="syncSettings_wifiOnlyDescription">Si aquest paràmetre està activat, només se sincronitzarà el contingut si el dispositiu es connecta a una xarxa Wi-Fi; en cas contrari, l’acció es posposarà fins que hi hagi una xarxa Wi-Fi disponible.</string>
+    <string name="syncSettings_toolbarTitle">Sincronització</string>
+    <string name="daily">Diari</string>
+    <string name="weekly">Setmanal</string>
+    <string name="syncSettings_syncFrequencyDialogTitle">Freqüència de sincronització</string>
+    <string name="syncSettings_wifiConfirmationTitle">Voleu desactivar la sincronització del contingut a través de Wi-Fi?</string>
+    <string name="synySettings_wifiConfirmationMessage">Si aquest paràmetre està activat, només se sincronitzarà el contingut si el dispositiu es connecta a una xarxa Wi-Fi; en cas contrari, l’acció es posposarà fins que hi hagi una xarxa Wi-Fi disponible.</string>
+    <string name="syncSettings_wifiConfirmationPositiveButton">Desactiva</string>
+    <string name="syncSettings_manualDescription">Manual</string>
+    <string name="offlineModeSnackbar">Mode sense connexió</string>
+    <string name="notAvailableOfflineScreenTitle">No està disponible sense connexió</string>
+    <string name="notAvailableOfflineDescription">Aquest contingut no està disponible en mode sense connexió.</string>
+    <string name="notAvailableOfflineDescriptionForTabs">Aquest contingut no està disponible en mode sense connexió. Si voleu canviar la configuració, obriu la pantalla Contingut sense connexió des del panell de control quan la xarxa estigui disponible.</string>
+    <string name="offline">Sense connexió</string>
+    <string name="syncProgress_syncFailed">No s’ha pogut dur a terme la sincronització</string>
+    <string name="syncProgress_downloadProgress">S\'estan baixant %1$s de %2$s</string>
+    <string name="syncProgress_syncQueued">En cua</string>
+    <string name="syncProgress_offlineContentSyncCompleted">S’ha completat la sincronització del contingut sense connexió</string>
+    <string name="syncProgress_offlineContentSyncFailed">No s’ha pogut sincronitzar el contingut sense connexió</string>
+    <string name="syncProgress_cancelConfirmationTitle">Voleu cancel·lar la sincronització?</string>
+    <string name="syncProgress_cancelConfirmationMessage">Amb aquesta acció s’aturarà la sincronització del contingut sense connexió. Podeu tornar-ho a fer més endavant.</string>
+    <string name="syncProgress_syncErrorSubtitle">No s\'han pogut sincronitzar un o més fitxers. Reviseu la connexió a Internet i torneu a provar de fer l\'entrega.</string>
+    <string name="syncProgress_downloadStarting">S’està iniciant la baixada</string>
+    <string name="coursesCannotBeFavoritedOffline">No es poden afegir les assignatures a Preferits sense connexió.</string>
+    <string name="allCoursesScreenHeader">Totes les assignatures</string>
+    <string name="allCoursesCourseHeader">Assignatures</string>
+    <string name="allCoursesGroupHeader">Grups</string>
+    <string name="dashboardAllCoursesButton">Totes les assignatures</string>
+    <string name="allCoursesOfflineNote">Seleccionar assignatures per al panell de control només es pot fer sense connexió. Podeu navegar a la informació de l’assignatura sense connexió.</string>
+    <string name="allCoursesOfflineNoteTitle">Nota</string>
+    <string name="syncProgress_downloadSuccess">Operació correcta! S’han baixat %1$s de %2$s</string>
+    <string name="syncProgress_syncingOfflineContent">S’està sincronitzant el contingut sense connexió</string>
+    <string name="a11y_contentDescription_syncDashboardNotificationDismiss">Rebutgeu la notificació</string>
+    <plurals name="syncProgress_itemCount">
+        <item quantity="one">S’està sincronitzant %d assignatura.</item>
+        <item quantity="other">S’estan sincronitzant %d assignatures.</item>
+    </plurals>
+    <string name="assignmentNoLongerAvailable">Aquesta activitat ja no està disponible.</string>
+    <string name="editDashboardOfflineMode">Esteu sense connexió</string>
+    <string name="editDashboardOfflineModeMessage">Actualment, no teniu cap assignatura que estigui disponible sense connexió.</string>
+    <string name="offlineContentSyncSuccessNotificationTitle">S’ha sincronitzat correctament el contingut sense connexió</string>
+    <string name="offlineContentSyncFailureNotificationTitle">No s’ha pogut sincronitzar el contingut sense connexió</string>
+    <string name="notificationChannelNameSyncUpdates">Actualitzacions de la sincronització sense connexió</string>
+    <string name="notificationChannelNameSyncUpdatesDescription">Notificacions del Canvas d’actualitzacions de sincronització sense connexió.</string>
+    <plurals name="offlineContentSyncSuccessNotificationBody">
+        <item quantity="one">S’ha sincronitzat %d assignatura.</item>
+        <item quantity="other">S’han sincronitzat %d assignatures.</item>
+    </plurals>
+    <string name="syncProgressAdditionalCourseContent">Contingut de l’assignatura addicional</string>
+    <string name="failedToUpdateDashboardOrder">No s’ha pogut actualitzar la comanda de targetes del panell de control</string>
+    <string name="publishAllModulesAndItems">Publica tots els continguts i elements</string>
+    <string name="publishModulesOnly">Publica només els continguts</string>
+    <string name="unpublishAllModulesAndItems">Anul·la tots els continguts i elements</string>
+    <string name="moduleOptions">Opcions de contingut</string>
+    <string name="publishModuleAndItems">Publica el contingut i tots els elements</string>
+    <string name="publishModuleOnly">Publica només el contingut</string>
+    <string name="unpublishModuleAndItems">Anul·la la publicació del contingut i de tots els elements</string>
+    <string name="a11y_contentDescription_moduleOptions">Opcions de contingut per a %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Opcions d’elements de contingut per a %s</string>
+    <string name="publishModuleItem">Publica l’element de contingut</string>
+    <string name="unpublishModuleItem">Anul·la la publicació de l\'element de contingut</string>
+    <string name="publishDialogTitle">Voleu publicar-ho?</string>
+    <string name="publishModuleDialogMessage">D’aquesta manera, els estudiants només podran veure el contingut.</string>
+    <string name="publishModuleAndItemsDialogMessage">D’aquesta manera, els estudiants podran veure el contingut i tots els elements.</string>
+    <string name="unpublishDialogTitle">Voleu anul·lar-ne la publicació?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">D’aquesta manera, el contingut i tots els elements seran invisibles per als estudiants.</string>
+    <string name="publishModuleItemDialogMessage">D’aquesta manera, els estudiants només podran veure aquest element.</string>
+    <string name="unpublishModuleItemDialogMessage">D’aquesta manera, només aquest element serà invisible per als estudiants.</string>
+    <string name="publishModulesAndItemsDialogMessage">D’aquesta manera, els estudiants podran veure tots els continguts i elements.</string>
+    <string name="publishModulesDialogMessage">D’aquesta manera, els estudiants només podran veure els continguts.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">D’aquesta manera, tots els continguts i elements seran invisibles per als estudiants.</string>
+    <string name="only_available_with_link">Només està disponible a través d\'un enllaç</string>
+    <string name="schedule_availability">Planifica la disponibilitat</string>
+    <string name="moduleItemPublished">S’ha publicat l\'element</string>
+    <string name="moduleItemUnpublished">S’ha anul·lat la publicació de l\'element</string>
+    <string name="onlyModulePublished">Només s’ha publicat el contingut</string>
+    <string name="moduleAndAllItemsPublished">S’han publicat el contingut i tots els elements</string>
+    <string name="moduleAndAllItemsUnpublished">S’ha anul·lat la publicació del contingut i de tots els elements</string>
+    <string name="onlyModulesPublished">Només s’han publicat els continguts</string>
+    <string name="allModulesAndAllItemsPublished">S’han publicat tots els continguts i elements</string>
+    <string name="allModulesAndAllItemsUnpublished">S’ha anul·lat la publicació de tots els continguts i elements</string>
+    <string name="inherit_from_course">Hereta de l\'assignatura</string>
+    <string name="course_members">Membres del curs</string>
+    <string name="institution_members">Membres de la institució</string>
+    <string name="public_title">Públic</string>
+    <string name="edit_permissions">Edita els permisos</string>
+    <string name="update">Actualitza</string>
+    <string name="availability_title">Disponibilitat</string>
+    <string name="visibility_title">Visibilitat</string>
+    <string name="available_from">Disponible des del</string>
+    <string name="available_until">Disponible fins al</string>
+    <string name="from">Des del</string>
+    <string name="until">Fins al</string>
+    <string name="date">Data</string>
+    <string name="time">Hora</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Esborra la data Des del</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Esborra la data Fins al</string>
+    <string name="progressMessage">Pot ser que aquest procés trigui uns minuts. Podeu tancar el modal o sortir de la pàgina durant aquest procés.</string>
+    <string name="noteTitle">Nota</string>
+    <string name="allModules">Tots els continguts</string>
+    <string name="allModulesAndItems">Tots els continguts i elements</string>
+    <string name="selectedModulesAndItems">Continguts i elements seleccionats</string>
+    <string name="selectedModules">Continguts seleccionats</string>
+    <string name="publishing">S\'està publicant</string>
+    <string name="unpublishing">Se n\'està anul·lant la publicació</string>
+    <string name="moduleBulkUpdateNote">Els continguts i els elements que ja s’hagin processat no es revertiran al seu estat anterior un cop interromput el procés.</string>
+    <string name="success">Operació correcta!</string>
+    <string name="updateFailed">No s’ha pogut realitzar l’actualització</string>
+    <string name="updateCancelled">S’ha cancel·lat l’actualització</string>
+    <string name="a11y_hidden">Ocult</string>
+    <string name="a11y_scheduled">S’ha planificat</string>
+    <string name="a11y_published">S’ha publicat</string>
+    <string name="a11y_unpublished">Se n’ha anul·lat la publicació</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f punt</item>
+        <item quantity="other">%.0f punts</item>
+    </plurals>
+    <string name="publishModuleItemAction">Publica-ho</string>
+    <string name="unpublishModuleItemAction">Anul·la’n la publicació</string>
+    <string name="publishDialogPositiveButton">Publica-ho</string>
+    <string name="unpublishDialogPositiveButton">Anul·la’n la publicació</string>
+    <string name="discussionMenuRefresh">Actualitza-ho</string>
 </resources>

@@ -18,7 +18,7 @@
 package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
@@ -45,6 +45,8 @@ data class Enrollment(
         val computedCurrentGrade: String? = null,
         @SerializedName("computed_final_grade")
         val computedFinalGrade: String? = null,
+        @SerializedName("computed_current_letter_grade")
+        val computedCurrentLetterGrade: String? = null,
         @SerializedName("multiple_grading_periods_enabled")
         val multipleGradingPeriodsEnabled: Boolean = false,
         @SerializedName("totals_for_all_grading_periods_option")
@@ -103,7 +105,7 @@ data class Enrollment(
 
     val currentScore: Double? get() = grades?.currentScore ?: computedCurrentScore
     val finalScore: Double? get() = grades?.finalScore ?: computedFinalScore
-    val currentGrade: String? get() = grades?.currentGrade ?: computedCurrentGrade
+    val currentGrade: String? get() = grades?.currentGrade ?: computedCurrentGrade ?: computedCurrentLetterGrade
     val finalGrade: String? get() = grades?.finalGrade ?: computedFinalGrade
 
     fun currentPeriodComputedCurrentScore(): Double? = grades?.currentScore ?: currentPeriodComputedCurrentScore

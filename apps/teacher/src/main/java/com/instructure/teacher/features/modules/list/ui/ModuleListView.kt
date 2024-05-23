@@ -16,36 +16,41 @@
  */
 package com.instructure.teacher.features.modules.list.ui
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.models.License
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.utils.tryOrNull
-import com.instructure.interactions.router.Route
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
-import com.instructure.pandautils.models.EditableFile
+import com.instructure.pandautils.features.progress.ProgressDialogFragment
+import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.showThemed
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentModuleListBinding
+import com.instructure.teacher.features.modules.list.BulkModuleUpdateAction
 import com.instructure.teacher.features.modules.list.ModuleListEvent
-import com.instructure.teacher.fragments.*
+import com.instructure.teacher.features.modules.list.ui.file.UpdateFileDialogFragment
+import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
-import com.instructure.teacher.utils.viewMedia
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_module_list.*
 
 class ModuleListView(
     inflater: LayoutInflater,
     parent: ViewGroup,
     val course: CanvasContext
-) : MobiusView<ModuleListViewState, ModuleListEvent>(R.layout.fragment_module_list, inflater, parent) {
+) : MobiusView<ModuleListViewState, ModuleListEvent, FragmentModuleListBinding>(
+    inflater,
+    FragmentModuleListBinding::inflate,
+    parent
+) {
 
     private var consumer: Consumer<ModuleListEvent>? = null
 
@@ -68,20 +73,131 @@ class ModuleListView(
             consumer?.accept(ModuleListEvent.ModuleExpanded(moduleId, isExpanded))
         }
 
+        override fun publishModule(moduleId: Long) {
+            showConfirmationDialog(
+                R.string.publishDialogTitle,
+                R.string.publishModuleDialogMessage,
+                R.string.publishDialogPositiveButton,
+                R.string.cancel
+            ) {
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.PUBLISH, true))
+            }
+        }
+
+        override fun publishModuleAndItems(moduleId: Long) {
+            showConfirmationDialog(
+                R.string.publishDialogTitle,
+                R.string.publishModuleAndItemsDialogMessage,
+                R.string.publishDialogPositiveButton,
+                R.string.cancel
+            ) {
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.PUBLISH, false))
+            }
+        }
+
+        override fun unpublishModuleAndItems(moduleId: Long) {
+            showConfirmationDialog(
+                R.string.unpublishDialogTitle,
+                R.string.unpublishModuleAndItemsDialogMessage,
+                R.string.unpublishDialogPositiveButton,
+                R.string.cancel
+            ) {
+                consumer?.accept(ModuleListEvent.BulkUpdateModule(moduleId, BulkModuleUpdateAction.UNPUBLISH, false))
+            }
+        }
+
+        override fun updateFileModuleItem(fileId: Long, contentDetails: ModuleContentDetails) {
+            consumer?.accept(
+                ModuleListEvent.UpdateFileModuleItem(
+                    fileId,
+                    contentDetails
+                )
+            )
+        }
+
+        override fun showSnackbar(@StringRes message: Int, params: Array<Any>) {
+            consumer?.accept(ModuleListEvent.ShowSnackbar(message, params))
+        }
+
+        override fun updateModuleItem(itemId: Long, isPublished: Boolean) {
+            val title = if (isPublished) R.string.publishDialogTitle else R.string.unpublishDialogTitle
+            val message =
+                if (isPublished) R.string.publishModuleItemDialogMessage else R.string.unpublishModuleItemDialogMessage
+            val positiveButton = if (isPublished) R.string.publishDialogPositiveButton else R.string.unpublishDialogPositiveButton
+
+            showConfirmationDialog(title, message, positiveButton, R.string.cancel) {
+                consumer?.accept(ModuleListEvent.UpdateModuleItem(itemId, isPublished))
+            }
+        }
     })
 
     init {
         // Toolbar setup
-        toolbar.subtitle = course.name
-        toolbar.setupBackButton(context)
-        ViewStyler.themeToolbarColored(context as Activity, toolbar, course)
+        binding.toolbar.apply {
+            subtitle = course.name
+            setupBackButton(activity)
+            ViewStyler.themeToolbarColored(activity, this, course)
+            inflateMenu(R.menu.menu_module_list)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.actionPublishModulesItems -> {
+                        showConfirmationDialog(
+                            R.string.publishDialogTitle,
+                            R.string.publishModulesAndItemsDialogMessage,
+                            R.string.publishDialogPositiveButton,
+                            R.string.cancel
+                        ) {
+                            consumer?.accept(
+                                ModuleListEvent.BulkUpdateAllModules(
+                                    BulkModuleUpdateAction.PUBLISH,
+                                    false
+                                )
+                            )
+                        }
+                        true
+                    }
 
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
+                    R.id.actionPublishModules -> {
+                        showConfirmationDialog(
+                            R.string.publishDialogTitle,
+                            R.string.publishModulesDialogMessage,
+                            R.string.publishDialogPositiveButton,
+                            R.string.cancel
+                        ) {
+                            consumer?.accept(ModuleListEvent.BulkUpdateAllModules(BulkModuleUpdateAction.PUBLISH, true))
+                        }
+                        true
+                    }
 
-        recyclerView.addOnScrollListener(scrollListener)
+                    R.id.actionUnpublishModulesItems -> {
+                        showConfirmationDialog(
+                            R.string.unpublishDialogTitle,
+                            R.string.unpublishModulesAndItemsDialogMessage,
+                            R.string.unpublishDialogPositiveButton,
+                            R.string.cancel
+                        ) {
+                            consumer?.accept(
+                                ModuleListEvent.BulkUpdateAllModules(
+                                    BulkModuleUpdateAction.UNPUBLISH,
+                                    false
+                                )
+                            )
+                        }
+                        true
+                    }
 
-        swipeRefreshLayout.setOnRefreshListener {
+                    else -> false
+                }
+            }
+        }
+
+        binding.recyclerView.apply {
+            layoutManager = this@ModuleListView.layoutManager
+            adapter = this@ModuleListView.adapter
+            addOnScrollListener(scrollListener)
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
             consumer?.accept(ModuleListEvent.PullToRefresh)
         }
     }
@@ -91,7 +207,7 @@ class ModuleListView(
     }
 
     override fun render(state: ModuleListViewState) {
-        swipeRefreshLayout.isRefreshing = state.showRefreshing
+        binding.swipeRefreshLayout.isRefreshing = state.showRefreshing
         adapter.setData(state.items, state.collapsedModuleIds)
         if (state.items.isEmpty()) scrollListener.resetScroll()
     }
@@ -101,72 +217,58 @@ class ModuleListView(
     }
 
     fun routeToModuleItem(item: ModuleItem, canvasContext: CanvasContext) {
-        val route = when (tryOrNull { ModuleItem.Type.valueOf(item.type!!) }) {
-            ModuleItem.Type.Assignment -> {
-                val args = AssignmentDetailsFragment.makeBundle(item.contentId)
-                Route(null, AssignmentDetailsFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.Discussion -> {
-                DiscussionRouterFragment.makeRoute(canvasContext, item.contentId)
-            }
-            ModuleItem.Type.Page -> {
-                val args = PageDetailsFragment.makeBundle(item.pageUrl!!)
-                Route(null, PageDetailsFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.Quiz -> {
-                val args = QuizDetailsFragment.makeBundle(item.contentId)
-                Route(null, QuizDetailsFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.ExternalUrl -> {
-                val args = InternalWebViewFragment.makeBundle(
-                    item.externalUrl.orEmpty(),
-                    item.title.orEmpty()
-                )
-                Route(null, InternalWebViewFragment::class.java, canvasContext, args)
-            }
-            ModuleItem.Type.ExternalTool -> {
-                val args = LtiLaunchFragment.makeBundle(
-                    canvasContext = canvasContext,
-                    url = item.url.orEmpty(),
-                    title = item.title.orEmpty(),
-                    sessionLessLaunch = true
-                )
-                Route(null, LtiLaunchFragment::class.java, canvasContext, args)
-            }
-            else -> null
-        }
-        RouteMatcher.route(context, route)
-    }
-
-    fun routeToFile(
-        canvasContext: CanvasContext,
-        file: FileFolder,
-        requiresUsageRights: Boolean,
-        licenses: List<License>
-    ) {
-        val editableFile = EditableFile(
-            file = file,
-            usageRights = requiresUsageRights,
-            licenses = licenses,
-            courseColor = canvasContext.backgroundColor,
-            canvasContext = canvasContext,
-            iconRes = R.drawable.ic_document
-        )
-        viewMedia(
-            context = context,
-            filename = file.displayName.orEmpty(),
-            contentType = file.contentType.orEmpty(),
-            url = file.url,
-            thumbnailUrl = file.thumbnailUrl,
-            displayName = file.displayName,
-            iconRes = R.drawable.ic_document,
-            toolbarColor = canvasContext.backgroundColor,
-            editableFile = editableFile
-        )
+        val route = ModuleProgressionFragment.makeRoute(canvasContext, item.id)
+        RouteMatcher.route(activity as FragmentActivity, route)
     }
 
     fun scrollToItem(itemId: Long) {
         val itemPosition = adapter.getItemVisualPosition(itemId)
-        recyclerView?.scrollToPosition(itemPosition)
+        binding.recyclerView.scrollToPosition(itemPosition)
+    }
+
+    fun showConfirmationDialog(
+        title: Int,
+        message: Int,
+        positiveButton: Int,
+        negativeButton: Int,
+        onConfirmed: () -> Unit
+    ) {
+        AlertDialog.Builder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(positiveButton) { _, _ ->
+                onConfirmed()
+            }
+            .setNegativeButton(negativeButton) { _, _ -> }
+            .showThemed()
+    }
+
+    fun showSnackbar(@StringRes message: Int, params: Array<Any> = emptyArray()) {
+        Snackbar.make(binding.root, context.getString(message, *params), Snackbar.LENGTH_SHORT).show()
+    }
+
+    fun showUpdateFileDialog(fileId: Long, contentDetails: ModuleContentDetails) {
+        val fragment = UpdateFileDialogFragment.newInstance(fileId, contentDetails, course)
+        fragment.show((activity as FragmentActivity).supportFragmentManager, "editFileDialog")
+    }
+
+    fun showProgressDialog(
+        progressId: Long,
+        @StringRes title: Int,
+        @StringRes progressTitle: Int,
+        @StringRes note: Int? = null
+    ) {
+        val fragment = ProgressDialogFragment.newInstance(
+            progressId,
+            context.getString(title),
+            context.getString(progressTitle),
+            note?.let { context.getString(it) })
+        fragment.show((activity as FragmentActivity).supportFragmentManager, "progressDialog")
+    }
+
+    fun bulkUpdateInProgress(progresses: List<ModuleBulkProgressEntity>) {
+        progresses.forEach {
+            consumer?.accept(ModuleListEvent.BulkUpdateStarted(course, it.progressId, it.allModules, it.skipContentTags, it.affectedIds, BulkModuleUpdateAction.valueOf(it.action)))
+        }
     }
 }

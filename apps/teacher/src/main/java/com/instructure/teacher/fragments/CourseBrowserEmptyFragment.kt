@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.fragments
 
+import android.view.LayoutInflater
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER_EMPTY
 import com.instructure.pandautils.analytics.ScreenView
@@ -23,25 +24,25 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentCourseBrowserEmptyBinding
 import com.instructure.teacher.factory.CourseBrowserEmptyViewFactory
 import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
-import kotlinx.android.synthetic.main.fragment_course_browser_empty.*
 
 @ScreenView(SCREEN_VIEW_COURSE_BROWSER_EMPTY)
-class CourseBrowserEmptyFragment: BasePresenterFragment<
+class CourseBrowserEmptyFragment : BasePresenterFragment<
         CourseBrowserEmptyPresenter,
-        CourseBrowserEmptyView>(), CourseBrowserEmptyView {
+        CourseBrowserEmptyView,
+        FragmentCourseBrowserEmptyBinding>(),
+    CourseBrowserEmptyView {
 
     private var mCourse: Course by ParcelableArg(Course())
 
-    override fun layoutResId(): Int {
-        return R.layout.fragment_course_browser_empty
-    }
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCourseBrowserEmptyBinding = FragmentCourseBrowserEmptyBinding::inflate
 
     private fun setupToolbar(courseColor: Int?) {
         if(courseColor != null) {
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseColor, requireContext().getColor(R.color.white))
+            ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, courseColor, requireContext().getColor(R.color.white))
         }
     }
 
@@ -49,7 +50,7 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
 
     override fun onRefreshStarted() {}
 
-    override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter) {
+    override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter) = with(binding) {
         textCourseName.text = presenter.course.name
         textCourseTerm.text = presenter.course.term?.name
         setupToolbar(presenter.course.backgroundColor)

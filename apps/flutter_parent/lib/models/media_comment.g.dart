@@ -41,75 +41,73 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
   final String wireName = 'MediaComment';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, MediaComment object,
+  Iterable<Object?> serialize(Serializers serializers, MediaComment object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'media_type',
       serializers.serialize(object.mediaType,
           specifiedType: const FullType(MediaType)),
     ];
-    result.add('media_id');
-    if (object.mediaId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.mediaId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('display_name');
-    if (object.displayName == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.displayName,
-          specifiedType: const FullType(String)));
-    }
-    result.add('url');
-    if (object.url == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('content-type');
-    if (object.contentType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.contentType,
-          specifiedType: const FullType(String)));
-    }
+    Object? value;
+    value = object.mediaId;
+
+    result
+      ..add('media_id')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.displayName;
+
+    result
+      ..add('display_name')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.url;
+
+    result
+      ..add('url')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+    value = object.contentType;
+
+    result
+      ..add('content-type')
+      ..add(
+          serializers.serialize(value, specifiedType: const FullType(String)));
+
     return result;
   }
 
   @override
-  MediaComment deserialize(Serializers serializers, Iterable<Object> serialized,
+  MediaComment deserialize(
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new MediaCommentBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final dynamic value = iterator.current;
-      if (value == null) continue;
+      final Object? value = iterator.current;
       switch (key) {
         case 'media_id':
           result.mediaId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'display_name':
           result.displayName = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'url':
           result.url = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
         case 'media_type':
           result.mediaType = serializers.deserialize(value,
-              specifiedType: const FullType(MediaType)) as MediaType;
+              specifiedType: const FullType(MediaType))! as MediaType;
           break;
         case 'content-type':
           result.contentType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String)) as String?;
           break;
       }
     }
@@ -137,29 +135,28 @@ class _$MediaTypeSerializer implements PrimitiveSerializer<MediaType> {
 
 class _$MediaComment extends MediaComment {
   @override
-  final String mediaId;
+  final String? mediaId;
   @override
-  final String displayName;
+  final String? displayName;
   @override
-  final String url;
+  final String? url;
   @override
   final MediaType mediaType;
   @override
-  final String contentType;
+  final String? contentType;
 
-  factory _$MediaComment([void Function(MediaCommentBuilder) updates]) =>
-      (new MediaCommentBuilder()..update(updates)).build();
+  factory _$MediaComment([void Function(MediaCommentBuilder)? updates]) =>
+      (new MediaCommentBuilder()..update(updates))._build();
 
   _$MediaComment._(
       {this.mediaId,
       this.displayName,
       this.url,
-      this.mediaType,
+      required this.mediaType,
       this.contentType})
       : super._() {
-    if (mediaType == null) {
-      throw new BuiltValueNullFieldError('MediaComment', 'mediaType');
-    }
+    BuiltValueNullFieldError.checkNotNull(
+        mediaType, r'MediaComment', 'mediaType');
   }
 
   @override
@@ -182,17 +179,19 @@ class _$MediaComment extends MediaComment {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, mediaId.hashCode), displayName.hashCode),
-                url.hashCode),
-            mediaType.hashCode),
-        contentType.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, mediaId.hashCode);
+    _$hash = $jc(_$hash, displayName.hashCode);
+    _$hash = $jc(_$hash, url.hashCode);
+    _$hash = $jc(_$hash, mediaType.hashCode);
+    _$hash = $jc(_$hash, contentType.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('MediaComment')
+    return (newBuiltValueToStringHelper(r'MediaComment')
           ..add('mediaId', mediaId)
           ..add('displayName', displayName)
           ..add('url', url)
@@ -204,37 +203,38 @@ class _$MediaComment extends MediaComment {
 
 class MediaCommentBuilder
     implements Builder<MediaComment, MediaCommentBuilder> {
-  _$MediaComment _$v;
+  _$MediaComment? _$v;
 
-  String _mediaId;
-  String get mediaId => _$this._mediaId;
-  set mediaId(String mediaId) => _$this._mediaId = mediaId;
+  String? _mediaId;
+  String? get mediaId => _$this._mediaId;
+  set mediaId(String? mediaId) => _$this._mediaId = mediaId;
 
-  String _displayName;
-  String get displayName => _$this._displayName;
-  set displayName(String displayName) => _$this._displayName = displayName;
+  String? _displayName;
+  String? get displayName => _$this._displayName;
+  set displayName(String? displayName) => _$this._displayName = displayName;
 
-  String _url;
-  String get url => _$this._url;
-  set url(String url) => _$this._url = url;
+  String? _url;
+  String? get url => _$this._url;
+  set url(String? url) => _$this._url = url;
 
-  MediaType _mediaType;
-  MediaType get mediaType => _$this._mediaType;
-  set mediaType(MediaType mediaType) => _$this._mediaType = mediaType;
+  MediaType? _mediaType;
+  MediaType? get mediaType => _$this._mediaType;
+  set mediaType(MediaType? mediaType) => _$this._mediaType = mediaType;
 
-  String _contentType;
-  String get contentType => _$this._contentType;
-  set contentType(String contentType) => _$this._contentType = contentType;
+  String? _contentType;
+  String? get contentType => _$this._contentType;
+  set contentType(String? contentType) => _$this._contentType = contentType;
 
   MediaCommentBuilder();
 
   MediaCommentBuilder get _$this {
-    if (_$v != null) {
-      _mediaId = _$v.mediaId;
-      _displayName = _$v.displayName;
-      _url = _$v.url;
-      _mediaType = _$v.mediaType;
-      _contentType = _$v.contentType;
+    final $v = _$v;
+    if ($v != null) {
+      _mediaId = $v.mediaId;
+      _displayName = $v.displayName;
+      _url = $v.url;
+      _mediaType = $v.mediaType;
+      _contentType = $v.contentType;
       _$v = null;
     }
     return this;
@@ -242,29 +242,30 @@ class MediaCommentBuilder
 
   @override
   void replace(MediaComment other) {
-    if (other == null) {
-      throw new ArgumentError.notNull('other');
-    }
+    ArgumentError.checkNotNull(other, 'other');
     _$v = other as _$MediaComment;
   }
 
   @override
-  void update(void Function(MediaCommentBuilder) updates) {
+  void update(void Function(MediaCommentBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$MediaComment build() {
+  MediaComment build() => _build();
+
+  _$MediaComment _build() {
     final _$result = _$v ??
         new _$MediaComment._(
             mediaId: mediaId,
             displayName: displayName,
             url: url,
-            mediaType: mediaType,
+            mediaType: BuiltValueNullFieldError.checkNotNull(
+                mediaType, r'MediaComment', 'mediaType'),
             contentType: contentType);
     replace(_$result);
     return _$result;
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

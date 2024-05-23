@@ -15,7 +15,7 @@
 import 'package:flutter/widgets.dart';
 
 class StudentExpansionWidget extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
   final bool expand;
 
   StudentExpansionWidget({this.expand = false, this.child});
@@ -25,8 +25,8 @@ class StudentExpansionWidget extends StatefulWidget {
 }
 
 class StudentExpansionWidgetState extends State<StudentExpansionWidget> with SingleTickerProviderStateMixin {
-  AnimationController expandController;
-  Animation<double> animation;
+  late AnimationController expandController;
+  late Animation<double> animation;
 
   @override
   void initState() {

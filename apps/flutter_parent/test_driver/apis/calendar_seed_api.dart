@@ -17,9 +17,9 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CalendarSeedApi {
-  static Future<ScheduleItem> createCalendarEvent(String courseId, String title, DateTime startAt,
+  static Future<ScheduleItem?> createCalendarEvent(String courseId, String title, DateTime startAt,
       {String description = "",
-      DateTime endAt = null,
+      DateTime? endAt = null,
       bool allDay = false,
       String locationName = "",
       String locationAddress = ""}) async {
@@ -35,6 +35,8 @@ class CalendarSeedApi {
       'calendar_event[location_address]': locationAddress,
     };
 
-    return fetch(seedingDio().post('calendar_events', queryParameters: queryParams));
+    var dio = seedingDio();
+
+    return fetch(dio.post('calendar_events', queryParameters: queryParams));
   }
 }

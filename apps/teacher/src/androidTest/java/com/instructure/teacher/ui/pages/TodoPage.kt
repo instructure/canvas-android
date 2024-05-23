@@ -16,26 +16,76 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 
+/**
+ * Represents the To Do Page.
+ *
+ * This page extends the BasePage class and provides functionality for interacting with the elements on the To Do page.
+ * It contains methods for waiting for the page to render, asserting the display of To Do element details,
+ * refreshing the page, asserting the presence of an empty view, asserting the needs grading count of a To Do element,
+ * and asserting the count of To Do elements.
+ */
 class TodoPage : BasePage() {
 
+    /**
+     * Waits for the To Do page to render by asserting the display of the To Do toolbar.
+     */
     fun waitForRender() {
         onView(withId(R.id.toDoToolbar)).assertDisplayed()
     }
 
-    fun assertTodoElementIsDisplayed(courseName: String) {
+    /**
+     * Asserts that the details of a To Do element are displayed.
+     *
+     * @param courseName The name of the course associated with the To Do element.
+     */
+    fun assertTodoElementDetailsDisplayed(courseName: String) {
         onView(withId(R.id.toDoCourse) + withText(courseName)).assertDisplayed()
+        onView(withId(R.id.dueDate)).assertDisplayed()
+        onView(withId(R.id.toDoTitle)).assertDisplayed()
     }
 
+    /**
+     * Refreshes the To Do page by performing a swipe down action on the swipe refresh layout.
+     */
     fun refresh() {
         onView(withId(R.id.swipeRefreshLayout)).swipeDown()
     }
 
+    /**
+     * Asserts that an empty view is displayed on the To Do page.
+     */
     fun assertEmptyView() {
         onView(withId(R.id.emptyPandaView)).assertDisplayed()
+    }
+
+    /**
+     * Asserts the needs grading count of a To Do element.
+     *
+     * @param todoTitle The title of the To Do element.
+     * @param ungradedCount The number of ungraded items.
+     */
+    fun assertNeedsGradingCountOfTodoElement(todoTitle: String, ungradedCount: Int) {
+        onView(withId(R.id.ungradedCount) + withText("$ungradedCount needs grading") + hasSibling(withId(R.id.toDoTitle) + withText(todoTitle))).assertDisplayed()
+    }
+
+    /**
+     * Asserts the count of To Do elements on the To Do page.
+     *
+     * @param count The expected count of To Do elements.
+     */
+    fun assertTodoElementCount(count: Int) {
+        onView(withId(R.id.toDoRecyclerView)).waitForCheck(RecyclerViewItemCountAssertion(count))
     }
 }

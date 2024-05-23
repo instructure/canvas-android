@@ -16,7 +16,12 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addCourseSettings
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.CourseSettings
@@ -24,13 +29,13 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SyllabusPageTest : TeacherTest() {
+class SyllabusPageTest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -58,8 +63,8 @@ class SyllabusPageTest : TeacherTest() {
         syllabusPage.selectSummaryTab()
         syllabusPage.assertItemDisplayed(calendarEvent.title!!)
         syllabusPage.selectSummaryEvent(calendarEvent.title!!)
-        calendarEventPage.verifyTitle(calendarEvent.title!!)
-        calendarEventPage.verifyDescription(calendarEvent.description!!)
+        calendarEventDetailsPage.assertEventTitle(calendarEvent.title!!)
+        calendarEventDetailsPage.assertDescription(calendarEvent.description!!)
     }
 
     // Tests that we can open the edit syllabus.
@@ -101,7 +106,7 @@ class SyllabusPageTest : TeacherTest() {
         repeat(assignmentCount) {
             data.addAssignment(
                 courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 dueAt = 2.days.fromNow.iso8601,
                 name = "Assignment: $it"
             )

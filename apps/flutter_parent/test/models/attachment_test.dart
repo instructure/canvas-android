@@ -19,7 +19,7 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:test/test.dart';
 
 void main() {
-  IconData getIcon(String contentType) => Attachment((a) => a..contentType = contentType).getIcon();
+  IconData getIcon(String? contentType) => Attachment((a) => a..contentType = contentType).getIcon();
 
   test('returns video icon for video attachments', () {
     expect(getIcon('video/mp4'), CanvasIcons.video);

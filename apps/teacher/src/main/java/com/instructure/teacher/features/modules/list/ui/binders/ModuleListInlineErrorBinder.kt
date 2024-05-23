@@ -20,20 +20,20 @@ import android.content.res.ColorStateList
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ListItemBinder
+import com.instructure.teacher.databinding.AdapterModuleListErrorInlineBinding
 import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
-import kotlinx.android.synthetic.main.adapter_module_list_error_inline.view.*
 
 class ModuleListInlineErrorBinder : ListItemBinder<ModuleListItemData.InlineError, ModuleListCallback>() {
 
     override val layoutResId = R.layout.adapter_module_list_error_inline
 
     override val bindBehavior = Item { item, view, callback ->
-        with(view.retryButton) {
+        val binding = AdapterModuleListErrorInlineBinding.bind(view)
+        with(binding.retryButton) {
             backgroundTintList = ColorStateList.valueOf(item.buttonColor)
             setTextColor(ThemePrefs.buttonTextColor)
             setOnClickListener { callback.retryNextPage() }
         }
     }
-
 }

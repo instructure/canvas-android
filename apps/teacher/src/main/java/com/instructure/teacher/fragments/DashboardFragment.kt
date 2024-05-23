@@ -26,8 +26,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
@@ -35,6 +37,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.CoursesAdapter
+import com.instructure.teacher.databinding.FragmentDashboardBinding
 import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
 import com.instructure.teacher.events.CourseColorOverlayToggledEvent
 import com.instructure.teacher.events.CourseUpdatedEvent
@@ -46,15 +49,17 @@ import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 private const val LIST_SPAN_COUNT = 1
 
+@PageView
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
+
+    private val binding by viewBinding(FragmentDashboardBinding::bind)
 
     private lateinit var mGridLayoutManager: GridLayoutManager
     private lateinit var mDecorator: VerticalGridSpacingDecoration
@@ -66,14 +71,14 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             if (intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
-                swipeRefreshLayout?.isRefreshing = true
+                binding.swipeRefreshLayout.isRefreshing = true
                 presenter.refresh(true)
             }
         }
     }
 
     override fun layoutResId() = R.layout.fragment_dashboard
-    override val recyclerView: RecyclerView get() = courseRecyclerView
+    override val recyclerView: RecyclerView get() = binding.courseRecyclerView
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
 
@@ -109,7 +114,7 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
 
     override fun onPresenterPrepared(presenter: DashboardPresenter) {}
 
-    override fun onReadySetGo(presenter: DashboardPresenter) {
+    override fun onReadySetGo(presenter: DashboardPresenter) = with(binding) {
         swipeRefreshLayout.setOnRefreshListener {
             if (!Utils.isNetworkAvailable(requireContext())) {
                 swipeRefreshLayout.isRefreshing = false
@@ -141,15 +146,15 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
     }
 
     private fun setupHeader() {
-        editDashboardTextView.setTextColor(ThemePrefs.textButtonColor)
-        editDashboardTextView.setOnClickListener { routeEditDashboard() }
+        binding.editDashboardTextView.setTextColor(ThemePrefs.textButtonColor)
+        binding.editDashboardTextView.setOnClickListener { routeEditDashboard() }
     }
 
     private fun routeEditDashboard() {
         RouteMatcher.route(requireActivity(), EditDashboardFragment.makeRoute())
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         toolbar.setupMenu(R.menu.courses_fragment, menuItemCallback)
 
         val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)
@@ -161,9 +166,10 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
 
         val activity = requireActivity()
         if (activity is InitActivity) {
-            activity.attachNavigationDrawer(toolbar)
+            activity.attachNavigationDrawer()
+            activity.attachToolbar(toolbar)
         } else {
-            toolbar.setupAsBackButton(this)
+            toolbar.setupAsBackButton(this@DashboardFragment)
         }
 
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
@@ -171,7 +177,7 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
         toolbar.requestAccessibilityFocus()
     }
 
-    val menuItemCallback: (MenuItem) -> Unit = { item ->
+    private val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_dashboard_cards -> changeDashboardLayout(item)
         }
@@ -202,28 +208,28 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
         return CoursesAdapter(requireActivity(), presenter, mCourseBrowserCallback)
     }
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted(): Unit = with(binding) {
         //this prevents two loading spinners from happening during pull to refresh
         if(!swipeRefreshLayout.isRefreshing) {
             emptyCoursesView.visibility  = View.VISIBLE
         }
         emptyCoursesView.setLoading()
         coursesHeaderWrapper.setGone()
-        notificationsFragment?.setGone()
+        notificationsFragment.setGone()
         (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment?)?.refresh()
     }
 
-    override fun onRefreshFinished() {
+    override fun onRefreshFinished(): Unit = with(binding) {
         swipeRefreshLayout.isRefreshing = false
         if (presenter.isEmpty) {
             coursesHeaderWrapper.setGone()
         } else {
             coursesHeaderWrapper.setVisible()
         }
-        notificationsFragment?.setVisible()
+        notificationsFragment.setVisible()
     }
 
-    override fun checkIfEmpty() {
+    override fun checkIfEmpty() = with(binding) {
         emptyCoursesView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_super))
         RecyclerViewUtils.checkIfEmpty(emptyCoursesView, courseRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }

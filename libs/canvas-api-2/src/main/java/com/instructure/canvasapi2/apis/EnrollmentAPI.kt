@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -36,15 +37,24 @@ object EnrollmentAPI {
     const val STATE_CREATION_PENDING = "creation_pending"
     const val STATE_CURRENT_AND_FUTURE = "current_and_future"
 
-    internal interface EnrollmentInterface {
+    interface EnrollmentInterface {
 
         @get:GET("users/self/enrollments?include[]=observed_users&include[]=avatar_url&state[]=creation_pending&state[]=invited&state[]=active&state[]=completed")
         val firstPageObserveeEnrollments: Call<List<Enrollment>>
+
+        @GET("users/self/enrollments?include[]=observed_users&include[]=avatar_url&state[]=creation_pending&state[]=invited&state[]=active&state[]=completed")
+        suspend fun firstPageObserveeEnrollments(@Tag params: RestParams): DataResult<List<Enrollment>>
 
         @GET("courses/{courseId}/enrollments?include[]=avatar_url&state[]=active")
         fun getFirstPageEnrollmentsForCourse(
                 @Path("courseId") courseId: Long,
                 @Query("type[]") enrollmentType: String?): Call<List<Enrollment>>
+
+        @GET("courses/{courseId}/enrollments?include[]=avatar_url&state[]=active")
+        suspend fun getFirstPageEnrollmentsForCourse(
+            @Path("courseId") courseId: Long,
+            @Query("type[]") enrollmentType: String?,
+            @Tag restParams: RestParams): DataResult<List<Enrollment>>
 
         @GET("courses/{courseId}/enrollments?userId")
         fun getFirstPageEnrollmentsForUserInCourse(
@@ -52,8 +62,18 @@ object EnrollmentAPI {
                 @Query("userId") userId: Long,
                 @Query("type[]") enrollmentTypes: Array<String>): Call<List<Enrollment>>
 
+        @GET("courses/{courseId}/enrollments?include[]=current_points")
+        suspend fun getEnrollmentsForUserInCourse(
+            @Path("courseId") courseId: Long,
+            @Query("user_id") userId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<List<Enrollment>>
+
         @GET
         fun getNextPage(@Url nextUrl: String): Call<List<Enrollment>>
+
+        @GET
+        suspend fun getNextPage(@Url nextUrl: String, @Tag params: RestParams): DataResult<List<Enrollment>>
 
         @GET("users/self/enrollments")
         fun getFirstPageSelfEnrollments(

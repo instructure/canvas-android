@@ -1,0 +1,901 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">Indstillinger</string>
+    <string name="tab_week">Uge</string>
+    <string name="tab_inbox">Indbakke</string>
+    <string name="tab_details">Nærmere oplysninger</string>
+    <string name="tab_questions">Spørgsmål</string>
+    <string name="tab_submissions">Afleveringer</string>
+    <string name="tab_assignments">Opgaver</string>
+    <string name="tab_profile">Profil</string>
+    <string name="tab_people">Deltagere</string>
+    <string name="tab_quizzes">Quiz</string>
+    <string name="tab_discussions">Diskussioner</string>
+    <string name="tab_announcements">Beskeder</string>
+    <string name="tab_attendance">Tilstedeværelse</string>
+    <string name="tab_pages">Sider</string>
+    <string name="tab_todo">Opgaveliste</string>
+    <string name="content_description_school_logo">Skolelogo</string>
+    <string name="search_guides">Søg i Canvas-vejledningerne</string>
+    <string name="canvas_guides">Canvas-vejledningerne</string>
+    <string name="search_guides_icon">Ikon for Canvas-vejledningerne</string>
+    <string name="search_guides_details">Svar på ofte stillede spørgsmål</string>
+    <string name="report_problem">Indberet et problem</string>
+    <string name="report_problem_icon"> Ikon for Indberet et problem</string>
+    <string name="report_problem_details">Fortæl os, hvis denne app ikke virker</string>
+    <string name="request_feature">Anmod om en funktion</string>
+    <string name="request_feature_icon">Ikon for Anmod om en funktion</string>
+    <string name="request_feature_details">Fortæl os din idé til forbedring af appen</string>
+    <string name="share_your_love">Del din kærlighed for denne app</string>
+    <string name="share_your_love_details">Fortæl os om, hvad du bedst kan lide af denne app</string>
+    <string name="masquerade">Forklæd</string>
+    <string name="issue_with_teacher_app">Problem med appen Teacher [Android]</string>
+    <string name="no_items_to_display_short">Ingen elementer</string>
+    <string name="rate_the_app">Vurder appen</string>
+    <string name="rate_the_app_icon">Ikon for Vurder appen</string>
+    <string name="teacher_log_out">Log ud</string>
+    <string name="teacher_switch_user">Skift bruger</string>
+    <string name="under_construction">Under opbygning</string>
+    <string name="toolbar_event">Begivenhed</string>
+    <string name="location">Placering</string>
+    <string name="event_date">Begivenhedsdato</string>
+    <string name="course">Fag</string>
+    <string name="profile">Profil</string>
+    <string name="share">Del</string>
+    <string name="share_with">Del med&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Åbn navigationsskuffe</string>
+    <string name="navigation_drawer_close">Luk navigationsskuffe</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(intet emne)</string>
+    <string name="compose_message">Skriv besked</string>
+    <string name="newMessage">Ny besked</string>
+    <string name="courses">Fag</string>
+    <string name="compose_message_no_ellipsis">Skriv besked</string>
+    <string name="send">Send</string>
+    <string name="attachment">Vedhæftet fil</string>
+    <string name="attachments">Vedhæftede filer</string>
+    <string name="not_available_offline">Funktionalitet ikke tilgængelig mens offline</string>
+    <string name="empty_message">Beskeden kan ikke være tom!</string>
+    <string name="message_has_no_recipients">Denne besked har for øjeblikket ingen modtagere.</string>
+    <string name="course_spinner_title">Fag:</string>
+    <string name="reply_to_message">Svar</string>
+    <string name="forward_message">Videresend besked</string>
+    <string name="label_to">Til</string>
+    <string name="label_course">Fag</string>
+    <string name="label_subject">Emne</string>
+
+    <string name="common_send">Send</string>
+    <string name="common_edit">Redigér</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Idé til appen Teacher [Android]</string>
+    <string name="understand_request">Følgende oplysninger hjælper os med bedre at forstå din idé:</string>
+    <string name="send_mail">Send e-mail&#8230;</string>
+
+    <string name="color_1">Rød</string>
+    <string name="color_2">Hot pink</string>
+    <string name="color_3">Lyselilla</string>
+    <string name="color_4">Violet</string>
+    <string name="color_5">Lilla</string>
+    <string name="color_6">Skifergrå</string>
+    <string name="color_7">Blå</string>
+    <string name="color_8">Cyan</string>
+    <string name="color_9">Grøn</string>
+    <string name="color_10">Limegrøn</string>
+    <string name="color_11">Gul</string>
+    <string name="color_12">Guld</string>
+    <string name="color_13">Orange</string>
+    <string name="color_14">Lyserød</string>
+    <string name="color_15">Grå</string>
+
+    <string name="attachment_icon">Ikonet for vedhæftet fil</string>
+    <string name="star_icon">Ikon for Giv stjerne</string>
+    <string name="monologue">Monolog</string>
+
+    <string name="create_announcement_topic_title_hint">Emneoverskrift</string>
+    <string name="post_date">Indlægsdato</string>
+    <string name="announcement">Besked</string>
+    <string name="create_announcement_title">Ny besked</string>
+    <string name="create_announcement_no_description">En beskrivelse er påkrævet</string>
+    <string name="announcementDetails">Beskeddetaljer</string>
+
+    <string name="no_title">Ingen overskrift</string>
+    <string name="announcement_create_success">Besked oprettet!</string>
+    <string name="announcement_create_fail">Det er ikke muligt at oprette besked. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="create_announcement_delay_posting">Forsink indlæg</string>
+
+    <string name="discussion">Diskussion</string>
+
+    <string name="sunday">Søndag</string>
+    <string name="monday">Mandag</string>
+    <string name="tuesday">Tirsdag</string>
+    <string name="wednesday">Onsdag</string>
+    <string name="thursday">Torsdag</string>
+    <string name="friday">Fredag</string>
+    <string name="saturday">Lørdag</string>
+
+    <string name="add_attachment">Tilføj vedhæftet fil</string>
+    <string name="content_description_files">Filikon</string>
+    <string name="next">Næste</string>
+    <string name="upload_to_cnavas">Overfør til Canvas</string>
+    <string name="upload_my_files">Mine filer</string>
+    <string name="upload_course_files">Fagets filer</string>
+    <string name="upload_to">Overfør til</string>
+    <string name="message_attachments">Beskedens vedhæftede filer</string>
+    <string name="with">med</string>
+    <string name="discussion_attachment">Vedhæft en fil</string>
+    <string name="select_files_or_photos">Vælg filer eller fotos</string>
+    <string name="uploading_files">Uploader filer&#8230;</string>
+    <string name="no_attachment">(Ingen vedhæftelse)</string>
+    <string name="creating_announcement">Opretter besked&#8230;</string>
+
+    <string name="copy_email">Kopiér e-mail</string>
+    <string name="all_grading_periods">Alle vurderingsperioder</string>
+    <string name="no_submissions">Ingen afleveringer</string>
+    <string name="all_submissions_graded">Alle bedømte afleveringer</string>
+    <string name="icon">ikon</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">%d afleveringen kræver vurdering</item>
+        <item quantity="other">%d opgaver kræver vurdering</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">Der er %d assignatar uden vurdering.</item>
+        <item quantity="other">Der er %d assignatarer uden vurdering.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">Ingen beskeder</string>
+    <string name="inbox_empty_starred_title">Ingen beskeder med stjerne</string>
+    <string name="inbox_empty_message">Tryk på \"+\" for at oprette en ny diskussion.</string>
+    <string name="inbox_empty_starred_message">Giv stjerne til beskeder ved at trykke på stjernen i beskeden.</string>
+
+    <string name="reply">Svar</string>
+    <string name="replyAll">Svar til alle</string>
+    <string name="forward">Fremad</string>
+    <string name="star">Giv stjerne</string>
+    <string name="archive">Arkiv</string>
+    <string name="delete">Slet</string>
+    <string name="message">Besked</string>
+    <string name="unarchive">Fjern fra arkivet</string>
+    <string name="message_options">Beskedindstillinger</string>
+    <string name="markAsUnread">Markér som ulæst</string>
+    <string name="message_delete_warning">Er du sikker på, du vil slette din kopi af denne besked? Denne handling kan ikke fortrydes.</string>
+    <string name="conversation_delete_warning">Er du sikker på, du vil slette din kopi af denne samtale? Denne handling kan ikke fortrydes.</string>
+    <string name="error_conversation_generic">Det er ikke muligt at udføre denne handling. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="message_archived">Besked arkiveret</string>
+    <string name="message_unarchived">Besked ikke arkiveret</string>
+    <string name="message_deleted">Besked slettet</string>
+    <string name="select_recipients">Vælg modtagere</string>
+    <string name="entire_group_selected">Hele gruppen er valgt</string>
+    <string name="no_users_in_group">Ingen brugere i gruppen</string>
+
+    <string name="published">Offentliggjort</string>
+    <string name="not_published">Ikke offentliggjort</string>
+    <string name="published_content_description">Kryds for offentliggjort</string>
+    <string name="points_with_value">point</string>
+    <string name="point_with_value">point</string>
+    <string name="no_due_date">Ingen afleveringsdato</string>
+    <string name="due_date">Afleveringsdato</string>
+
+    <string name="view_replies">Se svar</string>
+    <string name="view_discussion">Se diskussion</string>
+
+    <string name="edit">Redigér</string>
+    <string name="save">Gem</string>
+    <string name="successfully_updated_assignment">Opgave opdateret.</string>
+    <string name="successfully_updated_quiz">Quiz opdateret.</string>
+    <string name="failure_updating_assignment">Noget gik galt ved opdatering af opgaven. Prøv igen.</string>
+    <string name="failure_deleting_assignment">Noget gik galt ved sletning af opgaven. Prøv igen.</string>
+    <string name="cant_unpublish">Det er ikke muligt at fjerne, hvis der er afleveringer fra elever.</string>
+    <string name="messages">Beskeder</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d besked</item>
+        <item quantity="other">+ %d beskeder</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">%d afleveringen kræver vurdering</item>
+        <item quantity="other">%d opgaver kræver vurdering</item>
+    </plurals>
+
+    <string name="delete_assignment_message">Er du sikker på, du vil slette denne opgave?</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">Send besked til eleverne</string>
+
+    <string name="message_these_students">Send besked til disse elever</string>
+    <string name="submission_status_missing">Mangler</string>
+    <string name="submission_status_late">Sen</string>
+    <string name="submission_status_submitted">Afleveret</string>
+    <string name="submission_status_not_submitted">Ikke afleveret endnu</string>
+    <string name="submission_status_excused">Undskyldt</string>
+    <string name="last_login_format">Seneste login: %s</string>
+
+    <string name="turnOnAnonymousGrading">Slå Anonym bedømmelse til</string>
+    <string name="turnOffAnonymousGrading">Slå Anonym bedømmelse fra</string>
+    <string name="anonymousGradingLabel">Anonym vurdering</string>
+    <string name="anonymousStudentLabel">Elever</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">Funktion kommer snart</string>
+
+    <string-array name="submission_filters">
+        <item>Alle afleveringer</item>
+        <item>Sene afleveringer</item>
+        <item>Manglende afleveringer</item>
+        <item>Vurderinger højt</item>
+        <item>Vurderinger lavt</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>Efter navn</item>
+        <item>Vurderinger ordnes fra højeste til laveste</item>
+        <item>Vurderinger ordnes fra laveste til højeste</item>
+    </string-array>
+
+    <string name="content_description_course_tab">Fanen Fag</string>
+    <string name="content_description_inbox_tab">Fanen Indbakke</string>
+    <string name="content_description_profile_tab">Fanen Profil</string>
+    <string name="close">Luk</string>
+    <string name="no_course_selected">Vælg et fag</string>
+    <string name="discussion_reply_to_entry">Svar på diskussion</string>
+    <string name="announcement_reply_to_entry">Svar på besked</string>
+    <string name="error_text_missing">Tilføj tekst for at sende en besked</string>
+    <string name="error_sending_message">Denne besked kunne ikke sendes. Tryk for at prøve igen.</string>
+    <string name="message_sent_successfully">Besked er sendt.</string>
+    <string name="error_occurred">En uventet fejl opstod.</string>
+    <string name="no_assignments_with_file_upload">Dette fag har ingen opgaver, der tillader filoverførsel.</string>
+    <string name="extension_not_allowed">Den valgte filtype er ikke tilladt.</string>
+    <string name="allowed_extensions">Tilladet filtyper:&#160;</string>
+    <string name="files_uploaded_successfully">Filer er overført.</string>
+    <string name="error_uploading_file">En uventet fejl opstod ved overførsel af filen. Prøv igen.</string>
+    <string name="uploading_file">Uploader fil&#8230;</string>
+    <string name="no_apps">Der er ingen app på enheden, der kan åbne denne fil.</string>
+    <string name="turn_in">Indsend</string>
+    <string name="error_getting_photo">Der opstod en fejl ved hentning af fotoet. Prøv igen.</string>
+    <string name="loading_files_indeterminate">Loading filer&#8230;</string>
+    <string name="no_files_uploaded">Du har ikke valgt nogen filer.</string>
+    <string name="file_upload_not_supported">Du kan ikke overføre filer til den valgte opgave.</string>
+    <string name="one_or_more_extension_not_allowed">Der er én eller flere filer med et ikke tilladt filtypenavn</string>
+
+    <string name="inbox_all">Indbakke</string>
+    <string name="inbox_unread">Ulæst</string>
+    <string name="inbox_starred">Markeret med stjerne</string>
+    <string name="inbox_sent">Sendt</string>
+    <string name="inbox_archived">Arkiveret</string>
+    <string name="inbox_all_messages">Alle</string>
+    <string name="uploading_file_num" formatted="false">Overfører %d af %d</string>
+    <string name="page_not_found">Siden blev ikke fundet.</string>
+    <string name="no_connection">Ingen forbindelse</string>
+    <string name="unauthorized_access">Du har ikke autorisation til at få adgang til dette. Du har enten ikke tilladelser, eller du har ikke adgang endnu (dit fag er eksempelvis ikke startet endnu)</string>
+    <string name="server_error">En serverfejl opstod.</string>
+    <string name="error_loading_files">En uventet fejl opstod ved indlæsning af filen. Kontrollér din internetforbindelse, og prøv igen.</string>
+    <string name="files_submitted_successfully">Filer indsendt succesfuldt.</string>
+    <string name="no_data_connection">Kontrollér din dataforbindelse, og prøv igen.</string>
+    <string name="teacher_logout_warning">Er du sikker på, du vil logge af?</string>
+    <string name="teacher_yes">Ja</string>
+    <string name="teacher_no">Nej</string>
+    <string name="teacher_sending">Sender&#8230;</string>
+    <string name="teacher_cancel">Annullér</string>
+    <string name="teacher_okay">Okay</string>
+    <string name="teacher_upload">Upload</string>
+    <string name="settings">Indstillinger</string>
+    <string name="edit_courses">Rediger fag</string>
+    <string name="start_annotating">Start med at anmærke</string>
+    <string name="empty_speedgrader_content">Tom SpeedGrader-visning – design kræves</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">Fagindstillinger</string>
+    <string name="course_name">Fagets navn</string>
+    <string name="set_home_to">Indstil \'Start\' til...</string>
+    <string name="course_activity_stream">Fagets seneste aktiviteter</string>
+    <string name="pages_front_page">Sider forside</string>
+    <string name="frontPage">Forside</string>
+    <string name="course_modules">Fagforløb</string>
+    <string name="assignments_list">Opgaveliste</string>
+    <string name="syllabus">Fagplan</string>
+    <!--End Course Settings-->
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">Flere forfaldsdatoer</string>
+    <string name="everyone">Alle</string>
+    <string name="everyone_else">Alle andre</string>
+    <string name="unknown_student">Ukendt elev</string>
+    <string name="closed">Lukket</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Forfalder d. %1s kl. %2s</string>
+    <string name="last_post" formatted="false">Sidste opslag %s</string>
+    <string name="submission_types">Afleveringstyper</string>
+    <string name="full_due_date_details">Fulde oplysninger om afleveringsdato</string>
+    <string name="availability_label">Tilgængelighed:</string>
+    <string name="available_to_label">Tilgængelig indtil:</string>
+    <string name="available_from_label">Tilgængelig fra:</string>
+    <string name="due_for_label">Til:</string>
+    <string name="due_label">Forfalder:</string>
+    <string name="details_available_to_label">Tilgængelig indtil</string>
+    <string name="details_available_from_label">Tilgængelig fra</string>
+    <string name="details_due_for_label">Til</string>
+    <string name="due_date_header_label">Forfalder</string>
+    <string name="assignment_details">Opgaveoplysninger</string>
+    <string name="no_content">Intet indhold</string>
+    <string name="submissions">Afleveringer</string>
+    <string name="no_assignment_description_filler">Hjælp dine elever med denne opgave ved at tilføje vejledning.</string>
+    <string name="no_quiz_description_filler">Hjælp dine elever med denne quiz ved at tilføje vejledning.</string>
+    <string name="page_title_due_dates">Afleveringsdatoer</string>
+    <string name="edit_assignment">Rediger opgave</string>
+    <string name="edit_quiz">Rediger quiz</string>
+    <string name="title">Titel</string>
+    <string name="description">Beskrivelse</string>
+    <string name="grade_total">Samlet vurdering</string>
+    <string name="grade">Vurdering</string>
+    <string name="enter_grade">Indtast vurderinger</string>
+    <string name="override">Tilsidesæt</string>
+    <string name="calculated_by_rubric">Beregnet med vurderingskriterium</string>
+    <string name="customize_grade">Tilpas vurdering</string>
+    <string name="out_of_points">Ud af %1$s</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">Bogstavvurderinger</string>
+    <string name="excuse_student">Undskyld elev</string>
+    <string name="excuseGroup">Undskyld gruppe</string>
+    <string name="complete_grade">Fuldført</string>
+    <string name="incomplete_grade">Ufuldstændig</string>
+    <string name="not_graded">Ikke bedømt</string>
+    <string name="excused">Undskyldt</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s ud af %2$s</string>
+    <string name="publish">Offentliggør</string>
+    <string name="error_saving_assignment">Der opstod en fejl ved forsøg på at gemme opgaven. Prøv igen.</string>
+    <string name="error_saving_quiz">Der opstod en fejl ved forsøg på at gemme quizzen. Prøv igen.</string>
+    <string name="assignment_name_must_be_set">Opgavens navn skal angives.</string>
+    <string name="announcement_name_must_be_set">Beskedens titel skal indstilles.</string>
+    <string name="quiz_title_must_be_set">Quizzens titel skal angives.</string>
+    <string name="assignment_points_must_be_set">Opgavens point skal angives.</string>
+    <string name="assignment_points_must_be_a_number">Mulige point skal være et tal</string>
+    <string name="quiz_points_must_be_set">Quizzens point skal angives.</string>
+    <string name="assignee_type_course_sections">Fagsektioner</string>
+    <string name="assignee_type_groups">Grupper</string>
+    <string name="assignee_type_students">Elever</string>
+    <string name="page_title_add_assignees">Tilføj assignatarer</string>
+    <string name="assign_to">Tildel til</string>
+    <string name="available_from">Tilgængelig fra</string>
+    <string name="available_to">Tilgængelig indtil</string>
+    <string name="unlock_after_due_date_error">Oplåsningsdatoen kan ikke ligge efter afleveringsdato</string>
+    <string name="lock_before_due_date_error">Låsningsdato kan ikke ligge før afleveringsdatoer</string>
+    <string name="lock_after_unlock_error">Låsningsdato kan ikke ligge før oplåsningsdato</string>
+    <string name="assignee_blank_error">Assignatar kan ikke være tom</string>
+    <string name="remove">Fjern</string>
+    <string name="add_due_date">Tilføj afleveringsdato</string>
+    <string name="full_submission_details">Fulde afleveringsoplysninger</string>
+    <string name="graded">Vurderet</string>
+    <string name="needsGrading">Mangler bedømmelse</string>
+    <string name="not_submitted">Ikke indsendt</string>
+    <string name="a11y_viewSubmissionAction">vis afleveringsoplysninger</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Vurderet, %s af %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Mangler vurdering, %s af %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Ikke indsendt, %s af %s</string>
+    <string name="display_grade_as">Vis vurdering som&#8230;</string>
+    <string name="percentage">Procentdel</string>
+    <string name="complete_incomplete">Fuldstændig/ufuldstændig</string>
+    <string name="points">Point</string>
+    <string name="gpa_scale">GPA-scala</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">Ikke en lærer?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">En af vores andre apps kan være bedre egnet. Tryk på et for at besøge Play Store.</string>
+
+    <string name="sg_tab_grade">Vurdering</string>
+    <string name="sg_tab_comments">Kommentarer</string>
+    <string name="sg_tab_files">Filer</string>
+    <string name="sg_tab_files_w_counter">Filer (%d)</string>
+    <string name="filter_submissions">Filtrer afleveringer</string>
+    <string name="all_submissions">Alle afleveringer</string>
+    <string name="submitted_late">Afleveret sent</string>
+    <string name="havent_submitted_yet">Har ikke afleveret endnu</string>
+    <string name="havent_been_graded">Er ikke blevet vurderet</string>
+    <string name="scored_less_than">Fik mindre end &#8230;</string>
+    <string name="scored_more_than">Fik mere end &#8230;</string>
+    <string name="scored_less_than_value">Fik mindre end %s</string>
+    <string name="scored_more_than_value">Fik mere end %s</string>
+    <string name="add_comment">Tilføj kommentar</string>
+    <string name="editComment">Rediger kommentar</string>
+    <string name="deleteComment">Slet kommentar</string>
+    <string name="deleteAnnotation">Slet anmærkning</string>
+    <string name="deleteCommentConfirmation">Er du sikker på, at du ønsker at slette denne kommentar?</string>
+    <string name="rubric_view_long_description">Se lang beskrivelse</string>
+    <string name="rubric">Vurderingskriterium</string>
+    <string name="enter_custom_value">Indtast en brugerdefineret værdi</string>
+    <string name="success_saving_rubric_assessment">Vurdering med vurderingskriterier gemt</string>
+    <string name="error_saving_rubric_assessment">Der opstod en fejl ved lagring af vurdering med vurderingskriterier. Prøv igen.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s ud af %2$s</string>
+    <string name="criterion_rating_customize_score">Brugerdefiner score</string>
+    <string name="edit_criterion_comment">Rediger kommentar til kriterium</string>
+    <string name="sendMessageToHint">Send besked til %s</string>
+    <string name="save_comment">Gem kommentar</string>
+    <string name="cancel_editing_comment">Annuller redigering af kommentar</string>
+    <string name="skip">Spring over</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">Brugerdefineret resultat %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">ud af %s point</item>
+        <item quantity="other">ud af %s point</item>
+    </plurals>
+
+    <string name="tab_courses">Fag</string>
+    <string name="course_options">Fagindstillinger</string>
+    <string name="edit_favorite_courses">Rediger favoritfag</string>
+    <string name="feedback_form">Feedbackformular</string>
+    <string name="see_all">Se alle</string>
+    <string name="all_courses">Alle fag</string>
+    <string name="welcome">Velkommen!</string>
+    <string name="empty_course_list_message">Tilføj nogle af dine foretrukne fag for at gøre siden mere personlig.</string>
+    <string name="add_courses">Tilføj fag</string>
+    <string name="unable_to_add_course_to_favorites">Faget kan ikke føjes til menuen på nuværende tidspunkt.</string>
+    <string name="grading_periods_filter">Vurderingsperiodefilter</string>
+    <string name="assignments">Opgaver</string>
+    <string name="clear_filter">Nulstil filter</string>
+    <string name="due">Forfalder %1$s</string>
+    <string name="updated">Opdateret %1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s mangler vurdering</item>
+        <item quantity="other">%s mangler vurdering</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">Mangler bedømmelse</item>
+        <item quantity="other">Mangler vurdering</item>
+    </plurals>
+    <string name="at">ved</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s point</item>
+        <item quantity="other">%s point</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s point</item>
+        <item quantity="other">%s point</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d deltager</item>
+        <item quantity="other">%d deltagere</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d gruppe</item>
+        <item quantity="other">%d grupper</item>
+    </plurals>
+    <string name="cmp_closed">Lukket</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">favorit</string>
+    <string name="content_description_not_favorite">ikke favorit</string>
+    <string name="edit_nickname">Rediger kaldenavn</string>
+    <string name="edit_course_color">Rediger fagets farve</string>
+    <string name="edit_course_nickname">Rediger fagets kaldenavn</string>
+
+    <string name="colorPickerDialogTitle">Fagets farve</string>
+    <string name="colorPickerDialogMessage">Denne er din personlige farveindstilling. Du er den eneste, der ser denne farve sammen med faget.</string>
+    <string name="colorPickerError">Fagets farve kunne ikke indstilles på nuværende tidspunkt.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Lyserød</string>
+    <string name="contentDescriptionColorBarbie">Hot pink</string>
+    <string name="contentDescriptionColorBarneyPurple">Violet</string>
+    <string name="contentDescriptionColorEggplant">Lilla</string>
+    <string name="contentDescriptionColorUltramarine">Mørkeblå</string>
+    <string name="contentDescriptionColorOcean11">Blå</string>
+    <string name="contentDescriptionColorCyan">Cyan</string>
+    <string name="contentDescriptionColorAquaMarine">Vandblå</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdgrøn</string>
+    <string name="contentDescriptionColorFreshCutLawn">Grøn</string>
+    <string name="contentDescriptionColorChartreuse">Limegrøn</string>
+    <string name="contentDescriptionColorSunFlower">Gul</string>
+    <string name="contentDescriptionColorTangerine">Orange</string>
+    <string name="contentDescriptionColorBloodOrange">Mørkeorange</string>
+    <string name="contentDescriptionColorSriracha">Rød</string>
+    <string name="launch_link_in_external_browser">Åbn link i ekstern browser</string>
+    <string name="contentDescriptionSelectedFile">Valgt fil</string>
+    <string name="contentDescriptionFileIcon">Filikon</string>
+    <string name="contentDescriptionExpandPage">Udvid side</string>
+    <string name="contentDescriptionCollapsePage">Skjul side</string>
+    <string name="noInternetConnectionTitle">Ingen internetforbindelse</string>
+    <string name="noInternetConnectionMessage">Denne handling kræver en internetforbindelse.</string>
+
+    <string name="emptyDetailsMessage">Tryk på et element på listen for at se oplysningerne</string>
+
+    <string name="assignmentQuizzes">Opgavequiz</string>
+    <string name="practiceQuizzes">Øvelsesquiz</string>
+    <string name="gradedSurveys">Bedømte spørgeundersøgelse</string>
+    <string name="surveys">Spørgeundersøgelser</string>
+    <string name="editQuiz">Rediger quizdetaljer</string>
+    <string name="requireAccessCode">Kræv en adgangskode</string>
+    <string name="accessCode">Adgangskode</string>
+    <string name="mustHaveAccessCode">Indtast en adgangskode, eller kræv ikke en adgangskode.</string>
+    <string name="errorSavingQuiz">Der opstod en fejl ved forsøg på at gemme quizzen. Prøv igen.</string>
+    <string name="successfullyUpdatedQuiz">Quiz opdateret.</string>
+    <string name="quizType">Quiztype</string>
+
+    <string name="practiceQuiz">Øvelsesquiz</string>
+    <string name="gradedQuiz">Bedømt quiz</string>
+    <string name="gradedSurvey">Bedømt spørgeundersøgelse</string>
+    <string name="ungradedSurvey">Ikke bedømt spørgeundersøgelse</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">Ikke taget</string>
+
+    <string name="quizStatusComplete">Fuldført</string>
+    <string name="quizStatusPendingReview">Afventer revision</string>
+    <string name="quizStatusInProgress">I gang</string>
+    <string name="quizStatusNotStarted">Ikke startet</string>
+
+
+    <string name="quiz_settings_label_quiz_type">Quiztype:</string>
+    <string name="quiz_settings_label_assignment_group">Opgavegruppe:</string>
+    <string name="quiz_settings_label_shuffle_answers">Bland svar:</string>
+    <string name="quiz_settings_label_multiple_attempts">Flere forsøg:</string>
+    <string name="quiz_settings_label_time_limit">Frist:</string>
+    <string name="quiz_settings_label_score_to_keep">Score, der skal beholdes:</string>
+    <string name="quiz_settings_label_attempts">Forsøg:</string>
+    <string name="quiz_settings_label_view_responses">Se svar:</string>
+    <string name="quiz_settings_label_show_correct_answers">Vis korrekte svar:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">Ét spørgsmål ad gangen:</string>
+    <string name="quiz_settings_label_ip_filter">IP-filter:</string>
+    <string name="quiz_settings_label_points">Point:</string>
+    <string name="quiz_settings_label_access_code">Adgangskode:</string>
+    <string name="quiz_settings_label_anonymous_submissions">Anonyme afleveringer:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">Lås spørgsmål efter besvarelse:</string>
+
+    <string name="quizPreview">Forhåndsvisning af quiz</string>
+    <string name="preview_quiz">Forhåndsvisning af quiz</string>
+    <string name="quiz_details">Nærmere oplysninger om quizzen</string>
+    <string name="submission_versions">Afleveringsversioner</string>
+    <string name="speedgrader_student_no_submissions">Denne elev har ingen afleveringer for denne opgave.</string>
+    <string name="speedgrader_group_no_submissions">Denne gruppe har ingen afleveringer for denne opgave.</string>
+    <string name="speedgrader_unsupported_type">Ikke-understøttet afleveringsform</string>
+    <string name="unlimited">Ubegrænset</string>
+    <string name="practice_quiz">Øvelsesquiz</string>
+    <string name="graded_quiz">Bedømt quiz</string>
+    <string name="graded_survey">Bedømt spørgeundersøgelse</string>
+    <string name="ungraded_survey">Ikke bedømt spørgeundersøgelse</string>
+    <string name="no_time_limit">Ingen tidsbegrænsning</string>
+    <string name="immediately">Straks</string>
+    <string name="quiz_details_no_points_assigned">Intet point tildelt</string>
+
+    <string name="quiz_details_from_to">Fra %1$s til %2$s</string>
+    <string name="quiz_details_after">Efter %1$s</string>
+    <string name="quiz_details_until">Indtil %1$s</string>
+    <string name="filterPointsMustBeSet">Indtast en værdi.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d spørgsmål</item>
+        <item quantity="other">%d spørgsmål</item>
+    </plurals>
+
+    <string name="discussion_details">Diskussionsdetaljer</string>
+    <string name="discussions_pinned">Fastgjort</string>
+    <string name="discussions_unpinned">Diskussioner</string>
+    <string name="discussions_closed">Lukket for kommentarer</string>
+    <string name="discussions_open">Åben for kommentarer</string>
+    <string name="discussions_pin">Fastgør</string>
+    <string name="discussions_unpin">Frigør</string>
+    <string name="contentDescriptionDiscussionsOverflow">Flere indstillinger:</string>
+    <string name="discussions_options">Muligheder</string>
+    <string name="discussions_replies" formatted="false">%s svar</string>
+    <string name="discussions_unread" formatted="false">%s ulæst</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">Er du sikker på, du vil slette dette svar?</string>
+    <string name="discussions_replies_title">Svar</string>
+    <string name="discussions_reply">Svar</string>
+    <string name="discussions_edit">Redigér</string>
+    <string name="discussions_forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
+    <string name="discussions_delete">Slet diskussion</string>
+    <string name="discussions_delete_title">Skal diskussion slettes?</string>
+    <string name="discussions_delete_message">Dette sletter hele diskussionen og tråden.</string>
+
+    <string name="dataUsageWarningTitle">Advarsel om databrug</string>
+    <string name="dataUsageWarningMessage">Denne handling kan bruge en stor datamængde, hvilket muligvis kan medføre gebyrer for overstigning af dataforbrug. Vil du fortsætte?</string>
+    <string name="doNotShowMessageAgain">Vis ikke denne besked igen</string>
+    <string name="playMedia">Afspil medie</string>
+    <string name="submissionIsMediaFile">Denne aflevering er en mediefil</string>
+    <string name="tryAgain">Prøv igen</string>
+    <string name="couldNotPlayFormat">Dette medieformat er ikke understøttet</string>
+    <string name="openWithAnotherApp">Åbn med...</string>
+
+    <string name="speedgraderCommentAddedSubmission">Opgave afleveret. Tryk for at se.</string>
+    <string name="speedgraderCommentSubmittedFiles">Afleverede filer:</string>
+    <string name="no_submission_comments">Der er ingen kommentarer til afleveringen</string>
+    <string name="mediaUploadAudio">Medieoverførsel - lyd</string>
+    <string name="mediaUploadVideo">Medieoverførsel - video</string>
+    <string name="speedgraderCommentQuizAttempt">Forsøg %d</string>
+    <string name="speedGraderTextSubmission">Tekst indsendelse</string>
+    <string name="speedGraderExternalToolSubmission">Aflevering af eksternt værktøj</string>
+    <string name="speedGraderDiscussionSubmission">Indsendelse af diskussion</string>
+    <string name="speedGraderQuizSubmission">Indsendelse af quiz</string>
+    <string name="speedGraderMediaFile">Mediefil</string>
+    <string name="submissionTypeAudio">Lyd</string>
+    <string name="submissionTypeVideo">Video</string>
+    <string name="speedGraderUrlSubmission">URL aflevering</string>
+
+    <string name="unsupportedFileMessage">Denne fil kunne ikke vises. Brug knappen herunder til at åbne filen med en anden app på enheden.</string>
+    <string name="speedGraderNoneMessage">Denne opgave tillader ikke afleveringer.</string>
+    <string name="speedGraderOnPaperMessage">Denne opgave tillader kun aflevering på papir.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Afleveringen var en URL til en ekstern side. Husk på, at denne side eventuelt er blevet ændret, siden den oprindelige aflevering fandt sted.</string>
+    <string name="speedGraderOpenUrl">Åbn URL</string>
+    <string name="annotationError">Anmærkningsfejl</string>
+    <string name="annotationDialogMessage">Anmærkningen er slettet fra en anden kilde.</string>
+
+    <string name="selectCourse">Vælg et fag</string>
+
+    <string name="sendIndividualMessage">Send individuel besked til hver modtager</string>
+
+    <string name="filterInbox">Filtrér indbakke</string>
+    <string name="selectCanvasContext">Vælg et fag eller en gruppe</string>
+
+    <string name="contentDescription_back">Gå tilbage</string>
+
+    <string name="discussion_update_success">Diskussionen blev redigeret.</string>
+    <string name="discussion_update_empty">Diskussionens besked kan ikke være tom.</string>
+    <string name="discussion_update_failure">Det var ikke muligt at redigere diskussionen på nuværende tidspunkt.</string>
+    <string name="discussion_sent_success">Diskussionens svar blev udført.</string>
+    <string name="discussion_sent_empty">Diskussionens svar kan ikke være tomt.</string>
+    <string name="discussion_sent_failure">Det var ikke muligt at sende diskussionens svar på nuværende tidspunkt.</string>
+    <string name="discussion_first_to_respond">Bliv den første til at svare ved at tilføje et svar.</string>
+    <string name="addMorePeopleToMessage">Tilføj en anden modtager. Der kan ikke sendes beskeder, der kun adresseres til dig selv.</string>
+    <string name="tutorialSwipeMessage">Stryg mod venstre eller højre for at se andre elever.</string>
+    <string name="tutorialRubricMessage">Tryk på, og hold nummeret nede for at se beskrivelsen.</string>
+
+    <string name="viewQuizSubmission">Vis aflevering</string>
+    <string name="gradeQuizSubmission">Vurderingsaflevering</string>
+    <string name="comment">Kommentar</string>
+    <string name="messageStudentsWho">Send besked til elever, der &#8230;</string>
+
+    <string name="on">d.</string>
+
+    <string name="createDiscussion">Ny diskussion</string>
+    <string name="options">Muligheder</string>
+    <string name="subscribe">Abonner</string>
+    <string name="allowThreadedReplies">Tillad trådede svar</string>
+    <string name="usersMustPost">Brugere skal lægge opslag ud, inden de ser svar</string>
+    <string name="allowUserComments">Tillad brugere at kommentere</string>
+    <string name="discussionTitleMustBeSet">Diskussionens titel skal angives.</string>
+    <string name="discussionSuccessfullyCreated">Diskussionen er oprettet.</string>
+    <string name="errorCreatingDiscussion">Der opstod en fejl ved forsøg på at oprette denne diskussion. Prøv igen.</string>
+    <string name="editDiscussion">Rediger diskussion</string>
+    <string name="discussionSuccessfullyUpdated">Diskussionen er opdateret.</string>
+    <string name="input_text">Skriv tekst</string>
+    <string name="announcementSuccessfullyCreated">Beskeder er oprettet.</string>
+    <string name="errorSavingAnnouncement">Der opstod en fejl ved forsøg på at gemme denne besked. Prøv igen.</string>
+    <string name="editAnnouncementTitle">Rediger besked</string>
+    <string name="announcementSuccessfullyUpdated">Besked er opdateret.</string>
+    <string name="announcementDeleted">Besked er slettet.</string>
+    <string name="postAt">Læg ud kl.</string>
+    <string name="errorDeletingAnnouncement">Der opstod en fejl ved forsøg på at slette denne besked. Prøv igen.</string>
+    <string name="deleteAnnouncementDialogTitle">Skal besked slettes?</string>
+    <string name="deleteAnnouncementDialogMessage">Er du sikker på, at du vil slette denne besked?</string>
+    <string name="deleteAnnouncement">Slet besked</string>
+    <string name="annotationErrorOccurred">Der opstod en uventet fejl ved indlæsning af anmærkninger.</string>
+
+    <string name="account">Konto</string>
+    <string name="changeUser">Skift bruger</string>
+    <string name="general">Generelt</string>
+    <string name="sendFeedback">Send feedback</string>
+    <string name="privacyPolicy">Datapolitik</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Betingelser for brug</string>
+    <string name="searchGuides">Søg i Canvas-vejledningerne</string>
+    <string name="searchGuidesDetails">Find svar på hyppige spørgsmål</string>
+    <string name="reportProblem">Indberet et problem</string>
+    <string name="reportProblemDetails">Fortæl os, hvis denne app ikke virker</string>
+    <string name="requestFeature">Anmod om en funktion</string>
+    <string name="requestFeatureDetails">Har du en ide, der kan forbedre appen?</string>
+    <string name="shareYourLove">Del din kærlighed for denne app</string>
+    <string name="shareYourLoveDetails">Fortæl os om, hvad du bedst kan lide af denne app</string>
+    <string name="canvasGuides">Canvas-vejledningerne</string>
+    <string name="featureSubject">Idé til Canvas Teacher [Android]</string>
+    <string name="understandRequest">Følgende oplysninger hjælper os med bedre at forstå din idé:</string>
+    <string name="sendMail">Send e-mail&#8230;</string>
+    <string name="editProfile">Rediger profil</string>
+    <string name="name">Navn</string>
+    <string name="bio">Bio</string>
+    <string name="profileEditSuccess">Profil er opdateret</string>
+    <string name="profileEditFailure">Det er ikke muligt at opdatere profil</string>
+    <string name="takePhoto">Tag billede</string>
+    <string name="choosePhotoFromGallery">Vælg foto fra Galleri</string>
+    <string name="fileNotFound">Fil ikke fundet.</string>
+    <string name="version" formatted="false">Version %s</string>
+    <string name="fullVersion">Version %s (%d)</string>
+    <string name="tap_to_view_submissions_list">Tryk for at se listen over afsendelser.</string>
+    <string name="assignmentDescriptionContentDescription">Opgavebeskrivelse</string>
+    <string name="quizDescriptionContentDescription">Quizbeskrivelse</string>
+    <string name="removeDueDate">Fjern afleveringsdato</string>
+    <string name="removeDueDateMessage">Dette fjerner afleveringsdatoen og alle af de tilknyttede assignatarer.</string>
+    <string name="email">E-mail</string>
+    <string name="fullscreen">fuld skærm</string>
+    <string name="addNew">Tilføj ny</string>
+    <string name="sendMessage">Send besked</string>
+    <string name="addMessage">Tilføj besked</string>
+    <string name="messageThisStudent">Send besked til denne elev</string>
+    <string name="scrollInstructions">Rul for at se alle detaljer</string>
+    <string name="dueTime">Forfalder kl.</string>
+    <string name="available_from_date">Tilgængelig fra dato</string>
+    <string name="available_from_time">Tilgængelig fra tid</string>
+    <string name="available_to_date">Tilgængelig til dato</string>
+    <string name="available_to_time">Tilgængelig til tid</string>
+    <string name="addDescription">Tilføj beskrivelse</string>
+    <string name="post_time">Post tid</string>
+    <string name="allPeople">Alle deltagere</string>
+    <string name="loading">Indlæser</string>
+    <string name="saving">Gemmer</string>
+    <string name="sendingSimple">Sender</string>
+    <string name="uploading">Uploader</string>
+    <string name="retry">Prøv igen</string>
+    <string name="error_loading_submission">Der opstod et problem ved indlæsning af denne aflevering.</string>
+    <string name="search">Søg</string>
+    <string name="filterPeople">Filtrer deltagere</string>
+    <string name="loadMore">Indlæs flere</string>
+    <string name="latestStudentActivityAtFormatted">Seneste aktivitet d. %1$s kl. %2$s.</string>
+    <string name="errorLoadingStudentContextCard">Kan ikke indlæse detaljer for denne bruger.</string>
+    <string name="enrollmentTypeStudent">Elever</string>
+    <string name="enrollmentTypeTeacher">Lærer</string>
+    <string name="enrollmentTypeObserver">Observatør</string>
+    <string name="enrollmentTypeTeachingAssistant">Undervisningsassistent</string>
+    <string name="enrollmentTypeDesigner">Designer</string>
+    <string name="enrollmentTypeUnknown">Ukendt</string>
+    <string name="unableToLoadAttendance">Tilstedeværelse kunne ikke indlæses på dette tidspunkt.</string>
+    <string name="markRemainingAsPresent">Marker de resterende som tilstedeværende</string>
+    <string name="markAllAsPresent">Marker alle som tilstedeværende</string>
+    <string name="calendar">Kalender</string>
+    <string name="filterSections">Filter sektioner</string>
+    <string name="addVideoComment">Tilføj en videokommentar</string>
+    <string name="addAudioComment">Tilføj en lydkommentar</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d timer, %2$d minutter og %3$d sekunder</string>
+    <string name="recordingTimerSpeechDivider">%1$s ud af %2$s</string>
+    <string name="replay">Genspil</string>
+    <string name="stop">Stop</string>
+    <string name="startRecordingAudio">Start optagelse af lyd</string>
+    <string name="stopRecordingAudio">Stop optagelse af lyd</string>
+    <string name="startRecordingVideo">Start optagelse af video</string>
+    <string name="stopRecordingVideo">Stop optagelse af video</string>
+    <string name="closeRecordingView">Luk optagelsesvisning</string>
+    <string name="deleteRecording">Slet optagelse</string>
+    <string name="videoCommentReplay">Genspil videokommentar</string>
+    <string name="addMediaComment">Tilføj en mediekommentar</string>
+    <string name="copyrightHolder">Indehaver af ophavsret</string>
+    <string name="access">Adgang</string>
+    <string name="usageRights">Brugsrettigheder</string>
+    <string name="deleteFile">Slet fil</string>
+    <string name="holdCopyright">Jeg er rettighedshaveren</string>
+    <string name="havePermission">Jeg har tilladelse til at bruge fil</string>
+    <string name="publicDomain">Offentligt domæne-fil</string>
+    <string name="fairUse">Fair Use-undtagelse</string>
+    <string name="creativeCommons">Creative Commons-fil</string>
+    <string name="editFile">Rediger fil</string>
+    <string name="deleteFolder">Slet mappe</string>
+    <string name="editFolder">Rediger mappe</string>
+    <string name="deleteFileMessage">Er du sikker på, at du ønsker at slette denne fil?</string>
+    <string name="deleteFolderMessage">Er du sikker på, at du ønsker at slette denne mappe? Alt indhold i mappen slettes også.</string>
+    <string name="newFolder">My mappe</string>
+    <string name="createAFolder">Opret en mappe</string>
+    <string name="createFolder">Opret mappe</string>
+    <string name="createAFile">Opret en fil</string>
+    <string name="createFileFolderFabContentDesc">Vis knapperne Opret fil og Opret mappe</string>
+    <string name="hideCreateFileFolderFabContentDesc">Skjul Opret fil- og Opret mappe-knapper</string>
+    <string name="unpublish">Annuller offentliggørelse</string>
+    <string name="restrictedAccess">Begrænset adgang</string>
+    <string name="restricted">Begrænset</string>
+    <string name="hidden">Skjult, filer i faget vil være tilgængelige med links.</string>
+    <string name="studentsWithLink">Kun tilgængelig for elever med link. Ikke tilgængelig i elevernes filer.</string>
+    <string name="scheduleAvailability">Planlæg elevernes tilgængelighed</string>
+    <string name="folderCreationError">Der opstod en fejl under oprettelse af mapper.</string>
+
+    <string name="setAsFrontPage">Indstil som forside</string>
+    <string name="canEdit">Kan redigere</string>
+    <string name="pageDetails">Sidedetaljer</string>
+    <string name="pageSuccessfullyUpdated">Side blev opdateret.</string>
+    <string name="pageSuccessfullyCreated">Side blev oprettet.</string>
+    <string name="editPageTitle">Rediger side</string>
+    <string name="createPageTitle">Opret side</string>
+    <string name="pageTitleMustBeSet">Sidens titel skal indstilles.</string>
+    <string name="pageDeleteTitle">Slet side?</string>
+    <string name="pageDelete">Slet side</string>
+    <string name="pageDeleteMessage">Dette vil slette siden. Denne handling kan ikke fortrydes.</string>
+    <string name="errorSavingPage">Der opstod en fejl ved forsøg på at gemme denne side. Prøv igen.</string>
+    <string name="frontPageUnpublishedError">En side kan ikke både være forside og ikke offentliggjort.</string>
+
+    <string name="onlyTeachers">Kun lærere</string>
+    <string name="teachersAndStudents">Lærere og elever</string>
+    <string name="anyone">Alle</string>
+    <string name="groupMembers">Kun medlemmer</string>
+    <string name="license">Licens</string>
+    <string name="availableFromAfterTo">Tilgængelighedens slutdato skal være efter startdato</string>
+    <string name="errorDeletingFile">Der opstod en fejl under sletning af denne fil</string>
+    <string name="errorDeletingFolder">Der opstod en fejl under sletning af denne mappe</string>
+    <string name="errorUpdatingFile">Der opstod en fejl under opdatering af denne fil</string>
+    <string name="errorUpdatingFolder">Der opstod en fejl under opdatering af denne mappe</string>
+
+    <string name="toDoEmpty">Ikke mere at gøre!\n Hav en god dag!</string>
+    <string name="toDoNoSubmissions">Der er ingen afleveringer til bedømmelse for denne opgave.</string>
+    <string name="errorToDoRouteFailed">Der opstod en fejl ved forsøg på at vise dette element på opgavelisten.</string>
+    <string name="errorIsDesigner">Designer-tilmelding kan ikke se dette.</string>
+
+    <string name="sections">Sektioner</string>
+    <string name="filterBy">Filtrer efter &#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
+    <string name="filterBySection">Filtrer efter sektion</string>
+    <string name="filterSubmissionsLowercase">Filtrer afleveringer</string>
+    <string name="latePenalty">Straf for sen aflevering</string>
+    <string name="finalGrade">Endelig vurdering</string>
+    <string name="moderatedGradingUnsupported">Samlet vurdering understøttes ikke i øjeblikket i mobil SpeedGrader.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s pt</item>
+        <item quantity="other">-%s pt</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s point</item>
+        <item quantity="other">-%s point</item>
+    </plurals>
+    <string name="profileSettings">Profilindstillinger</string>
+    <string name="downloadingFile">Downloader fil&#8230;</string>
+    <string name="fileDownloadedSuccessfully">Fil blev downloaded!</string>
+    <string name="tapToView">Tryk for at se</string>
+    <string name="errorDownloadingFile">Der opstod en fejl ved download af din fil. Prøv igen.</string>
+
+    <string name="postTo">Opslå på</string>
+    <string name="allSections">Alle sektioner</string>
+
+    <string name="gauge">Gauge</string>
+    <string name="ltiLaunchFailure">LTI-værktøjet kunne ikke indlæses på dette tidspunkt.</string>
+    <string name="downloading">Downloader ...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Fagplan blev opdateret.</string>
+    <string name="errorSavingSyllabus">Der opstod en fejl ved forsøg på at gemme fagplanen. Prøv igen.</string>
+    <string name="editSyllabusTitle">Rediger fagplanen</string>
+    <string name="editSyllabusContent">Indhold</string>
+    <string name="editSyllabusDetails">Nærmere oplysninger</string>
+    <string name="editSyllabusShowCourseSummary">Vis fagoversigt</string>
+    <string name="editSyllabusContentAccessibilityLabel">Fagplanens indhold</string>
+
+    <string name="no_grade">Ingen vurdering</string>
+    <string name="excuse">Undskyld</string>
+    <string name="speed_grader_overgraded_by">Givet for høj vurdering af %s</string>
+    <string name="error_unpublishable_module_item">Kan ikke fjerne offentliggørelse af %s, hvis der er afleveringer fra elever</string>
+</resources>

@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- For Studio -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -96,7 +97,7 @@
             android:noHistory="true"
             android:theme="@style/LoginFlowTheme.Splash_Teacher"
             android:exported="true">
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -106,7 +107,7 @@
                     android:host="*.instructure.com"
                     android:scheme="https" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -116,7 +117,7 @@
                     android:host="*.instructure.com"
                     android:scheme="http" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -126,7 +127,7 @@
                     android:host="*.canvas.net"
                     android:scheme="https" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -210,6 +211,10 @@
         <activity android:name=".activities.TeacherLoginWithQRActivity"
             android:theme="@style/LoginFlowTheme.NoActionBar"/>
 
+        <activity
+            android:name="com.instructure.teacher.features.shareextension.TeacherShareExtensionActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -222,6 +227,11 @@
 
         <service android:name=".services.FileDownloadService" />
         <service android:name="com.instructure.pandautils.services.NotoriousUploadService"/>
+
+        <service
+            android:name=".services.TeacherPageViewService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <!--Push Notifications-->
 

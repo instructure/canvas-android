@@ -23,8 +23,8 @@ enum RemoteConfigParams {
 }
 
 class RemoteConfigUtils {
-  static RemoteConfig _remoteConfig = null;
-  static SharedPreferences _prefs;
+  static FirebaseRemoteConfig? _remoteConfig = null;
+  static SharedPreferences? _prefs;
 
   // I bifurcated initialize() into initialize() and initializeExplicit() to allow for
   // tests to pass in a mocked RemoteConfig object.
@@ -33,7 +33,7 @@ class RemoteConfigUtils {
    * This is the normal initializer that should be called from production code.
    **/
   static Future<void> initialize() async {
-    RemoteConfig freshRemoteConfig = await RemoteConfig.instance;
+    FirebaseRemoteConfig freshRemoteConfig = await FirebaseRemoteConfig.instance;
     await initializeExplicit(freshRemoteConfig);
   }
 
@@ -49,18 +49,18 @@ class RemoteConfigUtils {
    * Only intended for use in test code.  Should not be called from production code.
    */
   @visibleForTesting
-  static Future<void> initializeExplicit(RemoteConfig remoteConfig) async {
+  static Future<void> initializeExplicit(FirebaseRemoteConfig remoteConfig) async {
     if (_remoteConfig != null)
       throw StateError('double-initialization of RemoteConfigUtils');
 
     _remoteConfig = remoteConfig;
-    _remoteConfig.settings.minimumFetchInterval = Duration(hours: 1);
+    _remoteConfig!.settings.minimumFetchInterval = Duration(hours: 1);
 
     // fetch data from Firebase
-    var updated = false;
+    bool updated = false;
     try {
-      await _remoteConfig.fetch();
-      updated = await _remoteConfig.activate();
+      await _remoteConfig?.fetch();
+      updated = await _remoteConfig?.activate() ?? false;
     } catch (e) {
       // On fetch/activate failure, just make sure that updated is set to false
       updated = false;
@@ -73,12 +73,12 @@ class RemoteConfigUtils {
       // If we actually fetched something, then store the fetched info into _prefs
       RemoteConfigParams.values.forEach((rc) {
         String rcParamName = getRemoteConfigName(rc);
-        String rcParamValue = _remoteConfig.getString(rcParamName);
+        String? rcParamValue = _remoteConfig?.getString(rcParamName);
         String rcPreferencesName = _getSharedPreferencesName(rc);
         print(
             'RemoteConfigUtils.initialize(): fetched $rcParamName=${rcParamValue == null ? 'null' : '\"$rcParamValue\"'}');
         if (rcParamValue != null) {
-          _prefs.setString(rcPreferencesName, rcParamValue);
+          _prefs?.setString(rcPreferencesName, rcParamValue);
         }
       });
     } else {
@@ -88,7 +88,7 @@ class RemoteConfigUtils {
       RemoteConfigParams.values.forEach((rc) {
         String rcParamName = getRemoteConfigName(rc);
         String rcPreferencesName = _getSharedPreferencesName(rc);
-        String rcParamValue = _prefs.getString(rcPreferencesName);
+        String? rcParamValue = _prefs?.getString(rcPreferencesName);
         print(
             'RemoteConfigUtils.initialize(): cached $rcParamName value = ${rcParamValue == null ? 'null' : '\"$rcParamValue\"'}');
       });
@@ -102,10 +102,10 @@ class RemoteConfigUtils {
 
     var rcDefault = _getRemoteConfigDefaultValue(rcParam);
     var rcPreferencesName = _getSharedPreferencesName(rcParam);
-    var result = _prefs.getString(rcPreferencesName);
+    var result = _prefs?.getString(rcPreferencesName);
     if (result == null) {
       result = rcDefault;
-      _prefs.setString(rcPreferencesName, rcDefault);
+      _prefs?.setString(rcPreferencesName, rcDefault);
     }
     return result;
   }
@@ -150,6 +150,6 @@ class RemoteConfigUtils {
   }
 
   static void updateRemoteConfig(RemoteConfigParams rcParam, String newValue) {
-    _prefs.setString(_getSharedPreferencesName(rcParam), newValue);
+    _prefs?.setString(_getSharedPreferencesName(rcParam), newValue);
   }
 }

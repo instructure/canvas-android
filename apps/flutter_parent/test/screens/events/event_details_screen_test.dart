@@ -35,6 +35,7 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 import '../../utils/test_utils.dart';
 
 void main() {
@@ -59,8 +60,8 @@ void main() {
     ..date = DateTime(2100)
     ..userDomain = 'domain');
 
-  final interactor = _MockEventDetailsInteractor();
-  final mockNav = _MockQuickNav();
+  final interactor = MockEventDetailsInteractor();
+  final mockNav = MockQuickNav();
 
   final l10n = AppLocalizations();
 
@@ -91,7 +92,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
-    when(interactor.loadEvent(eventId, any)).thenAnswer((_) => Future<ScheduleItem>.error('Failed to load event'));
+    when(interactor.loadEvent(eventId, any)).thenAnswer((_) => Future<ScheduleItem?>.error('Failed to load event'));
 
     await tester.pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId)));
     await tester.pumpAndSettle(); // Let the future finish
@@ -293,7 +294,7 @@ void main() {
       expect(find.text(l10n.eventRemindMeDescription), findsNothing);
       expect(find.text(l10n.eventRemindMeSet), findsOneWidget);
       expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-      expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('shows correct state when no reminder is set', (tester) async {
@@ -477,7 +478,3 @@ Widget _testableWidget(
     platformConfig: config,
   );
 }
-
-class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
-
-class _MockQuickNav extends Mock implements QuickNav {}

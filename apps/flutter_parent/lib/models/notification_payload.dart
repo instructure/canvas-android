@@ -26,8 +26,7 @@ abstract class NotificationPayload implements Built<NotificationPayload, Notific
 
   NotificationPayloadType get type;
 
-  @nullable
-  String get data;
+  String? get data;
 
   NotificationPayload._();
   factory NotificationPayload([void Function(NotificationPayloadBuilder) updates]) = _$NotificationPayload;

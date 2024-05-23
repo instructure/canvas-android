@@ -16,6 +16,7 @@ library assignment;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/submission_wrapper.dart';
 
@@ -33,15 +34,12 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   String get id;
 
-  @nullable
-  String get name;
+  String? get name;
 
-  @nullable
-  String get description;
+  String? get description;
 
-  @nullable
   @BuiltValueField(wireName: 'due_at')
-  DateTime get dueAt;
+  DateTime? get dueAt;
 
   @BuiltValueField(wireName: 'points_possible')
   double get pointsPossible;
@@ -49,34 +47,29 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   @BuiltValueField(wireName: 'course_id')
   String get courseId;
 
-  @nullable
   @BuiltValueField(wireName: 'grading_type')
-  GradingType get gradingType;
+  GradingType? get gradingType;
 
-  @nullable
   @BuiltValueField(wireName: 'html_url')
-  String get htmlUrl;
+  String? get htmlUrl;
 
-  @nullable
-  String get url;
+  String? get url;
 
-  @nullable
   @BuiltValueField(wireName: 'quiz_id')
-  String get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
+  String? get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
 
   @BuiltValueField(wireName: 'use_rubric_for_grading')
   bool get useRubricForGrading;
 
   /// Wrapper object to handle observer and non-observer submission case
   /// See SubmissionWrapper for more details
-  @nullable
   @BuiltValueField(wireName: 'submission')
-  SubmissionWrapper get submissionWrapper;
+  SubmissionWrapper? get submissionWrapper;
 
   /// This is used specifically for the observer -> assignment list case (all observee submissions are returned)
   /// If you are using the assignment/submission model for any other case use submissionWrapper.submission above.
-  Submission submission(String studentId) =>
-      submissionWrapper?.submissionList?.firstWhere((submission) => submission.userId == studentId, orElse: () => null);
+  Submission? submission(String? studentId) =>
+      submissionWrapper?.submissionList?.firstWhereOrNull((submission) => submission.userId == studentId);
 
   @BuiltValueField(wireName: 'assignment_group_id')
   String get assignmentGroupId;
@@ -84,31 +77,27 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   int get position;
 
   @BuiltValueField(wireName: 'lock_info')
-  LockInfo get lockInfo;
+  LockInfo? get lockInfo;
 
   @BuiltValueField(wireName: 'locked_for_user')
   bool get lockedForUser;
 
-  @nullable
   @BuiltValueField(wireName: 'lock_at')
-  DateTime get lockAt; // Date the teacher no longer accepts submissions.
+  DateTime? get lockAt; // Date the teacher no longer accepts submissions.
 
-  @nullable
   @BuiltValueField(wireName: 'unlock_at')
-  DateTime get unlockAt;
+  DateTime? get unlockAt;
 
-  @nullable
   @BuiltValueField(wireName: 'lock_explanation')
-  String get lockExplanation;
+  String? get lockExplanation;
 
   @BuiltValueField(wireName: 'free_form_criterion_comments')
   bool get freeFormCriterionComments;
 
   bool get published;
 
-  @nullable
   @BuiltValueField(wireName: 'group_category_id')
-  String get groupCategoryId;
+  String? get groupCategoryId;
 
   @BuiltValueField(wireName: 'user_submitted')
   bool get userSubmitted;
@@ -127,9 +116,8 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   bool get isStudioEnabled;
 
-  @nullable
   @BuiltValueField(wireName: 'submission_types')
-  BuiltList<SubmissionTypes> get submissionTypes;
+  BuiltList<SubmissionTypes>? get submissionTypes;
 
   static void _initializeBuilder(AssignmentBuilder b) => b
     ..pointsPossible = 0.0
@@ -146,18 +134,18 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   @BuiltValueField(serialize: false)
   bool get isFullyLocked {
-    if (lockInfo == null || lockInfo.isEmpty) return false;
-    if (lockInfo.hasModuleName) return true;
-    if (lockInfo.unlockAt != null && lockInfo.unlockAt.isAfter(DateTime.now())) return true;
+    if (lockInfo == null || lockInfo?.isEmpty == true) return false;
+    if (lockInfo!.hasModuleName) return true;
+    if (lockInfo!.unlockAt != null && lockInfo!.unlockAt!.isAfter(DateTime.now())) return true;
     return false;
   }
 
   bool isSubmittable() =>
       submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) != true;
 
-  SubmissionStatus getStatus({String studentId}) {
+  SubmissionStatus getStatus({required String? studentId}) {
     final submission = this.submission(studentId);
-    if (!isSubmittable()) {
+    if (!isSubmittable() && submission == null) {
       return SubmissionStatus.NONE;
     } else if (submission?.isLate == true) {
       return SubmissionStatus.LATE;
@@ -171,7 +159,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   }
 
   // Returns true if the submission is marked as missing, or if it's pass due and either no submission or 'fake' submission
-  bool _isMissingSubmission(String studentId) {
+  bool _isMissingSubmission(String? studentId) {
     final submission = this.submission(studentId);
     if (submission?.missing == true) return true;
 
@@ -182,9 +170,13 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     return isPastDue && (submission == null || (submission.attempt == 0 && submission.grade == null));
   }
 
-  bool get isDiscussion => submissionTypes.contains(SubmissionTypes.discussionTopic);
+  bool get isDiscussion => submissionTypes?.contains(SubmissionTypes.discussionTopic) ?? false;
 
-  bool get isQuiz => submissionTypes.contains(SubmissionTypes.onlineQuiz);
+  bool get isQuiz => submissionTypes?.contains(SubmissionTypes.onlineQuiz) ?? false;
+
+  bool isGradingTypeQuantitative() {
+    return gradingType == GradingType.points || gradingType == GradingType.percent;
+  }
 }
 
 @BuiltValueEnum(wireName: 'grading_type')

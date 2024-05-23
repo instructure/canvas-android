@@ -15,14 +15,17 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.canvas.espresso.mockCanvas.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -32,42 +35,36 @@ import org.junit.Test
 class QuizDetailsPageTest: TeacherTest() {
 
     @Test
-    @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
         getToQuizDetailsPage()
         quizDetailsPage.assertPageObjects()
     }
 
     @Test
-    @TestRail(ID = "C3109579")
     fun displaysCorrectDetails() {
         val quiz = getToQuizDetailsPage()
         quizDetailsPage.assertQuizDetails(quiz)
     }
 
     @Test
-    @TestRail(ID = "C3109579")
     fun displaysInstructions() {
         getToQuizDetailsPage(withDescription = true)
         quizDetailsPage.assertDisplaysInstructions()
     }
 
     @Test
-    @TestRail(ID = "C3134480")
     fun displaysNoInstructionsMessage() {
         getToQuizDetailsPage()
         quizDetailsPage.assertDisplaysNoInstructionsView()
     }
 
     @Test
-    @TestRail(ID = "C3134481")
     fun displaysClosedAvailability() {
         getToQuizDetailsPage(lockAt = 1.days.ago.iso8601)
         quizDetailsPage.assertQuizClosed()
     }
 
     @Test
-    @TestRail(ID = "C3134482")
     fun displaysNoFromDate() {
         val lockAt = 2.days.fromNow.iso8601
         getToQuizDetailsPage(lockAt = lockAt)
@@ -75,7 +72,6 @@ class QuizDetailsPageTest: TeacherTest() {
     }
 
     @Test
-    @TestRail(ID = "C3134483")
     fun displaysNoToDate() {
         getToQuizDetailsPage(unlockAt = 2.days.ago.iso8601)
         quizDetailsPage.assertFromFilledAndToEmpty()

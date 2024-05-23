@@ -15,14 +15,29 @@
  */
 package com.instructure.teacher.fragments
 
+import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_GRADE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentSpeedgraderGradeBinding
 import com.instructure.teacher.dialog.CustomizeGradeDialog
 import com.instructure.teacher.dialog.PassFailGradeDailog
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -31,21 +46,25 @@ import com.instructure.teacher.presenters.SpeedGraderGradePresenter
 import com.instructure.teacher.utils.getDisplayGrade
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderGradeView
-import kotlinx.android.synthetic.main.fragment_speedgrader_grade.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.DecimalFormat
 
 @ScreenView(SCREEN_VIEW_SPEED_GRADER_GRADE)
-class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter, SpeedGraderGradeView>(), SpeedGraderGradeView {
+class SpeedGraderGradeFragment : BasePresenterFragment<
+        SpeedGraderGradePresenter,
+        SpeedGraderGradeView,
+        FragmentSpeedgraderGradeBinding>(),
+    SpeedGraderGradeView {
 
     private var mSubmission: Submission? by NullableParcelableArg(default = Submission())
     private var mAssignment: Assignment by ParcelableArg(default = Assignment())
     private var mAssignee: Assignee by ParcelableArg(default = StudentAssignee(User()))
     private var mCourse: Course by ParcelableArg(default = Course())
 
-    override fun layoutResId() = R.layout.fragment_speedgrader_grade
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentSpeedgraderGradeBinding = FragmentSpeedgraderGradeBinding::inflate
+
     override fun getPresenterFactory() = SpeedGraderGradePresenterFactory(mSubmission, mAssignment, mCourse, mAssignee)
     override fun onReadySetGo(presenter: SpeedGraderGradePresenter) {}
 
@@ -103,54 +122,53 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         // Show 'grade hidden' icon if the submission is graded but there is no postAt date
         val showHiddenIcon = presenter.submission?.let { (it.isGraded || it.excused) && it.postedAt == null }
                 ?: false
-        hiddenIcon.setVisible(showHiddenIcon)
+        binding.hiddenIcon.setVisible(showHiddenIcon)
 
         presenter.submission?.let {
             if (it.score > presenter.assignment.pointsPossible) {
                 val numberFormatter = DecimalFormat("##.##")
-                gradeText.text = getString(R.string.speed_grader_overgraded_by, numberFormatter.format(it.score - presenter.assignment.pointsPossible))
-                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textWarning))
+                binding.gradeText.text = getString(R.string.speed_grader_overgraded_by, numberFormatter.format(it.score - presenter.assignment.pointsPossible))
+                binding.gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textWarning))
             } else {
-                gradeText.setText(R.string.grade)
-                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textDarkest))
+                binding.gradeText.setText(R.string.grade)
+                binding.gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textDarkest))
             }
         }
-
 
         val displayGrade = presenter.assignment.getDisplayGrade(presenter.submission, requireContext())
         // Toggle visibility and set text
         if (displayGrade.text.isBlank()) {
-            gradeValueText.setVisible(false)
-            addGradeIcon.setVisible(true)
-            gradeValueText.text = ""
-            editGradeIcon.setVisible(false)
+            binding.gradeValueText.setVisible(false)
+            binding.addGradeIcon.setVisible(true)
+            binding.gradeValueText.text = ""
+            binding.editGradeIcon.setVisible(false)
         } else {
-            gradeValueText.setVisible(true)
-            addGradeIcon.setVisible(false)
-            editGradeIcon.setVisible(true)
+            binding.gradeValueText.setVisible(true)
+            binding.addGradeIcon.setVisible(false)
+            binding.editGradeIcon.setVisible(true)
 
             var currentGrade = displayGrade
             // Check to see if this submission has a late penalty
             if (presenter.submission?.pointsDeducted != null && presenter.submission?.pointsDeducted as Double > 0.0) {
                 // Make the late policy information visible
-                finalGradeValueText.setVisible(true)
-                latePenaltyValue.setVisible(true)
-                latePolicy.setVisible(true)
-                finalGradeContainer.setVisible(true)
+                binding.finalGradeValueText.setVisible(true)
+                binding.latePenaltyValue.setVisible(true)
+                binding.latePolicy.setVisible(true)
+                binding.finalGradeContainer.setVisible(true)
 
-                latePenalty.setTextColor(ThemePrefs.brandColor)
-                latePenaltyValue.setTextColor(ThemePrefs.brandColor)
+                binding.latePenalty.setTextColor(ThemePrefs.brandColor)
+                binding.latePenaltyValue.setTextColor(ThemePrefs.brandColor)
 
-                finalGradeValueText.text = displayGrade.text
-                finalGradeValueText.contentDescription = displayGrade.contentDescription
-                latePenaltyValue.text = requireContext().resources.getQuantityString(R.plurals.latePolicyPenalty, if (presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
-                latePenaltyValue.contentDescription = requireContext().resources.getQuantityString(R.plurals.latePolicyPenaltyFull, if (presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
+                binding.finalGradeValueText.text = displayGrade.text
+                binding.finalGradeValueText.contentDescription = displayGrade.contentDescription
+                binding.latePenaltyValue.text = requireContext().resources.getQuantityString(R.plurals.latePolicyPenalty, if (presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
+                binding.latePenaltyValue.contentDescription = requireContext().resources.getQuantityString(R.plurals.latePolicyPenaltyFull, if (presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
 
                 // Change the currentGrade variable to the entered grade because the actual grade on the submission applies the late penalty
                 currentGrade = presenter.assignment.getDisplayGrade(presenter.submission, requireContext(), true, true)
             }
-            gradeValueText.text = currentGrade.text
-            gradeValueText.contentDescription = currentGrade.contentDescription
+            binding.gradeValueText.text = currentGrade.text
+            binding.gradeValueText.contentDescription = currentGrade.contentDescription
         }
     }
 
@@ -158,8 +176,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         toast(R.string.error_occurred)
     }
 
-    private fun setupViews() {
-
+    private fun setupViews() = with(binding) {
         /* Mobile doesn't support moderated grading yet. If moderated grading is enabled
         for this assignment, hide all grading options and display a message to the user */
         if (presenter.assignment.moderatedGrading) {
@@ -206,6 +223,8 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             speedGraderSlider.onGradeChanged = { grade, isExcused -> presenter.updateGrade(grade, isExcused) }
             speedGraderSlider.setVisible()
         }
+
+        editGradeIcon.onClick { showCustomizeGradeDialog() }
     }
 
     private fun shouldShowSliderView(assignment: Assignment): Boolean = (assignment.rubric == null || assignment.rubric!!.isEmpty())
@@ -240,7 +259,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         dialog.show(requireActivity().supportFragmentManager, PassFailGradeDailog::class.java.simpleName)
     }
 
-    override fun onRefreshStarted() {
+    override fun onRefreshStarted(): Unit = with(binding) {
         gradeValueText.setGone()
         addGradeIcon.setGone()
         editGradeIcon.setGone()
@@ -249,9 +268,9 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         hiddenIcon.setGone()
     }
 
-    val hasUnsavedChanges: Boolean get() = rubricEditView?.hasUnsavedChanges ?: false
+    val hasUnsavedChanges: Boolean get() = if (view != null) binding.rubricEditView.hasUnsavedChanges else false
 
-    override fun onRefreshFinished() {
+    override fun onRefreshFinished() = with(binding) {
         gradeProgressSpinner.setGone()
         speedGraderSlider.setData(presenter.assignment, presenter.submission, presenter.assignee)
     }

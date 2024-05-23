@@ -159,14 +159,18 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     init {
-        initSettings()
-        setDownloadListener { url, _, contentDisposition, mimetype, _ ->
-            if (contentDisposition != null) {
-                val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
-                canvasWebViewClientCallback?.openMediaFromWebView(mimetype, url, fileName)
+        if (isInEditMode) {
+            loadHtml("This is a preview of the CanvasWebView", "CanvasWebView")
+        } else {
+            initSettings()
+            setDownloadListener { url, _, contentDisposition, mimetype, _ ->
+                if (contentDisposition != null) {
+                    val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
+                    canvasWebViewClientCallback?.openMediaFromWebView(mimetype, url, fileName)
+                }
             }
+            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
         }
-        CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -178,6 +182,7 @@ class CanvasWebView @JvmOverloads constructor(
         this.settings.useWideViewPort = true
         this.webViewClient = CanvasWebViewClient()
         this.settings.domStorageEnabled = true
+        this.settings.allowFileAccess = true
         this.settings.mediaPlaybackRequiresUserGesture = false // Disabled to allow videos to be played
 
         // Increase text size based on the devices accessibility setting
@@ -565,7 +570,6 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     fun setCanvasWebChromeClientShowFilePickerCallback(callback: VideoPickerCallback?) {
-        this.settings.allowFileAccess = true
         videoPickerCallback = callback
     }
 

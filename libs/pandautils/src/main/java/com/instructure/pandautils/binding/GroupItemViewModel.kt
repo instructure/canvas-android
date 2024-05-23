@@ -23,12 +23,23 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 
 abstract class GroupItemViewModel(
     val collapsable: Boolean,
-    @get:Bindable var collapsed: Boolean = collapsable,
-    val items: List<ItemViewModel>
+    @get:Bindable open var collapsed: Boolean = collapsable,
+    var items: List<ItemViewModel>
 ) : ItemViewModel, BaseObservable() {
 
     open fun toggleItems() {
         collapsed = !collapsed
         notifyPropertyChanged(BR.collapsed)
+    }
+
+    fun getAllVisibleItems(): List<ItemViewModel> {
+        val result = mutableListOf<ItemViewModel>()
+        items.forEach {
+            result += it
+            if (it is GroupItemViewModel && !it.collapsed) {
+                result += it.getAllVisibleItems()
+            }
+        }
+        return result
     }
 }

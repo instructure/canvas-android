@@ -18,42 +18,46 @@
 package com.instructure.teacher.adapters
 
 import android.content.Context
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.pandarecycler.util.Types
+import com.instructure.teacher.databinding.AdapterAssignmentBinding
+import com.instructure.teacher.databinding.AdapterAssignmentGroupHeaderBinding
 import com.instructure.teacher.holders.AssignmentGroupHeaderViewHolder
 import com.instructure.teacher.holders.AssignmentViewHolder
-import com.instructure.teacher.presenters.AssignmentListPresenter
+import com.instructure.teacher.features.assignment.list.AssignmentListPresenter
 import com.instructure.teacher.viewinterface.AssignmentListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
-class AssignmentAdapter(context: Context, expandablePresenter: AssignmentListPresenter, private val iconColor: Int, private val mCallback: (Assignment) -> Unit) :
-        SyncExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder, AssignmentListView>(context, expandablePresenter) {
+class AssignmentAdapter(
+    context: Context,
+    expandablePresenter: AssignmentListPresenter,
+    private val iconColor: Int,
+    private val mCallback: (Assignment) -> Unit
+) : SyncExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder, AssignmentListView>(context, expandablePresenter) {
 
-    override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType) {
-            Types.TYPE_ITEM -> AssignmentViewHolder(v)
-            else -> AssignmentGroupHeaderViewHolder(v)
-        }
+    override fun createViewHolder(binding: ViewBinding, viewType: Int) = when (viewType) {
+        Types.TYPE_ITEM -> AssignmentViewHolder(binding as AdapterAssignmentBinding)
+        else -> AssignmentGroupHeaderViewHolder(binding as AdapterAssignmentGroupHeaderBinding)
     }
 
-    override fun itemLayoutResId(viewType: Int): Int {
-        return when(viewType) {
-            Types.TYPE_ITEM -> AssignmentViewHolder.HOLDER_RES_ID
-            else -> AssignmentGroupHeaderViewHolder.HOLDER_RES_ID
-        }
+    override fun bindingInflater(viewType: Int): (LayoutInflater, ViewGroup, Boolean) -> ViewBinding = when (viewType) {
+        Types.TYPE_ITEM -> AdapterAssignmentBinding::inflate
+        else -> AdapterAssignmentGroupHeaderBinding::inflate
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: AssignmentGroup, isExpanded: Boolean) {
-        (holder as AssignmentGroupHeaderViewHolder).bind(group, isExpanded) {
-            assignmentGroup -> expandCollapseGroup(assignmentGroup)
-        }
+        (holder as AssignmentGroupHeaderViewHolder).bind(
+            group,
+            isExpanded
+        ) { assignmentGroup -> expandCollapseGroup(assignmentGroup) }
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: AssignmentGroup, item: Assignment) {
         context?.let { (holder as AssignmentViewHolder).bind(it, item, iconColor, mCallback) }
     }
-
 }

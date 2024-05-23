@@ -14,7 +14,7 @@
 
 import 'dart:async';
 
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
@@ -44,14 +44,14 @@ class WebLoginScreen extends StatefulWidget {
     this.pass,
     this.authenticationProvider,
     this.loginFlow = LoginFlow.normal,
-    Key key,
-  }) : super(key: key);
+    super.key,
+  });
 
-  final String user;
-  final String accountName;
-  final String pass;
+  final String? user;
+  final String? accountName;
+  final String? pass;
   final String domain;
-  final String authenticationProvider;
+  final String? authenticationProvider;
   final LoginFlow loginFlow;
 
   static const String PROTOCOL_SKIP_VERIFY_KEY = 'skip-protocol';
@@ -70,12 +70,13 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
 
   WebLoginInteractor get _interactor => locator<WebLoginInteractor>();
 
-  Future<MobileVerifyResult> _verifyFuture;
-  WebViewController _controller;
-  String _authUrl;
-  String _domain;
+  Future<MobileVerifyResult?>? _verifyFuture;
+  WebViewController? _controller;
+  late String _authUrl;
+  late String _domain;
   bool _showLoading = false;
   bool _isMobileVerifyError = false;
+  bool loadStarted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(widget.domain),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
         ),
         body: _loginBody(),
         // MBL-14271: When in landscape mode, set this to false in order to avoid the situation
@@ -98,18 +99,19 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       _verifyFuture = (widget.loginFlow == LoginFlow.skipMobileVerify)
           ? Future.delayed(Duration.zero, () => _SkipVerifyDialog.asDialog(context, widget.domain)).then((result) {
               // Use the result if we have it, otherwise continue on with mobile verify
-              return result ?? _interactor.mobileVerify(widget.domain);
-            })
+              if (result != null) { return result; }
+              return _interactor.mobileVerify(widget.domain);
+          })
           : _interactor.mobileVerify(widget.domain);
     }
 
     return FutureBuilder(
       future: _verifyFuture,
-      builder: (context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+      builder: (context, AsyncSnapshot<MobileVerifyResult?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         } else {
-          _isMobileVerifyError = snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success);
+          _isMobileVerifyError = snapshot.hasError || (snapshot.hasData && snapshot.data!.result != VerifyResultEnum.success);
           if (_isMobileVerifyError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _showErrorDialog(context, snapshot);
@@ -123,7 +125,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     );
   }
 
-  Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+  Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult?> snapshot) {
     final verifyResult = snapshot.data;
 
     return Stack(
@@ -132,40 +134,36 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             navigationDelegate: (request) =>
                 _navigate(context, request, verifyResult),
             javascriptMode: JavascriptMode.unrestricted,
-            darkMode: ParentTheme
-                .of(context)
-                .isWebViewDarkMode,
             userAgent: ApiPrefs.getUserAgent(),
             onPageFinished: (url) => _pageFinished(url, verifyResult),
-            onPageStarted: (url) => _showLoadingState(),
+            onPageStarted: (url) => _pageStarted(url),
             onWebViewCreated: (controller) =>
-                _webViewCreated(controller, verifyResult)
+                _webViewCreated(controller, verifyResult),
         ),
-        if (_showLoading) LoadingIndicator(),
+        if (_showLoading) ...[
+          Container(color: Theme.of(context).scaffoldBackgroundColor),
+          LoadingIndicator(),
+        ],
       ],
     );
   }
 
-  void _webViewCreated(WebViewController controller, MobileVerifyResult verifyResult) async {
+  void _webViewCreated(WebViewController controller, MobileVerifyResult? verifyResult) async {
     controller.clearCache();
     _controller = controller;
 
     // WebView's created, time to load
     await _buildAuthUrl(verifyResult);
-    await _loadAuthUrl();
+    _loadAuthUrl();
 
     if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
   }
 
-  void _pageFinished(String url, MobileVerifyResult verifyResult) {
-    if (!_isMobileVerifyError) {
-      setState(() => _showLoading = false);
-    }
-
+  void _pageFinished(String url, MobileVerifyResult? verifyResult) {
     _controllerCompleter.future.then((controller) async {
       if (widget.user != null && widget.pass != null) {
         // SnickerDoodle login
-        controller.evaluateJavascript("""javascript: {
+        await controller.evaluateJavascript("""javascript: {
                       document.getElementsByName('pseudonym_session[unique_id]')[0].value = '${widget.user}';
                       document.getElementsByName('pseudonym_session[password]')[0].value = '${widget.pass}';
                       document.getElementsByClassName('Button')[0].click();
@@ -179,11 +177,19 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             (function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();
           """);
       if (htmlError != null && htmlError.contains("redirect_uri does not match client settings")) {
-        _buildAuthUrl(verifyResult, forceAuthRedirect: true);
+        await _buildAuthUrl(verifyResult, forceAuthRedirect: true);
         controller.loadUrl("about:blank");
         _loadAuthUrl();
       }
+      if (loadStarted) {
+        _hideLoadingDialog();
+      }
     });
+  }
+
+  void _pageStarted(String url) {
+    loadStarted = true;
+    _showLoadingState();
   }
 
   void _showLoadingState() {
@@ -192,7 +198,13 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     }
   }
 
-  NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult result) {
+  void _hideLoadingDialog() {
+    if (!_isMobileVerifyError) {
+      setState(() => _showLoading = false);
+    }
+  }
+
+  NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult? result) {
     if (request.url.contains(SUCCESS_URL)) {
       // Success! Try to get tokens now
       var url = request.url;
@@ -200,7 +212,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_SUCCESS,
-          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result?.baseUrl},
         );
         final lastAccount = new SchoolDomain((builder) =>
         builder
@@ -212,7 +224,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       }).catchError((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_FAILURE,
-          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result?.baseUrl},
         );
         // Load the original auth url so the user can try again
         _loadAuthUrl();
@@ -230,16 +242,15 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   /// Load the authenticated url with any necessary cookies
   void _loadAuthUrl() async {
     _showLoadingState();
-    CookieManager().clearCookies();
+    final cookieManager = CookieManager();
+    cookieManager.clearCookies();
 
     if (widget.loginFlow == LoginFlow.siteAdmin) {
-      await _controller?.setAcceptThirdPartyCookies(true);
       if (_domain.contains('.instructure.com')) {
-        String cookie = 'canvas_sa_delegated=1;domain=.instructure.com;path=/;';
-        await _controller?.setCookie(_domain, cookie);
-        await _controller?.setCookie('.instructure.com', cookie);
+        cookieManager.setCookie(WebViewCookie(name: 'canvas_sa_delegated', value: '1', domain: _domain));
+        cookieManager.setCookie(WebViewCookie(name: 'canvas_sa_delegated', value: '1', domain: '.instructure.com'));
       } else {
-        await _controller?.setCookie(_domain, 'canvas_sa_delegated=1');
+        cookieManager.setCookie(WebViewCookie(name: 'canvas_sa_delegated', value: '1', domain: _domain));
       }
     }
 
@@ -247,27 +258,26 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   /// Sets an authenticated login url as well as the base url of the institution
-  void _buildAuthUrl(
-    MobileVerifyResult verifyResult, {
+  Future<void> _buildAuthUrl(
+    MobileVerifyResult? verifyResult, {
     bool forceAuthRedirect = false,
   }) async {
     // Sanitize the url
-    String baseUrl = verifyResult?.baseUrl;
+    String? baseUrl = verifyResult?.baseUrl;
     if ((baseUrl?.length ?? 0) == 0) {
       baseUrl = widget.domain;
     }
-    if (baseUrl.endsWith('/')) {
-      baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+    if (baseUrl?.endsWith('/') == true) {
+      baseUrl = baseUrl!.substring(0, baseUrl.length - 1);
     }
-    final scheme = Uri.parse(baseUrl).scheme;
+    final scheme = baseUrl == null ? null : Uri.parse(baseUrl).scheme;
     if (scheme == null || scheme.isEmpty) {
       baseUrl = 'https://${baseUrl}';
     }
 
     // Prepare login information
     var purpose = await DeviceInfoPlugin().androidInfo.then((info) => info.model.replaceAll(' ', '_'));
-    var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
-    // var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
+    var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult.clientId) : '';
     var redirect = Uri.encodeQueryComponent('https://canvas-test.emeritus.org/login/oauth2/auth');
 
     if (forceAuthRedirect || widget.domain.contains(".test.") || widget.loginFlow == LoginFlow.skipMobileVerify) {
@@ -280,28 +290,28 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
 
     // If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
     if (widget.authenticationProvider != null &&
-        widget.authenticationProvider.length > 0 &&
-        widget.authenticationProvider.toLowerCase() != 'null') {
+        widget.authenticationProvider!.length > 0 &&
+        widget.authenticationProvider!.toLowerCase() != 'null') {
       locator<Analytics>().logMessage('authentication_provider=${widget.authenticationProvider}');
-      result = '$result&authentication_provider=${Uri.encodeQueryComponent(widget.authenticationProvider)}';
+      result = '$result&authentication_provider=${Uri.encodeQueryComponent(widget.authenticationProvider!)}';
     }
 
     if (widget.loginFlow == LoginFlow.canvas) result += '&canvas_login=1';
 
     // Set the variables to use when doing a load
     _authUrl = result;
-    _domain = baseUrl;
+    _domain = baseUrl ?? '';
   }
 
   /// Shows a simple alert dialog with an error message that correlates to the result code
-  _showErrorDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) => showDialog(
+  _showErrorDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult?> snapshot) => showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(L10n(context).unexpectedError),
           content: Text(_getErrorMessage(context, snapshot)),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(L10n(context).ok),
               onPressed: () => Navigator.of(context).pop(),
             ),
@@ -309,7 +319,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         );
       });
 
-  String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+  String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult?> snapshot) {
     final localizations = L10n(context);
 
     // No data means the request failed for some other reason that we don't know
@@ -318,7 +328,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       return localizations.domainVerificationErrorUnknown;
     }
 
-    switch (snapshot.data.result) {
+    switch (snapshot.data!.result) {
       case VerifyResultEnum.generalError:
         return localizations.domainVerificationErrorGeneral;
       case VerifyResultEnum.domainNotAuthorized:
@@ -335,12 +345,12 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
 class _SkipVerifyDialog extends StatefulWidget {
   final String domain;
 
-  const _SkipVerifyDialog(this.domain, {Key key}) : super(key: key);
+  const _SkipVerifyDialog(this.domain, {super.key});
 
   @override
   __SkipVerifyDialogState createState() => __SkipVerifyDialogState();
 
-  static Future<MobileVerifyResult> asDialog(BuildContext context, String domain) {
+  static Future<MobileVerifyResult?> asDialog(BuildContext context, String domain) {
     return showDialog<MobileVerifyResult>(context: context, builder: (_) => _SkipVerifyDialog(domain));
   }
 }
@@ -369,11 +379,11 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
       title: Text(L10n(context).skipMobileVerifyTitle), // Non translated string
       content: _content(),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(L10n(context).cancel.toUpperCase()),
           onPressed: () => Navigator.of(context).pop(null),
         ),
-        FlatButton(
+        TextButton(
           child: Text(L10n(context).ok.toUpperCase()),
           onPressed: () => _popWithResult(),
         ),
@@ -382,7 +392,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
   }
 
   void _popWithResult() {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState?.validate() == true) {
       Navigator.of(context).pop(MobileVerifyResult((b) => b
         ..clientId = _clientId
         ..clientSecret = _clientSecret
@@ -401,7 +411,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
         node: _focusScopeNode,
         child: Form(
           key: _formKey,
-          // autovalidate: _autoValidate,
+          autovalidateMode: _autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -410,7 +420,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
                 decoration: _decoration(L10n(context).skipMobileVerifyProtocol),
                 initialValue: _protocol,
                 onChanged: (text) => _protocol = text,
-                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyProtocolMissing : null,
+                validator: (text) => text?.isEmpty == true ? L10n(context).skipMobileVerifyProtocolMissing : null,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
               ),
@@ -419,7 +429,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
                 key: Key(WebLoginScreen.ID_SKIP_VERIFY_KEY),
                 decoration: _decoration(L10n(context).skipMobileVerifyClientId),
                 onChanged: (text) => _clientId = text,
-                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyClientIdMissing : null,
+                validator: (text) => text?.isEmpty == true ? L10n(context).skipMobileVerifyClientIdMissing : null,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
               ),
@@ -428,7 +438,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
                 key: Key(WebLoginScreen.SECRET_SKIP_VERIFY_KEY),
                 decoration: _decoration(L10n(context).skipMobileVerifyClientSecret),
                 onChanged: (text) => _clientSecret = text,
-                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyClientSecretMissing : null,
+                validator: (text) => text?.isEmpty == true ? L10n(context).skipMobileVerifyClientSecretMissing : null,
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
                 onEditingComplete: _popWithResult,
@@ -442,7 +452,7 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
 
   InputDecoration _decoration(String label) => InputDecoration(
         labelText: label,
-        fillColor: ParentTheme.of(context).nearSurfaceColor,
+        fillColor: ParentTheme.of(context)?.nearSurfaceColor,
         filled: true,
       );
 }

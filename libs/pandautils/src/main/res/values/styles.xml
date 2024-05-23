@@ -29,6 +29,7 @@
         <item name="colorPrimaryDark">@color/textDarkest</item>
         <item name="colorAccent">@color/textDarkest</item>
         <item name="actionModeBackground">@color/textDarkest</item>
+        <item name="background">@color/backgroundLightestElevated</item>
     </style>
 
     <style name="CustomViewAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
@@ -217,6 +218,10 @@
         <item name="android:colorControlActivated">@color/white</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="DatePickerTextAppearance" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/calendar_color_selector</item>
     </style>
 
 </resources>

@@ -44,6 +44,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
@@ -77,6 +78,10 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
             emptyView.setVisible()
             emptyView.setLoading()
         }
+        is ViewState.LoadingWithAnimation -> {
+            emptyView.setVisible()
+            emptyView.setLoadingWithAnimation(state.titleRes, state.messageRes, state.animationRes)
+        }
         is ViewState.Refresh -> emptyView.setGone()
         is ViewState.Empty -> {
             emptyView.setVisible()
@@ -95,11 +100,11 @@ private fun handleErrorState(emptyView: EmptyView, error: ViewState.Error) {
         emptyView.setGone()
     } else {
         emptyView.setVisible()
-        emptyView.setError(error.errorMessage)
+        emptyView.setError(error.errorMessage, error.errorImage)
     }
 }
 
-@BindingAdapter("recyclerViewItemViewModels", "adapter", "useDiffUtil", requireAll = false)
+@BindingAdapter(value = ["recyclerViewItemViewModels", "adapter", "useDiffUtil"], requireAll = false)
 fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?, bindableAdapter: BindableRecyclerViewAdapter?, useDiffUtil: Boolean?) {
     val adapter = bindableAdapter ?: getOrCreateAdapter(recyclerView)
     if (recyclerView.adapter == null) {
@@ -152,11 +157,11 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
 fun bindHtmlContent(webViewWrapper: CanvasWebViewWrapper, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
     webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty())
     if (onLtiButtonPressed != null) {
-        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), Const.LTI_TOOL)
     }
 
     if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), "accessor")
+        webViewWrapper.webView.addJavascriptInterface(JsGoogleDocsInterface(webViewWrapper.context), Const.GOOGLE_DOCS)
     }
 }
 
@@ -177,7 +182,7 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
 fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, @ColorInt overlayColor: Int?) {
     if (overlayColor != null) {
         imageView.post {
-            imageView.setCourseImage(imageUrl, overlayColor, true)
+            imageView.setCourseImage(imageUrl, overlayColor, imageUrl.isNullOrEmpty())
         }
     } else {
         Glide.with(imageView)
@@ -254,7 +259,10 @@ fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: Strin
 fun bindUserAvatar(imageView: ImageView, avatar: AvatarViewData) {
     if (avatar.group) {
         imageView.setImageResource(R.drawable.ic_group)
+        imageView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     } else {
+        imageView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+        imageView.contentDescription = imageView.context.getString(R.string.a11y_avatarContentDescription)
         ProfileUtils.loadAvatarForUser(imageView, avatar.firstUserName, avatar.avatarUrl)
     }
 }
@@ -321,4 +329,9 @@ fun bindImageColor(imageView: ImageView, @ColorInt color: Int) {
 @BindingAdapter("onClickWithNetworkCheck")
 fun bindOnClickWithNetworkCheck(view: View, clickListener: OnClickListener) {
     view.onClickWithRequireNetwork(clickListener)
+}
+
+@BindingAdapter("onPageChangeListener")
+fun addOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageChangeListener?) {
+    listener?.let { viewPager.addOnPageChangeListener(it) }
 }

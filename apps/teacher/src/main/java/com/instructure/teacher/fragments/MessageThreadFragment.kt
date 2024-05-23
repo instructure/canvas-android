@@ -33,6 +33,7 @@ import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_MESSAGE_THREAD
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
@@ -40,11 +41,13 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.MessageAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.databinding.FragmentMessageThreadBinding
+import com.instructure.teacher.databinding.RecyclerSwipeRefreshLayoutBinding
 import com.instructure.teacher.events.ConversationDeletedEvent
 import com.instructure.teacher.events.ConversationUpdatedEvent
-import com.instructure.teacher.events.ConversationUpdatedEventTablet
 import com.instructure.teacher.events.MessageAddedEvent
 import com.instructure.teacher.factory.MessageThreadPresenterFactory
+import com.instructure.teacher.features.inbox.list.TeacherInboxRouter
 import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.presenters.MessageThreadPresenter
@@ -54,17 +57,14 @@ import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.view
 import com.instructure.teacher.viewinterface.MessageThreadView
-import kotlinx.android.synthetic.main.fragment_message_thread.*
-import kotlinx.android.synthetic.main.fragment_message_thread.view.*
-import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
-import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.recyclerView as messageRecyclerView
-import kotlinx.android.synthetic.main.toolbar_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 @ScreenView(SCREEN_VIEW_MESSAGE_THREAD)
 class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, MessageThreadView, MessageHolder, MessageAdapter>(), MessageThreadView, Identity {
+
+    private val binding by viewBinding(FragmentMessageThreadBinding::bind)
 
     private var conversationScope: String? = null
 
@@ -73,6 +73,11 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
     override val skipCheck: Boolean
         get() = false
+
+    private val toolbar: Toolbar
+        get() = binding.root.findViewById(R.id.toolbar)
+
+    private lateinit var swipeRefreshLayoutContainerBinding: RecyclerSwipeRefreshLayoutBinding
 
     private val menuListener = Toolbar.OnMenuItemClickListener { item ->
         when (item.itemId) {
@@ -125,13 +130,13 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
             if (canvasContext != null && canvasContext is Course) {
                 val bundle = StudentContextFragment.makeBundle(user.id, canvasContext.id, false)
-                RouteMatcher.route(requireContext(), Route(StudentContextFragment::class.java, null, bundle))
+                RouteMatcher.route(requireActivity(), Route(StudentContextFragment::class.java, null, bundle))
             }
         }
 
         override fun onAttachmentClicked(action: AttachmentView.AttachmentAction, attachment: Attachment) {
             if (action == AttachmentView.AttachmentAction.PREVIEW) {
-                attachment.view(requireContext())
+                attachment.view(requireActivity())
             } else if (action == AttachmentView.AttachmentAction.DOWNLOAD) {
                 if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
                     // Download media
@@ -173,6 +178,11 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     private val conversation: Conversation?
         get() = presenter.getConversation()
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -185,20 +195,20 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
     override fun layoutResId(): Int = R.layout.fragment_message_thread
 
-    override fun onCreateView(view: View) {
-        view.starred.onClick {
-            presenter.toggleStarred()
-        }
-    }
+    override fun onCreateView(view: View) {}
 
-    override fun onReadySetGo(presenter: MessageThreadPresenter) {
-        if (recyclerView?.adapter == null && conversation != null) {
-            recyclerView?.adapter = adapter
+    override fun onReadySetGo(presenter: MessageThreadPresenter) = with(binding) {
+        if (recyclerView.adapter == null && conversation != null) {
+            recyclerView.adapter = adapter
+        }
+
+        starred.onClick {
+            presenter.toggleStarred()
         }
 
         // Set to true so we actually mark the conversation as read
         presenter.loadData(true)
-        emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
     }
 
     override fun getPresenterFactory(): MessageThreadPresenterFactory {
@@ -208,7 +218,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             return MessageThreadPresenterFactory(conversationId = nonNullArgs.getLong(Const.CONVERSATION_ID, 0))
         }
 
-        return MessageThreadPresenterFactory(nonNullArgs.getParcelable<Parcelable>(Const.CONVERSATION) as Conversation, nonNullArgs.getInt(Const.POSITION))
+        return MessageThreadPresenterFactory(nonNullArgs.getParcelable<Parcelable>(Const.CONVERSATION) as Conversation)
     }
 
     override fun onPresenterPrepared(presenter: MessageThreadPresenter) {
@@ -226,7 +236,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     private fun setupRecyclerView() {
         RecyclerViewUtils.buildRecyclerView(requireActivity().window.decorView.rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
-        recyclerView?.let {
+        recyclerView.also {
             val linearLayoutManager = LinearLayoutManager(requireContext())
             it.layoutManager = linearLayoutManager
 
@@ -237,7 +247,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             dividerItemDecoration.setDrawable(requireContext().getDrawableCompat(R.drawable.item_decorator_gray))
             it.removeAllItemDecorations()
             it.addItemDecoration(dividerItemDecoration)
-            addSwipeToRefresh(swipeRefreshLayout)
+            addSwipeToRefresh(swipeRefreshLayoutContainerBinding.swipeRefreshLayout)
         }
     }
 
@@ -249,7 +259,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         if (activity is InitActivity && resources.getBoolean(R.bool.isDeviceTablet)) {
             // Don't have an arrow because going back will close the app
         } else {
-            toolbar.setupBackButton(this)
+            toolbar.setupBackButton(this@MessageThreadFragment)
         }
 
         toolbar.inflateMenu(R.menu.message_thread)
@@ -270,10 +280,10 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         toolbar.setOnMenuItemClickListener(menuListener)
     }
 
-    override fun setupConversationDetails() {
-        if(recyclerView?.adapter == null) {
+    override fun setupConversationDetails() = with(binding) {
+        if(recyclerView.adapter == null) {
             // If we didn't setup the adapter initially (we didn't start off with the conversation), then do it now
-            recyclerView?.adapter = adapter
+            recyclerView.adapter = adapter
         }
 
         setupRecyclerView()
@@ -300,7 +310,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         ToolbarColorizeHelper.colorizeToolbar(toolbar, textColor, requireActivity())
     }
 
-    private fun initConversationDetails() {
+    private fun initConversationDetails() = with(binding) {
         if (conversation!!.subject == null || conversation!!.subject!!.isBlank() || conversation!!.subject!!.trim { it <= ' ' }.isEmpty()) {
             subjectView.setText(R.string.no_subject)
         } else {
@@ -335,7 +345,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             messages = presenter.getMessageChainForMessage(null),
             currentMessage = null
         )
-        RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+        RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
     }
 
     // Same as reply all but scoped to a message
@@ -347,7 +357,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             messages = presenter.getMessageChainForMessage(null),
             currentMessage = message
         )
-        RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+        RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
     }
 
     private fun addMessage(message: Message, isReply: Boolean) {
@@ -358,7 +368,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             messages = presenter.getMessageChainForMessage(message),
             currentMessage = message
         )
-        RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+        RouteMatcher.route(requireActivity(), Route(AddMessageFragment::class.java, null, args))
     }
 
     private fun getMessageRecipientsForReplyAll(message: Message): ArrayList<BasicUser> {
@@ -381,30 +391,32 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override val recyclerView: RecyclerView? get() = messageRecyclerView
+    override val recyclerView: RecyclerView get() = swipeRefreshLayoutContainerBinding.recyclerView
 
     override fun onRefreshFinished() {
-        swipeRefreshLayout.isRefreshing = false
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onRefreshStarted() {
-        emptyPandaView.setLoading()
+        swipeRefreshLayoutContainerBinding.emptyPandaView.setLoading()
     }
 
     override fun checkIfEmpty() {
-        RecyclerViewUtils.checkIfEmpty(emptyPandaView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+        RecyclerViewUtils.checkIfEmpty(
+            swipeRefreshLayoutContainerBinding.emptyPandaView,
+            recyclerView,
+            swipeRefreshLayoutContainerBinding.swipeRefreshLayout,
+            adapter,
+            presenter.isEmpty
+        )
     }
 
     override fun refreshConversationData() {
         initConversationDetails()
     }
 
-    override fun onConversationDeleted(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, InboxFragment::class.java.simpleName + ".onPost()"))
-        } else {
-            EventBus.getDefault().postSticky(ConversationDeletedEvent(position, InboxFragment::class.java.simpleName + ".onResume()"))
-        }
+    override fun onConversationDeleted() {
+        EventBus.getDefault().postSticky(ConversationDeletedEvent(TeacherInboxRouter::class.java.simpleName))
 
         // Only go back a screen on phones
         if (!isTablet) {
@@ -412,12 +424,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override fun onConversationMarkedAsUnread(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.UNREAD, null))
-        }
+    override fun onConversationMarkedAsUnread() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
 
         // Only go back a screen on phones
         if (!isTablet) {
@@ -425,12 +433,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override fun onConversationRead(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.UNREAD, null))
-        }
+    override fun onConversationRead() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.UNREAD, null))
     }
 
     override fun onMessageDeleted() {
@@ -438,12 +442,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         presenter.refresh(true)
     }
 
-    override fun onConversationArchived(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.ARCHIVED, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.ARCHIVED, null))
-        }
+    override fun onConversationArchived() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.ARCHIVED, null))
 
         // Only go back a screen on phones
         if (!isTablet) {
@@ -451,12 +451,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override fun onConversationStarred(position: Int) {
-        if (!isTablet) {
-            EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.STARRED, null))
-        } else {
-            EventBus.getDefault().postSticky(ConversationUpdatedEventTablet(position, InboxApi.Scope.STARRED, null))
-        }
+    override fun onConversationStarred() {
+        EventBus.getDefault().postSticky(ConversationUpdatedEvent(conversation!!, InboxApi.Scope.STARRED, null))
     }
 
     override fun onConversationLoadFailed() {
@@ -471,7 +467,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.COMPOSE_MESSAGE && resultCode == RESULT_OK) {
             if (presenter != null) {
-                swipeRefreshLayout.isRefreshing = true
+                swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = true
                 presenter.refresh(true)
             }
         }
@@ -484,10 +480,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     fun onMessageEdited(event: MessageAddedEvent) {
         event.once(javaClass.simpleName + conversation!!.id + "_" + conversation!!.messageCount) { aBoolean ->
             if (aBoolean) {
-                if (swipeRefreshLayout != null && presenter != null) {
-                    swipeRefreshLayout.isRefreshing = true
-                    presenter.refresh(true)
-                }
+                swipeRefreshLayoutContainerBinding.swipeRefreshLayout.isRefreshing = true
+                presenter.refresh(true)
             }
         }
     }
@@ -495,10 +489,9 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 
     companion object {
-        fun createBundle(conversation: Conversation, position: Int, scope: String): Bundle =
+        fun createBundle(conversation: Conversation, scope: String): Bundle =
                 Bundle().apply {
                     putParcelable(Const.CONVERSATION, conversation)
-                    putInt(Const.POSITION, position)
                     putString(Const.SCOPE, scope)
                 }
 

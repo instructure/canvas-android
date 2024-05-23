@@ -18,8 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Typeface
 import android.os.Bundle
-import com.google.android.material.textfield.TextInputLayout
-import androidx.appcompat.app.AppCompatDelegate
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -27,7 +26,16 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
-import com.instructure.canvasapi2.models.*
+import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.material.textfield.TextInputLayout
+import com.instructure.canvasapi2.models.FileAccessStatus
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.FileUsageRightsJustification
+import com.instructure.canvasapi2.models.License
+import com.instructure.canvasapi2.models.PublishStatus
+import com.instructure.canvasapi2.models.RestrictedScheduleStatus
+import com.instructure.canvasapi2.models.RestrictedStatus
+import com.instructure.canvasapi2.models.UnpublishStatus
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.canvasapi2.utils.toApiString
@@ -36,24 +44,37 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
-import com.instructure.teacher.adapters.LongNameArrayAdapter
-import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
+import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.FileFolderDeletedEvent
 import com.instructure.pandautils.utils.FileFolderUpdatedEvent
-import com.instructure.teacher.events.post
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.descendants
+import com.instructure.pandautils.utils.postSticky
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.teacher.R
+import com.instructure.teacher.adapters.LongNameArrayAdapter
+import com.instructure.teacher.databinding.FragmentEditFilefolderBinding
+import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
 import com.instructure.teacher.factory.EditFilePresenterFactory
 import com.instructure.teacher.presenters.EditFileFolderPresenter
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.formatOrDoubleDash
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.view.EditFileView
-import kotlinx.android.synthetic.main.fragment_edit_filefolder.*
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_EDIT_FILE_FOLDER)
 class EditFileFolderFragment : BasePresenterFragment<
         EditFileFolderPresenter,
-        EditFileView>(), EditFileView {
+        EditFileView,
+        FragmentEditFilefolderBinding>(), EditFileView {
 
     private var currentFileOrFolder: FileFolder by ParcelableArg()
     private var usageRightsEnabled: Boolean by BooleanArg()
@@ -80,8 +101,8 @@ class EditFileFolderFragment : BasePresenterFragment<
             if (isLockDate) lockDate = updatedDate else unlockDate = updatedDate
 
             // Clear any date/time errors
-            unlockDateTextInput.error = null
-            unlockDateTextInput.isErrorEnabled = false
+            binding.unlockDateTextInput.error = null
+            binding.unlockDateTextInput.isErrorEnabled = false
         }.show(requireActivity().supportFragmentManager, DatePickerDialogFragment::class.java.simpleName)
     }
 
@@ -93,12 +114,12 @@ class EditFileFolderFragment : BasePresenterFragment<
             if (isLockDate) lockDate = updatedDate else unlockDate = updatedDate
 
             // Clear any date/time errors
-            unlockDateTextInput.error = null
-            unlockDateTextInput.isErrorEnabled = false
+            binding.unlockDateTextInput.error = null
+            binding.unlockDateTextInput.isErrorEnabled = false
         }.show(requireActivity().supportFragmentManager, TimePickerDialogFragment::class.java.simpleName)
     }
 
-    override fun layoutResId(): Int = R.layout.fragment_edit_filefolder
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentEditFilefolderBinding = FragmentEditFilefolderBinding::inflate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,8 +152,8 @@ class EditFileFolderFragment : BasePresenterFragment<
         super.showToast(stringResId)
     }
 
-    private fun setupToolbar() {
-        toolbar.setupCloseButton(this)
+    private fun setupToolbar() = with(binding) {
+        toolbar.setupCloseButton(this@EditFileFolderFragment)
 
         if (presenter.isFile) toolbar.title = getString(R.string.editFile)
         else toolbar.title = getString(R.string.editFolder)
@@ -140,16 +161,13 @@ class EditFileFolderFragment : BasePresenterFragment<
         toolbar.setupMenu(R.menu.menu_save_generic) { saveFileFolder() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
-
-
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
-    private fun setupViews() {
+    private fun setupViews() = with(binding) {
         setupAccess()
         setupRestrictedAccess()
         setupUsageRights()
-
 
         deleteWrapper.setOnClickListener {
             ConfirmDeleteFileFolderDialog.show(requireActivity().supportFragmentManager, presenter.isFile) {
@@ -162,7 +180,6 @@ class EditFileFolderFragment : BasePresenterFragment<
         } else if (presenter.usageRightsEnabled) {
             setupLicenses(presenter.licenseList)
         }
-
 
         titleEditText.setText(presenter.currentFileOrFolder.name ?: presenter.currentFileOrFolder.displayName)
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
@@ -192,27 +209,27 @@ class EditFileFolderFragment : BasePresenterFragment<
         }
 
         (view as? ViewGroup)?.descendants<TextInputLayout>()?.forEach {
-            it.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL))
+            it.typeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
         }
 
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
     }
 
-    private fun showUsageRights(show: Boolean) {
+    private fun showUsageRights(show: Boolean) = with(binding) {
         usageRightsLabel.setVisible(show)
         usageRightsSpinner.setVisible(show)
         copyrightHolderLabel.setVisible(show)
         copyrightEditText.setVisible(show)
     }
 
-    private fun setupFolderViews() {
+    private fun setupFolderViews() = with(binding) {
         copyrightHolderLabel.setGone()
         usageRightsLabel.setGone()
         usageRightsSpinner.setGone()
         deleteText.text = getText(R.string.deleteFolder)
     }
 
-    private fun setupAccess() {
+    private fun setupAccess() = with(binding) {
         val spinnerAdapter = ArrayAdapter.createFromResource(requireActivity(), R.array.fileAccessTypes, R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         accessSpinner.adapter = spinnerAdapter
@@ -271,7 +288,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         accessSpinner.setSelection(initialPosition)
     }
 
-    private fun setupRestrictedAccess() {
+    private fun setupRestrictedAccess() = with(binding) {
         val spinnerAdapter = LongNameArrayAdapter.createFromResource(requireActivity(), if (presenter.isFile) R.array.fileRestrictedTypes else R.array.folderRestrictedTypes, R.layout.simple_spinner_item)
         restrictedAccessSpinner.adapter = spinnerAdapter
         ViewStyler.themeSpinner(requireContext(), accessSpinner, ThemePrefs.brandColor)
@@ -301,34 +318,33 @@ class EditFileFolderFragment : BasePresenterFragment<
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
 
-        val initialPosition =
-                when {
-                    presenter.currentFileOrFolder.isHidden -> {
-                        if (presenter.isFile)
-                            spinnerAdapter.getPosition(getString(R.string.studentsWithLink))
-                        else
-                            spinnerAdapter.getPosition(getString(R.string.hidden))
-                    }
-                    presenter.currentFileOrFolder.lockDate != null || presenter.currentFileOrFolder.unlockDate != null -> {
-                        if (presenter.currentFileOrFolder.lockDate != null) {
-                            lockDateEditText.setText(mDateFormat.format(presenter.currentFileOrFolder.lockDate))
-                            lockTimeEditText.setText(mTimeFormat.format(presenter.currentFileOrFolder.lockDate))
-                        }
-                        if (presenter.currentFileOrFolder.unlockDate != null) {
-                            unlockDateEditText.setText(mDateFormat.format(presenter.currentFileOrFolder.unlockDate))
-                            unlockTimeEditText.setText(mTimeFormat.format(presenter.currentFileOrFolder.unlockDate))
-                        }
-                        spinnerAdapter.getPosition(getString(R.string.scheduleAvailability))
-                    }
-                    else -> spinnerAdapter.getPosition(getString(R.string.studentsWithLink))
+        val initialPosition = when {
+            presenter.currentFileOrFolder.isHidden -> {
+                if (presenter.isFile)
+                    spinnerAdapter.getPosition(getString(R.string.studentsWithLink))
+                else
+                    spinnerAdapter.getPosition(getString(R.string.hidden))
+            }
+            presenter.currentFileOrFolder.lockDate != null || presenter.currentFileOrFolder.unlockDate != null -> {
+                if (presenter.currentFileOrFolder.lockDate != null) {
+                    lockDateEditText.setText(mDateFormat.format(presenter.currentFileOrFolder.lockDate))
+                    lockTimeEditText.setText(mTimeFormat.format(presenter.currentFileOrFolder.lockDate))
                 }
+                if (presenter.currentFileOrFolder.unlockDate != null) {
+                    unlockDateEditText.setText(mDateFormat.format(presenter.currentFileOrFolder.unlockDate))
+                    unlockTimeEditText.setText(mTimeFormat.format(presenter.currentFileOrFolder.unlockDate))
+                }
+                spinnerAdapter.getPosition(getString(R.string.scheduleAvailability))
+            }
+            else -> spinnerAdapter.getPosition(getString(R.string.studentsWithLink))
+        }
         restrictedAccessSpinner.setSelection(initialPosition)
     }
 
     /**
      * Method is called assuming the usage rights feature is enabled and we are editing a file
      */
-    private fun setupUsageRights() {
+    private fun setupUsageRights() = with(binding) {
         val spinnerAdapter = ArrayAdapter.createFromResource(requireActivity(), R.array.fileUsageRightsTypes, R.layout.simple_spinner_item)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         usageRightsSpinner.adapter = spinnerAdapter
@@ -368,7 +384,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         usageRightsSpinner.setSelection(initialPosition)
     }
 
-    private fun setupLicenses(licenses: List<License>) {
+    private fun setupLicenses(licenses: List<License>) = with(binding) {
         // Create adapter, filtering for creative common licenses
         val spinnerAdapter = ArrayAdapter(requireActivity(), R.layout.simple_spinner_item, presenter.licenseList.filter { it.name.contains("CC") }.map { it.name })
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -395,7 +411,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         licenseSpinner.setSelection(initialPosition)
     }
 
-    private fun saveFileFolder() {
+    private fun saveFileFolder() = with(binding) {
 
         // Check unlock/lock dates
         if (unlockDate != null && lockDate != null)

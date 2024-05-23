@@ -16,11 +16,19 @@
  */
 package com.instructure.pandautils.navigation
 
+import com.instructure.canvasapi2.models.CanvasContext
+
 interface WebViewRouter {
 
     fun canRouteInternally(url: String, routeIfPossible: Boolean = false): Boolean
 
     fun routeInternally(url: String)
 
-    fun openMedia(url: String)
+    fun openMedia(url: String, mime: String = "", filename: String = "", canvasContext: CanvasContext? = null)
+
+    fun routeExternally(url: String)
+
+    fun openLtiScreen(canvasContext: CanvasContext?, url: String)
+
+    fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?)
 }

@@ -17,6 +17,7 @@ import 'dart:async';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/screens/aup/acceptable_use_policy_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
@@ -32,6 +33,7 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
   final login = Login((b) => b
@@ -49,8 +51,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays loadingIndicator', (tester) async {
-    var interactor = _MockInteractor();
-    var nav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var nav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => nav);
@@ -58,8 +60,10 @@ void main() {
 
     final completer = Completer<SplashScreenData>();
     when(interactor.getData()).thenAnswer((_) => completer.future);
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(SplashScreen()));
+    await tester.pump();
     await tester.pump();
 
     expect(find.byType(CanvasLoadingIndicator), findsOneWidget);
@@ -67,12 +71,13 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Routes to not-a-parent screen if not an observer and cannot masquerade',
       (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockSplashScreenInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
     when(interactor.getData()).thenAnswer((_) async => SplashScreenData(false, false));
 
     await tester.pumpWidget(TestApp(
@@ -80,20 +85,47 @@ void main() {
       platformConfig: PlatformConfig(initLoggedInUser: login),
     ));
     await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(NotAParentScreen), findsOneWidget);
     await ApiPrefs.clean();
   });
 
+  testWidgetsWithAccessibilityChecks('Routes to Acceptable Use Policy screen if needed', (tester) async {
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
+    setupTestLocator((locator) {
+      locator.registerFactory<SplashScreenInteractor>(() => interactor);
+      locator.registerLazySingleton<QuickNav>(() => mockNav);
+    });
+    
+    when(interactor.getData()).thenAnswer((_) async => SplashScreenData(true, false));
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => true);
+
+    await tester.pumpWidget(TestApp(
+      SplashScreen(),
+      platformConfig: PlatformConfig(initLoggedInUser: login),
+    ));
+    await tester.pump(); // Pump to get data
+    await tester.pump(); // Pump to update with result
+    await tester.pump(); // Pump to update with result
+    await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
+
+    verify(mockNav.pushRouteWithCustomTransition(any, '/aup', any, any, any));
+    await ApiPrefs.clean();
+  });
+
   testWidgetsWithAccessibilityChecks('Routes to dashboard if not an observer but can masquerade', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
     });
 
     when(interactor.getData()).thenAnswer((_) async => SplashScreenData(false, true));
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
@@ -101,21 +133,23 @@ void main() {
     ));
     await tester.pump(); // Pump to get data
     await tester.pump(); // Pump to update with result
+    await tester.pump(); // Pump to update with result
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 
     verify(mockNav.pushRouteWithCustomTransition(any, '/dashboard', any, any, any));
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Routes to dashboard if an observer but cannot masquerade', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
     });
 
     when(interactor.getData()).thenAnswer((_) async => SplashScreenData(true, false));
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
@@ -123,14 +157,15 @@ void main() {
     ));
     await tester.pump(); // Pump to get data
     await tester.pump(); // Pump to update with result
+    await tester.pump(); // Pump to update with result
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 
     verify(mockNav.pushRouteWithCustomTransition(any, '/dashboard', any, any, any));
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Routes to login screen when the user is not logged in', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockSplashScreenInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -146,7 +181,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks(
       'Routes to login screen when the user is not logged in and camera count throws error', (tester) async {
-    var interactor = _MockInteractor();
+    var interactor = MockSplashScreenInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -190,8 +225,8 @@ void main() {
    */
 
   testWidgetsWithAccessibilityChecks('Routes to dashboard without students on error', (tester) async {
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
@@ -199,6 +234,7 @@ void main() {
 
     final completer = Completer<SplashScreenData>();
     when(interactor.getData()).thenAnswer((_) => completer.future);
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
@@ -208,10 +244,11 @@ void main() {
 
     completer.completeError('Fake error');
     await tester.pump();
+    await tester.pump();
     await tester.pump(const Duration(milliseconds: 350));
 
     verify(mockNav.pushRouteWithCustomTransition(any, '/dashboard', any, any, any));
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Requests MasqueradeUI refresh', (tester) async {
@@ -221,8 +258,8 @@ void main() {
       ..masqueradeUser = masqueradeUser.toBuilder());
     var masqueradeInfo = AppLocalizations().actingAsUser(masqueradeUser.name);
 
-    var interactor = _MockInteractor();
-    var mockNav = _MockNav();
+    var interactor = MockSplashScreenInteractor();
+    var mockNav = MockQuickNav();
     setupTestLocator((locator) {
       locator.registerFactory<SplashScreenInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => mockNav);
@@ -232,6 +269,7 @@ void main() {
       ApiPrefs.switchLogins(maskedLogin);
       return SplashScreenData(true, false);
     });
+    when(interactor.isTermsAcceptanceRequired()).thenAnswer((_) async => false);
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
@@ -243,14 +281,11 @@ void main() {
     expect(find.text(masqueradeInfo), findsNothing);
 
     await tester.pump(); // Pump to update with result
+    await tester.pump(); // Pump to update with result
     await tester.pump(const Duration(milliseconds: 350)); // Pump for animation finish
 
     // Should now show masquerade info
     expect(find.text(masqueradeInfo), findsOneWidget);
-    ApiPrefs.clean();
+    await ApiPrefs.clean();
   });
 }
-
-class _MockInteractor extends Mock implements SplashScreenInteractor {}
-
-class _MockNav extends Mock implements QuickNav {}

@@ -17,10 +17,13 @@
 
 package com.instructure.canvasapi2.apis
 
+import androidx.annotation.StringRes
+import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -29,7 +32,7 @@ import java.io.IOException
 
 object CalendarEventAPI {
 
-    internal interface CalendarEventInterface {
+    interface CalendarEventInterface {
 
         @get:GET("users/self/upcoming_events")
         val upcomingEvents: Call<List<ScheduleItem>>
@@ -42,14 +45,42 @@ object CalendarEventAPI {
                 @Query("end_date") endDate: String?,
                 @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>): Call<List<ScheduleItem>>
 
+        @GET("calendar_events/")
+        suspend fun getCalendarEvents(
+            @Query("all_events") allEvents: Boolean,
+            @Query("type") type: String,
+            @Query("start_date") startDate: String?,
+            @Query("end_date") endDate: String?,
+            @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>, @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
         @GET
         fun next(@Url url: String): Call<List<ScheduleItem>>
+
+        @GET
+        suspend fun next(@Url url: String, @Tag restParams: RestParams): DataResult<List<ScheduleItem>>
 
         @GET("calendar_events/{eventId}")
         fun getCalendarEvent(@Path("eventId") eventId: Long): Call<ScheduleItem>
 
+        @GET("calendar_events/{eventId}?include[]=series_natural_language")
+        suspend fun getCalendarEvent(@Path("eventId") eventId: Long, @Tag restParams: RestParams): DataResult<ScheduleItem>
+
         @DELETE("calendar_events/{eventId}")
         fun deleteCalendarEvent(@Path("eventId") eventId: Long, @Query("cancel_reason") cancelReason: String): Call<ScheduleItem>
+
+        @DELETE("calendar_events/{eventId}")
+        suspend fun deleteRecurringCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Query("which") deleteScope: String,
+            @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
+        @DELETE("calendar_events/{eventId}")
+        suspend fun deleteCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
 
         @POST("calendar_events/")
         fun createCalendarEvent(
@@ -60,6 +91,27 @@ object CalendarEventAPI {
                 @Query("calendar_event[end_at]") endDate: String,
                 @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
                 @Body body: String): Call<ScheduleItem>
+
+        @POST("calendar_events/")
+        suspend fun createCalendarEvent(
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
+
+        @PUT("calendar_events/{eventId}")
+        suspend fun updateRecurringCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Query(value = "which") modifyEventScope: String,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
+            @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
+        @PUT("calendar_events/{eventId}")
+        suspend fun updateCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
 
         @GET("calendar_events/")
         fun getImportantDates(
@@ -73,6 +125,12 @@ object CalendarEventAPI {
     enum class CalendarEventType(val apiName: String) {
         CALENDAR("event"),
         ASSIGNMENT("assignment")
+    }
+
+    enum class ModifyEventScope(val apiName: String, @StringRes val stringRes: Int) {
+        ONE("one", R.string.eventDeleteScopeOne),
+        ALL("all", R.string.eventDeleteScopeAll),
+        FOLLOWING("following", R.string.eventDeleteScopeFollowing)
     }
 
     fun getCalendarEvent(

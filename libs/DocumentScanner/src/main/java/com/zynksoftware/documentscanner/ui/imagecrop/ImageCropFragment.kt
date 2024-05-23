@@ -29,37 +29,23 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.zynksoftware.documentscanner.R
 import com.zynksoftware.documentscanner.ScanActivity
 import com.zynksoftware.documentscanner.common.extensions.scaledBitmap
 import com.zynksoftware.documentscanner.common.utils.OpenCvNativeBridge
+import com.zynksoftware.documentscanner.databinding.FragmentImageCropBinding
 import com.zynksoftware.documentscanner.model.DocumentScannerErrorModel
 import com.zynksoftware.documentscanner.ui.base.BaseFragment
 import com.zynksoftware.documentscanner.ui.scan.InternalScanActivity
 import id.zelory.compressor.determineImageRotation
-import kotlinx.android.synthetic.main.fragment_image_crop.*
 
-internal class ImageCropFragment : BaseFragment() {
-
-    companion object {
-        private val TAG = ImageCropFragment::class.simpleName
-
-        fun newInstance(): ImageCropFragment {
-            return ImageCropFragment()
-        }
-    }
+internal class ImageCropFragment : BaseFragment<FragmentImageCropBinding>(FragmentImageCropBinding::inflate) {
 
     private val nativeClass = OpenCvNativeBridge()
 
     private var selectedImage: Bitmap? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_image_crop, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,14 +60,14 @@ internal class ImageCropFragment : BaseFragment() {
                 closeFragment()
             }
         }
-        holderImageView.post {
-            initializeCropping()
+        binding.holderImageView.post {
+            if (this.view != null) initializeCropping()
         }
 
         initListeners()
     }
 
-    private fun initListeners() {
+    private fun initListeners() = with(binding) {
         closeButton.setOnClickListener {
             closeFragment()
         }
@@ -94,7 +80,7 @@ internal class ImageCropFragment : BaseFragment() {
         return (requireActivity() as InternalScanActivity)
     }
 
-    private fun initializeCropping() {
+    private fun initializeCropping() = with(binding) {
         if(selectedImage != null && selectedImage!!.width > 0 && selectedImage!!.height > 0) {
             val scaledBitmap: Bitmap = selectedImage!!.scaledBitmap(holderImageCrop.width, holderImageCrop.height)
             imagePreview.setImageBitmap(scaledBitmap)
@@ -124,16 +110,16 @@ internal class ImageCropFragment : BaseFragment() {
     private fun getEdgePoints(tempBitmap: Bitmap): Map<Int, PointF> {
         Log.d(TAG, "ZDCgetEdgePoints Starts ${System.currentTimeMillis()}")
         val pointFs: List<PointF> = nativeClass.getContourEdgePoints(tempBitmap)
-        return polygonView.getOrderedValidEdgePoints(tempBitmap, pointFs)
+        return binding.polygonView.getOrderedValidEdgePoints(tempBitmap, pointFs)
     }
 
     private fun getCroppedImage() {
         if(selectedImage != null) {
             try {
                 Log.d(TAG, "ZDCgetCroppedImage starts ${System.currentTimeMillis()}")
-                val points: Map<Int, PointF> = polygonView.getPoints()
-                val xRatio: Float = selectedImage!!.width.toFloat() / imagePreview.width
-                val yRatio: Float = selectedImage!!.height.toFloat() / imagePreview.height
+                val points: Map<Int, PointF> = binding.polygonView.getPoints()
+                val xRatio: Float = selectedImage!!.width.toFloat() / binding.imagePreview.width
+                val yRatio: Float = selectedImage!!.height.toFloat() / binding.imagePreview.height
                 val pointPadding = requireContext().resources.getDimension(R.dimen.zdc_point_padding).toInt()
                 val x1: Float = (points.getValue(0).x + pointPadding) * xRatio
                 val x2: Float = (points.getValue(1).x + pointPadding) * xRatio
@@ -161,5 +147,13 @@ internal class ImageCropFragment : BaseFragment() {
 
     private fun closeFragment() {
         getScanActivity().closeCurrentFragment()
+    }
+
+    companion object {
+        private val TAG = ImageCropFragment::class.simpleName
+
+        fun newInstance(): ImageCropFragment {
+            return ImageCropFragment()
+        }
     }
 }

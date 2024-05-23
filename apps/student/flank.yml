@@ -1,8 +1,8 @@
 gcloud:
   project: delta-essence-114723
 # Use the next two lines to run locally
-#  app: ./build/outputs/apk/qa/debug/student-qa-debug.apk
-#  test: ./build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+#  app: ./build/intermediates/apk/qa/debug/student-qa-debug.apk
+#  test: ./build/intermediates/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
   app: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
   test: ./apps/student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
   results-bucket: android-student
@@ -12,10 +12,10 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug
+  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug, com.instructure.canvas.espresso.OfflineE2E
   device:
-  - model: Nexus6P
-    version: 26
+  - model: Pixel2.arm
+    version: 29
     locale: en_US
     orientation: portrait
 

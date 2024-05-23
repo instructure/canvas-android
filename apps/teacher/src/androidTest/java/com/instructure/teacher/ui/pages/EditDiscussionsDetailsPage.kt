@@ -27,34 +27,61 @@ import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
+/**
+ * The `EditDiscussionsDetailsPage` class represents a page for editing discussion details.
+ * It extends the `BasePage` class.
+ *
+ * @constructor Creates an instance of `EditDiscussionsDetailsPage`.
+ */
 class EditDiscussionsDetailsPage : BasePage() {
 
     private val contentRceView by WaitForViewWithId(R.id.rce_webView)
 
-    fun editTitle(newTitle: String) {
+    /**
+     * Edits the title of the discussion.
+     *
+     * @param newTitle The new title of the discussion.
+     */
+    fun editDiscussionTitle(newTitle: String) {
         onView(withId(R.id.editDiscussionName)).replaceText(newTitle)
         Espresso.closeSoftKeyboard()
     }
 
+    /**
+     * Toggles the published state of the discussion.
+     */
     fun togglePublished() {
         onView(withId(R.id.publishSwitch)).scrollTo().click()
     }
 
+    /**
+     * Deletes the discussion.
+     */
     fun deleteDiscussion() {
         onView(withId(R.id.deleteText)).scrollTo().click()
-        onView(withId(android.R.id.button1)).click() //button1 is actually the 'DELETE' button on the UI pop-up dialog.
+        onView(withId(android.R.id.button1)).click() // button1 is actually the 'DELETE' button on the UI pop-up dialog.
     }
 
-    fun clickSave() { //This method is used when editing an existing discussion.
+    /**
+     * Clicks the save button. This method is used when editing an existing discussion.
+     */
+    fun saveDiscussion() {
         onView(withId(R.id.menuSave)).click()
     }
 
-    fun clickSendNewDiscussion() { //This method is used when creating a new discussion via mobile UI.
+    /**
+     * Clicks the send new discussion button. This method is used when creating a new discussion via mobile UI.
+     */
+    fun clickSendNewDiscussion() {
         onView(withId(R.id.menuSaveDiscussion)).click()
     }
 
-    fun editDescription(newDescription: String) {
+    /**
+     * Edits the description of the discussion.
+     *
+     * @param newDescription The new description of the discussion.
+     */
+    fun editDiscussionDescription(newDescription: String) {
         contentRceView.perform(TypeInRCETextEditor(newDescription))
     }
-
 }

@@ -25,15 +25,12 @@ abstract class BasicUser implements Built<BasicUser, BasicUserBuilder> {
 
   String get id;
 
-  @nullable
-  String get name;
+  String? get name;
 
-  @nullable
-  String get pronouns;
+  String? get pronouns;
 
   @BuiltValueField(wireName: 'avatar_url')
-  @nullable
-  String get avatarUrl;
+  String? get avatarUrl;
 
   BasicUser._();
   factory BasicUser([void Function(BasicUserBuilder) updates]) = _$BasicUser;

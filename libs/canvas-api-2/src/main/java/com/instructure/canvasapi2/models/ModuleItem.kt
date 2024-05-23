@@ -17,9 +17,8 @@
 
 package com.instructure.canvasapi2.models
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ModuleItem(
@@ -34,7 +33,7 @@ data class ModuleItem(
     val htmlUrl: String? = null,
     val url: String? = null,
     @SerializedName("completion_requirement")
-    val completionRequirement: CompletionRequirement? = null,
+    val completionRequirement: ModuleCompletionRequirement? = null,
     @SerializedName("content_details")
     val moduleDetails: ModuleContentDetails? = null,
     val published: Boolean? = null,
@@ -44,6 +43,7 @@ data class ModuleItem(
     val externalUrl: String? = null,
     @SerializedName("page_url")
     val pageUrl: String? = null,
+    val unpublishable: Boolean = true,
     @SerializedName("mastery_paths")
     var masteryPaths: MasteryPath? = null,
     // When we display the "Choose Assignment Group" when an assignment uses Mastery Paths we create a new row to display.
@@ -61,12 +61,4 @@ data class ModuleItem(
         const val MUST_MARK_DONE = "must_mark_done"
     }
 }
-
-@Parcelize
-data class CompletionRequirement(
-    val type: String? = null,
-    @SerializedName("min_score")
-    val minScore: Double = 0.0,
-    var completed: Boolean = false
-) : Parcelable
 

@@ -31,9 +31,10 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
-  final interactor = _MockAnnouncementDetailsInteractor();
+  final interactor = MockAnnouncementDetailsInteractor();
 
   setupTestLocator((locator) {
     locator.registerFactory<AnnouncementDetailsInteractor>(() => interactor);
@@ -46,7 +47,7 @@ void main() {
 
   group('Loading', () {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
-      when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value());
+      when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value(null));
 
       await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
       await tester.pump();
@@ -55,7 +56,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Does not show once loaded', (tester) async {
-      when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value());
+      when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value(null));
 
       await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
       await tester.pump();
@@ -126,7 +127,7 @@ void main() {
 
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(courseName), findsOneWidget);
-      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byType(HtmlDescriptionTile), findsOneWidget);
     });
 
@@ -152,7 +153,7 @@ void main() {
 
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(courseName), findsOneWidget);
-      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byType(HtmlDescriptionTile), findsOneWidget);
       var attachmentWidget = find.byType(AttachmentIndicatorWidget);
       expect(attachmentWidget, findsOneWidget);
@@ -177,7 +178,7 @@ void main() {
 
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(toolbarTitle), findsOneWidget);
-      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
+      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)!), findsOneWidget);
       expect(find.byType(HtmlDescriptionTile), findsOneWidget);
     });
   });
@@ -192,5 +193,3 @@ Widget _testableWidget(String announcementId, AnnouncementType type, String cour
     ),
   );
 }
-
-class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}

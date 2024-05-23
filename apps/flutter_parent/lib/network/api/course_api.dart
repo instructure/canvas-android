@@ -21,7 +21,7 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CourseApi {
-  Future<List<Course>> getObserveeCourses({bool forceRefresh: false}) async {
+  Future<List<Course>?> getObserveeCourses({bool forceRefresh = false}) async {
     final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'include[]': [
@@ -37,13 +37,15 @@ class CourseApi {
         'course_image',
         'sections',
         'observed_users',
+        'settings',
+        'grading_scheme'
       ],
       'enrollment_state': 'active',
     };
     return fetchList(dio.get('courses', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Course> getCourse(String courseId, {bool forceRefresh: false}) async {
+  Future<Course?> getCourse(String courseId, {bool forceRefresh = false}) async {
     final params = {
       'include[]': [
         'syllabus_body',
@@ -56,25 +58,32 @@ class CourseApi {
         'current_grading_period_scores',
         'course_image',
         'observed_users',
+        'settings',
+        'grading_scheme'
       ]
     };
-    return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/${courseId}', queryParameters: params));
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('courses/${courseId}', queryParameters: params));
   }
 
   // TODO: Set up pagination when API is fixed (no header link) and remove per_page query parameter
-  Future<GradingPeriodResponse> getGradingPeriods(String courseId, {bool forceRefresh = false}) {
-    return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/grading_periods?per_page=100'));
+  Future<GradingPeriodResponse?> getGradingPeriods(String courseId, {bool forceRefresh = false}) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('courses/$courseId/grading_periods?per_page=100'));
   }
 
-  Future<List<CourseTab>> getCourseTabs(String courseId, {bool forceRefresh}) {
-    return fetchList(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/tabs'));
+  Future<List<CourseTab>?> getCourseTabs(String courseId, {bool forceRefresh = false}) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetchList(dio.get('courses/$courseId/tabs'));
   }
 
-  Future<CourseSettings> getCourseSettings(String courseId, {bool forceRefresh}) {
-    return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/settings'));
+  Future<CourseSettings?> getCourseSettings(String courseId, {bool forceRefresh = false}) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('courses/$courseId/settings'));
   }
 
-  Future<CoursePermissions> getCoursePermissions(String courseId, {bool forceRefresh = false}) {
-    return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/permissions'));
+  Future<CoursePermissions?> getCoursePermissions(String courseId, {bool forceRefresh = false}) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
+    return fetch(dio.get('courses/$courseId/permissions'));
   }
 }

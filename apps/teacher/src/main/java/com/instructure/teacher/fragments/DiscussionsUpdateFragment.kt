@@ -19,6 +19,7 @@ package com.instructure.teacher.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.WindowManager
 import android.widget.Toast
@@ -27,15 +28,27 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.analytics.SCREEN_VIEW_DISCUSSIONS_UPDATE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
+import com.instructure.teacher.databinding.FragmentDiscussionsEditBinding
 import com.instructure.teacher.events.DiscussionEntryUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.DiscussionsUpdatePresenterFactory
@@ -46,15 +59,20 @@ import com.instructure.teacher.presenters.DiscussionsUpdatePresenter.Companion.R
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
-import kotlinx.android.synthetic.main.fragment_discussions_edit.*
 
+@PageView(url = "{canvasContext}/discussion_topics/{topicId}/edit")
 @ScreenView(SCREEN_VIEW_DISCUSSIONS_UPDATE)
-class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresenter, DiscussionsUpdateView>(), DiscussionsUpdateView {
+class DiscussionsUpdateFragment : BasePresenterFragment<
+        DiscussionsUpdatePresenter,
+        DiscussionsUpdateView,
+        FragmentDiscussionsEditBinding>(),
+    DiscussionsUpdateView {
 
-    private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
-    private var mDiscussionTopicHeaderId: Long by LongArg(key = DISCUSSION_TOPIC_HEADER_ID, default = 0L) // The topic the discussion belongs too
-    private var mDiscussionEntry: DiscussionEntry by ParcelableArg(key = DISCUSSION_ENTRY, default = DiscussionEntry())
-    private var mDiscussionTopic: DiscussionTopic by ParcelableArg(key = DISCUSSION_TOPIC, default = DiscussionTopic())
+    private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, -1L, ""))
+    @get:PageViewUrlParam("topicId")
+    private var discussionTopicHeaderId: Long by LongArg(key = DISCUSSION_TOPIC_HEADER_ID, default = 0L) // The topic the discussion belongs too
+    private var discussionEntry: DiscussionEntry by ParcelableArg(key = DISCUSSION_ENTRY, default = DiscussionEntry())
+    private var discussionTopic: DiscussionTopic by ParcelableArg(key = DISCUSSION_TOPIC, default = DiscussionTopic())
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,15 +84,15 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
 
-    override fun layoutResId(): Int = R.layout.fragment_discussions_edit
+    override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentDiscussionsEditBinding = FragmentDiscussionsEditBinding::inflate
 
-    override fun getPresenterFactory() = DiscussionsUpdatePresenterFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntry, mDiscussionTopic)
+    override fun getPresenterFactory() = DiscussionsUpdatePresenterFactory(canvasContext, discussionTopicHeaderId, discussionEntry, discussionTopic)
 
     override fun onPresenterPrepared(presenter: DiscussionsUpdatePresenter) {}
 
-    override fun onReadySetGo(presenter: DiscussionsUpdatePresenter) {
+    override fun onReadySetGo(presenter: DiscussionsUpdatePresenter): Unit = with(binding) {
         rceTextEditor.setHint(R.string.rce_empty_description)
-        rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
+        rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this@DiscussionsUpdateFragment) }
 
         if (CanvasWebView.containsLTI(presenter.discussionEntry.message.orEmpty(), "UTF-8")) {
             rceTextEditor.setHtml(DiscussionUtils.createLTIPlaceHolders(requireContext(), presenter.discussionEntry.message.orEmpty()) { _, placeholder ->
@@ -139,10 +157,10 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         setupToolbar()
     }
 
-    private fun setupToolbar() {
+    private fun setupToolbar() = with(binding) {
         toolbar.title = getString(R.string.edit)
         toolbar.setupCloseButton {
-            if (presenter.discussionEntry.message == rceTextEditor?.html) {
+            if (presenter.discussionEntry.message == rceTextEditor.html) {
                 activity?.onBackPressed()
             } else {
                 UnsavedChangesExitDialog.show(requireFragmentManager()) {
@@ -156,13 +174,13 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
     }
 
-    override fun insertImageIntoRCE(imageUrl: String) = rceTextEditor.insertImage(requireActivity(), imageUrl)
+    override fun insertImageIntoRCE(imageUrl: String) = binding.rceTextEditor.insertImage(requireActivity(), imageUrl)
 
-    val menuItemCallback: (MenuItem) -> Unit = { item ->
+    private val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
             R.id.menu_save -> {
                 if(APIHelper.hasNetworkConnection()) {
-                    presenter.editMessage(handleLTIPlaceHolders(placeHolderList, rceTextEditor.html))
+                    presenter.editMessage(handleLTIPlaceHolders(placeHolderList, binding.rceTextEditor.html))
                 } else {
                     Toast.makeText(requireContext(), R.string.noInternetConnectionMessage, Toast.LENGTH_LONG).show()
                 }
@@ -188,6 +206,6 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         }
 
         fun newInstance(canvasContext: CanvasContext, args: Bundle) =
-            DiscussionsUpdateFragment().withArgs(args).apply { mCanvasContext = canvasContext }
+            DiscussionsUpdateFragment().withArgs(args).apply { this.canvasContext = canvasContext }
     }
 }

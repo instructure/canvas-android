@@ -21,7 +21,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -37,7 +36,7 @@ import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
-import kotlinx.android.synthetic.main.dialog_legal.view.*
+import com.instructure.teacher.databinding.DialogLegalBinding
 import kotlinx.coroutines.Job
 
 @ScreenView(SCREEN_VIEW_LEGAL)
@@ -54,9 +53,9 @@ class LegalDialog : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity()).setTitle(getString(R.string.legal))
 
-        val view = LayoutInflater.from(requireActivity()).inflate(R.layout.dialog_legal, null)
+        val binding = DialogLegalBinding.inflate(layoutInflater)
 
-        view.descendants<ImageView>().forEach {
+        binding.root.descendants<ImageView>().forEach {
             it.setColorFilter(ThemePrefs.brandColor)
         }
 
@@ -66,32 +65,32 @@ class LegalDialog : AppCompatDialogFragment() {
             terms.content?.let { html = it }
 
             // If the institution has set terms and conditions to be "no terms", just keep the item gone
-            view.termsOfUse.setVisible(html.isNotBlank())
+            binding.termsOfUse.setVisible(html.isNotBlank())
             // Now set the rest of the items visible
-            view.privacyPolicy.setVisible()
-            view.openSource.setVisible()
+            binding.privacyPolicy.setVisible()
+            binding.openSource.setVisible()
         } catch {
             // Something went wrong, make everything visible
-            view.descendants.forEach { it.setVisible() }
+            binding.root.descendants.forEach { it.setVisible() }
         }
 
-        builder.setView(view)
+        builder.setView(binding.root)
 
         val dialog = builder.create()
 
-        view.termsOfUse.setOnClickListener {
+        binding.termsOfUse.setOnClickListener {
             val intent = InternalWebViewActivity.createIntent(requireActivity(), "http://www.canvaslms.com/policies/terms-of-use", html, getString(R.string.termsOfUse), false)
             requireActivity().startActivity(intent)
             dialog.dismiss()
         }
 
-        view.privacyPolicy.setOnClickListener {
-            val intent = InternalWebViewActivity.createIntent(requireActivity(), "https://www.instructure.com/canvas/privacy", getString(R.string.privacyPolicy), false)
+        binding.privacyPolicy.setOnClickListener {
+            val intent = InternalWebViewActivity.createIntent(requireActivity(), "https://www.instructure.com/policies/product-privacy-policy", getString(R.string.privacyPolicy), false)
             requireActivity().startActivity(intent)
             dialog.dismiss()
         }
 
-        view.openSource.setOnClickListener {
+        binding.openSource.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
             requireActivity().startActivity(intent)
             dialog.dismiss()

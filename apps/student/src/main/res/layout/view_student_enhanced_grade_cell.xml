@@ -169,12 +169,13 @@
             android:layout_height="130dp"
             android:layout_marginTop="@dimen/grade_cell_chart_top_margin"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="8dp"
             android:visibility="@{viewData.state == viewData.State.GRADED ? View.VISIBLE : View.GONE}"
             app:color="@{viewData.showIncompleteIcon ? @color/textDark : viewData.courseColor.backgroundColor()}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/statisticsView"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/gradeLabel"
+            app:layout_goneMarginBottom="20dp"
             app:progress="@{viewData.chartPercent}"
             app:trackColor="@{viewData.backgroundColorWithAlpha}" />
 
@@ -272,11 +273,26 @@
             android:text="@{viewData.outOf}"
             android:textColor="@color/textDarkest"
             android:visibility="@{viewData.outOf.empty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toTopOf="@id/latePenalty"
+            app:layout_constraintBottom_toTopOf="@id/yourGrade"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/chart"
             app:layout_constraintTop_toBottomOf="@id/grade"
             tools:text="Out of 100 pts" />
+
+        <TextView
+            android:id="@+id/yourGrade"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:text="@{viewData.yourGrade}"
+            android:textColor="@color/textDarkest"
+            android:visibility="@{viewData.yourGrade.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/latePenalty"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/chart"
+            app:layout_constraintTop_toBottomOf="@id/outOf"
+            tools:text="Late Penalty (-2 pts)" />
 
         <TextView
             android:id="@+id/latePenalty"
@@ -285,13 +301,12 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="4dp"
             android:text="@{viewData.latePenalty}"
-            android:textColor="@color/textInfo"
-            android:textSize="12sp"
+            android:textColor="@color/textWarning"
             android:visibility="@{viewData.latePenalty.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/finalGrade"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/chart"
-            app:layout_constraintTop_toBottomOf="@id/outOf"
+            app:layout_constraintTop_toBottomOf="@id/yourGrade"
             tools:text="Late Penalty (-2 pts)" />
 
         <TextView
@@ -299,7 +314,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="@{viewData.finalGrade}"
             android:textColor="@color/textDarkest"
             android:textSize="16sp"
@@ -310,6 +325,62 @@
             app:layout_constraintStart_toEndOf="@id/chart"
             app:layout_constraintTop_toBottomOf="@id/latePenalty"
             tools:text="Final Grade: 73 pts" />
+
+        <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView
+            android:id="@+id/statisticsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewData.stats == null ? View.GONE : View.VISIBLE}"
+            app:color="@{viewData.courseColor.backgroundColor()}"
+            app:layout_constraintBottom_toTopOf="@id/minLabel"
+            app:layout_constraintTop_toBottomOf="@id/chart"
+            app:stats="@{viewData.stats}" />
+
+        <TextView
+            android:id="@+id/minLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@{viewData.stats.minText}"
+            android:textColor="@color/textDark"
+            android:visibility="@{viewData.stats == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/meanLabel"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@id/statisticsView"
+            app:layout_constraintTop_toBottomOf="@id/statisticsView"
+            tools:text="Low: 1.0" />
+
+        <TextView
+            android:id="@+id/meanLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@{viewData.stats.meanText}"
+            android:textColor="@color/textDark"
+            android:visibility="@{viewData.stats == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/maxLabel"
+            app:layout_constraintStart_toEndOf="@id/minLabel"
+            app:layout_constraintTop_toBottomOf="@id/statisticsView"
+            tools:text="Mean: 7.2" />
+
+        <TextView
+            android:id="@+id/maxLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="@{viewData.stats.maxText}"
+            android:textColor="@color/textDark"
+            android:visibility="@{viewData.stats == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/statisticsView"
+            app:layout_constraintStart_toEndOf="@id/meanLabel"
+            app:layout_constraintTop_toBottomOf="@id/statisticsView"
+            tools:text="High: 9.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

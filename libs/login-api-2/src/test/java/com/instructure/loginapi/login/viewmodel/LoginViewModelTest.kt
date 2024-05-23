@@ -26,7 +26,9 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -53,6 +55,7 @@ class LoginViewModelTest {
     private val userManager: UserManager = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
@@ -64,6 +67,8 @@ class LoginViewModelTest {
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        every { apiPrefs.user } returns mockk()
     }
 
     @After
@@ -183,8 +188,77 @@ class LoginViewModelTest {
         assertEquals(LoginResultAction.ShouldAcceptPolicy(false), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
+    @Test
+    fun `Set offline login if the user logs in offline and the feature flag is on`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        every { networkStateProvider.isOnline() } returns false
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, false)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { apiPrefs.checkTokenAfterOfflineLogin = true }
+        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Dont Set offline login if the user logs in offline and the feature flag is off`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
+        every { networkStateProvider.isOnline() } returns false
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, false)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { apiPrefs.checkTokenAfterOfflineLogin = false }
+        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Dont Set offline login if the user logs in online`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        every { networkStateProvider.isOnline() } returns true
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, false)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { apiPrefs.checkTokenAfterOfflineLogin = false }
+        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
     private fun createViewModel(): LoginViewModel {
-        return LoginViewModel(featureFlagProvider, userManager, oauthManager, apiPrefs)
+        return LoginViewModel(featureFlagProvider, userManager, oauthManager, apiPrefs, networkStateProvider)
     }
 
 }

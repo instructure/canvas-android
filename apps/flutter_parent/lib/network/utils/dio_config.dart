@@ -16,12 +16,13 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:dio_http_cache_lts/dio_http_cache_lts.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
+import 'package:path_provider/path_provider.dart';
 
 // import 'private_consts.dart';
 
@@ -32,7 +33,7 @@ class DioConfig {
   final Duration cacheMaxAge;
   final bool forceRefresh;
   final PageSize pageSize;
-  final Map<String, dynamic> extraQueryParams;
+  final Map<String, dynamic>? extraQueryParams;
   final int retries;
 
   DioConfig({
@@ -43,21 +44,17 @@ class DioConfig {
     this.pageSize = PageSize.none,
     this.extraQueryParams,
     this.retries = 0,
-  })  : this.baseHeaders = baseHeaders ?? {},
-        assert(baseUrl != null),
-        assert(cacheMaxAge != null),
-        assert(forceRefresh != null),
-        assert(pageSize != null);
+  })  : this.baseHeaders = baseHeaders ?? {};
 
   /// Creates a copy of this configuration with the given fields replaced with the new values
   DioConfig copyWith({
-    String baseUrl,
-    Map<String, String> baseHeaders,
-    Duration cacheMaxAge,
-    bool forceRefresh,
-    PageSize pageSize,
-    Map<String, dynamic> extraQueryParams,
-    int retries,
+    String? baseUrl,
+    Map<String, String>? baseHeaders,
+    Duration? cacheMaxAge,
+    bool? forceRefresh,
+    PageSize? pageSize,
+    Map<String, dynamic>? extraQueryParams,
+    int? retries,
   }) {
     return DioConfig(
         baseUrl: baseUrl ?? this.baseUrl,
@@ -87,7 +84,7 @@ class DioConfig {
     // Add cache configuration to base options
     if (cacheMaxAge != Duration.zero) {
       var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
-      options.extra.addAll(extras);
+      if (extras != null) options.extra.addAll(extras);
     }
 
     // Create Dio instance and add interceptors
@@ -129,14 +126,13 @@ class DioConfig {
 
   // To use proxy add the following run args to run configuration: --dart-define=PROXY={your proxy io}:{proxy port}
   void _configureDebugProxy(Dio dio) {
-    const proxy = String.fromEnvironment('PROXY', defaultValue: null);
-    if (proxy == null) return;
+    const proxy = String.fromEnvironment('PROXY', defaultValue: "");
+    if (proxy == "") return;
 
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (client) {
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
       client.findProxy = (uri) => "PROXY $proxy;";
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
+      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      return client;
     };
   }
 
@@ -151,14 +147,14 @@ class DioConfig {
 
   /// Creates a [DioConfig] targeted at typical Canvas API usage
   static DioConfig canvas({
-    bool includeApiPath: true,
-    bool forceRefresh: false,
-    bool forceDeviceLanguage: false,
-    String overrideToken: null,
-    Map<String, String> extraHeaders: null,
-    PageSize pageSize: PageSize.none,
+    bool includeApiPath = true,
+    bool forceRefresh = false,
+    bool forceDeviceLanguage = false,
+    String? overrideToken = null,
+    Map<String, String>? extraHeaders = null,
+    PageSize pageSize = PageSize.none,
   }) {
-    Map<String, dynamic> extraParams = ApiPrefs.isMasquerading() ? {'as_user_id': ApiPrefs.getUser().id} : null;
+    Map<String, dynamic>? extraParams = ApiPrefs.isMasquerading() ? {'as_user_id': ApiPrefs.getUser()?.id} : null;
     return DioConfig(
       baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
       baseHeaders: ApiPrefs.getHeaderMap(
@@ -175,12 +171,12 @@ class DioConfig {
 
   /// Creates a [DioConfig] targeted at core/free-for-teacher API usage (i.e. canvas.instructure.com)
   static DioConfig core({
-    bool includeApiPath: true,
-    Map<String, String> headers: null,
-    Duration cacheMaxAge: Duration.zero,
-    bool forceRefresh: false,
-    PageSize pageSize: PageSize.none,
-    bool useBetaDomain: false,
+    bool includeApiPath = true,
+    Map<String, String>? headers = null,
+    Duration cacheMaxAge = Duration.zero,
+    bool forceRefresh = false,
+    PageSize pageSize = PageSize.none,
+    bool useBetaDomain = false,
   }) {
     // var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://canvas.instructure.com/';
     var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://canvas-test.emeritus.org/';
@@ -204,7 +200,7 @@ class DioConfig {
   }
 
   /// Clears the cache, deleting only the entries related to path OR clearing everything if path is null
-  Future<bool> clearCache({String path}) {
+  Future<bool> clearCache({String? path}) {
     // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
     // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
     if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
@@ -235,12 +231,12 @@ class PageSize {
 
 /// Convenience method that returns a [Dio] instance configured by calling through to [DioConfig.canvas]
 Dio canvasDio({
-  bool includeApiPath: true,
-  bool forceRefresh: false,
-  bool forceDeviceLanguage: false,
-  String overrideToken: null,
-  Map<String, String> extraHeaders: null,
-  PageSize pageSize: PageSize.none,
+  bool includeApiPath = true,
+  bool forceRefresh = false,
+  bool forceDeviceLanguage = false,
+  String? overrideToken = null,
+  Map<String, String>? extraHeaders = null,
+  PageSize pageSize = PageSize.none,
 }) {
   return DioConfig.canvas(
           forceRefresh: forceRefresh,

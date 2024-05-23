@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.toApiString
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize
@@ -115,7 +115,7 @@ data class DiscussionTopicHeader(
         var sections: List<Section>? = null, // Comes back from the server
 
         @SerializedName("anonymous_state")
-        var anonymousState: String? = null
+        var anonymousState: String? = null,
 ) : CanvasModel<DiscussionTopicHeader>() {
     override val comparisonDate: Date?
         get() = if (lastReplyDate != null)

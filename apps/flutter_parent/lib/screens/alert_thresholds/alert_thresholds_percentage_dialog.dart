@@ -26,7 +26,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertThresholdsPercentageDialog extends StatefulWidget {
   final AlertType _alertType;
-  final List<AlertThreshold> thresholds;
+  final List<AlertThreshold?>? thresholds;
   final String _studentId;
 
   AlertThresholdsPercentageDialog(this.thresholds, this._alertType, this._studentId);
@@ -37,18 +37,18 @@ class AlertThresholdsPercentageDialog extends StatefulWidget {
 
 class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercentageDialog> {
   bool _disableButtons = false;
-  AlertThreshold _threshold;
+  AlertThreshold? _threshold;
   bool _networkError = false;
   bool _neverClicked = false;
 
-  String maxValue;
-  String minValue;
+  String? maxValue;
+  String? minValue;
 
   final int _disabledAlpha = 80;
 
   static final UniqueKey okButtonKey = UniqueKey(); // For testing
 
-  String errorMsg;
+  String? errorMsg;
 
   final GlobalKey<FormFieldState> _formKey = GlobalKey<FormFieldState>();
 
@@ -77,37 +77,40 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
       builder: (context) => ArrowAwareFocusScope(
         node: _focusScopeNode,
         child: AlertDialog(
+          scrollable: true,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           title: Text(widget._alertType.getTitle(context)),
           content: TextFormField(
             key: _formKey,
             autofocus: true,
-            // autovalidate: true,
+            autovalidateMode: AutovalidateMode.always,
             keyboardType: TextInputType.number,
             initialValue: _threshold?.threshold,
             maxLength: 3,
-            buildCounter: (_, {currentLength, maxLength, isFocused}) => null, // Don't show the counter
+            buildCounter: (_, {required currentLength, maxLength, required isFocused}) => null, // Don't show the counter
             inputFormatters: [
               // Only accept numbers, no other characters (including '-')
-              // BlacklistingTextInputFormatter(RegExp('[^0-9]')),
+              FilteringTextInputFormatter.deny(RegExp('[^0-9]')),
             ],
             onChanged: (input) {
               errorMsg = null;
               // Check if we had a network error
-              if (input == null || input.isEmpty) {
+              if (input.isEmpty) {
                 // Don't validate when there's no input (no error)
                 errorMsg = null;
               } else {
                 var inputParsed = int.tryParse(input);
-                var maxParsed = maxValue != null ? int.tryParse(maxValue) : 100;
-                var minParsed = minValue != null ? int.tryParse(minValue) : null;
+                var maxParsed = maxValue != null ? int.tryParse(maxValue!) ?? 100 : 100;
+                var minParsed = minValue != null ? int.tryParse(minValue!) ?? 0 : 0;
 
-                if (maxParsed == 100 && inputParsed > 100) {
-                  errorMsg = L10n(context).mustBeBelow100;
-                } else if (maxParsed != 100 && inputParsed >= maxParsed) {
-                  errorMsg = L10n(context).mustBeBelowN(maxParsed);
-                } else if (minParsed != null && inputParsed <= minParsed) {
-                  errorMsg = L10n(context).mustBeAboveN(minParsed);
+                if (inputParsed != null) {
+                  if (maxParsed == 100 && inputParsed > 100) {
+                    errorMsg = L10n(context).mustBeBelow100;
+                  } else if (maxParsed != 100 && inputParsed >= maxParsed) {
+                    errorMsg = L10n(context).mustBeBelowN(maxParsed);
+                  } else if (inputParsed <= minParsed) {
+                    errorMsg = L10n(context).mustBeAboveN(minParsed);
+                  }
                 }
               }
 
@@ -128,9 +131,9 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
             },
             onSaved: (input) async {
               // Don't do anything if there are existing validation errors and the user didn't click 'Never'
-              if (!_formKey.currentState.validate() && !_neverClicked) return;
+              if (_formKey.currentState?.validate() == false && !_neverClicked) return;
 
-              if (_threshold == null && input.isEmpty) {
+              if (_threshold == null && (input == null || input.isEmpty)) {
                 // Threshold is already disabled
                 Navigator.of(context).pop(null);
               }
@@ -139,14 +142,14 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
 
               var result = await locator<AlertThresholdsInteractor>()
                   .updateAlertThreshold(widget._alertType, widget._studentId, _threshold,
-                      value: input.isNotEmpty && !_neverClicked ? input : '-1')
+                      value: ((input == null || input.isNotEmpty) && !_neverClicked) ? input : '-1')
                   .catchError((_) => null);
 
               if (result != null) {
                 // Threshold was updated/deleted successfully
-                if (input.isEmpty || _neverClicked) {
+                if (input == null || input.isEmpty || _neverClicked) {
                   // Deleted a threshold
-                  Navigator.of(context).pop(_threshold.rebuild((b) => b.threshold = '-1'));
+                  Navigator.of(context).pop(_threshold?.rebuild((b) => b.threshold = '-1'));
                 } else {
                   // Updated a threshold
                   Navigator.of(context).pop(result);
@@ -159,7 +162,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
               _neverClicked = false;
             },
             onFieldSubmitted: (input) async {
-              _formKey.currentState.save();
+              _formKey.currentState?.save();
             },
             decoration: InputDecoration(
               hintText: L10n(context).gradePercentage,
@@ -170,13 +173,13 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
           actions: <Widget>[
             TextButton(
                 child: Text(L10n(context).cancel.toUpperCase()),
-                // disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
                 onPressed: () {
                   Navigator.of(context).pop(null);
                 }),
             TextButton(
                 child: Text(L10n(context).never.toUpperCase()),
-                // disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
                 onPressed: () async {
                   if (_threshold == null) {
                     // Threshold is already disabled
@@ -186,17 +189,17 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
                   _threshold = _threshold?.rebuild((b) => b.threshold = '-1');
                   _neverClicked = true;
                   _showNetworkError(false);
-                  _formKey.currentState.save();
+                  _formKey.currentState?.save();
                 }),
             TextButton(
               key: okButtonKey,
               child: Text(L10n(context).ok),
-              // disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+              style: TextButton.styleFrom(disabledBackgroundColor: ParentColors.parentApp.withAlpha(_disabledAlpha)),
               onPressed: _disableButtons
                   ? null
                   : () async {
                       _showNetworkError(false);
-                      _formKey.currentState.save();
+                      _formKey.currentState?.save();
                     },
             ),
           ],
@@ -206,7 +209,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
   }
 
   void _showNetworkError(bool show) {
-    _formKey.currentState.validate();
+    _formKey.currentState?.validate();
     setState(() {
       _networkError = show;
     });

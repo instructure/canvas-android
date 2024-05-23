@@ -23,8 +23,7 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 
 class ModuleListEmptyItemBinder : ListItemBinder<ModuleListItemData.EmptyItem, ModuleListCallback>() {
 
-    override val layoutResId: Int
-        get() = R.layout.adapter_module_empty_item
+    override val layoutResId: Int get() = R.layout.adapter_module_empty_item
 
     override val bindBehavior = NoBind()
 

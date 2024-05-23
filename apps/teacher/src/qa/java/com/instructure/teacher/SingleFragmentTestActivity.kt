@@ -21,23 +21,28 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.qa.activity_single_fragment_test.*
+import com.instructure.pandautils.binding.viewBinding
+import com.instructure.teacher.databinding.ActivitySingleFragmentTestBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SingleFragmentTestActivity : AppCompatActivity() {
+
+    private val binding by viewBinding(ActivitySingleFragmentTestBinding::inflate)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_single_fragment_test)
+        setContentView(binding.root)
     }
 
     fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(container.id, fragment, fragment.javaClass.simpleName)
+        transaction.replace(binding.container.id, fragment, fragment.javaClass.simpleName)
         transaction.commitAllowingStateLoss()
     }
 
     fun loadView(view: View, width: Int, height: Int) {
         val params = FrameLayout.LayoutParams(width, height)
-        container.addView(view, params)
+        binding.container.addView(view, params)
     }
 }

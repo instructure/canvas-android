@@ -35,19 +35,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:theme="@style/ToolBarStyle" />
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/discussionSwipeRefreshLayout"
+            <com.instructure.pandautils.views.CanvasWebView
+                android:id="@+id/discussionWebView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-                <com.instructure.pandautils.views.CanvasWebView
-                    android:id="@+id/discussionWebView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:url="@{viewModel.data.url}" />
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:url="@{viewModel.data.url}" />
 
             <com.instructure.pandautils.views.EmptyView
                 android:id="@+id/emptyView"

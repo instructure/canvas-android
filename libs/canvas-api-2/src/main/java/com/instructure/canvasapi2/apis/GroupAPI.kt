@@ -58,6 +58,9 @@ object GroupAPI {
         @GET("groups/{groupId}?include[]=permissions&include[]=favorites")
         fun getDetailedGroup(@Path("groupId") groupId: Long): Call<Group>
 
+        @GET("groups/{groupId}?include[]=permissions&include[]=favorites")
+        suspend fun getDetailedGroup(@Path("groupId") groupId: Long, @Tag params: RestParams): DataResult<Group>
+
         @POST("users/self/favorites/groups/{groupId}")
         fun addGroupToFavorites(@Path("groupId") groupId: Long): Call<Favorite>
 
@@ -72,6 +75,9 @@ object GroupAPI {
 
         @GET("groups/{groupId}/permissions")
         fun getGroupPermissions(@Path("groupId") groupId: Long, @Query("permissions[]") requestedPermissions: List<String>): Call<CanvasContextPermission>
+
+        @GET("groups/{groupId}/permissions")
+        suspend fun getGroupPermissions(@Path("groupId") groupId: Long, @Query("permissions[]") requestedPermissions: List<String>, @Tag params: RestParams): DataResult<CanvasContextPermission>
     }
 
     fun getFirstPageGroups(adapter: RestBuilder, callback: StatusCallback<List<Group>>, params: RestParams) {

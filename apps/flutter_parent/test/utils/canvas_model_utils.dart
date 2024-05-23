@@ -17,7 +17,7 @@ import 'dart:math';
 import 'package:flutter_parent/models/user.dart';
 
 class CanvasModelTestUtils {
-  static User mockUser({String name, String pronouns, String primaryEmail, String id, String shortName}) =>
+  static User mockUser({String? name, String? pronouns, String? primaryEmail, String? id, String? shortName}) =>
       User((b) => b
         ..id = id ?? Random(name.hashCode).nextInt(100000).toString()
         ..sortableName = name ?? 'sortableName'

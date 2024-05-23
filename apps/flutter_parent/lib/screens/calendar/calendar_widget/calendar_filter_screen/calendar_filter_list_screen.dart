@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
@@ -33,7 +32,7 @@ class CalendarFilterListScreen extends StatefulWidget {
 }
 
 class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
-  Future<List<Course>> _coursesFuture;
+  late Future<List<Course>?> _coursesFuture;
   Set<String> selectedContextIds = {}; // Public, to allow for testing
   final GlobalKey<RefreshIndicatorState> _refreshCoursesKey = new GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -60,7 +59,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
           key: _scaffoldKey,
           appBar: AppBar(
             title: Text(L10n(context).calendars),
-            bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+            bottom: ParentTheme.of(context)?.appBarDivider(shadowInLightMode: false),
           ),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +67,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
               SizedBox(height: 16.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(L10n(context).calendarTapToFavoriteDesc, style: Theme.of(context).textTheme.bodyText2),
+                child: Text(L10n(context).calendarTapToFavoriteDesc, style: Theme.of(context).textTheme.bodyMedium),
               ),
               SizedBox(height: 24.0),
               Expanded(child: _body())
@@ -84,11 +83,11 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
         future: _coursesFuture,
         builder: (context, snapshot) {
           Widget _body;
-          List<Course> _courses;
+          List<Course>?_courses;
           if (snapshot.hasError) {
-            _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshCoursesKey.currentState.show());
+            _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshCoursesKey.currentState?.show());
           } else if (snapshot.hasData) {
-            _courses = snapshot.data;
+            _courses = snapshot.data!;
             courseLength = _courses.length;
             if (selectedContextIds.isEmpty && selectAllIfEmpty) {
               // We only want to do this the first time we load, otherwise if the user ever deselects all the
@@ -97,10 +96,10 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
 
               // List will be empty when all courses are selected (on first load)
               final tempList = _courses.map((c) => 'course_${c.id}').toList();
-              selectedContextIds.addAll(tempList.take(10));
+              selectedContextIds.addAll(tempList);
               selectAllIfEmpty = false;
             }
-            _body = (_courses == null || _courses.isEmpty)
+            _body = (_courses.isEmpty)
                 ? EmptyPandaWidget(
                     svgPath: 'assets/svg/panda-book.svg',
                     title: L10n(context).noCoursesTitle,
@@ -109,7 +108,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                 : _courseList(_courses);
           } else {
             // This is a user with a filter from before the api migration, make sure we trim their list down.
-            selectedContextIds.addAll(widget._selectedCourses.take(10));
+            selectedContextIds.addAll(widget._selectedCourses);
             if (selectedContextIds.isNotEmpty) {
               // The list isn't empty so we don't want to continue checking if the list is empty above, and
               // select everything again (though if the user doesn't select anything and they go back, everything will be
@@ -143,13 +142,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                 onChanged: (bool newValue) {
                   setState(() {
                     if (newValue) {
-                      if (selectedContextIds.length <= 9) {
-                        selectedContextIds.add(c.contextFilterId());
-                      } else {
-                        // We are full, show an error and do nothing
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(L10n(context).tooManyCalendarsError)));
-                      }
+                      selectedContextIds.add(c.contextFilterId());
                     } else {
                       if (selectedContextIds.length == 1) {
                         // The list cannot be empty, the calendar wouldn't do anything!
@@ -176,7 +169,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Text(
           title,
-          style: Theme.of(context).textTheme.overline,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
 }
@@ -184,10 +177,10 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
 // Custom checkbox to better control the padding at the start
 class LabeledCheckbox extends StatelessWidget {
   const LabeledCheckbox({
-    this.label,
-    this.padding,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -207,12 +200,12 @@ class LabeledCheckbox extends StatelessWidget {
           children: <Widget>[
             Checkbox(
               value: value,
-              onChanged: (bool newValue) {
+              onChanged: (bool? newValue) {
                 onChanged(newValue);
               },
             ),
             SizedBox(width: 21.0),
-            Expanded(child: Text(label, style: Theme.of(context).textTheme.subtitle1)),
+            Expanded(child: Text(label, style: Theme.of(context).textTheme.titleMedium)),
           ],
         ),
       ),

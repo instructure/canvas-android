@@ -39,12 +39,13 @@ object PagesApi {
 
     fun createCoursePage(
             courseId: Long,
-            published: Boolean,
-            frontPage: Boolean,
             token: String,
-            body: String = Randomizer.randomPageBody()
-    ): PageApiModel {
-        val page = CreatePageWrapper(CreatePage(Randomizer.randomPageTitle(), body, published, frontPage))
+            published: Boolean = true,
+            frontPage: Boolean = false,
+            body: String = Randomizer.randomPageBody(),
+            editingRoles: String? = null,
+            ): PageApiModel {
+        val page = CreatePageWrapper(CreatePage(Randomizer.randomPageTitle(), body, published, frontPage, editingRoles))
 
         return pagesService(token)
                 .createCoursePage(courseId, page)

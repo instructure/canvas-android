@@ -52,6 +52,14 @@ object LocaleUtils {
             }
         }
 
+        // This is a workaround, because the AAPT bundled in the latest AGP (7.0.0+) has a bug.
+        // It seems like the resource merger cannot recognise resources using custom BCP-47 language subtags without also specifing a region tag.
+        // We should monitor this in later releases and remove the workaround once it's fixed.
+        // Related issue: https://issuetracker.google.com/issues/234820481
+        if (localeString == "da-instk12") localeString = "da-DK-instk12"
+        if (localeString == "nb-instk12") localeString = "nb-NO-instk12"
+        if (localeString == "sv-instk12") localeString = "sv-SE-instk12"
+
         val locale = if (localeString == ApiPrefs.DEVICE_LOCALE) {
             ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
         } else {

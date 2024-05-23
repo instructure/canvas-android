@@ -60,6 +60,12 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
   next unless File.directory? src_dir
   Dir.glob("#{src_dir}/*.{xml,arb}") do |file|
     language = File.basename(src_dir).gsub('_', '-')
+    
+    # Fix Chinese directories
+    if file.end_with?('.xml')
+      language = language.gsub('zh-', 'b+zh+')
+    end
+
     if language.include? '-x-'
       # BCP 47 private-use subtag. Convert to new Android format and
       # prepend subtag with 'inst'
@@ -75,6 +81,17 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
     elsif file.end_with?('.xml')
       language = language.gsub('-', '-r') # Android specific naming convention
     end
+
+    # This is a workaround, because the AAPT bundled in the latest AGP (7.0.0+) has a bug.
+    # It seems like the resource merger cannot recognise resources using custom BCP-47 language subtags without also specifing a region tag.
+    # We should monitor this in later releases and remove the workaround once it's fixed.
+    # Related issue: https://issuetracker.google.com/issues/234820481
+    if file.end_with?('.xml')
+      language = language.gsub('da+instk12', 'da+DK+instk12')
+      language = language.gsub('nb+instk12', 'nb+NO+instk12')
+      language = language.gsub('sv+instk12', 'sv+SE+instk12')
+    end
+
     if language.eql? 'en'
       puts "Skipping redundant 'en' resource"
       next
@@ -85,6 +102,9 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
       puts "Skipping #{language} translation for untracked project #{project}"
       next
     end
+
+    # Fix apostrophes
+    File.write(file, File.open(file, &:read).gsub('&apos;', '\\\\\''))
 
     # Preserve arb file extensions (flutter also names resources slightly different)
     if file.end_with?('.arb')

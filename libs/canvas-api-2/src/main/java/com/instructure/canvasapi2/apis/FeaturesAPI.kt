@@ -22,18 +22,29 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Tag
 
 object FeaturesAPI {
 
-    internal interface FeaturesInterface {
+    interface FeaturesInterface {
         @GET("courses/{courseId}/features/enabled")
         fun getEnabledFeaturesForCourse(@Path("courseId") contextId: Long): Call<List<String>>
 
+        @GET("courses/{courseId}/features/enabled")
+        suspend fun getEnabledFeaturesForCourse(@Path("courseId") contextId: Long, @Tag params: RestParams): DataResult<List<String>>
+
         @GET("features/environment")
         fun getEnvironmentFeatureFlags(): Call<Map<String, Boolean>>
+
+        @GET("features/environment")
+        suspend fun getEnvironmentFeatureFlags(@Tag restParams: RestParams): DataResult<Map<String, Boolean>>
+
+        @GET("settings/environment")
+        suspend fun getAccountSettingsFeatures(@Tag restParams: RestParams): DataResult<Map<String, Boolean>>
     }
 
     fun getEnabledFeaturesForCourse(adapter: RestBuilder, courseId: Long, callback: StatusCallback<List<String>>, params: RestParams) {

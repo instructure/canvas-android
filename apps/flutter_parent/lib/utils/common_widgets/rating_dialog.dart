@@ -11,8 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:device_info/device_info.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
@@ -22,7 +21,7 @@ import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/android_intent_veneer.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../url_launcher.dart';
 
@@ -72,17 +71,17 @@ class RatingDialog extends StatefulWidget {
     );
   }
 
-  const RatingDialog._internal({Key key}) : super(key: key);
+  const RatingDialog._internal({super.key});
 
   @override
   _RatingDialogState createState() => _RatingDialogState();
 }
 
 class _RatingDialogState extends State<RatingDialog> {
-  String _comment;
-  int _focusedStar;
-  int _selectedStar;
-  bool _sending;
+  late String _comment;
+  late int _focusedStar;
+  late int _selectedStar;
+  late bool _sending;
 
   @override
   void initState() {
@@ -168,8 +167,11 @@ class _RatingDialogState extends State<RatingDialog> {
         SizedBox(height: 8),
         ElevatedButton(
           child: Text(L10n(context).ratingDialogSendFeedback.toUpperCase()),
-          // color: Theme.of(context).accentColor,
-          // textColor: Colors.white,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            foregroundColor: Colors.white,
+            textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+          ),
           onPressed: _sending ? null : _sendFeedbackPressed,
         ),
       ],
@@ -227,11 +229,12 @@ class _RatingDialogState extends State<RatingDialog> {
       final email = ApiPrefs.getUser()?.primaryEmail ?? '';
       final domain = ApiPrefs.getDomain() ?? '';
 
-      final info = await Future.wait([PackageInfo.fromPlatform(), DeviceInfoPlugin().androidInfo]);
-      PackageInfo package = info[0];
-      AndroidDeviceInfo device = info[1];
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-      final subject = l10n.ratingDialogEmailSubject(package.version);
+
+      final subject = l10n.ratingDialogEmailSubject(packageInfo.version);
 
       // Populate the email body with information about the user
       String emailBody = '' +
@@ -240,9 +243,9 @@ class _RatingDialogState extends State<RatingDialog> {
           '${l10n.helpUserId} $parentId\r\n' +
           '${l10n.helpEmail} $email\r\n' +
           '${l10n.helpDomain} $domain\r\n' +
-          '${l10n.versionNumber}: ${package.appName} v${package.version} (${package.buildNumber})\r\n' +
-          '${l10n.device}: ${device.manufacturer} ${device.model}\r\n' +
-          '${l10n.osVersion}: Android ${device.version.release}\r\n' +
+          '${l10n.versionNumber}: ${packageInfo.appName} v${packageInfo.version} (${packageInfo.buildNumber})\r\n' +
+          '${l10n.device}: ${androidInfo.manufacturer} ${androidInfo.model}\r\n' +
+          '${l10n.osVersion}: Android ${androidInfo.version.release}\r\n' +
           '----------------------------------------------\r\n';
 
       locator<AndroidIntentVeneer>().launchEmailWithBody(subject, emailBody);

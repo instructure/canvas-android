@@ -19,7 +19,7 @@ import 'package:flutter_parent/utils/common_widgets/view_attachment/fetcher/atta
 class TextAttachmentViewer extends StatefulWidget {
   final Attachment attachment;
 
-  const TextAttachmentViewer(this.attachment, {Key key}) : super(key: key);
+  const TextAttachmentViewer(this.attachment, {super.key});
 
   @override
   _TextAttachmentViewerState createState() => _TextAttachmentViewerState();
