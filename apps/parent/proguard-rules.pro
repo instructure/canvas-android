@@ -12,10 +12,239 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-dontoptimize
+-verbose
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-dontpreverify
+-optimizations !code/simplification/arithmetic
+
+-keepattributes *Annotation*,Signature,EnclosingMethod,ElementList,Root,Annotation,InnerClasses,SourceFile,LineNumberTable
+
+# Android
+
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class * implements java.io.Serializable
+-keep public class * extends androidx.fragment.app.Fragment
+-keep public class * extends androidx.fragment.app.ListFragment
+-keep public class * extends android.os.AsyncTask
+
+-keep public class * extends android.view.View {
+    public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+    public void set*(...);
+}
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembers class * extends android.content.Context {
+   public void *(android.view.View);
+   public void *(android.view.MenuItem);
+}
+
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
+}
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
+
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+-dontwarn com.google.android.gms.**
+
+-dontwarn com.google.api.**
+-dontwarn android.net.http.**
+-keep class com.google.api.** { *; }
+-keep class android.net.http.** { *; }
+
+# Google
+
+-keep class com.google.appengine.** { *; }
+
+# Apache
+
+-dontwarn org.apache.**
+-keep class org.apache.http.** { *; }
+-keep class org.apache.james.mime4j.** { *; }
+
+# Amazon
+
+-keep class com.amazonaws.services.sqs.QueueUrlHandler  { *; }
+-keep class com.amazonaws.javax.xml.transform.sax.*     { public *; }
+-keep class com.amazonaws.javax.xml.stream.**           { *; }
+-keep class com.amazonaws.services.**.model.*Exception* { *; }
+-keep class com.amazonaws.internal.** 					{ *; }
+-keep class org.codehaus.**                             { *; }
+-keep class org.joda.convert.*							{ *; }
+-keepnames class com.fasterxml.jackson.** { *; }
+-keepnames class com.amazonaws.** { *; }
+
+-dontwarn com.amazonaws.auth.policy.conditions.S3ConditionFactory
+-dontwarn org.joda.time.**
+-dontwarn com.fasterxml.jackson.databind.**
+-dontwarn javax.xml.stream.events.**
+-dontwarn org.codehaus.jackson.**
+-dontwarn org.apache.commons.logging.impl.**
+-dontwarn org.apache.http.conn.scheme.**
+-dontwarn org.apache.http.annotation.**
+-dontwarn org.ietf.jgss.**
+-dontwarn org.w3c.dom.bootstrap.**
+
+-keep class org.ietf.** { *; }
+-keep interface org.ietf.** { *; }
+
+-dontwarn com.amazon.**
+-dontwarn com.amazonaws.**
+
+-keep class com.amazon.** { *; }
+-dontwarn org.apache.http.annotation.**
+-keep class com.amazonaws.** { *; }
+-keep class org.apache.commons.logging.**               { *; }
+-keep class com.amazonaws.services.sqs.QueueUrlHandler  { *; }
+-keep class com.amazonaws.javax.xml.transform.sax.*     { public *; }
+-keep class com.amazonaws.javax.xml.stream.**           { *; }
+-keep class com.amazonaws.services.**.model.*Exception* { *; }
+-keep class org.codehaus.**                             { *; }
+
+-dontwarn javax.xml.stream.events.**
+-dontwarn org.codehaus.jackson.**
+-dontwarn org.apache.commons.logging.impl.**
+-dontwarn org.apache.http.conn.scheme.**
+
+-keep class android.webkit.** { *; }
+
+# Retrofit
+
+-dontwarn retrofit2.**
+-dontwarn retrofit.**
+-dontwarn rx.**
+-dontwarn okio.**
+-dontwarn com.squareup.okhttp.*
+-dontwarn retrofit.appengine.UrlFetchClient
+-keep class com.google.gson.** { *; }
+-keep class com.google.inject.** { *; }
+-keep class javax.inject.** { *; }
+-keep class retrofit2.** { *; }
+-keep class retrofit.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
+
+# Retrofit, OkHttp, Gson
+
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+-keep class sun.misc.Unsafe { *; }
+-dontwarn java.nio.file.*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okhttp3.**
+-keep class okhttp3.** { *; }
+
+# PSPDFKit
+-keep class com.pspdfkit.** { *; }
+-dontwarn com.pspdfkit.**
+-dontwarn sun.misc.**
+-dontwarn android.view.WindowInsets
+-dontwarn android.graphics.Insets
+-dontwarn edu.umd.cs.findbugs.annotations.SuppressWarnings
+-keepnames class io.reactivex.android.schedulers.AndroidSchedulers
+-keepnames class io.reactivex.Observable
+
+# RxJava
+-keep class rx.internal.util.unsafe.** { *; }
+
+# SimpleFramework.xml
+-dontwarn org.simpleframework.xml.stream.**
+-keep public class org.simpleframework.** { *; }
+-keep class org.simpleframework.xml.** { *; }
+-keep class org.simpleframework.xml.core.** { *; }
+-keep class org.simpleframework.xml.util.** { *; }
+-keep class javax.xml.stream.** { *; }
+
+-keepclassmembers class * {
+    @org.simpleframework.xml.* *;
+}
+
+# Instructure
+
+-keep public class com.instructure.** { *; }
+-keep public class instructure.** { *; }
+
+# androidsvg
+
+-dontwarn com.caverock.androidsvg.**
+-keep public class com.caverock.androidsvg.** { *; }
+
+# Greenrobot event bus
+-keep public class org.greenrobot.eventbus.** { *; }
+
+# Glide
+-dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
+-keep public class * extends com.bumptech.glide.AppGlideModule
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# afollestad material dialogs
+-dontwarn me.zhanghai.android.materialprogressbar.**
+
+-dontwarn com.sothree.slidinguppanel.**
+
+# Mobius
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+-dontwarn org.slf4j.impl.StaticMDCBinder
+-dontwarn org.slf4j.impl.StaticMarkerBinder
+
+# Kotlin
+-dontwarn kotlinx.atomicfu.AtomicBoolean
+
+-keepattributes Exceptions, Signature, InnerClasses, LineNumberTable, SourceFile, EnclosingMethod

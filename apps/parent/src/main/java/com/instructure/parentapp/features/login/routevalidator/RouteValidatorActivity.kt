@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.parentapp.databinding.ActivityRouteValidatorBinding
@@ -31,6 +32,9 @@ import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.features.login.SignInActivity
 import com.instructure.parentapp.features.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @AndroidEntryPoint
@@ -44,9 +48,11 @@ class RouteValidatorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        viewModel.events.observe(this) { event ->
-            event.getContentIfNotHandled()?.let {
-                handleAction(it)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main.immediate) {
+                viewModel.events.collect {
+                    handleAction(it)
+                }
             }
         }
 

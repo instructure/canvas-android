@@ -114,16 +114,17 @@ dependencies {
     implementation Libs.ROOM_COROUTINES
 
     /* Navigation */
-    def nav_version = "2.7.7"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
 
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    /* Support dependencies */
+    implementation Libs.ANDROIDX_ANNOTATION
+    implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_BROWSER
+    implementation Libs.ANDROIDX_CARDVIEW
+    implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
+    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.ANDROIDX_RECYCLERVIEW
+    implementation Libs.ANDROIDX_PALETTE
+    implementation Libs.PLAY_IN_APP_UPDATES
 }

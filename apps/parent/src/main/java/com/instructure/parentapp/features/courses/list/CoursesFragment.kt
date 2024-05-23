@@ -39,6 +39,7 @@ class CoursesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // TODO this is just to showcase the navigation
         binding.button.setOnClickListener {
             findNavController().navigate(Uri.parse("https://anything.instructure.com/courses/1"))
         }

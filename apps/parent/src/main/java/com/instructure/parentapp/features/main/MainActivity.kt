@@ -36,12 +36,12 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.hide
+import com.instructure.pandautils.utils.show
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityMainBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
 import com.instructure.parentapp.util.ParentLogoutTask
-import com.instructure.parentapp.util.hide
-import com.instructure.parentapp.util.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

@@ -24,7 +24,6 @@ import com.instructure.pandautils.features.help.HelpLinkFilter
 class ParentHelpLinkFilter : HelpLinkFilter {
 
     override fun isLinkAllowed(link: HelpLink, favoriteCourses: List<Course>): Boolean {
-        return ((link.availableTo.contains("parent") || link.availableTo.contains("user"))
-                && (link.url != "#teacher_feedback" || favoriteCourses.any { !it.isTeacher }))
+        return link.availableTo.contains("parent") || link.availableTo.contains("user")
     }
 }

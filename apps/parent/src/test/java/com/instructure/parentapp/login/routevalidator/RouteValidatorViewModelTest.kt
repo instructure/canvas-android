@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.models.TokenUser
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
@@ -41,15 +42,15 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
-import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.unmockkAll
-import io.mockk.unmockkObject
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -74,6 +75,8 @@ class RouteValidatorViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
+    private val qrLogin: QRLogin = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
     private val mockUri = mockk<Uri>(relaxed = true) {
         every { host } returns "mobiledev.instructure.com"
     }
@@ -100,88 +103,110 @@ class RouteValidatorViewModelTest {
     }
 
     @Test
-    fun `Load route with null url`() {
+    fun `Load route with null url`() = runTest {
         createViewModel()
         viewModel.loadRoute(null)
 
-        Assert.assertEquals(RouteValidatorAction.Finish, viewModel.events.value?.peekContent())
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        Assert.assertEquals(RouteValidatorAction.Finish, events.last())
     }
 
     @Test
-    fun `Load route with empty url`() {
+    fun `Load route with empty url`() = runTest {
         createViewModel()
         viewModel.loadRoute("")
 
-        Assert.assertEquals(RouteValidatorAction.Finish, viewModel.events.value?.peekContent())
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        Assert.assertEquals(RouteValidatorAction.Finish, events.last())
     }
 
     @Test
-    fun `Load route with QR login url when user is already signed in`() {
+    fun `Load route with QR login url when user is already signed in`() = runTest {
         every { apiPrefs.getValidToken() } returns "token"
-        mockkObject(QRLogin)
-        every { QRLogin.verifySSOLoginUri(any()) } returns true
+        every { qrLogin.verifySSOLoginUri(any()) } returns true
 
         createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
-        Assert.assertEquals(RouteValidatorAction.Finish, viewModel.events.value?.peekContent())
-        unmockkObject(QRLogin)
+        Assert.assertEquals(RouteValidatorAction.Finish, events.last())
     }
-
 
     @Test
     fun `Load route with QR login url`() = runTest {
         every { apiPrefs.getValidToken() } returns ""
-        mockkObject(QRLogin)
-        every { QRLogin.verifySSOLoginUri(any()) } returns true
-        coEvery { QRLogin.performSSOLogin(any(), any(), any()) } returns OAuthTokenResponse()
+        every { qrLogin.verifySSOLoginUri(any()) } returns true
+        coEvery { qrLogin.performSSOLogin(any(), any(), any()) } returns OAuthTokenResponse()
         coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
 
         createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
-        Assert.assertEquals(RouteValidatorAction.LoadWebViewUrl("sessionUrl"), viewModel.events.value?.peekContent())
+        Assert.assertEquals(RouteValidatorAction.LoadWebViewUrl("sessionUrl"), events.last())
         delay(800)
-        Assert.assertEquals(RouteValidatorAction.StartMainActivity(), viewModel.events.value?.peekContent())
-
-        unmockkObject(QRLogin)
+        Assert.assertEquals(RouteValidatorAction.StartMainActivity(), events.last())
     }
 
     @Test
     fun `Load route with masquerade QR login url`() = runTest {
         every { apiPrefs.getValidToken() } returns ""
-        mockkObject(QRLogin)
-        every { QRLogin.verifySSOLoginUri(any()) } returns true
-        coEvery { QRLogin.performSSOLogin(any(), any(), any()) } returns OAuthTokenResponse(
+        every { qrLogin.verifySSOLoginUri(any()) } returns true
+        coEvery { qrLogin.performSSOLogin(any(), any(), any()) } returns OAuthTokenResponse(
             realUser = TokenUser(1, "", ""),
             user = TokenUser(1, "", "")
         )
         coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
 
         createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
-        Assert.assertEquals(RouteValidatorAction.LoadWebViewUrl("sessionUrl"), viewModel.events.value?.peekContent())
+        Assert.assertEquals(RouteValidatorAction.LoadWebViewUrl("sessionUrl"), events.last())
         delay(800)
-        Assert.assertEquals(RouteValidatorAction.StartMainActivity(1), viewModel.events.value?.peekContent())
-
-        unmockkObject(QRLogin)
+        Assert.assertEquals(RouteValidatorAction.StartMainActivity(1), events.last())
     }
 
     @Test
-    fun `Load route with QR login url when error happens`() {
+    fun `Load route with QR login url when error happens`() = runTest {
         every { apiPrefs.getValidToken() } returns ""
-        mockkObject(QRLogin)
-        every { QRLogin.verifySSOLoginUri(any()) } returns true
-        coEvery { QRLogin.performSSOLogin(any(), any(), any()) } throws Exception()
+        every { qrLogin.verifySSOLoginUri(any()) } returns true
+        coEvery { qrLogin.performSSOLogin(any(), any(), any()) } throws Exception()
 
         createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
         verify { apiPrefs.clearAllData() }
-        Assert.assertEquals(RouteValidatorAction.Finish, viewModel.events.value?.peekContent())
-
-        unmockkObject(QRLogin)
+        Assert.assertEquals(RouteValidatorAction.Finish, events.last())
     }
 
     @Test
@@ -189,12 +214,18 @@ class RouteValidatorViewModelTest {
         every { apiPrefs.getValidToken() } returns ""
 
         createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.loadRoute("https://mobiledev.instructure.com/courses")
 
         delay(800)
         Assert.assertEquals(
             RouteValidatorAction.StartSignInActivity(AccountDomain("mobiledev.instructure.com")),
-            viewModel.events.value?.peekContent()
+            events.last()
         )
     }
 
@@ -204,10 +235,16 @@ class RouteValidatorViewModelTest {
         every { mockUri.host } returns ""
 
         createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.loadRoute("https://mobiledev.instructure.com/courses")
 
         delay(800)
-        Assert.assertEquals(RouteValidatorAction.StartLoginActivity, viewModel.events.value?.peekContent())
+        Assert.assertEquals(RouteValidatorAction.StartLoginActivity, events.last())
     }
 
     @Test
@@ -216,13 +253,19 @@ class RouteValidatorViewModelTest {
         every { apiPrefs.getValidToken() } returns "token"
 
         createViewModel()
+
+        val events = mutableListOf<RouteValidatorAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
         viewModel.loadRoute("https://mobiledev.instructure.com/courses")
 
         delay(800)
-        Assert.assertEquals(RouteValidatorAction.StartMainActivity(data = mockUri), viewModel.events.value?.peekContent())
+        Assert.assertEquals(RouteValidatorAction.StartMainActivity(data = mockUri), events.last())
     }
 
     private fun createViewModel() {
-        viewModel = RouteValidatorViewModel(context, apiPrefs, oAuthApi)
+        viewModel = RouteValidatorViewModel(context, apiPrefs, oAuthApi, qrLogin, analytics)
     }
 }

@@ -17,6 +17,8 @@
 
 package com.instructure.parentapp.di
 
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.parentapp.util.ParentLogoutHelper
 import dagger.Module
@@ -31,5 +33,15 @@ class ApplicationModule {
     @Provides
     fun provideLogoutHelper(): LogoutHelper {
         return ParentLogoutHelper()
+    }
+
+    @Provides
+    fun provideQRLogin(): QRLogin {
+        return QRLogin
+    }
+
+    @Provides
+    fun provideAnalytics(): Analytics {
+        return Analytics
     }
 }
