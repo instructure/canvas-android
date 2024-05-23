@@ -36,10 +36,10 @@ import com.instructure.espresso.page.waitForViewWithClassName
 import org.hamcrest.Matchers
 import java.util.Calendar
 
-class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) {
+class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertScreenTitle(title: String) {
-        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText(title))).assertIsDisplayed()
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText(title))).assertIsDisplayed()
     }
 
     fun assertTitle(title: String) {

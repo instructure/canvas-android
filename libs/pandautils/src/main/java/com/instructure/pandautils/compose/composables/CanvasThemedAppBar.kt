@@ -70,7 +70,7 @@ fun CanvasThemedAppBar(
                 Icon(painterResource(id = navIconRes), contentDescription = navIconContentDescription)
             }
         },
-        modifier = modifier.testTag("Toolbar")
+        modifier = modifier.testTag("toolbar")
     )
 }
 

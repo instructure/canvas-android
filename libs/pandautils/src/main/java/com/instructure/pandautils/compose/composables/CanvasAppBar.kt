@@ -58,7 +58,7 @@ fun CanvasAppBar(
                 )
             }
         },
-        modifier = modifier.testTag("Toolbar"),
+        modifier = modifier.testTag("toolbar"),
         actions = actions
     )
 }

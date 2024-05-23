@@ -62,13 +62,13 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        val toolbar = composeTestRule.onNodeWithTag("Toolbar")
+        val toolbar = composeTestRule.onNodeWithTag("toolbar")
         toolbar.assertExists()
         composeTestRule.onNode(
-            hasParent(hasTestTag("Toolbar")).and(hasText("New Event"))
+            hasParent(hasTestTag("toolbar")).and(hasText("New Event"))
         ).assertIsDisplayed()
         val backButton = composeTestRule.onNode(
-            hasParent(hasTestTag("Toolbar")).and(hasContentDescription("Close"))
+            hasParent(hasTestTag("toolbar")).and(hasContentDescription("Close"))
         )
         backButton
             .assertIsDisplayed()
@@ -252,8 +252,8 @@ class CreateUpdateEventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithTag("SingleChoiceAlertDialog").assertIsDisplayed()
-        val matcher = hasAnyAncestor(hasTestTag("SingleChoiceAlertDialog"))
+        composeTestRule.onNodeWithTag("singleChoiceAlertDialog").assertIsDisplayed()
+        val matcher = hasAnyAncestor(hasTestTag("singleChoiceAlertDialog"))
         composeTestRule.onNode(matcher.and(hasText("Frequency"))).assertIsDisplayed()
         composeTestRule.onNode(matcher.and(hasText("Cancel")))
             .assertIsDisplayed()

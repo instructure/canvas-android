@@ -57,19 +57,19 @@ class EventScreenTest {
             )
         }
 
-        val toolbar = composeTestRule.onNodeWithTag("Toolbar")
+        val toolbar = composeTestRule.onNodeWithTag("toolbar")
         toolbar.assertExists()
         composeTestRule.onNode(
-            hasParent(hasTestTag("Toolbar")).and(hasText("Event"))
+            hasParent(hasTestTag("toolbar")).and(hasText("Event"))
         ).assertIsDisplayed()
         val backButton = composeTestRule.onNode(
-            hasParent(hasTestTag("Toolbar")).and(hasContentDescription("Back"))
+            hasParent(hasTestTag("toolbar")).and(hasContentDescription("Back"))
         )
         backButton
             .assertIsDisplayed()
             .assertHasClickAction()
         val overflowButton = composeTestRule.onNode(
-            hasParent(hasTestTag("Toolbar")).and(
+            hasParent(hasTestTag("toolbar")).and(
                 hasContentDescription("More options")
             )
         )
@@ -93,9 +93,9 @@ class EventScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithTag("Toolbar").assertExists()
+        composeTestRule.onNodeWithTag("toolbar").assertExists()
         val overflowButton =
-            composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("More options")))
+            composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("More options")))
         overflowButton
             .assertIsDisplayed()
             .performClick()

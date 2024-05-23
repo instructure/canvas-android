@@ -56,7 +56,7 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
     }
 
     fun assertEventCalendar(calendar: String) {
-        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText(calendar))).assertIsDisplayed()
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText(calendar))).assertIsDisplayed()
     }
 
     fun assertEventTitle(title: String) {
@@ -98,7 +98,7 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
     }
 
     fun clickOverflowMenu() {
-        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("More options"))).performClick()
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("More options"))).performClick()
     }
 
     fun clickEditMenu() {

@@ -120,12 +120,12 @@ fun CalendarEvents(
                 CalendarEventsPage(
                     calendarEventsPageUiState = calendarEventsPageUiState,
                     actionHandler,
-                    modifier = Modifier.testTag("CalendarEventsPage$monthOffset")
+                    modifier = Modifier.testTag("calendarEventsPage$monthOffset")
                 )
             } else {
                 Loading(modifier = Modifier
                     .fillMaxSize()
-                    .testTag("Loading$monthOffset"))
+                    .testTag("loading$monthOffset"))
             }
         }
     )

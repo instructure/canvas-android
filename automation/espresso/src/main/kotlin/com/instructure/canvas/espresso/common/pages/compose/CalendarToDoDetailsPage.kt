@@ -76,7 +76,7 @@ class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun clickToolbarMenu() {
         composeTestRule.onNode(
-            hasParent(hasTestTag("Toolbar"))
+            hasParent(hasTestTag("toolbar"))
                 .and(hasContentDescription("More options"))
         )
             .performClick()
@@ -88,6 +88,10 @@ class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun clickDeleteMenu() {
         composeTestRule.onNodeWithText("Delete").performClick()
+    }
+
+    fun assertDeleteDialog() {
+        composeTestRule.onNodeWithText("Delete Event?").assertIsDisplayed()
     }
 
     fun confirmDeletion() {

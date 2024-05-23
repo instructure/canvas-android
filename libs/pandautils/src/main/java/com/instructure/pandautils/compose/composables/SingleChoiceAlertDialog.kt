@@ -70,7 +70,7 @@ fun SingleChoiceAlertDialog(
         }
     ) {
         Surface(
-            modifier = modifier.testTag("SingleChoiceAlertDialog"),
+            modifier = modifier.testTag("singleChoiceAlertDialog"),
             shape = MaterialTheme.shapes.medium,
             color = colorResource(id = R.color.backgroundLightestElevated)
         ) {
