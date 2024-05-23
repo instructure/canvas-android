@@ -102,6 +102,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
+import org.threeten.bp.temporal.WeekFields
 import java.util.Locale
 
 private const val MIN_SCREEN_HEIGHT_FOR_FULL_CALENDAR = 500
@@ -320,9 +321,11 @@ fun DayHeaders(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.clearAndSetSemantics { testTag = "dayHeaders" }, horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        val daysOfWeek = DayOfWeek.values()
-        // Shift the starting point to Sunday
-        val shiftedDaysOfWeek = Array(7) { daysOfWeek[(it + 6) % 7] }
+        val daysOfWeek = DayOfWeek.entries.toTypedArray()
+        val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+        // Shift the starting point to the correct day
+        val shiftAmount = localeFirstDayOfWeek - daysOfWeek.first().value
+        val shiftedDaysOfWeek = Array(7) { daysOfWeek[(it + shiftAmount) % 7] }
 
         for (day in shiftedDaysOfWeek) {
             val headerText = day.getDisplayName(TextStyle.SHORT, Locale.getDefault())
