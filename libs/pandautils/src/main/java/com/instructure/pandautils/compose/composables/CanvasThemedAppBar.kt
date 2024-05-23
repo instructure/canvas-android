@@ -53,7 +53,7 @@ fun CanvasThemedAppBar(
     TopAppBar(
         title = {
             Column {
-                Text(text = title)
+                Text(text = title, modifier.testTag("todoDetailsPageTitle"))
                 if (subtitle.isNotEmpty()) {
                     Text(
                         text = subtitle,
