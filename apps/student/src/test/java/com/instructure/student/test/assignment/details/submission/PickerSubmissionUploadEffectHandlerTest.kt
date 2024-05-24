@@ -27,6 +27,7 @@ import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
 import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -44,7 +45,8 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     private val context: Activity = mockk(relaxed = true)
     private val view: PickerSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<PickerSubmissionUploadEvent> = mockk(relaxed = true)
-    private val effectHandler = PickerSubmissionUploadEffectHandler(context)
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val effectHandler = PickerSubmissionUploadEffectHandler(context, submissionHelper)
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi
@@ -322,13 +324,12 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         )
 
         mockkObject(SubmissionService.Companion)
-        every { SubmissionService.startMediaSubmission(any(), any(), any(), any(), any(), any()) } returns Unit
+        every { submissionHelper.startMediaSubmission(any(), any(), any(), any(), any()) } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 
         verify(timeout = 100) {
-            SubmissionService.startMediaSubmission(
-                context,
+            submissionHelper.startMediaSubmission(
                 model.canvasContext,
                 model.assignmentId,
                 model.assignmentName,
@@ -339,7 +340,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         }
 
         confirmVerified(view)
-        confirmVerified(SubmissionService)
+        confirmVerified(submissionHelper)
     }
 
     @Test
@@ -355,14 +356,13 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.startFileSubmission(any(), any(), any(), any(), any(), any())
+            submissionHelper.startFileSubmission(any(), any(), any(), any(), any())
         } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 
         verify(timeout = 100) {
-            SubmissionService.startFileSubmission(
-                context,
+            submissionHelper.startFileSubmission(
                 model.canvasContext,
                 model.assignmentId,
                 model.assignmentName,
@@ -373,7 +373,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         }
 
         confirmVerified(view)
-        confirmVerified(SubmissionService)
+        confirmVerified(submissionHelper)
     }
 
     @Test
@@ -390,14 +390,13 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any(), any())
+            submissionHelper.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
         } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 
         verify(timeout = 100) {
-            SubmissionService.startCommentUpload(
-                context,
+            submissionHelper.startCommentUpload(
                 model.canvasContext,
                 model.assignmentId,
                 model.assignmentName,
@@ -410,7 +409,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         }
 
         confirmVerified(view)
-        confirmVerified(SubmissionService)
+        confirmVerified(submissionHelper)
     }
 
     @Test

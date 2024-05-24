@@ -29,7 +29,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class FileSubmissionEntity(
+data class CreateFileSubmissionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val dbSubmissionId: Long,

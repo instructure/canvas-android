@@ -26,9 +26,10 @@ import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
 import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.util.getResourceSelectorUrl
 
-class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assignmentId: Long) :
+class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assignmentId: Long, val submissionHelper: SubmissionHelper) :
     EffectHandler<SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect>() {
 
     override fun accept(effect: SubmissionDetailsEmptyContentEffect) {
@@ -53,7 +54,7 @@ class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assig
 
             is SubmissionDetailsEmptyContentEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
             is SubmissionDetailsEmptyContentEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
-            is SubmissionDetailsEmptyContentEffect.UploadAudioSubmission -> uploadAudioRecording(context, effect.file, effect.assignment, effect.course)
+            is SubmissionDetailsEmptyContentEffect.UploadAudioSubmission -> uploadAudioRecording(submissionHelper, effect.file, effect.assignment, effect.course)
             is SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {
                     Assignment.SubmissionType.ONLINE_QUIZ -> {

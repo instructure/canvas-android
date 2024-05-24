@@ -19,28 +19,25 @@ package com.instructure.student.mobius.assignmentDetails.submission.text
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 
-class TextSubmissionUploadEffectHandler :
+class TextSubmissionUploadEffectHandler(private val submissionHelper: SubmissionHelper) :
     EffectHandler<TextSubmissionUploadView, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {
     override fun accept(effect: TextSubmissionUploadEffect) {
         when (effect) {
-            is TextSubmissionUploadEffect.SubmitText -> view?.onTextSubmitted(
-                effect.text,
-                effect.canvasContext,
-                effect.assignmentId,
-                effect.assignmentName
-            )
+            is TextSubmissionUploadEffect.SubmitText -> {
+                submissionHelper.startTextSubmission(effect.canvasContext, effect.assignmentId, effect.assignmentName, effect.text)
+                view?.goBack()
+            }
             is TextSubmissionUploadEffect.InitializeText -> view?.setInitialSubmissionText(effect.text)
             is TextSubmissionUploadEffect.AddImage -> view?.addImageToSubmission(
                 effect.uri,
                 effect.canvasContext
             )
-            is TextSubmissionUploadEffect.SaveDraft -> view?.saveDraft(
-                effect.text,
-                effect.canvasContext,
-                effect.assignmentId,
-                effect.assignmentName
-            )
+            is TextSubmissionUploadEffect.SaveDraft -> {
+                submissionHelper.saveDraft(effect.canvasContext, effect.assignmentId, effect.assignmentName, effect.text)
+                view?.goBack()
+            }
             TextSubmissionUploadEffect.ProcessCameraImage -> processCameraImage()
             TextSubmissionUploadEffect.ShowFailedImageMessage -> view?.showFailedImageMessage()
         }.exhaustive

@@ -12,7 +12,8 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.student.room.entities
+ */
+package com.instructure.student.room.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -20,13 +21,13 @@ import com.instructure.canvasapi2.models.CanvasContext
 import java.util.Date
 
 @Entity
-data class PendingSubmissionCommentEntity(
+data class CreatePendingSubmissionCommentEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val accountDomain: String,
     val canvasContext: CanvasContext,
     val assignmentName: String,
-    val assignmentId: String,
+    val assignmentId: Long,
     val lastActivityDate: Date,
     val isGroupMessage: Boolean,
     val message: String? = null,

@@ -25,6 +25,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.file.UploadSt
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -42,7 +43,8 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     private val context: Context = mockk(relaxed = true)
     private val view: UploadStatusSubmissionView = mockk(relaxed = true)
     private val eventConsumer: Consumer<UploadStatusSubmissionEvent> = mockk(relaxed = true)
-    private val effectHandler = UploadStatusSubmissionEffectHandler(context, submissionId)
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val effectHandler = UploadStatusSubmissionEffectHandler(context, submissionId, submissionHelper)
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi
@@ -154,7 +156,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.retryFileSubmission(any(), any())
+            submissionHelper.retryFileSubmission(any())
         } returns Unit
 
         mockkStatic("com.instructure.student.db.ExtensionsKt")
@@ -170,11 +172,11 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
         effectHandler.accept(UploadStatusSubmissionEffect.RetrySubmission(submissionId))
 
         verify (timeout = 100) {
-            SubmissionService.retryFileSubmission(context, submissionId)
+            submissionHelper.retryFileSubmission(submissionId)
             view.submissionRetrying()
         }
 
-        confirmVerified(view, SubmissionService)
+        confirmVerified(view, submissionHelper)
     }
 
     @Test

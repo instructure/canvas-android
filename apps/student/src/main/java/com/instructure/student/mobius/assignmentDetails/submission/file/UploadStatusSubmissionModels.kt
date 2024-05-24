@@ -16,7 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.file
 
-import com.instructure.student.FileSubmission
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
 
 sealed class UploadStatusSubmissionEvent {
     object OnRetryClicked : UploadStatusSubmissionEvent()
@@ -27,10 +27,10 @@ sealed class UploadStatusSubmissionEvent {
     data class OnFilesRefreshed(
         val failed: Boolean,
         val submissionId: Long,
-        val files: List<FileSubmission>
+        val files: List<CreateFileSubmissionEntity>
     ) : UploadStatusSubmissionEvent()
 
-    data class OnPersistedSubmissionLoaded(val assignmentName: String?, val failed: Boolean, val files: List<FileSubmission>) :
+    data class OnPersistedSubmissionLoaded(val assignmentName: String?, val failed: Boolean, val files: List<CreateFileSubmissionEntity>) :
         UploadStatusSubmissionEvent()
 
     data class OnUploadProgressChanged(
@@ -56,5 +56,5 @@ data class UploadStatusSubmissionModel(
     val isLoading: Boolean = false,
     val isFailed: Boolean = false,
     val uploadedBytes: Long? = null,
-    val files: List<FileSubmission> = emptyList()
+    val files: List<CreateFileSubmissionEntity> = emptyList()
 )

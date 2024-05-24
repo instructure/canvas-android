@@ -20,19 +20,21 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.instructure.pandautils.room.common.Converters
 import com.instructure.student.room.entities.CreateSubmissionEntity
-import com.instructure.student.room.entities.FileSubmissionEntity
-import com.instructure.student.room.entities.PendingSubmissionCommentEntity
-import com.instructure.student.room.entities.SubmissionCommentFileEntity
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
 import com.instructure.student.room.entities.daos.CreateSubmissionDao
-import com.instructure.student.room.entities.daos.PendingSubmissionCommentDao
+import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
+import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
 
 @Database(
     version = 5,
     entities = [
         CreateSubmissionEntity::class,
-        PendingSubmissionCommentEntity::class,
-        FileSubmissionEntity::class,
-        SubmissionCommentFileEntity::class
+        CreatePendingSubmissionCommentEntity::class,
+        CreateFileSubmissionEntity::class,
+        CreateSubmissionCommentFileEntity::class
     ],
 )
 @TypeConverters(Converters::class)
@@ -40,5 +42,9 @@ abstract class StudentDb : RoomDatabase() {
 
     abstract fun submissionDao(): CreateSubmissionDao
 
-    abstract fun pendingSubmissionCommentDao(): PendingSubmissionCommentDao
+    abstract fun pendingSubmissionCommentDao(): CreatePendingSubmissionCommentDao
+
+    abstract fun fileSubmissionDao(): CreateFileSubmissionDao
+
+    abstract fun submissionCommentFileDao(): CreateSubmissionCommentFileDao
 }

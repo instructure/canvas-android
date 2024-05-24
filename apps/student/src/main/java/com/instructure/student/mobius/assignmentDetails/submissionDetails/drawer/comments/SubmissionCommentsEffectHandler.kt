@@ -29,9 +29,9 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
 import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
-import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 
-class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<SubmissionCommentsView, SubmissionCommentsEvent, SubmissionCommentsEffect>() {
+class SubmissionCommentsEffectHandler(val context: Context, val submissionHelper: SubmissionHelper) : EffectHandler<SubmissionCommentsView, SubmissionCommentsEvent, SubmissionCommentsEffect>() {
     override fun accept(effect: SubmissionCommentsEffect) {
         when (effect) {
             is SubmissionCommentsEffect.ShowMediaCommentDialog -> {
@@ -45,8 +45,7 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
             }
             is SubmissionCommentsEffect.UploadMediaComment -> {
                 logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_MEDIA_REPLY)
-                SubmissionService.startMediaCommentUpload(
-                    context = context,
+                submissionHelper.startMediaCommentUpload(
                     canvasContext = CanvasContext.emptyCourseContext(effect.courseId),
                     assignmentId = effect.assignmentId,
                     assignmentName = effect.assignmentName,
@@ -63,8 +62,7 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
             }
             is SubmissionCommentsEffect.SendTextComment -> {
                 logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_TEXT_REPLY)
-                SubmissionService.startCommentUpload(
-                    context,
+                submissionHelper.startCommentUpload(
                     CanvasContext.emptyCourseContext(effect.courseId),
                     effect.assignmentId,
                     effect.assignmentName,
@@ -75,10 +73,10 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
                 )
             }
             is SubmissionCommentsEffect.RetryCommentUpload -> {
-                SubmissionService.retryCommentUpload(context, effect.commentId)
+                submissionHelper.retryCommentUpload(effect.commentId)
             }
             is SubmissionCommentsEffect.DeletePendingComment -> {
-                SubmissionService.deletePendingComment(context, effect.commentId)
+                submissionHelper.deletePendingComment(effect.commentId)
             }
             SubmissionCommentsEffect.ScrollToBottom -> view?.scrollToBottom()
             is SubmissionCommentsEffect.BroadcastSubmissionSelected -> {

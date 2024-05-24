@@ -1,73 +1,49 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-package com.instructure.student.mobius.assignmentDetails.submission.picker.ui
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */package com.instructure.student.mobius.assignmentDetails.submission.picker.ui
 
 import android.net.Uri
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER
-import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
-import com.instructure.student.databinding.FragmentPickerSubmissionUploadBinding
-import com.instructure.student.mobius.assignmentDetails.submission.picker.*
-import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.isCourseOrGroup
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.withArgs
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@ScreenView(SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER)
-class PickerSubmissionUploadFragment :
-    MobiusFragment<PickerSubmissionUploadModel, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect, PickerSubmissionUploadView, PickerSubmissionUploadViewState, FragmentPickerSubmissionUploadBinding>() {
+@AndroidEntryPoint
+class PickerSubmissionUploadFragment : BasePickerSubmissionUploadFragment() {
 
-    private val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
-    private val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
-    private val mode by SerializableArg(key = PICKER_MODE, default = PickerSubmissionMode.FileSubmission)
-    private val mediaUri by NullableParcelableArg<Uri>(key = Const.PASSED_URI, default = null)
-    private var attemptId by LongArg(key = Const.SUBMISSION_ATTEMPT)
+    @Inject
+    lateinit var submissionHelper: SubmissionHelper
 
-    override fun makeEffectHandler() = PickerSubmissionUploadEffectHandler(requireContext())
-
-    override fun makeUpdate() = PickerSubmissionUploadUpdate()
-
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) =
-        PickerSubmissionUploadView(inflater, parent, mode)
-
-    override fun makePresenter() = PickerSubmissionUploadPresenter
-
-    override fun makeInitModel() = PickerSubmissionUploadModel(
-        canvasContext,
-        assignment.id,
-        assignment.name ?: "",
-        assignment.groupCategoryId,
-        if (mode.isForComment || mode.isMediaSubmission) emptyList() else assignment.allowedExtensions,
-        mode,
-        mediaUri,
-        attemptId = attemptId.takeIf { it != INVALID_ATTEMPT }
-    )
+    override fun makeEffectHandler() = PickerSubmissionUploadEffectHandler(requireContext(), submissionHelper)
 
     companion object {
 
-        private const val PICKER_MODE = "pickerMode"
-        private const val INVALID_ATTEMPT = -1L
+        const val PICKER_MODE = "pickerMode"
+        const val INVALID_ATTEMPT = -1L
 
         private fun validRoute(route: Route) = route.canvasContext?.isCourseOrGroup == true
-            && route.arguments.containsKey(Const.ASSIGNMENT)
-            && route.arguments.containsKey(PICKER_MODE)
+                && route.arguments.containsKey(Const.ASSIGNMENT)
+                && route.arguments.containsKey(PICKER_MODE)
 
         fun makeRoute(
             canvasContext: CanvasContext,

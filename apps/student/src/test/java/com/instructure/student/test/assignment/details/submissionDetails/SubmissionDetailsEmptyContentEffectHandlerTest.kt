@@ -40,6 +40,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
@@ -60,7 +61,8 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: SubmissionDetailsEmptyContentView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
-    private val effectHandler = SubmissionDetailsEmptyContentEffectHandler(context, assignmentId).apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val effectHandler = SubmissionDetailsEmptyContentEffectHandler(context, assignmentId, submissionHelper).apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEmptyContentEvent> = mockk(relaxed = true)
     private lateinit var connection: Connection<SubmissionDetailsEmptyContentEffect>
 
@@ -256,8 +258,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionService)
         every {
-            SubmissionService.startMediaSubmission(
-                context,
+            submissionHelper.startMediaSubmission(
                 course,
                 assignment.id,
                 assignment.name,
@@ -269,8 +270,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         connection.accept(SubmissionDetailsEmptyContentEffect.UploadAudioSubmission(file, course, assignment))
         verify(timeout = 100) {
-            SubmissionService.startMediaSubmission(
-                context,
+            submissionHelper.startMediaSubmission(
                 course,
                 assignment.id,
                 assignment.name,

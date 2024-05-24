@@ -22,14 +22,14 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = PendingSubmissionCommentEntity::class,
+            entity = CreatePendingSubmissionCommentEntity::class,
             parentColumns = ["id"],
             childColumns = ["pendingCommentId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class SubmissionCommentFileEntity(
+data class CreateSubmissionCommentFileEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val pendingCommentId: Long,

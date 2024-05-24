@@ -17,13 +17,15 @@ package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.url.MalformedUrlError
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEffect
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEvent
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadView
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
@@ -36,7 +38,8 @@ class UrlSubmissionUploadEffectHandlerTest : Assert() {
 
     private val view: UrlSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<UrlSubmissionUploadEvent> = mockk(relaxed = true)
-    private val effectHandler = UrlSubmissionUploadEffectHandler()
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val effectHandler = UrlSubmissionUploadEffectHandler(submissionHelper)
     private val connection = effectHandler.connect(eventConsumer)
 
     @Before
@@ -66,7 +69,7 @@ class UrlSubmissionUploadEffectHandlerTest : Assert() {
         connection.accept(UrlSubmissionUploadEffect.SubmitUrl(url, course, assignment.id, assignment.name))
 
         verify(timeout = 100) {
-            view.onSubmitUrl(course, assignment.id, assignment.name, url)
+            submissionHelper.startUrlSubmission(course, assignment.id, assignment.name, url)
         }
 
         confirmVerified(view)

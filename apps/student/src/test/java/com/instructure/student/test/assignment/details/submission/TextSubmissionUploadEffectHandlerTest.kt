@@ -22,6 +22,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubm
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -39,7 +40,8 @@ import java.util.concurrent.Executors
 class TextSubmissionUploadEffectHandlerTest : Assert() {
     private val view: TextSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<TextSubmissionUploadEvent> = mockk(relaxed = true)
-    private val effectHandler = TextSubmissionUploadEffectHandler()
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val effectHandler = TextSubmissionUploadEffectHandler(submissionHelper)
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi
@@ -59,7 +61,8 @@ class TextSubmissionUploadEffectHandlerTest : Assert() {
         connection.accept(TextSubmissionUploadEffect.SubmitText(text, course, assignmentId, assignmentName))
 
         verify(timeout = 100) {
-            view.onTextSubmitted(text, course, assignmentId, assignmentName)
+            submissionHelper.startTextSubmission(course, assignmentId, assignmentName, text)
+            view.goBack()
         }
 
         confirmVerified(view)
@@ -76,7 +79,8 @@ class TextSubmissionUploadEffectHandlerTest : Assert() {
         connection.accept(TextSubmissionUploadEffect.SubmitText(text, course, assignmentId, assignmentName))
 
         verify(exactly = 0) {
-            view.onTextSubmitted(any(), any(), any(), any())
+            submissionHelper.startTextSubmission(any(), any(), any(), any())
+            view.goBack()
         }
 
         confirmVerified(view)
