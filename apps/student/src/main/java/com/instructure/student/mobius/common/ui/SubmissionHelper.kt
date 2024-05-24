@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.room.entities.CreateSubmissionEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -328,8 +329,14 @@ class SubmissionHelper(
         val dbSubmissionId = studentDb.submissionDao().findSubmissionByRowId(rowId)?.id ?: return -1
 
         files.forEach {
-            studentDb.fileSubmissionDao()
-                .insertFile(dbSubmissionId, it.name, it.size, it.contentType, it.fullPath)
+            val fileEntity = CreateFileSubmissionEntity(
+                dbSubmissionId = dbSubmissionId,
+                name = it.name,
+                size = it.size,
+                contentType = it.contentType,
+                fullPath = it.fullPath
+            )
+            studentDb.fileSubmissionDao().insert(fileEntity)
         }
 
         return dbSubmissionId

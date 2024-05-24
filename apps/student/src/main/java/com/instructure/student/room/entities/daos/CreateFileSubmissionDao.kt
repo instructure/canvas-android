@@ -15,11 +15,15 @@
  */package com.instructure.student.room.entities.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 
 @Dao
 interface CreateFileSubmissionDao {
+
+    @Insert
+    suspend fun insert(createFileSubmissionEntity: CreateFileSubmissionEntity)
 
     @Query("SELECT * FROM CreateFileSubmissionEntity WHERE dbSubmissionId = :id LIMIT 1")
     suspend fun findFileForSubmissionId(id: Long): CreateFileSubmissionEntity?
@@ -43,15 +47,6 @@ interface CreateFileSubmissionDao {
 
     @Query("UPDATE CreateFileSubmissionEntity SET errorFlag = :errorFlag, error = :errorMessage WHERE id = :id")
     suspend fun setFileError(errorFlag: Boolean, errorMessage: String?, id: Long)
-
-    @Query("INSERT INTO CreateFileSubmissionEntity (dbSubmissionId, name, size, contentType, fullPath) VALUES (:dbSubmissionId, :name, :size, :contentType, :fullPath)")
-    suspend fun insertFile(
-        dbSubmissionId: Long,
-        name: String,
-        size: Long,
-        contentType: String,
-        fullPath: String
-    )
 
     @Query("DELETE FROM CreateFileSubmissionEntity WHERE id = :fileId")
     suspend fun deleteFileById(fileId: Long)

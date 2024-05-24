@@ -28,6 +28,7 @@ import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.remove
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
@@ -196,13 +197,13 @@ class PickerSubmissionUploadEffectHandler(
         )
 
         view?.getGalleryIntent(uri)?.let {
-            (context as Activity).startActivityForResult(it, REQUEST_PICK_IMAGE_GALLERY)
+            (context.getFragmentActivity()).startActivityForResult(it, REQUEST_PICK_IMAGE_GALLERY)
         }
     }
 
     private fun launchSelectFile() {
         view?.getSelectFileIntent()?.let {
-            (context as Activity).startActivityForResult(it, REQUEST_PICK_FILE_FROM_DEVICE)
+            (context.getFragmentActivity()).startActivityForResult(it, REQUEST_PICK_FILE_FROM_DEVICE)
         }
     }
 
@@ -214,7 +215,7 @@ class PickerSubmissionUploadEffectHandler(
                 )
         ) return
         val intent = Intent(context, DocumentScanningActivity::class.java)
-        (context as Activity).startActivityForResult(intent, REQUEST_DOCUMENT_SCANNING)
+        (context.getFragmentActivity()).startActivityForResult(intent, REQUEST_DOCUMENT_SCANNING)
     }
 
     private fun launchCamera() {
@@ -241,7 +242,7 @@ class PickerSubmissionUploadEffectHandler(
         val intent = view?.getCameraIntent(uri)
 
         if (intent != null && context.isIntentAvailable(intent.action)) {
-            (context as Activity).startActivityForResult(intent, REQUEST_CAMERA_PIC)
+            (context.getFragmentActivity()).startActivityForResult(intent, REQUEST_CAMERA_PIC)
         }
     }
 
@@ -251,11 +252,11 @@ class PickerSubmissionUploadEffectHandler(
         successEvent: PickerSubmissionUploadEvent,
         vararg permissions: String
     ): Boolean {
-        if (PermissionUtils.hasPermissions(context as Activity, *permissions)) {
+        if (PermissionUtils.hasPermissions(context.getFragmentActivity(), *permissions)) {
             return false
         }
 
-        context.requestPermissions(setOf(*permissions)) { results ->
+        context.getFragmentActivity().requestPermissions(setOf(*permissions)) { results ->
             if (results.isNotEmpty() && results.all { it.value }) {
                 // If permissions list is not empty and all are granted, send the success event
                 consumer.accept(successEvent)
