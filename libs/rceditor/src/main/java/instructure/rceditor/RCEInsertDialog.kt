@@ -81,7 +81,7 @@ class RCEInsertDialog : AppCompatDialogFragment() {
                 if (callback != null) {
                     val isVerifyUrl = arguments?.getBoolean(VERIFY_URL, false) ?: false
                     val url = urlEditText.text.toString()
-                    val alt = altEditText.text.toString()
+                    val alt = altEditText.text.toString().ifBlank { url }
                     if (isVerifyUrl) {
                         when {
                             url.isEmpty() -> {
