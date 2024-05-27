@@ -29,6 +29,8 @@ configurations {
     all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
 }
 
+def coverageEnabled = project.hasProperty('coverage')
+
 android {
     namespace 'com.instructure.parentapp'
     compileSdk Versions.COMPILE_SDK
@@ -45,12 +47,99 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    packagingOptions {
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'LICENSE.txt'
+    }
+
+
+    lintOptions {
+        abortOnError false
+    }
+
+    flavorDimensions 'default'
+
+    productFlavors {
+        dev {
+            dimension 'default'
+        }
+
+        qa {
+            buildConfigField "boolean", "IS_TESTING", "true"
+            dimension 'default'
+        }
+
+        prod {
+            dimension 'default'
         }
     }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled = coverageEnabled
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
+            shrinkResources false
+            pseudoLocalesEnabled true
+
+            firebaseCrashlytics {
+                // If you don't need crash reporting for your debug build,
+                // you can speed up your build by disabling mapping file uploading.
+                mappingFileUploadEnabled false
+            }
+        }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "boolean", "POINT_ONE", "true"
+            buildConfigField "boolean", "POINT_TWO", "true"
+            buildConfigField "boolean", "POINT_THREE", "true"
+            buildConfigField "boolean", "POINT_FOUR", "true"
+            buildConfigField "boolean", "POINT_FIVE", "true"
+            buildConfigField "boolean", "POINT_SIX", "false"
+            buildConfigField "boolean", "POINT_SEVEN", "false"
+            buildConfigField "boolean", "POINT_EIGHT", "false"
+            buildConfigField "boolean", "POINT_NINE", "false"
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+        /*
+        Resolves dependency versions across test and production APKs, specifically, transitive
+        dependencies. This is required since Espresso internally has a dependency on support-annotations.
+        https://github.com/googlecodelabs/android-testing/blob/57852eaf7df88ddaf828eca879a407f2249d5348/app/build.gradle#L86
+        */
+        resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
+
+        resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
+        resolutionStrategy.force Libs.KOTLIN_STD_LIB
+    }
+
+    configurations.implementation.dependencies.each { compileDependency ->
+        println "Excluding compile dependency: ${compileDependency.getName()}"
+        configurations.androidTestImplementation.dependencies.each { androidTestCompileDependency ->
+            configurations.androidTestImplementation.exclude module: "${compileDependency.getName()}"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
