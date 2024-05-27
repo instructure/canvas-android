@@ -20,6 +20,7 @@ import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoUnit
+import org.threeten.bp.temporal.WeekFields
 import java.util.Locale
 
 class CalendarStateMapper(private val clock: Clock) {
@@ -56,13 +57,14 @@ class CalendarStateMapper(private val clock: Clock) {
     ): CalendarPageUiState {
         val daysInMonth = date.lengthOfMonth()
         val firstDayOfMonth = date.withDayOfMonth(1)
+        val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
         val firstDayOfWeekIndex =
-            firstDayOfMonth.dayOfWeek.value % 7 // 0 for Sunday, 6 for Saturday
+            (7 + (firstDayOfMonth.dayOfWeek.value - localeFirstDayOfWeek)) % 7 // We need to add 7 to avoid negative values
 
         val calendarRows = mutableListOf<CalendarRowUiState>()
         val currentWeek = mutableListOf<CalendarDayUiState>()
 
-        // Fill the previous month's days if the first day of the month is not Sunday
+        // Fill the previous month's days if the first day of the month is not the first day of the week
         if (firstDayOfWeekIndex > 0) {
             val previousMonth = date.minusMonths(1).month
             val previousMonthYear = date.minusMonths(1).year
