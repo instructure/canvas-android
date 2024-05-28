@@ -25,23 +25,14 @@ import javax.inject.Inject
 
 
 @HiltAndroidApp
-class AppManager : AppManager() {
+class AppManager : BaseAppManager() {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
-
-    override fun onCreate() {
-        super.onCreate()
-        init()
-    }
 
     override fun performLogoutOnAuthError() {
         // TODO: Implement
     }
 
     override fun getWorkManagerFactory() = workerFactory
-
-    private fun init() {
-        RemoteConfigUtils.initialize()
-    }
 }
