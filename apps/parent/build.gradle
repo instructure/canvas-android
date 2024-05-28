@@ -107,16 +107,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField "boolean", "POINT_ONE", "true"
-            buildConfigField "boolean", "POINT_TWO", "true"
-            buildConfigField "boolean", "POINT_THREE", "true"
-            buildConfigField "boolean", "POINT_FOUR", "true"
-            buildConfigField "boolean", "POINT_FIVE", "true"
-            buildConfigField "boolean", "POINT_SIX", "false"
-            buildConfigField "boolean", "POINT_SEVEN", "false"
-            buildConfigField "boolean", "POINT_EIGHT", "false"
-            buildConfigField "boolean", "POINT_NINE", "false"
         }
     }
 
