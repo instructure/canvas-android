@@ -15,20 +15,21 @@
  */package com.instructure.student.room.entities.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
 import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
 
 @Dao
 interface CreateSubmissionCommentFileDao {
 
+    @Insert
+    suspend fun insert(createSubmissionCommentFileEntity: CreateSubmissionCommentFileEntity): Long
+
     @Query("SELECT * FROM CreateSubmissionCommentFileEntity WHERE id = :id")
     suspend fun findFilesForPendingComment(id: Long): List<CreateSubmissionCommentFileEntity>
 
     @Query("UPDATE CreateSubmissionCommentFileEntity SET attachmentId = :attachmentId WHERE id = :id")
     suspend fun setFileAttachmentId(attachmentId: Long, id: Long)
-
-    @Query("INSERT INTO CreateSubmissionCommentFileEntity (pendingCommentId, name, size, contentType, fullPath) VALUES (:commentId, :name, :size, :contentType, :fullPath)")
-    suspend fun insertFile(commentId: Long, name: String, size: Long, contentType: String, fullPath: String)
 
     @Query("DELETE FROM CreateSubmissionCommentFileEntity WHERE pendingCommentId = :commentId")
     suspend fun deleteFilesForCommentId(commentId: Long)

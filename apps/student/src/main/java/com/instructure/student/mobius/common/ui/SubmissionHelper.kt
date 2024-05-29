@@ -28,6 +28,8 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
 import com.instructure.student.room.entities.CreateSubmissionEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -238,7 +240,7 @@ class SubmissionHelper(
         attemptId: Long?
     ) = scope.launch {
         require(message.isValid() || attachments?.isNotEmpty() == true)
-        studentDb.pendingSubmissionCommentDao().insertComment(
+        val entity = CreatePendingSubmissionCommentEntity(
             accountDomain = ApiPrefs.domain,
             canvasContext = canvasContext,
             assignmentName = assignmentName,
@@ -249,15 +251,17 @@ class SubmissionHelper(
             mediaPath = null,
             attemptId = attemptId
         )
-        val commentId = studentDb.pendingSubmissionCommentDao().getLastInsert()
+        val rowId = studentDb.pendingSubmissionCommentDao().insert(entity)
+        val commentId = studentDb.pendingSubmissionCommentDao().findIdByRowId(rowId)
         attachments?.forEach {
-            studentDb.submissionCommentFileDao().insertFile(
-                commentId,
-                it.name,
-                it.size,
-                it.contentType,
-                it.fullPath
+            val fileEntity = CreateSubmissionCommentFileEntity(
+                pendingCommentId = commentId,
+                name = it.name,
+                size = it.size,
+                contentType = it.contentType,
+                fullPath = it.fullPath
             )
+            studentDb.submissionCommentFileDao().insert(fileEntity)
         }
 
         val bundle = Bundle().apply {
@@ -274,7 +278,7 @@ class SubmissionHelper(
         isGroupMessage: Boolean,
         attemptId: Long?
     ) = scope.launch {
-        studentDb.pendingSubmissionCommentDao().insertComment(
+        val entity = CreatePendingSubmissionCommentEntity(
             accountDomain = ApiPrefs.domain,
             canvasContext = canvasContext,
             assignmentName = assignmentName,
@@ -285,7 +289,8 @@ class SubmissionHelper(
             mediaPath = mediaFile.absolutePath,
             attemptId = attemptId
         )
-        val commentId = studentDb.pendingSubmissionCommentDao().getLastInsert()
+        val rowId = studentDb.pendingSubmissionCommentDao().insert(entity)
+        val commentId = studentDb.pendingSubmissionCommentDao().findIdByRowId(rowId)
 
         val bundle = Bundle().apply {
             putLong(Const.ID, commentId)
