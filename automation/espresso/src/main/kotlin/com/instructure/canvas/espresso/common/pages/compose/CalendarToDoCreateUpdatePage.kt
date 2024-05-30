@@ -15,15 +15,31 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import android.content.Context
+import android.widget.DatePicker
+import android.widget.TimePicker
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
+import androidx.test.espresso.contrib.PickerActions
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.waitForViewWithClassName
+import org.hamcrest.Matchers
+import java.util.Calendar
+import java.util.Date
 
-class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule) {
+class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertPageTitle(pageTitle: String) {
         composeTestRule.onNodeWithText(pageTitle).assertIsDisplayed()
@@ -32,6 +48,52 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
     fun typeTodoTitle(todoTitle: String) {
         composeTestRule.onNodeWithTag("addTitleField").assertExists().performTextReplacement(todoTitle)
         composeTestRule.waitForIdle()
+    }
+
+    fun selectDate(calendar: Calendar) {
+        composeTestRule.onNodeWithTag("dateRow").performScrollTo().performClick()
+        waitForViewWithClassName(Matchers.equalTo(DatePicker::class.java.name)).perform(
+            PickerActions.setDate(
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+        )
+        onViewWithId(android.R.id.button1).click()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertDate(date: Date) {
+        val dateText = DateHelper.dayMonthDateFormat.format(date)
+        composeTestRule.onNodeWithTag("dateRow", true).assert(hasAnyChild(hasText(dateText)))
+    }
+
+    fun assertTime(context: Context, date: Date) {
+        val timeText = DateHelper.getFormattedTime(context, date).orEmpty()
+        composeTestRule.onNodeWithTag("timeRow", true).assert(hasAnyChild(hasText(timeText)))
+    }
+
+    fun selectTime(calendar: Calendar) {
+        composeTestRule.onNodeWithText("Time").performScrollTo().performClick()
+        waitForViewWithClassName(Matchers.equalTo(TimePicker::class.java.name)).perform(
+            PickerActions.setTime(
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE)
+            )
+        )
+        onViewWithId(android.R.id.button1).click()
+        composeTestRule.waitForIdle()
+    }
+
+    fun selectCanvasContext(canvasContext: String) {
+        composeTestRule.onNodeWithTag("canvasContextRow").performScrollTo().performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(canvasContext).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertCanvasContext(canvasContext: String) {
+        composeTestRule.onNodeWithTag("canvasContextRow", true).assert(hasAnyChild(hasText(canvasContext)))
     }
 
     fun assertTodoTitle(todoTitle: String) {
@@ -50,5 +112,16 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
     fun clickSave() {
         composeTestRule.onNodeWithText("Save").performClick()
         composeTestRule.waitForIdle()
+    }
+
+    fun assertUnsavedChangesDialog() {
+        composeTestRule.onNodeWithText("Exit without saving?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Are you sure you would like to exit without saving?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Exit").assertIsDisplayed()
+    }
+
+    fun clickClose() {
+        composeTestRule.onNodeWithTag("appBarNavigationIcon").performClick()
     }
 }

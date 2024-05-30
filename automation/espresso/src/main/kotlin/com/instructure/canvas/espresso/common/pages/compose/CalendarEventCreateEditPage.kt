@@ -97,4 +97,15 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
         composeTestRule.onNodeWithText("Save").performClick()
         composeTestRule.waitForIdle()
     }
+
+    fun assertUnsavedChangesDialog() {
+        composeTestRule.onNodeWithText("Exit without saving?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Are you sure you would like to exit without saving?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Exit").assertIsDisplayed()
+    }
+
+    fun clickClose() {
+        composeTestRule.onNodeWithTag("appBarNavigationIcon").performClick()
+    }
 }

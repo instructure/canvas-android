@@ -20,6 +20,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addPlannable
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.DontCareAuthModel
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
@@ -35,6 +36,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.user
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
@@ -42,9 +44,12 @@ import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.UpdateFileFolder
+import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.orDefault
 import okio.Buffer
+import java.util.Date
 
 /**
  * Base endpoint for the Canvas API
@@ -325,22 +330,60 @@ object ApiEndpoint : Endpoint(
                     request.unauthorizedResponse()
                 }
             }
+            PUT {
+                val params = getJsonFromRequestBody<PlannerNoteBody>(request.body)
+                val plannerItem = data.todos.find { it.plannable.id == pathVars.plannerNoteId }!!
+                val course = params?.courseId?.let { data.courses[it] }
+                val date = params?.toDoDate?.toDate()
+                data.todos.remove(plannerItem)
+                data.todos.add(
+                    plannerItem.copy(
+                        courseId = course?.id,
+                        contextName = course?.name,
+                        plannable = plannerItem.plannable.copy(
+                            title = params?.title.orEmpty(),
+                            courseId = course?.id,
+                            todoDate = date.toApiString(),
+                            details = params?.details
+                        ),
+                        plannableDate = date ?: Date()
+                    )
+                )
+                request.successResponse(Unit)
+            }
         },
         response = {
             GET {
                 val contextCodes = request.url.queryParameterValues("context_codes[]")
                 val startDate = request.url.queryParameter("start_date").toDate()
                 val endDate = request.url.queryParameter("end_date").toDate()
-                val courseIds = contextCodes.map { it?.substringAfter("_")?.toLong() }
+                val courseIds = contextCodes
+                    .filter { it?.startsWith("course_").orDefault() }
+                    .map { it?.substringAfter("course_")?.toLong() }
+                val userIds = contextCodes
+                    .filter { it?.startsWith("user_").orDefault() }
+                    .map { it?.substringAfter("user_")?.toLong() }
 
                 val plannables = data.todos.filter {
-                    courseIds.contains(it.courseId)
+                    courseIds.contains(it.courseId) || userIds.contains(it.userId)
                 }.filter {
                     if (it.plannable.todoDate == null) return@filter true
                     if (startDate == null || endDate == null) return@filter true
                     it.plannable.todoDate.toDate()?.time in startDate.time..endDate.time
                 }.map { it.plannable }
                 request.successResponse(plannables)
+            }
+            POST {
+                val params = getJsonFromRequestBody<PlannerNoteBody>(request.body)
+                val plannerItem = data.addPlannable(
+                    name = params?.title.orEmpty(),
+                    userId = data.users.values.first().id,
+                    course = params?.courseId?.let { data.courses[it] },
+                    type = PlannableType.PLANNER_NOTE,
+                    date = params?.toDoDate?.toDate(),
+                    details = params?.details
+                )
+                request.successResponse(plannerItem)
             }
         }
     )

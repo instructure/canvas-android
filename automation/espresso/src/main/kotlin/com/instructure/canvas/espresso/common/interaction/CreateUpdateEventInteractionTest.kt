@@ -93,7 +93,6 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         calendarEventDetailsPage.assertEventDateContains("12:15 PM")
     }
 
-
     @Test
     fun assertNewTimeTo() {
         val data = initData()
@@ -339,6 +338,27 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
         calendarScreenPage.clickOnItem(event.title!!)
         calendarEventDetailsPage.assertAddressDisplayed("Updated Address")
+    }
+
+    @Test
+    fun assertUnsavedChangesDialog() {
+        val data = initData()
+        val user = data.users.values.first()
+        data.addUserCalendarEvent(
+            userId = user.id,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        goToEditEvent(data)
+
+        composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.typeTitle("Updated Title")
+        createUpdateEventDetailsPage.clickClose()
+
+        composeTestRule.waitForIdle()
+        createUpdateEventDetailsPage.assertUnsavedChangesDialog()
     }
 
     abstract fun goToCreateEvent(data: MockCanvas)
