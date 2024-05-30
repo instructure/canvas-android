@@ -113,4 +113,9 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         composeTestRule.onNodeWithText("Calendars").performClick()
         composeTestRule.waitForIdle()
     }
+
+    fun clickTodayButton() {
+        composeTestRule.onNodeWithContentDescription("Jump to Today").performClick()
+        composeTestRule.waitForIdle()
+    }
 }

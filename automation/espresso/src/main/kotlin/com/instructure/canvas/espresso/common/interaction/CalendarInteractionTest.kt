@@ -367,6 +367,42 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         assertDiscussionDetailsTitle("Discussion topic")
     }
 
+    @Test
+    fun clickingTodayButtonWillNavigateBackToTodayAndShowTodaysEvents() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val event = data.addCourseCalendarEvent(
+            course = course,
+            date = Date().toApiString(),
+            title = "Test Event",
+            description = "Test Description"
+        )
+
+        val user = getLoggedInUser()
+        val todo = data.addPlannable(
+            name = "Test Todo",
+            course = course,
+            userId = user.id,
+            type = PlannableType.PLANNER_NOTE,
+            date = Date()
+        )
+
+        goToCalendar(data)
+
+        calendarScreenPage.swipeCalendarLeft()
+        calendarScreenPage.swipeCalendarLeft()
+        calendarScreenPage.swipeCalendarLeft()
+
+        calendarScreenPage.assertItemNotDisplayed(event.title!!)
+        calendarScreenPage.assertItemNotDisplayed(todo.plannable.title)
+
+        calendarScreenPage.clickTodayButton()
+
+        calendarScreenPage.assertItemDetails(event.title!!, course.name)
+        calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To Do")
+    }
+
     override fun displaysPageObjects() = Unit
 
     abstract fun goToCalendar(data: MockCanvas)

@@ -30,14 +30,16 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.pandautils.features.calendar.filter.CalendarFilterAction
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterItemUiState
 import com.instructure.pandautils.features.calendar.filter.CalendarFilterScreenUiState
 import com.instructure.pandautils.features.calendar.filter.composables.CalendarFiltersScreen
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.math.exp
 
 @OptIn(ExperimentalFoundationApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -237,5 +239,82 @@ class CalendarFilterScreenTest {
         }
 
         composeTestRule.onNodeWithText("Snackbar message").assertIsDisplayed()
+    }
+
+    @Test
+    fun clickingOnFilterItemSendsToggleFilterEvent() {
+        val actions = mutableListOf<CalendarFilterAction>()
+
+        composeTestRule.setContent {
+            CalendarFiltersScreen(uiState = CalendarFilterScreenUiState(
+                users = listOf(
+                    CalendarFilterItemUiState("user_1", "User 1", false, Color.BLUE),
+                ),
+                courses = listOf(
+                    CalendarFilterItemUiState("course_1", "Course 1", false, Color.BLUE),
+                    CalendarFilterItemUiState("course_2", "Course 2", false, Color.BLUE)
+                ),
+                groups = listOf(
+                    CalendarFilterItemUiState("group_1", "Group 1", false, Color.BLUE),
+                    CalendarFilterItemUiState("group_2", "Group 2", false, Color.BLUE)
+                ), selectAllAvailable = false
+            ), actionHandler = { actions.add(it) }) {}
+        }
+
+        composeTestRule.onNodeWithText("Course 1").performClick()
+
+        assertEquals(CalendarFilterAction.ToggleFilter("course_1"), actions.last())
+    }
+
+    @Test
+    fun clickingOnSelectAllSendsSelectAllAction() {
+        val actions = mutableListOf<CalendarFilterAction>()
+
+        composeTestRule.setContent {
+            CalendarFiltersScreen(uiState = CalendarFilterScreenUiState(
+                users = listOf(
+                    CalendarFilterItemUiState("user_1", "User 1", false, Color.BLUE),
+                ),
+                courses = listOf(
+                    CalendarFilterItemUiState("course_1", "Course 1", false, Color.BLUE),
+                    CalendarFilterItemUiState("course_2", "Course 2", false, Color.BLUE)
+                ),
+                groups = listOf(
+                    CalendarFilterItemUiState("group_1", "Group 1", false, Color.BLUE),
+                    CalendarFilterItemUiState("group_2", "Group 2", false, Color.BLUE)
+                ), selectAllAvailable = true
+            ), actionHandler = { actions.add(it) }) {}
+        }
+
+        composeTestRule.onNode(hasText("Select all").and(hasAnyAncestor(hasTestTag("toolbar"))))
+            .performClick()
+
+        assertEquals(CalendarFilterAction.SelectAll, actions.last())
+    }
+
+    @Test
+    fun clickingOnDeselectAllSendsSelectAllAction() {
+        val actions = mutableListOf<CalendarFilterAction>()
+
+        composeTestRule.setContent {
+            CalendarFiltersScreen(uiState = CalendarFilterScreenUiState(
+                users = listOf(
+                    CalendarFilterItemUiState("user_1", "User 1", false, Color.BLUE),
+                ),
+                courses = listOf(
+                    CalendarFilterItemUiState("course_1", "Course 1", true, Color.BLUE),
+                    CalendarFilterItemUiState("course_2", "Course 2", false, Color.BLUE)
+                ),
+                groups = listOf(
+                    CalendarFilterItemUiState("group_1", "Group 1", true, Color.BLUE),
+                    CalendarFilterItemUiState("group_2", "Group 2", false, Color.BLUE)
+                ), selectAllAvailable = true
+            ), actionHandler = { actions.add(it) }) {}
+        }
+
+        composeTestRule.onNode(hasText("Deselect all").and(hasAnyAncestor(hasTestTag("toolbar"))))
+            .performClick()
+
+        assertEquals(CalendarFilterAction.DeselectAll, actions.last())
     }
 }
