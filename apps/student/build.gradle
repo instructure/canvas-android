@@ -21,21 +21,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'com.heapanalytics.android'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
-
-sqldelight {
-    StudentDb {
-        packageName = "com.instructure.student.db"
-        sourceFolders = ["db"]
-        schemaOutputDirectory = file("src/main/db/schemas")
-    }
-}
-
 
 configurations {
     all*.exclude group: 'commons-logging', module: 'commons-logging'
@@ -302,9 +292,6 @@ dependencies {
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES
-
-    /* Database */
-    implementation Libs.SQLDELIGHT
 
     /* Qr Code */
     implementation (Libs.JOURNEY_ZXING) { transitive = false }

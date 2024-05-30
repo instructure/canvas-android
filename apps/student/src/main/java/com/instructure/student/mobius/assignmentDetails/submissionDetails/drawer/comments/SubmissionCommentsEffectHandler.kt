@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
@@ -111,11 +112,11 @@ class SubmissionCommentsEffectHandler(val context: Context, val submissionHelper
     }
 
     private fun needsPermissions(successCallback: () -> Unit, vararg permissions: String): Boolean {
-        if (PermissionUtils.hasPermissions(context as Activity, *permissions)) {
+        if (PermissionUtils.hasPermissions(context.getFragmentActivity(), *permissions)) {
             return false
         }
 
-        context.requestPermissions(setOf(*permissions)) { results ->
+        context.getFragmentActivity().requestPermissions(setOf(*permissions)) { results ->
             if (results.isNotEmpty() && results.all { it.value }) {
                 // If permissions list is not empty and all are granted, retry camera
                 successCallback()

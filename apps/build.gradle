@@ -33,7 +33,6 @@ buildscript {
         classpath Plugins.KOTLIN
         classpath Plugins.FIREBASE_CRASHLYTICS
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
-        classpath Plugins.SQLDELIGHT
         classpath Plugins.HILT
         classpath Plugins.HEAP
     }

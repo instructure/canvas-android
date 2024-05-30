@@ -18,7 +18,6 @@ package com.instructure.student.test.assignment.details.submission
 import android.content.Context
 import com.instructure.canvasapi2.models.Course
 import com.instructure.student.FileSubmission
-import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect

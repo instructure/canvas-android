@@ -67,7 +67,6 @@ import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateSubmissionEntity
 import com.instructure.student.util.getStudioLTITool
-import com.squareup.sqldelight.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -88,7 +87,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val alarmScheduler: AlarmScheduler,
     studentDb: StudentDb
-) : ViewModel(), Query.Listener {
+) : ViewModel() {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -198,10 +197,6 @@ class AssignmentDetailsViewModel @Inject constructor(
         super.onCleared()
         remindersLiveData.removeObserver(remindersObserver)
         submissionLiveData.removeObserver(submissionObserver)
-    }
-
-    override fun queryResultsChanged() {
-
     }
 
     private fun markSubmissionAsRead() {
