@@ -27,7 +27,9 @@ import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Bookmark
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.FileUploadParams
 import com.instructure.canvasapi2.models.Group
@@ -99,11 +101,23 @@ object UserEndpoint : Endpoint(
                     // Currently we assume all the assignments are due today
                     val plannerItemsList = data.assignments.values
                         .filter { userCourseIds.contains(it.courseId) }
-                        .map {
-                            val plannableDate = it.dueDate ?: Date()
-                            val plannable = Plannable(it.id, it.name
-                                ?: "", it.courseId, null, userId, null, it.dueDate, it.id, null, null, null, null, null)
-                            PlannerItem(it.courseId, null, userId, null, null, PlannableType.ASSIGNMENT, plannable, plannableDate, null, SubmissionState(), false)
+                        .map { assignment ->
+                            val plannableType = when {
+                                assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> PlannableType.QUIZ
+                                assignment.getSubmissionTypes().contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> PlannableType.DISCUSSION_TOPIC
+                                else -> PlannableType.ASSIGNMENT
+                            }
+                            val plannableDate = assignment.dueDate ?: Date()
+                            val contextName = data.courses[assignment.courseId]?.name
+                            val plannableId = if (plannableType == PlannableType.DISCUSSION_TOPIC) {
+                                val topicHeader = data.courseDiscussionTopicHeaders.values.flatten().find { it.assignmentId == assignment.id }
+                                topicHeader?.id ?: assignment.id
+                            } else {
+                                assignment.id
+                            }
+                            val plannable = Plannable(plannableId, assignment.name
+                                ?: "", assignment.courseId, null, userId, null, assignment.dueDate, assignment.id, null, null, null, null, null)
+                            PlannerItem(assignment.courseId, null, userId, CanvasContext.Type.COURSE.apiString, contextName, plannableType, plannable, plannableDate, null, SubmissionState(), false)
                         }
                         .plus(todos)
                         .plus(events)

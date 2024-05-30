@@ -16,11 +16,18 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipeRight
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.pandautils.R
@@ -59,8 +66,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun assertItemDetails(eventTitle: String, contextName: String, eventDate: String? = null, eventStatus: String? = null) {
-        composeTestRule.onNodeWithText(eventTitle).assertIsDisplayed()
-        composeTestRule.onNodeWithText(contextName).assertIsDisplayed()
+        composeTestRule.onNode(hasAnyChild(hasText(contextName)).and(hasAnyChild(hasText(eventTitle)))).assertIsDisplayed()
         if (eventDate != null) composeTestRule.onNodeWithText(eventDate).assertIsDisplayed()
         if (eventStatus != null) composeTestRule.onNodeWithText(eventStatus).assertIsDisplayed()
     }
@@ -71,5 +77,40 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
 
     fun assertItemNotExist(itemTitle: String) {
         composeTestRule.onNodeWithText(itemTitle).assertDoesNotExist()
+    }
+
+    fun assertItemNotDisplayed(itemTitle: String) {
+        composeTestRule.onNodeWithText(itemTitle).assertIsNotDisplayed()
+    }
+
+    fun swipeCalendarLeft() {
+        composeTestRule.onNodeWithTag("calendarPager").performTouchInput {
+            swipeLeft()
+        }
+        composeTestRule.waitForIdle()
+    }
+
+    fun swipeEventsLeft() {
+        composeTestRule.onNodeWithTag("calendarEventsPage0").performTouchInput {
+            swipeLeft()
+        }
+        composeTestRule.waitForIdle()
+    }
+
+    fun swipeEventsRight() {
+        composeTestRule.onNodeWithTag("calendarEventsPage0").performTouchInput {
+            swipeRight()
+        }
+        composeTestRule.waitForIdle()
+    }
+
+    fun clickCalendarHeader() {
+        composeTestRule.onNodeWithTag("yearMonthTitle").performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun clickCalendarFilters() {
+        composeTestRule.onNodeWithText("Calendars").performClick()
+        composeTestRule.waitForIdle()
     }
 }

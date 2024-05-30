@@ -43,7 +43,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
@@ -61,7 +61,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
@@ -79,7 +79,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
@@ -97,7 +97,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description",
@@ -116,7 +116,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description",
@@ -135,7 +135,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description",
@@ -154,7 +154,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
@@ -172,7 +172,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
@@ -194,7 +194,7 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
+            course = course,
             date = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"

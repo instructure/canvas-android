@@ -79,7 +79,7 @@ class SyllabusInteractionTest : StudentComposeTest() {
 
         repeat(eventCount) {
             data.addCourseCalendarEvent(
-                    courseId = course.id,
+                    course = course,
                     date = 2.days.fromNow.iso8601,
                     title = "Test Calendar Event",
                     description = "The calendar event to end all calendar events"

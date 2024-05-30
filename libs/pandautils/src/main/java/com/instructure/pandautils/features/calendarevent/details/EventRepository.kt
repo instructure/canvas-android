@@ -46,9 +46,9 @@ class EventRepository(
 
     suspend fun canManageCourseCalendar(contextId: Long) = courseApi.getCoursePermissions(
         contextId, listOf(MANAGE_CALENDAR), RestParams()
-    ).dataOrThrow.manageCalendar
+    ).dataOrNull?.manageCalendar ?: false
 
     suspend fun canManageGroupCalendar(contextId: Long) = groupApi.getGroupPermissions(
         contextId, listOf(MANAGE_CALENDAR), RestParams()
-    ).dataOrThrow.manageCalendar
+    ).dataOrNull?.manageCalendar ?: false
 }

@@ -162,7 +162,7 @@ fun Calendar(calendarUiState: CalendarUiState, actionHandler: (CalendarAction) -
                 orientation = Orientation.Vertical,
                 anchors = mapOf(0f to 0f, maxHeight.toFloat() to 1f),
                 thresholds = { _, _ -> FractionalThreshold(0.5f) },
-            ),
+            ).testTag("calendarPager"),
             state = pagerState,
             beyondBoundsPageCount = 2,
             reverseLayout = false,
