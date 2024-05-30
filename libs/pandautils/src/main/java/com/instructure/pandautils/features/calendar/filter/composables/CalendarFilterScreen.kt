@@ -111,7 +111,7 @@ fun CalendarFiltersScreen(
                             .fillMaxHeight()
                     )
                 } else if (uiState.loading) {
-                    Loading(modifier = Modifier.fillMaxSize())
+                    Loading(modifier = Modifier.fillMaxSize().testTag("loading"))
                 } else {
                     CalendarFiltersContent(
                         uiState, actionHandler, modifier = Modifier
@@ -189,7 +189,8 @@ private fun CalendarFilterItem(
                 checkedColor = Color(uiState.color),
                 uncheckedColor = Color(uiState.color),
                 checkmarkColor = colorResource(id = R.color.white)
-            )
+            ),
+            modifier = Modifier.testTag("calendarFilterCheckbox")
         )
         Text(uiState.name, color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
     }
