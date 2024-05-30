@@ -14,6 +14,8 @@
  *     limitations under the License.
  */package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEffectHandler
@@ -39,6 +41,8 @@ class SubmissionCommentsFragment : BaseSubmissionCommentsFragment() {
     lateinit var studentDb: StudentDb
 
     override fun makeEffectHandler() = SubmissionCommentsEffectHandler(requireContext(), submissionHelper)
+
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionCommentsView(inflater, parent, studentDb)
 
     override fun makePresenter() = SubmissionCommentsPresenter(studentDb)
 

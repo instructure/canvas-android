@@ -44,8 +44,6 @@ abstract class BaseSubmissionCommentsFragment :
     protected var assignmentEnhancementsEnabled by BooleanArg(key = Const.ASSIGNMENT_ENHANCEMENTS_ENABLED)
 
     override fun makeUpdate() = SubmissionCommentsUpdate()
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionCommentsView(inflater, parent)
-
 
     override fun makeInitModel() = SubmissionCommentsModel(
         attemptId = attemptId,
