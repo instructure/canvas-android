@@ -19,6 +19,7 @@
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
 import android.app.Activity
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
@@ -37,6 +38,7 @@ import com.instructure.student.test.util.receiveOnce
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
@@ -45,10 +47,11 @@ import org.junit.Test
 import java.io.File
 import java.util.concurrent.Executors
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SubmissionCommentsEffectHandlerTest : Assert(){
 
     private val mockView: SubmissionCommentsView = mockk(relaxed = true)
-    private val context: Activity = mockk(relaxed = true)
+    private val context: FragmentActivity = mockk(relaxed = true)
     private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
     private val effectHandler = SubmissionCommentsEffectHandler(context, submissionHelper).apply { view = mockView }
     private val eventConsumer: Consumer<SubmissionCommentsEvent> = mockk(relaxed = true)

@@ -72,7 +72,7 @@ class UrlSubmissionUploadEffectHandlerTest : Assert() {
             submissionHelper.startUrlSubmission(course, assignment.id, assignment.name, url)
         }
 
-        confirmVerified(view)
+        confirmVerified(submissionHelper)
     }
 
     @Test

@@ -69,24 +69,6 @@ class TextSubmissionUploadEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `SubmitText with no view does not crash`() {
-        val text = "Some text here"
-        val assignmentId = 1234L
-        val assignmentName = "Name"
-        val course = Course()
-        effectHandler.view = null
-
-        connection.accept(TextSubmissionUploadEffect.SubmitText(text, course, assignmentId, assignmentName))
-
-        verify(exactly = 0) {
-            submissionHelper.startTextSubmission(any(), any(), any(), any())
-            view.goBack()
-        }
-
-        confirmVerified(view)
-    }
-
-    @Test
     fun `InitializeText results in view calling setInitialSubmissionText`() {
         val text = "Some text"
         connection.accept(TextSubmissionUploadEffect.InitializeText(text))

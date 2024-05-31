@@ -21,13 +21,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.student.PendingSubmissionComment
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsPresenter
-import io.mockk.every
+import com.instructure.student.room.StudentDb
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.junit.Assert
@@ -45,26 +42,16 @@ class SubmissionCommentsPresenterTest : Assert() {
     private lateinit var baseAssignment:  Assignment
     private lateinit var baseSubmission: Submission
     private lateinit var submissionComment: SubmissionComment
-    lateinit var queryMockk: List<PendingSubmissionComment>
+    private lateinit var presenter: SubmissionCommentsPresenter
+
+    private val studentDb: StudentDb = mockk(relaxed = true)
 
     @Before
     fun setup() {
         // Set up our context
         context = ApplicationProvider.getApplicationContext()
 
-        // Set up our mock DB logic
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
-
-        queryMockk = mockk(relaxed = true)
-        val db: StudentDb = mockk {
-            every {
-                pendingSubmissionCommentQueries
-                        .getCommentsByAccountAssignment(any(),any())
-                        .executeAsList()
-            } returns queryMockk
-        }
-
-        every { Db.getInstance(context) } returns db
+        presenter = SubmissionCommentsPresenter(studentDb)
 
         // Set up our user(s)
         user = User(id=100,name="Bart Simpson",shortName="Bart",avatarUrl="BartAvatarUrl")
@@ -106,14 +93,14 @@ class SubmissionCommentsPresenterTest : Assert() {
     @Test
     fun `Returns enableFilesButton true when model isFileButtonEnabledButton is true`() {
         val model = baseModel.copy(isFileButtonEnabled = true)
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue(actualState.enableFilesButton)
     }
 
     @Test
     fun `Returns enableFilesButton false when model isFileButtonEnabledButton is false`() {
         val model = baseModel.copy(isFileButtonEnabled = false)
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertFalse(actualState.enableFilesButton)
     }
 
@@ -121,63 +108,63 @@ class SubmissionCommentsPresenterTest : Assert() {
     fun `Returns enableFilesButton false when user not set`() {
         ApiPrefs.user = null
         val model = baseModel.copy(isFileButtonEnabled = true)
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertFalse(actualState.enableFilesButton)
     }
 
     @Test
     fun `Returns CommentItem states if comments in model`() {
         val model = baseModel.copy()
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue(actualState.commentStates.filter {it is CommentItemState.CommentItem}.count() > 0)
     }
 
     @Test
     fun `Returns no CommentItem states if no comments in model`() {
         val model = baseModel.copy(comments = emptyList())
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue(actualState.commentStates.filter {it is CommentItemState.CommentItem}.count() == 0)
     }
 
     @Test
     fun `Returns SubmissionItem states if submission in model`() {
         val model = baseModel.copy()
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue(actualState.commentStates.filter {it is CommentItemState.SubmissionItem}.count() > 0)
     }
 
     @Test
     fun `Returns no SubmissionItem states if no submissions in model`() {
         val model = baseModel.copy( submissionHistory = emptyList())
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue(actualState.commentStates.filter {it is CommentItemState.SubmissionItem}.count() == 0)
     }
 
     @Test
     fun `Returns isAudience true for comments by other user`() {
         val model = baseModel.copy( comments = listOf(submissionComment.copy(authorId = teacher.id)))
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue( (actualState.commentStates.filter {it is CommentItemState.CommentItem}.get(0) as CommentItemState.CommentItem).isAudience)
     }
 
     @Test
     fun `Returns isAudience false for comments by user`() {
         val model = baseModel.copy()
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertFalse( (actualState.commentStates.filter {it is CommentItemState.CommentItem}.get(0) as CommentItemState.CommentItem).isAudience)
     }
 
     @Test
     fun `Returns no SubmissionItem states for submissions with null submission type`() {
         val model = baseModel.copy(submissionHistory = listOf(baseSubmission.copy(submissionType = null)))
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue(actualState.commentStates.filter {it is CommentItemState.SubmissionItem}.count() == 0)
     }
 
     @Test
     fun `Returns no SubmissionItem states for submissions with workflow state unsubmitted`() {
         val model = baseModel.copy(submissionHistory = listOf(baseSubmission.copy(workflowState = "unsubmitted")))
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertTrue(actualState.commentStates.filter {it is CommentItemState.SubmissionItem}.count() == 0)
     }
 
@@ -194,7 +181,7 @@ class SubmissionCommentsPresenterTest : Assert() {
                 comments = listOf(comment1,comment2)
         )
 
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
 
         assertEquals(3, actualState.commentStates.count())
         for(i in 1 until actualState.commentStates.count()) {
@@ -214,7 +201,7 @@ class SubmissionCommentsPresenterTest : Assert() {
             SubmissionComment(id=1, comment="No attempt", attempt = null)
         )
         val model = baseModel.copy(comments = comments)
-        val actualState = SubmissionCommentsPresenter.present(model, context)
+        val actualState = presenter.present(model, context)
         assertEquals(3, actualState.commentStates.size)
         assertEquals("No attempt", (actualState.commentStates[1] as CommentItemState.CommentItem).message)
     }

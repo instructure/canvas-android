@@ -35,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.util.Date
 
@@ -43,17 +44,14 @@ class SubmissionHelper(
     private val studentDb: StudentDb,
     private val apiPrefs: ApiPrefs
 ) {
-
-    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     fun startTextSubmission(
         canvasContext: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
         text: String
     ) {
-        scope.launch {
-            val dbSubmissionId = insertNewSubmission(assignmentId) {
+        val dbSubmissionId = runBlocking {
+            insertNewSubmission(assignmentId) {
                 val entity = CreateSubmissionEntity(
                     submissionEntry = text,
                     assignmentName = assignmentName,
@@ -66,13 +64,13 @@ class SubmissionHelper(
                 )
                 it.submissionDao().insert(entity)
             }
-
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, SubmissionService.Action.TEXT_ENTRY, bundle)
         }
+
+        val bundle = Bundle().apply {
+            putLong(Const.SUBMISSION_ID, dbSubmissionId)
+        }
+
+        startService(context, SubmissionService.Action.TEXT_ENTRY, bundle)
     }
 
     fun saveDraft(
@@ -80,19 +78,21 @@ class SubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         text: String
-    ) = scope.launch {
-        insertDraft(assignmentId) {
-            val entity = CreateSubmissionEntity(
-                assignmentName = assignmentName,
-                assignmentId = assignmentId,
-                canvasContext = canvasContext,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
-                userId = getUserId(),
-                lastActivityDate = Date(),
-                submissionEntry = text,
-                isDraft = true
-            )
-            it.submissionDao().insert(entity)
+    ) {
+        runBlocking {
+            insertDraft(assignmentId) {
+                val entity = CreateSubmissionEntity(
+                    assignmentName = assignmentName,
+                    assignmentId = assignmentId,
+                    canvasContext = canvasContext,
+                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+                    userId = getUserId(),
+                    lastActivityDate = Date(),
+                    submissionEntry = text,
+                    isDraft = true
+                )
+                it.submissionDao().insert(entity)
+            }
         }
     }
 
@@ -101,18 +101,20 @@ class SubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         url: String
-    ) = scope.launch {
-        val dbSubmissionId = insertNewSubmission(assignmentId) {
-            val entity = CreateSubmissionEntity(
-                submissionEntry = url,
-                assignmentName = assignmentName,
-                assignmentId = assignmentId,
-                canvasContext = canvasContext,
-                submissionType = Assignment.SubmissionType.ONLINE_URL.apiString,
-                userId = getUserId(),
-                lastActivityDate = Date()
-            )
-            it.submissionDao().insert(entity)
+    ) {
+        val dbSubmissionId = runBlocking {
+            insertNewSubmission(assignmentId) {
+                val entity = CreateSubmissionEntity(
+                    submissionEntry = url,
+                    assignmentName = assignmentName,
+                    assignmentId = assignmentId,
+                    canvasContext = canvasContext,
+                    submissionType = Assignment.SubmissionType.ONLINE_URL.apiString,
+                    userId = getUserId(),
+                    lastActivityDate = Date()
+                )
+                it.submissionDao().insert(entity)
+            }
         }
 
         val bundle = Bundle().apply {
@@ -128,20 +130,22 @@ class SubmissionHelper(
         assignmentName: String?,
         assignmentGroupCategoryId: Long = 0,
         files: ArrayList<FileSubmitObject>
-    ) = scope.launch {
-        files.ifEmpty { return@launch } // No need to upload files if we aren't given any
+    ) {
+        files.ifEmpty { return } // No need to upload files if we aren't given any
 
-        val dbSubmissionId = insertNewSubmission(assignmentId, files) {
-            val entity = CreateSubmissionEntity(
-                assignmentName = assignmentName,
-                assignmentId = assignmentId,
-                assignmentGroupCategoryId = assignmentGroupCategoryId,
-                canvasContext = canvasContext,
-                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
-                userId = getUserId(),
-                lastActivityDate = Date()
-            )
-            it.submissionDao().insert(entity)
+        val dbSubmissionId = runBlocking {
+            insertNewSubmission(assignmentId, files) {
+                val entity = CreateSubmissionEntity(
+                    assignmentName = assignmentName,
+                    assignmentId = assignmentId,
+                    assignmentGroupCategoryId = assignmentGroupCategoryId,
+                    canvasContext = canvasContext,
+                    submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+                    userId = getUserId(),
+                    lastActivityDate = Date()
+                )
+                it.submissionDao().insert(entity)
+            }
         }
 
         val bundle = Bundle().apply {
@@ -151,12 +155,13 @@ class SubmissionHelper(
         startService(context, SubmissionService.Action.FILE_ENTRY, bundle)
     }
 
-    fun retryFileSubmission(dbSubmissionId: Long) = scope.launch {
-        val submission =
+    fun retryFileSubmission(dbSubmissionId: Long) {
+        val submission = runBlocking {
             studentDb.submissionDao().findSubmissionById(dbSubmissionId)
-                ?: return@launch // No submission exists, so nothing to be done
+        } ?: return
 
-        studentDb.submissionDao().setSubmissionError(false, submission.id)
+        runBlocking { studentDb.submissionDao().setSubmissionError(false, submission.id) }
+
         val bundle = Bundle().apply {
             putLong(Const.SUBMISSION_ID, dbSubmissionId)
         }
@@ -174,7 +179,7 @@ class SubmissionHelper(
         assignmentName: String?,
         assignmentGroupCategoryId: Long,
         mediaFilePath: String
-    ) = scope.launch {
+    ) {
         val file = File(mediaFilePath).let {
             FileSubmitObject(
                 it.name,
@@ -183,7 +188,7 @@ class SubmissionHelper(
                 mediaFilePath
             )
         }
-        val dbSubmissionId =
+        val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId, listOf(file)) {
                 val entity = CreateSubmissionEntity(
                     assignmentName = assignmentName,
@@ -196,6 +201,7 @@ class SubmissionHelper(
                 )
                 it.submissionDao().insert(entity)
             }
+        }
 
         val bundle = Bundle().apply {
             putLong(Const.SUBMISSION_ID, dbSubmissionId)
@@ -209,18 +215,20 @@ class SubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         url: String
-    ) = scope.launch {
-        val dbSubmissionId = insertNewSubmission(assignmentId) {
-            val entity = CreateSubmissionEntity(
-                submissionEntry = url,
-                assignmentName = assignmentName,
-                assignmentId = assignmentId,
-                canvasContext = canvasContext,
-                submissionType = Assignment.SubmissionType.ONLINE_URL.apiString,
-                userId = getUserId(),
-                lastActivityDate = Date()
-            )
-            it.submissionDao().insert(entity)
+    ) {
+        val dbSubmissionId = runBlocking {
+            insertNewSubmission(assignmentId) {
+                val entity = CreateSubmissionEntity(
+                    submissionEntry = url,
+                    assignmentName = assignmentName,
+                    assignmentId = assignmentId,
+                    canvasContext = canvasContext,
+                    submissionType = Assignment.SubmissionType.ONLINE_URL.apiString,
+                    userId = getUserId(),
+                    lastActivityDate = Date()
+                )
+                it.submissionDao().insert(entity)
+            }
         }
 
         val bundle = Bundle().apply {
@@ -238,7 +246,7 @@ class SubmissionHelper(
         attachments: List<FileSubmitObject>?,
         isGroupMessage: Boolean,
         attemptId: Long?
-    ) = scope.launch {
+    ) {
         require(message.isValid() || attachments?.isNotEmpty() == true)
         val entity = CreatePendingSubmissionCommentEntity(
             accountDomain = ApiPrefs.domain,
@@ -251,8 +259,8 @@ class SubmissionHelper(
             mediaPath = null,
             attemptId = attemptId
         )
-        val rowId = studentDb.pendingSubmissionCommentDao().insert(entity)
-        val commentId = studentDb.pendingSubmissionCommentDao().findIdByRowId(rowId)
+        val rowId = runBlocking { studentDb.pendingSubmissionCommentDao().insert(entity) }
+        val commentId = runBlocking { studentDb.pendingSubmissionCommentDao().findIdByRowId(rowId) }
         attachments?.forEach {
             val fileEntity = CreateSubmissionCommentFileEntity(
                 pendingCommentId = commentId,
@@ -261,7 +269,7 @@ class SubmissionHelper(
                 contentType = it.contentType,
                 fullPath = it.fullPath
             )
-            studentDb.submissionCommentFileDao().insert(fileEntity)
+            runBlocking { studentDb.submissionCommentFileDao().insert(fileEntity) }
         }
 
         val bundle = Bundle().apply {
@@ -277,7 +285,7 @@ class SubmissionHelper(
         mediaFile: File,
         isGroupMessage: Boolean,
         attemptId: Long?
-    ) = scope.launch {
+    ) {
         val entity = CreatePendingSubmissionCommentEntity(
             accountDomain = ApiPrefs.domain,
             canvasContext = canvasContext,
@@ -289,8 +297,8 @@ class SubmissionHelper(
             mediaPath = mediaFile.absolutePath,
             attemptId = attemptId
         )
-        val rowId = studentDb.pendingSubmissionCommentDao().insert(entity)
-        val commentId = studentDb.pendingSubmissionCommentDao().findIdByRowId(rowId)
+        val rowId = runBlocking { studentDb.pendingSubmissionCommentDao().insert(entity) }
+        val commentId = runBlocking { studentDb.pendingSubmissionCommentDao().findIdByRowId(rowId) }
 
         val bundle = Bundle().apply {
             putLong(Const.ID, commentId)
@@ -303,18 +311,20 @@ class SubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         annotatableAttachmentId: Long
-    ) = scope.launch {
-        val dbSubmissionId = insertNewSubmission(assignmentId) {
-            val entity = CreateSubmissionEntity(
-                annotatableAttachmentId = annotatableAttachmentId,
-                assignmentName = assignmentName,
-                assignmentId = assignmentId,
-                canvasContext = canvasContext,
-                submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION.apiString,
-                userId = getUserId(),
-                lastActivityDate = Date()
-            )
-            it.submissionDao().insert(entity)
+    ) {
+        val dbSubmissionId = runBlocking {
+            insertNewSubmission(assignmentId) {
+                val entity = CreateSubmissionEntity(
+                    annotatableAttachmentId = annotatableAttachmentId,
+                    assignmentName = assignmentName,
+                    assignmentId = assignmentId,
+                    canvasContext = canvasContext,
+                    submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION.apiString,
+                    userId = getUserId(),
+                    lastActivityDate = Date()
+                )
+                it.submissionDao().insert(entity)
+            }
         }
 
         val bundle = Bundle().apply {
@@ -391,9 +401,11 @@ class SubmissionHelper(
         studentDb.submissionDao().deleteDraftById(id, getUserId())
     }
 
-    fun deletePendingComment(commentId: Long) = scope.launch {
-        studentDb.pendingSubmissionCommentDao().deleteCommentById(commentId)
-        studentDb.submissionCommentFileDao().deleteFilesForCommentId(commentId)
+    fun deletePendingComment(commentId: Long) {
+        runBlocking {
+            studentDb.pendingSubmissionCommentDao().deleteCommentById(commentId)
+            studentDb.submissionCommentFileDao().deleteFilesForCommentId(commentId)
+        }
     }
 
     fun retryCommentUpload(commentId: Long) {

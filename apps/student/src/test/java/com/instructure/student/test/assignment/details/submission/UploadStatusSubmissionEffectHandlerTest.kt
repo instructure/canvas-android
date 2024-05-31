@@ -17,15 +17,14 @@ package com.instructure.student.test.assignment.details.submission
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.FileSubmission
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +42,9 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     private val view: UploadStatusSubmissionView = mockk(relaxed = true)
     private val eventConsumer: Consumer<UploadStatusSubmissionEvent> = mockk(relaxed = true)
     private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
-    private val effectHandler = UploadStatusSubmissionEffectHandler(context, submissionId, submissionHelper)
+    private val studentDb: StudentDb = mockk(relaxed = true)
+    private val effectHandler =
+        UploadStatusSubmissionEffectHandler(submissionId, submissionHelper, studentDb)
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi
@@ -58,7 +59,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
         val name = "assignment"
         val failed = false
         val list = listOf(
-            FileSubmission(
+            CreateFileSubmissionEntity(
                 0,
                 submissionId,
                 null,
@@ -71,21 +72,15 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
             )
         )
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
-
-        val db: StudentDb = mockk {
-            every {
-                submissionQueries.getSubmissionById(submissionId).executeAsOneOrNull()
-            } returns mockk {
-                every { errorFlag } returns failed
-                every { assignmentName } returns name
-            }
-            every {
-                fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList()
-            } returns list
+        coEvery {
+            studentDb.submissionDao().findSubmissionById(submissionId)
+        } returns mockk {
+            every { errorFlag } returns failed
+            every { assignmentName } returns name
         }
-
-        every { Db.getInstance(context) } returns db
+        coEvery {
+            studentDb.fileSubmissionDao().findFilesForSubmissionId(submissionId)
+        } returns list
 
         connection.accept(UploadStatusSubmissionEffect.LoadPersistedFiles(submissionId))
 
@@ -100,15 +95,9 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `LoadPersistedFiles results in OnPersistedSubmissionLoaded event with success submission`() {
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
-
-        val db: StudentDb = mockk {
-            every {
-                submissionQueries.getSubmissionById(submissionId).executeAsOneOrNull()
-            } returns null
-        }
-
-        every { Db.getInstance(context) } returns db
+        coEvery {
+            studentDb.submissionDao().findSubmissionById(submissionId)
+        } returns null
 
         connection.accept(UploadStatusSubmissionEffect.LoadPersistedFiles(submissionId))
 
@@ -123,30 +112,24 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `OnDeleteSubmission results in view call for submissionDeleted`() {
+        coEvery {
+            studentDb.submissionDao().deleteSubmissionById(submissionId)
+        } returns Unit
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
+        coEvery {
+            studentDb.fileSubmissionDao().deleteFilesForSubmissionId(submissionId)
+        } returns Unit
 
-        val db: StudentDb = mockk {
-            every {
-                submissionQueries.deleteSubmissionById(submissionId)
-            } returns Unit
-
-            every {
-                fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
-            } returns Unit
-        }
-
-        every { Db.getInstance(context) } returns db
 
         effectHandler.accept(UploadStatusSubmissionEffect.OnDeleteSubmission(submissionId))
 
-        verify (timeout = 100) {
-            db.submissionQueries.deleteSubmissionById(submissionId)
-            db.fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
+        coVerify(timeout = 100) {
+            studentDb.submissionDao().deleteSubmissionById(submissionId)
+            studentDb.fileSubmissionDao().deleteFilesForSubmissionId(submissionId)
             view.submissionDeleted()
         }
 
-        confirmVerified(db, view)
+        confirmVerified(studentDb, view)
     }
 
     @Test
@@ -158,19 +141,13 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
             submissionHelper.retryFileSubmission(any())
         } returns Unit
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
-
-        val db: StudentDb = mockk {
-            every {
-                submissionQueries.getSubmissionById(submissionId).executeAsOne().canvasContext
-            } returns course
-        }
-
-        every { Db.getInstance(context) } returns db
+        coEvery {
+            studentDb.submissionDao().findSubmissionById(submissionId)?.canvasContext
+        } returns course
 
         effectHandler.accept(UploadStatusSubmissionEffect.RetrySubmission(submissionId))
 
-        verify (timeout = 100) {
+        verify(timeout = 100) {
             submissionHelper.retryFileSubmission(submissionId)
             view.submissionRetrying()
         }
@@ -181,23 +158,18 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     @Test
     fun `OnDeleteFileFromSubmission results in db deletion`() {
         val fileId = 101L
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
 
-        val db: StudentDb = mockk {
-            every {
-                fileSubmissionQueries.deleteFileById(fileId)
-            } returns Unit
-        }
-
-        every { Db.getInstance(context) } returns db
+        coEvery {
+            studentDb.fileSubmissionDao().deleteFileById(fileId)
+        } returns Unit
 
         effectHandler.accept(UploadStatusSubmissionEffect.OnDeleteFileFromSubmission(fileId))
 
-        verify (timeout = 100) {
-            db.fileSubmissionQueries.deleteFileById(fileId)
+        coVerify(timeout = 100) {
+            studentDb.fileSubmissionDao().deleteFileById(fileId)
         }
 
-        confirmVerified(db)
+        confirmVerified(studentDb)
     }
 
     @Test

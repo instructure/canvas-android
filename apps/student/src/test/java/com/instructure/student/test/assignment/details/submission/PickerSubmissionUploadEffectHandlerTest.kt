@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.*
@@ -42,7 +43,7 @@ import java.io.File
 import java.util.concurrent.Executors
 
 class PickerSubmissionUploadEffectHandlerTest : Assert() {
-    private val context: Activity = mockk(relaxed = true)
+    private val context: FragmentActivity = mockk(relaxed = true)
     private val view: PickerSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<PickerSubmissionUploadEvent> = mockk(relaxed = true)
     private val submissionHelper: SubmissionHelper = mockk(relaxed = true)

@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.renderTests
 
+import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -27,16 +28,19 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
-import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -53,12 +57,15 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     private lateinit var commentItemIsAudience: CommentItemState.CommentItem
     private lateinit var submissionItem: CommentItemState.SubmissionItem
     private lateinit var pendingCommentItem: CommentItemState.PendingCommentItem
-    private val db = Db.getInstance(ApplicationProvider.getApplicationContext()).pendingSubmissionCommentQueries
+
+    private lateinit var db: StudentDb
 
     val page = SubmissionCommentsRenderPage()
 
     @Before
-    fun setUp() {
+    fun setUp() = runTest {
+        db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), StudentDb::class.java).build()
+
         user = User(id=100,name="Bart Simpson",shortName="Bart",avatarUrl="BartAvatarUrl")
         teacher = User(id=101,name="Edna Krabapple",shortName="Edna",avatarUrl="EdnaAvatarUrl")
 
@@ -123,12 +130,17 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
                         assignmentName = "Special assignment",
                         canvasContext = CanvasContext.defaultCanvasContext(),
                         isGroupMessage = false,
-                        lastActivityDate = Date.now(),
+                        lastActivityDate = Date(),
                         mediaPath = "/media/path",
                         message = "Pending Message",
                         attemptId = 1
                 )
         )
+    }
+
+    @After
+    fun cleanup() {
+        db.close()
     }
 
     @Test
@@ -226,8 +238,8 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         Priority.COMMON,
         FeatureCategory.ASSIGNMENTS,
         TestCategory.RENDER,secondaryFeature = SecondaryFeatureCategory.ASSIGNMENT_COMMENTS)
-    fun testFailedCommentDisplaysRetryAndDeleteOptions() {
-        db.setCommentError(true, pendingCommentItem.pendingComment.id)
+    fun testFailedCommentDisplaysRetryAndDeleteOptions() = runTest {
+        db.pendingSubmissionCommentDao().setCommentError(true, pendingCommentItem.pendingComment.id)
         val state = SubmissionCommentsViewState(
             commentStates = listOf(pendingCommentItem)
         )
@@ -292,7 +304,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Suppress("SameParameterValue")
-    private fun makePendingComment(
+    private suspend fun makePendingComment(
         accountDomain: String,
         canvasContext: CanvasContext,
         assignmentName: String,
@@ -302,20 +314,21 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         message: String?,
         mediaPath: String?,
         attemptId: Long?
-    ) : PendingSubmissionComment {
-        db.insertComment(
-            accountDomain,
-            canvasContext,
-            assignmentName,
-            assignmentId,
-            lastActivityDate,
-            isGroupMessage,
-            message,
-            mediaPath,
-            attemptId
+    ): CreatePendingSubmissionCommentEntity {
+        val rowId = db.pendingSubmissionCommentDao().insert(
+            CreatePendingSubmissionCommentEntity(
+                accountDomain = accountDomain,
+                canvasContext = canvasContext,
+                assignmentName = assignmentName,
+                assignmentId = assignmentId,
+                lastActivityDate = lastActivityDate,
+                isGroupMessage = isGroupMessage,
+                message = message,
+                mediaPath = mediaPath,
+                attemptId = attemptId
+            )
         )
-        val id = db.getLastInsert().executeAsOne()
-        return db.getCommentById(id).executeAsOne()
+        val id = db.pendingSubmissionCommentDao().findIdByRowId(rowId)
+        return db.pendingSubmissionCommentDao().findCommentById(id)!!
     }
-
 }

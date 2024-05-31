@@ -63,7 +63,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
     lateinit var assignment: Assignment
     lateinit var course: Course
-    private lateinit var queryMockk: Query<Submission>
     private var userId: Long = 0
     val uri = mockk<Uri>(relaxed = true)
 
@@ -78,22 +77,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = userId)
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
-
-        queryMockk = mockk(relaxed = true)
-        val db: StudentDb = mockk {
-            every {
-                submissionQueries.getSubmissionsByAssignmentId(assignment.id, userId)
-            } returns queryMockk
-        }
-
-        every { Db.getInstance(context) } returns db
-
         val intent = mockk<Intent>()
         every { intent.action } returns ""
         every { intent.addFlags(any()) } returns intent
         every { intent.putExtra(MediaStore.EXTRA_OUTPUT, uri) } returns intent
-
 
         connection = effectHandler.connect(eventConsumer)
     }
