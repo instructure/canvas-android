@@ -55,34 +55,31 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
     fun calendarItemsAreShownForToday() {
         val data = initData()
 
-        val course = data.courses.values.first()
-        val event = data.addCourseCalendarEvent(
-            course = course,
-            date = Date().toApiString(),
-            title = "Test Event",
-            description = "Test Description"
-        )
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 13)
+        }
 
+        val course = data.courses.values.first()
         val user = getLoggedInUser()
         val todo = data.addPlannable(
             name = "Test Todo",
             course = course,
             userId = user.id,
             type = PlannableType.PLANNER_NOTE,
-            date = Date()
+            date = calendar.time
         )
 
         val assignment = data.addAssignment(
             course.id,
             name = "Test Assignment",
-            dueAt = Calendar.getInstance().time.toApiString()
+            dueAt = calendar.time.toApiString()
         )
 
         val quiz = data.addQuizToCourse(
             title = "Test Quiz",
             course = course,
             quizType = Quiz.TYPE_ASSIGNMENT,
-            dueAt = Calendar.getInstance().time.toApiString(),
+            dueAt = calendar.time.toApiString(),
             description = "Here's a description!"
         )
 
@@ -91,7 +88,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
             submissionTypeList = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC),
             name = "Discussion assignment",
             pointsPossible = 12,
-            dueAt = Calendar.getInstance().time.toApiString()
+            dueAt = calendar.time.toApiString()
         )
 
         data.addDiscussionTopicToCourse(
@@ -99,6 +96,14 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
             course = course,
             user = user,
             assignment = discussionAssignment
+        )
+
+        val event = data.addCourseCalendarEvent(
+            course = course,
+            startDate = calendar.apply { set(Calendar.HOUR_OF_DAY, 15) }.time.toApiString(),
+            endDate = calendar.apply { set(Calendar.HOUR_OF_DAY, 16) }.time.toApiString(),
+            title = "Test Event",
+            description = "Test Description"
         )
 
         goToCalendar(data)
@@ -118,7 +123,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
             course = course,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -127,7 +132,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         calendar.add(Calendar.MONTH, 1)
         val eventNextMonth = data.addCourseCalendarEvent(
             course = course,
-            date = Date(calendar.timeInMillis).toApiString(),
+            startDate = Date(calendar.timeInMillis).toApiString(),
             title = "Next month event",
             description = "Test Description"
         )
@@ -149,7 +154,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
             course = course,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -158,7 +163,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         calendar.add(Calendar.WEEK_OF_YEAR, 1)
         val eventNextWeek = data.addCourseCalendarEvent(
             course = course,
-            date = Date(calendar.timeInMillis).toApiString(),
+            startDate = Date(calendar.timeInMillis).toApiString(),
             title = "Next week event",
             description = "Test Description"
         )
@@ -179,7 +184,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
             course = course,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -188,7 +193,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         val eventNextDay = data.addCourseCalendarEvent(
             course = course,
-            date = Date(calendar.timeInMillis).toApiString(),
+            startDate = Date(calendar.timeInMillis).toApiString(),
             title = "Next day event",
             description = "Test Description"
         )
@@ -209,7 +214,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
             course = course,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -218,7 +223,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         calendar.add(Calendar.DAY_OF_YEAR, -1)
         val eventPreviousDay = data.addCourseCalendarEvent(
             course = course,
-            date = Date(calendar.timeInMillis).toApiString(),
+            startDate = Date(calendar.timeInMillis).toApiString(),
             title = "previous day event",
             description = "Test Description"
         )
@@ -239,7 +244,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
             course = course,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -247,7 +252,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course2 = data.courses.values.last()
         val event2 = data.addCourseCalendarEvent(
             course = course2,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Course 2 event",
             description = "Test Description"
         )
@@ -292,7 +297,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
             course = course,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -376,7 +381,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
             course = course,
-            date = Date().toApiString(),
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )

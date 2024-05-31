@@ -625,7 +625,8 @@ fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdat
 
 fun MockCanvas.addCourseCalendarEvent(
     course: Course,
-    date: String,
+    startDate: String,
+    endDate: String? = null,
     title: String,
     description: String,
     isImportantDate: Boolean = false,
@@ -639,9 +640,9 @@ fun MockCanvas.addCourseCalendarEvent(
         description = description,
         itemType = ScheduleItem.Type.TYPE_CALENDAR,
         isAllDay = true,
-        allDayAt = date,
-        startAt = date,
-        endAt = date,
+        allDayAt = if (endDate != null) null else startDate,
+        startAt = startDate,
+        endAt = endDate ?: startDate,
         contextCode = "course_${course.id}",
         contextName = course.name,
         importantDates = isImportantDate,
