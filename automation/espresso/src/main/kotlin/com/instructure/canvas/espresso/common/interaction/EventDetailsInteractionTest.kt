@@ -43,8 +43,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -61,8 +61,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -79,8 +79,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -97,8 +97,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description",
             rrule = "FREQ=DAILY;COUNT=365;INTERVAL=1"
@@ -116,8 +116,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description",
             location = "Test Location"
@@ -135,8 +135,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description",
             address = "Test Address"
@@ -154,8 +154,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -172,8 +172,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )
@@ -194,8 +194,8 @@ abstract class EventDetailsInteractionTest : CanvasComposeTest() {
         val data = initData()
         val course = data.courses.values.first()
         val event = data.addCourseCalendarEvent(
-            courseId = course.id,
-            date = Date().toApiString(),
+            course = course,
+            startDate = Date().toApiString(),
             title = "Test Event",
             description = "Test Description"
         )

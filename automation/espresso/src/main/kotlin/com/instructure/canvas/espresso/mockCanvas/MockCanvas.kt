@@ -624,11 +624,12 @@ fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdat
 }
 
 fun MockCanvas.addCourseCalendarEvent(
-    courseId: Long,
-    date: String,
+    course: Course,
+    startDate: String,
     title: String,
     description: String,
     isImportantDate: Boolean = false,
+    endDate: String? = null,
     rrule: String? = null,
     location: String? = null,
     address: String? = null
@@ -639,11 +640,11 @@ fun MockCanvas.addCourseCalendarEvent(
         description = description,
         itemType = ScheduleItem.Type.TYPE_CALENDAR,
         isAllDay = true,
-        allDayAt = date,
-        startAt = date,
-        endAt = date,
-        contextCode = "course_$courseId",
-        contextName = "Course $courseId",
+        allDayAt = if (endDate != null) null else startDate,
+        startAt = startDate,
+        endAt = endDate ?: startDate,
+        contextCode = "course_${course.id}",
+        contextName = course.name,
         importantDates = isImportantDate,
         rrule = rrule,
         seriesNaturalLanguage = rrule,
@@ -652,10 +653,10 @@ fun MockCanvas.addCourseCalendarEvent(
         workflowState = "active"
     )
 
-    var calendarEventList = courseCalendarEvents[courseId]
+    var calendarEventList = courseCalendarEvents[course.id]
     if (calendarEventList == null) {
         calendarEventList = mutableListOf()
-        courseCalendarEvents[courseId] = calendarEventList
+        courseCalendarEvents[course.id] = calendarEventList
     }
     calendarEventList.add(newScheduleItem)
 
@@ -1004,7 +1005,8 @@ fun MockCanvas.addAssignment(
     lockAt: String? = null,
     unlockAt: String? = null,
     withDescription: Boolean = false,
-    gradingType: String = "percent"
+    gradingType: String = "percent",
+    discussionTopicHeader: DiscussionTopicHeader? = null
 ) : Assignment {
     val assignmentId = newItemId()
     val submissionTypeListRawStrings = submissionTypeList.map { it.apiString }
@@ -1024,7 +1026,8 @@ fun MockCanvas.addAssignment(
             unlockAt = unlockAt,
             published = true,
             allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
-            gradingType = gradingType
+            gradingType = gradingType,
+            discussionTopicHeader = discussionTopicHeader
     )
 
     if (isQuizzesNext) {
@@ -1058,6 +1061,17 @@ fun MockCanvas.addAssignment(
 
     // return the new assignment
     return assignment
+}
+
+fun MockCanvas.addDiscussionTopicToAssignment(
+    assignment: Assignment,
+    discussionTopicHeader: DiscussionTopicHeader
+) {
+    val assignmentWithDiscussion = assignment.copy(
+        discussionTopicHeader = discussionTopicHeader
+    )
+
+    assignments[assignment.id] = assignmentWithDiscussion
 }
 
 /**
@@ -2217,7 +2231,7 @@ fun MockCanvas.addPlannable(name: String, userId: Long, course: Course? = null, 
         course?.id,
         null,
         userId,
-        null,
+        if (course != null) CanvasContext.Type.COURSE.apiString else CanvasContext.Type.USER.apiString,
         course?.name,
         plannableType = type,
         Plannable(newItemId(), name, course?.id, null, userId, null, date, null, date.toApiString(), null, null, details, null),

@@ -189,10 +189,13 @@ object ApiEndpoint : Endpoint(
                                 .filter { a -> a.courseId in courseIds }
                                 .map { a ->
                                     ScheduleItem(
+                                        itemId = a.id.toString(),
                                         title = a.name,
                                         description = a.description,
                                         startAt = a.dueAt,
-                                        assignment = a
+                                        assignment = a,
+                                        contextCode = "course_${a.courseId}",
+                                        contextName = data.courses[a.courseId]?.name
                                     )
                                 }
 
