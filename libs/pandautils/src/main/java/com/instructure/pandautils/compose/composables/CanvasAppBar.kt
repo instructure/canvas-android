@@ -51,10 +51,7 @@ fun CanvasAppBar(
         backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
         contentColor = colorResource(id = R.color.textDarkest),
         navigationIcon = {
-            IconButton(
-                onClick = navigationActionClick,
-                modifier = Modifier.testTag("appBarNavigationIcon")
-            ) {
+            IconButton(onClick = navigationActionClick) {
                 Icon(
                     painter = painterResource(id = navIconRes),
                     contentDescription = navIconContentDescription

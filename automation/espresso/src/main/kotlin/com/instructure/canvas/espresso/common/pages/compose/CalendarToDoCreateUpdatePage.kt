@@ -18,12 +18,13 @@ package com.instructure.canvas.espresso.common.pages.compose
 import android.content.Context
 import android.widget.DatePicker
 import android.widget.TimePicker
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -65,12 +66,12 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
 
     fun assertDate(date: Date) {
         val dateText = DateHelper.dayMonthDateFormat.format(date)
-        composeTestRule.onNodeWithTag("dateRow", true).assert(hasAnyChild(hasText(dateText)))
+        composeTestRule.onNode(hasParent(hasTestTag("dateRow")).and(hasText(dateText)), true).assertIsDisplayed()
     }
 
     fun assertTime(context: Context, date: Date) {
         val timeText = DateHelper.getFormattedTime(context, date).orEmpty()
-        composeTestRule.onNodeWithTag("timeRow", true).assert(hasAnyChild(hasText(timeText)))
+        composeTestRule.onNode(hasParent(hasTestTag("timeRow")).and(hasText(timeText)), true).assertIsDisplayed()
     }
 
     fun selectTime(calendar: Calendar) {
@@ -93,7 +94,7 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
     }
 
     fun assertCanvasContext(canvasContext: String) {
-        composeTestRule.onNodeWithTag("canvasContextRow", true).assert(hasAnyChild(hasText(canvasContext)))
+        composeTestRule.onNode(hasParent(hasTestTag("canvasContextRow")).and(hasText(canvasContext)), true).assertIsDisplayed()
     }
 
     fun assertTodoTitle(todoTitle: String) {
@@ -122,6 +123,6 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
     }
 
     fun clickClose() {
-        composeTestRule.onNodeWithTag("appBarNavigationIcon").performClick()
+        composeTestRule.onNodeWithContentDescription("Close").performClick()
     }
 }

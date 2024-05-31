@@ -23,6 +23,7 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onChildAt
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -106,6 +107,6 @@ class CalendarEventCreateEditPage(private val composeTestRule: ComposeTestRule) 
     }
 
     fun clickClose() {
-        composeTestRule.onNodeWithTag("appBarNavigationIcon").performClick()
+        composeTestRule.onNodeWithContentDescription("Close").performClick()
     }
 }
