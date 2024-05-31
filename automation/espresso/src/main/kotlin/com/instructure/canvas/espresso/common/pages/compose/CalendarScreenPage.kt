@@ -25,6 +25,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
@@ -65,7 +66,12 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         composeTestRule.waitForIdle()
     }
 
-    fun assertItemDetails(eventTitle: String, contextName: String, eventDate: String? = null, eventStatus: String? = null) {
+    fun assertItemDetails(eventTitle: String, contextName: String, eventDate: String? = null, eventStatus: String? = null, index: Int = -1) {
+        if (index != -1) {
+            // If we have more items in the list and a small device we need to scroll to the item.
+            // We can't use a node matcher here because LazyColumn doesn't render all items at once.
+            composeTestRule.onNodeWithTag("calendarEventsList").performScrollToIndex(index)
+        }
         composeTestRule.onNode(hasAnyChild(hasText(contextName)).and(hasAnyChild(hasText(eventTitle)))).assertIsDisplayed()
         if (eventDate != null) composeTestRule.onNodeWithText(eventDate).assertIsDisplayed()
         if (eventStatus != null) composeTestRule.onNodeWithText(eventStatus).assertIsDisplayed()

@@ -16,6 +16,7 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
+import com.instructure.canvas.espresso.StubLandscape
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
@@ -102,14 +103,15 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
 
         goToCalendar(data)
 
-        calendarScreenPage.assertItemDetails(event.title!!, course.name)
-        calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To Do")
-        calendarScreenPage.assertItemDetails(assignment.name!!, course.name)
-        calendarScreenPage.assertItemDetails(quiz.title!!, course.name)
-        calendarScreenPage.assertItemDetails(discussionAssignment.name!!, course.name)
+        calendarScreenPage.assertItemDetails(assignment.name!!, course.name, index = 0)
+        calendarScreenPage.assertItemDetails(quiz.title!!, course.name, index = 1)
+        calendarScreenPage.assertItemDetails(discussionAssignment.name!!, course.name, index = 2)
+        calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To Do", index = 3)
+        calendarScreenPage.assertItemDetails(event.title!!, course.name, index = 4)
     }
 
     @Test
+    @StubLandscape("Month view is not available in landscape")
     fun calendarMonthChangesAfterSwipe() {
         val data = initData()
 

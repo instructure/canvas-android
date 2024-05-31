@@ -148,7 +148,7 @@ fun CalendarEventsPage(
         if (calendarEventsPageUiState.events.isNotEmpty()) {
             LazyColumn(
                 Modifier
-                    .fillMaxSize(), verticalArrangement = Arrangement.Top
+                    .fillMaxSize().testTag("calendarEventsList"), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
                     CalendarEventItem(eventUiState = it, { id ->
