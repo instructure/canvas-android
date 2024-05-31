@@ -33,7 +33,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -83,7 +82,7 @@ fun SingleChoiceAlertDialog(
                 )
                 ChoiceList(
                     items = items,
-                    selectedIndex = selectedIndex,
+                    selectedIndex = selectedIndex.value,
                     onItemSelected = {
                         selectedIndex.intValue = it
                         onItemSelected(it)
@@ -128,7 +127,7 @@ fun SingleChoiceAlertDialog(
 @Composable
 private fun ChoiceList(
     items: List<String>,
-    selectedIndex: MutableState<Int>,
+    selectedIndex: Int,
     onItemSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -139,7 +138,9 @@ private fun ChoiceList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(
-                            interactionSource = MutableInteractionSource(),
+                            interactionSource = remember {
+                                MutableInteractionSource()
+                            },
                             indication = null,
                             onClick = {
                                 onItemSelected(index)
@@ -148,7 +149,7 @@ private fun ChoiceList(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
-                        selected = item == items.getOrNull(selectedIndex.value),
+                        selected = item == items.getOrNull(selectedIndex),
                         onClick = {
                             onItemSelected(index)
                         },

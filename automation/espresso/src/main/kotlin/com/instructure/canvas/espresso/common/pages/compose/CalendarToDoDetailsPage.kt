@@ -38,7 +38,6 @@ class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNode(hasTestTag("todoDetailsPageTitle") and hasText(pageTitle)).assertIsDisplayed()
     }
 
-
     fun assertTitle(title: String) {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("title")

@@ -80,7 +80,6 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
-@ExperimentalFoundationApi
 @Composable
 internal fun CreateUpdateToDoScreenWrapper(
     title: String,
@@ -190,7 +189,9 @@ private fun CreateUpdateToDoTopAppBar(
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.textDarkest),
                     strokeWidth = 3.dp,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier
+                        .size(32.dp)
+                        .testTag("savingProgressIndicator")
                 )
             } else {
                 ActionsSegment(
@@ -304,7 +305,8 @@ private fun CreateUpdateToDoContent(
                 onClick = {
                     focusManager.clearFocus()
                     datePickerDialog.show()
-                }
+                },
+                modifier = Modifier.testTag("dateRow")
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createToDoTimeLabel),
@@ -312,7 +314,8 @@ private fun CreateUpdateToDoContent(
                 onClick = {
                     focusManager.clearFocus()
                     timePickerDialog.show()
-                }
+                },
+                modifier = Modifier.testTag("timeRow")
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createToDoCalendarLabel),
@@ -321,7 +324,8 @@ private fun CreateUpdateToDoContent(
                 onClick = {
                     focusManager.clearFocus()
                     actionHandler(CreateUpdateToDoAction.ShowSelectCalendarScreen)
-                }
+                },
+                modifier = Modifier.testTag("canvasContextRow")
             )
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
