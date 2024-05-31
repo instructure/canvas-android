@@ -176,9 +176,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private lateinit var canvasLoadingBinding: LoadingCanvasViewBinding
 
     @Inject
-    lateinit var studentDb: StudentDb
-
-    @Inject
     lateinit var navigationBehavior: NavigationBehavior
 
     @Inject
@@ -308,10 +305,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onResume() {
         super.onResume()
         applyCurrentFragmentTheme()
-        lifecycleScope.launch {
-            val pending = studentDb.pendingSubmissionCommentDao().findAll()
-            Logger.d("Pending submission comments: $pending")
-        }
     }
 
     private fun checkAppUpdates() {
