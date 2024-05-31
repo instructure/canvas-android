@@ -45,6 +45,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
+import javax.inject.Inject
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -58,14 +59,13 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     private lateinit var submissionItem: CommentItemState.SubmissionItem
     private lateinit var pendingCommentItem: CommentItemState.PendingCommentItem
 
-    private lateinit var db: StudentDb
+    @Inject
+    lateinit var db: StudentDb
 
     val page = SubmissionCommentsRenderPage()
 
     @Before
     fun setUp() = runTest {
-        db = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), StudentDb::class.java).build()
-
         user = User(id=100,name="Bart Simpson",shortName="Bart",avatarUrl="BartAvatarUrl")
         teacher = User(id=101,name="Edna Krabapple",shortName="Edna",avatarUrl="EdnaAvatarUrl")
 
@@ -136,11 +136,6 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
                         attemptId = 1
                 )
         )
-    }
-
-    @After
-    fun cleanup() {
-        db.close()
     }
 
     @Test
@@ -329,6 +324,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
             )
         )
         val id = db.pendingSubmissionCommentDao().findIdByRowId(rowId)
-        return db.pendingSubmissionCommentDao().findCommentById(id)!!
+        val comment = db.pendingSubmissionCommentDao().findCommentById(id)!!
+        return comment
     }
 }
