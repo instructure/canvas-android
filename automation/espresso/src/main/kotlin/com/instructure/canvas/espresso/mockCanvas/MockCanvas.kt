@@ -626,10 +626,10 @@ fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdat
 fun MockCanvas.addCourseCalendarEvent(
     course: Course,
     startDate: String,
-    endDate: String? = null,
     title: String,
     description: String,
     isImportantDate: Boolean = false,
+    endDate: String? = null,
     rrule: String? = null,
     location: String? = null,
     address: String? = null
