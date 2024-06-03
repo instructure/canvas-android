@@ -415,6 +415,7 @@ fun DaysOfWeekRow(
                     color = textColor,
                     modifier = dayModifier.semantics {
                         contentDescription = dayContentDescription
+                        testTag = "dayNumber${dayState.dayNumber}"
                     },
                     textAlign = TextAlign.Center,
                 )
