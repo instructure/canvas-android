@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Verkon ulkopuolisen sisällön synkronisointi epäonnistui.</string>
     <string name="syncProgress_cancelConfirmationTitle">Peruutetaanko synkronisointi?</string>
     <string name="syncProgress_cancelConfirmationMessage">Se keskeyttää verkon ulkopuolisen sisällön synkronoinnin. Voit tehdä sen uudelleen myöhemmin.</string>
-    <string name="syncProgress_syncErrorSubtitle">Yhden tai useamman tiedoston synkronisointi ei onnistunut. Tarkista Internet-yhteytesi ja yritä lähettää uudelleen.</string>
+    <string name="syncProgress_syncErrorSubtitle">Yhden tai useamman kohteen synkronisointi ei onnistunut. Tarkasta Internet-yhteytesi ja yritä synkronoida uudelleen.</string>
     <string name="syncProgress_downloadStarting">Lataus alkaa</string>
     <string name="coursesCannotBeFavoritedOffline">Kursseja ei voi lisätä suosikkeihin verkon ulkopuolisessa tilassa.</string>
     <string name="allCoursesScreenHeader">Kaikki kurssit</string>

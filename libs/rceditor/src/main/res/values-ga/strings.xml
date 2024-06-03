@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="rce_contentDescription_undo">Cealaigh</string>
+    <string name="rce_contentDescription_redo">Athdhéan</string>
+    <string name="rce_contentDescription_bold">Formáid Trom</string>
+    <string name="rce_contentDescription_italic">Formáid Iodálach</string>
+    <string name="rce_contentDescription_strikethrough">Líne Tríd</string>
+    <string name="rce_contentDescription_underline">Cuir líne faoi</string>
+    <string name="rce_contentDescription_format_text_color">Formáidigh Dath Téacs</string>
+    <string name="rce_contentDescription_border_color">Formáidigh Dath Teorann Téacs</string>
+    <string name="rce_contentDescription_indent_increase">Méadú ar Fhleasc</string>
+    <string name="rce_contentDescription_indent_decrease">Laghdú fleasc</string>
+    <string name="rce_contentDescription_align_left">Ailínigh ar Chlé</string>
+    <string name="rce_contentDescription_align_right">Ailínigh ar Dheis</string>
+    <string name="rce_contentDescription_align_center">Ailínigh Sa Lár</string>
+    <string name="rce_contentDescription_insert_bullets">Cuir isteach Liosta Urchair</string>
+    <string name="rce_contentDescription_insert_numbers">Cuir isteach Liosta Uimhrithe</string>
+    <string name="rce_contentDescription_insert_photo">Cuir isteach Grianghraf</string>
+    <string name="rce_contentDescription_upload_photo">Uaslódáil Grianghraf ó gléas</string>
+    <string name="rce_contentDescription_insert_link">Cuir Nasc Isteach</string>
+    <string name="rce_contentDescription_block_quote">Bloc Athfhriotail</string>
+
+    <string name="rce_contentDescription_color_none">Dath Ceann ar bith</string>
+    <string name="rce_contentDescription_color_white">Dath Bán</string>
+    <string name="rce_contentDescription_color_black">Dath Dubh</string>
+    <string name="rce_contentDescription_color_blue">Dath Gorm</string>
+    <string name="rce_contentDescription_color_red">Dath Dearg</string>
+    <string name="rce_contentDescription_color_green">Dath Glas</string>
+    <string name="rce_contentDescription_color_gray">Dath Liath</string>
+    <string name="rce_contentDescription_color_magenta">Dath Mageanta</string>
+    <string name="rce_contentDescription_color_cyan">Dath Cian</string>
+    <string name="rce_contentDescription_color_orange">Dath Oráiste</string>
+    <string name="rce_contentDescription_color_yellow">Dath Buí</string>
+    <string name="rce_contentDescription_color_purple">Dath Corcra</string>
+
+    <string name="rce_editTextUrlHint">Nasc</string>
+    <string name="rce_editTextALTHint">Téacs</string>
+    <string name="rce_dialogDone">Déanta</string>
+    <string name="rce_dialogCancel">Cealaigh</string>
+    <string name="rce_insertLink">Cuir Nasc Isteach</string>
+    <string name="rce_insertImage">Cuir Íomhá Isteach</string>
+    <string name="rce_uploadImage">Uaslódáil Íomhá</string>
+
+    <string name="rce_done">Déanta</string>
+    <string name="rce_cancel">Cealaigh</string>
+    <string name="rce_exit">Scoir</string>
+    <string name="rce_dialog_exit_title">Scoir den Eagarthóireacht Taisc?</string>
+    <string name="rce_dialog_exit_message">An bhfuil tú cinnte gur mhaith leat scoir? Caillfear aon sonraí nár sábháladh.</string>
+    <string name="rce_empty_message">Teachtaireacht</string>
+    <string name="rce_empty_description">Cuir cur síos leis</string>
+    <string name="rce_scrollInstructions">Scrollaigh do gach uirlis eagarthóireachta</string>
+
+    <string name="rce_emptyUrlError">Ní féidir an URL a bheith bán</string>
+    <string name="rce_httpNotAllowed">Ní ghlactar ach le URLanna https</string>
+    <string name="rce_dialogAltText">Cuir téacs alt leis do léitheoirí scáileáin</string>
+</resources>

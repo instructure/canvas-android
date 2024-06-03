@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Sinhronizacija vsebine brez povezave ni uspela</string>
     <string name="syncProgress_cancelConfirmationTitle">Želite preklicati sinhronizacijo?</string>
     <string name="syncProgress_cancelConfirmationMessage">S tem boste zaustavili sinhronizacijo vsebine brez povezave. To lahko pozneje ponovite.</string>
-    <string name="syncProgress_syncErrorSubtitle">Sinhronizacija ene ali več datotek ni uspela. Preverite internetno povezavo in poskusite poslati znova.</string>
+    <string name="syncProgress_syncErrorSubtitle">Sinhronizacija enega ali več elementov ni uspela. Preverite internetno povezavo in znova poskusite s sinhronizacijo.</string>
     <string name="syncProgress_downloadStarting">Začetek prenosa</string>
     <string name="coursesCannotBeFavoritedOffline">Predmetov ni mogoče dodati med priljubljene, če povezava ni na voljo.</string>
     <string name="allCoursesScreenHeader">Vsi predmeti</string>

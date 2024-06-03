@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Offline contentsynchronisatie mislukt</string>
     <string name="syncProgress_cancelConfirmationTitle">Synchronisatie annuleren?</string>
     <string name="syncProgress_cancelConfirmationMessage">De offline inhoud wordt dan niet meer gesynchroniseerd. U kunt later opnieuw synchroniseren.</string>
-    <string name="syncProgress_syncErrorSubtitle">Een of meer bestanden kunnen niet worden gesynchroniseerd. Controleer je internetverbinding en probeer opnieuw in te leveren.</string>
+    <string name="syncProgress_syncErrorSubtitle">Een of meer items kunnen niet worden gesynchroniseerd. Controleer je internetverbinding en probeer opnieuw te synchroniseren.</string>
     <string name="syncProgress_downloadStarting">Bezig met downloaden</string>
     <string name="coursesCannotBeFavoritedOffline">Cursussen kunnen niet offline worden toegevoegd aan favorieten.</string>
     <string name="allCoursesScreenHeader">Alle cursussen</string>
