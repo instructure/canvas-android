@@ -54,7 +54,12 @@ fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
 
 
 fun getCurrentDateInCanvasCalendarFormat(): String {
-    val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+    val calendar = Calendar.getInstance()
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+    var dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+
+    if (day in 1..9) dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
+
     return dateFormat.format(Date())
 }
     
