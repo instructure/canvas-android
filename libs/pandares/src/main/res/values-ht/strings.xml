@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Senkwonizasyon Kontni san Koneksyon an Echwe</string>
     <string name="syncProgress_cancelConfirmationTitle">Anile Senkwonizasyon?</string>
     <string name="syncProgress_cancelConfirmationMessage">L ap kanpe senkwonizasyn kontni san koneksyon W ap fè l ankò pita.</string>
-    <string name="syncProgress_syncErrorSubtitle">Gen yonn oswa plizyè fichye ki pa rive senkwonize. Verifye koneksyon entènèt ou a epi eseye re voye yo ankò</string>
+    <string name="syncProgress_syncErrorSubtitle">Yon oswa plizyè eleman echwe nan senkwonizasyon an. Verifye koneksyon entènèt ou a epi eseye senkwonize ankò.</string>
     <string name="syncProgress_downloadStarting">Telechajman kòmanse</string>
     <string name="coursesCannotBeFavoritedOffline">Kou yo paka ajoute nan favori yo san koneksyon.</string>
     <string name="allCoursesScreenHeader">Tout Kou</string>

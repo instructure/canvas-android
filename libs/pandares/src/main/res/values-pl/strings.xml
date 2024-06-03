@@ -1534,7 +1534,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Niepowodzenie synchronizacji zawartości offline</string>
     <string name="syncProgress_cancelConfirmationTitle">Anulować synchronizację?</string>
     <string name="syncProgress_cancelConfirmationMessage">Zatrzyma synchronizację zawartości offline. Można to zrobić ponownie później.</string>
-    <string name="syncProgress_syncErrorSubtitle">Nie udało się zsynchronizować co najmniej jednego pliku. Sprawdź połączenie internetowe i ponów przesyłanie.</string>
+    <string name="syncProgress_syncErrorSubtitle">Nie udało się zsynchronizować co najmniej jednego elementu. Sprawdź połączenie internetowe i ponów synchronizację.</string>
     <string name="syncProgress_downloadStarting">Rozpoczynanie pobierania</string>
     <string name="coursesCannotBeFavoritedOffline">Kursów nie można dodać do ulubionych offline.</string>
     <string name="allCoursesScreenHeader">Wszystkie kursy</string>

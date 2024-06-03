@@ -1492,7 +1492,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Ha habido un error en la sincronización del contenido sin conexión</string>
     <string name="syncProgress_cancelConfirmationTitle">¿Cancelar sincronización?</string>
     <string name="syncProgress_cancelConfirmationMessage">Se parará la sincronización del contenido sin conexión. Lo puedes hacer de nuevo.</string>
-    <string name="syncProgress_syncErrorSubtitle">No se han podido sincronizar uno o más archivos. Comprueba tu conexión a Internet y vuelve a realizar la entrega.</string>
+    <string name="syncProgress_syncErrorSubtitle">No se han podido sincronizar uno o más ítems. Comprueba tu conexión a Internet y vuelve a intentar la sincronización.</string>
     <string name="syncProgress_downloadStarting">Empezando la descarga</string>
     <string name="coursesCannotBeFavoritedOffline">No se pueden añadir cursos a favoritos sin conexión.</string>
     <string name="allCoursesScreenHeader">Todos los cursos</string>

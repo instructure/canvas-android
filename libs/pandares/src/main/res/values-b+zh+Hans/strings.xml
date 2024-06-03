@@ -1468,7 +1468,7 @@
     <string name="syncProgress_offlineContentSyncFailed">离线同步内容失败</string>
     <string name="syncProgress_cancelConfirmationTitle">是否取消同步？</string>
     <string name="syncProgress_cancelConfirmationMessage">将停止离线同步内容。您可以稍后再次操作。</string>
-    <string name="syncProgress_syncErrorSubtitle">一个或多个文件未能同步。请检查网络连接，并再次尝试提交。</string>
+    <string name="syncProgress_syncErrorSubtitle">一个或多个项目同步失败。请检查网络连接状况并重新尝试同步。</string>
     <string name="syncProgress_downloadStarting">正在开始下载</string>
     <string name="coursesCannotBeFavoritedOffline">无法离线将课程添加到收藏</string>
     <string name="allCoursesScreenHeader">所有课程</string>

@@ -1496,7 +1496,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Penyegerakan Kandungan Luar Talian Gagal</string>
     <string name="syncProgress_cancelConfirmationTitle">Batal Penyegerakan?</string>
     <string name="syncProgress_cancelConfirmationMessage">Tindakan ini akan memberhentikan penyegerakan kandungan luar talian. Anda boleh melakukan penyegerakan lagi kemudian.</string>
-    <string name="syncProgress_syncErrorSubtitle">Satu atau lebih fail gagal disegerakkan. Semak sambungan Internet anda dan cuba semula untuk membuat serahan.</string>
+    <string name="syncProgress_syncErrorSubtitle">Satu atau lebih item gagal disegerakkan. Sila semak sambungan Internet anda dan cuba semula penyegerakan.</string>
     <string name="syncProgress_downloadStarting">Muat turun bermula</string>
     <string name="coursesCannotBeFavoritedOffline">Kursus tidak boleh ditambahkan ke kegemaran semasa di luar talian.</string>
     <string name="allCoursesScreenHeader">Semua Kursus</string>
