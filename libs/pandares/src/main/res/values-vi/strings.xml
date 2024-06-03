@@ -1491,7 +1491,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Đồng Bộ Nội Dung Ngoại Tuyến Không Thành Công</string>
     <string name="syncProgress_cancelConfirmationTitle">Hủy Đồng Bộ?</string>
     <string name="syncProgress_cancelConfirmationMessage">Việc này sẽ ngừng đồng bộ nội dung ngoại tuyến. Bạn có thể thực hiện lại sau.</string>
-    <string name="syncProgress_syncErrorSubtitle">Một hoặc nhiều tập tin không đồng bộ thành công. Hãy kiểm tra kết nối internet của bạn rồi thử lại để nộp.</string>
+    <string name="syncProgress_syncErrorSubtitle">Một hoặc nhiều mục không đồng bộ thành công. Vui lòng kiểm tra kết nối internet của bạn và thử đồng bộ lại.</string>
     <string name="syncProgress_downloadStarting">Đang bắt đầu tải xuống</string>
     <string name="coursesCannotBeFavoritedOffline">Không thể thêm các khóa học vào mục yêu thích ngoại tuyến.</string>
     <string name="allCoursesScreenHeader">Tất Cả Khóa Học</string>

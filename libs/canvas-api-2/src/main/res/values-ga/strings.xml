@@ -1,0 +1,80 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Caithfidh tú an méid seo a leanas a chríochnú:</string>
+    <string name="unlockedAt">Díghlasálfar é ag:</string>
+    <string name="goToModules">Téigh Go Modúil</string>
+
+    <!--Events-->
+    <string name="Starts">Tosaíonn sé</string>
+    <string name="Ends">Críochnaíonn sé</string>
+    <string name="allDayEvent">Imeacht Don Lá Ar Fad</string>
+    <string name="at">ag</string>
+    <string name="to">go dtí</string>
+
+    <!--StreamItems-->
+    <string name="Message">Teachtaireacht</string>
+    <string name="Loading">Ag lódáil&#8230;</string>
+    <string name="Deleted">Scriosta</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Ar líne</string>
+    <string name="canvasAPI_onPaper">Ar Pháipéar</string>
+    <string name="canvasAPI_discussion">Plé</string>
+    <string name="canvasAPI_quiz">Quiz</string>
+    <string name="canvasAPI_externalTool">Uirlis Sheachtrach</string>
+    <string name="canvasAPI_none">Níl aon Uaslódáil</string>
+
+    <string name="canvasAPI_passFail">Pas Teip</string>
+    <string name="canvasAPI_percent">Céatadán</string>
+    <string name="canvasAPI_letterGrade">Marc Litreach</string>
+    <string name="canvasAPI_points">Pointí</string>
+    <string name="canvasAPI_gpaScale">Scála GPA</string>
+    <string name="canvasAPI_notGraded">Níl sé Marcáilte</string>
+
+    <string name="canvasAPI_onlineQuiz">Quiz</string>
+    <string name="canvasAPI_discussionTopic">Topaic Phléite</string>
+    <string name="canvasAPI_onlineUpload">Uaslódáil Comhad</string>
+    <string name="canvasAPI_onlineTextEntry">Iontráil Téacs</string>
+    <string name="canvasAPI_onlineURL">URL an tsuímh Ghréasáin</string>
+    <string name="canvasAPI_mediaRecording">Taifeadadh Meáin</string>
+    <string name="canvasAPI_attendance">Teilifís</string>
+    <string name="canvasAPI_studentAnnotation">Nóra Mínithe an Mac Léinn</string>
+    <string name="quiz_scoring_policy_highest">Is airde</string>
+    <string name="quiz_scoring_policy_average">Meán</string>
+    <string name="quiz_scoring_policy_latest">Is déanaí</string>
+    <string name="no">Níl</string>
+    <string name="always">I gcónaí</string>
+    <string name="graded_quiz">Quiz Marcáilte</string>
+    <string name="practice_quiz">Quiz le haghaidh Cleachtadh</string>
+    <string name="graded_survey">Suirbhé Marcáilte</string>
+    <string name="ungraded_survey">Suirbhé Neamhmharcáilte</string>
+    <string name="andMore">\u0020agus %d eile</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Mac léinn</string>
+    <string name="enrollmentTypeTeacher">Múinteoir</string>
+    <string name="enrollmentTypeObserver">Breathnóir</string>
+    <string name="enrollmentTypeTeachingAssistant">CT</string>
+    <string name="enrollmentTypeDesigner">Dearthóir</string>
+    <string name="enrollmentTypeUnknown">Anaithnid</string>
+
+</resources>
