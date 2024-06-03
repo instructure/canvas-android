@@ -62,7 +62,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun selectDay(day: String) {
-        composeTestRule.onNodeWithText(day).performClick()
+        composeTestRule.onNodeWithTag("dayNumber${day}").performClick()
         composeTestRule.waitForIdle()
     }
 
