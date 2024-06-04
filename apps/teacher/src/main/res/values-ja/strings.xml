@@ -563,7 +563,7 @@
     <string name="quiz_settings_label_attempts">試行：</string>
     <string name="quiz_settings_label_view_responses">レスポンスを表示する：</string>
     <string name="quiz_settings_label_show_correct_answers">正解を表示する：</string>
-    <string name="quiz_settings_label_one_question_at_a_time">一度に1つの質問：</string>
+    <string name="quiz_settings_label_one_question_at_a_time">1問ずつ表示する：</string>
     <string name="quiz_settings_label_ip_filter">IP フィルタ：</string>
     <string name="quiz_settings_label_points">点数:</string>
     <string name="quiz_settings_label_access_code">アクセスコード：</string>

@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M5.529,11.412V10.235H18.472V11.412H5.529ZM5.529,14.941V13.765H14.941V14.941H5.529ZM8.471,5.529C7.498,5.529 6.706,4.738 6.706,3.765C6.706,2.792 7.498,2 8.471,2C9.444,2 10.235,2.792 10.235,3.765C10.235,4.036 10.168,4.291 10.059,4.521L12.417,6.878L11.583,7.711L9.227,5.353C8.996,5.462 8.742,5.529 8.471,5.529ZM17.294,20.58V17.294H20.58L17.294,20.58ZM12.588,4.353V5.529H20.823V16.118H16.118V20.823H3.176V5.529H5.529V4.353H2V22H16.807C17.278,22 17.721,21.816 18.054,21.483L21.483,18.055C21.816,17.721 22,17.278 22,16.807V4.353H12.588Z"
+      android:fillColor="#2D3B45"
+      android:fillType="evenOdd"/>
+</vector>

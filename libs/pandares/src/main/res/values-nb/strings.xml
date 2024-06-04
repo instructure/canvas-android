@@ -1491,7 +1491,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Synkronisering av frakoblet emneinnhold mislyktes</string>
     <string name="syncProgress_cancelConfirmationTitle">Avbryte synkronisering?</string>
     <string name="syncProgress_cancelConfirmationMessage">Det vil stoppe synkronisering av frakoblet emneinnhold Du kan gjøre det igjen senere.</string>
-    <string name="syncProgress_syncErrorSubtitle">Én eller flere filer kunne ikke synkroniseres. Sjekk internettforbindelsen din og prøv å lever på nytt.</string>
+    <string name="syncProgress_syncErrorSubtitle">Én eller flere elementer kunne ikke synkroniseres. Kontroller internettforbindelsen og prøv å synkronisere på nytt.</string>
     <string name="syncProgress_downloadStarting">Nedlasting startere</string>
     <string name="coursesCannotBeFavoritedOffline">Emner kan ikke legges til i favoritter i frakoblet modus.</string>
     <string name="allCoursesScreenHeader">Alle åpne emner</string>

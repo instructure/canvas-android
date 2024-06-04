@@ -1,0 +1,209 @@
+/*
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.firebase.crashlytics'
+    id 'dagger.hilt.android.plugin'
+}
+
+configurations {
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+    all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+}
+
+def coverageEnabled = project.hasProperty('coverage')
+
+android {
+    namespace 'com.instructure.parentapp'
+    compileSdk Versions.COMPILE_SDK
+
+    defaultConfig {
+        applicationId "com.instructure.parentapp"
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        versionCode 50
+        versionName "3.10.0"
+
+        /* Add private data */
+        PrivateData.merge(project, "parent")
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'LICENSE.txt'
+    }
+
+
+    lintOptions {
+        abortOnError false
+    }
+
+    flavorDimensions 'default'
+
+    productFlavors {
+        dev {
+            dimension 'default'
+        }
+
+        qa {
+            buildConfigField "boolean", "IS_TESTING", "true"
+            dimension 'default'
+        }
+
+        prod {
+            dimension 'default'
+        }
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled = coverageEnabled
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
+            shrinkResources false
+            pseudoLocalesEnabled true
+
+            firebaseCrashlytics {
+                // If you don't need crash reporting for your debug build,
+                // you can speed up your build by disabling mapping file uploading.
+                mappingFileUploadEnabled false
+            }
+        }
+
+        debugMinify {
+            initWith debug
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            matchingFallbacks = ['debug']
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+        /*
+        Resolves dependency versions across test and production APKs, specifically, transitive
+        dependencies. This is required since Espresso internally has a dependency on support-annotations.
+        https://github.com/googlecodelabs/android-testing/blob/57852eaf7df88ddaf828eca879a407f2249d5348/app/build.gradle#L86
+        */
+        resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
+
+        resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
+        resolutionStrategy.force Libs.KOTLIN_STD_LIB
+    }
+
+    configurations.implementation.dependencies.each { compileDependency ->
+        println "Excluding compile dependency: ${compileDependency.getName()}"
+        configurations.androidTestImplementation.dependencies.each { androidTestCompileDependency ->
+            configurations.androidTestImplementation.exclude module: "${compileDependency.getName()}"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+    hilt {
+        enableAggregatingTask = false
+        enableExperimentalClasspathAggregation = true
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /* Project Modules */
+    implementation project(path: ':login-api-2')
+
+    /* Android Test Dependencies */
+    androidTestImplementation project(path: ':espresso')
+    androidTestImplementation project(':dataseedingapi')
+
+    /* Unit Test Dependencies */
+    testImplementation Libs.JUNIT
+    testImplementation Libs.ROBOLECTRIC
+    testImplementation Libs.ANDROIDX_TEST_JUNIT
+    testImplementation Libs.MOCKK
+    androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
+    testImplementation Libs.THREETEN_BP
+    testImplementation Libs.ANDROIDX_CORE_TESTING
+
+    /* Firebase */
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
+    }
+    implementation Libs.FIREBASE_MESSAGING
+    implementation Libs.FIREBASE_CRASHLYTICS_NDK
+    implementation(Libs.FIREBASE_CRASHLYTICS) {
+        transitive = true
+    }
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    kapt Libs.HILT_ANDROIDX_COMPILER
+
+    /* ROOM */
+    implementation Libs.ROOM
+    kapt Libs.ROOM_COMPILER
+    implementation Libs.ROOM_COROUTINES
+
+    /* Navigation */
+    implementation Libs.NAVIGATION_FRAGMENT
+    implementation Libs.NAVIGATION_KTX
+
+    /* Support dependencies */
+    implementation Libs.ANDROIDX_ANNOTATION
+    implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_BROWSER
+    implementation Libs.ANDROIDX_CARDVIEW
+    implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
+    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.ANDROIDX_RECYCLERVIEW
+    implementation Libs.ANDROIDX_PALETTE
+    implementation Libs.PLAY_IN_APP_UPDATES
+}

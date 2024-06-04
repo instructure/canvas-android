@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Synkronisering af offlineindhold mislykkedes</string>
     <string name="syncProgress_cancelConfirmationTitle">Vil du annullere synkronisering?</string>
     <string name="syncProgress_cancelConfirmationMessage">Det vil stoppe synkronisering af offlineindhold. Du kan gøre det igen senere.</string>
-    <string name="syncProgress_syncErrorSubtitle">En eller flere filer kunne ikke synkronisere. Kontroller din internetforbindelse, og prøv igen for at aflevere.</string>
+    <string name="syncProgress_syncErrorSubtitle">Et eller flere elementer kunne ikke synkroniseres. Kontrollér din internetforbindelse, og prøv synkronisering igen.</string>
     <string name="syncProgress_downloadStarting">Download starter</string>
     <string name="coursesCannotBeFavoritedOffline">Fag kan ikke føjes til favoritter offline.</string>
     <string name="allCoursesScreenHeader">Alle fag</string>

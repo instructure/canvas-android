@@ -26,7 +26,10 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -37,6 +40,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.R
@@ -73,7 +77,7 @@ class RouteValidatorActivity : FragmentActivity() {
             val isSignedIn = ApiPrefs.getValidToken().isNotEmpty()
             val domain = ApiPrefs.domain
 
-            if (verifySSOLoginUri(data, true)) {
+            if (verifySSOLoginUri(data, AppType.TEACHER)) {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if (isSignedIn) { // If the user is already signed in, use the QR Switch
@@ -87,7 +91,7 @@ class RouteValidatorActivity : FragmentActivity() {
                         ApiPrefs.userAgent = Utils.generateUserAgent(this@RouteValidatorActivity, Const.TEACHER_USER_AGENT)
                     }
 
-                    val tokenResponse = QRLogin.performSSOLogin(data, this@RouteValidatorActivity, true)
+                    val tokenResponse = QRLogin.performSSOLogin(data, this@RouteValidatorActivity, AppType.TEACHER)
 
                     val authResult = apiAsync { OAuthManager.getAuthenticatedSession(ApiPrefs.fullDomain, it) }.await()
                     if (authResult.isSuccess) {

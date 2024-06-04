@@ -15,9 +15,12 @@
  */
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
+@Parcelize
 data class Plannable(
     val id: Long,
 
@@ -43,5 +46,16 @@ data class Plannable(
     val assignmentId: Long?,
 
     @SerializedName("todo_date")
-    val todoDate: String?
-)
+    val todoDate: String?,
+
+    @SerializedName("start_at")
+    val startAt: Date?,
+
+    @SerializedName("end_at")
+    val endAt: Date?,
+
+    val details: String?,
+
+    @SerializedName("all_day")
+    val allDay: Boolean?,
+) : Parcelable

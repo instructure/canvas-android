@@ -29,8 +29,9 @@ class SpeedGraderPresenterFactory(
         private val submissionId: Long, // Id used when we are coming from a push notification
         private val discussionEntries:  DiscussionTopicHeader?,
         private val repository: AssignmentSubmissionRepository,
+        private val filteredSubmissionIds: LongArray,
         private val filter: SubmissionListFilter,
         private val filterValue: Double
 ) : PresenterFactory<SpeedGraderView, SpeedGraderPresenter> {
-    override fun create() = SpeedGraderPresenter(courseId, assignmentId, submissionId, discussionEntries, repository, filter, filterValue)
+    override fun create() = SpeedGraderPresenter(courseId, assignmentId, submissionId, discussionEntries, repository, filteredSubmissionIds, filter, filterValue)
 }

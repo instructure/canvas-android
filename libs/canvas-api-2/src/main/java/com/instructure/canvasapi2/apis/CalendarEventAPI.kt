@@ -17,6 +17,8 @@
 
 package com.instructure.canvasapi2.apis
 
+import androidx.annotation.StringRes
+import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
@@ -61,8 +63,24 @@ object CalendarEventAPI {
         @GET("calendar_events/{eventId}")
         fun getCalendarEvent(@Path("eventId") eventId: Long): Call<ScheduleItem>
 
+        @GET("calendar_events/{eventId}?include[]=series_natural_language")
+        suspend fun getCalendarEvent(@Path("eventId") eventId: Long, @Tag restParams: RestParams): DataResult<ScheduleItem>
+
         @DELETE("calendar_events/{eventId}")
         fun deleteCalendarEvent(@Path("eventId") eventId: Long, @Query("cancel_reason") cancelReason: String): Call<ScheduleItem>
+
+        @DELETE("calendar_events/{eventId}")
+        suspend fun deleteRecurringCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Query("which") deleteScope: String,
+            @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
+        @DELETE("calendar_events/{eventId}")
+        suspend fun deleteCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
 
         @POST("calendar_events/")
         fun createCalendarEvent(
@@ -73,6 +91,27 @@ object CalendarEventAPI {
                 @Query("calendar_event[end_at]") endDate: String,
                 @Query(value = "calendar_event[location_name]", encoded = true) locationName: String,
                 @Body body: String): Call<ScheduleItem>
+
+        @POST("calendar_events/")
+        suspend fun createCalendarEvent(
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
+
+        @PUT("calendar_events/{eventId}")
+        suspend fun updateRecurringCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Query(value = "which") modifyEventScope: String,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
+            @Tag restParams: RestParams
+        ): DataResult<List<ScheduleItem>>
+
+        @PUT("calendar_events/{eventId}")
+        suspend fun updateCalendarEvent(
+            @Path("eventId") eventId: Long,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
 
         @GET("calendar_events/")
         fun getImportantDates(
@@ -86,6 +125,12 @@ object CalendarEventAPI {
     enum class CalendarEventType(val apiName: String) {
         CALENDAR("event"),
         ASSIGNMENT("assignment")
+    }
+
+    enum class ModifyEventScope(val apiName: String, @StringRes val stringRes: Int) {
+        ONE("one", R.string.eventDeleteScopeOne),
+        ALL("all", R.string.eventDeleteScopeAll),
+        FOLLOWING("following", R.string.eventDeleteScopeFollowing)
     }
 
     fun getCalendarEvent(

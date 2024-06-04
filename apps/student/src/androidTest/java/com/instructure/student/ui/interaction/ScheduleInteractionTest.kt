@@ -19,6 +19,7 @@ package com.instructure.student.ui.interaction
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.StubLandscape
+import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -257,6 +258,7 @@ class ScheduleInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.INTERACTION)
+    @StubTablet
     fun testTodayButton() {
         setDate(2021, Calendar.AUGUST, 11)
         val data = createMockData(courseCount = 1)
@@ -274,7 +276,7 @@ class ScheduleInteractionTest : StudentTest() {
         try {
             schedulePage.assertTodayButtonDisplayed()
         } catch(e: AssertionFailedError) {
-            schedulePage.swipeDown()
+            schedulePage.swipeUp()
             schedulePage.assertTodayButtonDisplayed()
         }
         schedulePage.clickOnTodayButton()
