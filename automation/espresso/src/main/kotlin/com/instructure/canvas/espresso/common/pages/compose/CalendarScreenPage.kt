@@ -61,11 +61,6 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         composeTestRule.waitForIdle()
     }
 
-    fun selectDay(day: String) {
-        composeTestRule.onNodeWithText(day).performClick()
-        composeTestRule.waitForIdle()
-    }
-
     fun assertItemDetails(eventTitle: String, contextName: String, eventDate: String? = null, eventStatus: String? = null, index: Int = -1) {
         if (index != -1) {
             // If we have more items in the list and a small device we need to scroll to the item.

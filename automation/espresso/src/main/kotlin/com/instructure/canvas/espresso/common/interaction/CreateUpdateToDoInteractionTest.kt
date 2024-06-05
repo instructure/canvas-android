@@ -62,7 +62,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
+        calendarScreenPage.swipeEventsLeft()
         calendarScreenPage.assertItemDetails("New Todo", "To Do")
     }
 
@@ -166,7 +166,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
+        calendarScreenPage.swipeEventsLeft()
         calendarScreenPage.assertItemDetails("Test Todo", "To Do")
     }
 
@@ -197,7 +197,6 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
         calendarScreenPage.clickOnItem("Test Todo")
         calendarToDoDetailsPage.assertDate(activityRule.activity, calendar.time)
     }

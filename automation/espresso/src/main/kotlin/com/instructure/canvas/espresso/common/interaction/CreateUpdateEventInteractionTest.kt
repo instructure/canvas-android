@@ -67,7 +67,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         createUpdateEventDetailsPage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
+        calendarScreenPage.swipeEventsLeft()
         createUpdateEventDetailsPage.assertTitle("New Title")
     }
 
@@ -214,7 +214,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
         createUpdateEventDetailsPage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.selectDay(calendar.get(Calendar.DAY_OF_MONTH).toString())
+        calendarScreenPage.swipeEventsLeft()
         createUpdateEventDetailsPage.assertTitle(event.title!!)
     }
 
