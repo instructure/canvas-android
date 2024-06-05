@@ -23,7 +23,7 @@ import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
 interface CreateSubmissionCommentFileDao {
 
     @Insert
-    suspend fun insert(createSubmissionCommentFileEntity: CreateSubmissionCommentFileEntity): Long
+    suspend fun insert(createSubmissionCommentFileEntity: CreateSubmissionCommentFileEntity)
 
     @Query("SELECT * FROM CreateSubmissionCommentFileEntity WHERE id = :id")
     suspend fun findFilesForPendingComment(id: Long): List<CreateSubmissionCommentFileEntity>
