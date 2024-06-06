@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.FilePrefs
@@ -55,7 +56,7 @@ import java.util.concurrent.Executors
 class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: SubmissionDetailsEmptyContentView = mockk(relaxed = true)
-    private val context: Activity = mockk(relaxed = true)
+    private val context: FragmentActivity = mockk(relaxed = true)
     private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
     private val effectHandler = SubmissionDetailsEmptyContentEffectHandler(context, assignmentId, submissionHelper).apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEmptyContentEvent> = mockk(relaxed = true)
