@@ -25,7 +25,7 @@ interface CreateSubmissionCommentFileDao {
     @Insert
     suspend fun insert(createSubmissionCommentFileEntity: CreateSubmissionCommentFileEntity)
 
-    @Query("SELECT * FROM CreateSubmissionCommentFileEntity WHERE id = :id")
+    @Query("SELECT * FROM CreateSubmissionCommentFileEntity WHERE pendingCommentId = :id")
     suspend fun findFilesForPendingComment(id: Long): List<CreateSubmissionCommentFileEntity>
 
     @Query("UPDATE CreateSubmissionCommentFileEntity SET attachmentId = :attachmentId WHERE id = :id")
