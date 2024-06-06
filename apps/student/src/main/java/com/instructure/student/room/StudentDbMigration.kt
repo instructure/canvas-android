@@ -146,6 +146,4 @@ val studentDbMigrations = arrayOf(
             """
         )
     }
-
-//TableInfo{name='CreatePendingSubmissionCommentEntity', columns={assignmentName=Column{name='assignmentName', type='TEXT', affinity='2', notNull=true, primaryKeyPosition=0, defaultValue='undefined'}, foreignKeys=[], indices=[]}
 )
