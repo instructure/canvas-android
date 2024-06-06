@@ -54,6 +54,14 @@ android {
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
 
         testBuildType = "debug"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
     }
 
     bundle {
@@ -225,6 +233,10 @@ android {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
+    }
+
+    sourceSets {
+        debug.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
 
