@@ -36,6 +36,7 @@ import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -122,7 +123,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun requestFilePermissions() {
-        requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA), PermissionUtils.PERMISSION_REQUEST_CODE)
+        requireContext().getFragmentActivity().requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA), PermissionUtils.PERMISSION_REQUEST_CODE)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

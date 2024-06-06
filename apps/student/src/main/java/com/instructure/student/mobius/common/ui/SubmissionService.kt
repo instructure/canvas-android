@@ -54,6 +54,7 @@ import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.room.StudentDb
 import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.student.room.entities.CreateSubmissionEntity
@@ -73,7 +74,7 @@ import javax.inject.Inject
 class SubmissionService : IntentService(SubmissionService::class.java.simpleName) {
 
     @Inject
-    lateinit var studentDb: com.instructure.student.room.StudentDb
+    lateinit var studentDb: StudentDb
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
     private val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
@@ -578,7 +579,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     // region Notifications
 
     private suspend fun handleFileError(
-        db: com.instructure.student.room.StudentDb,
+        db: StudentDb,
         submission: CreateSubmissionEntity,
         completedCount: Int,
         attachments: List<CreateFileSubmissionEntity>,
@@ -784,7 +785,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         private suspend fun deleteSubmissionsForAssignment(
             id: Long,
-            db: com.instructure.student.room.StudentDb,
+            db: StudentDb,
             files: List<FileSubmitObject> = emptyList()
         ) {
             db.submissionDao().findSubmissionsByAssignmentId(id, getUserId())

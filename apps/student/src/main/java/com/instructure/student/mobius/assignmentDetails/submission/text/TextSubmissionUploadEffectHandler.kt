@@ -20,9 +20,11 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionHelper
+import kotlinx.coroutines.launch
 
 class TextSubmissionUploadEffectHandler(private val submissionHelper: SubmissionHelper) :
     EffectHandler<TextSubmissionUploadView, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {
+    @Suppress("IMPLICIT_CAST_TO_ANY")
     override fun accept(effect: TextSubmissionUploadEffect) {
         when (effect) {
             is TextSubmissionUploadEffect.SubmitText -> {
@@ -35,8 +37,10 @@ class TextSubmissionUploadEffectHandler(private val submissionHelper: Submission
                 effect.canvasContext
             )
             is TextSubmissionUploadEffect.SaveDraft -> {
-                submissionHelper.saveDraft(effect.canvasContext, effect.assignmentId, effect.assignmentName, effect.text)
-                view?.goBack()
+                launch {
+                    submissionHelper.saveDraft(effect.canvasContext, effect.assignmentId, effect.assignmentName, effect.text)
+                    view?.goBack()
+                }
             }
             TextSubmissionUploadEffect.ProcessCameraImage -> processCameraImage()
             TextSubmissionUploadEffect.ShowFailedImageMessage -> view?.showFailedImageMessage()

@@ -73,26 +73,24 @@ class SubmissionHelper(
         startService(context, SubmissionService.Action.TEXT_ENTRY, bundle)
     }
 
-    fun saveDraft(
+    suspend fun saveDraft(
         canvasContext: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
         text: String
     ) {
-        runBlocking {
-            insertDraft(assignmentId) {
-                val entity = CreateSubmissionEntity(
-                    assignmentName = assignmentName,
-                    assignmentId = assignmentId,
-                    canvasContext = canvasContext,
-                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
-                    userId = getUserId(),
-                    lastActivityDate = Date(),
-                    submissionEntry = text,
-                    isDraft = true
-                )
-                it.submissionDao().insert(entity)
-            }
+        insertDraft(assignmentId) {
+            val entity = CreateSubmissionEntity(
+                assignmentName = assignmentName,
+                assignmentId = assignmentId,
+                canvasContext = canvasContext,
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+                userId = getUserId(),
+                lastActivityDate = Date(),
+                submissionEntry = text,
+                isDraft = true
+            )
+            it.submissionDao().insert(entity)
         }
     }
 

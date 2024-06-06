@@ -33,6 +33,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -248,7 +249,7 @@ class SubmissionHelperTest {
     }
 
     @Test
-    fun `Save draft`() {
+    fun `Save draft`() = runTest {
         val canvasContext = CanvasContext.defaultCanvasContext()
         val assignmentId = 1L
         val assignmentName = "Assignment"
