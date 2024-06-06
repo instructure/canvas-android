@@ -21,12 +21,12 @@ val studentDbMigrations = arrayOf(
         // Add a new table
         database.execSQL(
             """
-            CREATE TABLE IF NOT EXISTS `PendingSubmissionCommentEntity` (
+            CREATE TABLE IF NOT EXISTS `CreatePendingSubmissionCommentEntity` (
                 `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 `accountDomain` TEXT NOT NULL,
                 `canvasContext` TEXT NOT NULL,
                 `assignmentName` TEXT NOT NULL,
-                `assignmentId` TEXT NOT NULL,
+                `assignmentId` INTEGER NOT NULL,
                 `lastActivityDate` INTEGER NOT NULL,
                 `isGroupMessage` INTEGER NOT NULL,
                 `message` TEXT,
@@ -64,7 +64,7 @@ val studentDbMigrations = arrayOf(
 
         database.execSQL(
             """
-               CREATE TABLE IF NOT EXISTS `SubmissionCommentFileEntity` (
+               CREATE TABLE IF NOT EXISTS `CreateSubmissionCommentFileEntity` (
                 `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 `pendingCommentId` INTEGER NOT NULL,
                 `attachmentId` INTEGER,
@@ -72,14 +72,14 @@ val studentDbMigrations = arrayOf(
                 `size` INTEGER NOT NULL,
                 `contentType` TEXT NOT NULL,
                 `fullPath` TEXT NOT NULL,
-                 FOREIGN KEY(`pendingCommentId`) REFERENCES `PendingSubmissionCommentEntity`(`id`) ON DELETE CASCADE
+                 FOREIGN KEY(`pendingCommentId`) REFERENCES `CreatePendingSubmissionCommentEntity`(`id`) ON DELETE CASCADE
             )
             """
         )
 
         database.execSQL(
             """
-               CREATE TABLE IF NOT EXISTS `FileSubmissionEntity` (
+               CREATE TABLE IF NOT EXISTS `CreateFileSubmissionEntity` (
                 `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                 `dbSubmissionId` INTEGER NOT NULL,
                 `attachmentId` INTEGER,
@@ -96,7 +96,7 @@ val studentDbMigrations = arrayOf(
 
         database.execSQL(
             """
-        INSERT INTO `PendingSubmissionCommentEntity` 
+        INSERT INTO `CreatePendingSubmissionCommentEntity` 
         SELECT * FROM `pendingSubmissionComment`
         """
         )
@@ -110,14 +110,14 @@ val studentDbMigrations = arrayOf(
 
         database.execSQL(
             """
-        INSERT INTO `SubmissionCommentFileEntity`
+        INSERT INTO `CreateSubmissionCommentFileEntity`
         SELECT * FROM `submissionCommentFile`
             """
         )
 
         database.execSQL(
             """
-        INSERT INTO `FileSubmissionEntity`
+        INSERT INTO `CreateFileSubmissionEntity`
         SELECT * FROM `fileSubmission`
             """
         )
@@ -146,4 +146,6 @@ val studentDbMigrations = arrayOf(
             """
         )
     }
+
+//TableInfo{name='CreatePendingSubmissionCommentEntity', columns={assignmentName=Column{name='assignmentName', type='TEXT', affinity='2', notNull=true, primaryKeyPosition=0, defaultValue='undefined'}, foreignKeys=[], indices=[]}
 )
