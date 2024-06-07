@@ -17,16 +17,11 @@
 package com.instructure.student.ui.renderTests
 
 import android.net.Uri
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvasapi2.utils.NetworkUtils
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.waitForCheck
 import com.instructure.pandautils.utils.PandaPrefs
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType

@@ -21,16 +21,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
 import com.bumptech.glide.Glide
-import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
-import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ExoAgent
+import com.instructure.pandautils.utils.ExoAgentState
+import com.instructure.pandautils.utils.ExoInfoListener
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.viewExternally
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentMediaSubmissionViewBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
@@ -111,7 +123,7 @@ class MediaSubmissionViewFragment : Fragment() {
                 }
             }
 
-            override fun onError(cause: Throwable?) {
+            @OptIn(UnstableApi::class) override fun onError(cause: Throwable?) {
                 binding.submissionMediaPlayerView.setGone()
                 binding.mediaProgressBar.setGone()
                 binding.mediaPlaybackErrorView.setVisible()
