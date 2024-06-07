@@ -98,7 +98,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
             }
 
             override fun permissionsGranted(): Boolean {
-                return if (PermissionUtils.hasPermissions(requireActivity(), *PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE))) {
+                return if (PermissionUtils.hasPermissions(requireActivity().getFragmentActivity(), *PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA))) {
                     true
                 } else {
                     requestFilePermissions()
