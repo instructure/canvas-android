@@ -15,22 +15,20 @@
  *
  */
 
-package com.instructure.parentapp.di.feature
+package com.instructure.parentapp.features.main
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.calendarevent.details.EventRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.parentapp.R
 
-@Module
-@InstallIn(FragmentComponent::class)
-class EventModule {
 
-    @Provides
-    fun provideEventRouter(activity: FragmentActivity): EventRouter {
-        // TODO: Implement
-        throw NotImplementedError()
+class StudentItemViewModel(
+    val studentItemViewData: StudentItemViewData,
+    private val onStudentSelected: (Long) -> Unit
+) : ItemViewModel {
+
+    override val layoutId = R.layout.view_student_item
+
+    fun onStudentClick() {
+        onStudentSelected.invoke(studentItemViewData.studentId)
     }
 }

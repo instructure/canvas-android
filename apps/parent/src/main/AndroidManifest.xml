@@ -27,7 +27,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Apps"
+        android:theme="@style/CanvasMaterialTheme_Default"
         tools:overrideLibrary="com.instructure.canvasapi">
 
         <activity
@@ -113,7 +113,10 @@
 
         <activity
             android:name=".features.main.MainActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="@string/canvas"
+            android:launchMode="singleTask"
+            android:theme="@style/CanvasMaterialTheme_Default">
             <nav-graph android:value="@navigation/nav_graph" />
         </activity>
     </application>

@@ -43,6 +43,7 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.Transformation
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -906,4 +907,50 @@ fun BottomNavigationView.hide() {
             start()
         }
     }
+}
+
+fun View.expand(duration: Long = 300) {
+    if (visibility == View.VISIBLE) return
+
+    this.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    val targetHeight = this.measuredHeight
+
+    this.layoutParams.height = 0
+    this.visibility = View.VISIBLE
+    val animation = object : Animation() {
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            this@expand.layoutParams.height = if (interpolatedTime == 1f)
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            else
+                (targetHeight * interpolatedTime).toInt()
+            this@expand.requestLayout()
+        }
+
+        override fun willChangeBounds(): Boolean = true
+    }
+
+    animation.duration = duration
+    this.startAnimation(animation)
+}
+
+fun View.collapse(duration: Long = 300) {
+    if (visibility == View.GONE) return
+
+    val initialHeight = this.measuredHeight
+
+    val animation = object : Animation() {
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            if (interpolatedTime == 1f) {
+                this@collapse.visibility = View.GONE
+            } else {
+                this@collapse.layoutParams.height = initialHeight - (initialHeight * interpolatedTime).toInt()
+                this@collapse.requestLayout()
+            }
+        }
+
+        override fun willChangeBounds(): Boolean = true
+    }
+
+    animation.duration = duration
+    this.startAnimation(animation)
 }

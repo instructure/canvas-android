@@ -21,47 +21,78 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collapse
+import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.pandautils.utils.expand
 import com.instructure.pandautils.utils.hide
 import com.instructure.pandautils.utils.show
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityMainBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
+import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.util.ParentLogoutTask
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
+    private val viewModel by viewModels<MainViewModel>()
+
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         setContentView(binding.root)
 
         setupNavigation()
         handleDeeplink()
+
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
+        lifecycleScope.launch {
+            viewModel.data.collectLatest {
+                setupNavigationDrawerHeader(it.userViewData)
+                setupAppColors(it.selectedStudent)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration)
+    }
+
+    private fun handleAction(action: MainAction) = when (action) {
+        is MainAction.ShowToast -> Toast.makeText(this, action.message, Toast.LENGTH_LONG).show()
+        is MainAction.LocaleChanged -> LocaleUtils.restartApp(this, LoginActivity::class.java)
     }
 
     private fun setupNavigation() {
@@ -70,6 +101,13 @@ class MainActivity : AppCompatActivity() {
 
         val drawerLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(setOf(R.id.courses, R.id.calendar, R.id.alerts), drawerLayout)
+
+        val toolbar = binding.toolbar
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
+        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
+        toolbar.setNavigationOnClickListener {
+            openNavigationDrawer()
+        }
 
         val navView = binding.navView
         navView.setNavigationItemSelectedListener {
@@ -91,8 +129,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        val header = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
-        setupNavigationDrawerHeader(header)
+        headerLayoutBinding = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
 
         val bottomNavigationView = binding.bottomNav
         bottomNavigationView.setupWithNavController(navController)
@@ -100,10 +137,30 @@ class MainActivity : AppCompatActivity() {
         // Hide bottom nav on screens which don't require it
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.coursesFragment, R.id.calendarFragment, R.id.alertsFragment, R.id.help -> binding.bottomNav.show()
-                else -> binding.bottomNav.hide()
+                R.id.coursesFragment, R.id.calendarFragment, R.id.alertsFragment, R.id.help -> showMainNavigation()
+                else -> hideMainNavigation()
             }
         }
+    }
+
+    private fun showMainNavigation() {
+        binding.bottomNav.show()
+        binding.toolbar.expand()
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+    }
+
+    private fun hideMainNavigation() {
+        binding.bottomNav.hide()
+        binding.toolbar.collapse(200L)
+        viewModel.closeStudentSelector()
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
+
+    private fun setupAppColors(student: User?) {
+        val color = ColorKeeper.getOrGenerateUserColor(student).backgroundColor()
+        binding.toolbar.setBackgroundColor(color)
+        binding.bottomNav.applyTheme(color, getColor(R.color.textDarkest))
+        ViewStyler.setStatusBarDark(this, color)
     }
 
     private fun openNavigationDrawer() {
@@ -137,12 +194,8 @@ class MainActivity : AppCompatActivity() {
         ParentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
     }
 
-    private fun setupNavigationDrawerHeader(header: NavigationDrawerHeaderLayoutBinding) {
-        ApiPrefs.user?.let {
-            header.navHeaderName.text = Pronouns.span(it.shortName, it.pronouns)
-            header.navHeaderEmail.text = it.primaryEmail
-            ProfileUtils.loadAvatarForUser(header.navHeaderImage, it.shortName, it.avatarUrl)
-        }
+    private fun setupNavigationDrawerHeader(userViewData: UserViewData?) {
+        headerLayoutBinding.userViewData = userViewData
     }
 
     override fun onBackPressed() {

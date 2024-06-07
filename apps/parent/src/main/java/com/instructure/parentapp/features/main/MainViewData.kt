@@ -15,15 +15,32 @@
  *
  */
 
-package com.instructure.parentapp.util
+package com.instructure.parentapp.features.main
 
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.GsonPref
-import com.instructure.canvasapi2.utils.PrefManager
 
 
-object ParentPrefs : PrefManager("parentSP") {
+data class MainViewData(
+    val userViewData: UserViewData? = null,
+    val studentSelectorExpanded: Boolean = false,
+    val studentItems: List<StudentItemViewModel> = emptyList(),
+    val selectedStudent: User? = null
+)
 
-    var currentStudent: User? by GsonPref(User::class.java, null, "current_student", false)
-
+sealed class MainAction {
+    data class ShowToast(val message: String) : MainAction()
+    data object LocaleChanged : MainAction()
 }
+
+data class StudentItemViewData(
+    val studentId: Long,
+    val studentName: String,
+    val avatarUrl: String
+)
+
+data class UserViewData(
+    val name: String?,
+    val shortName: String?,
+    val avatarUrl: String?,
+    val email: String?
+)
