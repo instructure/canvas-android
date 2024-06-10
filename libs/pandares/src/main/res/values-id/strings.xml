@@ -1493,7 +1493,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Sinkronisasi Konten Offline Gagal</string>
     <string name="syncProgress_cancelConfirmationTitle">Batalkan Sinkronisasi?</string>
     <string name="syncProgress_cancelConfirmationMessage">Akan menghentikan sinkronisasi konten offline. Anda dapat melakukannya lagi nanti.</string>
-    <string name="syncProgress_syncErrorSubtitle">Satu atau lebih file gagal disinkronkan. Periksa sambungan internet Anda dan coba serahkan lagi.</string>
+    <string name="syncProgress_syncErrorSubtitle">Satu atau lebih file gagal disinkronkan. Silakan periksa sambungan internet Anda dan coba sinkronkan lagi.</string>
     <string name="syncProgress_downloadStarting">Unduhan dimulai</string>
     <string name="coursesCannotBeFavoritedOffline">Kursus tidak dapat ditambahkan ke offline favorit.</string>
     <string name="allCoursesScreenHeader">Semua Kursus</string>

@@ -60,8 +60,9 @@ class StudentCalendarRepositoryTest {
     }
 
     @Test
-    fun `Return results from the api and filter announcments on successful request`() = runTest {
+    fun `Return results from the api and filter announcments and assessment requests on successful request`() = runTest {
         val filteredItem = createPlannerItem(1, 3, PlannableType.ANNOUNCEMENT)
+        val filteredItem2 = createPlannerItem(1, 7, PlannableType.ASSESSMENT_REQUEST)
         val plannerItems = listOf(
             createPlannerItem(1, 1, PlannableType.ASSIGNMENT),
             createPlannerItem(1, 2, PlannableType.QUIZ),
@@ -75,7 +76,7 @@ class StudentCalendarRepositoryTest {
 
         val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
 
-        assertEquals(plannerItems.minus(filteredItem), result)
+        assertEquals(plannerItems.minus(listOf(filteredItem, filteredItem2).toSet()), result)
     }
 
     @Test
