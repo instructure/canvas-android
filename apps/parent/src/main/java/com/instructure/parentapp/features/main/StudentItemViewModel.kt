@@ -21,7 +21,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.parentapp.R
 
 
-class StudentItemViewModel(
+data class StudentItemViewModel(
     val studentItemViewData: StudentItemViewData,
     private val onStudentSelected: (Long) -> Unit
 ) : ItemViewModel {

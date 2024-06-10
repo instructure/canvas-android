@@ -40,6 +40,7 @@ data class StudentItemViewData(
 
 data class UserViewData(
     val name: String?,
+    val pronouns: String?,
     val shortName: String?,
     val avatarUrl: String?,
     val email: String?

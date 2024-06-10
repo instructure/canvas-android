@@ -1737,4 +1737,6 @@
     <string name="screenTitleSettings">Settings</string>
     <string name="navigationDrawerSwitchUsers">Switch Users</string>
     <string name="navigationDrawerLogOut">Log Out</string>
+    <string name="noStudentsError">No Students</string>
+    <string name="noStudentsErrorDescription">You are not observing any students.</string>
 </resources>

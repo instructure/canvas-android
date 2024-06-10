@@ -37,7 +37,8 @@ class MainRepository(
         val params = RestParams(usePerPageQueryParam = true)
         return enrollmentApi.firstPageObserveeEnrollmentsParent(params).depaginate {
             enrollmentApi.getNextPage(it, params)
-        }.dataOrThrow
+        }.dataOrNull
+            .orEmpty()
             .mapNotNull { it.observedUser }
             .distinct()
             .sortedBy { it.sortableName }

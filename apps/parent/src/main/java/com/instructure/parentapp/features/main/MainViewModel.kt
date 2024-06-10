@@ -85,7 +85,15 @@ class MainViewModel @Inject constructor(
 
             loadStudents()
 
-            _state.value = ViewState.Success
+            if (_data.value.studentItems.isEmpty()) {
+                _state.value = ViewState.Empty(
+                    R.string.noStudentsError,
+                    R.string.noStudentsErrorDescription,
+                    R.drawable.panda_manage_students
+                )
+            } else {
+                _state.value = ViewState.Success
+            }
         } catch {
             viewModelScope.launch {
                 _state.value = ViewState.Error(context.getString(R.string.errorOccurred))
@@ -106,8 +114,9 @@ class MainViewModel @Inject constructor(
             _data.update {
                 it.copy(
                     userViewData = UserViewData(
-                        user.shortName,
+                        user.name,
                         user.pronouns,
+                        user.shortName,
                         user.avatarUrl,
                         user.primaryEmail
                     )
