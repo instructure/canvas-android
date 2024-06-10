@@ -100,6 +100,7 @@ object Const {
     const val SESSIONLESS_LAUNCH = "sessionlessLaunch"
     const val ASSIGNMENT_LTI = "assignmentLti"
     const val LTI_TOOL = "ltiTool"
+    const val GOOGLE_DOCS = "googleDocs"
     const val SUBMISSION_COMMENT_SUBMITTED = "submission-comment-submitted"
     const val SUBMISSION = "submission"
     const val SUBMISSION_ID = "submission_id"
@@ -161,6 +162,7 @@ object Const {
     const val STUDIO_LTI_TOOL = "studioLTITool"
     const val STUDENT_USER_AGENT = "candroid"
     const val TEACHER_USER_AGENT = "androidTeacher"
+    const val PARENT_USER_AGENT = "androidParent"
 
     // Intent String for QR Code Masquerading
     const val QR_CODE_MASQUERADE_ID = "qrCodeMasqueradeId"

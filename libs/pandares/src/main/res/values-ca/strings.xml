@@ -1491,7 +1491,7 @@
     <string name="syncProgress_offlineContentSyncFailed">No s’ha pogut sincronitzar el contingut sense connexió</string>
     <string name="syncProgress_cancelConfirmationTitle">Voleu cancel·lar la sincronització?</string>
     <string name="syncProgress_cancelConfirmationMessage">Amb aquesta acció s’aturarà la sincronització del contingut sense connexió. Podeu tornar-ho a fer més endavant.</string>
-    <string name="syncProgress_syncErrorSubtitle">No s\'han pogut sincronitzar un o més fitxers. Reviseu la connexió a Internet i torneu a provar de fer l\'entrega.</string>
+    <string name="syncProgress_syncErrorSubtitle">No s\'han pogut sincronitzar un o més elements. Reviseu la connexió a internet i torneu a provar de sincronitzar-los.</string>
     <string name="syncProgress_downloadStarting">S’està iniciant la baixada</string>
     <string name="coursesCannotBeFavoritedOffline">No es poden afegir les assignatures a Preferits sense connexió.</string>
     <string name="allCoursesScreenHeader">Totes les assignatures</string>

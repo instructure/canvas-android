@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Innehållssynkronisering offline misslyckades</string>
     <string name="syncProgress_cancelConfirmationTitle">Avbryta synkroniseringen?</string>
     <string name="syncProgress_cancelConfirmationMessage">Det stoppar synkronisering av offlineinnehåll. Du kan göra detta vid ett senare tillfälle.</string>
-    <string name="syncProgress_syncErrorSubtitle">En eller fler filer synkroniserades inte. Kontrollera din internetanslutning och försök lämna in igen.</string>
+    <string name="syncProgress_syncErrorSubtitle">Det gick inte att synkronisera en eller fler objekt. Kontrollera din internetanslutning och försök synkronisera igen.</string>
     <string name="syncProgress_downloadStarting">Nedladdningen startar</string>
     <string name="coursesCannotBeFavoritedOffline">Det går inte att lägga till kurser i favoriter offline.</string>
     <string name="allCoursesScreenHeader">Alla kurser</string>

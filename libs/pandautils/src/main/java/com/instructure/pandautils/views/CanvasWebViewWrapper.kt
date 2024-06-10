@@ -63,7 +63,7 @@ class CanvasWebViewWrapper @JvmOverloads constructor(
             }
         }
 
-        val layoutParams = LinearLayout.LayoutParams(context, attrs)
+        val layoutParams = attrs?.let { LayoutParams(context, attrs) } ?: LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         val webViewLayoutParams = binding.contentWebView.layoutParams
         webViewLayoutParams.height = layoutParams.height
         binding.contentWebView.layoutParams = webViewLayoutParams

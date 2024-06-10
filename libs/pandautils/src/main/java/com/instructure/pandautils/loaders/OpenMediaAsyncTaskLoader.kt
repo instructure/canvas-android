@@ -36,6 +36,7 @@ import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader.LoadedMedia
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.Utils.getAttachmentsDirectory
+import com.instructure.pandautils.utils.orDefault
 import okhttp3.Request
 import okio.Source
 import okio.buffer
@@ -165,7 +166,11 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             Log.e(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "MalformedURLException: $e")
         } catch (e: IOException) {
             Log.e(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "IOException: $e")
-            loadedMedia.errorMessage = R.string.unexpectedErrorOpeningFile
+            if (e.message?.contains("404").orDefault()) {
+                loadedMedia.errorMessage = R.string.fileNotFound
+            } else {
+                loadedMedia.errorMessage = R.string.unexpectedErrorOpeningFile
+            }
         } catch (e: ActivityNotFoundException) {
             Log.e(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "ActivityNotFoundException: $e")
             loadedMedia.errorMessage = R.string.noApps

@@ -16,9 +16,9 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "1.9.20"
+    const val KOTLIN = "1.9.23"
     const val KOTLIN_COROUTINES = "1.6.4"
-    const val KOTLIN_COMPOSE_COMPILER_VERSION = "1.5.4"
+    const val KOTLIN_COMPOSE_COMPILER_VERSION = "1.5.11"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.3.15"
@@ -40,6 +40,7 @@ object Versions {
     const val HEAP = "1.10.6"
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
+    const val NAVIGATION = "2.7.7"
 }
 
 object Libs {
@@ -163,15 +164,22 @@ object Libs {
 
     const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 
+    const val RRULE = "org.scala-saddle:google-rfc-2445:20110304"
+
     // Compose
-    const val COMPOSE_BOM = "androidx.compose:compose-bom:2023.10.01"
+    const val COMPOSE_BOM = "androidx.compose:compose-bom:2024.03.00"
     const val COMPOSE_MATERIAL = "androidx.compose.material:material"
     const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
     const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling"
     const val COMPOSE_UI = "androidx.compose.ui:ui-android"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.5.4"
+    const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.6.4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
+    const val COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
+
+    // Navigation
+    const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
+    const val NAVIGATION_KTX = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
 }
 
 object Plugins {

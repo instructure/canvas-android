@@ -25,18 +25,19 @@ import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
 import com.instructure.canvas.espresso.mockCanvas.addCourseSettings
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class SyllabusInteractionTest : StudentTest() {
+class SyllabusInteractionTest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
@@ -48,13 +49,14 @@ class SyllabusInteractionTest : StudentTest() {
         val data = goToSyllabus(eventCount = 1, assignmentCount = 0)
 
         val course = data.courses.values.first()
+        data.coursePermissions[course.id] = CanvasContextPermission(manageCalendar = true)
         val event = data.courseCalendarEvents[course.id]!!.first()
 
         syllabusPage.selectSummaryTab()
         syllabusPage.assertItemDisplayed(event.title!!)
         syllabusPage.selectSummaryEvent(event.title!!)
-        calendarEventPage.verifyTitle(event.title!!)
-        calendarEventPage.verifyDescription(event.description!!)
+        calendarEventDetailsPage.assertEventTitle(event.title!!)
+        calendarEventDetailsPage.verifyDescription(event.description!!)
     }
 
     private fun goToSyllabus(eventCount: Int, assignmentCount: Int) : MockCanvas {
@@ -77,8 +79,8 @@ class SyllabusInteractionTest : StudentTest() {
 
         repeat(eventCount) {
             data.addCourseCalendarEvent(
-                    courseId = course.id,
-                    date = 2.days.fromNow.iso8601,
+                    course = course,
+                    startDate = 2.days.fromNow.iso8601,
                     title = "Test Calendar Event",
                     description = "The calendar event to end all calendar events"
             )

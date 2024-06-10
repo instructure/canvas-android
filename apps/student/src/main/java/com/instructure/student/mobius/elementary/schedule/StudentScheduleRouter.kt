@@ -20,12 +20,12 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
 import com.instructure.student.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
-import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentScheduleRouter(private val activity: FragmentActivity) : ScheduleRouter {
@@ -35,7 +35,7 @@ class StudentScheduleRouter(private val activity: FragmentActivity) : ScheduleRo
     }
 
     override fun openCalendarEvent(canvasContext: CanvasContext, scheduleItemId: Long) {
-        RouteMatcher.route(activity, CalendarEventFragment.makeRoute(canvasContext, scheduleItemId))
+        RouteMatcher.route(activity, EventFragment.makeRoute(canvasContext, scheduleItemId))
     }
 
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) {

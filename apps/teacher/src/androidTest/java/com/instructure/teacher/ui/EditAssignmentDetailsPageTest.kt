@@ -59,7 +59,7 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
         val newAssignmentName = randomString()
         editAssignmentDetailsPage.editAssignmentName(newAssignmentName)
         editAssignmentDetailsPage.saveAssignment()
-        assignmentDetailsPage.assertAssignmentNameChanged(newAssignmentName)
+        assignmentDetailsPage.assertAssignmentName(newAssignmentName)
     }
 
     @Test

@@ -20,9 +20,9 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.R
-import com.instructure.student.fragment.CalendarFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.fragment.ToDoListFragment

@@ -20,13 +20,15 @@ import android.content.IntentFilter
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.work.Configuration
-import androidx.work.WorkerFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.heapanalytics.android.Heap
 import com.heapanalytics.android.config.Options
 import com.instructure.annotations.FileCaching.FileCache
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.AppTheme
@@ -41,12 +43,7 @@ import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 
-abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configuration.Provider {
-
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(getWorkManagerFactory())
-            .build()
+abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
 
     override fun onCreate() {
         super.onCreate()
@@ -102,8 +99,6 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Configu
     override fun performLogoutOnAuthError() {
         TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
-
-    abstract fun getWorkManagerFactory(): WorkerFactory
 
     companion object {
         val PREF_FILE_NAME = "teacherSP"

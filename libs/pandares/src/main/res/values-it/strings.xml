@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Sincronizzazione contenuto offline non andata a buon fine</string>
     <string name="syncProgress_cancelConfirmationTitle">Cancellare sincronizzazione?</string>
     <string name="syncProgress_cancelConfirmationMessage">Ferma la sincronizzazione del contenuto offline. Puoi rifarlo dopo.</string>
-    <string name="syncProgress_syncErrorSubtitle">Impossibile sincronizzare uno o più file. Controlla la tua connessione Internet e riprova a inviare.</string>
+    <string name="syncProgress_syncErrorSubtitle">Impossibile sincronizzare uno o più elementi. Verificare la connessione Internet e riprovare a sincronizzare.</string>
     <string name="syncProgress_downloadStarting">Avvio download</string>
     <string name="coursesCannotBeFavoritedOffline">Impossibile aggiungere dei corsi ai preferiti offline.</string>
     <string name="allCoursesScreenHeader">Tutti i corsi</string>

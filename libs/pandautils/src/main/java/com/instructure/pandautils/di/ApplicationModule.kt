@@ -40,6 +40,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.threeten.bp.Clock
 import javax.inject.Singleton
 
 /**
@@ -119,5 +120,10 @@ class ApplicationModule {
         fileFolderApi: FileFolderAPI.FilesFoldersInterface
     ): HtmlParser {
         return HtmlParser(localFileDao, apiPrefs, fileFolderDao, context, fileSyncSettingsDao, fileFolderApi)
+    }
+
+    @Provides
+    fun provideClock(): Clock {
+        return Clock.systemDefaultZone()
     }
 }

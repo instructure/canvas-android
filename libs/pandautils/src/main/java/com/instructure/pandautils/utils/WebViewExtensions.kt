@@ -46,11 +46,11 @@ fun WebView.loadHtmlWithIframes(
         val formatter = HtmlContentFormatter(context, FirebaseCrashlytics.getInstance(), OAuthManager)
 
         if (HtmlContentFormatter.hasExternalTools(html) && onLtiButtonPressed != null) {
-            addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), "ltiTool")
+            addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
         }
 
         if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
-            addJavascriptInterface(JsGoogleDocsInterface(context), "googleDocs")
+            addJavascriptInterface(JsGoogleDocsInterface(context), Const.GOOGLE_DOCS)
         }
 
         loadHtml(formatter.formatHtmlWithIframes(html.orEmpty()))

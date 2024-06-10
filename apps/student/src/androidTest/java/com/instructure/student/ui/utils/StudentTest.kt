@@ -21,10 +21,8 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
-import android.util.Log
 import android.view.View
 import androidx.core.content.FileProvider
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -42,7 +40,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.espresso.StudentHiltTestApplication_Application
 import com.instructure.student.ui.pages.AboutPage
 import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
@@ -50,7 +47,6 @@ import com.instructure.student.ui.pages.AnnouncementListPage
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.pages.BookmarkPage
-import com.instructure.student.ui.pages.CalendarEventPage
 import com.instructure.student.ui.pages.CanvasWebViewPage
 import com.instructure.student.ui.pages.ConferenceDetailsPage
 import com.instructure.student.ui.pages.ConferenceListPage
@@ -105,48 +101,19 @@ import com.instructure.student.ui.pages.UrlSubmissionUploadPage
 import com.instructure.student.ui.pages.offline.ManageOfflineContentPage
 import com.instructure.student.ui.pages.offline.OfflineSyncSettingsPage
 import com.instructure.student.ui.pages.offline.SyncProgressPage
-import dagger.hilt.android.testing.HiltAndroidRule
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
-import org.junit.Before
-import org.junit.Rule
 import java.io.File
-import javax.inject.Inject
 
 abstract class StudentTest : CanvasTest() {
 
     val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
+    override val isTesting = BuildConfig.IS_TESTING
+
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)
-
-    lateinit var originalActivity : Activity
-
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    @get:Rule(order = 0)
-    var hiltRule = HiltAndroidRule(this)
-
-    // Sometimes activityRule.activity can get nulled out over time, probably as we
-    // navigate away from the original login screen.  Capture the activity here so
-    // that we can reference it safely later.
-    @Before
-    fun recordOriginalActivity() {
-        originalActivity = activityRule.activity
-        try {
-            hiltRule.inject()
-        } catch (e: IllegalStateException) {
-            // Catch this exception to avoid multiple injection
-            Log.w("Test Inject", e.message ?: "")
-        }
-
-        val application = originalActivity.application as? StudentHiltTestApplication_Application
-        application?.workerFactory = workerFactory
-    }
-
-    override val isTesting = BuildConfig.IS_TESTING
 
     /**
      * Required for auto complete of page objects within tests
@@ -156,7 +123,6 @@ abstract class StudentTest : CanvasTest() {
     val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()
-    val calendarEventPage = CalendarEventPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
     val groupBrowserPage = GroupBrowserPage()
