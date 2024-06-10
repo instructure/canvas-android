@@ -209,6 +209,25 @@ class MainViewModelTest {
     }
 
     @Test
+    fun `Change selected student`() {
+        val students = listOf(
+            User(id = 1L, name = "Student One", avatarUrl = "avatar1"),
+            User(id = 2L, name = "Student Two", avatarUrl = "avatar2"),
+        )
+
+        coEvery { repository.getStudents() } returns students
+
+        createViewModel()
+
+        Assert.assertEquals(students.first(), viewModel.data.value.selectedStudent)
+
+        viewModel.data.value.studentItems.last().onStudentClick()
+
+        Assert.assertEquals(students.last(), viewModel.data.value.selectedStudent)
+        Assert.assertFalse(viewModel.data.value.studentSelectorExpanded)
+    }
+
+    @Test
     fun `Toggle student selector`() {
         createViewModel()
 
