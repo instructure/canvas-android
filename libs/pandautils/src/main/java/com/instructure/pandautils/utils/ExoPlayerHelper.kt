@@ -92,26 +92,10 @@ class ExoAgent private constructor(val uri: Uri) {
     private val mMediaSource by lazy {
         val mediaItem = MediaItem.fromUri(uri)
         when (Util.inferContentType(uri)) {
-            C.CONTENT_TYPE_SS -> SsMediaSource.Factory(
-                DefaultSsChunkSource.Factory(
-                    DATA_SOURCE_FACTORY
-                ), DATA_SOURCE_FACTORY
-            ).createMediaSource(mediaItem)
-
-            C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(
-                DefaultDashChunkSource.Factory(
-                    DATA_SOURCE_FACTORY
-                ), DATA_SOURCE_FACTORY
-            ).createMediaSource(mediaItem)
-
-            C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(
-                DefaultHlsDataSourceFactory(
-                    DATA_SOURCE_FACTORY
-                )
-            ).createMediaSource(mediaItem)
-
-            else -> ProgressiveMediaSource.Factory(DATA_SOURCE_FACTORY, DefaultExtractorsFactory())
-                .createMediaSource(mediaItem)
+            C.CONTENT_TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
+            C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
+            C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(mediaItem)
+            else -> ProgressiveMediaSource.Factory(DATA_SOURCE_FACTORY, DefaultExtractorsFactory()).createMediaSource(mediaItem)
         }
     }
 
