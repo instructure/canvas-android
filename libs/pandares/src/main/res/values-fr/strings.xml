@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Échec de la synchronisation du contenu hors ligne</string>
     <string name="syncProgress_cancelConfirmationTitle">Annuler la synchronisation ?</string>
     <string name="syncProgress_cancelConfirmationMessage">Cette action interrompra la synchronisation de contenu hors ligne. Vous pourrez le faire plus tard.</string>
-    <string name="syncProgress_syncErrorSubtitle">Un ou plusieurs fichiers n’ont pas pu être synchronisés. Vérifiez l’état de votre connexion internet, puis réessayez.</string>
+    <string name="syncProgress_syncErrorSubtitle">Un ou plusieurs éléments n\'ont pas été synchronisés. Veuillez vérifier votre connexion internet et réessayer la synchronisation.</string>
     <string name="syncProgress_downloadStarting">Téléchargement commencé</string>
     <string name="coursesCannotBeFavoritedOffline">Vous ne pouvez pas ajouter de cours favoris en mode hors ligne.</string>
     <string name="allCoursesScreenHeader">Tous les cours</string>

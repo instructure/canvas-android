@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">I Rahua te Tukutahi Ihirangi Tuimotu</string>
     <string name="syncProgress_cancelConfirmationTitle">Whakakore Tukutahi?</string>
     <string name="syncProgress_cancelConfirmationMessage">Ka mutu te tukutahi ihirangi tuimotu. Ka taea e koe te mahi ano i muri mai.</string>
-    <string name="syncProgress_syncErrorSubtitle">Kotahi neke atu ranei nga konae i rahua ki te tukutahi. Tirohia to hononga ipurangi ka ngana ano ki te tuku.</string>
+    <string name="syncProgress_syncErrorSubtitle">Kotahi neke atu ranei nga tuemi i rahua ki te tukutahi. Tena koa tirohia to hononga ipurangi ka ngana ano ki te tukutahi.</string>
     <string name="syncProgress_downloadStarting">Ka timata te tango</string>
     <string name="coursesCannotBeFavoritedOffline">Kaore e taea te taapiri i nga akoranga ki nga makau tuimotu.</string>
     <string name="allCoursesScreenHeader">Ngā akoranga katoa</string>

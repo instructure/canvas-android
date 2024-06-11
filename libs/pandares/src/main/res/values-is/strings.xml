@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Samstilling efnis án nettengingar mistókst</string>
     <string name="syncProgress_cancelConfirmationTitle">Hætta við samhæfingu?</string>
     <string name="syncProgress_cancelConfirmationMessage">Það mun stöðva samstillingu efnis án nettengingar. Þú getur gert það aftur síðar.</string>
-    <string name="syncProgress_syncErrorSubtitle">Ekki tókst að samstilla eina eða fleiri skrár. Athugaðu nettenginguna þína og reyndu aftur að skila.</string>
+    <string name="syncProgress_syncErrorSubtitle">Ekki tókst að samstilla eitt eða fleiri atriði. Athugaðu nettengingu þína og reyndu að endurstilla aftur.</string>
     <string name="syncProgress_downloadStarting">Niðurhal hefst</string>
     <string name="coursesCannotBeFavoritedOffline">Ekki er hægt að bæta námskeiðum við eftirlæti án nettengingar.</string>
     <string name="allCoursesScreenHeader">Öll námskeið</string>

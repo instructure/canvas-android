@@ -776,7 +776,7 @@
     <string name="notification_cat_course_activities">コースアクティビティ</string>
     <string name="notification_cat_discussions">ディスカッション</string>
     <string name="notification_cat_conversations">会話</string>
-    <string name="notification_cat_scheduling">スケジュール中</string>
+    <string name="notification_cat_scheduling">スケジュール</string>
     <string name="notification_cat_groups">グループ</string>
     <string name="notification_cat_alerts">アラート</string>
     <string name="notification_cat_conferences">会議</string>
@@ -826,21 +826,21 @@
     <string name="notification_desc_announcement_created_by_you">アナウンスメントを作成するとき、およびアナウンスに誰かが返信したときに通知を受け取ります。</string>
     <string name="notification_desc_grading">課題/提出が採点/変更されたとき、および採点の重みが変更されたときに通知を受け取ります。</string>
     <string name="notification_desc_invitation">ウェブ会議、グループ、コラボレーション、ピアレビュー、およびリマインダーへの招待状の通知を受け取ります。</string>
-    <string name="notification_desc_all_submissions">インストラクターと管理者のみ。課題が提出または再提出されたときに通知を受け取ります。</string>
-    <string name="notification_desc_late_grading">インストラクターと管理者のみ。遅れた課題が提出されたときに通知を受け取ります。</string>
+    <string name="notification_desc_all_submissions">教員と管理者のみ。課題が提出または再提出されたときに通知を受け取ります。</string>
+    <string name="notification_desc_late_grading">教員と管理者のみ。遅れた課題が提出されたときに通知を受け取ります。</string>
     <string name="notification_desc_submission_comment">提出物にコメントがあるときに通知を受け取ります。</string>
     <string name="notification_desc_discussion">コースに新しいディスカッショントピックがあったときに通知を受け取ります。</string>
     <string name="notification_desc_discussion_post">購読しているディスカッションに新しい投稿があったときに通知を受け取ります。</string>
     <string name="notification_desc_add_to_conversation">あなたが会話に追加されたときに通知を受け取ります。</string>
     <string name="notification_desc_conversation_message">新しい受信メッセージを受け取ったときに通知を受け取ります。</string>
     <string name="notification_desc_conversations_created_by_you">新しい会話を作成するときに通知を受け取ります。</string>
-    <string name="notification_desc_student_appointment_signups">インストラクターと管理者のみ。予定が登録されたときに通知を受け取ります。</string>
+    <string name="notification_desc_student_appointment_signups">教員と管理者のみ。予定が登録されたときに通知を受け取ります。</string>
     <string name="notification_desc_appointment_signups">カレンダーに新しい登録があったときに通知を受け取ります。</string>
     <string name="notification_desc_appointment_cancelations">予定のキャンセルがあったときに通知を受け取ります。</string>
     <string name="notification_desc_appointment_availability">予約時間帯が利用可能になったときに通知を受け取ります。</string>
     <string name="notification_desc_calendar">新しいカレンダーアイテムや更新されたカレンダーアイテムについて通知を受け取ります。</string>
     <string name="notification_desc_membership_update">管理者のみ。保留中の登録が有効になりました。グループ登録が承認または拒否されたときに通知を受け取ります。</string>
-    <string name="notification_desc_admin">インストラクターと管理者のみ。コースの登録、生成されたレポート、エクスポートされたコンテンツ、移行レポート、新しいアカウントユーザー、新しい受講者グループについて通知を受け取ります。</string>
+    <string name="notification_desc_admin">教員と管理者のみ。コースの登録、生成されたレポート、エクスポートされたコンテンツ、移行レポート、新しいアカウントユーザー、新しい受講者グループについて通知を受け取ります。</string>
     <string name="notification_desc_recording_ready">会議録画の準備ができたときに通知を受け取ります。</string>
 
     <string name="unlimited">無制限</string>
@@ -1468,7 +1468,7 @@
     <string name="syncProgress_offlineContentSyncFailed">オフラインコンテンツの同期に失敗しました</string>
     <string name="syncProgress_cancelConfirmationTitle">同期をキャンセルしますか？</string>
     <string name="syncProgress_cancelConfirmationMessage">オフラインコンテンツの同期が中止されます。後でやり直すことができます。</string>
-    <string name="syncProgress_syncErrorSubtitle">1つまたは複数のファイルが同期に失敗しました。インターネット接続をチェックしてから、提出を再試行してください。</string>
+    <string name="syncProgress_syncErrorSubtitle">1つ以上の項目の同期に失敗しました。インターネット接続を確認して、もう一度同期してみてください。</string>
     <string name="syncProgress_downloadStarting">ダウンロード開始</string>
     <string name="coursesCannotBeFavoritedOffline">オフラインでコースをお気に入りに追加することはできません。</string>
     <string name="allCoursesScreenHeader">すべてのコース</string>
