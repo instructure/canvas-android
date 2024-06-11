@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2019 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -26,7 +25,8 @@
         android:id="@+id/submissionMediaPlayerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:use_controller="true">
 
         <ImageView
             android:id="@+id/audioIconView"
@@ -36,7 +36,7 @@
             android:importantForAccessibility="no"
             android:src="@drawable/ic_audio"
             android:tint="@color/textDark"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </androidx.media3.ui.PlayerView>
 
@@ -57,19 +57,19 @@
             android:padding="16dp"
             android:text="@string/errorOccurred"
             android:textColor="@color/textDark"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/tryAgainButton"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
-            android:text="@string/utils_tryAgain"/>
+            android:text="@string/utils_tryAgain" />
 
         <Button
             android:id="@+id/openExternallyButton"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
-            android:text="@string/utils_openWithAnotherApp"/>
+            android:text="@string/utils_openWithAnotherApp" />
 
     </LinearLayout>
 
@@ -79,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        app:pclv_indeterminate="true"/>
+        app:pclv_indeterminate="true" />
 
     <FrameLayout
         android:id="@+id/mediaPreviewContainer"
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:importantForAccessibility="no"
-            tools:src="@drawable/ic_cv_camera"/>
+            tools:src="@drawable/ic_cv_camera" />
 
         <ImageButton
             android:id="@+id/prepareMediaButton"
@@ -103,7 +103,7 @@
             android:background="@drawable/bg_play_arrow"
             android:contentDescription="@string/utils_playMedia"
             android:importantForAccessibility="yes"
-            android:src="@drawable/ic_play_arrow"/>
+            android:src="@drawable/ic_play_arrow" />
 
     </FrameLayout>
 

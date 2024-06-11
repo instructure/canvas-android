@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.annotation.OptIn
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.media3.common.util.UnstableApi
@@ -48,7 +49,6 @@ import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.view.MediaContent
 import org.greenrobot.eventbus.EventBus
 
-@UnstableApi
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
 class ViewMediaFragment : Fragment(), ShareableFile {
 
@@ -145,7 +145,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
                 }
             }
 
-            override fun onError(cause: Throwable?) {
+            @OptIn(UnstableApi::class) override fun onError(cause: Throwable?) {
                 speedGraderMediaPlayerView.setGone()
                 mediaProgressBar.setGone()
                 mediaPlaybackErrorView.setVisible()

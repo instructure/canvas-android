@@ -26,6 +26,7 @@ import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -168,7 +169,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
                 }
             }
 
-            @UnstableApi override fun onError(cause: Throwable?) {
+            @OptIn(UnstableApi::class) override fun onError(cause: Throwable?) {
                 mediaPlayerView.setGone()
                 mediaProgressBar.setGone()
                 mediaPlaybackErrorView.setVisible()

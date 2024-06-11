@@ -18,6 +18,7 @@ package com.instructure.pandautils.utils
 
 import android.net.Uri
 import android.view.SurfaceView
+import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.C.TRACK_TYPE_VIDEO
 import androidx.media3.common.MediaItem
@@ -66,7 +67,7 @@ interface ExoInfoListener {
  * playback between different fragments/activities (e.g. switching from a player embedded in a
  * fragment to a player in a fullscreen activity)
  */
-@UnstableApi
+@OptIn(UnstableApi::class)
 class ExoAgent private constructor(val uri: Uri) {
 
     /** Current ExoPlayer */
@@ -90,11 +91,27 @@ class ExoAgent private constructor(val uri: Uri) {
     /** The media source that will feed data from the [uri] */
     private val mMediaSource by lazy {
         val mediaItem = MediaItem.fromUri(uri)
-        when (Util.inferContentType(uri.lastPathSegment ?: "")) {
-            C.CONTENT_TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
-            C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
-            C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(mediaItem)
-            else -> ProgressiveMediaSource.Factory(DATA_SOURCE_FACTORY, DefaultExtractorsFactory()).createMediaSource(mediaItem)
+        when (Util.inferContentType(uri)) {
+            C.CONTENT_TYPE_SS -> SsMediaSource.Factory(
+                DefaultSsChunkSource.Factory(
+                    DATA_SOURCE_FACTORY
+                ), DATA_SOURCE_FACTORY
+            ).createMediaSource(mediaItem)
+
+            C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(
+                DefaultDashChunkSource.Factory(
+                    DATA_SOURCE_FACTORY
+                ), DATA_SOURCE_FACTORY
+            ).createMediaSource(mediaItem)
+
+            C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(
+                DefaultHlsDataSourceFactory(
+                    DATA_SOURCE_FACTORY
+                )
+            ).createMediaSource(mediaItem)
+
+            else -> ProgressiveMediaSource.Factory(DATA_SOURCE_FACTORY, DefaultExtractorsFactory())
+                .createMediaSource(mediaItem)
         }
     }
 
@@ -139,15 +156,19 @@ class ExoAgent private constructor(val uri: Uri) {
         currentState = ExoAgentState.PREPARING
 
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
-        val trackSelector: TrackSelector = DefaultTrackSelector(ContextKeeper.appContext, trackSelectionFactory)
+        val trackSelector: TrackSelector =
+            DefaultTrackSelector(ContextKeeper.appContext, trackSelectionFactory)
         mPlayer = ExoPlayer.Builder(ContextKeeper.appContext)
             .setTrackSelector(trackSelector)
             .build()
 
         mPlayer?.addListener(object : Player.Listener {
-            override fun onLoadingChanged(isLoading: Boolean) {}
-            override fun onPositionDiscontinuity(reason: Int) {}
+            override fun onIsLoadingChanged(isLoading: Boolean) {}
+
+            override fun onPositionDiscontinuity(oldPosition: Player.PositionInfo, newPosition: Player.PositionInfo, reason: Int) {}
+
             override fun onRepeatModeChanged(repeatMode: Int) {}
+
             override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {}
 
             override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {}
@@ -162,8 +183,8 @@ class ExoAgent private constructor(val uri: Uri) {
                 mInfoListener?.onError(exception.cause)
             }
 
-            override fun onPlayerStateChanged(playWhenReady: Boolean, state: Int) {
-                currentState = when (state) {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                currentState = when (playbackState) {
                     Player.STATE_BUFFERING -> ExoAgentState.BUFFERING
                     Player.STATE_ENDED -> {
                         mPlayer?.seekToDefaultPosition()
@@ -171,10 +192,10 @@ class ExoAgent private constructor(val uri: Uri) {
                         mPlayer?.release()
                         ExoAgentState.ENDED
                     }
+
                     Player.STATE_IDLE -> ExoAgentState.IDLE
                     else -> ExoAgentState.READY
                 }
-
             }
         })
 
@@ -220,7 +241,9 @@ class ExoAgent private constructor(val uri: Uri) {
 
         private const val READ_TIMEOUT = 8000
 
-        private val BANDWIDTH_METER by lazy { DefaultBandwidthMeter.Builder(ContextKeeper.appContext).build() }
+        private val BANDWIDTH_METER by lazy {
+            DefaultBandwidthMeter.Builder(ContextKeeper.appContext).build()
+        }
 
         private val DATA_SOURCE_FACTORY by lazy {
             val httpSourceFactory = DefaultHttpDataSource.Factory()

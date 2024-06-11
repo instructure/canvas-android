@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -50,7 +51,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.student.databinding.ActivityVideoViewBinding
 import com.instructure.student.util.Const
 
-@UnstableApi
+@OptIn(UnstableApi::class)
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
 class VideoViewActivity : AppCompatActivity() {
 

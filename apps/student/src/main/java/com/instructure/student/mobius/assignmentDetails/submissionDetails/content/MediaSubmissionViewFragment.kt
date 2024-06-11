@@ -48,6 +48,7 @@ import com.instructure.student.databinding.FragmentMediaSubmissionViewBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.router.RouteMatcher
 
+@OptIn(UnstableApi::class)
 class MediaSubmissionViewFragment : Fragment() {
 
     private val binding by viewBinding(FragmentMediaSubmissionViewBinding::bind)
@@ -123,7 +124,7 @@ class MediaSubmissionViewFragment : Fragment() {
                 }
             }
 
-            @OptIn(UnstableApi::class) override fun onError(cause: Throwable?) {
+            override fun onError(cause: Throwable?) {
                 binding.submissionMediaPlayerView.setGone()
                 binding.mediaProgressBar.setGone()
                 binding.mediaPlaybackErrorView.setVisible()
