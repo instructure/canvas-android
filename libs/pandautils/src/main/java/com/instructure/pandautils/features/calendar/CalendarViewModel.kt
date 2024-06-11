@@ -163,9 +163,9 @@ class CalendarViewModel @Inject constructor(
     /**
      * @return true if the month was loaded, false if it was already loaded
      */
-    private suspend fun loadEventsForMonth(date: LocalDate): Boolean {
+    private suspend fun loadEventsForMonth(date: LocalDate, refresh: Boolean = false): Boolean {
         val yearMonth = YearMonth.from(date)
-        if (loadedMonths.contains(yearMonth)) return false
+        if (loadedMonths.contains(yearMonth) && !refresh) return false
 
         loadedMonths.add(yearMonth) // We add it here because we don't want to reload even when it's loading
 
@@ -175,7 +175,11 @@ class CalendarViewModel @Inject constructor(
         val daysToFetch = daysBetweenDates(startDate, endDate)
         try {
             errorDays.removeAll(daysToFetch)
-            loadingDays.addAll(daysToFetch)
+            if (refresh) {
+                refreshingDays.addAll(daysToFetch)
+            } else {
+                loadingDays.addAll(daysToFetch)
+            }
             _uiState.emit(createNewUiState())
 
             val result = calendarRepository.getPlannerItems(
@@ -185,17 +189,36 @@ class CalendarViewModel @Inject constructor(
                 true
             )
 
-            loadingDays.removeAll(daysToFetch)
+            if (refresh) {
+                refreshingDays.removeAll(daysToFetch)
+            } else {
+                loadingDays.removeAll(daysToFetch)
+            }
+
+            // If this was a refresh we should clear all events only after we have the new ones.
+            // At this point we should already have a successful request.
+            if (refresh) {
+                eventsByDay.clear()
+                loadedMonths.clear()
+                loadedMonths.add(yearMonth)
+            }
 
             storeResults(result)
             _uiState.emit(createNewUiState())
             return true
         } catch (e: Exception) {
-            loadedMonths.remove(yearMonth)
-            loadingDays.removeAll(daysToFetch)
-            errorDays.addAll(daysToFetch)
-            viewModelScope.launch {
-                _uiState.emit(createNewUiState())
+            if (refresh) {
+                refreshingDays.removeAll(daysToFetch)
+                viewModelScope.launch {
+                    _uiState.emit(createNewUiState().copy(snackbarMessage = context.getString(R.string.calendarRefreshFailed)))
+                }
+            } else {
+                loadedMonths.remove(yearMonth)
+                loadingDays.removeAll(daysToFetch)
+                errorDays.addAll(daysToFetch)
+                viewModelScope.launch {
+                    _uiState.emit(createNewUiState())
+                }
             }
             return true
         }
@@ -393,7 +416,7 @@ class CalendarViewModel @Inject constructor(
                     if (calendarRepository.getCalendarFilterLimit() == -1) { // If we don't have a limit just filter locally
                         _uiState.emit(createNewUiState())
                     } else {
-                        refreshCalendar()
+                        clearAndReloadCalendar()
                     }
                 }
             }
@@ -401,12 +424,13 @@ class CalendarViewModel @Inject constructor(
                 _events.send(CalendarViewModelAction.OpenCreateEvent(selectedDay.toApiString()))
             }
             is CalendarAction.RefreshCalendar -> viewModelScope.launch {
-                refreshCalendar()
+                clearAndReloadCalendar()
             }
+            CalendarAction.PullToRefresh -> refreshCalendar()
         }
     }
 
-    private suspend fun refreshCalendar() {
+    private suspend fun clearAndReloadCalendar() {
         eventsByDay.clear()
         loadedMonths.clear()
 
@@ -528,6 +552,21 @@ class CalendarViewModel @Inject constructor(
             }
 
             event?.let { _events.send(it) }
+        }
+    }
+
+    private fun refreshCalendar() {
+        viewModelScope.launch {
+            _uiState.emit(createNewUiState(loadingMonths = true))
+
+            loadEventsForMonth(selectedDay, refresh = true)
+
+            awaitAll(
+                async { loadEventsForMonth(selectedDay.plusMonths(1)) },
+                async { loadEventsForMonth(selectedDay.minusMonths(1)) }
+            )
+
+            _uiState.emit(createNewUiState(loadingMonths = false))
         }
     }
 

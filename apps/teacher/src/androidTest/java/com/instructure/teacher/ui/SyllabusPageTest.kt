@@ -96,8 +96,8 @@ class SyllabusPageTest : TeacherComposeTest() {
 
         repeat(eventCount) {
             data.addCourseCalendarEvent(
-                courseId = course.id,
-                date = 2.days.fromNow.iso8601,
+                course = course,
+                startDate = 2.days.fromNow.iso8601,
                 title = "Test Calendar Event",
                 description = "Calendar event: $it"
             )

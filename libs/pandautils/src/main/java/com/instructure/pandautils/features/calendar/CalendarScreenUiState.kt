@@ -114,6 +114,7 @@ sealed class CalendarAction {
     data object FiltersRefreshed : CalendarAction()
     data object AddEventTapped : CalendarAction()
     data object RefreshCalendar : CalendarAction()
+    data object PullToRefresh : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {

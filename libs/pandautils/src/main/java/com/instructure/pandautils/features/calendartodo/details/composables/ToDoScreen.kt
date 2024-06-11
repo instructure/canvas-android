@@ -142,7 +142,10 @@ private fun OverFlowMenuSegment(
     val showMenu = remember { mutableStateOf(false) }
     OverflowMenu(
         modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
-        showMenu = showMenu
+        showMenu = showMenu.value,
+        onDismissRequest = {
+            showMenu.value = !showMenu.value
+        }
     ) {
         DropdownMenuItem(
             onClick = {
@@ -182,7 +185,8 @@ private fun ToDoContent(
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = toDoUiState.title,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
                     .testTag("title"),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 22.sp
@@ -208,7 +212,9 @@ private fun ToDoContent(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = toDoUiState.date,
-                modifier = Modifier.padding(horizontal = 16.dp).testTag("date"),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .testTag("date"),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp
             )
@@ -225,7 +231,9 @@ private fun ToDoContent(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = toDoUiState.description,
-                    modifier = Modifier.padding(horizontal = 16.dp).testTag("description"),
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .testTag("description"),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp
                 )

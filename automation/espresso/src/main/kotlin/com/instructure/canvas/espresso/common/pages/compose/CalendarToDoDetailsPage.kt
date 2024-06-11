@@ -22,6 +22,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -31,7 +32,11 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.assertTextColor
 import java.util.Date
 
-class ToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
+class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
+
+    fun assertPageTitle(pageTitle: String) {
+        composeTestRule.onNode(hasTestTag("todoDetailsPageTitle") and hasText(pageTitle)).assertIsDisplayed()
+    }
 
     fun assertTitle(title: String) {
         composeTestRule.waitForIdle()
@@ -39,10 +44,12 @@ class ToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
             .assertTextEquals(title).isDisplayed()
     }
 
-    fun assertCanvasContext(title: String, color: Int) {
-        composeTestRule.onNodeWithText(title)
-            .assertIsDisplayed()
-            .assertTextColor(Color(color))
+    fun assertCanvasContext(title: String) {
+        composeTestRule.onNodeWithText(title).assertIsDisplayed()
+    }
+
+    fun assertTextColor(title: String, color: Int) {
+        composeTestRule.onNodeWithText(title).assertTextColor(Color(color))
     }
 
     fun assertDate(context: Context, date: Date) {
@@ -56,6 +63,11 @@ class ToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
             .assertTextEquals(dateTitle).isDisplayed()
     }
 
+    fun assertDate(dateString: String) {
+        composeTestRule.onNodeWithTag("date")
+            .assertTextEquals(dateString).isDisplayed()
+    }
+
     fun assertDescription(description: String) {
         composeTestRule.onNodeWithTag("description")
             .assertTextEquals(description).isDisplayed()
@@ -63,7 +75,7 @@ class ToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun clickToolbarMenu() {
         composeTestRule.onNode(
-            hasParent(hasTestTag("Toolbar"))
+            hasParent(hasTestTag("toolbar"))
                 .and(hasContentDescription("More options"))
         )
             .performClick()
@@ -74,6 +86,16 @@ class ToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickDeleteMenu() {
+        composeTestRule.onNodeWithText("Delete").performClick()
+    }
+
+    fun assertDeleteDialog() {
+        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
+    }
+
+    fun confirmDeletion() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
         composeTestRule.onNodeWithText("Delete").performClick()
     }
 }

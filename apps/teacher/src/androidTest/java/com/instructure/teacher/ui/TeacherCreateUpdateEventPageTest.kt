@@ -15,49 +15,55 @@
  */
 package com.instructure.teacher.ui
 
-import android.app.Activity
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.performClick
-import com.instructure.canvas.espresso.common.interaction.ToDoDetailsInteractionTest
+import com.instructure.canvas.espresso.common.interaction.CreateUpdateEventInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.espresso.InstructureActivityTestRule
-import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.BuildConfig
+import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.DashboardPage
 import com.instructure.teacher.ui.utils.TeacherActivityTestRule
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 
 @HiltAndroidTest
-class TeacherToDoDetailsPageTest : ToDoDetailsInteractionTest() {
+class TeacherCreateUpdateEventPageTest : CreateUpdateEventInteractionTest() {
 
-    override val activityRule: InstructureActivityTestRule<out Activity>
-            = TeacherActivityTestRule(LoginActivity::class.java)
+    override val activityRule = TeacherActivityTestRule(LoginActivity::class.java)
 
     override val isTesting = BuildConfig.IS_TESTING
 
-    val dashboardPage = DashboardPage()
+    private val dashboardPage = DashboardPage()
 
-    override fun displaysPageObjects() = Unit
-
-    override fun goToToDoDetails(data: MockCanvas) {
+    override fun goToCreateEvent(data: MockCanvas) {
         val teacher = data.teachers[0]
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
 
         dashboardPage.openCalendar()
 
-        val todo = data.todos.first()
-
-        //TODO: Update when the CalendarPage is ready
         composeTestRule.waitForIdle()
-        composeTestRule.onNode(hasText(todo.plannable.title)).performClick()
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddEvent()
+    }
+
+    override fun goToEditEvent(data: MockCanvas) {
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+
+        dashboardPage.openCalendar()
+
+        val event = data.userCalendarEvents.values.first().first()
+
+        composeTestRule.waitForIdle()
+        calendarScreenPage.clickOnItem(event.title!!)
+        calendarEventDetailsPage.clickOverflowMenu()
+        calendarEventDetailsPage.clickEditMenu()
     }
 
     override fun initData(): MockCanvas {
         return MockCanvas.init(
-            studentCount = 1,
+            studentCount = 0,
             teacherCount = 1,
             courseCount = 1,
             favoriteCourseCount = 1

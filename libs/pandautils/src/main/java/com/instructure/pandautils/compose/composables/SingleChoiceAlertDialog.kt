@@ -33,7 +33,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -69,7 +69,7 @@ fun SingleChoiceAlertDialog(
         }
     ) {
         Surface(
-            modifier = modifier,
+            modifier = modifier.testTag("singleChoiceAlertDialog"),
             shape = MaterialTheme.shapes.medium,
             color = colorResource(id = R.color.backgroundLightestElevated)
         ) {
@@ -82,7 +82,7 @@ fun SingleChoiceAlertDialog(
                 )
                 ChoiceList(
                     items = items,
-                    selectedIndex = selectedIndex,
+                    selectedIndex = selectedIndex.value,
                     onItemSelected = {
                         selectedIndex.intValue = it
                         onItemSelected(it)
@@ -127,7 +127,7 @@ fun SingleChoiceAlertDialog(
 @Composable
 private fun ChoiceList(
     items: List<String>,
-    selectedIndex: MutableState<Int>,
+    selectedIndex: Int,
     onItemSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -138,7 +138,9 @@ private fun ChoiceList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(
-                            interactionSource = MutableInteractionSource(),
+                            interactionSource = remember {
+                                MutableInteractionSource()
+                            },
                             indication = null,
                             onClick = {
                                 onItemSelected(index)
@@ -147,7 +149,7 @@ private fun ChoiceList(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
-                        selected = item == items.getOrNull(selectedIndex.value),
+                        selected = item == items.getOrNull(selectedIndex),
                         onClick = {
                             onItemSelected(index)
                         },

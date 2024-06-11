@@ -1490,7 +1490,7 @@
     <string name="syncProgress_offlineContentSyncFailed">ซิงค์เนื้อหาออฟไลน์ล้มเหลว</string>
     <string name="syncProgress_cancelConfirmationTitle">ยกเลิกการซิงค์หรือไม่</string>
     <string name="syncProgress_cancelConfirmationMessage">การซิงค์ข้อมูลออฟไลน์จะหยุดลง คุณสามารถดำเนินการได้อีกครั้งในภายหลัง</string>
-    <string name="syncProgress_syncErrorSubtitle">ไฟล์บางส่วนไม่สามารถซิงค์ได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณแล้วลองส่งใหม่อีกครั้ง</string>
+    <string name="syncProgress_syncErrorSubtitle">มีบางรายการไม่สามารถซิงค์ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตขอคุณและลองทำการซิงค์อีกครั้ง</string>
     <string name="syncProgress_downloadStarting">เริ่มดาวน์โหลด</string>
     <string name="coursesCannotBeFavoritedOffline">ไม่สามารถเพิ่มบทเรียนไปยังรายการโปรดแบบออฟไลน์</string>
     <string name="allCoursesScreenHeader">บทเรียนทั้งหมด</string>

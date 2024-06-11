@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/courses"
+    app:startDestination="@id/coursesFragment">
+
+    <fragment
+        android:id="@+id/coursesFragment"
+        android:name="com.instructure.parentapp.features.courses.list.CoursesFragment"
+        android:label="@string/screenTitleCourses">
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri=".*/courses" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/courseDetailsFragment"
+        android:name="com.instructure.parentapp.features.courses.details.CourseDetailsFragment"
+        android:label="Course name">
+        <argument
+            android:name="id"
+            app:argType="integer"
+            app:nullable="false" />
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri=".*/courses/{id}" />
+    </fragment>
+
+</navigation>

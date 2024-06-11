@@ -1,0 +1,41 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="inputText">Cuir isteach Téacs</string>
+    <string name="cancel">Cealaigh</string>
+    <string name="comment">Ráiteas</string>
+    <string name="skip">Scipeáil</string>
+    <string name="comments">Ráitis</string>
+    <string name="error_loading_submission">Tharla fadhb agus an uaslódáil seo á lódáil.</string>
+    <string name="retry">Bain triail eile as</string>
+    <string name="annotationErrorOccurred">Tharla earráid gan choinne agus nótaí mínithe á lódáil.</string>
+    <string name="annotationError">Earráid Nóta Mínithe</string>
+    <string name="annotationDialogMessage">Scriosadh an nótaí mínithe ó fhoinse eile.</string>
+    <string name="errorSendingMessage">Níorbh fhéidir an teachtaireacht seo a sheoladh. Tapáil chun triail eile a bhaint as.</string>
+    <string name="addAnnotationComment">Cuir Ráiteas leis</string>
+    <string name="editComment">Cuir Ráiteas in Eagar</string>
+    <string name="deleteComment">Scrios Ráiteas</string>
+    <string name="deleteAnnotation">Scrios Nótaí Mínithe</string>
+    <string name="deleteCommentConfirmation">An bhfuil tú cinnte gur mhaith leat an nóta tráchta seo a scriosadh?</string>
+    <string name="deleteHeadCommentConfirmation">Má scriosann tú an ráiteas seo, scriosfar gach ráiteas a bhaineann leis an nótaí mínithe seo. An bhfuil tú cinnte gur mhaith leat é seo a dhéanamh?</string>
+    <string name="sendingSimple">Ag seoladh</string>
+    <string name="pspdf__annotation_type_stamp">Dath Nóta</string>
+    <string name="removedComment">%1$s bainte ag %2$s</string>
+    <string name="pspdf__stamp_standard_section"></string>
+
+</resources>

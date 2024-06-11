@@ -120,12 +120,12 @@ fun CalendarEvents(
                 CalendarEventsPage(
                     calendarEventsPageUiState = calendarEventsPageUiState,
                     actionHandler,
-                    modifier = Modifier.testTag("CalendarEventsPage$monthOffset")
+                    modifier = Modifier.testTag("calendarEventsPage$monthOffset")
                 )
             } else {
                 Loading(modifier = Modifier
                     .fillMaxSize()
-                    .testTag("Loading$monthOffset"))
+                    .testTag("loading$monthOffset"))
             }
         }
     )
@@ -140,7 +140,7 @@ fun CalendarEventsPage(
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = calendarEventsPageUiState.refreshing,
-        onRefresh = { actionHandler(CalendarAction.RefreshDay(calendarEventsPageUiState.date)) },
+        onRefresh = { actionHandler(CalendarAction.PullToRefresh) },
         refreshThreshold = PullRefreshDefaults.RefreshingOffset
     )
 
@@ -148,7 +148,7 @@ fun CalendarEventsPage(
         if (calendarEventsPageUiState.events.isNotEmpty()) {
             LazyColumn(
                 Modifier
-                    .fillMaxSize(), verticalArrangement = Arrangement.Top
+                    .fillMaxSize().testTag("calendarEventsList"), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
                     CalendarEventItem(eventUiState = it, { id ->

@@ -381,6 +381,7 @@ class ScheduleViewModel @Inject constructor(
             PlannableType.QUIZ -> resources.getString(R.string.a11y_quiz)
             PlannableType.TODO -> resources.getString(R.string.a11y_todo)
             PlannableType.WIKI_PAGE -> resources.getString(R.string.a11y_page)
+            PlannableType.ASSESSMENT_REQUEST -> resources.getString(R.string.a11y_assessment_request)
         }
     }
 
@@ -510,6 +511,7 @@ class ScheduleViewModel @Inject constructor(
             PlannableType.DISCUSSION_TOPIC -> PlannerItemType.DISCUSSION
             PlannableType.PLANNER_NOTE -> PlannerItemType.TO_DO
             PlannableType.TODO -> PlannerItemType.TO_DO
+            PlannableType.ASSESSMENT_REQUEST -> PlannerItemType.ASSESSMENT_REQUEST
         }
     }
 

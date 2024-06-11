@@ -23,9 +23,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -35,11 +32,12 @@ import com.instructure.pandautils.R
 @Composable
 fun OverflowMenu(
     modifier: Modifier = Modifier,
-    showMenu: MutableState<Boolean>,
+    showMenu: Boolean,
+    onDismissRequest: () -> Unit,
     content: @Composable () -> Unit
 ) {
     IconButton(onClick = {
-        showMenu.value = !showMenu.value
+        onDismissRequest()
     }) {
         Icon(
             imageVector = Icons.Outlined.MoreVert,
@@ -49,9 +47,9 @@ fun OverflowMenu(
     }
     DropdownMenu(
         modifier = modifier,
-        expanded = showMenu.value,
+        expanded = showMenu,
         onDismissRequest = {
-            showMenu.value = false
+            onDismissRequest()
         }
     ) {
         content()
@@ -61,6 +59,5 @@ fun OverflowMenu(
 @Preview
 @Composable
 fun OverflowMenuPreview() {
-    val showMenu = remember { mutableStateOf(true) }
-    OverflowMenu(showMenu = showMenu, content = {})
+    OverflowMenu(showMenu = true, onDismissRequest = {}, content = {})
 }

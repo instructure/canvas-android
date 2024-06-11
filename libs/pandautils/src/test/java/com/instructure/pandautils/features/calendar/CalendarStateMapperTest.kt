@@ -15,19 +15,34 @@
  */
 package com.instructure.pandautils.features.calendar
 
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
+import java.util.Locale
 
 class CalendarStateMapperTest {
 
     private val clock = Clock.fixed(Instant.parse("2023-04-20T14:00:00.00Z"), ZoneId.systemDefault())
 
     private val calendarStateMapper = CalendarStateMapper(clock)
+
+    private val locale = Locale.getDefault()
+
+    @Before
+    fun setup() {
+        Locale.setDefault(Locale.US)
+    }
+
+    @After
+    fun tearDown() {
+        Locale.setDefault(locale)
+    }
 
     @Test
     fun `Format header UI state for selected date`() {

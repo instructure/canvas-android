@@ -123,7 +123,7 @@ fun CalendarScreen(
                     navIconContentDescription = stringResource(id = R.string.navigation_drawer_open)
                 )
             },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("SnackbarHost")) },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
             content = { padding ->
                 Surface(
                     modifier = Modifier

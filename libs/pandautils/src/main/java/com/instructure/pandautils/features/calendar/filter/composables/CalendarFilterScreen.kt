@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -110,7 +111,7 @@ fun CalendarFiltersScreen(
                             .fillMaxHeight()
                     )
                 } else if (uiState.loading) {
-                    Loading(modifier = Modifier.fillMaxSize())
+                    Loading(modifier = Modifier.fillMaxSize().testTag("loading"))
                 } else {
                     CalendarFiltersContent(
                         uiState, actionHandler, modifier = Modifier
@@ -178,6 +179,7 @@ private fun CalendarFilterItem(
             .clickable {
                 actionHandler(CalendarFilterAction.ToggleFilter(uiState.contextId))
             }
+            .testTag("calendarFilter")
             .padding(start = 8.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
@@ -187,7 +189,8 @@ private fun CalendarFilterItem(
                 checkedColor = Color(uiState.color),
                 uncheckedColor = Color(uiState.color),
                 checkmarkColor = colorResource(id = R.color.white)
-            )
+            ),
+            modifier = Modifier.testTag("calendarFilterCheckbox")
         )
         Text(uiState.name, color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
     }

@@ -20,6 +20,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addPlannable
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.DontCareAuthModel
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
@@ -32,8 +33,10 @@ import com.instructure.canvas.espresso.mockCanvas.utils.successRedirectWithHeade
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
@@ -41,8 +44,12 @@ import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.UpdateFileFolder
+import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
+import com.instructure.pandautils.utils.orDefault
 import okio.Buffer
+import java.util.Date
 
 /**
  * Base endpoint for the Canvas API
@@ -101,36 +108,148 @@ object ApiEndpoint : Endpoint(
     ),
     Segment("groups") to GroupsEndpoint,
     Segment("calendar_events") to Endpoint(
+        LongId(PathVars::eventId) to Endpoint(
+            response = {
+                GET {
+                    val event = data.courseCalendarEvents.values.flatten()
+                        .plus(data.userCalendarEvents.values.flatten())
+                        .find { it.id == pathVars.eventId }
+                    if (event != null) {
+                        request.successResponse(event)
+                    } else {
+                        request.unauthorizedResponse()
+                    }
+                }
+                DELETE {
+                    val event = data.courseCalendarEvents.values.flatten().find { it.id == pathVars.eventId }
+                    if (event != null) {
+                        data.courseCalendarEvents[event.courseId]?.remove(event)
+                        request.successResponse(event)
+                    } else {
+                        request.unauthorizedResponse()
+                    }
+                }
+                PUT {
+                    val params = getJsonFromRequestBody<ScheduleItem.ScheduleItemParamsWrapper>(request.body)?.calendarEvent
+                    val event = ScheduleItem(
+                        contextCode = params?.contextCode,
+                        title = params?.title,
+                        description = params?.description,
+                        startAt = params?.startAt,
+                        endAt = params?.endAt,
+                        isAllDay = params?.isAllDay ?: false,
+                        rrule = params?.rrule,
+                        seriesNaturalLanguage = params?.rrule,
+                        locationName = params?.locationName,
+                        locationAddress = params?.locationAddress,
+                        itemId = data.newItemId().toString(),
+                    )
+
+                    when (event.contextType) {
+                        CanvasContext.Type.COURSE -> {
+                            val courseEvents = data.courseCalendarEvents[event.courseId] ?: mutableListOf()
+                            courseEvents.find { it.id == pathVars.eventId }?.let {
+                                courseEvents.remove(it)
+                                courseEvents.add(event)
+                            }
+                            data.courseCalendarEvents[event.courseId] = courseEvents
+                        }
+
+                        CanvasContext.Type.USER -> {
+                            val userEvents = data.userCalendarEvents[event.userId] ?: mutableListOf()
+                            userEvents.find { it.id == pathVars.eventId }?.let {
+                                userEvents.remove(it)
+                                userEvents.add(event)
+                            }
+                            data.userCalendarEvents[event.userId] = userEvents
+                        }
+
+                        else -> {}
+                    }
+
+                    if (params?.rrule?.isNotEmpty().orDefault()) {
+                        request.successResponse(listOf(event))
+                    } else {
+                        request.successResponse(event)
+                    }
+                }
+            }
+        ),
         Segment("") to Endpoint( // Our call has an extra "/" at the end, thus the blank segment
             response = {
                 GET {
-                    val contextCodes = request.url.queryParameter("context_codes[]")
-                    // TODO: Assumes that the context prefix is "course".  We may need to support other possibilities.
-                    val courseId = contextCodes?.substringAfter("_")?.toLong()
+                    val contextCodes = request.url.queryParameterValues("context_codes[]")
+                    val courseIds = contextCodes
+                        .filter { it?.startsWith("course_").orDefault() }
+                        .map { it?.substringAfter("course_")?.toLong() }
+                    val userIds = contextCodes
+                        .filter { it?.startsWith("user_").orDefault() }
+                        .map { it?.substringAfter("user_")?.toLong() }
                     val eventType = request.url.queryParameter("type") ?: "event"
-                    if (courseId != null) {
+                    if (courseIds.isNotEmpty() || userIds.isNotEmpty()) {
                         val events = when (eventType) {
                             "assignment" -> data
                                 .assignments
                                 .values
-                                .filter { a -> a.courseId == courseId }
+                                .filter { a -> a.courseId in courseIds }
                                 .map { a ->
                                     ScheduleItem(
+                                        itemId = a.id.toString(),
                                         title = a.name,
                                         description = a.description,
                                         startAt = a.dueAt,
-                                        assignment = a
+                                        assignment = a,
+                                        contextCode = "course_${a.courseId}",
+                                        contextName = data.courses[a.courseId]?.name
                                     )
                                 }
 
                             // default handler assumes "event" event type
-                            else -> data.courseCalendarEvents[courseId]
-                                ?: mutableListOf<ScheduleItem>()
+                            else -> {
+                                data.courseCalendarEvents.filter { it.key in courseIds }.values.flatten() +
+                                        data.userCalendarEvents.filter { it.key in userIds }.values.flatten()
+                            }
                         }
                         request.successResponse(events)
                     } else {
                         request.unauthorizedResponse()
                     }
+                }
+                POST {
+                    val params = getJsonFromRequestBody<ScheduleItem.ScheduleItemParamsWrapper>(request.body)?.calendarEvent
+                    val event = ScheduleItem(
+                        contextCode = params?.contextCode,
+                        title = params?.title,
+                        description = params?.description,
+                        startAt = params?.startAt,
+                        endAt = params?.endAt,
+                        isAllDay = params?.isAllDay ?: false,
+                        rrule = params?.rrule,
+                        seriesNaturalLanguage = params?.rrule,
+                        locationName = params?.locationName,
+                        locationAddress = params?.locationAddress,
+                        itemId = data.newItemId().toString(),
+                    )
+
+                    when (event.contextType) {
+                        CanvasContext.Type.COURSE -> {
+                            val courseEvents = (data.courseCalendarEvents[event.courseId] ?: mutableListOf()).apply {
+                                add(event)
+                            }
+                            data.courseCalendarEvents[event.courseId] = courseEvents
+                        }
+
+                        CanvasContext.Type.USER -> {
+                            val userEvents = (data.userCalendarEvents[event.userId] ?: mutableListOf()).apply {
+                                add(event)
+                            }
+                            data.userCalendarEvents[event.userId] = userEvents
+                        }
+
+                        else -> {}
+                    }
+
+                    request.successResponse(event)
                 }
             }
         )
@@ -214,22 +333,60 @@ object ApiEndpoint : Endpoint(
                     request.unauthorizedResponse()
                 }
             }
+            PUT {
+                val params = getJsonFromRequestBody<PlannerNoteBody>(request.body)
+                val plannerItem = data.todos.find { it.plannable.id == pathVars.plannerNoteId }!!
+                val course = params?.courseId?.let { data.courses[it] }
+                val date = params?.toDoDate?.toDate()
+                data.todos.remove(plannerItem)
+                data.todos.add(
+                    plannerItem.copy(
+                        courseId = course?.id,
+                        contextName = course?.name,
+                        plannable = plannerItem.plannable.copy(
+                            title = params?.title.orEmpty(),
+                            courseId = course?.id,
+                            todoDate = date.toApiString(),
+                            details = params?.details
+                        ),
+                        plannableDate = date ?: Date()
+                    )
+                )
+                request.successResponse(Unit)
+            }
         },
         response = {
             GET {
                 val contextCodes = request.url.queryParameterValues("context_codes[]")
                 val startDate = request.url.queryParameter("start_date").toDate()
                 val endDate = request.url.queryParameter("end_date").toDate()
-                val courseIds = contextCodes.map { it?.substringAfter("_")?.toLong() }
+                val courseIds = contextCodes
+                    .filter { it?.startsWith("course_").orDefault() }
+                    .map { it?.substringAfter("course_")?.toLong() }
+                val userIds = contextCodes
+                    .filter { it?.startsWith("user_").orDefault() }
+                    .map { it?.substringAfter("user_")?.toLong() }
 
                 val plannables = data.todos.filter {
-                    courseIds.contains(it.courseId)
+                    courseIds.contains(it.courseId) || userIds.contains(it.userId)
                 }.filter {
                     if (it.plannable.todoDate == null) return@filter true
                     if (startDate == null || endDate == null) return@filter true
                     it.plannable.todoDate.toDate()?.time in startDate.time..endDate.time
                 }.map { it.plannable }
                 request.successResponse(plannables)
+            }
+            POST {
+                val params = getJsonFromRequestBody<PlannerNoteBody>(request.body)
+                val plannerItem = data.addPlannable(
+                    name = params?.title.orEmpty(),
+                    userId = data.users.values.first().id,
+                    course = params?.courseId?.let { data.courses[it] },
+                    type = PlannableType.PLANNER_NOTE,
+                    date = params?.toDoDate?.toDate(),
+                    details = params?.details
+                )
+                request.successResponse(plannerItem)
             }
         }
     )

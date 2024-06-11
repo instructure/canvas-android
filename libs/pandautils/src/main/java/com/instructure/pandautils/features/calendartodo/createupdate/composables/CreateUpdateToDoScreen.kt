@@ -53,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -79,7 +80,6 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 
-@ExperimentalFoundationApi
 @Composable
 internal fun CreateUpdateToDoScreenWrapper(
     title: String,
@@ -189,7 +189,9 @@ private fun CreateUpdateToDoTopAppBar(
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.textDarkest),
                     strokeWidth = 3.dp,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier
+                        .size(32.dp)
+                        .testTag("savingProgressIndicator")
                 )
             } else {
                 ActionsSegment(
@@ -288,7 +290,8 @@ private fun CreateUpdateToDoContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .testTag("addTitleField"),
                 cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                 textStyle = TextStyle(
                     color = colorResource(id = R.color.textDarkest),
@@ -302,7 +305,8 @@ private fun CreateUpdateToDoContent(
                 onClick = {
                     focusManager.clearFocus()
                     datePickerDialog.show()
-                }
+                },
+                modifier = Modifier.testTag("dateRow")
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createToDoTimeLabel),
@@ -310,7 +314,8 @@ private fun CreateUpdateToDoContent(
                 onClick = {
                     focusManager.clearFocus()
                     timePickerDialog.show()
-                }
+                },
+                modifier = Modifier.testTag("timeRow")
             )
             LabelValueRow(
                 label = stringResource(id = R.string.createToDoCalendarLabel),
@@ -319,7 +324,8 @@ private fun CreateUpdateToDoContent(
                 onClick = {
                     focusManager.clearFocus()
                     actionHandler(CreateUpdateToDoAction.ShowSelectCalendarScreen)
-                }
+                },
+                modifier = Modifier.testTag("canvasContextRow")
             )
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
@@ -345,7 +351,8 @@ private fun CreateUpdateToDoContent(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
-                        .focusRequester(detailsFocusRequester),
+                        .focusRequester(detailsFocusRequester)
+                        .testTag("todoDetailsTextField"),
                     cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
                     textStyle = TextStyle(
                         color = colorResource(id = R.color.textDarkest),

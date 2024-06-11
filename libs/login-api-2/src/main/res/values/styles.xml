@@ -42,6 +42,10 @@
         <item name="android:windowBackground">@drawable/splash_background_teacher</item>
     </style>
 
+    <style name="LoginFlowTheme.Splash_Parent" parent="@style/LoginFlowTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background_parent</item>
+    </style>
+
     <style name="ToolBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>

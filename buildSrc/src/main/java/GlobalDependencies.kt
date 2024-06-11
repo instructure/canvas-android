@@ -39,6 +39,7 @@ object Versions {
     const val HEAP = "1.10.6"
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
+    const val NAVIGATION = "2.7.7"
 }
 
 object Libs {
@@ -173,6 +174,10 @@ object Libs {
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.6.4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
     const val COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
+
+    // Navigation
+    const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
+    const val NAVIGATION_KTX = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
 }
 
 object Plugins {

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.instructure.parentapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".util.AppManager"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Apps"
+        tools:overrideLibrary="com.instructure.canvasapi">
+
+        <activity
+            android:name=".features.login.LoginActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.Splash_Parent"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".features.login.LoginLandingPageActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
+        <activity
+            android:name=".features.login.FindSchoolActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
+        <activity
+            android:name=".features.login.SignInActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
+        <activity
+            android:name=".features.login.ParentLoginWithQRActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar" />
+
+        <activity
+            android:name=".features.login.routevalidator.RouteValidatorActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:theme="@style/LoginFlowTheme.Splash_Parent">
+            <intent-filter android:autoVerify="true">
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="*.instructure.com" />
+                <data android:host="*.canvas.net" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:host="*" />
+                <data android:scheme="canvas-courses" />
+                <data android:scheme="canvas-parent" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="sso.canvaslms.com" />
+                <data android:pathPattern="/canvas/login" />
+
+                <data android:scheme="https" />
+                <data android:host="sso.test.canvaslms.com" />
+                <data android:pathPattern="/canvas/login" />
+
+                <data android:scheme="https" />
+                <data android:host="sso.beta.canvaslms.com" />
+                <data android:pathPattern="/canvas/login" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".features.main.MainActivity"
+            android:exported="false">
+            <nav-graph android:value="@navigation/nav_graph" />
+        </activity>
+    </application>
+
+</manifest>

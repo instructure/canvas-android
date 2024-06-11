@@ -27,7 +27,9 @@ import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 
@@ -54,7 +56,7 @@ class EventRepositoryTest {
 
         val result = eventRepository.getCalendarEvent(1)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -72,7 +74,7 @@ class EventRepositoryTest {
 
         val result = eventRepository.deleteCalendarEvent(1)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -90,14 +92,16 @@ class EventRepositoryTest {
 
         val result = eventRepository.deleteRecurringCalendarEvent(1, CalendarEventAPI.ModifyEventScope.ALL)
 
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `Throw exception when course permissions request fails`() = runTest {
+    @Test
+    fun `Return false when course permissions request fails`() = runTest {
         coEvery { courseApi.getCoursePermissions(any(), any(), any()) } returns DataResult.Fail()
 
-        eventRepository.canManageCourseCalendar(1)
+        val result = eventRepository.canManageCourseCalendar(1)
+
+        assertFalse(result)
     }
 
     @Test
@@ -106,7 +110,7 @@ class EventRepositoryTest {
 
         val result = eventRepository.canManageCourseCalendar(1)
 
-        Assert.assertTrue(result)
+        assertTrue(result)
     }
 
     @Test
@@ -115,14 +119,16 @@ class EventRepositoryTest {
 
         val result = eventRepository.canManageCourseCalendar(1)
 
-        Assert.assertFalse(result)
+        assertFalse(result)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `Throw exception when group permissions request fails`() = runTest {
+    @Test
+    fun `Return false when group permissions request fails`() = runTest {
         coEvery { groupApi.getGroupPermissions(any(), any(), any()) } returns DataResult.Fail()
 
-        eventRepository.canManageGroupCalendar(1)
+        val result = eventRepository.canManageGroupCalendar(1)
+
+        assertFalse(result)
     }
 
     @Test
@@ -131,7 +137,7 @@ class EventRepositoryTest {
 
         val result = eventRepository.canManageGroupCalendar(1)
 
-        Assert.assertTrue(result)
+        assertTrue(result)
     }
 
     @Test
@@ -140,6 +146,6 @@ class EventRepositoryTest {
 
         val result = eventRepository.canManageGroupCalendar(1)
 
-        Assert.assertFalse(result)
+        assertFalse(result)
     }
 }

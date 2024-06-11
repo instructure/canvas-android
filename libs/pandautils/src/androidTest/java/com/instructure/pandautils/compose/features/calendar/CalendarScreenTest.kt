@@ -70,16 +70,16 @@ class CalendarScreenTest {
             )
         }
 
-        val toolbar = composeTestRule.onNodeWithTag("Toolbar")
+        val toolbar = composeTestRule.onNodeWithTag("toolbar")
         toolbar.assertExists()
-        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText("Calendar")))
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText("Calendar")))
             .assertIsDisplayed()
         val backButton =
-            composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("Open navigation drawer")))
+            composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("Open navigation drawer")))
         backButton
             .assertIsDisplayed()
             .assertHasClickAction()
-        val todayButton = composeTestRule.onNode(hasAnyAncestor(hasTestTag("Toolbar")).and(hasContentDescription("Jump to Today")))
+        val todayButton = composeTestRule.onNode(hasAnyAncestor(hasTestTag("toolbar")).and(hasContentDescription("Jump to Today")))
         todayButton.assertIsNotDisplayed()
     }
 
@@ -103,16 +103,16 @@ class CalendarScreenTest {
             )
         }
 
-        val toolbar = composeTestRule.onNodeWithTag("Toolbar")
+        val toolbar = composeTestRule.onNodeWithTag("toolbar")
         toolbar.assertExists()
-        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText("Calendar")))
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText("Calendar")))
             .assertIsDisplayed()
         val backButton =
-            composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("Open navigation drawer")))
+            composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("Open navigation drawer")))
         backButton
             .assertIsDisplayed()
             .assertHasClickAction()
-        val todayButton = composeTestRule.onNode(hasAnyAncestor(hasTestTag("Toolbar")).and(hasContentDescription("Jump to Today")))
+        val todayButton = composeTestRule.onNode(hasAnyAncestor(hasTestTag("toolbar")).and(hasContentDescription("Jump to Today")))
         todayButton.assertIsDisplayed()
     }
 
@@ -138,7 +138,7 @@ class CalendarScreenTest {
             )
         }
 
-        val todayButton = composeTestRule.onNode(hasAnyAncestor(hasTestTag("Toolbar")).and(hasContentDescription("Jump to Today")))
+        val todayButton = composeTestRule.onNode(hasAnyAncestor(hasTestTag("toolbar")).and(hasContentDescription("Jump to Today")))
         todayButton.assertIsDisplayed().performClick()
         composeTestRule.waitForIdle()
 
@@ -287,7 +287,7 @@ class CalendarScreenTest {
             )
         }
 
-        val snackbarText = composeTestRule.onNode(hasText("Snackbar message").and(hasAnyAncestor(hasTestTag("SnackbarHost"))))
+        val snackbarText = composeTestRule.onNode(hasText("Snackbar message").and(hasAnyAncestor(hasTestTag("snackbarHost"))))
         snackbarText.assertIsDisplayed()
     }
 }

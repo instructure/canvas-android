@@ -54,6 +54,7 @@ import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.TemporalAdjusters
+import org.threeten.bp.temporal.WeekFields
 import java.util.Locale
 import javax.inject.Inject
 
@@ -546,8 +547,10 @@ class CreateUpdateEventViewModel @Inject constructor(
             else -> 0
         }
         val daysOfWeek = DayOfWeek.entries.toTypedArray()
-        val shiftedDaysOfWeek = Array(7) { daysOfWeek[(it + 6) % 7] }.toList()
-        val selectedDays = selectedRRule?.byDay?.map { shiftedDaysOfWeek[it.wday.ordinal] }?.toSet().orEmpty()
+
+        val shiftedDaysOfWeekStartingSunday = Array(7) { daysOfWeek[(it + 6) % 7] }.toList()
+        val selectedDays = selectedRRule?.byDay?.map { shiftedDaysOfWeekStartingSunday[it.wday.ordinal] }?.toSet().orEmpty()
+
         val dayOfMonthOrdinal = selectedRRule?.bySetPos?.firstOrNull()?.let {
             getWeekDayInMonthOrdinal(it)
         } ?: run {
@@ -561,7 +564,7 @@ class CreateUpdateEventViewModel @Inject constructor(
             }
         }
         val weekDayOfMonth = selectedRRule?.byDay?.firstOrNull()?.wday?.let {
-            shiftedDaysOfWeek[it.ordinal]
+            shiftedDaysOfWeekStartingSunday[it.ordinal]
         } ?: run {
             uiState.value.date.dayOfWeek
         }
@@ -576,13 +579,18 @@ class CreateUpdateEventViewModel @Inject constructor(
         )
         val endsOn = selectedRRule?.until?.let { LocalDate.of(it.year(), it.month(), it.day()) }
 
+        val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+        // Shift the starting point to the correct day
+        val shiftAmount = localeFirstDayOfWeek - daysOfWeek.first().value
+        val shiftedDaysOfWeekLocalized = Array(7) { daysOfWeek[(it + shiftAmount) % 7] }.toList()
+
         return CustomFrequencyUiState(
             show = true,
             quantity = selectedRRule?.interval.orDefault(),
             timeUnits = getTimeUnits(selectedRRule?.interval.orDefault(1)),
             selectedTimeUnitIndex = timeUnitIndex,
             daySelectorVisible = selectedRRule?.freq == Frequency.WEEKLY,
-            days = shiftedDaysOfWeek,
+            days = shiftedDaysOfWeekLocalized,
             selectedDays = selectedDays,
             repeatsOnVisible = selectedRRule?.freq == Frequency.MONTHLY,
             repeatsOn = repeatsOn,

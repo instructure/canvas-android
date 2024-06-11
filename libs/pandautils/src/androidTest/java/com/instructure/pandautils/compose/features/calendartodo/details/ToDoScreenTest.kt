@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.compose.features.calendartodo
+package com.instructure.pandautils.compose.features.calendartodo.details
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -56,17 +56,17 @@ class ToDoScreenTest {
             )
         }
 
-        val toolbar = composeTestRule.onNodeWithTag("Toolbar")
+        val toolbar = composeTestRule.onNodeWithTag("toolbar")
         toolbar.assertExists()
-        composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasText("To Do")))
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText("To Do")))
             .assertIsDisplayed()
         val backButton =
-            composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("Back")))
+            composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("Back")))
         backButton
             .assertIsDisplayed()
             .assertHasClickAction()
         val overflowButton =
-            composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("More options")))
+            composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("More options")))
         overflowButton
             .assertIsDisplayed()
             .assertHasClickAction()
@@ -83,9 +83,9 @@ class ToDoScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithTag("Toolbar").assertExists()
+        composeTestRule.onNodeWithTag("toolbar").assertExists()
         val overflowButton =
-            composeTestRule.onNode(hasParent(hasTestTag("Toolbar")).and(hasContentDescription("More options")))
+            composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("More options")))
         overflowButton
             .assertIsDisplayed()
             .performClick()

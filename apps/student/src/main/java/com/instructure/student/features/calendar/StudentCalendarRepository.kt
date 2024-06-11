@@ -54,7 +54,7 @@ class StudentCalendarRepository(
         ).depaginate {
             plannerApi.nextPagePlannerItems(it, restParams)
         }.dataOrThrow
-            .filter { it.plannableType != PlannableType.ANNOUNCEMENT }
+            .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
     }
 
     override suspend fun getCanvasContexts(): DataResult<Map<CanvasContext.Type, List<CanvasContext>>> {

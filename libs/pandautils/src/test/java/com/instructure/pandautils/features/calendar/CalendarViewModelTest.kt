@@ -1104,6 +1104,64 @@ class CalendarViewModelTest {
         assertEquals(updatedExpectedState, viewModel.uiState.value)
     }
 
+    @Test
+    fun refreshCalendarActionReloadsFullMonth() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+        initViewModel()
+
+        val previousMonthStartDate = LocalDate.of(2023, 3, 1).atStartOfDay().toApiString()
+        val previousMonthEndDate = LocalDate.of(2023, 4, 1).atStartOfDay().toApiString()
+        val currentStartDate = LocalDate.of(2023, 4, 1).atStartOfDay().toApiString()
+        val currentMonthEndDate = LocalDate.of(2023, 5, 1).atStartOfDay().toApiString()
+        val nextMonthStartDate = LocalDate.of(2023, 5, 1).atStartOfDay().toApiString()
+        val nextMonthEndDate = LocalDate.of(2023, 6, 1).atStartOfDay().toApiString()
+
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, any(), true) }
+
+        viewModel.handleAction(CalendarAction.PullToRefresh)
+
+        coVerify(exactly = 2) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, any(), true) }
+        coVerify(exactly = 2) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, any(), true) }
+        coVerify(exactly = 2) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, any(), true) }
+    }
+
+    @Test
+    fun refreshCalendarFailureShowsErrorSnackbarAndDoesNotRequestPreviousAndNextPage() = runTest {
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+        initViewModel()
+
+        val previousMonthStartDate = LocalDate.of(2023, 3, 1).atStartOfDay().toApiString()
+        val previousMonthEndDate = LocalDate.of(2023, 4, 1).atStartOfDay().toApiString()
+        val currentStartDate = LocalDate.of(2023, 4, 1).atStartOfDay().toApiString()
+        val currentMonthEndDate = LocalDate.of(2023, 5, 1).atStartOfDay().toApiString()
+        val nextMonthStartDate = LocalDate.of(2023, 5, 1).atStartOfDay().toApiString()
+        val nextMonthEndDate = LocalDate.of(2023, 6, 1).atStartOfDay().toApiString()
+
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, any(), true) }
+
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } throws Exception()
+
+        viewModel.handleAction(CalendarAction.PullToRefresh)
+
+        coVerify(exactly = 2) { calendarRepository.getPlannerItems(currentStartDate!!, currentMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(previousMonthStartDate!!, previousMonthEndDate!!, any(), true) }
+        coVerify(exactly = 1) { calendarRepository.getPlannerItems(nextMonthStartDate!!, nextMonthEndDate!!, any(), true) }
+
+        val newExpectedState = CalendarScreenUiState(
+            baseCalendarUiState, CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19)),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            ), snackbarMessage = "Error refreshing events"
+        )
+
+        assertEquals(newExpectedState, viewModel.uiState.value)
+    }
+
     private fun initViewModel() {
         viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarFilterDao)
     }
