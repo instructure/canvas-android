@@ -16,46 +16,65 @@
  */
 package com.instructure.student.mobius.common.ui
 
-import android.app.*
+import android.app.IntentService
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.managers.*
-import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.managers.FileUploadConfig
+import com.instructure.canvasapi2.managers.FileUploadManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.FileUtils
+import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.NotoriousUploader
-import com.instructure.student.FileSubmission
-import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
-import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.ChannelSource
-import kotlinx.coroutines.*
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.student.room.entities.CreateSubmissionEntity
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.ObsoleteCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.greenrobot.eventbus.EventBus
-import org.threeten.bp.OffsetDateTime
-import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
+import javax.inject.Inject
 
+@OptIn(DelicateCoroutinesApi::class)
+@AndroidEntryPoint
 class SubmissionService : IntentService(SubmissionService::class.java.simpleName) {
+
+    @Inject
+    lateinit var studentDb: StudentDb
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
     private val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
@@ -64,26 +83,26 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         setIntentRedelivery(true)
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    override fun onHandleIntent(intent: Intent?) = runBlocking {
         val action = intent!!.action!!
 
-        lateinit var submission: com.instructure.student.Submission
-        val db = Db.getInstance(this)
+        lateinit var submission: CreateSubmissionEntity
 
         // Try to get the submission, won't have one for comment uploads
         if (intent.hasExtra(Const.SUBMISSION_ID)) {
             val dbSubmissionId = intent.getLongExtra(Const.SUBMISSION_ID, 0)
-            submission = db.submissionQueries.getSubmissionById(dbSubmissionId).executeAsOneOrNull() ?: return // Return early if deleted, means it was canceled
+            submission = studentDb.submissionDao().findSubmissionById(dbSubmissionId)
+                ?: return@runBlocking // Return early if deleted, means it was canceled
         }
 
         when (Action.valueOf(action)) {
-            Action.TEXT_ENTRY -> uploadText(db, submission)
-            Action.FILE_ENTRY -> uploadFileSubmission(db, submission)
-            Action.MEDIA_ENTRY -> uploadMedia(db, submission)
-            Action.URL_ENTRY -> uploadUrl(db, submission, false)
-            Action.STUDIO_ENTRY -> uploadUrl(db, submission, true)
+            Action.TEXT_ENTRY -> uploadText(submission)
+            Action.FILE_ENTRY -> uploadFileSubmission(submission)
+            Action.MEDIA_ENTRY -> uploadMedia(submission)
+            Action.URL_ENTRY -> uploadUrl(submission, false)
+            Action.STUDIO_ENTRY -> uploadUrl(submission, true)
             Action.COMMENT_ENTRY -> uploadComment(intent)
-            Action.STUDENT_ANNOTATION -> uploadStudentAnnotation(db, submission)
+            Action.STUDENT_ANNOTATION -> uploadStudentAnnotation(submission)
         }.exhaustive
     }
 
@@ -99,65 +118,89 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         }
     }
 
-    private fun uploadText(db: StudentDb, submission: com.instructure.student.Submission) {
+    private fun uploadText(submission: CreateSubmissionEntity) {
         showProgressNotification(submission.assignmentName, submission.id)
         val textToSubmit = try {
             URLEncoder.encode(submission.submissionEntry, "UTF-8")
-        } catch (e: UnsupportedEncodingException) { submission.submissionEntry!! }
+        } catch (e: UnsupportedEncodingException) {
+            submission.submissionEntry!!
+        }
 
-        val result = apiAsync<Submission> { SubmissionManager.postTextSubmission(submission.canvasContext, submission.assignmentId, textToSubmit, it) }
+        val result = apiAsync {
+            SubmissionManager.postTextSubmission(
+                submission.canvasContext,
+                submission.assignmentId,
+                textToSubmit,
+                it
+            )
+        }
 
         GlobalScope.launch {
             val uploadResult = result.await()
             uploadResult.onSuccess {
-                db.submissionQueries.deleteSubmissionById(submission.id)
+                studentDb.submissionDao().deleteSubmissionById(submission.id)
                 if (!it.late) showConfetti()
             }.onFailure {
-                db.submissionQueries.setSubmissionError(true, submission.id)
+                studentDb.submissionDao().setSubmissionError(true, submission.id)
                 showErrorNotification(this@SubmissionService, submission)
             }
         }
     }
 
-    private fun uploadUrl(db: StudentDb, submission: com.instructure.student.Submission, isLti: Boolean) {
+    private fun uploadUrl(submission: CreateSubmissionEntity, isLti: Boolean) {
         showProgressNotification(submission.assignmentName, submission.id)
-        val result = apiAsync<Submission> { SubmissionManager.postUrlSubmission(submission.canvasContext, submission.assignmentId, submission.submissionEntry!!, isLti, it) }
+        val result = apiAsync {
+            SubmissionManager.postUrlSubmission(
+                submission.canvasContext,
+                submission.assignmentId,
+                submission.submissionEntry!!,
+                isLti,
+                it
+            )
+        }
 
         GlobalScope.launch {
             val uploadResult = result.await()
             uploadResult.onSuccess {
-                db.submissionQueries.deleteSubmissionById(submission.id)
+                studentDb.submissionDao().deleteSubmissionById(submission.id)
                 if (!it.late) showConfetti()
             }.onFailure {
-                db.submissionQueries.setSubmissionError(true, submission.id)
+                studentDb.submissionDao().setSubmissionError(true, submission.id)
                 showErrorNotification(this@SubmissionService, submission)
             }
         }
     }
 
-    private fun uploadMedia(db: StudentDb, submission: com.instructure.student.Submission) {
+    private suspend fun uploadMedia(submission: CreateSubmissionEntity) {
         showProgressNotification(submission.assignmentName, submission.id)
 
         // Upload file
-        val mediaFile = db.fileSubmissionQueries.getFilesForSubmissionId(submission.id).executeAsOneOrNull()
-            ?: return // The file is deleted, so no need to upload anything
+        val mediaFile =
+            studentDb.fileSubmissionDao().findFileForSubmissionId(submission.id) ?: return
+        // The file is deleted, so no need to upload anything
 
         runBlocking {
-            NotoriousUploader.performUpload(mediaFile.fullPath!!, object : ProgressRequestUpdateListener {
-                override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
-                    if (db.submissionQueries.getSubmissionById(submission.id).executeAsOneOrNull() == null) {
-                        return false // Stop uploading and don't show error if submission was deleted,
-                    }
+            NotoriousUploader.performUpload(
+                mediaFile.fullPath!!,
+                object : ProgressRequestUpdateListener {
+                    override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
+                        runBlocking { studentDb.submissionDao().findSubmissionById(submission.id) }
+                            ?: return false // Stop uploading and don't show error if submission was deleted,
 
-                    updateFileProgress(db, submission.id, progressPercent, 0, 1, 0)
-                    return true
-                }
-            }).onSuccess { result ->
-                updateFileProgress(db, submission.id, 1.0f, 0, 1, 0)
-                db.fileSubmissionQueries.setFileAttachmentIdAndError(null, false, null, mediaFile.id)
+                        updateFileProgress(submission.id, progressPercent, 0, 1, 0)
+                        return true
+                    }
+                }).onSuccess { result ->
+                updateFileProgress(submission.id, 1.0f, 0, 1, 0)
+                studentDb.fileSubmissionDao()
+                    .setFileAttachmentIdAndError(null, false, null, mediaFile.id)
 
                 // Update the notification to show that we're doing the actual submission now
-                showProgressNotification(submission.assignmentName, submission.id, alertOnlyOnce = true)
+                showProgressNotification(
+                    submission.assignmentName,
+                    submission.id,
+                    alertOnlyOnce = true
+                )
                 val uploadedSubmission = try {
                     awaitApi<Submission> { callback ->
                         SubmissionManager.postMediaSubmission(
@@ -171,48 +214,63 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     }
                 } catch (e: Throwable) {
                     detachForegroundNotification()
-                    db.submissionQueries.setSubmissionError(true, submission.id)
+                    studentDb.submissionDao().setSubmissionError(true, submission.id)
                     showErrorNotification(this@SubmissionService, submission)
                     return@runBlocking
                 }
 
                 // Clear out the db for the successful submission
-                db.fileSubmissionQueries.deleteFilesForSubmissionId(submission.id)
-                db.submissionQueries.deleteSubmissionById(submission.id)
+                studentDb.fileSubmissionDao().deleteFilesForSubmissionId(submission.id)
+                studentDb.submissionDao().deleteSubmissionById(submission.id)
 
                 detachForegroundNotification()
-                showCompleteNotification(this@SubmissionService, submission, uploadedSubmission.late)
+                showCompleteNotification(
+                    this@SubmissionService,
+                    submission,
+                    uploadedSubmission.late
+                )
             }.onFailure {
-                handleFileError(db, submission, 0, listOf(mediaFile), it?.message)
+                runBlocking {
+                    handleFileError(studentDb, submission, 0, listOf(mediaFile), it?.message)
+                }
             }
         }
     }
 
-    private fun uploadFileSubmission(db: StudentDb, submission: com.instructure.student.Submission) {
+    private suspend fun uploadFileSubmission(submission: CreateSubmissionEntity) {
         showProgressNotification(submission.assignmentName, submission.id)
 
-        val (completed, pending) = db.fileSubmissionQueries.getFilesForSubmissionId(submission.id).executeAsList().partition { it.attachmentId != null }
-        val uploadedAttachmentIds = uploadFiles(submission, completed.size, pending, db)
+        val (completed, pending) = studentDb.fileSubmissionDao()
+            .findFilesForSubmissionId(submission.id).partition { it.attachmentId != null }
+        val uploadedAttachmentIds = uploadFiles(submission, completed.size, pending)
             ?: return // Cancel submitting if any of the files failed to upload
 
         // Update the notification to show that we're doing the actual submission now
         showProgressNotification(submission.assignmentName, submission.id, alertOnlyOnce = true)
 
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
-        SubmissionManager.postSubmissionAttachmentsSynchronous(submission.canvasContext.id, submission.assignmentId, attachmentIds)?.let {
+        SubmissionManager.postSubmissionAttachmentsSynchronous(
+            submission.canvasContext.id,
+            submission.assignmentId,
+            attachmentIds
+        )?.let {
             // Clear out the db for the successful submission
-            deleteSubmissionsForAssignment(submission.assignmentId, db)
+            deleteSubmissionsForAssignment(submission.assignmentId, studentDb)
 
             detachForegroundNotification()
             showCompleteNotification(this, submission, it.late)
         } ?: run {
             detachForegroundNotification()
-            db.submissionQueries.setSubmissionError(true, submission.id)
+            studentDb.submissionDao().setSubmissionError(true, submission.id)
             showErrorNotification(this, submission)
         }
     }
 
-    private fun uploadFiles(submission: com.instructure.student.Submission, completedAttachmentCount: Int, attachments: List<FileSubmission>, db: StudentDb): List<Long>? {
+    private fun uploadFiles(
+        submission: CreateSubmissionEntity,
+        completedAttachmentCount: Int,
+        attachments: List<CreateFileSubmissionEntity>
+    ): List<Long>? {
         val attachmentIds = ArrayList<Long>(attachments.size)
 
         // This is a group assignment, we need to get the list of groups before starting uploads
@@ -222,12 +280,21 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         }
 
         attachments.forEachIndexed { index, pendingAttachment ->
-            updateFileProgress(db, submission.id, 0f, index, attachments.size, completedAttachmentCount)
+            updateFileProgress(submission.id, 0f, index, attachments.size, completedAttachmentCount)
 
             // Upload config setup
-            val fso = FileSubmitObject(pendingAttachment.name!!, pendingAttachment.size!!, pendingAttachment.contentType!!, pendingAttachment.fullPath!!)
+            val fso = FileSubmitObject(
+                pendingAttachment.name!!,
+                pendingAttachment.size!!,
+                pendingAttachment.contentType!!,
+                pendingAttachment.fullPath!!
+            )
             val config = if (groupId == null) {
-                FileUploadConfig.forSubmission(fso, submission.canvasContext.id, submission.assignmentId)
+                FileUploadConfig.forSubmission(
+                    fso,
+                    submission.canvasContext.id,
+                    submission.assignmentId
+                )
             } else {
                 FileUploadConfig.forGroup(fso, groupId)
             }
@@ -235,21 +302,38 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             // Perform upload
             FileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
                 override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
-                    if (db.submissionQueries.getSubmissionById(submission.id).executeAsOneOrNull() == null) {
-                        return false // Stop uploading and don't show error if submission was deleted,
-                    }
-                    updateFileProgress(db, submission.id, progressPercent, index, attachments.size, completedAttachmentCount)
+                    runBlocking { studentDb.submissionDao().findSubmissionById(submission.id) }
+                        ?: return false // Stop uploading and don't show error if submission was deleted,
+
+                    updateFileProgress(
+                        submission.id,
+                        progressPercent,
+                        index,
+                        attachments.size,
+                        completedAttachmentCount
+                    )
                     return true
                 }
             }).onSuccess { attachment ->
                 Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED)
-                updateFileProgress(db, submission.id, 1.0f, index, attachments.size, completedAttachmentCount)
-                db.fileSubmissionQueries.setFileAttachmentIdAndError(attachment.id, false, null, pendingAttachment.id)
+                updateFileProgress(
+                    submission.id,
+                    1.0f,
+                    index,
+                    attachments.size,
+                    completedAttachmentCount
+                )
+                runBlocking {
+                    studentDb.fileSubmissionDao()
+                        .setFileAttachmentIdAndError(attachment.id, false, null, pendingAttachment.id)
+                }
 
                 attachmentIds.add(attachment.id)
             }.onFailure {
                 Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
-                handleFileError(db, submission, index, attachments, it?.message)
+                runBlocking {
+                    handleFileError(studentDb, submission, index, attachments, it?.message)
+                }
                 return null
             }
         }
@@ -257,20 +341,18 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     }
 
     @ObsoleteCoroutinesApi
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun uploadComment(intent: Intent) {
+    private suspend fun uploadComment(intent: Intent) {
         runBlocking {
-            val db = Db.getInstance(this@SubmissionService)
-            val commentDb = db.pendingSubmissionCommentQueries
-            val fileDb = db.submissionCommentFileQueries
+            val commentDao = studentDb.pendingSubmissionCommentDao()
+            val fileDao = studentDb.submissionCommentFileDao()
 
             // Get existing pending comment from db, or return if it was deleted
-            val comment = commentDb.getCommentById(intent.getLongExtra(Const.ID, 0)).executeAsOneOrNull() ?: return@runBlocking
+            val comment =
+                commentDao.findCommentById(intent.getLongExtra(Const.ID, 0)) ?: return@runBlocking
 
             // Get attachments, partition by completed vs pending
-            val (completed, pending) = fileDb
-                .getFilesForPendingComment(comment.id)
-                .executeAsList()
+            val (completed, pending) = fileDao
+                .findFilesForPendingComment(comment.id)
                 .partition { it.attachmentId != null }
 
             // Use foreground if there are files and/or media to upload
@@ -278,19 +360,35 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
             // Set up notifications
             createNotificationChannel(notificationManager, COMMENT_CHANNEL_ID)
-            val notification = NotificationCompat.Builder(this@SubmissionService, COMMENT_CHANNEL_ID)
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-                .setContentTitle(getString(R.string.assignmentSubmissionCommentUpload, comment.assignmentName))
-                .setProgress(0, 0, true)
+            val notification =
+                NotificationCompat.Builder(this@SubmissionService, COMMENT_CHANNEL_ID)
+                    .setOngoing(true)
+                    .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+                    .setContentTitle(
+                        getString(
+                            R.string.assignmentSubmissionCommentUpload,
+                            comment.assignmentName
+                        )
+                    )
+                    .setProgress(0, 0, true)
 
             if (foreground) startForeground(comment.assignmentId.toInt(), notification.build())
 
-            fun setError() {
-                val pendingIntent = getSubmissionIntent(this@SubmissionService, comment.canvasContext, comment.assignmentId, true)
+            suspend fun setError() {
+                val pendingIntent = getSubmissionIntent(
+                    this@SubmissionService,
+                    comment.canvasContext,
+                    comment.assignmentId,
+                    true
+                )
 
                 // Update notification
-                notification.setContentTitle(getString(R.string.assignmentSubmissionCommentError, comment.assignmentName))
+                notification.setContentTitle(
+                    getString(
+                        R.string.assignmentSubmissionCommentError,
+                        comment.assignmentName
+                    )
+                )
                 notification.setContentText("")
                 notification.setProgress(0, 0, false)
                 notification.setOngoing(false)
@@ -298,7 +396,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setAutoCancel(true) // Still need auto cancel for clicks, false to ongoing only makes it possible to swipe away
 
                 // Set error in db
-                commentDb.setCommentError(true, comment.id)
+                commentDao.setCommentError(true, comment.id)
 
                 // Stop service
                 if (foreground) {
@@ -310,25 +408,39 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             }
 
             // Clear existing error state, if any
-            commentDb.setCommentError(false, comment.id)
+            commentDao.setCommentError(false, comment.id)
 
             // Upload pending attachments
             pending.forEachIndexed { index, pendingAttachment ->
                 // Update notification
-                notification.setContentText(getString(R.string.assignmentSubmissionUploadingFile, index + 1, pending.size))
+                notification.setContentText(
+                    getString(
+                        R.string.assignmentSubmissionUploadingFile,
+                        index + 1,
+                        pending.size
+                    )
+                )
                 updateCommentProgress(
                     notification = notification,
                     comment = comment,
                     progressPercent = 0f,
-                    db = db,
                     completedSize = completed.size,
                     pendingSize = pending.size,
                     index = index
                 )
 
                 // Upload config setup
-                val fso = FileSubmitObject(pendingAttachment.name, pendingAttachment.size, pendingAttachment.contentType, pendingAttachment.fullPath)
-                val config = FileUploadConfig.forSubmissionComment(fso, comment.canvasContext.id, comment.assignmentId)
+                val fso = FileSubmitObject(
+                    pendingAttachment.name,
+                    pendingAttachment.size,
+                    pendingAttachment.contentType,
+                    pendingAttachment.fullPath
+                )
+                val config = FileUploadConfig.forSubmissionComment(
+                    fso,
+                    comment.canvasContext.id,
+                    comment.assignmentId
+                )
 
                 // Perform upload
                 FileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
@@ -337,7 +449,6 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                             notification = notification,
                             comment = comment,
                             progressPercent = progressPercent,
-                            db = db,
                             completedSize = completed.size,
                             pendingSize = pending.size,
                             index = index
@@ -346,7 +457,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     }
                 }).onSuccess { attachment ->
                     // Update db
-                    fileDb.setFileAttachmentId(attachment.id, pendingAttachment.id)
+                    fileDao.setFileAttachmentId(attachment.id, pendingAttachment.id)
                 }.onFailure {
                     setError()
                     return@runBlocking
@@ -361,12 +472,17 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setProgress(0, 0, true)
                 notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
-                NotoriousUploader.performUpload(comment.mediaPath, object : ProgressRequestUpdateListener {
-                    override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
-                        updateCommentProgress(notification, comment, progressPercent, db)
-                        return true
-                    }
-                }).onSuccess {
+                NotoriousUploader.performUpload(
+                    comment.mediaPath,
+                    object : ProgressRequestUpdateListener {
+                        override fun onProgressUpdated(
+                            progressPercent: Float,
+                            length: Long
+                        ): Boolean {
+                            updateCommentProgress(notification, comment, progressPercent)
+                            return true
+                        }
+                    }).onSuccess {
                     notoriousResult = it
                 }.onFailure {
                     setError()
@@ -395,10 +511,11 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                         )
                     }
                 } ?: awaitApi { callback ->
-                    val attachmentIds = fileDb
-                        .getFilesForPendingComment(comment.id)
-                        .executeAsList()
-                        .map { file -> file.attachmentId!! }
+                    val attachmentIds = runBlocking {
+                        fileDao
+                            .findFilesForPendingComment(comment.id)
+                            .map { file -> file.attachmentId!! }
+                    }
                     SubmissionManager.postSubmissionComment(
                         courseId = comment.canvasContext.id,
                         assignmentId = comment.assignmentId,
@@ -419,7 +536,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 )
 
                 // Remove db entry
-                commentDb.deleteCommentById(comment.id)
+                commentDao.deleteCommentById(comment.id)
 
                 // Clear network cache so we don't fetch a stale comment list
                 CanvasRestAdapter.clearCacheUrls("assignments/${comment.assignmentId}")
@@ -434,7 +551,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
     }
 
-    private fun uploadStudentAnnotation(db: StudentDb, submission: com.instructure.student.Submission) {
+    private fun uploadStudentAnnotation(submission: CreateSubmissionEntity) {
         showProgressNotification(submission.assignmentName, submission.id)
         val annotatableAttachmentIt = submission.annotatableAttachmentId
 
@@ -444,12 +561,16 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         }
 
         GlobalScope.launch {
-            val uploadResult = SubmissionManager.postStudentAnnotationSubmissionAsync(submission.canvasContext, submission.assignmentId, annotatableAttachmentIt).await()
+            val uploadResult = SubmissionManager.postStudentAnnotationSubmissionAsync(
+                submission.canvasContext,
+                submission.assignmentId,
+                annotatableAttachmentIt
+            ).await()
             uploadResult.onSuccess {
-                db.submissionQueries.deleteSubmissionById(submission.id)
+                studentDb.submissionDao().deleteSubmissionById(submission.id)
                 if (!it.late) showConfetti()
             }.onFailure {
-                db.submissionQueries.setSubmissionError(true, submission.id)
+                studentDb.submissionDao().setSubmissionError(true, submission.id)
                 showErrorNotification(this@SubmissionService, submission)
             }
         }
@@ -457,17 +578,23 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
     // region Notifications
 
-    private fun handleFileError(db: StudentDb, submission: com.instructure.student.Submission, completedCount: Int, attachments: List<FileSubmission>, errorMessage: String?) {
-        if (db.submissionQueries.getSubmissionById(submission.id).executeAsOneOrNull() == null) {
+    private suspend fun handleFileError(
+        db: StudentDb,
+        submission: CreateSubmissionEntity,
+        completedCount: Int,
+        attachments: List<CreateFileSubmissionEntity>,
+        errorMessage: String?
+    ) {
+        if (db.submissionDao().findSubmissionById(submission.id) == null) {
             return // Not an error if the submission was deleted, it was canceled
         }
 
-        db.submissionQueries.setSubmissionError(true, submission.id)
+        db.submissionDao().setSubmissionError(true, submission.id)
 
         // Set all files that haven't been completed yet to error
         attachments.forEachIndexed { index, file ->
             if (index >= completedCount) {
-                db.fileSubmissionQueries.setFileError(true, errorMessage, file.id)
+                db.fileSubmissionDao().setFileError(true, errorMessage, file.id)
             }
         }
 
@@ -475,7 +602,12 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         showErrorNotification(this, submission)
     }
 
-    private fun showProgressNotification(assignmentName: String?, submissionId: Long, inForeground: Boolean = true, alertOnlyOnce: Boolean = false) {
+    private fun showProgressNotification(
+        assignmentName: String?,
+        submissionId: Long,
+        inForeground: Boolean = true,
+        alertOnlyOnce: Boolean = false
+    ) {
         createNotificationChannel(notificationManager)
         notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
@@ -489,47 +621,75 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         }
     }
 
-    private fun updateFileProgress(db: StudentDb, dbSubmissionId: Long, uploaded: Float, fileIndex: Int, fileCount: Int, completedAttachmentCount: Int) {
+    private fun updateFileProgress(
+        dbSubmissionId: Long,
+        uploaded: Float,
+        fileIndex: Int,
+        fileCount: Int,
+        completedAttachmentCount: Int
+    ) {
         // Update notification
         notificationBuilder
-            .setContentTitle(getString(R.string.assignmentSubmissionUploadingFile, fileIndex + 1, fileCount))
+            .setContentTitle(
+                getString(
+                    R.string.assignmentSubmissionUploadingFile,
+                    fileIndex + 1,
+                    fileCount
+                )
+            )
             .setProgress(100, (uploaded * 100f).toInt(), false)
             .setOnlyAlertOnce(true)
         notificationManager.notify(dbSubmissionId.toInt(), notificationBuilder.build())
 
         // Set initial progress
-        db.submissionQueries.updateProgress(
-            currentFile = (completedAttachmentCount + fileIndex).toLong(),
-            fileCount = (completedAttachmentCount + fileCount).toLong(),
-            progress = uploaded.toDouble(),
-            id = dbSubmissionId
-        )
+        runBlocking {
+            studentDb.submissionDao().updateProgress(
+                currentFile = (completedAttachmentCount + fileIndex).toLong(),
+                fileCount = (completedAttachmentCount + fileCount).toLong(),
+                progress = uploaded.toDouble(),
+                id = dbSubmissionId
+            )
+        }
     }
 
-    private fun updateCommentProgress(notification: NotificationCompat.Builder, comment: PendingSubmissionComment, progressPercent: Float, db: StudentDb, completedSize: Int = 0, pendingSize: Int = 1, index: Int = 0) {
+    private fun updateCommentProgress(
+        notification: NotificationCompat.Builder,
+        comment: CreatePendingSubmissionCommentEntity,
+        progressPercent: Float,
+        completedSize: Int = 0,
+        pendingSize: Int = 1,
+        index: Int = 0
+    ) {
         // Update notification
         notification.setProgress(1000, (progressPercent * 1000).toInt(), false)
         notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
         // Update progress in db
-        db.pendingSubmissionCommentQueries.updateCommentProgress(
-            id = comment.id,
-            currentFile = (completedSize + index).toLong(),
-            fileCount = (completedSize + pendingSize).toLong(),
-            progress = progressPercent.toDouble()
-        )
+        runBlocking {
+            studentDb.pendingSubmissionCommentDao().updateCommentProgress(
+                id = comment.id,
+                currentFile = (completedSize + index).toLong(),
+                fileCount = (completedSize + pendingSize).toLong(),
+                progress = progressPercent.toDouble()
+            )
+        }
     }
 
     private fun detachForegroundNotification() {
         stopForeground(Service.STOP_FOREGROUND_DETACH)
     }
 
-    private fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
+    private fun createNotificationChannel(
+        notificationManager: NotificationManager,
+        channelId: String = CHANNEL_ID
+    ) {
         // Prevents recreation of notification channel if it exists.
         if (notificationManager.notificationChannels.any { it.id == channelId }) return
 
-        val name = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsName)
-        val description = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsDescription)
+        val name =
+            ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsName)
+        val description =
+            ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsDescription)
 
         // Create the channel and add the group
         val importance = NotificationManager.IMPORTANCE_HIGH
@@ -550,23 +710,35 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         goToSubmissionDetail: Boolean = false
     ): PendingIntent {
         val submissionPage = if (goToSubmissionDetail) "/submissions" else ""
-        val path = "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId$submissionPage"
+        val path =
+            "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId$submissionPage"
         val intent = Intent(context, NavigationActivity.startActivityClass).apply {
             putExtra(Const.LOCAL_NOTIFICATION, true)
             putExtra(PushNotification.HTML_URL, path)
         }
 
-        return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        return PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 
     private fun showErrorNotification(
         context: Context,
-        submission: com.instructure.student.Submission
+        submission: CreateSubmissionEntity
     ) {
-        val pendingIntent = getSubmissionIntent(context, submission.canvasContext, submission.assignmentId)
+        val pendingIntent =
+            getSubmissionIntent(context, submission.canvasContext, submission.assignmentId)
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-            .setContentTitle(context.getString(R.string.assignmentSubmissionError, submission.assignmentName ?: ""))
+            .setContentTitle(
+                context.getString(
+                    R.string.assignmentSubmissionError,
+                    submission.assignmentName ?: ""
+                )
+            )
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setOnlyAlertOnce(false)
@@ -576,17 +748,24 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
     private fun showCompleteNotification(
         context: Context,
-        submission: com.instructure.student.Submission,
+        submission: CreateSubmissionEntity,
         isLate: Boolean
     ) {
-        val pendingIntent = getSubmissionIntent(context, submission.canvasContext, submission.assignmentId)
+        val pendingIntent =
+            getSubmissionIntent(context, submission.canvasContext, submission.assignmentId)
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-            .setContentTitle(context.getString(R.string.assignmentSubmissionComplete, submission.assignmentName ?: ""))
+            .setContentTitle(
+                context.getString(
+                    R.string.assignmentSubmissionComplete,
+                    submission.assignmentName ?: ""
+                )
+            )
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setOnlyAlertOnce(false)
-        NotificationManagerCompat.from(context).notify(submission.id.toInt(), notificationBuilder.build())
+        NotificationManagerCompat.from(context)
+            .notify(submission.id.toInt(), notificationBuilder.build())
         if (!isLate) showConfetti()
     }
 
@@ -604,273 +783,23 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         private fun getUserId() = ApiPrefs.user!!.id
 
-        private fun insertDraft(assignmentId: Long, context: Context, insertBlock: (StudentDb) -> Unit): Long {
-            val db = Db.getInstance(context)
-            deleteDraftsForAssignment(assignmentId, db)
-            insertBlock(db)
-            return db.submissionQueries.getLastInsert().executeAsOne()
-        }
-
-        private fun deleteDraftsForAssignment(id: Long, db: StudentDb) {
-            db.submissionQueries.deleteDraftById(id, getUserId())
-        }
-
-        private fun insertNewSubmission(assignmentId: Long, context: Context, files: List<FileSubmitObject> = emptyList(), insertBlock: (StudentDb) -> Unit): Long {
-            val db = Db.getInstance(context)
-            deleteSubmissionsForAssignment(assignmentId, db, files)
-            insertBlock(db)
-            val dbSubmissionId = db.submissionQueries.getLastInsert().executeAsOne()
-
-            files.forEach {
-                db.fileSubmissionQueries.insertFile(dbSubmissionId, it.name, it.size, it.contentType, it.fullPath)
-            }
-
-            return dbSubmissionId
-        }
-
-        private fun deleteSubmissionsForAssignment(id: Long, db: StudentDb, files: List<FileSubmitObject> = emptyList()) {
-            db.submissionQueries.getSubmissionsByAssignmentId(id, getUserId()).executeAsList().forEach { submission ->
-                db.fileSubmissionQueries.getFilesForSubmissionId(submission.id).executeAsList().forEach { file ->
-                    // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
-                    if (!files.any { it.fullPath == file.fullPath } && db.fileSubmissionQueries.getFilesForPath(file.id, file.fullPath).executeAsList().isEmpty()) {
-                        FileUploadUtils.deleteTempFile(file.fullPath)
+        private suspend fun deleteSubmissionsForAssignment(
+            id: Long,
+            db: StudentDb,
+            files: List<FileSubmitObject> = emptyList()
+        ) {
+            db.submissionDao().findSubmissionsByAssignmentId(id, getUserId())
+                .forEach { submission ->
+                    db.fileSubmissionDao().findFilesForSubmissionId(submission.id).forEach { file ->
+                        // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
+                        if (!files.any { it.fullPath == file.fullPath } && db.fileSubmissionDao()
+                                .findFilesForPath(file.id, file.fullPath).isEmpty()) {
+                            FileUploadUtils.deleteTempFile(file.fullPath)
+                        }
                     }
+                    db.fileSubmissionDao().deleteFilesForSubmissionId(submission.id)
                 }
-                db.fileSubmissionQueries.deleteFilesForSubmissionId(submission.id)
-            }
-            db.submissionQueries.deleteSubmissionsForAssignmentId(id, getUserId())
+            db.submissionDao().deleteSubmissionsForAssignmentId(id, getUserId())
         }
-
-        // region start helpers
-
-        private fun startService(context: Context, action: Action, extras: Bundle) {
-            Intent(context, SubmissionService::class.java).also { intent ->
-                intent.action = action.name
-                intent.putExtras(extras)
-                context.startService(intent)
-            }
-        }
-
-        fun startTextSubmission(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String?,
-            text: String
-        ) {
-            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
-                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), false)
-            }
-
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, Action.TEXT_ENTRY, bundle)
-        }
-
-        fun saveDraft(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String?,
-            text: String
-        ) {
-            insertDraft(assignmentId, context) {
-                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now(), true)
-            }
-        }
-
-        fun startUrlSubmission(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String?,
-            url: String
-        ) {
-            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
-                it.submissionQueries.insertOnlineUrlSubmission(url, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
-            }
-
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, Action.URL_ENTRY, bundle)
-        }
-
-        fun startFileSubmission(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String?,
-            assignmentGroupCategoryId: Long = 0,
-            files: ArrayList<FileSubmitObject>
-        ) {
-            files.ifEmpty { return } // No need to upload files if we aren't given any
-
-            val dbSubmissionId = insertNewSubmission(assignmentId, context, files) {
-                it.submissionQueries.insertOnlineUploadSubmission(assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, getUserId(), OffsetDateTime.now())
-            }
-
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, Action.FILE_ENTRY, bundle)
-        }
-
-        fun retryFileSubmission(context: Context, dbSubmissionId: Long) {
-            val db = Db.getInstance(context)
-            val submission = db.submissionQueries.getSubmissionById(dbSubmissionId).executeAsOneOrNull() ?: return // No submission exists, so nothing to be done
-
-            db.submissionQueries.setSubmissionError(false, submission.id)
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, if (submission.submissionType == Assignment.SubmissionType.MEDIA_RECORDING.apiString) Action.MEDIA_ENTRY else Action.FILE_ENTRY, bundle)
-        }
-
-        fun startMediaSubmission(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String?,
-            assignmentGroupCategoryId: Long,
-            mediaFilePath: String
-        ) {
-            val file = File(mediaFilePath).let { FileSubmitObject(it.name, it.length(), FileUtils.getMimeType(it.path), mediaFilePath) }
-            val dbSubmissionId = insertNewSubmission(assignmentId, context, listOf(file)) {
-                it.submissionQueries.insertMediaUploadSubmission(assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, getUserId(), OffsetDateTime.now())
-            }
-
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, Action.MEDIA_ENTRY, bundle)
-        }
-
-        fun startStudioSubmission(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String?,
-            url: String
-        ) {
-            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
-                it.submissionQueries.insertOnlineUrlSubmission(url, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
-            }
-
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, Action.STUDIO_ENTRY, bundle)
-        }
-
-        /**
-         * Begins the process of uploading a submission comment for the given assignment. A valid value *must* be
-         * provided for [message] and/or [attachments]. If no message is provided, the API will use the message "This
-         * is a media comment" - or its applicable translation. If one or more attachments are provided, a progress
-         * notification will be displayed while the upload occurs.
-         */
-        fun startCommentUpload(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String,
-            message: String?,
-            attachments: List<FileSubmitObject>?,
-            isGroupMessage: Boolean,
-            attemptId: Long?
-        ) {
-            require(message.isValid() || attachments?.isNotEmpty() == true)
-            val db = Db.getInstance(context)
-            db.pendingSubmissionCommentQueries.insertComment(
-                accountDomain = ApiPrefs.domain,
-                canvasContext = canvasContext,
-                assignmentName = assignmentName,
-                assignmentId = assignmentId,
-                lastActivityDate = Date.now(),
-                isGroupMessage = isGroupMessage,
-                message = message,
-                mediaPath = null,
-                attemptId = attemptId
-            )
-            val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
-            attachments?.forEach { db.submissionCommentFileQueries.insertFile(commentId, it.name, it.size, it.contentType, it.fullPath) }
-
-            val bundle = Bundle().apply {
-                putLong(Const.ID, commentId)
-            }
-            startService(context, Action.COMMENT_ENTRY, bundle)
-        }
-
-        /**
-         * Begins the process of uploading a media submission comment for the given assignment. A progress notification
-         * will be displayed while the upload occurs.
-         */
-        fun startMediaCommentUpload(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String,
-            mediaFile: File,
-            isGroupMessage: Boolean,
-            attemptId: Long?
-        ) {
-            val db = Db.getInstance(context)
-            db.pendingSubmissionCommentQueries.insertComment(
-                accountDomain = ApiPrefs.domain,
-                canvasContext = canvasContext,
-                assignmentName = assignmentName,
-                assignmentId = assignmentId,
-                lastActivityDate = Date.now(),
-                isGroupMessage = isGroupMessage,
-                message = null,
-                mediaPath = mediaFile.absolutePath,
-                attemptId = attemptId
-            )
-            val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
-
-            val bundle = Bundle().apply {
-                putLong(Const.ID, commentId)
-            }
-            startService(context, Action.COMMENT_ENTRY, bundle)
-        }
-
-        fun retryCommentUpload(context: Context, commentId: Long) {
-            val bundle = Bundle().apply {
-                putLong(Const.ID, commentId)
-            }
-            startService(context, Action.COMMENT_ENTRY, bundle)
-        }
-
-        fun deletePendingComment(context: Context, commentId: Long) {
-            val db = Db.getInstance(context)
-            db.pendingSubmissionCommentQueries.deleteCommentById(commentId)
-            db.submissionCommentFileQueries.deleteFilesForCommentId(commentId)
-        }
-
-        fun startStudentAnnotationSubmission(
-            context: Context,
-            canvasContext: CanvasContext,
-            assignmentId: Long,
-            assignmentName: String?,
-            annotatableAttachmentIt: Long
-        ) {
-            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
-                it.submissionQueries.insertStudentAnnotationSubmission(annotatableAttachmentIt, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
-            }
-
-            val bundle = Bundle().apply {
-                putLong(Const.SUBMISSION_ID, dbSubmissionId)
-            }
-
-            startService(context, Action.STUDENT_ANNOTATION, bundle)
-        }
-        // endregion
     }
 }

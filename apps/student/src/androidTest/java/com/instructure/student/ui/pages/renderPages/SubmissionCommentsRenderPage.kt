@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.student.R
@@ -61,7 +62,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         // Make sure that the message is on the screen
         val message = getMessage(commentState)
         val messageMatcher = allOf(withText(containsString(message)), anyOf(withId(R.id.commentTextView), withId(R.id.subtitleTextView)))
-        scrollAndAssertDisplayed(messageMatcher)
+        onView(messageMatcher).scrollTo().assertDisplayed()
 
         if (failed) {
             // Make sure the fail message is on the screen and the sending layout is gone
