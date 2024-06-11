@@ -238,6 +238,11 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
+
         <!--Push Notifications-->
 
         <receiver android:name=".receivers.InitializeReceiver"
