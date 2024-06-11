@@ -79,7 +79,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
        return if (user == null) {
            ThemedColor(ThemePrefs.primaryColor)
        } else {
-           cachedThemedColors.getOrElse(user.contextId) { generateColor(user) }
+           cachedThemedColors.getOrElse(user.contextId) { generateUserColor(user) }
        }
     }
 
@@ -94,7 +94,8 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         )
 
         val index = user.id % colors.size
-        val themedColor = createThemedColor(colors[index.toInt()])
+        val color = ContextCompat.getColor(ContextKeeper.appContext, colors[index.toInt()])
+        val themedColor = createThemedColor(color)
         cachedThemedColors += user.contextId to themedColor
         return themedColor
     }
