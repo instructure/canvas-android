@@ -145,13 +145,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showMainNavigation() {
         binding.bottomNav.show()
-        binding.toolbar.expand()
+        binding.toolbar.expand(200L, 100L, true)
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
     }
 
     private fun hideMainNavigation() {
         binding.bottomNav.hide()
-        binding.toolbar.collapse(200L)
+        binding.toolbar.collapse(200L, 100L, true)
         viewModel.closeStudentSelector()
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }

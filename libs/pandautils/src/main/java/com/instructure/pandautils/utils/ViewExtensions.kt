@@ -909,7 +909,7 @@ fun BottomNavigationView.hide() {
     }
 }
 
-fun View.expand(duration: Long = 300) {
+fun View.expand(duration: Long = 300, startOffset: Long = 0L, interpolate: Boolean = false) {
     if (visibility == View.VISIBLE) return
 
     this.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -929,11 +929,21 @@ fun View.expand(duration: Long = 300) {
         override fun willChangeBounds(): Boolean = true
     }
 
-    animation.duration = duration
+    animation.apply {
+        this.startOffset = startOffset
+        this.duration = duration
+        if (interpolate) {
+            this.interpolator = AnimationUtils.loadInterpolator(
+                context,
+                android.R.interpolator.linear_out_slow_in
+            )
+        }
+    }
+
     this.startAnimation(animation)
 }
 
-fun View.collapse(duration: Long = 300) {
+fun View.collapse(duration: Long = 300, startOffset: Long = 0L, interpolate: Boolean = false) {
     if (visibility == View.GONE) return
 
     val initialHeight = this.measuredHeight
@@ -951,6 +961,16 @@ fun View.collapse(duration: Long = 300) {
         override fun willChangeBounds(): Boolean = true
     }
 
-    animation.duration = duration
+    animation.apply {
+        this.startOffset = startOffset
+        this.duration = duration
+        if (interpolate) {
+            this.interpolator = AnimationUtils.loadInterpolator(
+                context,
+                android.R.interpolator.fast_out_linear_in
+            )
+        }
+    }
+
     this.startAnimation(animation)
 }
