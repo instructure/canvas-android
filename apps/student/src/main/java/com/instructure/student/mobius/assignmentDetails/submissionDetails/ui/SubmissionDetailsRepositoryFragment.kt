@@ -19,12 +19,19 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsRepository
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
+import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.LiveDataSource
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateSubmissionEntity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -34,12 +41,44 @@ class SubmissionDetailsRepositoryFragment : SubmissionDetailsFragment() {
     @Inject
     lateinit var submissionDetailsRepository: SubmissionDetailsRepository
 
+    @Inject
+    lateinit var studentDb: StudentDb
+
     override fun getRepository() = submissionDetailsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = false
     }
+
+    override fun getExternalEventSources() = listOf(
+        ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
+            when (it) {
+                is SubmissionDetailsSharedEvent.FileSelected -> SubmissionDetailsEvent.AttachmentClicked(it.file)
+                is SubmissionDetailsSharedEvent.AudioRecordingViewLaunched -> SubmissionDetailsEvent.AudioRecordingClicked
+                is SubmissionDetailsSharedEvent.VideoRecordingViewLaunched -> SubmissionDetailsEvent.VideoRecordingClicked
+                is SubmissionDetailsSharedEvent.SubmissionClicked -> {
+                    SubmissionDetailsEvent.SubmissionClicked(it.submission.attempt)
+                }
+                is SubmissionDetailsSharedEvent.SubmissionAttachmentClicked -> {
+                    SubmissionDetailsEvent.SubmissionAndAttachmentClicked(it.submission.attempt, it.attachment)
+                }
+                is SubmissionDetailsSharedEvent.SubmissionCommentsUpdated -> SubmissionDetailsEvent.SubmissionCommentsUpdated(it.submissionComments)
+            }
+        },
+        LiveDataSource.of<CreateSubmissionEntity, SubmissionDetailsEvent>(
+            studentDb.submissionDao()
+                .findSubmissionByAssignmentIdLiveData(assignmentId, ApiPrefs.user?.id ?: -1)
+        ) { submission ->
+            if (submission?.progress?.toDouble() == 100.0) {
+                // A submission for this assignment was finished - we'll want to reload data
+                SubmissionDetailsEvent.SubmissionUploadFinished
+            } else {
+                // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
+                null
+            }
+        },
+    )
 
     companion object {
         fun makeRoute(

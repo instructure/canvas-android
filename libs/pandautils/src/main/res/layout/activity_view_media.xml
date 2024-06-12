@@ -21,7 +21,7 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <com.google.android.exoplayer2.ui.PlayerView
+    <androidx.media3.ui.PlayerView
         android:id="@+id/mediaPlayerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,7 +37,7 @@
             android:tint="@color/textDark"
             android:visibility="gone"/>
 
-    </com.google.android.exoplayer2.ui.PlayerView>
+    </androidx.media3.ui.PlayerView>
 
     <LinearLayout
         android:id="@+id/mediaPlaybackErrorView"

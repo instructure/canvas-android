@@ -16,31 +16,24 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.file
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.utils.Const
-import com.instructure.student.FileSubmission
-import com.instructure.student.db.Db
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
 import com.instructure.student.mobius.common.ui.EffectHandler
-import com.instructure.student.mobius.common.ui.SubmissionService
-import com.spotify.mobius.Connection
-import com.spotify.mobius.functions.Consumer
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId: Long) :
+class UploadStatusSubmissionEffectHandler(val submissionId: Long, val submissionHelper: SubmissionHelper, val studentDb: StudentDb) :
     EffectHandler<UploadStatusSubmissionView, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect>() {
 
     override fun accept(effect: UploadStatusSubmissionEffect) {
         when (effect) {
             is UploadStatusSubmissionEffect.LoadPersistedFiles -> {
                 launch(Dispatchers.Main) {
-                    val (name, error, files) = loadPersistedData(effect.submissionId, context)
+                    val (name, error, files) = loadPersistedData(effect.submissionId)
                     consumer.accept(
                         UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(name, error, files)
                     )
@@ -61,33 +54,29 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
         }.exhaustive
     }
 
-    private fun loadPersistedData(
+    private suspend fun loadPersistedData(
         submissionId: Long,
-        context: Context
-    ): Triple<String?, Boolean, List<FileSubmission>> {
+    ): Triple<String?, Boolean, List<CreateFileSubmissionEntity>> {
         // If we can't find the submissionId, it was successful and was deleted from the database
         val successSubmission =
-            Triple<String?, Boolean, List<FileSubmission>>(null, false, emptyList())
+            Triple<String?, Boolean, List<CreateFileSubmissionEntity>>(null, false, emptyList())
 
-        val db = Db.getInstance(context)
-        val submission = db.submissionQueries.getSubmissionById(submissionId).executeAsOneOrNull()
+        val submission = studentDb.submissionDao().findSubmissionById(submissionId)
             ?: return successSubmission
-        val files = db.fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList()
+        val files = studentDb.fileSubmissionDao().findFilesForSubmissionId(submissionId)
 
         return Triple(submission.assignmentName, submission.errorFlag, files)
     }
 
-    private fun deleteSubmission(submissionId: Long) {
-        val db = Db.getInstance(context)
-        db.fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
-        db.submissionQueries.deleteSubmissionById(submissionId)
+    private suspend fun deleteSubmission(submissionId: Long) {
+        studentDb.fileSubmissionDao().deleteFilesForSubmissionId(submissionId)
+        studentDb.submissionDao().deleteSubmissionById(submissionId)
 
         view?.submissionDeleted()
     }
 
-    private fun deleteFileForSubmission(fileId: Long) {
-        val db = Db.getInstance(context)
-        db.fileSubmissionQueries.deleteFileById(fileId)
+    private suspend fun deleteFileForSubmission(fileId: Long) {
+        studentDb.fileSubmissionDao().deleteFileById(fileId)
     }
 
     /**
@@ -96,7 +85,7 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
      * has "finished" will fail as it can no longer find the file on the device.
      */
     private fun retrySubmission(submissionId: Long) {
-        SubmissionService.retryFileSubmission(context, submissionId)
+        submissionHelper.retryFileSubmission(submissionId)
 
         view?.submissionRetrying()
     }

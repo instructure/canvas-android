@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,42 +12,29 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */
-package com.instructure.student.mobius.assignmentDetails.submission.url.ui
+ */package com.instructure.student.mobius.assignmentDetails.submission.url.ui
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.analytics.SCREEN_VIEW_URL_SUBMISSION_UPLOAD
-import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
-import com.instructure.student.databinding.FragmentUrlSubmissionUploadBinding
-import com.instructure.student.mobius.assignmentDetails.submission.url.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.withArgs
+import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.EffectHandler
-import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.student.mobius.common.ui.UpdateInit
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@ScreenView(SCREEN_VIEW_URL_SUBMISSION_UPLOAD)
-class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect, UrlSubmissionUploadView, UrlSubmissionUploadViewState, FragmentUrlSubmissionUploadBinding>() {
+@AndroidEntryPoint
+class UrlSubmissionUploadFragment : BaseUrlSubmissionUploadFragment() {
 
-    private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
-    private val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
-    private val initialUrl by StringArg(key = Const.URL)
-    private val assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
-    private val isFailure by BooleanArg(key = Const.IS_FAILURE)
+    @Inject
+    lateinit var submissionHelper: SubmissionHelper
 
-    override fun makeEffectHandler(): EffectHandler<UrlSubmissionUploadView, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect> = UrlSubmissionUploadEffectHandler()
-
-    override fun makeUpdate(): UpdateInit<UrlSubmissionUploadModel, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect> = UrlSubmissionUploadUpdate()
-
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup): UrlSubmissionUploadView = UrlSubmissionUploadView(inflater, parent)
-
-    override fun makePresenter(): Presenter<UrlSubmissionUploadModel, UrlSubmissionUploadViewState> = UrlSubmissionUploadPresenter
-
-    override fun makeInitModel(): UrlSubmissionUploadModel = UrlSubmissionUploadModel(course, assignmentId, assignmentName, initialUrl, isFailure)
+    override fun makeEffectHandler(): EffectHandler<UrlSubmissionUploadView, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect> = UrlSubmissionUploadEffectHandler(submissionHelper)
 
     companion object {
 

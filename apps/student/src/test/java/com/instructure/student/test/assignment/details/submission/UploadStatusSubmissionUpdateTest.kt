@@ -16,11 +16,11 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
-import com.instructure.student.FileSubmission
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionUpdate
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
@@ -36,7 +36,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     private val initSpec = InitSpec(UploadStatusSubmissionUpdate()::init)
     private val updateSpec = UpdateSpec(UploadStatusSubmissionUpdate()::update)
 
-    private lateinit var initFile: FileSubmission
+    private lateinit var initFile: CreateFileSubmissionEntity
     private lateinit var initModel: UploadStatusSubmissionModel
     private lateinit var assignmentName: String
     private val submissionId = 123L
@@ -47,7 +47,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
         initModel = UploadStatusSubmissionModel(
             submissionId = submissionId
         )
-        initFile = FileSubmission(
+        initFile = CreateFileSubmissionEntity(
             12L,
             submissionId,
             null,
@@ -134,7 +134,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
             assignmentName = assignmentName + "bad",
             isLoading = true,
             isFailed = false,
-            files = listOf(FileSubmission(0, 0, null, null, null, null, null, null, false))
+            files = listOf(CreateFileSubmissionEntity(0, 0, null, null, null, null, null, null, false))
         )
         val expectedModel = startModel.copy(
             isLoading = false,
@@ -164,7 +164,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
         val startModel = initModel.copy(
             isFailed = false,
             uploadedBytes = 1,
-            files = listOf(FileSubmission(0, 0, null, null, null, null, null, null, false))
+            files = listOf(CreateFileSubmissionEntity(0, 0, null, null, null, null, null, null, false))
         )
         val expectedModel = startModel.copy(uploadedBytes = null, files = listOf(initFile))
 
@@ -308,7 +308,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
 
     @Test
     fun `OnDeleteFile results in a OnDeleteFileFromSubmission effect with a model change`() {
-        val deleteFile = FileSubmission(409L, submissionId, null, null, null, null, null, null, false)
+        val deleteFile = CreateFileSubmissionEntity(409L, submissionId, null, null, null, null, null, null, false)
         val startModel = initModel.copy(files = listOf(initFile, deleteFile))
         val expectedModel = initModel.copy(files = listOf(initFile))
         updateSpec
