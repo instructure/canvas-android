@@ -40,6 +40,7 @@ object Versions {
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.7.7"
+    const val MEDIA3 = "1.3.1"
 }
 
 object Libs {
@@ -121,7 +122,11 @@ object Libs {
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
-    const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:2.18.5" // This is deprecated, we should migrate to https://developer.android.com/guide/topics/media/media3/getting-started/migration-guide
+    const val MEDIA3 = "androidx.media3:media3-exoplayer:${Versions.MEDIA3}"
+    const val MEDIA3_UI = "androidx.media3:media3-ui:${Versions.MEDIA3}"
+    const val MEDIA3_HLS = "androidx.media3:media3-exoplayer-hls:${Versions.MEDIA3}"
+    const val MEDIA3_DASH = "androidx.media3:media3-exoplayer-dash:${Versions.MEDIA3}"
+    const val MEDIA3_SMOOTH_STREAMING = "androidx.media3:media3-exoplayer-smoothstreaming:${Versions.MEDIA3}"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
