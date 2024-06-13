@@ -41,6 +41,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collapse
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -158,7 +159,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAppColors(student: User?) {
         val color = ColorKeeper.getOrGenerateUserColor(student).backgroundColor()
-        binding.toolbar.setBackgroundColor(color)
+        if (binding.toolbar.background == null) {
+            binding.toolbar.setBackgroundColor(color)
+        } else {
+            binding.toolbar.animateCircularBackgroundColorChange(color, binding.toolbarImage)
+        }
         binding.bottomNav.applyTheme(color, getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(this, color)
     }

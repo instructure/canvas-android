@@ -54,6 +54,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
@@ -82,6 +83,7 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import kotlinx.coroutines.delay
 import java.util.*
+import kotlin.math.hypot
 
 /** Convenience extension for setting a click listener */
 @Suppress("NOTHING_TO_INLINE")
@@ -973,4 +975,33 @@ fun View.collapse(duration: Long = 300, startOffset: Long = 0L, interpolate: Boo
     }
 
     this.startAnimation(animation)
+}
+
+fun View.animateCircularBackgroundColorChange(endColor: Int, image: ImageView, duration: Long = 400L) {
+    if (!isLaidOut) return
+
+    val w = measuredWidth
+    val h = measuredHeight
+
+    val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    draw(canvas)
+
+    image.setImageBitmap(bitmap)
+    image.setVisible(true)
+
+    val finalRadius = hypot(w.toFloat(), h.toFloat())
+
+    val anim = ViewAnimationUtils.createCircularReveal(this, w / 2, h / 2, 0f, finalRadius)
+
+    anim.duration = duration
+    anim.doOnStart {
+        setBackgroundColor(endColor)
+    }
+    anim.doOnEnd {
+        image.setImageDrawable(null)
+        image.setVisible(false)
+    }
+
+    anim.start()
 }

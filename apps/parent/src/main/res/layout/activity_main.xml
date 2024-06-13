@@ -38,59 +38,77 @@
             android:orientation="vertical"
             tools:context=".MainActivity">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.toggleStudentSelector()}">
+                android:layout_height="wrap_content">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/toolbarImage"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:importantForAccessibility="no"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="12dp">
+                    android:onClick="@{() -> viewModel.toggleStudentSelector()}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
-                        android:id="@+id/student_image"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="16dp"
-                        android:contentDescription="@null"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:userAvatar="@{viewModel.data.selectedStudent.avatarUrl}"
-                        app:userName="@{viewModel.data.selectedStudent.name}" />
-
-                    <TextView
-                        android:id="@+id/student_name"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@{viewModel.data.selectedStudent.name}"
-                        android:textColor="@color/textLightest"
-                        app:layout_constraintEnd_toStartOf="@id/student_selector_arrow"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/student_image" />
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="12dp">
 
-                    <ImageView
-                        android:id="@+id/student_selector_arrow"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_arrow_down"
-                        app:layout_constraintBottom_toBottomOf="@id/student_name"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/student_name"
-                        app:layout_constraintTop_toTopOf="@id/student_name"
-                        app:rotationAnim="@{viewModel.data.studentSelectorExpanded ? -180 : 0}"
-                        app:tint="@color/textLightest" />
+                        <ImageView
+                            android:id="@+id/student_image"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="16dp"
+                            android:contentDescription="@null"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:userAvatar="@{viewModel.data.selectedStudent.avatarUrl}"
+                            app:userName="@{viewModel.data.selectedStudent.name}" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/student_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@{viewModel.data.selectedStudent.name}"
+                            android:textColor="@color/textLightest"
+                            app:layout_constraintEnd_toStartOf="@id/student_selector_arrow"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/student_image" />
 
-            </androidx.appcompat.widget.Toolbar>
+                        <ImageView
+                            android:id="@+id/student_selector_arrow"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginStart="8dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_arrow_down"
+                            app:layout_constraintBottom_toBottomOf="@id/student_name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/student_name"
+                            app:layout_constraintTop_toTopOf="@id/student_name"
+                            app:rotationAnim="@{viewModel.data.studentSelectorExpanded ? -180 : 0}"
+                            app:tint="@color/textLightest" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.appcompat.widget.Toolbar>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:id="@+id/student_list_container"
