@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.common.ui
 
 import android.app.IntentService
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
