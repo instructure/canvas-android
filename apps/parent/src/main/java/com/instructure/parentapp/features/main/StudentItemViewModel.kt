@@ -26,9 +26,9 @@ data class StudentItemViewModel(
     private val onStudentSelected: (Long) -> Unit
 ) : ItemViewModel {
 
-    override val layoutId = R.layout.view_student_item
+    override val layoutId = R.layout.item_student
 
     fun onStudentClick() {
-        onStudentSelected.invoke(studentItemViewData.studentId)
+        onStudentSelected(studentItemViewData.studentId)
     }
 }
