@@ -41,6 +41,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <instrumentation
         android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
@@ -226,8 +227,15 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".mobius.common.ui.SubmissionService"
-            android:exported="false" />
+        <service
+            android:name=".mobius.common.ui.SubmissionService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
 
         <!-- Widget Items -->
         <activity
@@ -274,10 +282,6 @@
             android:theme="@style/CanvasMaterialTheme_Default"
             android:exported="true"
             android:screenOrientation="portrait"/>
-
-        <service
-            android:name="com.instructure.pandautils.services.NotoriousUploadService"
-            android:exported="false" />
 
         <receiver android:name=".receivers.InitializeReceiver"
             android:exported="true">
