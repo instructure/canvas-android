@@ -15,15 +15,22 @@
  *
  */
 
-package com.instructure.parentapp.util
+package com.instructure.parentapp.di
 
-import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.GsonPref
-import com.instructure.canvasapi2.utils.PrefManager
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
+@Module
+@InstallIn(FragmentComponent::class)
+class ToDoModule {
 
-object ParentPrefs : PrefManager("parentSP") {
-
-    var currentStudent: User? by GsonPref(User::class.java, null, "current_student", false)
-
+    @Provides
+    fun provideToDoRouter(activity: FragmentActivity): ToDoRouter {
+        // TODO: Implement
+        throw NotImplementedError()
+    }
 }

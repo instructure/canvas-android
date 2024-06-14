@@ -14,43 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di.feature
+
+package com.instructure.parentapp.di
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.calendar.CalendarRepository
-import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.features.calendarevent.details.EventRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
-import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class CalendarModule {
+class EventModule {
 
     @Provides
-    fun provideCalendarRouter(activity: FragmentActivity): CalendarRouter {
-        // TODO: Implement
-        throw NotImplementedError()
-    }
-}
-
-@Module
-@InstallIn(ViewModelComponent::class)
-class CalendarViewModelModule {
-
-    @Provides
-    fun provideCalendarRepository(
-        plannerApi: PlannerAPI.PlannerInterface,
-        coursesApi: CourseAPI.CoursesInterface,
-        groupsApi: GroupAPI.GroupInterface,
-        apiPrefs: ApiPrefs
-    ): CalendarRepository {
+    fun provideEventRouter(activity: FragmentActivity): EventRouter {
         // TODO: Implement
         throw NotImplementedError()
     }

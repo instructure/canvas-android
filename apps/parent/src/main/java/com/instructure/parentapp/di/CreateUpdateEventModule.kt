@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.di.feature
+package com.instructure.parentapp.di
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
