@@ -140,10 +140,14 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        compose true
     }
     hilt {
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
 }
 
@@ -206,4 +210,6 @@ dependencies {
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }

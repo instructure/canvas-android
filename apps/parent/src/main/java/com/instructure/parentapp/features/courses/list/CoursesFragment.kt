@@ -22,26 +22,53 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.instructure.pandautils.binding.viewBinding
-import com.instructure.parentapp.R
-import com.instructure.parentapp.databinding.FragmentCoursesBinding
+import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.features.main.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
+@AndroidEntryPoint
 class CoursesFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentCoursesBinding::bind)
+    private val viewModel: CoursesViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return layoutInflater.inflate(R.layout.fragment_courses, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
+        lifecycleScope.launch {
+            mainViewModel.data.collectLatest {
+                viewModel.studentChanged(it.selectedStudent)
+            }
+        }
+
+        return ComposeView(requireActivity()).apply {
+            setContent {
+                val uiState by viewModel.uiState.collectAsState()
+                CourseListScreen(uiState, viewModel::handleAction)
+            }
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // TODO this is just to showcase the navigation
-        binding.button.setOnClickListener {
-            findNavController().navigate(Uri.parse("https://anything.instructure.com/courses/1"))
+    private fun handleAction(action: CourseListViewModelAction) {
+        when (action) {
+            is CourseListViewModelAction.NavigateToCourseDetails -> {
+                findNavController().navigate(Uri.parse(action.navigationUrl))
+            }
         }
     }
 }

@@ -150,7 +150,6 @@
                 android:layout_height="wrap_content"
                 android:background="@color/backgroundLightestElevated"
                 android:visibility="gone"
-                app:elevation="0dp"
                 app:itemIconTint="@color/textDarkest"
                 app:itemTextColor="@color/textDarkest"
                 app:labelVisibilityMode="labeled"
