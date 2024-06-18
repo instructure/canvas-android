@@ -39,6 +39,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -164,9 +165,11 @@ private fun OverFlowMenuSegment(
         )
     }
 
-    val showDeleteScopeDialog = remember { mutableStateOf(false) }
-    if (showDeleteScopeDialog.value) {
+    var showDeleteScopeDialog by rememberSaveable { mutableStateOf(false) }
+    var defaultSelection by rememberSaveable { mutableIntStateOf(-1) }
+    if (showDeleteScopeDialog) {
         SingleChoiceAlertDialog(
+            defaultSelection = defaultSelection,
             dialogTitle = stringResource(id = R.string.eventDeleteRecurringConfirmationTitle),
             items = CalendarEventAPI.ModifyEventScope.entries.take(if (eventUiState.isSeriesHead) 2 else 3).map {
                 stringResource(id = it.stringRes)
@@ -174,29 +177,32 @@ private fun OverFlowMenuSegment(
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.delete),
             onDismissRequest = {
-                showDeleteScopeDialog.value = false
+                showDeleteScopeDialog = false
             },
             onConfirmation = {
-                showDeleteScopeDialog.value = false
+                showDeleteScopeDialog = false
                 actionHandler(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.entries[it]))
+            },
+            onItemSelected = {
+                defaultSelection = it
             }
         )
     }
 
-    val showMenu = remember { mutableStateOf(false) }
+    var showMenu by rememberSaveable { mutableStateOf(false) }
     OverflowMenu(
         modifier = modifier
             .background(color = colorResource(id = R.color.backgroundLightestElevated))
             .testTag("overFlowMenu"),
-        showMenu = showMenu.value,
+        showMenu = showMenu,
         onDismissRequest = {
-            showMenu.value = !showMenu.value
+            showMenu = !showMenu
         }
     ) {
         if (eventUiState.toolbarUiState.editAllowed) {
             DropdownMenuItem(
                 onClick = {
-                    showMenu.value = !showMenu.value
+                    showMenu = !showMenu
                     actionHandler(EventAction.EditEvent)
                 }
             ) {
@@ -208,9 +214,9 @@ private fun OverFlowMenuSegment(
         }
         DropdownMenuItem(
             onClick = {
-                showMenu.value = !showMenu.value
+                showMenu = !showMenu
                 if (eventUiState.isSeriesEvent) {
-                    showDeleteScopeDialog.value = true
+                    showDeleteScopeDialog = true
                 } else {
                     showDeleteConfirmationDialog = true
                 }
