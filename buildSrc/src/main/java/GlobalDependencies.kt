@@ -7,7 +7,7 @@ object Versions {
     const val TARGET_SDK = 33
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "7.4.2"
+    const val ANDROID_GRADLE_TOOLS = "8.1.0"
     const val BUILD_TOOLS = "34.0.0"
 
     /* Testing */

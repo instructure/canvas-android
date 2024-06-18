@@ -23,7 +23,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
-apply plugin: 'com.heapanalytics.android'
+//apply plugin: 'com.heapanalytics.android'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -163,10 +163,6 @@ android {
         abortOnError false
     }
 
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
-
     lintOptions {
         disable 'MissingTranslation'
     }
@@ -193,23 +189,23 @@ android {
         unitTests.includeAndroidResources = true
     }
 
-    registerTransform(
-            new ProjectTransformer(
-                    android,
-                    new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
-                    new PageViewTransformer(),
-                    new LocaleTransformer(project),
-                    new ScreenViewTransformer("teacher")
-            )
-    )
+//    registerTransform(
+//            new ProjectTransformer(
+//                    android,
+//                    new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class'),
+//                    new PageViewTransformer(),
+//                    new LocaleTransformer(project),
+//                    new ScreenViewTransformer("teacher")
+//            )
+//    )
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     buildFeatures {

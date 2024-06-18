@@ -1,9 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
-apply plugin: 'com.apollographql.apollo'
+//apply plugin: 'com.apollographql.apollo'
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 buildscript {
     repositories {
@@ -20,14 +20,14 @@ repositories {
     mavenCentral()
 }
 
-apollo {
-    useJavaBeansSemanticNaming = true
-    customTypeMapping = [
-            "URL" : "java.lang.String",
-            "DateTime": "java.util.Date",
-            "ID"  : "java.lang.String"
-    ]
-}
+//apollo {
+//    useJavaBeansSemanticNaming = true
+//    customTypeMapping = [
+//            "URL" : "java.lang.String",
+//            "DateTime": "java.util.Date",
+//            "ID"  : "java.lang.String"
+//    ]
+//}
 
 dependencies {
     /* Kotlin */
@@ -58,8 +58,12 @@ task addPrivateData {
     }
 }
 
-compileKotlin.dependsOn(addPrivateData)
+//compileKotlin.dependsOn(addPrivateData)
 
+tasks.named('compileKotlin') {
+    dependsOn addPrivateData
+    dependsOn generateTestServiceApolloSources
+}
 
 task customClean {
     finalizedBy {

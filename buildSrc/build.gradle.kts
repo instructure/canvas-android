@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val agpVersion= "7.4.2"
+val agpVersion= "8.1.0"
 
 dependencies {
     implementation("com.android.tools.build:gradle:$agpVersion")
@@ -27,6 +27,8 @@ dependencies {
     implementation("org.javassist:javassist:3.24.1-GA")
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23")
+    implementation("org.ow2.asm:asm:9.7")
+    implementation("org.ow2.asm:asm-commons:9.7")
 }
 
 plugins {
