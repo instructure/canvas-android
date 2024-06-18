@@ -29,6 +29,7 @@ import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.time.Year
+import java.util.Calendar
 
 @HiltAndroidTest
 class CalendarE2ETest: TeacherComposeTest() {
@@ -206,5 +207,115 @@ class CalendarE2ETest: TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Assert that after the deletion the empty view will be displayed since we don't have any To Do items on the current day.")
         calendarScreenPage.assertEmptyView()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E)
+    fun testCalendarScreenE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 2)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page. Assert that the page title is 'Calendar' and there is no item in it yet.")
+        dashboardPage.clickCalendarTab()
+        calendarScreenPage.assertCalendarPageTitle()
+        calendarScreenPage.assertEmptyView()
+
+        //Calendar expand/collapse state remains sometimes from previous runs and this way we are handling whether if it's starting from a collapsed or expanded state.
+        if(calendarScreenPage.checkCalendarCollapsed()) {
+            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to expand the calendar.")
+            calendarScreenPage.clickCalendarHeader()
+
+            Log.d(STEP_TAG, "Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
+            calendarScreenPage.assertCalendarExpanded()
+
+            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar. Assert that the Calendar is collapsed and only 1 week is displayed in this state.")
+            calendarScreenPage.clickCalendarHeader()
+            calendarScreenPage.assertCalendarCollapsed()
+        }
+        else if(calendarScreenPage.checkCalendarExpanded()) {
+            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar.")
+            calendarScreenPage.clickCalendarHeader()
+
+            Log.d(STEP_TAG, "Assert that the Calendar is collapsed and only 1 week is displayed in this state.")
+            calendarScreenPage.assertCalendarCollapsed()
+
+            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar. Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
+            calendarScreenPage.clickCalendarHeader()
+            calendarScreenPage.assertCalendarExpanded()
+        }
+
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add Event' to create a new event.")
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddEvent()
+
+        Log.d(STEP_TAG, "Assert that the Calendar Event Page is displayed and the title is 'New Event' as we are making a new one.")
+        calendarEventCreateEditPage.assertTitle("New Event")
+
+        Log.d(STEP_TAG, "Type 'New Test Event' to the title input field and click on 'Save'.")
+        val newEventTitle = "New Test Event"
+        calendarEventCreateEditPage.typeTitle(newEventTitle)
+        calendarEventCreateEditPage.clickSave()
+
+        Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
+        val currentDate = getCurrentDateInCanvasCalendarFormat()
+        calendarScreenPage.assertItemDetails(newEventTitle, teacher.name, currentDate)
+
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddTodo()
+
+        Log.d(STEP_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+
+        val testTodoTitle = "Test ToDo Title"
+        val testTodoDescription = "Details of ToDo"
+
+        Log.d(STEP_TAG, "Fill the title with '$testTodoTitle' and the details/description with '$testTodoDescription'.")
+        calendarToDoCreateUpdatePage.typeTodoTitle(testTodoTitle)
+        calendarToDoCreateUpdatePage.typeDetails(testTodoDescription)
+
+        val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }
+        Log.d(STEP_TAG, "Select a date which is 2 days in the future from today and select '${course.name}' course as the canvas context.")
+        calendarToDoCreateUpdatePage.selectDate(calendar)
+        calendarToDoCreateUpdatePage.selectCanvasContext(course.name)
+
+        Log.d(STEP_TAG, "Click on the 'Save' button.")
+        calendarToDoCreateUpdatePage.clickSave()
+
+        Log.d(STEP_TAG, "Assert that the created To Do item is not displayed on today's calendar.")
+        calendarScreenPage.assertItemNotExist(testTodoTitle) //It's created for 2 days from today so it shouldn't displayed for today.
+
+        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
+        calendarScreenPage.swipeEventsLeft()
+        calendarScreenPage.swipeEventsLeft()
+
+        Log.d(STEP_TAG, "Assert that the '$testTodoTitle' To Do item is displayed because we created it to this particular day. Assert that '$newEventTitle' calendar event is not displayed because it's created for today.")
+        calendarScreenPage.assertItemDisplayed(testTodoTitle)
+        calendarScreenPage.assertItemNotExist(newEventTitle)
+
+        Log.d(STEP_TAG, "Click on 'Calendars' to open the Calendar Filter Page.")
+        calendarScreenPage.clickCalendarFilters()
+
+        Log.d(STEP_TAG, "Click on the checkbox before the '${course.name}' course to filter it out from the calendar and close the Calendar Filter Page.")
+        calendarFilterPage.clickOnFilterItem(course.name)
+        calendarFilterPage.closeFilterPage()
+
+        Log.d(STEP_TAG, "Assert that the '$testTodoTitle' To Do item is not displayed because we filtered out from the calendar. Assert that the empty view is displayed because there are no items for today.")
+        calendarScreenPage.assertItemNotExist(testTodoTitle)
+        calendarScreenPage.assertEmptyView()
+
+        Log.d(STEP_TAG, "Click on the 'Today' button to navigate back to the current day.")
+        calendarScreenPage.clickTodayButton()
+
+        Log.d(STEP_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
+        calendarScreenPage.assertItemDetails(newEventTitle, teacher.name, currentDate)
     }
 }
