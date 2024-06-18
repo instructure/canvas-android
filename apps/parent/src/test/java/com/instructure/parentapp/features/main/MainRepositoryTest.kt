@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.main
+package com.instructure.parentapp.features.main
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.parentapp.features.main.MainRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

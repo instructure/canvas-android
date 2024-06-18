@@ -22,12 +22,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.Utils
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.login.routevalidator.RouteValidatorActivity
+import com.instructure.parentapp.features.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,6 +55,20 @@ class LoginActivity : BaseLoginInitActivity() {
     }
 
     override fun userAgent() = Const.PARENT_USER_AGENT
+
+    /**
+     * ONLY USE FOR UI TESTING
+     * Skips the traditional login process by directly setting the domain, token, and user info.
+     */
+    fun loginWithToken(token: String, domain: String, user: User) {
+        ApiPrefs.accessToken = token
+        ApiPrefs.domain = domain
+        ApiPrefs.user = user
+        ApiPrefs.userAgent = Utils.generateUserAgent(this, userAgent())
+        val intent = MainActivity.createIntent(this, Uri.EMPTY)
+        finish()
+        startActivity(intent)
+    }
 
     companion object {
         fun createIntent(context: Context): Intent {

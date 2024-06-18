@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.main
+package com.instructure.parentapp.features.main
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -33,11 +33,6 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.R
-import com.instructure.parentapp.features.main.MainAction
-import com.instructure.parentapp.features.main.MainRepository
-import com.instructure.parentapp.features.main.MainViewModel
-import com.instructure.parentapp.features.main.StudentItemViewData
-import com.instructure.parentapp.features.main.UserViewData
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
 import io.mockk.coVerify

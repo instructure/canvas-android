@@ -42,9 +42,12 @@ android {
         versionCode 50
         versionName "3.10.0"
 
+        buildConfigField "boolean", "IS_TESTING", "false"
+        testInstrumentationRunner 'com.instructure.parentapp.ui.espresso.ParentHiltTestRunner'
+        testInstrumentationRunnerArguments disableAnalytics: 'true'
+
         /* Add private data */
         PrivateData.merge(project, "parent")
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     packagingOptions {
@@ -190,6 +193,7 @@ dependencies {
     kapt Libs.HILT_COMPILER
     implementation Libs.HILT_ANDROIDX_WORK
     kapt Libs.HILT_ANDROIDX_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
 
     /* ROOM */
     implementation Libs.ROOM

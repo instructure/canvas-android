@@ -59,14 +59,14 @@ class CoursesFragment : Fragment() {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CourseListScreen(uiState, viewModel::handleAction)
+                CoursesScreen(uiState, viewModel::handleAction)
             }
         }
     }
 
-    private fun handleAction(action: CourseListViewModelAction) {
+    private fun handleAction(action: CoursesViewModelAction) {
         when (action) {
-            is CourseListViewModelAction.NavigateToCourseDetails -> {
+            is CoursesViewModelAction.NavigateToCourseDetails -> {
                 findNavController().navigate(Uri.parse(action.navigationUrl))
             }
         }

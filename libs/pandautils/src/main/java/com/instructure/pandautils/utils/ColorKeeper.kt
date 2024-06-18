@@ -39,6 +39,7 @@ import com.instructure.pandautils.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Response
+import kotlin.math.absoluteValue
 
 private const val PREFERENCE_FILE_NAME = "color_keeper_prefs"
 
@@ -93,7 +94,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
             R.color.shamrock
         )
 
-        val index = user.id % colors.size
+        val index = user.id.absoluteValue % colors.size
         val color = ContextCompat.getColor(ContextKeeper.appContext, colors[index.toInt()])
         val themedColor = createThemedColor(color)
         cachedThemedColors += user.contextId to themedColor

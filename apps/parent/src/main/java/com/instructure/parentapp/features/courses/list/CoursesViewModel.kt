@@ -47,10 +47,10 @@ class CoursesViewModel @Inject constructor(
     private val colorKeeper: ColorKeeper,
     private val apiPrefs: ApiPrefs
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(CourseListUiState())
+    private val _uiState = MutableStateFlow(CoursesUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _events = Channel<CourseListViewModelAction>()
+    private val _events = Channel<CoursesViewModelAction>()
     val events = _events.receiveAsFlow()
 
     private var selectedStudent: User? = null
@@ -73,7 +73,7 @@ class CoursesViewModel @Inject constructor(
                 state.copy(
                     loading = false,
                     courseListItems = courses.map {
-                        CourseListItemUiState(it.id, it.name, it.courseCode.orEmpty(), getGradeText(it))
+                        CourseItemUiState(it.id, it.name, it.courseCode.orEmpty(), getGradeText(it))
                     }
                 )
             }
@@ -121,19 +121,19 @@ class CoursesViewModel @Inject constructor(
         }
     }
 
-    fun handleAction(action: CourseListAction) {
+    fun handleAction(action: CoursesAction) {
         when (action) {
-            is CourseListAction.CourseTapped -> {
+            is CoursesAction.CourseTapped -> {
                 viewModelScope.launch {
                     _events.send(
-                        CourseListViewModelAction.NavigateToCourseDetails(
+                        CoursesViewModelAction.NavigateToCourseDetails(
                             "${apiPrefs.fullDomain}/courses/${action.courseId}"
                         )
                     )
                 }
             }
 
-            is CourseListAction.Refresh -> {
+            is CoursesAction.Refresh -> {
                 loadCourses(true)
             }
         }

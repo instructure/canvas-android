@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -38,7 +40,7 @@ import com.instructure.pandautils.R
 fun EmptyContent(
     emptyTitle: String,
     emptyMessage: String,
-    image: Int,
+    @DrawableRes imageRes: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -47,9 +49,11 @@ fun EmptyContent(
         modifier = modifier
     ) {
         Image(
-            painter = painterResource(id = image),
+            painter = painterResource(id = imageRes),
             contentDescription = null,
-            modifier = Modifier.size(250.dp)
+            modifier = Modifier
+                .size(250.dp)
+                .testTag(imageRes.toString())
         )
         Spacer(modifier = Modifier.height(32.dp))
         Text(
@@ -80,6 +84,6 @@ fun EmptyContentPreview() {
     EmptyContent(
         emptyTitle = "Empty Title",
         emptyMessage = "Empty Message",
-        image = R.drawable.ic_panda_book
+        imageRes = R.drawable.ic_panda_book
     )
 }

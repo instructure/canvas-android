@@ -36,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,9 +49,9 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 
 
 @Composable
-internal fun CourseListScreen(
-    uiState: CourseListUiState,
-    actionHandler: (CourseListAction) -> Unit,
+internal fun CoursesScreen(
+    uiState: CoursesUiState,
+    actionHandler: (CoursesAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
@@ -61,14 +62,14 @@ internal fun CourseListScreen(
                     ErrorContent(
                         errorMessage = stringResource(id = R.string.errorLoadingCourses),
                         retryClick = {
-                            actionHandler(CourseListAction.Refresh)
+                            actionHandler(CoursesAction.Refresh)
                         }, modifier = Modifier.fillMaxSize()
                     )
                 } else if (uiState.courseListItems.isEmpty() && !uiState.loading) {
                     EmptyContent(
                         emptyTitle = stringResource(id = R.string.parentNoCourses),
                         emptyMessage = stringResource(id = R.string.parentNoCoursesMessage),
-                        image = R.drawable.ic_panda_book,
+                        imageRes = R.drawable.ic_panda_book,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
@@ -89,14 +90,14 @@ internal fun CourseListScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CourseListContent(
-    uiState: CourseListUiState,
-    actionHandler: (CourseListAction) -> Unit,
+    uiState: CoursesUiState,
+    actionHandler: (CoursesAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.loading,
         onRefresh = {
-            actionHandler(CourseListAction.Refresh)
+            actionHandler(CoursesAction.Refresh)
         }
     )
 
@@ -111,7 +112,7 @@ private fun CourseListContent(
             if (!uiState.loading) {
                 items(uiState.courseListItems) {
                     CourseListItem(it, uiState.studentColor, Modifier.clickable {
-                        actionHandler(CourseListAction.CourseTapped(it.courseId))
+                        actionHandler(CoursesAction.CourseTapped(it.courseId))
                     })
                 }
             }
@@ -120,7 +121,9 @@ private fun CourseListContent(
         PullRefreshIndicator(
             refreshing = uiState.loading,
             state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .testTag("pullRefreshIndicator"),
             contentColor = Color(uiState.studentColor)
         )
     }
@@ -128,12 +131,12 @@ private fun CourseListContent(
 
 @Composable
 private fun CourseListItem(
-    uiState: CourseListItemUiState,
+    uiState: CourseItemUiState,
     studentColor: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.testTag("courseListItem")
     ) {
         Text(
             text = uiState.courseName,
@@ -151,7 +154,8 @@ private fun CourseListItem(
             Text(
                 text = uiState.grade,
                 color = Color(studentColor),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("gradeText")
             )
         }
     }
@@ -160,13 +164,13 @@ private fun CourseListItem(
 @Preview(showBackground = true)
 @Composable
 private fun CourseListPreview() {
-    CourseListScreen(
-        uiState = CourseListUiState(
+    CoursesScreen(
+        uiState = CoursesUiState(
             studentColor = android.graphics.Color.RED,
             courseListItems = listOf(
-                CourseListItemUiState(1L, "Course 1", "course-1", "A"),
-                CourseListItemUiState(2L, "Course 2", "course-2", ""),
-                CourseListItemUiState(3L, "Course 3", "", "C")
+                CourseItemUiState(1L, "Course 1", "course-1", "A"),
+                CourseItemUiState(2L, "Course 2", "course-2", ""),
+                CourseItemUiState(3L, "Course 3", "", "C")
             )
         ),
         actionHandler = {}
