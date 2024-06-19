@@ -45,8 +45,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -142,16 +145,16 @@ private fun CustomFrequencyContent(
         )
     }
 
-    val showNumberOfOccurrencesDialog = remember { mutableStateOf(false) }
-    if (showNumberOfOccurrencesDialog.value) {
+    var showNumberOfOccurrencesDialog by rememberSaveable { mutableStateOf(false) }
+    if (showNumberOfOccurrencesDialog) {
         NumberOfOccurrencesDialog(
             initialValue = uiState.selectedOccurrences,
             onDismiss = {
-                showNumberOfOccurrencesDialog.value = false
+                showNumberOfOccurrencesDialog = false
             },
             onConfirm = {
                 actionHandler(CreateUpdateEventAction.UpdateCustomFrequencyOccurrences(it))
-                showNumberOfOccurrencesDialog.value = false
+                showNumberOfOccurrencesDialog = false
             }
         )
     }
@@ -293,13 +296,13 @@ private fun CustomFrequencyContent(
                 modifier = modifier
                     .height(48.dp)
                     .clickable {
-                        showNumberOfOccurrencesDialog.value = true
+                        showNumberOfOccurrencesDialog = true
                     }
             ) {
                 RadioButton(
                     selected = uiState.selectedOccurrences > 0,
                     onClick = {
-                        showNumberOfOccurrencesDialog.value = true
+                        showNumberOfOccurrencesDialog = true
                     },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = Color(color = ThemePrefs.brandColor),
