@@ -51,7 +51,6 @@ import com.instructure.pandautils.utils.show
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityMainBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
-import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.util.ParentLogoutTask
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleAction(action: MainAction) = when (action) {
         is MainAction.ShowToast -> Toast.makeText(this, action.message, Toast.LENGTH_LONG).show()
-        is MainAction.LocaleChanged -> LocaleUtils.restartApp(this, LoginActivity::class.java)
+        is MainAction.LocaleChanged -> LocaleUtils.restartApp(this)
     }
 
     private fun setupNavigation() {
