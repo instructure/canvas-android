@@ -46,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -213,7 +214,9 @@ private fun CreateUpdateEventTopAppBar(
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.textDarkest),
                     strokeWidth = 3.dp,
-                    modifier = Modifier.size(32.dp).testTag("savingProgressIndicator")
+                    modifier = Modifier
+                        .size(32.dp)
+                        .testTag("savingProgressIndicator")
                 )
             } else {
                 ActionsSegment(
@@ -235,8 +238,8 @@ private fun ActionsSegment(
     actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val showModifyScopeDialog = remember { mutableStateOf(false) }
-    if (showModifyScopeDialog.value) {
+    var showModifyScopeDialog by rememberSaveable { mutableStateOf(false) }
+    if (showModifyScopeDialog) {
         SingleChoiceAlertDialog(
             dialogTitle = stringResource(id = R.string.eventUpdateRecurringTitle),
             items = CalendarEventAPI.ModifyEventScope.entries.take(if (uiState.isSeriesHead) 2 else 3).map {
@@ -245,10 +248,10 @@ private fun ActionsSegment(
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.confirm),
             onDismissRequest = {
-                showModifyScopeDialog.value = false
+                showModifyScopeDialog = false
             },
             onConfirmation = {
-                showModifyScopeDialog.value = false
+                showModifyScopeDialog = false
                 actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.entries[it]))
             }
         )
@@ -260,7 +263,7 @@ private fun ActionsSegment(
         onClick = {
             focusManager.clearFocus()
             if (uiState.isSeriesEvent) {
-                showModifyScopeDialog.value = true
+                showModifyScopeDialog = true
             } else {
                 actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
             }
@@ -284,33 +287,73 @@ private fun CreateUpdateEventContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val datePickerDialog = remember {
-        getDatePickerDialog(
-            context = context,
-            date = uiState.date,
-            onDateSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateDate(it))
-            }
-        )
+    var showDatePickerDialog by rememberSaveable {
+        mutableStateOf(false)
     }
-    val startTimePickerDialog = remember {
-        getTimePickerDialog(
-            context = context,
-            time = uiState.startTime ?: LocalTime.of(0, 0),
-            onTimeSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
-            }
-        )
+    LaunchedEffect(showDatePickerDialog) {
+        if (showDatePickerDialog) {
+            getDatePickerDialog(
+                context = context,
+                date = uiState.date,
+                onDateSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateDate(it))
+                    showDatePickerDialog = false
+                },
+                onCancel = {
+                    showDatePickerDialog = false
+                },
+                onDismiss = {
+                    showDatePickerDialog = false
+                }
+            ).show()
+        }
     }
-    val endTimePickerDialog = remember {
-        getTimePickerDialog(
-            context = context,
-            time = uiState.endTime ?: LocalTime.of(0, 0),
-            onTimeSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
-            }
-        )
+
+    var showStartTimePickerDialog by rememberSaveable {
+        mutableStateOf(false)
     }
+    var showEndTimePickerDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(showStartTimePickerDialog) {
+        if (showStartTimePickerDialog) {
+            getTimePickerDialog(
+                context = context,
+                time = uiState.startTime ?: LocalTime.of(0, 0),
+                onTimeSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
+                    showStartTimePickerDialog = false
+                },
+                onCancel = {
+                    showStartTimePickerDialog = false
+                },
+                onDismiss = {
+                    showStartTimePickerDialog = false
+                }
+            ).show()
+        }
+    }
+
+    LaunchedEffect(showEndTimePickerDialog) {
+        if (showEndTimePickerDialog) {
+            getTimePickerDialog(
+                context = context,
+                time = uiState.endTime ?: LocalTime.of(0, 0),
+                onTimeSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
+                    showEndTimePickerDialog = false
+                },
+                onCancel = {
+                    showEndTimePickerDialog = false
+                },
+                onDismiss = {
+                    showEndTimePickerDialog = false
+                }
+            ).show()
+        }
+    }
+
     if (uiState.selectFrequencyUiState.showFrequencyDialog) {
         val frequencies = uiState.selectFrequencyUiState.frequencies.keys.toList()
         SingleChoiceAlertDialog(
@@ -399,7 +442,7 @@ private fun CreateUpdateEventContent(
                 value = uiState.formattedDate,
                 onClick = {
                     focusManager.clearFocus()
-                    datePickerDialog.show()
+                    showDatePickerDialog = true
                 }
             )
             val preferredTimePattern = DateHelper.getPreferredTimeFormat(context).toPattern()
@@ -409,7 +452,7 @@ private fun CreateUpdateEventContent(
                     ?: stringResource(id = R.string.createEventStartTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
-                    startTimePickerDialog.show()
+                    showStartTimePickerDialog = true
                 }
             )
             LabelValueRow(
@@ -418,7 +461,7 @@ private fun CreateUpdateEventContent(
                     ?: stringResource(id = R.string.createEventEndTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
-                    endTimePickerDialog.show()
+                    showEndTimePickerDialog = true
                 }
             )
             LabelValueRow(
@@ -444,13 +487,15 @@ private fun CreateUpdateEventContent(
                 onValueChange = {
                     actionHandler(CreateUpdateEventAction.UpdateLocation(it))
                 },
-                modifier = Modifier.onFocusChanged {
-                    focusedTextFields = if (it.hasFocus) {
-                        focusedTextFields + LOCATION
-                    } else {
-                        focusedTextFields - LOCATION
+                modifier = Modifier
+                    .onFocusChanged {
+                        focusedTextFields = if (it.hasFocus) {
+                            focusedTextFields + LOCATION
+                        } else {
+                            focusedTextFields - LOCATION
+                        }
                     }
-                }.testTag("locationTextField"),
+                    .testTag("locationTextField"),
             )
             LabeledTextField(
                 label = stringResource(id = R.string.createEventAddressLabel),
@@ -458,13 +503,15 @@ private fun CreateUpdateEventContent(
                 onValueChange = {
                     actionHandler(CreateUpdateEventAction.UpdateAddress(it))
                 },
-                modifier = Modifier.onFocusChanged {
-                    focusedTextFields = if (it.hasFocus) {
-                        focusedTextFields + ADDRESS
-                    } else {
-                        focusedTextFields - ADDRESS
+                modifier = Modifier
+                    .onFocusChanged {
+                        focusedTextFields = if (it.hasFocus) {
+                            focusedTextFields + ADDRESS
+                        } else {
+                            focusedTextFields - ADDRESS
+                        }
                     }
-                }.testTag("addressTextField"),
+                    .testTag("addressTextField"),
             )
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
@@ -482,7 +529,8 @@ private fun CreateUpdateEventContent(
                     html = uiState.details,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp).testTag("detailsComposeRCE"),
+                        .padding(horizontal = 16.dp)
+                        .testTag("detailsComposeRCE"),
                 ) {
                     actionHandler(CreateUpdateEventAction.UpdateDetails(it))
                 }
