@@ -42,8 +42,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -239,23 +243,45 @@ private fun CreateUpdateToDoContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val datePickerDialog = remember {
-        getDatePickerDialog(
-            context = context,
-            date = uiState.date,
-            onDateSelected = {
-                actionHandler(CreateUpdateToDoAction.UpdateDate(it))
-            }
-        )
+
+    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(showDatePickerDialog) {
+        if (showDatePickerDialog) {
+            getDatePickerDialog(
+                context = context,
+                date = uiState.date,
+                onDateSelected = {
+                    actionHandler(CreateUpdateToDoAction.UpdateDate(it))
+                    showDatePickerDialog = false
+                },
+                onCancel = {
+                    showDatePickerDialog = false
+                },
+                onDismiss = {
+                    showDatePickerDialog = false
+                }
+            ).show()
+        }
     }
-    val timePickerDialog = remember {
-        getTimePickerDialog(
-            context = context,
-            time = uiState.time,
-            onTimeSelected = {
-                actionHandler(CreateUpdateToDoAction.UpdateTime(it))
-            }
-        )
+
+    var showTimePickerDialog by rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(showTimePickerDialog) {
+        if (showTimePickerDialog) {
+            getTimePickerDialog(
+                context = context,
+                time = uiState.time,
+                onTimeSelected = {
+                    actionHandler(CreateUpdateToDoAction.UpdateTime(it))
+                    showTimePickerDialog = false
+                },
+                onCancel = {
+                    showTimePickerDialog = false
+                },
+                onDismiss = {
+                    showTimePickerDialog = false
+                }
+            ).show()
+        }
     }
 
     Surface(
@@ -304,7 +330,7 @@ private fun CreateUpdateToDoContent(
                 value = uiState.formattedDate,
                 onClick = {
                     focusManager.clearFocus()
-                    datePickerDialog.show()
+                    showDatePickerDialog = true
                 },
                 modifier = Modifier.testTag("dateRow")
             )
@@ -313,7 +339,7 @@ private fun CreateUpdateToDoContent(
                 value = uiState.formattedTime(LocalContext.current),
                 onClick = {
                     focusManager.clearFocus()
-                    timePickerDialog.show()
+                    showTimePickerDialog = true
                 },
                 modifier = Modifier.testTag("timeRow")
             )

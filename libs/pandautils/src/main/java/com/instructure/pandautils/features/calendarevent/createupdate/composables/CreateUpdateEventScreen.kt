@@ -287,33 +287,73 @@ private fun CreateUpdateEventContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val datePickerDialog = remember {
-        getDatePickerDialog(
-            context = context,
-            date = uiState.date,
-            onDateSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateDate(it))
-            }
-        )
+    var showDatePickerDialog by rememberSaveable {
+        mutableStateOf(false)
     }
-    val startTimePickerDialog = remember {
-        getTimePickerDialog(
-            context = context,
-            time = uiState.startTime ?: LocalTime.of(0, 0),
-            onTimeSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
-            }
-        )
+    LaunchedEffect(showDatePickerDialog) {
+        if (showDatePickerDialog) {
+            getDatePickerDialog(
+                context = context,
+                date = uiState.date,
+                onDateSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateDate(it))
+                    showDatePickerDialog = false
+                },
+                onCancel = {
+                    showDatePickerDialog = false
+                },
+                onDismiss = {
+                    showDatePickerDialog = false
+                }
+            ).show()
+        }
     }
-    val endTimePickerDialog = remember {
-        getTimePickerDialog(
-            context = context,
-            time = uiState.endTime ?: LocalTime.of(0, 0),
-            onTimeSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
-            }
-        )
+
+    var showStartTimePickerDialog by rememberSaveable {
+        mutableStateOf(false)
     }
+    var showEndTimePickerDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(showStartTimePickerDialog) {
+        if (showStartTimePickerDialog) {
+            getTimePickerDialog(
+                context = context,
+                time = uiState.startTime ?: LocalTime.of(0, 0),
+                onTimeSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
+                    showStartTimePickerDialog = false
+                },
+                onCancel = {
+                    showStartTimePickerDialog = false
+                },
+                onDismiss = {
+                    showStartTimePickerDialog = false
+                }
+            ).show()
+        }
+    }
+
+    LaunchedEffect(showEndTimePickerDialog) {
+        if (showEndTimePickerDialog) {
+            getTimePickerDialog(
+                context = context,
+                time = uiState.endTime ?: LocalTime.of(0, 0),
+                onTimeSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
+                    showEndTimePickerDialog = false
+                },
+                onCancel = {
+                    showEndTimePickerDialog = false
+                },
+                onDismiss = {
+                    showEndTimePickerDialog = false
+                }
+            ).show()
+        }
+    }
+
     if (uiState.selectFrequencyUiState.showFrequencyDialog) {
         val frequencies = uiState.selectFrequencyUiState.frequencies.keys.toList()
         SingleChoiceAlertDialog(
@@ -402,7 +442,7 @@ private fun CreateUpdateEventContent(
                 value = uiState.formattedDate,
                 onClick = {
                     focusManager.clearFocus()
-                    datePickerDialog.show()
+                    showDatePickerDialog = true
                 }
             )
             val preferredTimePattern = DateHelper.getPreferredTimeFormat(context).toPattern()
@@ -412,7 +452,7 @@ private fun CreateUpdateEventContent(
                     ?: stringResource(id = R.string.createEventStartTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
-                    startTimePickerDialog.show()
+                    showStartTimePickerDialog = true
                 }
             )
             LabelValueRow(
@@ -421,7 +461,7 @@ private fun CreateUpdateEventContent(
                     ?: stringResource(id = R.string.createEventEndTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
-                    endTimePickerDialog.show()
+                    showEndTimePickerDialog = true
                 }
             )
             LabelValueRow(

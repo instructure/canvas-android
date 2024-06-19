@@ -45,9 +45,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -135,14 +135,28 @@ private fun CustomFrequencyContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val datePickerDialog = remember {
-        getDatePickerDialog(
-            context = context,
-            date = uiState.selectedDate ?: LocalDate.now().plusYears(1),
-            onDateSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateCustomFrequencyEndDate(it))
-            }
-        )
+    var showDatePickerDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(showDatePickerDialog) {
+        if (showDatePickerDialog) {
+            getDatePickerDialog(
+                context = context,
+                date = uiState.selectedDate ?: LocalDate.now().plusYears(1),
+                onDateSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateCustomFrequencyEndDate(it))
+                    showDatePickerDialog = false
+                },
+                onCancel = {
+                    showDatePickerDialog = false
+                },
+                onDismiss = {
+                    showDatePickerDialog = false
+                }
+
+            ).show()
+        }
     }
 
     var showNumberOfOccurrencesDialog by rememberSaveable { mutableStateOf(false) }
@@ -252,13 +266,13 @@ private fun CustomFrequencyContent(
                 modifier = modifier
                     .height(48.dp)
                     .clickable {
-                        datePickerDialog.show()
+                        showDatePickerDialog = true
                     }
             ) {
                 RadioButton(
                     selected = uiState.selectedDate != null,
                     onClick = {
-                        datePickerDialog.show()
+                        showDatePickerDialog = true
                     },
                     colors = RadioButtonDefaults.colors(
                         selectedColor = Color(color = ThemePrefs.brandColor),
