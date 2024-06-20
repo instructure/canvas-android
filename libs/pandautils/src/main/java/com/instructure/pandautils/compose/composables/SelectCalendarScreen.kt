@@ -36,8 +36,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -133,6 +136,8 @@ private fun SelectCalendarItem(
     onCalendarSelected: (CanvasContext) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val localView = LocalView.current
     val color = Color(
         if (canvasContext is User) {
             ThemePrefs.brandColor
@@ -146,10 +151,17 @@ private fun SelectCalendarItem(
             .clickable {
                 onCalendarSelected(canvasContext)
             }
-            .padding(start = 8.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(start = 8.dp, end = 16.dp)
+            .clearAndSetSemantics {
+                contentDescription =
+                    "${canvasContext.name.orEmpty()} ${if (selected) context.getString(R.string.selected) else ""}"
+            }, verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = selected, onClick = {
+                localView.announceForAccessibility(
+                    context.getString(R.string.a11y_selectedCalendar)
+                )
                 onCalendarSelected(canvasContext)
             }, colors = RadioButtonDefaults.colors(
                 selectedColor = color,
@@ -192,5 +204,16 @@ private fun SelectCalendarPreview() {
         ),
         onCalendarSelected = {},
         navigationActionClick = {}
+    )
+}
+
+@Preview
+@Composable
+private fun SelectCalendarItemPreview() {
+    SelectCalendarItem(
+        canvasContext = Course(id = 1, name = "Black Holes"),
+        selected = false,
+        onCalendarSelected = {},
+        modifier = Modifier.fillMaxWidth()
     )
 }
