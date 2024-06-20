@@ -26,7 +26,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.espresso.assertTextColor
 import com.instructure.pandares.R
-import com.instructure.parentapp.features.courses.list.CourseItemUiState
+import com.instructure.parentapp.features.courses.list.CourseListItemUiState
 import com.instructure.parentapp.features.courses.list.CoursesScreen
 import com.instructure.parentapp.features.courses.list.CoursesUiState
 import org.junit.Rule
@@ -45,7 +45,7 @@ class CoursesScreenTest {
         composeTestRule.setContent {
             CoursesScreen(
                 uiState = CoursesUiState(
-                    loading = false,
+                    isLoading = false,
                     courseListItems = emptyList()
                 ),
                 actionHandler = {}
@@ -65,8 +65,8 @@ class CoursesScreenTest {
         composeTestRule.setContent {
             CoursesScreen(
                 uiState = CoursesUiState(
-                    loading = false,
-                    loadError = true
+                    isLoading = false,
+                    isError = true
                 ),
                 actionHandler = {}
             )
@@ -84,10 +84,10 @@ class CoursesScreenTest {
         composeTestRule.setContent {
             CoursesScreen(
                 uiState = CoursesUiState(
-                    loading = false,
+                    isLoading = false,
                     studentColor = android.graphics.Color.RED,
                     courseListItems = listOf(
-                        CourseItemUiState(
+                        CourseListItemUiState(
                             courseId = 1,
                             courseName = "Course 1",
                             courseCode = "C1",
@@ -116,7 +116,7 @@ class CoursesScreenTest {
         composeTestRule.setContent {
             CoursesScreen(
                 uiState = CoursesUiState(
-                    loading = true
+                    isLoading = true
                 ),
                 actionHandler = {}
             )

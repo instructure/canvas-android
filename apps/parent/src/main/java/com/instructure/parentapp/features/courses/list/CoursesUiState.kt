@@ -5,17 +5,19 @@ import androidx.annotation.ColorInt
 
 
 data class CoursesUiState(
-    val loading: Boolean = false,
-    val loadError: Boolean = false,
-    val courseListItems: List<CourseItemUiState> = emptyList(),
+    val isLoading: Boolean = true,
+    val isError: Boolean = false,
+    val courseListItems: List<CourseListItemUiState> = emptyList(),
     @ColorInt val studentColor: Int = Color.BLACK
-)
+) {
+    val isEmpty = courseListItems.isEmpty() && !isLoading
+}
 
-data class CourseItemUiState(
+data class CourseListItemUiState(
     val courseId: Long,
     val courseName: String = "",
-    val courseCode: String = "",
-    val grade: String = ""
+    val courseCode: String? = null,
+    val grade: String? = null
 )
 
 sealed class CoursesAction {

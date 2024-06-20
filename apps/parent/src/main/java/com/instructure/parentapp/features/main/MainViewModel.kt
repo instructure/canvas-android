@@ -50,7 +50,8 @@ class MainViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val parentPrefs: ParentPrefs,
     private val colorKeeper: ColorKeeper,
-    private val themePrefs: ThemePrefs
+    private val themePrefs: ThemePrefs,
+    private val selectedStudentHolder: SelectedStudentHolder
 ) : ViewModel() {
 
     private val _events = Channel<MainAction>()
@@ -129,6 +130,9 @@ class MainViewModel @Inject constructor(
         val students = repository.getStudents()
         val selectedStudent = students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
         parentPrefs.currentStudent = selectedStudent
+        selectedStudent?.let {
+            selectedStudentHolder.updateSelectedStudent(it)
+        }
 
         _data.update { data ->
             data.copy(
@@ -150,7 +154,12 @@ class MainViewModel @Inject constructor(
 
     private fun onStudentSelected(student: User) {
         parentPrefs.currentStudent = student
-        currentUser?.let { previousUsersUtils.add(context, it.copy(selectedStudentId = student.id)) }
+        currentUser?.let {
+            previousUsersUtils.add(context, it.copy(selectedStudentId = student.id))
+        }
+        viewModelScope.launch {
+            selectedStudentHolder.updateSelectedStudent(student)
+        }
         _data.update {
             it.copy(
                 studentSelectorExpanded = false,

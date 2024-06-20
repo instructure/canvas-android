@@ -21,10 +21,14 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.parentapp.features.main.MainRepository
+import com.instructure.parentapp.features.main.SelectedStudentHolder
+import com.instructure.parentapp.features.main.SelectedStudentHolderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -37,5 +41,16 @@ class MainModule {
         themeApi: ThemeAPI.ThemeInterface
     ): MainRepository {
         return MainRepository(enrollmentApi, userApi, themeApi)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class SelectedStudentHolderModule {
+
+    @Provides
+    @Singleton
+    fun provideSelectedStudentHolder(): SelectedStudentHolder {
+        return SelectedStudentHolderImpl()
     }
 }

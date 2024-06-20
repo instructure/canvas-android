@@ -58,14 +58,14 @@ internal fun CoursesScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             content = { padding ->
-                if (uiState.loadError) {
+                if (uiState.isError) {
                     ErrorContent(
                         errorMessage = stringResource(id = R.string.errorLoadingCourses),
                         retryClick = {
                             actionHandler(CoursesAction.Refresh)
                         }, modifier = Modifier.fillMaxSize()
                     )
-                } else if (uiState.courseListItems.isEmpty() && !uiState.loading) {
+                } else if (uiState.isEmpty) {
                     EmptyContent(
                         emptyTitle = stringResource(id = R.string.parentNoCourses),
                         emptyMessage = stringResource(id = R.string.parentNoCoursesMessage),
@@ -95,7 +95,7 @@ private fun CourseListContent(
     modifier: Modifier = Modifier
 ) {
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = uiState.loading,
+        refreshing = uiState.isLoading,
         onRefresh = {
             actionHandler(CoursesAction.Refresh)
         }
@@ -109,17 +109,13 @@ private fun CourseListContent(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            if (!uiState.loading) {
-                items(uiState.courseListItems) {
-                    CourseListItem(it, uiState.studentColor, Modifier.clickable {
-                        actionHandler(CoursesAction.CourseTapped(it.courseId))
-                    })
-                }
+            items(uiState.courseListItems) {
+                CourseListItem(it, uiState.studentColor, actionHandler)
             }
         }
 
         PullRefreshIndicator(
-            refreshing = uiState.loading,
+            refreshing = uiState.isLoading,
             state = pullRefreshState,
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -131,26 +127,31 @@ private fun CourseListContent(
 
 @Composable
 private fun CourseListItem(
-    uiState: CourseItemUiState,
+    uiState: CourseListItemUiState,
     studentColor: Int,
+    actionHandler: (CoursesAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.testTag("courseListItem")
+        modifier = modifier
+            .testTag("courseListItem")
+            .clickable {
+                actionHandler(CoursesAction.CourseTapped(uiState.courseId))
+            }
     ) {
         Text(
             text = uiState.courseName,
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
         )
-        if (uiState.courseCode.isNotEmpty()) {
+        uiState.courseCode?.let {
             Text(
                 text = uiState.courseCode,
                 color = colorResource(id = R.color.textDark),
                 fontSize = 14.sp
             )
         }
-        if (uiState.grade.isNotEmpty()) {
+        uiState.grade?.let {
             Text(
                 text = uiState.grade,
                 color = Color(studentColor),
@@ -168,9 +169,9 @@ private fun CourseListPreview() {
         uiState = CoursesUiState(
             studentColor = android.graphics.Color.RED,
             courseListItems = listOf(
-                CourseItemUiState(1L, "Course 1", "course-1", "A"),
-                CourseItemUiState(2L, "Course 2", "course-2", ""),
-                CourseItemUiState(3L, "Course 3", "", "C")
+                CourseListItemUiState(1L, "Course 1", "course-1", "A"),
+                CourseListItemUiState(2L, "Course 2", "course-2", ""),
+                CourseListItemUiState(3L, "Course 3", "", "C")
             )
         ),
         actionHandler = {}

@@ -70,6 +70,7 @@ class MainViewModelTest {
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
 
     private lateinit var viewModel: MainViewModel
 
@@ -220,6 +221,7 @@ class MainViewModelTest {
 
         Assert.assertEquals(students.last(), viewModel.data.value.selectedStudent)
         Assert.assertFalse(viewModel.data.value.studentSelectorExpanded)
+        coVerify { selectedStudentHolder.updateSelectedStudent(students.last()) }
     }
 
     @Test
@@ -252,7 +254,8 @@ class MainViewModelTest {
             apiPrefs = apiPrefs,
             parentPrefs = parentPrefs,
             colorKeeper = colorKeeper,
-            themePrefs = themePrefs
+            themePrefs = themePrefs,
+            selectedStudentHolder = selectedStudentHolder
         )
     }
 }

@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.main.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -45,7 +46,8 @@ class CoursesViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: CoursesRepository,
     private val colorKeeper: ColorKeeper,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val selectedStudentHolder: SelectedStudentHolder
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CoursesUiState())
     val uiState = _uiState.asStateFlow()
@@ -55,66 +57,78 @@ class CoursesViewModel @Inject constructor(
 
     private var selectedStudent: User? = null
 
+    init {
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentFlow.collect {
+                studentChanged(it)
+            }
+        }
+    }
+
     private fun loadCourses(forceRefresh: Boolean = false) {
         viewModelScope.tryLaunch {
             val color = colorKeeper.getOrGenerateUserColor(selectedStudent).backgroundColor()
 
             _uiState.update {
                 it.copy(
-                    loading = true,
-                    loadError = false,
+                    isLoading = true,
+                    isError = false,
                     studentColor = color
                 )
             }
 
-            val courses = repository.getCourses(selectedStudent!!.id, forceRefresh)
-
-            _uiState.update { state ->
-                state.copy(
-                    loading = false,
-                    courseListItems = courses.map {
-                        CourseItemUiState(it.id, it.name, it.courseCode.orEmpty(), getGradeText(it))
-                    }
-                )
+            selectedStudent?.id?.let {
+                val courses = repository.getCourses(selectedStudent!!.id, forceRefresh)
+                _uiState.update { state ->
+                    state.copy(
+                        isLoading = false,
+                        courseListItems = courses.map {
+                            CourseListItemUiState(it.id, it.name, it.courseCode, getGradeText(it))
+                        }
+                    )
+                }
+            } ?: run {
+                setErrorState()
             }
         } catch {
-            _uiState.update {
-                it.copy(
-                    loading = false,
-                    loadError = true
-                )
-            }
+            setErrorState()
         }
     }
 
-    private fun getGradeText(course: Course): String {
-        val percentageFormat = NumberFormat.getPercentInstance()
-        percentageFormat.maximumFractionDigits = 2
+    private fun setErrorState() {
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                isError = true
+            )
+        }
+    }
 
-        val enrollment = course.enrollments?.find { it.userId == selectedStudent?.id } ?: return ""
+    private fun getGradeText(course: Course): String? {
+        val percentageFormat = NumberFormat.getPercentInstance().apply {
+            maximumFractionDigits = 2
+        }
+
+        val enrollment = course.enrollments?.find { it.userId == selectedStudent?.id } ?: return null
         val grade = course.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment)
         val restrictQuantitativeData = course.settings?.restrictQuantitativeData.orDefault()
 
-        if (grade.isLocked || (restrictQuantitativeData && !grade.hasCurrentGradeString())) return ""
+        if (grade.isLocked || (restrictQuantitativeData && !grade.hasCurrentGradeString())) return null
 
-        val formattedScore = if (grade.currentScore != null && !restrictQuantitativeData) {
-            percentageFormat.format(grade.currentScore!! / 100)
-        } else {
-            ""
-        }
+        val formattedScore = grade.currentScore?.takeIf {
+            !restrictQuantitativeData
+        }?.let {
+            percentageFormat.format(it / 100)
+        }.orEmpty()
 
-        return if (!grade.hasCurrentGradeString()) {
-            context.getString(R.string.noGrade)
-        } else {
-            if (!grade.currentGrade.isNullOrEmpty()) {
-                "${grade.currentGrade} $formattedScore"
-            } else {
-                formattedScore
-            }
+        return when {
+            !grade.hasCurrentGradeString() -> context.getString(R.string.noGrade)
+            !grade.currentGrade.isNullOrEmpty() -> "${grade.currentGrade} $formattedScore"
+            else -> formattedScore
         }
     }
 
-    fun studentChanged(student: User?) {
+    private fun studentChanged(student: User?) {
         if (selectedStudent != student) {
             selectedStudent = student
             loadCourses()

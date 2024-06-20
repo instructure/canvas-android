@@ -26,35 +26,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.parentapp.features.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class CoursesFragment : Fragment() {
 
     private val viewModel: CoursesViewModel by viewModels()
-    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-
-        lifecycleScope.launch {
-            mainViewModel.data.collectLatest {
-                viewModel.studentChanged(it.selectedStudent)
-            }
-        }
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {

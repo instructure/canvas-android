@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.main.TestSelectStudentHolder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -38,6 +39,7 @@ import io.mockk.mockk
 import io.mockk.spyk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -65,6 +67,8 @@ class CoursesViewModelTest {
     private val repository: CoursesRepository = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val selectedStudentFlow = MutableSharedFlow<User>()
+    private val selectedStudentHolder = TestSelectStudentHolder(selectedStudentFlow)
 
     private lateinit var viewModel: CoursesViewModel
 
@@ -80,23 +84,23 @@ class CoursesViewModelTest {
     }
 
     @Test
-    fun `Load courses when student changes`() {
+    fun `Load courses when student changes`() = runTest {
         val student = User(1L)
         coEvery { colorKeeper.getOrGenerateUserColor(student) } returns ThemedColor(1, 1)
         coEvery { repository.getCourses(student.id, any()) } returns listOf(Course(id = 1L, name = "Course 1", courseCode = "code-1"))
 
         createViewModel()
-        viewModel.studentChanged(student)
+        selectedStudentFlow.emit(student)
 
         val expectedState = CoursesUiState(
-            loading = false,
-            loadError = false,
+            isLoading = false,
+            isError = false,
             courseListItems = listOf(
-                CourseItemUiState(
+                CourseListItemUiState(
                     courseId = 1L,
                     courseName = "Course 1",
                     courseCode = "code-1",
-                    grade = ""
+                    grade = null
                 )
             ),
             studentColor = 1
@@ -106,17 +110,17 @@ class CoursesViewModelTest {
     }
 
     @Test
-    fun `Error load courses`() {
+    fun `Error load courses`() = runTest {
         val student = User(1L)
         coEvery { colorKeeper.getOrGenerateUserColor(student) } returns ThemedColor(1, 1)
         coEvery { repository.getCourses(student.id, any()) } throws Exception()
 
         createViewModel()
-        viewModel.studentChanged(student)
+        selectedStudentFlow.emit(student)
 
         val expectedState = CoursesUiState(
-            loading = false,
-            loadError = true,
+            isLoading = false,
+            isError = true,
             studentColor = 1
         )
 
@@ -124,20 +128,20 @@ class CoursesViewModelTest {
     }
 
     @Test
-    fun `Course grade maps correctly when locked`() {
+    fun `Course grade maps correctly when locked`() = runTest {
         val student = User(1L)
         val course = spyk(Course(id = 1L, name = "Course 1", courseCode = "code-1", enrollments = mutableListOf(Enrollment(userId = student.id))))
         coEvery { repository.getCourses(student.id, any()) } returns listOf(course)
         every { course.getCourseGradeForGradingPeriodSpecificEnrollment(any()) } returns CourseGrade(isLocked = true)
 
         createViewModel()
-        viewModel.studentChanged(student)
+        selectedStudentFlow.emit(student)
 
-        Assert.assertEquals("", viewModel.uiState.value.courseListItems.first().grade)
+        Assert.assertEquals(null, viewModel.uiState.value.courseListItems.first().grade)
     }
 
     @Test
-    fun `Course grade maps correctly when restricted without grade string`() {
+    fun `Course grade maps correctly when restricted without grade string`() = runTest {
         val student = User(1L)
         val course = spyk(
             Course(
@@ -150,13 +154,13 @@ class CoursesViewModelTest {
         every { course.getCourseGradeForGradingPeriodSpecificEnrollment(any()) } returns CourseGrade()
 
         createViewModel()
-        viewModel.studentChanged(student)
+        selectedStudentFlow.emit(student)
 
-        Assert.assertEquals("", viewModel.uiState.value.courseListItems.first().grade)
+        Assert.assertEquals(null, viewModel.uiState.value.courseListItems.first().grade)
     }
 
     @Test
-    fun `Course grade maps correctly when restricted with grade string`() {
+    fun `Course grade maps correctly when restricted with grade string`() = runTest {
         val student = User(1L)
         val course = spyk(
             Course(
@@ -172,13 +176,13 @@ class CoursesViewModelTest {
         )
 
         createViewModel()
-        viewModel.studentChanged(student)
+        selectedStudentFlow.emit(student)
 
         Assert.assertEquals("A ", viewModel.uiState.value.courseListItems.first().grade)
     }
 
     @Test
-    fun `Course grade maps correctly without grade string`() {
+    fun `Course grade maps correctly without grade string`() = runTest {
         val student = User(1L)
         val course = spyk(Course(id = 1L, name = "Course 1", courseCode = "code-1", enrollments = mutableListOf(Enrollment(userId = student.id))))
         coEvery { repository.getCourses(student.id, any()) } returns listOf(course)
@@ -188,13 +192,13 @@ class CoursesViewModelTest {
         )
 
         createViewModel()
-        viewModel.studentChanged(student)
+        selectedStudentFlow.emit(student)
 
         Assert.assertEquals("No Grade", viewModel.uiState.value.courseListItems.first().grade)
     }
 
     @Test
-    fun `Course grade maps correctly with score and grade string`() {
+    fun `Course grade maps correctly with score and grade string`() = runTest {
         val student = User(1L)
         val course = spyk(Course(id = 1L, name = "Course 1", courseCode = "code-1", enrollments = mutableListOf(Enrollment(userId = student.id))))
         coEvery { repository.getCourses(student.id, any()) } returns listOf(course)
@@ -204,15 +208,15 @@ class CoursesViewModelTest {
         )
 
         createViewModel()
-        viewModel.studentChanged(student)
+        selectedStudentFlow.emit(student)
 
         Assert.assertEquals("A 100%", viewModel.uiState.value.courseListItems.first().grade)
     }
 
     @Test
-    fun `Refresh reloads courses`() {
+    fun `Refresh reloads courses`() = runTest {
         createViewModel()
-        viewModel.studentChanged(User(1L))
+        selectedStudentHolder.updateSelectedStudent(User(1L))
 
         viewModel.handleAction(CoursesAction.Refresh)
 
@@ -237,6 +241,6 @@ class CoursesViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = CoursesViewModel(context, repository, colorKeeper, apiPrefs)
+        viewModel = CoursesViewModel(context, repository, colorKeeper, apiPrefs, selectedStudentHolder)
     }
 }
