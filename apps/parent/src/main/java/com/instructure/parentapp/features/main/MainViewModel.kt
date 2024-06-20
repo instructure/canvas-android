@@ -140,7 +140,7 @@ class MainViewModel @Inject constructor(
                     StudentItemViewModel(
                         StudentItemViewData(
                             user.id,
-                            user.name,
+                            user.shortName.orEmpty(),
                             user.avatarUrl.orEmpty()
                         )
                     ) { userId ->
