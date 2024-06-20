@@ -148,8 +148,8 @@ class MainViewModelTest {
     @Test
     fun `Students map correctly`() {
         val students = listOf(
-            User(id = 1L, name = "Student One", avatarUrl = "avatar1"),
-            User(id = 2L, name = "Student Two", avatarUrl = "avatar2"),
+            User(id = 1L, shortName = "Student One", avatarUrl = "avatar1"),
+            User(id = 2L, shortName = "Student Two", avatarUrl = "avatar2"),
         )
 
         coEvery { repository.getStudents() } returns students
