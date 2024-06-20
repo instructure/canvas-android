@@ -1739,5 +1739,6 @@
     <string name="navigationDrawerLogOut">Log Out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
-    <string name="a11y_selectedCalendar">Calendar selected</string>
+    <string name="a11y_selectedCalendar">%s, selected calendar</string>
+    <string name="a11y_calendarSelected">%s selected</string>
 </resources>
