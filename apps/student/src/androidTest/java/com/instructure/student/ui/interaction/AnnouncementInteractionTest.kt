@@ -70,11 +70,11 @@ class AnnouncementInteractionTest : StudentTest() {
         // the discussion list page / discussion details page
         discussionListPage.assertTopicDisplayed(announcement.title!!)
         discussionListPage.selectTopic(announcement.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(announcement)
-        discussionDetailsPage.sendReply("Will do!")
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(announcement)
+        nativeDiscussionDetailsPage.sendReply("Will do!")
         //Find our DiscussionReply
         val reply = data.discussionTopics[announcement.id]?.views?.find {it.message == "Will do!"} !!
-        discussionDetailsPage.assertReplyDisplayed(reply)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(reply)
 
         // Just for fun, let's change the user to be enrolled in a section of the course to which
         // the announcement does not apply, and make sure that the user no longer sees the announcement.
@@ -123,8 +123,8 @@ class AnnouncementInteractionTest : StudentTest() {
         // Now let's test
         courseBrowserPage.selectAnnouncements()
         discussionListPage.selectTopic(announcement.title!!)
-        discussionDetailsPage.assertMainAttachmentDisplayed()
-        discussionDetailsPage.previewAndCheckMainAttachment(
+        nativeDiscussionDetailsPage.assertMainAttachmentDisplayed()
+        nativeDiscussionDetailsPage.previewAndCheckMainAttachment(
                 WebViewTextCheck(Locator.ID, "p1", "Et tu, Brute?")
         )
 
@@ -147,11 +147,11 @@ class AnnouncementInteractionTest : StudentTest() {
         courseBrowserPage.selectAnnouncements()
         discussionListPage.assertTopicDisplayed(announcement.title!!)
         discussionListPage.selectTopic(announcement.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(announcement)
-        discussionDetailsPage.sendReply("Roger!")
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(announcement)
+        nativeDiscussionDetailsPage.sendReply("Roger!")
         //Find our DiscussionReply
         val reply = data.discussionTopics[announcement.id]?.views?.find {it.message == "Roger!"} !!
-        discussionDetailsPage.assertReplyDisplayed(reply)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(reply)
     }
 
     // Tests that we can create an announcement (as teacher).
