@@ -22,11 +22,13 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.espresso.getCurrentDateInCanvasCalendarFormat
+import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.clickCalendarTab
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Before
 import org.junit.Test
 import java.time.Year
 import java.util.Calendar
@@ -37,6 +39,11 @@ class CalendarE2ETest: TeacherComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    @Before
+    fun clearPreferences() {
+        CalendarPrefs.clearPrefs()
+    }
 
     @E2E
     @Test
@@ -228,29 +235,12 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarScreenPage.assertCalendarPageTitle()
         calendarScreenPage.assertEmptyView()
 
-        //Calendar expand/collapse state remains sometimes from previous runs and this way we are handling whether if it's starting from a collapsed or expanded state.
-        if(calendarScreenPage.checkCalendarCollapsed()) {
-            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to expand the calendar.")
-            calendarScreenPage.clickCalendarHeader()
+        Log.d(STEP_TAG, "Assert that the Calendar is collapsed and only 1 week is displayed in this state.")
+        calendarScreenPage.assertCalendarCollapsed()
 
-            Log.d(STEP_TAG, "Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
-            calendarScreenPage.assertCalendarExpanded()
-
-            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar. Assert that the Calendar is collapsed and only 1 week is displayed in this state.")
-            calendarScreenPage.clickCalendarHeader()
-            calendarScreenPage.assertCalendarCollapsed()
-        }
-        else if(calendarScreenPage.checkCalendarExpanded()) {
-            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar.")
-            calendarScreenPage.clickCalendarHeader()
-
-            Log.d(STEP_TAG, "Assert that the Calendar is collapsed and only 1 week is displayed in this state.")
-            calendarScreenPage.assertCalendarCollapsed()
-
-            Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar. Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
-            calendarScreenPage.clickCalendarHeader()
-            calendarScreenPage.assertCalendarExpanded()
-        }
+        Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar. Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
+        calendarScreenPage.clickCalendarHeader()
+        calendarScreenPage.assertCalendarExpanded()
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add Event' to create a new event.")
         calendarScreenPage.clickOnAddButton()
