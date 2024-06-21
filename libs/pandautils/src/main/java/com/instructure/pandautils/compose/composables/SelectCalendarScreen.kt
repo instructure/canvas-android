@@ -39,9 +39,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -181,7 +182,9 @@ private fun SelectCalendarItem(
     ) {
         RadioButton(
             selected = selected,
-            modifier = Modifier.semantics { invisibleToUser() },
+            modifier = Modifier.clearAndSetSemantics {
+                testTag = "radioButton_${canvasContext.contextId}"
+            },
             onClick = {
                 onCalendarSelected(canvasContext)
             },
@@ -191,7 +194,9 @@ private fun SelectCalendarItem(
             )
         )
         Text(
-            modifier = Modifier.semantics { invisibleToUser() },
+            modifier = Modifier.clearAndSetSemantics {
+                testTag = "title_${canvasContext.contextId}"
+            },
             text = canvasContext.name.orEmpty(),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
