@@ -38,7 +38,7 @@ class AnnouncementsE2ETest : TeacherTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     //Because of naming conventions, we are using 'announcementDetailsPage' naming in this class to make the code more readable and straightforward.
-    private val announcementDetailsPage = discussionsDetailsPage
+    private val announcementDetailsPage = nativeDiscussionsDetailsPage
 
     @E2E
     @Test
@@ -76,11 +76,14 @@ class AnnouncementsE2ETest : TeacherTest() {
         announcementsListPage.searchable.clickOnClearSearchButton()
         announcementsListPage.assertSearchResultCount(2)
 
-        Log.d(STEP_TAG,"Edit ${announcement.title} announcement's name to 'Haha'. Save the modifications.")
+        Log.d(STEP_TAG,"Open the '${announcement.title}' announcement. Assert that it's title is displayed on the (web view) page's toolbar title and the 'Reply' button is also displayed.")
         announcementsListPage.clickAnnouncement(announcement)
-        announcementDetailsPage.openEdit()
-        editAnnouncementDetailsPage.editAnnouncementTitle("Haha")
-        editAnnouncementDetailsPage.saveAnnouncement()
+        discussionDetailsPage.assertToolbarDiscussionTitle(announcement.title)
+        discussionDetailsPage.waitForReplyButtonDisplayed()
+        discussionDetailsPage.assertReplyButtonDisplayed()
+
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+        discussionDetailsPage.editDiscussion("Haha")
 
         Log.d(STEP_TAG,"Navigate back to the Announcements Page. Refresh the page and assert that the announcement name has been changed to 'Haha'.")
         Espresso.pressBack()
@@ -92,20 +95,21 @@ class AnnouncementsE2ETest : TeacherTest() {
         announcementDetailsPage.openEdit()
         editAnnouncementDetailsPage.deleteAnnouncement()
 
-        Log.d(STEP_TAG, "")
+        Log.d(STEP_TAG, "Click on ${announcement2.title} announcement and delete it.")
         announcementsListPage.clickAnnouncement(announcement2.title)
         announcementDetailsPage.openEdit()
         editAnnouncementDetailsPage.deleteAnnouncement()
 
-        Log.d(STEP_TAG,"Refresh the Announcements Page and assert that there is no announcement displayed. Assert that empty view is displayed.")
+        Log.d(STEP_TAG,"Refresh the Announcements List Page and assert that there is no announcement displayed. Assert that only 1 announcement left because we just deleted the other one.")
         announcementsListPage.refresh()
-        announcementsListPage.assertEmpty()
+        announcementsListPage.assertAnnouncementCount(1)
 
         Log.d(STEP_TAG,"Create a new valid announcement.")
         announcementsListPage.createAnnouncement(announcementName = "I am an announcement", announcementDetails = "I am the detail")
 
-        Log.d(STEP_TAG,"Refresh the Announcements Page and assert that the previously created announcement is displayed.")
+        Log.d(STEP_TAG,"Refresh the Announcements Page and assert that the previously created announcement is displayed. Assert that there are 2 announcements displayed on the Announcement List Page.")
         announcementsListPage.refresh()
         announcementsListPage.assertHasAnnouncement("I am an announcement")
+        announcementsListPage.assertAnnouncementCount(1)
     }
 }

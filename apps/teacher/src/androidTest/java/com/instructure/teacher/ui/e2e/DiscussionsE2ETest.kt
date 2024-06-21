@@ -63,7 +63,7 @@ class DiscussionsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Click on '${discussion.title}' discussion and navigate to Discussions Details Page by clicking on 'Edit'.")
         discussionsListPage.clickDiscussion(discussion)
-        discussionsDetailsPage.openEdit()
+        nativeDiscussionsDetailsPage.openEdit()
 
         val newTitle = "New Discussion"
         Log.d(STEP_TAG,"Edit the discussion's title to: '$newTitle'. Click on 'Save'.")
@@ -71,18 +71,18 @@ class DiscussionsE2ETest : TeacherTest() {
         editDiscussionsDetailsPage.saveDiscussion()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the discussion's name has been changed to '$newTitle' and it is published.")
-        discussionsDetailsPage.refresh()
-        discussionsDetailsPage.assertDiscussionTitle(newTitle)
-        discussionsDetailsPage.assertDiscussionPublished()
+        nativeDiscussionsDetailsPage.refresh()
+        nativeDiscussionsDetailsPage.assertDiscussionTitle(newTitle)
+        nativeDiscussionsDetailsPage.assertDiscussionPublished()
 
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Unpublish the '$newTitle' discussion and click on 'Save'.")
-        discussionsDetailsPage.openEdit()
+        nativeDiscussionsDetailsPage.openEdit()
         editDiscussionsDetailsPage.togglePublished()
         editDiscussionsDetailsPage.saveDiscussion()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the '$newTitle' discussion has been unpublished.")
-        discussionsDetailsPage.refresh()
-        discussionsDetailsPage.assertDiscussionUnpublished()
+        nativeDiscussionsDetailsPage.refresh()
+        nativeDiscussionsDetailsPage.assertDiscussionUnpublished()
 
         Log.d(STEP_TAG, "Navigate back to Discussion List Page. Select 'Pin' overflow menu of '${discussion2.title}' discussion and assert that it has became Pinned.")
         Espresso.pressBack()
@@ -97,7 +97,7 @@ class DiscussionsE2ETest : TeacherTest() {
 
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '$newTitle' discussion.")
         discussionsListPage.clickDiscussion(newTitle)
-        discussionsDetailsPage.openEdit()
+        nativeDiscussionsDetailsPage.openEdit()
         editDiscussionsDetailsPage.deleteDiscussion()
 
         Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '${discussion2.title}' discussion via the overflow menu.")
@@ -122,7 +122,7 @@ class DiscussionsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Assert that '$newDiscussionTitle' discussion is displayed and published.")
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
         discussionsListPage.clickDiscussion(newDiscussionTitle)
-        discussionsDetailsPage.assertDiscussionPublished()
+        nativeDiscussionsDetailsPage.assertDiscussionPublished()
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -16,86 +16,164 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.web.assertion.WebViewAssertions
+import androidx.test.espresso.web.matcher.DomMatchers
+import androidx.test.espresso.web.model.Atoms
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
+import com.instructure.espresso.page.withText
+import com.instructure.espresso.waitForWebElement
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.TypeInRCETextEditor
+import org.junit.Assert
 
 class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage() {
 
-    /**
-     * Asserts that the discussion has the specified [title].
-     *
-     * @param title The title of the discussion to be asserted.
-     */
-    fun assertDiscussionTitle(title: String) {
-        onView(withId(R.id.discussionTopicTitle)).assertHasText(title)
+    fun assertReplyButtonDisplayed() {
+        Web.onWebView()
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//button[@data-testid='discussion-topic-reply']")))
     }
 
-    /**
-     * Asserts that the discussion is published.
-     */
-    fun assertDiscussionPublished() {
-        checkPublishedTextView("Published")
+    fun clickOnDiscussionMoreMenu() {
+        Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//button[@data-testid='discussion-post-menu-trigger']"))
+            .perform(webClick())
     }
 
-    /**
-     * Asserts that the discussion is unpublished.
-     */
-    fun assertDiscussionUnpublished() {
-        checkPublishedTextView("Unpublished")
+    fun editDiscussion(newTitle: String) {
+        Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//ul[@role='menu']//span[text()='Edit']"))
+            .perform(webClick())
+
+        waitForWebElement(
+            webViewMatcher = withId(R.id.canvasWebView),
+            locator = Locator.XPATH,
+            value = "//input[@placeholder='Topic Title']",
+            timeoutMillis = 10000,
+            intervalMillis = 500
+        )
+
+        /*Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//input[@placeholder='Topic Title']"))
+            .perform(Atoms.script("arguments[1].focus();"))  // Focus on the input field using JavaScript
+          //  .perform(webKeys(CharArray(100) { '\b' }.joinToString("")))
+            .perform(Atoms.script("arguments[1].value = '$newTitle'"))
+        //  .perform(Atoms.script("arguments[0].value = ''")) //This clears the previous value so that's why we need it.*/
+
+    /*    Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//input[@placeholder='Topic Title']"))
+            .perform(Atoms.script("""
+        const input = arguments[0];
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.blur();
+        arguments[0].focus();
+        input.value = '$newTitle';  // Directly inject the new title
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.blur();
+    """))*/
+
+
+        Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//input[@placeholder='Topic Title']"))
+            .perform(Atoms.script("""
+        function updateInputValue(input, newValue) {
+            input.focus();
+            input.value = '';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+
+            function typeCharacter(index) {
+                if (index < newValue.length) {
+                    input.value += newValue[index];
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    setTimeout(() => typeCharacter(index + 1), 500);
+                } else {
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
+                    input.blur();
+                }
+            }
+
+            typeCharacter(0);
+        }
+        updateInputValue(arguments[0], "$newTitle");
+    """))
+
+
+        /*  Web.onWebView()
+              .withElement(DriverAtoms.findElement(Locator.XPATH, "//input[@placeholder='Topic Title']"))
+              .perform(Atoms.script("arguments[0].focus()"))  // Focus the input
+
+          Web.onWebView()
+              .withElement(DriverAtoms.findElement(Locator.XPATH, "//input[@placeholder='Topic Title']"))
+              .perform(webKeys(CharArray(100) { '\b' }.joinToString("")))  // Clear input field with backspaces
+
+          Web.onWebView()
+              .withElement(DriverAtoms.findElement(Locator.XPATH, "//input[@placeholder='Topic Title']"))
+              .perform(webKeys(newTitle))  // Type the new title
+  */
+        Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//button[@data-testid='announcement-submit-button']"))
+            .perform(webClick())
+
+        print("asd")
     }
 
-    /**
-     * Asserts that there are no replies in the discussion.
-     */
-    fun assertNoReplies() {
-        onView(withId(R.id.discussionTopicReplies)).assertNotDisplayed()
+    private fun replyButtonNotDisplayed(): Boolean {
+        return try {
+            Web.onWebView()
+                .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//button[@data-testid='discussion-topic-reply']")))
+            false
+        }
+        catch (e: AssertionError) {
+            true
+        }
     }
 
-    /**
-     * Asserts that the discussion has at least one reply.
-     */
-    fun assertHasReply() {
-        val repliesHeader = onView(withId(R.id.discussionTopicReplies))
-        repliesHeader.scrollTo()
-        repliesHeader.assertDisplayed()
+    fun assertReplyButtonNotDisplayed() {
+        Assert.assertTrue("Reply button has displayed but it should not.",replyButtonNotDisplayed())
     }
 
-    /**
-     * Opens the edit menu of the discussion.
-     */
-    fun openEdit() {
-        onView(withId(R.id.menu_edit)).click()
+    fun assertEntryDisplayed(entryMessage: String) {
+        Web.onWebView()
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$entryMessage']")))
     }
 
-    /**
-     * Refreshes the discussion page.
-     */
-    fun refresh() {
-        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    fun assertToolbarDiscussionTitle(discussionTitle: String) {
+        onView(withText(discussionTitle) + withAncestor(withId(R.id.toolbar) + ViewMatchers.hasSibling(
+            withId(R.id.discussionWebView)
+        )
+        )).assertDisplayed()
     }
 
-    /**
-     * Adds a reply with the specified [content] to the discussion.
-     *
-     * @param content The content of the reply.
-     */
-    fun addReply(content: String) {
-        onView(withId(R.id.replyToDiscussionTopic)).click()
-        onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(content))
-        onView(withId(R.id.menu_send)).click()
+    fun waitForReplyButtonDisplayed() {
+        waitForWebElement(
+            webViewMatcher = withId(R.id.discussionWebView),
+            locator = Locator.XPATH,
+            value = "//button[@data-testid='discussion-topic-reply']",
+            timeoutMillis = 10000,
+            intervalMillis = 500
+        )
     }
 
-    private fun checkPublishedTextView(status: String) {
-        onView(withId(R.id.publishStatusTextView)).assertHasText(status)
+    fun waitForEntryDisplayed(entryMessage: String) {
+        waitForWebElement(
+            webViewMatcher = withId(R.id.discussionWebView),
+            locator = Locator.XPATH,
+            value = "//span[text()='$entryMessage']",
+            timeoutMillis = 10000,
+            intervalMillis = 500
+        )
     }
+
 }
