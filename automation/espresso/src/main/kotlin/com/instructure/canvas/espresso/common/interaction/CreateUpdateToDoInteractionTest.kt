@@ -198,6 +198,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         calendarScreenPage.clickOnItem("Test Todo")
+        composeTestRule.waitForIdle()
         calendarToDoDetailsPage.assertDate(activityRule.activity, calendar.time)
     }
 
