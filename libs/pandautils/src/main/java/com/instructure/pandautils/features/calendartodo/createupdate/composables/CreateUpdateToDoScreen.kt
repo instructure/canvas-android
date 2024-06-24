@@ -57,6 +57,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -91,6 +92,9 @@ internal fun CreateUpdateToDoScreenWrapper(
     actionHandler: (CreateUpdateToDoAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val localView = LocalView.current
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     CanvasTheme {
@@ -98,6 +102,9 @@ internal fun CreateUpdateToDoScreenWrapper(
             SelectCalendarScreen(
                 uiState = uiState.selectCalendarUiState,
                 onCalendarSelected = {
+                    localView.announceForAccessibility(
+                        context.getString(R.string.a11y_calendarSelected, it.name.orEmpty())
+                    )
                     actionHandler(CreateUpdateToDoAction.UpdateCanvasContext(it))
                     coroutineScope.launch {
                         // We need to add this delay to give the user some feedback about the selection before closing the screen
