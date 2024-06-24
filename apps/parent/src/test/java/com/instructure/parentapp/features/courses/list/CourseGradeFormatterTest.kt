@@ -41,7 +41,7 @@ class CourseGradeFormatterTest {
     fun `Course grade maps correctly when locked`() = runTest {
         val student = User(1L)
         val course = spyk(Course(id = 1L, name = "Course 1", courseCode = "code-1", enrollments = mutableListOf(Enrollment(userId = student.id))))
-        every { course.getCourseGradeForGradingPeriodSpecificEnrollment(any()) } returns CourseGrade(isLocked = true)
+        every { course.parentGetCourseGradeFromEnrollment(any(), any()) } returns CourseGrade(isLocked = true)
 
         val result = courseGradeFormatter.getGradeText(course, student.id)
 
@@ -58,7 +58,7 @@ class CourseGradeFormatterTest {
                 settings = CourseSettings(restrictQuantitativeData = true)
             )
         )
-        every { course.getCourseGradeForGradingPeriodSpecificEnrollment(any()) } returns CourseGrade()
+        every { course.parentGetCourseGradeFromEnrollment(any(), any()) } returns CourseGrade()
 
         val result = courseGradeFormatter.getGradeText(course, student.id)
 
@@ -75,7 +75,7 @@ class CourseGradeFormatterTest {
                 settings = CourseSettings(restrictQuantitativeData = true)
             )
         )
-        every { course.getCourseGradeForGradingPeriodSpecificEnrollment(any()) } returns CourseGrade(
+        every { course.parentGetCourseGradeFromEnrollment(any(), any()) } returns CourseGrade(
             currentScore = 100.0,
             currentGrade = "A"
         )
@@ -86,12 +86,13 @@ class CourseGradeFormatterTest {
     }
 
     @Test
-    fun `Course grade maps correctly without grade string`() = runTest {
+    fun `Course grade maps correctly without grade`() = runTest {
+        every { context.getString(R.string.noGrade) } returns "No Grade"
         val student = User(1L)
         val course = spyk(Course(id = 1L, name = "Course 1", courseCode = "code-1", enrollments = mutableListOf(Enrollment(userId = student.id))))
         every { context.getString(R.string.noGrade) } returns "No Grade"
-        every { course.getCourseGradeForGradingPeriodSpecificEnrollment(any()) } returns CourseGrade(
-            currentScore = 100.0
+        every { course.parentGetCourseGradeFromEnrollment(any(), any()) } returns CourseGrade(
+            noCurrentGrade = true
         )
 
         val result = courseGradeFormatter.getGradeText(course, student.id)
@@ -103,7 +104,7 @@ class CourseGradeFormatterTest {
     fun `Course grade maps correctly with score and grade string`() = runTest {
         val student = User(1L)
         val course = spyk(Course(id = 1L, name = "Course 1", courseCode = "code-1", enrollments = mutableListOf(Enrollment(userId = student.id))))
-        every { course.getCourseGradeForGradingPeriodSpecificEnrollment(any()) } returns CourseGrade(
+        every { course.parentGetCourseGradeFromEnrollment(any(), any()) } returns CourseGrade(
             currentScore = 100.0,
             currentGrade = "A"
         )

@@ -74,7 +74,7 @@ class CoursesInteractionTest : ParentComposeTest() {
     fun testShowNoGradeIfThereIsNoCurrentGrade() {
         val data = initData()
         val firstStudent = data.students.first()
-        val courseWithoutGrade = data.addCourseWithEnrollment(firstStudent, Enrollment.EnrollmentType.Student)
+        val courseWithoutGrade = data.addCourseWithEnrollment(firstStudent, Enrollment.EnrollmentType.Student, score = null, grade = null)
         data.addEnrollment(data.parents.first(), courseWithoutGrade, Enrollment.EnrollmentType.Observer, firstStudent)
 
         goToCourses(data)
