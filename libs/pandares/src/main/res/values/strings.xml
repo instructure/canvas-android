@@ -1743,4 +1743,7 @@
     <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
     <string name="parentNoCourses">No Courses</string>
     <string name="parentNoCoursesMessage">Your student’s courses might not be published yet.</string>
+
+    <string name="a11y_selectedCalendar">%s, selected calendar</string>
+    <string name="a11y_calendarSelected">%s selected</string>
 </resources>
