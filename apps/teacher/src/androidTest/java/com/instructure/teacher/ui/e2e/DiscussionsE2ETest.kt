@@ -28,6 +28,7 @@ import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class DiscussionsE2ETest : TeacherTest() {
@@ -61,28 +62,26 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertHasDiscussion(discussion)
         discussionsListPage.assertHasDiscussion(discussion2)
 
-        Log.d(STEP_TAG,"Click on '${discussion.title}' discussion and navigate to Discussions Details Page by clicking on 'Edit'.")
+        Log.d(STEP_TAG,"Click on '${discussion.title}' discussion.")
         discussionsListPage.clickDiscussion(discussion)
-        nativeDiscussionsDetailsPage.openEdit()
 
-        val newTitle = "New Discussion"
-        Log.d(STEP_TAG,"Edit the discussion's title to: '$newTitle'. Click on 'Save'.")
-        editDiscussionsDetailsPage.editDiscussionTitle(newTitle)
-        editDiscussionsDetailsPage.saveDiscussion()
+        Log.d(STEP_TAG, "Assert that the 'Reply' button is displayed on the discussion details (web view) page.")
+        discussionDetailsPage.waitForReplyButtonDisplayed()
+        discussionDetailsPage.assertReplyButtonDisplayed()
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the discussion's name has been changed to '$newTitle' and it is published.")
-        nativeDiscussionsDetailsPage.refresh()
-        nativeDiscussionsDetailsPage.assertDiscussionTitle(newTitle)
-        nativeDiscussionsDetailsPage.assertDiscussionPublished()
+        Log.d(STEP_TAG, "Assert that the toolbar's title is the '${discussion.title}' discussion's title.")
+        discussionDetailsPage.assertToolbarDiscussionTitle(discussion.title)
 
-        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Unpublish the '$newTitle' discussion and click on 'Save'.")
-        nativeDiscussionsDetailsPage.openEdit()
-        editDiscussionsDetailsPage.togglePublished()
-        editDiscussionsDetailsPage.saveDiscussion()
-
-        Log.d(STEP_TAG,"Refresh the page. Assert that the '$newTitle' discussion has been unpublished.")
-        nativeDiscussionsDetailsPage.refresh()
-        nativeDiscussionsDetailsPage.assertDiscussionUnpublished()
+        Log.d(STEP_TAG, "Click on the more menu of the announcement and assert if the more menu items are all displayed.")
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Unread")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Edit")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Delete")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Close for Comments")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Send To...")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Copy To...")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Share to Commons")
 
         Log.d(STEP_TAG, "Navigate back to Discussion List Page. Select 'Pin' overflow menu of '${discussion2.title}' discussion and assert that it has became Pinned.")
         Espresso.pressBack()
@@ -92,20 +91,16 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertDiscussionInGroup("Pinned", discussion2.title)
 
         Log.d(STEP_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discussions are displayed.")
-        discussionsListPage.assertHasDiscussion(newTitle)
+        discussionsListPage.assertHasDiscussion(discussion)
         discussionsListPage.assertHasDiscussion(discussion2)
 
-        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '$newTitle' discussion.")
-        discussionsListPage.clickDiscussion(newTitle)
-        nativeDiscussionsDetailsPage.openEdit()
-        editDiscussionsDetailsPage.deleteDiscussion()
+        Log.d(STEP_TAG,"Click on more menu of '${discussion.title}' discussion and delete it.")
+        discussionsListPage.deleteDiscussionFromOverflowMenu(discussion.title)
 
-        Log.d(STEP_TAG,"Navigate to Discussions Details Page by clicking on 'Edit'. Delete the '${discussion2.title}' discussion via the overflow menu.")
-        discussionsListPage.deleteDiscussionFromOverflowMenu(discussion2.title)
-
-        Log.d(STEP_TAG,"Refresh the page. Assert that there is no discussion, so the '$newTitle' discussion has been deleted successfully.")
-        discussionsListPage.refresh()
-        discussionsListPage.assertNoDiscussion()
+        Log.d(STEP_TAG,"Assert that the previously deleted '${discussion.title}' discussion is not displayed, but the other, '${discussion2.title}' discussion is.")
+        sleep(2000) //Allow the deletion to propagate
+        discussionsListPage.assertDiscussionDoesNotExist(discussion.title)
+        discussionsListPage.assertHasDiscussion(discussion2)
 
         Log.d(STEP_TAG,"Click on '+' icon on the UI to create a new discussion.")
         discussionsListPage.createNewDiscussion()
@@ -115,14 +110,16 @@ class DiscussionsE2ETest : TeacherTest() {
         editDiscussionsDetailsPage.editDiscussionTitle(newDiscussionTitle)
         editDiscussionsDetailsPage.editDiscussionDescription("Mobile UI Discussion description")
 
-        Log.d(STEP_TAG,"Toggle Publish checkbox and save the page.")
+        Log.d(STEP_TAG,"Toggle 'Publish' checkbox and save the page.")
         editDiscussionsDetailsPage.togglePublished()
         editDiscussionsDetailsPage.clickSendNewDiscussion()
 
         Log.d(STEP_TAG,"Assert that '$newDiscussionTitle' discussion is displayed and published.")
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
         discussionsListPage.clickDiscussion(newDiscussionTitle)
-        nativeDiscussionsDetailsPage.assertDiscussionPublished()
+
+        Log.d(STEP_TAG, "Assert that the toolbar's title is the '$newDiscussionTitle' discussion's title.")
+        discussionDetailsPage.assertToolbarDiscussionTitle(newDiscussionTitle)
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
@@ -133,6 +130,16 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(newDiscussionTitle)
         discussionsListPage.searchable.clickOnClearSearchButton()
+
+        Log.d(STEP_TAG, "Quit from Searching mechanism.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG,"Click on more menu of '${discussion2.title}' discussion and delete it.")
+        discussionsListPage.deleteDiscussionFromOverflowMenu(discussion2.title)
+
+        Log.d(STEP_TAG,"Assert that the previously deleted '${discussion2.title}' discussion is not displayed.")
+        sleep(2000) //Allow the deletion to propagate
+        discussionsListPage.assertDiscussionDoesNotExist(discussion2.title)
 
         Log.d(STEP_TAG,"Collapse the discussion list and assert that the '$newDiscussionTitle' discussion can NOT be seen.")
         discussionsListPage.toggleCollapseExpandIcon()
