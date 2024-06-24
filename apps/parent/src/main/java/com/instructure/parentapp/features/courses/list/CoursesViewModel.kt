@@ -17,38 +17,33 @@
 
 package com.instructure.parentapp.features.courses.list
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.orDefault
-import com.instructure.parentapp.R
 import com.instructure.parentapp.features.main.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import javax.inject.Inject
 
 
 @HiltViewModel
 class CoursesViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val repository: CoursesRepository,
     private val colorKeeper: ColorKeeper,
     private val apiPrefs: ApiPrefs,
-    private val selectedStudentHolder: SelectedStudentHolder
+    private val selectedStudentHolder: SelectedStudentHolder,
+    private val courseGradeFormatter: CourseGradeFormatter
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(CoursesUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -67,7 +62,7 @@ class CoursesViewModel @Inject constructor(
 
     private fun loadCourses(forceRefresh: Boolean = false) {
         viewModelScope.tryLaunch {
-            val color = colorKeeper.getOrGenerateUserColor(selectedStudent).backgroundColor()
+            val color = colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor()
 
             _uiState.update {
                 it.copy(
@@ -78,12 +73,17 @@ class CoursesViewModel @Inject constructor(
             }
 
             selectedStudent?.id?.let {
-                val courses = repository.getCourses(selectedStudent!!.id, forceRefresh)
+                val courses = repository.getCourses(it, forceRefresh)
                 _uiState.update { state ->
                     state.copy(
                         isLoading = false,
-                        courseListItems = courses.map {
-                            CourseListItemUiState(it.id, it.name, it.courseCode, getGradeText(it))
+                        courseListItems = courses.map { course ->
+                            CourseListItemUiState(
+                                course.id,
+                                course.name,
+                                course.courseCode,
+                                courseGradeFormatter.getGradeText(course, it)
+                            )
                         }
                     )
                 }
@@ -101,30 +101,6 @@ class CoursesViewModel @Inject constructor(
                 isLoading = false,
                 isError = true
             )
-        }
-    }
-
-    private fun getGradeText(course: Course): String? {
-        val percentageFormat = NumberFormat.getPercentInstance().apply {
-            maximumFractionDigits = 2
-        }
-
-        val enrollment = course.enrollments?.find { it.userId == selectedStudent?.id } ?: return null
-        val grade = course.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment)
-        val restrictQuantitativeData = course.settings?.restrictQuantitativeData.orDefault()
-
-        if (grade.isLocked || (restrictQuantitativeData && !grade.hasCurrentGradeString())) return null
-
-        val formattedScore = grade.currentScore?.takeIf {
-            !restrictQuantitativeData
-        }?.let {
-            percentageFormat.format(it / 100)
-        }.orEmpty()
-
-        return when {
-            !grade.hasCurrentGradeString() -> context.getString(R.string.noGrade)
-            !grade.currentGrade.isNullOrEmpty() -> "${grade.currentGrade} $formattedScore"
-            else -> formattedScore
         }
     }
 

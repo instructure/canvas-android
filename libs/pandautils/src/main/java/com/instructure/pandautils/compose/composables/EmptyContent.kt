@@ -58,9 +58,9 @@ fun EmptyContent(
         Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = emptyTitle,
-            fontSize = 22.sp,
+            fontSize = 20.sp,
             color = colorResource(
-                id = R.color.textDark
+                id = R.color.textDarkest
             ),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 32.dp)
@@ -70,7 +70,7 @@ fun EmptyContent(
             text = emptyMessage,
             fontSize = 16.sp,
             color = colorResource(
-                id = R.color.textDark
+                id = R.color.textDarkest
             ),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 32.dp)

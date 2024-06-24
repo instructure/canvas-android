@@ -17,12 +17,15 @@
 
 package com.instructure.parentapp.di
 
+import android.content.Context
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.parentapp.features.courses.list.CourseGradeFormatter
 import com.instructure.parentapp.features.courses.list.CoursesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 
 @Module
@@ -32,5 +35,10 @@ class CoursesModule {
     @Provides
     fun provideCoursesRepository(courseApi: CourseAPI.CoursesInterface): CoursesRepository {
         return CoursesRepository(courseApi)
+    }
+
+    @Provides
+    fun provideCourseGradeFormatter(@ApplicationContext context: Context): CourseGradeFormatter {
+        return CourseGradeFormatter(context)
     }
 }
