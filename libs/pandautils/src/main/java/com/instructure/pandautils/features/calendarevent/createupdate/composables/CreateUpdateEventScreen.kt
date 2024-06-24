@@ -21,6 +21,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -242,9 +244,10 @@ private fun ActionsSegment(
     if (showModifyScopeDialog) {
         SingleChoiceAlertDialog(
             dialogTitle = stringResource(id = R.string.eventUpdateRecurringTitle),
-            items = CalendarEventAPI.ModifyEventScope.entries.take(if (uiState.isSeriesHead) 2 else 3).map {
-                stringResource(id = it.stringRes)
-            },
+            items = CalendarEventAPI.ModifyEventScope.entries.take(if (uiState.isSeriesHead) 2 else 3)
+                .map {
+                    stringResource(id = it.stringRes)
+                },
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.confirm),
             onDismissRequest = {
@@ -401,42 +404,16 @@ private fun CreateUpdateEventContent(
         ) {
             val focusManager = LocalFocusManager.current
 
-            BasicTextField(
-                value = uiState.title,
-                decorationBox = {
-                    Box(contentAlignment = Alignment.CenterStart) {
-                        if (uiState.title.isEmpty()) {
-                            Text(
-                                text = stringResource(id = R.string.createEventTitleHint),
-                                color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
-                                fontSize = 16.sp
-                            )
-                        }
-                        it()
-                    }
-                },
-                onValueChange = {
-                    actionHandler(CreateUpdateEventAction.UpdateTitle(it))
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(horizontal = 16.dp)
-                    .onFocusChanged {
-                        focusedTextFields = if (it.hasFocus) {
-                            focusedTextFields + TITLE
-                        } else {
-                            focusedTextFields - TITLE
-                        }
-                    }
-                    .testTag("addTitleField"),
-                cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-                textStyle = TextStyle(
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                ),
-                singleLine = true
-            )
+            TitleInput(title = uiState.title, onFocusChanged = {
+                focusedTextFields = if (it.hasFocus) {
+                    focusedTextFields + TITLE
+                } else {
+                    focusedTextFields - TITLE
+                }
+            }, onTitleUpdate = {
+                actionHandler(CreateUpdateEventAction.UpdateTitle(it))
+            })
+
             LabelValueRow(
                 label = stringResource(R.string.createEventDateLabel),
                 value = uiState.formattedDate,
@@ -579,6 +556,59 @@ private fun LabeledTextField(
     }
 }
 
+@Composable
+private fun TitleInput(
+    title: String,
+    modifier: Modifier = Modifier,
+    onFocusChanged: (FocusState) -> Unit,
+    onTitleUpdate: (String) -> Unit
+) {
+    Row(
+        modifier = modifier
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(vertical = 16.dp, horizontal = 16.dp)
+    ) {
+
+        Text(
+            text = stringResource(id = R.string.createEventTitleLabel),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp,
+            modifier = Modifier.padding(end = 12.dp)
+        )
+
+        BasicTextField(
+            value = title,
+            decorationBox = {
+                Box(contentAlignment = Alignment.CenterStart) {
+                    if (title.isEmpty()) {
+                        Text(
+                            text = stringResource(id = R.string.createEventTitleHint),
+                            color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
+                            fontSize = 16.sp
+                        )
+                    }
+                    it()
+                }
+            },
+            onValueChange = {
+                onTitleUpdate(it)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged {
+                    onFocusChanged(it)
+                }
+                .testTag("addTitleField"),
+            cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
+            textStyle = TextStyle(
+                color = colorResource(id = R.color.textDark),
+                fontSize = 16.sp
+            ),
+            maxLines = 2
+        )
+    }
+}
+
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
@@ -602,4 +632,20 @@ private fun CreateUpdateEventPreview() {
         ),
         actionHandler = {}
     )
+}
+
+@Preview
+@Composable
+private fun TitleInputPreview() {
+    TitleInput("really really really really really really really really really long",
+        onFocusChanged = {},
+        onTitleUpdate = {})
+}
+
+@Preview
+@Composable
+private fun TitleInputEmptyPreview() {
+    TitleInput("",
+        onFocusChanged = {},
+        onTitleUpdate = {})
 }

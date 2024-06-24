@@ -21,6 +21,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -296,35 +297,9 @@ private fun CreateUpdateToDoContent(
             val detailsFocusRequester = remember { FocusRequester() }
             val focusManager = LocalFocusManager.current
 
-            BasicTextField(
-                value = uiState.title,
-                decorationBox = {
-                    Box(contentAlignment = Alignment.CenterStart) {
-                        if (uiState.title.isEmpty()) {
-                            Text(
-                                text = stringResource(id = R.string.createToDoTitleHint),
-                                color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
-                                fontSize = 16.sp
-                            )
-                        }
-                        it()
-                    }
-                },
-                onValueChange = {
-                    actionHandler(CreateUpdateToDoAction.UpdateTitle(it))
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(horizontal = 16.dp)
-                    .testTag("addTitleField"),
-                cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-                textStyle = TextStyle(
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                ),
-                singleLine = true
-            )
+            TitleInput(title = uiState.title) {
+                actionHandler(CreateUpdateToDoAction.UpdateTitle(it))
+            }
             LabelValueRow(
                 label = stringResource(id = R.string.createToDoDateLabel),
                 value = uiState.formattedDate,
@@ -387,6 +362,56 @@ private fun CreateUpdateToDoContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun TitleInput(
+    title: String,
+    modifier: Modifier = Modifier,
+    onTitleUpdate: (String) -> Unit
+) {
+
+    Row(
+        modifier = modifier
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(vertical = 16.dp, horizontal = 16.dp)
+    ) {
+
+        Text(
+            text = stringResource(id = R.string.createToDoTitleLabel),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp,
+            modifier = Modifier.padding(end = 12.dp)
+        )
+
+        BasicTextField(
+            value = title,
+            decorationBox = {
+                Box(contentAlignment = Alignment.CenterStart) {
+                    if (title.isEmpty()) {
+                        Text(
+                            text = stringResource(id = R.string.createEventTitleHint),
+                            color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
+                            fontSize = 16.sp
+                        )
+                    }
+                    it()
+                }
+            },
+            onValueChange = {
+                onTitleUpdate(it)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("addTitleField"),
+            cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
+            textStyle = TextStyle(
+                color = colorResource(id = R.color.textDark),
+                fontSize = 16.sp
+            ),
+            maxLines = 2
+        )
     }
 }
 
