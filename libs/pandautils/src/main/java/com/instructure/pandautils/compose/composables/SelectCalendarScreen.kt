@@ -178,12 +178,13 @@ private fun SelectCalendarItem(
                     } else {
                         canvasContext.name.orEmpty()
                     }
+                testTag = "calendar_${canvasContext.name}"
             }, verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
             selected = selected,
             modifier = Modifier.clearAndSetSemantics {
-                testTag = "radioButton_${canvasContext.contextId}"
+                testTag = "radioButton_${canvasContext.name}"
             },
             onClick = {
                 onCalendarSelected(canvasContext)
@@ -195,7 +196,7 @@ private fun SelectCalendarItem(
         )
         Text(
             modifier = Modifier.clearAndSetSemantics {
-                testTag = "title_${canvasContext.contextId}"
+                testTag = "title_${canvasContext.name}"
             },
             text = canvasContext.name.orEmpty(),
             color = colorResource(id = R.color.textDarkest),
