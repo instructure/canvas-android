@@ -79,6 +79,7 @@ class OfflineDiscussionsE2ETest : StudentTest() {
         discussionListPage.selectTopic(discussion1.title)
 
         Log.d(STEP_TAG, "Assert that the 'Reply' button is displayed on the Discussion Details (Web view) Page.")
+        discussionDetailsPage.waitForReplyButton()
         discussionDetailsPage.assertReplyButtonDisplayed()
 
         Log.d(STEP_TAG,"Assert the the previously sent reply 'My reply', is displayed on the (online) details page.")

@@ -87,7 +87,7 @@ class AnnouncementsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Assert that the '${announcement.title}' announcement's title is displayed on the toolbar and the 'Reply' button is displayed as this announcement is not locked.")
         discussionDetailsPage.assertToolbarDiscussionTitle(announcement.title)
-        discussionDetailsPage.waitForReplyButtonDisplayed()
+        discussionDetailsPage.waitForReplyButton()
         discussionDetailsPage.assertReplyButtonDisplayed()
 
         Log.d(STEP_TAG,"Assert the the previously seeded reply, '$replyMessage', is displayed on the (online) details page.")

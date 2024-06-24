@@ -70,7 +70,7 @@ class DiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
         onView(withText(discussionTitle) + withAncestor(withId(R.id.toolbar) + hasSibling(withId(R.id.discussionWebView)))).assertDisplayed()
     }
 
-    fun waitForReplyButtonDisplayed() {
+    fun waitForReplyButton() {
         waitForWebElement(
             webViewMatcher = withId(R.id.discussionWebView),
             locator = Locator.XPATH,
