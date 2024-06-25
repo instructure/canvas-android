@@ -18,8 +18,8 @@
 package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
-import com.heapanalytics.android.Heap
 import com.instructure.canvasapi2.BuildConfig
+import io.heap.core.Heap
 
 object Analytics {
 
@@ -32,14 +32,16 @@ object Analytics {
                 .associateWith {
                 bundle.getString(it)
             }
-        }
+                .filterValues { it != null }
+                .mapValues { it.value!! }
+        } ?: emptyMap()
         Heap.track(eventName, map)
     }
 
     fun logEvent(eventName: String) {
         if (BuildConfig.DEBUG) return
 
-        Heap.track(eventName, null)
+        Heap.track(eventName)
     }
 
     fun setUserProperty(propertyName: String, propertyValue: String) {

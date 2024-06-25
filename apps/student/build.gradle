@@ -24,7 +24,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
-//apply plugin: 'com.heapanalytics.android'
+apply plugin: 'io.heap.gradle'
 
 def updatePriority = 2
 def coverageEnabled = project.hasProperty('coverage')
@@ -115,10 +115,6 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
-
-            ext {
-                heapEnabled = true
-            }
         }
 
         debugMinify {
@@ -144,10 +140,6 @@ android {
             }
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapProductionId\""
-
-            ext {
-                heapEnabled = true
-            }
         }
     }
 
@@ -342,6 +334,7 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
     implementation Libs.HEAP
+    implementation Libs.HEAP_VIEW
 
     /* ROOM */
     implementation Libs.ROOM
