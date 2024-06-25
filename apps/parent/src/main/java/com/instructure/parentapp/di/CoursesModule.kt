@@ -17,40 +17,28 @@
 
 package com.instructure.parentapp.di
 
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.ThemeAPI
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.parentapp.features.main.MainRepository
-import com.instructure.parentapp.features.main.SelectedStudentHolder
-import com.instructure.parentapp.features.main.SelectedStudentHolderImpl
+import android.content.Context
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.parentapp.features.courses.list.CourseGradeFormatter
+import com.instructure.parentapp.features.courses.list.CoursesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class MainModule {
+class CoursesModule {
 
     @Provides
-    fun provideMainRepository(
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-        userApi: UserAPI.UsersInterface,
-        themeApi: ThemeAPI.ThemeInterface
-    ): MainRepository {
-        return MainRepository(enrollmentApi, userApi, themeApi)
+    fun provideCoursesRepository(courseApi: CourseAPI.CoursesInterface): CoursesRepository {
+        return CoursesRepository(courseApi)
     }
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-class SelectedStudentHolderModule {
 
     @Provides
-    @Singleton
-    fun provideSelectedStudentHolder(): SelectedStudentHolder {
-        return SelectedStudentHolderImpl()
+    fun provideCourseGradeFormatter(@ApplicationContext context: Context): CourseGradeFormatter {
+        return CourseGradeFormatter(context)
     }
 }

@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.main
+package com.instructure.parentapp.features.main
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -33,11 +33,6 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.R
-import com.instructure.parentapp.features.main.MainAction
-import com.instructure.parentapp.features.main.MainRepository
-import com.instructure.parentapp.features.main.MainViewModel
-import com.instructure.parentapp.features.main.StudentItemViewData
-import com.instructure.parentapp.features.main.UserViewData
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -75,6 +70,7 @@ class MainViewModelTest {
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
 
     private lateinit var viewModel: MainViewModel
 
@@ -152,8 +148,8 @@ class MainViewModelTest {
     @Test
     fun `Students map correctly`() {
         val students = listOf(
-            User(id = 1L, name = "Student One", avatarUrl = "avatar1"),
-            User(id = 2L, name = "Student Two", avatarUrl = "avatar2"),
+            User(id = 1L, shortName = "Student One", avatarUrl = "avatar1"),
+            User(id = 2L, shortName = "Student Two", avatarUrl = "avatar2"),
         )
 
         coEvery { repository.getStudents() } returns students
@@ -225,6 +221,7 @@ class MainViewModelTest {
 
         Assert.assertEquals(students.last(), viewModel.data.value.selectedStudent)
         Assert.assertFalse(viewModel.data.value.studentSelectorExpanded)
+        coVerify { selectedStudentHolder.updateSelectedStudent(students.last()) }
     }
 
     @Test
@@ -257,7 +254,8 @@ class MainViewModelTest {
             apiPrefs = apiPrefs,
             parentPrefs = parentPrefs,
             colorKeeper = colorKeeper,
-            themePrefs = themePrefs
+            themePrefs = themePrefs,
+            selectedStudentHolder = selectedStudentHolder
         )
     }
 }

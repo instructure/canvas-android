@@ -31,5 +31,6 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="android:editTextStyle">@style/NoGifEditText</item>
         <item name="editTextStyle">@style/NoGifEditText</item>
+        <item name="fontFamily">@font/lato_font_family</item>
     </style>
 </resources>

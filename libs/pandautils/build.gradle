@@ -208,16 +208,16 @@ dependencies {
 
     /* Compose */
     def composeBom = platform(Libs.COMPOSE_BOM)
-    implementation composeBom
-    androidTestImplementation composeBom
+    api composeBom
+    androidTestApi composeBom
 
-    implementation Libs.COMPOSE_BOM
-    implementation Libs.COMPOSE_MATERIAL
-    implementation Libs.COMPOSE_PREVIEW
-    debugImplementation Libs.COMPOSE_TOOLING
-    implementation Libs.COMPOSE_VIEW_MODEL
-    implementation Libs.COMPOSE_UI
-    implementation Libs.COMPOSE_ACTIVITY
+    api Libs.COMPOSE_BOM
+    api Libs.COMPOSE_MATERIAL
+    api Libs.COMPOSE_PREVIEW
+    debugApi Libs.COMPOSE_TOOLING
+    api Libs.COMPOSE_VIEW_MODEL
+    api Libs.COMPOSE_UI
+    api Libs.COMPOSE_ACTIVITY
 
     implementation Libs.FLEXBOX_LAYOUT
 
