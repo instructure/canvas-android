@@ -43,7 +43,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun clickOnAddButton() {
-        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.calendarAddButtonContentDescription))
+        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.calendarAddNewCalendarItemContentDescription))
             .performClick()
         composeTestRule.waitForIdle()
     }
