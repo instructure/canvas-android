@@ -53,8 +53,14 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,7 +83,7 @@ fun ExpandableFloatingActionButton(
     val rotationState by animateFloatAsState(targetValue = if (expanded.value) 45f else 0f, label = "fabRotation")
 
     Column(
-        modifier = modifier,
+        modifier = modifier.semantics { isTraversalGroup = true },
         horizontalAlignment = Alignment.End
     ) {
         expandedItems.forEach {
@@ -91,14 +97,28 @@ fun ExpandableFloatingActionButton(
             }
         }
         Spacer(modifier = Modifier.height(4.dp))
+        val labelRes = if (expanded.value) R.string.a11y_calendarCloseAddActions else R.string.a11y_calendarOpenAddActions
+        val onClickLabel = stringResource(labelRes)
+
+        val announceRes = if (expanded.value) R.string.a11y_calendarActionsClosed else R.string.a11y_calendarActionsOpen
+        val onClickAnnounce = stringResource(announceRes)
+        val localView = LocalView.current
         FloatingActionButton(
             shape = shape,
             backgroundColor = backgroundColor,
             contentColor = contentColor,
-            onClick = { expanded.value = !expanded.value },
+            onClick = {},
             modifier = Modifier
                 .size(56.dp)
                 .rotate(rotationState)
+                .semantics {
+                    traversalIndex = 0f
+                    onClick(label = onClickLabel) {
+                        localView.announceForAccessibility(onClickAnnounce)
+                        expanded.value = !expanded.value
+                        true
+                    }
+                }
         ) {
             icon()
         }
