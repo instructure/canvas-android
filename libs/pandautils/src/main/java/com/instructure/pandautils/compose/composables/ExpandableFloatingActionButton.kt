@@ -107,7 +107,7 @@ fun ExpandableFloatingActionButton(
             shape = shape,
             backgroundColor = backgroundColor,
             contentColor = contentColor,
-            onClick = {},
+            onClick = { expanded.value = !expanded.value },
             modifier = Modifier
                 .size(56.dp)
                 .rotate(rotationState)
