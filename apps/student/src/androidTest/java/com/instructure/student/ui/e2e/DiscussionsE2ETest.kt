@@ -80,7 +80,7 @@ class DiscussionsE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Select '${announcement.title}' announcement and assert if the Discussion Details Page is displayed.")
         discussionListPage.selectTopic(announcement.title)
-        discussionDetailsPage.assertTitleText(announcement.title)
+        discussionDetailsPage.assertToolbarDiscussionTitle(announcement.title)
 
         Log.d(STEP_TAG,"Navigate back to the Discussion List Page.")
         Espresso.pressBack()
@@ -108,8 +108,7 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Select '${topic1.title}' discussion and assert if the details page is displayed and there is no reply for the discussion yet.")
         discussionListPage.assertTopicDisplayed(topic1.title)
         discussionListPage.selectTopic(topic1.title)
-        discussionDetailsPage.assertTitleText(topic1.title)
-        discussionDetailsPage.assertNoRepliesDisplayed()
+        discussionDetailsPage.assertToolbarDiscussionTitle(topic1.title)
 
         Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
         Espresso.pressBack()
@@ -117,8 +116,7 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Select '${topic1.title}' discussion and assert if the details page is displayed and there is no reply for the discussion yet.")
         discussionListPage.assertTopicDisplayed(topic2.title)
         discussionListPage.selectTopic(topic2.title)
-        discussionDetailsPage.assertTitleText(topic2.title)
-        discussionDetailsPage.assertNoRepliesDisplayed()
+        discussionDetailsPage.assertToolbarDiscussionTitle(topic2.title)
 
         Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
         Espresso.pressBack()
@@ -133,29 +131,29 @@ class DiscussionsE2ETest: StudentTest() {
         discussionListPage.assertTopicDisplayed(newTopicName)
         discussionListPage.assertReplyCount(newTopicName, 0)
 
-        Log.d(STEP_TAG,"Select '$newTopicName' topic and assert that there is no reply on the details page as well.")
-        discussionListPage.selectTopic(newTopicName)
-        discussionDetailsPage.assertNoRepliesDisplayed()
-
         val replyMessage = "My reply"
-        Log.d(STEP_TAG,"Send a reply with text: '$replyMessage'.")
-        discussionDetailsPage.sendReply(replyMessage)
-        sleep(2000) // Allow some time for reply to propagate
+        Log.d(PREPARATION_TAG, "Seed a discussion topic (message) entry for the '${topic1.title}' discussion with the '$replyMessage' message as a student.")
+        DiscussionTopicsApi.createEntryToDiscussionTopic(student.token, course.id, topic1.id, replyMessage)
+        sleep(2000) // Allow some time for entry creation to propagate
 
-        Log.d(STEP_TAG,"Assert the the previously sent reply ($replyMessage) is displayed on the details page.")
-        discussionDetailsPage.assertRepliesDisplayed()
+        Log.d(STEP_TAG,"Select '${topic1.title}' topic.")
+        discussionListPage.selectTopic(topic1.title)
+
+        Log.d(STEP_TAG,"Assert the the previously sent entry message, '$replyMessage')' is displayed on the details (web view) page.")
+        discussionDetailsPage.waitForEntryDisplayed(replyMessage)
+        discussionDetailsPage.assertEntryDisplayed(replyMessage)
 
         Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the previously sent reply has been counted, and there are no unread replies.")
         discussionListPage.pullToUpdate()
-        discussionListPage.assertReplyCount(newTopicName, 1)
-        discussionListPage.assertUnreadReplyCount(newTopicName, 0)
+        discussionListPage.assertReplyCount(topic1.title, 1)
+        discussionListPage.assertUnreadReplyCount(topic1.title, 0)
 
         Log.d(STEP_TAG, "Assert that the due date is the current date (in the expected format).")
         val currentDate = getDateInCanvasFormat()
-        discussionListPage.assertDueDate(newTopicName, currentDate)
+        discussionListPage.assertDueDate(topic1.title, currentDate)
     }
 
 }
