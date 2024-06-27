@@ -53,7 +53,6 @@ import com.instructure.student.ui.pages.ConferenceListPage
 import com.instructure.student.ui.pages.CourseBrowserPage
 import com.instructure.student.ui.pages.CourseGradesPage
 import com.instructure.student.ui.pages.DashboardPage
-import com.instructure.student.ui.pages.DiscussionDetailsPage
 import com.instructure.student.ui.pages.DiscussionListPage
 import com.instructure.student.ui.pages.ElementaryCoursePage
 import com.instructure.student.ui.pages.ElementaryDashboardPage
@@ -99,6 +98,7 @@ import com.instructure.student.ui.pages.TextSubmissionUploadPage
 import com.instructure.student.ui.pages.TodoPage
 import com.instructure.student.ui.pages.UrlSubmissionUploadPage
 import com.instructure.student.ui.pages.offline.ManageOfflineContentPage
+import com.instructure.student.ui.pages.offline.NativeDiscussionDetailsPage
 import com.instructure.student.ui.pages.offline.OfflineSyncSettingsPage
 import com.instructure.student.ui.pages.offline.SyncProgressPage
 import instructure.rceditor.RCETextEditor
@@ -132,7 +132,8 @@ abstract class StudentTest : CanvasTest() {
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
-    val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
+    val discussionDetailsPage = com.instructure.student.ui.pages.DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
+    val nativeDiscussionDetailsPage = NativeDiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val allCoursesPage = AllCoursesPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))

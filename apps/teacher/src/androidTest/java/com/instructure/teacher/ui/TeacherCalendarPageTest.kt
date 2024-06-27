@@ -24,7 +24,7 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.AssignmentDetailsPage
 import com.instructure.teacher.ui.pages.DashboardPage
-import com.instructure.teacher.ui.pages.DiscussionsDetailsPage
+import com.instructure.teacher.ui.pages.NativeDiscussionsDetailsPage
 import com.instructure.teacher.ui.utils.TeacherActivityTestRule
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,7 +38,7 @@ class TeacherCalendarPageTest : CalendarInteractionTest() {
 
     private val dashboardPage = DashboardPage()
     private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
-    private val discussionDetailsPage = DiscussionsDetailsPage(ModuleItemInteractions())
+    private val discussionDetailsPage = NativeDiscussionsDetailsPage(ModuleItemInteractions())
 
     override fun goToCalendar(data: MockCanvas) {
         val teacher = data.teachers[0]

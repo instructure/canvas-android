@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">मीडिया चुनें</string>
+    <string name="takeVideo">वीडियो बनाएं</string>
+    <string name="noCameraOnDevice">कोई कैमरा नहीं</string>
+    <string name="takePhoto">फ़ोटो लें</string>
+    <string name="choosePhotoFromGallery">गैलरी से फ़ोटो चुनें</string>
+
+    <string name="utils_edit">संपादित करें</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Canvas पर अपलोड करें</string>
+    <string name="preparingUpload">अपलोड तैयार किया जा रहा है</string>
+    <string name="loadingFilesIndeterminate">फ़ाइलें लोड की जा रही हैं&#8230;</string>
+    <string name="fileUploadSuccess">सफलतापूर्वक अपलोड किया गया</string>
+    <string name="noNetwork">नेटवर्क उपलब्ध नहीं है - कृपया बाद में पुन: प्रयास करें.</string>
+    <string name="uploadMessage">"अपलोड प्रगति पर है। अपलोड स्थिति के लिए सूचनाएं देखें।</string>
+    <string name="uploadingFile">फ़ाइल अपलोड की जा रही है&#8230;</string>
+    <string name="errorUploadingFile">आपकी फ़ाइल अपलोड करने के दौरान त्रुटि उत्पन्न हुई। कृपया फिर से कोशिश करें।</string>
+    <string name="fileSubmission">फ़ाइल/फ़ाइलें सबमिट करें</string>
+    <string name="uploadFiles">फ़ाइल/फ़ाइलें अपलोड करें</string>
+    <string name="upload">अपलोड करें</string>
+    <string name="errorSendingMessage">आपका संदेश भेजते समय कोई त्रुटि उत्पन्न हुई। कृपया फिर से कोशिश करें।</string>
+
+    <string name="notificationChannelNameFileUploadsName">सूचनाएं अपलोड करें</string>
+    <string name="notificationChannelNameFileUploadsDescription">चालू अपलोड के लिए Canvas सूचनाएं।</string>
+
+
+    <!-- Turn in Files -->
+    <string name="addFile">फ़ाइल जोड़ें</string>
+
+    <string name="fromCamera">कैमरा</string>
+    <string name="fromGallery">गैलरी</string>
+    <string name="fromDevice">डिवाइस</string>
+    <string name="fromDocumentScanning">स्कैनर</string>
+    <string name="fromOtherApplication">अन्य</string>
+    <string name="Domain">डोमेन</string>
+    <string name="files">फ़ाइलें</string>
+    <string name="file">फ़ाइल</string>
+    <string name="fileTalkBack">फ़ाइल %s</string>
+    <string name="folderTalkBack">फ़ोल्डर %s</string>
+    <string name="addItem">आइटम जोड़ें</string>
+    <string name="assignment">असाइनमेंट</string>
+    <string name="attachedFiles">संलग्न फ़ाइलें</string>
+    <string name="turnIn">यहां जाएं:</string>
+    <string name="course">पाठ्यक्रम</string>
+    <string name="sending">भेजा जा रहा है&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">स्टार रेटिंग एक</string>
+    <string name="star2">स्टार रेटिंग दो</string>
+    <string name="star3">स्टार रेटिंग तीन</string>
+    <string name="star4">स्टार रेटिंग चार</string>
+    <string name="star5">स्टार रेटिंग पांच</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">आपने वर्तमान में अपना फ़ाइल संग्रहण कोटा पार कर लिया है।</string>
+    <string name="errorSubmittingFiles">आपकी फ़ाइलें भेजने के दौरान त्रुटि उत्पन्न हुई। कृपया फिर से कोशिश करें।</string>
+    <string name="errorLoadingFiles">आपकी फ़ाइल लोड करने के दौरान त्रुटि उत्पन्न हुई। कृपया अपने इंटरनेट कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+    <string name="filesUploadedSuccessfully">फ़ाइलें सफलतापूर्वक अपलोड हो गईं।</string>
+    <string name="filesSubmittedSuccessfully">फ़ाइलें सफलतापूर्वक सबमिट की गईं।</string>
+    <string name="messageSentSuccessfully">संदेश सफलतापूर्वक भेजा गया।</string>
+    <string name="shareWithCanvas">अन्य ऐप्स Canvas के साथ फ़ाइलें साझा कर सकते हैं! ऐप्स में नीचे दिए गए आइकन को देखें और Canvas पर टैप करें।</string>
+    <string name="shareWithCanvas2">इस तरह से यह ऐप खुल जाएगा। फिर बस यह चुनें कि आप किस पाठ्यक्रम और असाइनमेंट को फ़ाइल में बदलना चाहते हैं।</string>
+    <string name="contentDescriptionSocialShare">आइकन साझा करें</string>
+    <string name="submitAssignment">असाइनमेंट सबमिट करें</string>
+    <string name="assignmentHeader">असाइनमेंट :</string>
+    <string name="submittingAssignment">असाइनमेंट सबमिट किया जा रहा है&#8230;</string>
+    <string name="conversations">बातचीत </string>
+    <string name="inbox">इनबॉक्स </string>
+    <string name="divider">डिवाइडर</string>
+    <string name="legal">कानूनी</string>
+    <string name="completeHomework">अपना होमवर्क पूरा करें</string>
+    <string name="takeExam">परीक्षा में भाग लें</string>
+    <string name="fileIcon">फ़ाइल आइकन</string>
+    <string name="uploadingFileNum" formatted="false">%d में से %d अपलोड किया जा रहा है</string>
+    <string name="fileLocked" formatted="false">%s को लॉक कर दिया गया है।</string>
+    <string name="filePermissionGranted">फ़ाइल अब डाउनलोड करने के लिए तैयार है, कृपया पुनः प्रयास करें।</string>
+    <string name="filePermissionDenied">अनुमति दिए बिना फ़ाइल डाउनलोड नहीं की जा सकती।</string>
+    <string name="pleaseTryAgain">अनुमति दी गई, कृपया फिर से कोशिश करें।</string>
+    <string name="pickFile">कोई फ़ाइल चुनें</string>
+    <string name="assignmentSubmissionUpload">%s के लिए सबमिशन अपलोड किया जा रहा है</string>
+    <string name="assignmentSubmissionError">%s सबमिशन विफल रहा</string>
+    <string name="assignmentSubmissionComplete">%s सफलतापूर्वक सबमिट किया गया</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">एक अप्रत्याशित त्रुटि हुई।</string>
+    <string name="serverError">सर्वर त्रुटि उत्पन्न हुई है।</string>
+    <string name="unauthorized">आप इसे एक्सेस करने के लिए अनधिकृत हैं। या तो आपके पास अनुमतियां नहीं हैं या आपके पास अभी तक एक्सेस नहीं है (जैसे, आपका पाठ्यक्रम अभी तक शुरू नहीं हुआ है)</string>
+    <string name="fileNoLongerExists">वह फ़ाइल अब मौजूद नहीं है।</string>
+    <string name="invalidAccessToken">आपके सत्र का समय समाप्त हो गया है। नया सत्र शुरू करने के लिए कृपया लॉग इन करें।</string>
+    <string name="uploadingFromSourceFailed">इस स्रोत से फ़ाइल अपलोड करना पूरा नहीं किया जा सका।</string>
+    <string name="errorGettingPhoto">फ़ोटो प्राप्त करने में त्रुटि हुई। कृपया फिर से कोशिश करें।</string>
+    <string name="errorTextMissing">संदेश भेजने के लिए कुछ पाठ जोड़ें</string>
+
+    <string name="fileUploadNotSupported">आप चयनित असाइनमेंट में फ़ाइलें अपलोड नहीं कर सकते।</string>
+    <string name="noCourseSelected">कृपया पाठ्यक्रम चुनें</string>
+    <string name="selectCourse">पाठ्यक्रम का चयन करें</string>
+    <string name="selectAssignment">कोई असाइनमेंट चुनें</string>
+    <string name="loadingAssignments">असाइनमेंट लोड की जा रही हैं&#8230;</string>
+    <string name="noAssignmentSelected">कृपया कोई असाइनमेंट चुनें</string>
+    <string name="noAssignmentsWithFileUpload">इस पाठ्यक्रम में कोई असाइनमेंट नहीं है जो फ़ाइल अपलोड की अनुमति देता है।</string>
+    <string name="teacherNotAllowedFileSubmission">इस पाठ्यक्रम में एक शिक्षक के रूप में, आप फाइलें सबमिट नहीं कर सकते</string>
+    <string name="noFilesUploaded">आपने किसी भी फ़ाइल का चयन नहीं किया है।</string>
+    <string name="oneOrMoreExtensionNotAllowed">एक या अधिक फ़ाइलों का फ़ाइल एक्सटेंशन ऐसा है जिसकी अनुमति नहीं है</string>
+    <string name="extensionNotAllowed">चयनित फ़ाइल प्रकार की अनुमति नहीं है।</string>
+    <string name="allowedExtensions">अनुमत एक्सटेंशन:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> कृपया अपने डेटा कनेक्शन की जांच करें और फिर से कोशिश करें। </string>
+    <string name="noApps">आपकी डिवाइस में कोई भी ऐप्लिकेशन इंस्टॉल नहीं है जो इस फ़ाइल को हैंडल कर सके।</string>
+    <string name="noAppsShort">नहीं खोला जा सकता</string>
+    <string name="unexpectedErrorOpeningFile">फ़ाइल खोलने का प्रयास करते समय एक अप्रत्याशित त्रुटि उत्पन्न हुई।</string>
+    <string name="unexpectedErrorDownloadingFile">फ़ाइल डाउनलोड करने का प्रयास करते समय एक अप्रत्याशित त्रुटि उत्पन्न हुई।</string>
+
+    <string name="done">हो गया</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">इस फ़ीचर का उपयोग करने के लिए पहले अनुमति देनी होगी।</string>
+    <string name="noConnection">कोई कनेक्शन नहीं</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">आपके पसंदीदा पाठ्यक्रम और ग्रुप्स यहां दिखाई देते हैं।</string>
+    <string name="addCoursesGroups">पाठ्यक्रम/ग्रुप्स जोड़ें</string>
+    <string name="noDiscussions">कोई चर्चा नहीं</string>
+    <string name="noDiscussionsSubtext">दूसरों के साथ बातचीत शुरू करें।</string>
+    <string name="noDiscussionsTeacher">अपने छात्रों के साथ बातचीत शुरू करें।</string>
+    <string name="nothingUnread">इनबॉक्स ज़ीरो!</string>
+    <string name="nothingUnreadSubtext">आपका काम पूरा हुआ!</string>
+    <string name="nothingStarred">कोई तारांकित संदेश नहीं</string>
+    <string name="nothingStarredSubtext">प्रत्येक संदेश में तारे को टैप करके इस अनुभाग में महत्वपूर्ण संदेश रखें।</string>
+    <string name="nothingSent">कुछ नहीं भेजा गया</string>
+    <string name="nothingSentSubtext">आपने कोई संदेश नहीं भेजा है।</string>
+    <string name="nothingArchived">कुछ भी संग्रहीत नहीं</string>
+    <string name="nothingArchivedSubtext">आपने कोई संदेश संग्रहीत नहीं किया है।</string>
+    <string name="noQuizzes">कोई प्रश्नोत्तरी नहीं</string>
+    <string name="noQuizzesSubtext">माफ़ करें, अभी तक कोई प्रश्नोत्तरी मौजूद नहीं है।</string>
+    <string name="noQuizzesTeacher">प्रदर्शित करने के लिए कोई प्रकाशित प्रश्नोत्तरी नहीं हैं।</string>
+    <string name="noAnnouncements">कोई घोषणा नहीं</string>
+    <string name="noAnnouncementsSubtext">अभी तक कुछ भी घोषित नहीं किया गया है।</string>
+    <string name="noCourses">कोई पाठ्यक्रम नहीं</string>
+    <string name="noCoursesSubtext">ऐसा लगता है कि इस खाते से जुड़े कोई पाठ्यक्रम नहीं हैं। आज ही पाठ्यक्रम बनाने के लिए वेब पर जाएं।</string>
+    <string name="noAssignments">कोई असाइनमेंट नहीं</string>
+    <string name="noAssignmentsSubtext">ऐसा लगता है कि इस स्थान पर असाइनमेंट नहीं बनाई गई हैं। बाहर जाने और तलाशने का समय आ गया है।</string>
+    <string name="noAssignmentsTeacher">ऐसा लगता है कि अभी तक कोई असाइनमेंट प्रकाशित नहीं की गई है।</string>
+    <string name="noFiles">कोई फ़ाइल नहीं</string>
+    <string name="noFilesForAssignment">इस सबमिशन के लिए कोई फ़ाइल नहीं है</string>
+    <string name="noFilesSubtext">इस खाते से संबद्ध कोई फ़ाइल नहीं है।</string>
+    <string name="emptyFolder">यह फ़ोल्डर खाली है</string>
+    <string name="notSupported">समर्थित नहीं हैं</string>
+    <string name="noEvents">आज कोई घटना नहीं है!</string>
+    <string name="noEventsSubtext">आज का दिन आराम और विश्राम करने के लिए अच्छा लग रहा है।</string>
+    <string name="noSubmission">कोई सबमिशन नहीं</string>
+    <string name="noSubmissionTeacher">इस छात्र के पास अभी तक कोई सबमिशन नहीं है।</string>
+    <string name="locked">लॉक किया गया</string>
+    <string name="lockedSubtext">यह असाइनमेंट %2$s पर %1$s तक लॉक है।</string>
+    <string name="chooseFile">फ़ाइल चुनें</string>
+    <string name="chooseFileSubtext">नीचे दिए गए विकल्प पर टैप करके अपने सबमिशन में कोई फ़ाइल संलग्न करें।</string>
+    <string name="chooseFileForUploadSubtext">नीचे दिए गए विकल्प पर टैप करके अपलोड करने के लिए फ़ाइल चुनें</string>
+    <string name="noNotifications">कोई सूचना नहीं</string>
+    <string name="noNotificationsSubtext">अभी तक सूचित करने लायक कुछ भी नहीं है।</string>
+    <string name="noTodos">बहुत बढ़िया!</string>
+    <string name="noTodosSubtext">आपकी करने के लिए सूची खाली है। रिचार्ज करने का समय हो गया है।</string>
+    <string name="noSyllabus">कोई पाठ्यक्रम नहीं</string>
+    <string name="noSyllabusSubtext">अभी तक कोई पाठ्यक्रम नहीं बनाया गया है।</string>
+    <string name="noBookmarks">कोई बुकमार्क नहीं</string>
+    <string name="noBookmarksSubtext">बुकमार्क ऐप में किसी भी स्क्रीन के लिए शॉर्टकट होते हैं। उन्हें उस स्क्रीन पर जोड़ें जिसे आप बुकमार्क करना चाहते हैं।</string>
+    <string name="noModules">कोई मॉड्यूल नहीं</string>
+    <string name="noModulesSubtext">ऐसा लगता है कि अभी तक कोई मॉड्यूल नहीं बनाया गया है।</string>
+    <string name="noPages">कोई पेज नहीं</string>
+    <string name="noPagesSubtext">ऐसा लगता है कि अभी तक कोई पेज नहीं बनाया गया है।</string>
+    <string name="modulesLockedSubtext">इस पाठ्यक्रम के लिए मॉड्यूल अक्षम कर दिए गए हैं।</string>
+    <string name="modulesLocked">कुछ गड़बड़ हुई</string>
+
+    <!--General-->
+    <string name="yes">हां</string>
+    <string name="no">नहीं</string>
+
+    <string name="inbox_all">इनबॉक्स</string>
+    <string name="inbox_unread">अपठित</string>
+    <string name="inbox_starred">तारांकित किया गया</string>
+    <string name="inbox_sent">भेजा गया</string>
+    <string name="inbox_archived">संग्रहीत किया गया</string>
+
+    <string name="forbidden">उत्तर केवल उन लोगों को दिखाई देते हैं जिन्होंने कम से कम एक उत्तर पोस्ट किया है।</string>
+
+    <string name="like">पसंद</string>
+    <string name="likes">पसंद</string>
+    <string name="lockedAssignmentNotModule">यह असाइनमेंट लॉक है।</string>
+    <string name="deletedEntryNoChildren">इस मिटाई गई चर्चा प्रविष्टि का कोई उत्तर नहीं है।</string>
+    <string name="deleted">मिटाया गया</string>
+    <string name="deleted_by">[%1$s द्वारा मिटाया गया]</string>
+    <string name="lockedDiscussionDesc">यह चर्चा मॉड्यूल %s का हिस्सा है और अभी तक अनलॉक नहीं की गई है।</string>
+    <string name="gradedDiscussion">ग्रेड की गई चर्चा</string>
+    <string name="pointsPossible">पॉइंट्स संभव हैं</string>
+    <string name="sideCommentEntry">इस प्रकार की चर्चा में, आप इस स्तर पर किसी भी प्रविष्टि पर टिप्पणी नहीं कर सकते।</string>
+
+    <string name="accessibility_overflow">ओवरफ़्लो</string>
+
+    <string name="discussion_response">टिप्पणी</string>
+    <string name="discussion_responses">टिप्पणियां</string>
+    <string name="discussion_unread">अपठित</string>
+    <string name="discussion_reply">उत्तर दें</string>
+    <string name="close">बंद करें</string>
+
+    <string name="noInternetConnectionTitle">इंटरनेट कनेक्शन नहीं है</string>
+    <string name="noInternetConnectionMessage">इस कार्य के लिए इंटरनेट कनेक्शन की आवश्यकता है।</string>
+    <string name="content_description_avatar">अवतार</string>
+    <string name="a11y_avatarNameFormatted">%s अवतार</string>
+    <string name="formattedAvatarAction">%s के लिए उपयोगकर्ता विवरण देखें।</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">हमारा कार्य कैसा चल रहा है?</string>
+    <string name="utils_rateUs">आप हमारा मूल्यांकन कैसे करेंगे?</string>
+    <string name="utils_doBetter">क्या हम बेहतर कर सकते हैं?</string>
+    <string name="utils_sendFeedback">फ़ीडबैक भेजें</string>
+    <string name="utils_suggestions">Android के लिए सुझाव</string>
+    <string name="utils_domain">डोमेन</string>
+    <string name="utils_versionNum">संस्करण:</string>
+    <string name="utils_userId">उपयोगकर्ता आईडी</string>
+    <string name="utils_email">ईमेल</string>
+    <string name="utils_dontShowAgain">फिर से न दिखाएं</string>
+    <string name="utils_installDate">इंस्टॉल करने की तिथि:</string>
+    <string name="utils_device">डिवाइस</string>
+    <string name="utils_osVersion">OS संस्करण</string>
+    <string name="loading">लोड किया जा रहा है</string>
+    <string name="save">सहेजें</string>
+    <string name="cropInstructions">छवि को समायोजित करने के लिए पिंच करें और खींचें।</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s उत्तर</item>
+        <item quantity="other">%s उत्तर</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">इस उत्तर %s को मिटा दिया गया</string>
+    <string name="utils_discussionsUnknownAuthor">अज्ञात लेखक</string>
+    <string name="utils_discussionsReply">उत्तर दें</string>
+    <string name="utils_discussionsEdit">संपादित करें</string>
+    <string name="utils_discussionsDeleteWarning">क्या आप सच में इस उत्तर को मिटाना चाहते हैं?</string>
+    <string name="utils_availableToLabel">इसे उपलब्ध:</string>
+    <string name="utils_availableFromLabel">इस तिथि से उपलब्ध:</string>
+    <string name="utils_dueDateHeaderLabel">नियत</string>
+    <string name="utils_dueLabel">नियत:</string>
+    <string name="utils_delete">मिटाएं</string>
+    <string name="utils_dueDateAtTime" formatted="false">%1s को %2s बजे नियत</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">उपलब्धता:</string>
+    <string name="utils_pinnedIcon">पिन की गई चर्चा के लिए आइकन</string>
+    <string name="utils_pinDiscussion">चर्चा पिन करें</string>
+    <string name="utils_unpinDiscussion">चर्चा अनपिन करें</string>
+    <string name="utils_discussionPinned">चर्चा पिन की गई</string>
+    <string name="utils_pinnedDiscussions">पिन किया गया</string>
+    <string name="utils_discussionUnpinned">चर्चाएं</string>
+    <string name="utils_emptyDiscussions">इस अनुभाग में दिखाने के लिए कोई चर्चा नहीं है।</string>
+    <string name="utils_description">विवरण</string>
+    <string name="utils_allowThreadedReplies">थ्रेड किए गए उत्तरों की अनुमति दें</string>
+    <string name="utils_usersMustPost">छात्रों को उत्तर देखने से पहले पोस्ट करना होगा</string>
+    <string name="utils_discussionsClosed">टिप्पणियों के लिए बंद</string>
+    <string name="utils_discussionsOpen">टिप्पणियों के लिए खोलें</string>
+    <string name="utils_discussionsPin">पिन करें</string>
+    <string name="utils_discussionsUnpin">अनपिन करें</string>
+    <string name="utils_discussionsOptions">विकल्प</string>
+    <string name="utils_discussionsDeleteTitle">चर्चा मिटाएं?</string>
+    <string name="utils_discussionsDelete">चर्चा मिटाएं</string>
+    <string name="utils_discussionsDeleteMessage">इस तरह से पूरी चर्चा और थ्रेड मिट जाएंगे।</string>
+    <string name="utils_discussionSentSuccess">चर्चा का उत्तर सफल रहा।</string>
+    <string name="utils_discussionUpdateSuccess">चर्चा संपादन सफल रहा।</string>
+    <string name="utils_discussionSentEmpty">चर्चा का उत्तर खाली नहीं हो सकता।</string>
+    <string name="utils_discussionSentFailure">इस समय चर्चा का उत्तर नहीं भेजा जा सका।</string>
+    <string name="utils_createDiscussion">नई चर्चा</string>
+    <string name="utils_editDiscussion">चर्चा संपादित करें</string>
+    <string name="utils_discussionDetails">चर्चा का विवरण</string>
+    <string name="utils_discussionSuccessfullyUpdated">चर्चा सफलतापूर्वक अपडेट की गई।</string>
+    <string name="utils_saving">सहेजा जा रहा है</string>
+    <string name="utils_discussionSuccessfullyCreated">चर्चा सफलतापूर्वक बनाई गई।</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">संलग्नक को इस चर्चा में नहीं जोड़ा जा सका। कृपया अपना फ़ाइल कोटा जांचें और फिर से कोशिश करें।</string>
+    <string name="utils_noTitle">कोई शीर्षक नहीं</string>
+    <string name="utils_discussionsReplies_Title">उत्तर</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">अधिक विकल्प</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">अंतिम पोस्ट %s</string>
+    <string name="utils_postedOnDate">%s को पोस्ट किया गया</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">उत्तर केवल उन लोगों को दिखाई देते हैं जिन्होंने कम से कम एक उत्तर पोस्ट किया है।</string>
+    <string name="utils_createAnnouncementDelayPosting">विलंब से पोस्ट करें</string>
+    <string name="utils_postAt">यहां पोस्ट करें:</string>
+    <string name="utils_postDate">पोस्ट करने की तिथि</string>
+    <string name="utils_postTime">पोस्ट करने का समय</string>
+    <string name="utils_editAnnouncementTitle">घोषणा संपादित करें</string>
+    <string name="utils_createAnnouncementTitle">नई घोषणा</string>
+    <string name="utils_announcementDetails">घोषणा का विवरण</string>
+    <string name="utils_createAnnouncementNoDescription">विवरण आवश्यक है।</string>
+    <string name="utils_errorSavingAnnouncement">इस घोषणा को सहेजने का प्रयास करते समय त्रुटि उत्पन्न हुई। फिर से कोशिश करें।</string>
+    <string name="utils_announcementSuccessfullyUpdated">घोषणा सफलतापूर्वक अपडेट की गई।</string>
+    <string name="utils_announcementSuccessfullyCreated">घोषणा सफलतापूर्वक बनाई गई।</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s अपठित</item>
+        <item quantity="other">%s अपठित</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">संलग्नक जोड़ें</item>
+        <item quantity="one">संलग्नक जोड़ें</item>
+        <item quantity="other">संलग्नक जोड़ें</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">अनलॉक करें तिथि नियत तिथि के बाद की नहीं हो सकती</string>
+    <string name="utils_lockBeforeDueDateError">लॉक करें तिथि नियत तिथि से पहले नहीं हो सकती</string>
+    <string name="utils_lockAfterUnlockError">लॉक करें तिथि अनलॉक करें तिथि से पहले की नहीं हो सकती</string>
+    <string name="utils_assigneeBlankError">असाइनी खाली नहीं हो सकता</string>
+    <string name="utils_assignTo">इन्हें आवंटित करें:</string>
+    <string name="utils_availableFrom">इस तिथि से उपलब्ध:</string>
+    <string name="utils_availableTo">इसे उपलब्ध:</string>
+    <string name="utils_availableFromDate">तिथि से उपलब्ध</string>
+    <string name="utils_availableFromTime">इस समय से उपलब्ध:</string>
+    <string name="utils_availableToDate">इस तिथि तक उपलब्ध</string>
+    <string name="utils_availableToTime">इस समय तक उपलब्ध</string>
+    <string name="utils_dueDate">नियत तिथि</string>
+    <string name="utils_dueTime">नियत समय</string>
+    <string name="utils_addNew">नया जोड़ें</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">संलग्नक डाउनलोड करें</string>
+    <string name="utils_removeAttachment">संलग्नक निकालें</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">सहेजे बिना जारी रखें?</string>
+    <string name="utils_continueWithoutSavingMessage">क्या आप सच में सहेजे बिना जारी रखना चाहते हैं?</string>
+    <string name="utils_continueUnsaved">जारी रखें</string>
+    <string name="utils_exitWithoutSavingTitle">सहेजे बिना बाहर निकलना है?</string>
+    <string name="utils_exitWithoutSavingMessage">क्या आप सच में सहेजे बिना बाहर निकलना चाहते हैं?</string>
+    <string name="utils_exitUnsaved">बाहर निकलें</string>
+    <string name="utils_cancel">रद्द करें</string>
+
+    <string name="utils_contentDescriptionFiles">फ़ाइल आइकन</string>
+    <string name="utils_turn_in">यहां जाएं:</string>
+    <string name="utils_upload">अपलोड करें</string>
+    <string name="utils_okay">ठीक है</string>
+    <string name="utils_loadingFilesIndeterminate">फ़ाइलें लोड की जा रही हैं&#8230;</string>
+    <string name="utils_allowedExtensions">अनुमत एक्सटेंशन:&#160;</string>
+    <string name="utils_extensionNotAllowed">चयनित फ़ाइल प्रकार की अनुमति नहीं है।</string>
+    <string name="utils_errorUploadingFile">आपकी फ़ाइल बनाने के दौरान त्रुटि उत्पन्न हुई। कृपया फिर से कोशिश करें।</string>
+    <string name="utils_filesUploadedSuccessfully">फ़ाइलें सफलतापूर्वक अपलोड हो गईं।</string>
+    <string name="utils_uploadingFiles">फ़ाइलें अपलोड की जा रही हैं&#8230;</string>
+    <string name="utils_uploadingFile">फ़ाइल अपलोड की जा रही है&#8230;</string>
+    <string name="utils_noApps">आपकी डिवाइस में कोई भी ऐप्लिकेशन इंस्टॉल नहीं है जो इस फ़ाइल को हैंडल कर सके।</string>
+    <string name="utils_errorGettingPhoto">फ़ोटो प्राप्त करने में त्रुटि हुई। कृपया फिर से कोशिश करें।</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">एक या अधिक फ़ाइलों का फ़ाइल एक्सटेंशन ऐसा है जिसकी अनुमति नहीं है</string>
+    <string name="utils_fileUploadNotSupported">आप चयनित असाइनमेंट में फ़ाइलें अपलोड नहीं कर सकते।</string>
+    <string name="utils_noFilesUploaded">आपने कोई फ़ाइल नहीं चुनी है।</string>
+    <string name="utils_attachments">संलग्नक</string>
+    <string name="utils_uploadTo">यहां अपलोड करें: </string>
+    <string name="utils_uploadToCanvas">Canvas पर अपलोड करें</string>
+    <string name="utils_uploadMyFiles">मेरी फ़ाइलें</string>
+    <string name="utils_uploadCourseFiles">पाठ्यक्रम फ़ाइलें</string>
+    <string name="utils_uploadGroupFiles">ग्रुप फ़ाइलें</string>
+    <string name="utils_uploadToSubmissionComment">सबमिशन टिप्पणी पर अपलोड करें</string>
+    <string name="utils_attachFile">फ़ाइल संलग्न करें</string>
+    <string name="utils_with">इसके साथ:</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas सूचना</string>
+    <string name="notificationChannelNamePrimary">सामान्य Canvas सूचनाएं</string>
+    <string name="notificationChannelDescriptionPrimary">सूचनाओं को Canvas सूचना प्राथमिकताएं अनुभाग के भीतर अतिरिक्त रूप से कॉन्फ़िगर किया जा सकता है।</string>
+    <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
+        <item quantity="other">%d नई सूचनाएं</item>
+    </plurals>
+
+    <string name="copyLinkAddress">लिंक पता कॉपी करें</string>
+    <string name="copyLink">लिंक कॉपी करें</string>
+    <string name="linkCopied">लिंक कॉपी किया गया</string>
+    <string name="link">लिंक</string>
+    <string name="fileExists">फ़ाइल मौजूद है</string>
+    <string name="replace">प्रतिस्थापित करें</string>
+    <string name="shareLink">लिंक साझा करें</string>
+
+    <string name="utils_launchExternalTool">बाहरी उपकरण लॉन्च करें</string>
+    <string name="utils_externalToolTitle">बाहरी उपकरण</string>
+    <string name="utils_placeholderTitle">बाहरी उपकरण</string>
+    <string name="utils_placeholderDescription">इस बाहरी उपकरण को संपादित करने के लिए अपने Canvas वेब खाते पर जाएं।</string>
+    <string name="utils_unableToViewInBrowser">इस LTI उपकरण को देखने के लिए हमें कोई बाहरी ऐप नहीं मिल रहा है।</string>
+
+    <string name="utils_unsupportedFileMessage">यह फ़ाइल प्रदर्शित नहीं की जा सकी। अपनी डिवाइस पर किसी अन्य ऐप के साथ फ़ाइल खोलने के लिए नीचे दिए गए बटन का उपयोग करें।</string>
+    <string name="utils_openWithAnotherApp">इसके साथ खोलें&#8230;</string>
+    <string name="utils_couldNotPlayFormat">यह मीडिया प्रारूप समर्थित नहीं है</string>
+    <string name="utils_fullscreen">फ़ुलस्क्रीन</string>
+
+    <string name="utils_dataUsageWarningTitle">डेटा उपयोग की चेतावनी</string>
+    <string name="utils_dataUsageWarningMessage">इस कार्रवाई से बड़ी मात्रा में डेटा की खपत हो सकती है, संभावित रूप से अधिक शुल्क लग सकता है। क्या आप जारी रखना चाहेंगे?</string>
+    <string name="utils_doNotShowMessageAgain">इस संदेश को दोबारा नहीं दिखाएं</string>
+
+    <string name="utils_no_data_connection">कृपया अपने डेटा कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+    <string name="utils_playMedia">मीडिया चलाएं</string>
+    <string name="utils_tryAgain">फिर से कोशिश करें</string>
+    <string name="image_uploading">छवि अपलोड की जा रही है&#8230;</string>
+    <string name="image_upload_error">छवि अपलोड करने में त्रुटि हुई</string>
+    <string name="retry">पुन: प्रयास करें</string>
+    <string name="search">खोजें</string>
+    <string name="searchAssignmentsHint">असाइनमेंट की खोज करें</string>
+    <string name="searchAnnouncementsHint">घोषणाओं की खोज करें</string>
+    <string name="searchDiscussionsHint">चर्चाओं की खोज करें</string>
+    <string name="searchPagesHint">पेजों की खोज करें</string>
+    <string name="searchQuizzesHint">प्रश्नोत्तरी की खोज करें</string>
+    <string name="noItemsMatchingQuery">कोई आइटम \"%s\" से मेल नहीं खाती है</string>
+
+    <string name="selected">चयनित</string>
+
+    <string name="notificationChannelNameInAppUpdate">ऐप अपडेट की सूचनाएं</string>
+    <string name="notificationChannelDescriptionInAppUpdate">ऐप के भीतर अपडेट के लिए Canvas सूचनाएं।</string>
+    <string name="appUpdateReadyTitle">ऐप अपडेट होने के लिए तैयार है</string>
+    <string name="appUpdateReadyDescription">नया संस्करण इंस्टॉल करने के लिए ऐप को रीस्टार्ट करें</string>
+    <string name="nothing_planned_yet">अभी तक कोई योजना नहीं बनाई गई है</string>
+    <string name="schedule_tag_graded">ग्रेड किए गए</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d उत्तर</item>
+        <item quantity="other">%d उत्तर></item>
+    </plurals>
+    <string name="schedule_tag_feedback">फ़ीडबैक</string>
+    <string name="schedule_tag_late">विलंब</string>
+    <string name="schedule_tag_redo">फिर से करें</string>
+    <string name="schedule_tag_excused">माफ़ किया</string>
+    <string name="tomorrow">आने वाला कल</string>
+    <string name="yesterday">बीता कल</string>
+    <string name="schedule_calendar_event_due_text">%s पर</string>
+    <string name="schedule_calendar_event_interval_text">%1$s से %2$s तक</string>
+    <string name="schedule_todo_due_text">करने के लिए: %s</string>
+    <string name="schedule_due_text">नियत: %s</string>
+    <string name="show_missing_items_title">%d लापता आइटमें दिखाएं</string>
+    <string name="hide_missing_items_title">%d लापता आइटमें छिपाएं</string>
+    <string name="schedule_error_message">आपका शेड्यूल लाने में असमर्थ</string>
+    <string name="schedule_todo_title">करने के लिए</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s पॉइंट</item>
+        <item quantity="one">%s पॉइंट</item>
+        <item quantity="other">%s पॉइंट्स</item>
+    </plurals>
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f पॉइंट्स</item>
+        <item quantity="one">%.1f पॉइंट</item>
+        <item quantity="other">%.1f पॉइंट्स</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">सभी दिन</string>
+    <string name="schedule_tag_missing">लापता</string>
+    <string name="previous_week">पिछला सप्ताह</string>
+    <string name="next_week">अगला सप्ताह</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">पाठ्यक्रम %s</string>
+    <string name="a11y_announcement">घोषणा</string>
+    <string name="a11y_discussion_topic">चर्चा</string>
+    <string name="a11y_calendar_event">कैलेंडर घटना</string>
+    <string name="a11y_assignment">असाइनमेंट</string>
+    <string name="a11y_planner_note">योजनाकर्ता नोट</string>
+    <string name="a11y_quiz">प्रश्नोत्तरी</string>
+    <string name="a11y_todo">करने के लिए</string>
+    <string name="a11y_page">पेज</string>
+    <string name="a11y_marked_as_done">हो गया के रूप में चिह्नित किया गया</string>
+    <string name="a11y_not_marked_as_done">हो गया के रूप में नहीं चिह्नित किया गया है।</string>
+    <string name="error_loading_course_details">उह ओह! पाठ्यक्रम विवरण लोड करते समय त्रुटि उत्पन्न हुई।</string>
+    <string name="a11y_schedule_marked_as_not_done">%s को हो गया के रूप में चिह्नित किया गया</string>
+    <string name="a11y_markAsDoneWithName">%s को हो गया के रूप में चिह्नित करें</string>
+    <string name="a11y_markAsNotDoneWithName">%s को हो गया के रूप में चिह्नित करें</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+</resources>

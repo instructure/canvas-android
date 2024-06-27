@@ -21,16 +21,13 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
-import com.instructure.student.Submission
-import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.chooseMediaIntent
 import com.instructure.student.mobius.assignmentDetails.getVideoIntent
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
@@ -40,10 +37,10 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
-import com.squareup.sqldelight.Query
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -59,14 +56,14 @@ import java.util.concurrent.Executors
 class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: SubmissionDetailsEmptyContentView = mockk(relaxed = true)
-    private val context: Activity = mockk(relaxed = true)
-    private val effectHandler = SubmissionDetailsEmptyContentEffectHandler(context, assignmentId).apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
+    private val context: FragmentActivity = mockk(relaxed = true)
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val effectHandler = SubmissionDetailsEmptyContentEffectHandler(context, assignmentId, submissionHelper).apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEmptyContentEvent> = mockk(relaxed = true)
     private lateinit var connection: Connection<SubmissionDetailsEmptyContentEffect>
 
     lateinit var assignment: Assignment
     lateinit var course: Course
-    private lateinit var queryMockk: Query<Submission>
     private var userId: Long = 0
     val uri = mockk<Uri>(relaxed = true)
 
@@ -81,22 +78,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = userId)
 
-        mockkStatic("com.instructure.student.db.ExtensionsKt")
-
-        queryMockk = mockk(relaxed = true)
-        val db: StudentDb = mockk {
-            every {
-                submissionQueries.getSubmissionsByAssignmentId(assignment.id, userId)
-            } returns queryMockk
-        }
-
-        every { Db.getInstance(context) } returns db
-
         val intent = mockk<Intent>()
         every { intent.action } returns ""
         every { intent.addFlags(any()) } returns intent
         every { intent.putExtra(MediaStore.EXTRA_OUTPUT, uri) } returns intent
-
 
         connection = effectHandler.connect(eventConsumer)
     }
@@ -256,8 +241,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionService)
         every {
-            SubmissionService.startMediaSubmission(
-                context,
+            submissionHelper.startMediaSubmission(
                 course,
                 assignment.id,
                 assignment.name,
@@ -269,8 +253,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         connection.accept(SubmissionDetailsEmptyContentEffect.UploadAudioSubmission(file, course, assignment))
         verify(timeout = 100) {
-            SubmissionService.startMediaSubmission(
-                context,
+            submissionHelper.startMediaSubmission(
                 course,
                 assignment.id,
                 assignment.name,

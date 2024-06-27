@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
+import com.instructure.student.room.StudentDb
 
 interface SubmissionCommentsAdapterCallback : BasicItemCallback {
     fun onCommentAttachmentClicked(attachment: Attachment)
@@ -30,13 +31,16 @@ interface SubmissionCommentsAdapterCallback : BasicItemCallback {
     fun onDeletePendingComment(pendingCommentId: Long)
 }
 
-class SubmissionCommentsAdapter(callback: SubmissionCommentsAdapterCallback) :
+class SubmissionCommentsAdapter(callback: SubmissionCommentsAdapterCallback,
+                                private val studentDb: StudentDb) :
     BasicRecyclerAdapter<CommentItemState, SubmissionCommentsAdapterCallback>(callback) {
     override fun registerBinders() {
         register(SubmissionCommentsEmptyBinder())
         register(SubmissionCommentBinder())
         register(SubmissionAsCommentBinder())
-        register(PendingCommentBinder())
+        register(PendingCommentBinder(::getDb))
     }
+
+    private fun getDb() = studentDb
 }
 

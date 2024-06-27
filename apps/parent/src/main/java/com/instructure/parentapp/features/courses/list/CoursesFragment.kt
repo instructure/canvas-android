@@ -22,26 +22,42 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.instructure.pandautils.binding.viewBinding
-import com.instructure.parentapp.R
-import com.instructure.parentapp.databinding.FragmentCoursesBinding
+import com.instructure.pandautils.utils.collectOneOffEvents
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class CoursesFragment : Fragment() {
 
-    private val binding by viewBinding(FragmentCoursesBinding::bind)
+    private val viewModel: CoursesViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return layoutInflater.inflate(R.layout.fragment_courses, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
+        return ComposeView(requireActivity()).apply {
+            setContent {
+                val uiState by viewModel.uiState.collectAsState()
+                CoursesScreen(uiState, viewModel::handleAction)
+            }
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // TODO this is just to showcase the navigation
-        binding.button.setOnClickListener {
-            findNavController().navigate(Uri.parse("https://anything.instructure.com/courses/1"))
+    private fun handleAction(action: CoursesViewModelAction) {
+        when (action) {
+            is CoursesViewModelAction.NavigateToCourseDetails -> {
+                findNavController().navigate(Uri.parse(action.navigationUrl))
+            }
         }
     }
 }

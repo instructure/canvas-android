@@ -149,7 +149,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             if (!ApiPrefs.isMasquerading) {
                 // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
-                val crashlytics = FirebaseCrashlytics.getInstance();
+                val crashlytics = FirebaseCrashlytics.getInstance()
                 crashlytics.setUserId("")
             }
 
@@ -210,7 +210,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             val shouldRestartForLocaleChange = setupUser(user, type)
             if (shouldRestartForLocaleChange) {
                 if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
-                LocaleUtils.restartApp(this@CallbackActivity, LoginActivity::class.java)
+                LocaleUtils.restartApp(this@CallbackActivity)
             } else {
                 loadInitialData()
             }

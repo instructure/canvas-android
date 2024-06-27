@@ -20,13 +20,13 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.student.FileSubmission
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionPresenter
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionViewState
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadVisibilities
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.instructure.student.util.FileUtils
 import io.mockk.every
 import io.mockk.mockkObject
@@ -39,7 +39,7 @@ import org.junit.runner.RunWith
 class UploadStatusSubmissionPresenterTest : Assert() {
 
     private lateinit var context: Context
-    private lateinit var baseFile: FileSubmission
+    private lateinit var baseFile: CreateFileSubmissionEntity
     private lateinit var baseModel: UploadStatusSubmissionModel
     private lateinit var baseVisibilities: UploadVisibilities
 
@@ -58,7 +58,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
     }
 
     private fun submission(id: Long, error: String? = null, errorFlag: Boolean = false) =
-        FileSubmission(id, submissionId, 20L, "File", 1L, "Content", "Path", error, errorFlag)
+        CreateFileSubmissionEntity(id, submissionId, 20L, "File", 1L, "Content", "Path", error, errorFlag)
 
     @Test
     fun `returns Loading state when loading`() {

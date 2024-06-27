@@ -36,9 +36,12 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -122,34 +125,34 @@ private fun OverFlowMenuSegment(
     actionHandler: (ToDoAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val showDeleteConfirmationDialog = remember { mutableStateOf(false) }
-    if (showDeleteConfirmationDialog.value) {
+    var showDeleteConfirmationDialog by rememberSaveable { mutableStateOf(false) }
+    if (showDeleteConfirmationDialog) {
         SimpleAlertDialog(
             dialogTitle = stringResource(id = R.string.todoDeleteConfirmationTitle),
             dialogText = stringResource(id = R.string.todoDeleteConfirmationText),
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.delete),
             onDismissRequest = {
-                showDeleteConfirmationDialog.value = false
+                showDeleteConfirmationDialog = false
             },
             onConfirmation = {
-                showDeleteConfirmationDialog.value = false
+                showDeleteConfirmationDialog = false
                 actionHandler(ToDoAction.DeleteToDo)
             }
         )
     }
 
-    val showMenu = remember { mutableStateOf(false) }
+    var showMenu by rememberSaveable { mutableStateOf(false) }
     OverflowMenu(
         modifier = modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
-        showMenu = showMenu.value,
+        showMenu = showMenu,
         onDismissRequest = {
-            showMenu.value = !showMenu.value
+            showMenu = !showMenu
         }
     ) {
         DropdownMenuItem(
             onClick = {
-                showMenu.value = !showMenu.value
+                showMenu = !showMenu
                 actionHandler(ToDoAction.EditToDo)
             }
         ) {
@@ -160,8 +163,8 @@ private fun OverFlowMenuSegment(
         }
         DropdownMenuItem(
             onClick = {
-                showMenu.value = !showMenu.value
-                showDeleteConfirmationDialog.value = true
+                showMenu = !showMenu
+                showDeleteConfirmationDialog = true
             }
         ) {
             Text(

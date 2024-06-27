@@ -17,7 +17,9 @@ package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -41,7 +43,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun clickOnAddButton() {
-        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.calendarAddButtonContentDescription))
+        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.calendarAddNewCalendarItemContentDescription))
             .performClick()
         composeTestRule.waitForIdle()
     }
@@ -74,6 +76,10 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
 
     fun assertEmptyView() {
         assertTrue(composeTestRule.onAllNodesWithTag("calendarEventsEmpty").fetchSemanticsNodes().isNotEmpty())
+    }
+
+    fun assertItemDisplayed(itemTitle: String) {
+        composeTestRule.onNodeWithText(itemTitle).assertIsDisplayed()
     }
 
     fun assertItemNotExist(itemTitle: String) {
@@ -118,5 +124,39 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     fun clickTodayButton() {
         composeTestRule.onNodeWithContentDescription("Jump to Today").performClick()
         composeTestRule.waitForIdle()
+    }
+
+    fun checkCalendarCollapsed(): Boolean {
+        return try {
+            composeTestRule.onNode(hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("calendarRow1").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsNotDisplayed()
+            true
+        } catch (e: AssertionError) {
+            false
+        }
+    }
+
+    fun assertCalendarCollapsed() {
+        composeTestRule.onNode(hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("calendarRow1").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsNotDisplayed()
+    }
+
+    fun assertCalendarExpanded() {
+        composeTestRule.onNode(hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("calendarRow1").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("calendarRow2").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("calendarRow3").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+    }
+
+    fun checkCalendarExpanded(): Boolean {
+        return try {
+            composeTestRule.onNode(hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("calendarRow1").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("calendarRow2").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("calendarRow3").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
+            true
+        } catch (e: AssertionError) {
+            false
+        }
     }
 }

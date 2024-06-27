@@ -112,5 +112,7 @@ data class Enrollment(
     fun currentPeriodComputedCurrentGrade(): String? = grades?.currentGrade ?: currentPeriodComputedCurrentGrade
     fun currentPeriodComputedFinalScore(): Double? = grades?.finalScore ?: currentPeriodComputedFinalScore
     fun currentPeriodComputedFinalGrade(): String? = grades?.finalGrade ?: currentPeriodComputedFinalGrade
+
+    fun hasActiveGradingPeriod(): Boolean = multipleGradingPeriodsEnabled && currentGradingPeriodId != 0L
 }
 

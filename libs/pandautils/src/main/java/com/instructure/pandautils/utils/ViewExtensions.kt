@@ -43,6 +43,7 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.Transformation
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -53,6 +54,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
@@ -81,6 +83,7 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import kotlinx.coroutines.delay
 import java.util.*
+import kotlin.math.hypot
 
 /** Convenience extension for setting a click listener */
 @Suppress("NOTHING_TO_INLINE")
@@ -906,4 +909,99 @@ fun BottomNavigationView.hide() {
             start()
         }
     }
+}
+
+fun View.expand(duration: Long = 300, startOffset: Long = 0L, interpolate: Boolean = false) {
+    if (visibility == View.VISIBLE) return
+
+    this.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    val targetHeight = this.measuredHeight
+
+    this.layoutParams.height = 0
+    this.visibility = View.VISIBLE
+    val animation = object : Animation() {
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            this@expand.layoutParams.height = if (interpolatedTime == 1f)
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            else
+                (targetHeight * interpolatedTime).toInt()
+            this@expand.requestLayout()
+        }
+
+        override fun willChangeBounds(): Boolean = true
+    }
+
+    animation.apply {
+        this.startOffset = startOffset
+        this.duration = duration
+        if (interpolate) {
+            this.interpolator = AnimationUtils.loadInterpolator(
+                context,
+                android.R.interpolator.linear_out_slow_in
+            )
+        }
+    }
+
+    this.startAnimation(animation)
+}
+
+fun View.collapse(duration: Long = 300, startOffset: Long = 0L, interpolate: Boolean = false) {
+    if (visibility == View.GONE) return
+
+    val initialHeight = this.measuredHeight
+
+    val animation = object : Animation() {
+        override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+            if (interpolatedTime == 1f) {
+                this@collapse.visibility = View.GONE
+            } else {
+                this@collapse.layoutParams.height = initialHeight - (initialHeight * interpolatedTime).toInt()
+                this@collapse.requestLayout()
+            }
+        }
+
+        override fun willChangeBounds(): Boolean = true
+    }
+
+    animation.apply {
+        this.startOffset = startOffset
+        this.duration = duration
+        if (interpolate) {
+            this.interpolator = AnimationUtils.loadInterpolator(
+                context,
+                android.R.interpolator.fast_out_linear_in
+            )
+        }
+    }
+
+    this.startAnimation(animation)
+}
+
+fun View.animateCircularBackgroundColorChange(endColor: Int, image: ImageView, duration: Long = 400L) {
+    if (!isLaidOut) return
+
+    val w = measuredWidth
+    val h = measuredHeight
+
+    val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    draw(canvas)
+
+    image.setImageBitmap(bitmap)
+    image.setVisible(true)
+
+    val finalRadius = hypot(w.toFloat(), h.toFloat())
+
+    val anim = ViewAnimationUtils.createCircularReveal(this, w / 2, h / 2, 0f, finalRadius)
+
+    anim.duration = duration
+    anim.doOnStart {
+        setBackgroundColor(endColor)
+    }
+    anim.doOnEnd {
+        image.setImageDrawable(null)
+        image.setVisible(false)
+    }
+
+    anim.start()
 }

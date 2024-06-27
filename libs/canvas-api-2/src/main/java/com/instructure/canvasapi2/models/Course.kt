@@ -227,6 +227,44 @@ data class Course(
         return false
     }
 
+    private fun parentHasActiveGradingPeriod(): Boolean {
+        return enrollments?.any { it.multipleGradingPeriodsEnabled && it.currentGradingPeriodId != 0L } ?: false
+    }
+
+    private fun parentIsCourseGradeLocked(forAllGradingPeriod: Boolean = true): Boolean {
+        return if (hideFinalGrades) {
+            true
+        } else if (hasGradingPeriods) {
+            forAllGradingPeriod && !parentHasActiveGradingPeriod() && !isTotalsForAllGradingPeriodsEnabled
+        } else {
+            false
+        }
+    }
+
+    fun parentGetCourseGradeFromEnrollment(
+        enrollment: Enrollment,
+        lockedForAllGradingPeriod: Boolean = true
+    ) = if (parentHasActiveGradingPeriod()) {
+        CourseGrade(
+            enrollment.currentPeriodComputedCurrentGrade(),
+            enrollment.currentPeriodComputedCurrentScore(),
+            enrollment.currentPeriodComputedFinalGrade(),
+            enrollment.currentPeriodComputedFinalScore(),
+            parentIsCourseGradeLocked(lockedForAllGradingPeriod),
+            noCurrentGrade(enrollment.currentPeriodComputedCurrentGrade(), enrollment.currentPeriodComputedCurrentScore()),
+            noFinalGrade(enrollment.currentPeriodComputedFinalGrade(), enrollment.currentPeriodComputedFinalScore())
+        )
+    } else {
+        CourseGrade(
+            enrollment.currentGrade,
+            enrollment.currentScore,
+            enrollment.finalGrade,
+            enrollment.finalScore,
+            parentIsCourseGradeLocked(lockedForAllGradingPeriod),
+            noCurrentGrade(enrollment.currentGrade, enrollment.currentScore),
+            noFinalGrade(enrollment.finalGrade, enrollment.finalScore)
+        )
+    }
 
     /**
      * Helper function to check if the course is within a valid date range for use

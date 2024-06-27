@@ -13,7 +13,9 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package com.instructure.parentapp.util
+ */
+
+package com.instructure.parentapp.util
 
 import android.os.Build
 import android.webkit.WebView
@@ -38,7 +40,7 @@ abstract class BaseAppManager : AppManager() {
         val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
         AppCompatDelegate.setDefaultNightMode(appTheme.nightModeType)
 
-        Analytics.setUserProperty(AnalyticsEventConstants.USER_PROPERTY_BUILD_TYPE, if(BuildConfig.DEBUG) "debug" else "release")
+        Analytics.setUserProperty(AnalyticsEventConstants.USER_PROPERTY_BUILD_TYPE, if (BuildConfig.DEBUG) "debug" else "release")
         Analytics.setUserProperty(AnalyticsEventConstants.USER_PROPERTY_OS_VERSION, Build.VERSION.SDK_INT.toString())
 
         RemoteConfigUtils.initialize()
@@ -56,6 +58,7 @@ abstract class BaseAppManager : AppManager() {
         } catch (e: Exception) {
             FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
         }
-
     }
+
+    override fun performLogoutOnAuthError() = Unit
 }

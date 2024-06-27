@@ -22,6 +22,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -36,7 +38,14 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.FileUtils
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.ProgressEvent
+import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
@@ -115,7 +124,11 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
         if (mediaPath.isNotEmpty()) {
             notificationManager.notify(notificationId, builder.build())
-            startForeground(notificationId, builder.build())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(notificationId, builder.build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            } else {
+                startForeground(notificationId, builder.build())
+            }
             startFileUpload(submissionId)
         } else {
             handleFailure(null)

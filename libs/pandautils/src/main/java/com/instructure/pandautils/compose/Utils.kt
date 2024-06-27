@@ -29,7 +29,9 @@ import org.threeten.bp.LocalTime
 fun getDatePickerDialog(
     context: Context,
     date: LocalDate,
-    onDateSelected: (LocalDate) -> Unit
+    onDateSelected: (LocalDate) -> Unit,
+    onCancel: () -> Unit,
+    onDismiss: () -> Unit
 ): DatePickerDialog {
     return DatePickerDialog(
         context,
@@ -50,13 +52,21 @@ fun getDatePickerDialog(
             getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
             getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
         }
+        setOnDismissListener {
+            onDismiss()
+        }
+        setOnCancelListener {
+            onCancel()
+        }
     }
 }
 
 fun getTimePickerDialog(
     context: Context,
     time: LocalTime,
-    onTimeSelected: (LocalTime) -> Unit
+    onTimeSelected: (LocalTime) -> Unit,
+    onCancel: () -> Unit,
+    onDismiss: () -> Unit
 ): TimePickerDialog {
     return TimePickerDialog(
         context,
@@ -75,6 +85,14 @@ fun getTimePickerDialog(
         setOnShowListener {
             getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.textButtonColor)
             getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.textButtonColor)
+        }
+
+        setOnDismissListener {
+            onDismiss()
+        }
+
+        setOnCancelListener {
+            onCancel()
         }
     }
 }

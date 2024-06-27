@@ -45,6 +45,9 @@ object EnrollmentAPI {
         @GET("users/self/enrollments?include[]=observed_users&include[]=avatar_url&state[]=creation_pending&state[]=invited&state[]=active&state[]=completed")
         suspend fun firstPageObserveeEnrollments(@Tag params: RestParams): DataResult<List<Enrollment>>
 
+        @GET("users/self/enrollments?include[]=observed_users&include[]=avatar_url&state[]=creation_pending&state[]=invited&state[]=active&state[]=completed&state[]=current_and_future")
+        suspend fun firstPageObserveeEnrollmentsParent(@Tag params: RestParams): DataResult<List<Enrollment>>
+
         @GET("courses/{courseId}/enrollments?include[]=avatar_url&state[]=active")
         fun getFirstPageEnrollmentsForCourse(
                 @Path("courseId") courseId: Long,

@@ -23,14 +23,23 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FilePrefs
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.pandautils.utils.remove
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
 import com.instructure.student.features.documentscanning.DocumentScanningActivity
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.*
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.CommentAttachment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.FileSubmission
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.MediaSubmission
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
-import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import kotlinx.coroutines.Dispatchers
@@ -41,8 +50,9 @@ import org.greenrobot.eventbus.Subscribe
 import java.io.File
 
 // We need a context in this class to register receivers and to access the database
-class PickerSubmissionUploadEffectHandler constructor(
-    private val context: Context
+class PickerSubmissionUploadEffectHandler(
+    private val context: Context,
+    private val submissionHelper: SubmissionHelper
 ) : EffectHandler<PickerSubmissionUploadView, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect>() {
 
     override fun connect(output: Consumer<PickerSubmissionUploadEvent>): Connection<PickerSubmissionUploadEffect> {
@@ -122,8 +132,7 @@ class PickerSubmissionUploadEffectHandler constructor(
     private fun handleSubmit(model: PickerSubmissionUploadModel) {
         when (model.mode) {
             MediaSubmission -> {
-                SubmissionService.startMediaSubmission(
-                    context = context,
+                submissionHelper.startMediaSubmission(
                     canvasContext = model.canvasContext,
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
@@ -132,8 +141,7 @@ class PickerSubmissionUploadEffectHandler constructor(
                 )
             }
             FileSubmission -> {
-                SubmissionService.startFileSubmission(
-                    context = context,
+                submissionHelper.startFileSubmission(
                     canvasContext = model.canvasContext,
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
@@ -142,8 +150,7 @@ class PickerSubmissionUploadEffectHandler constructor(
                 )
             }
             CommentAttachment -> {
-                SubmissionService.startCommentUpload(
-                    context = context,
+                submissionHelper.startCommentUpload(
                     canvasContext = model.canvasContext,
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
@@ -190,13 +197,13 @@ class PickerSubmissionUploadEffectHandler constructor(
         )
 
         view?.getGalleryIntent(uri)?.let {
-            (context as Activity).startActivityForResult(it, REQUEST_PICK_IMAGE_GALLERY)
+            (context.getFragmentActivity()).startActivityForResult(it, REQUEST_PICK_IMAGE_GALLERY)
         }
     }
 
     private fun launchSelectFile() {
         view?.getSelectFileIntent()?.let {
-            (context as Activity).startActivityForResult(it, REQUEST_PICK_FILE_FROM_DEVICE)
+            (context.getFragmentActivity()).startActivityForResult(it, REQUEST_PICK_FILE_FROM_DEVICE)
         }
     }
 
@@ -208,7 +215,7 @@ class PickerSubmissionUploadEffectHandler constructor(
                 )
         ) return
         val intent = Intent(context, DocumentScanningActivity::class.java)
-        (context as Activity).startActivityForResult(intent, REQUEST_DOCUMENT_SCANNING)
+        (context.getFragmentActivity()).startActivityForResult(intent, REQUEST_DOCUMENT_SCANNING)
     }
 
     private fun launchCamera() {
@@ -235,7 +242,7 @@ class PickerSubmissionUploadEffectHandler constructor(
         val intent = view?.getCameraIntent(uri)
 
         if (intent != null && context.isIntentAvailable(intent.action)) {
-            (context as Activity).startActivityForResult(intent, REQUEST_CAMERA_PIC)
+            (context.getFragmentActivity()).startActivityForResult(intent, REQUEST_CAMERA_PIC)
         }
     }
 
@@ -245,11 +252,11 @@ class PickerSubmissionUploadEffectHandler constructor(
         successEvent: PickerSubmissionUploadEvent,
         vararg permissions: String
     ): Boolean {
-        if (PermissionUtils.hasPermissions(context as Activity, *permissions)) {
+        if (PermissionUtils.hasPermissions(context.getFragmentActivity(), *permissions)) {
             return false
         }
 
-        context.requestPermissions(setOf(*permissions)) { results ->
+        context.getFragmentActivity().requestPermissions(setOf(*permissions)) { results ->
             if (results.isNotEmpty() && results.all { it.value }) {
                 // If permissions list is not empty and all are granted, send the success event
                 consumer.accept(successEvent)

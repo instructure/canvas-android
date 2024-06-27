@@ -63,6 +63,7 @@ import com.instructure.teacher.ui.pages.LoginFindSchoolPage
 import com.instructure.teacher.ui.pages.LoginLandingPage
 import com.instructure.teacher.ui.pages.LoginSignInPage
 import com.instructure.teacher.ui.pages.ModulesPage
+import com.instructure.teacher.ui.pages.NativeDiscussionsDetailsPage
 import com.instructure.teacher.ui.pages.NavDrawerPage
 import com.instructure.teacher.ui.pages.NotATeacherPage
 import com.instructure.teacher.ui.pages.PageListPage
@@ -122,7 +123,8 @@ abstract class TeacherTest : CanvasTest() {
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
     val editProfileSettingsPage = EditProfileSettingsPage()
-    val discussionsDetailsPage = DiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
+    val nativeDiscussionsDetailsPage = NativeDiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
+    val discussionDetailsPage = DiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val discussionsListPage = DiscussionsListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val editAnnouncementDetailsPage = EditAnnouncementDetailsPage()
     val editAssignmentDetailsPage = EditAssignmentDetailsPage()

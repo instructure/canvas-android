@@ -527,8 +527,8 @@ fun MockCanvas.updateUserEnrollments() {
 fun MockCanvas.addCourseWithEnrollment(
     user: User,
     enrollmentType: Enrollment.EnrollmentType,
-    score: Double = 0.0,
-    grade: String = "",
+    score: Double? = 0.0,
+    grade: String? = "",
     isHomeroom: Boolean = false,
     restrictQuantitativeData: Boolean = false
 ): Course {
@@ -1238,8 +1238,8 @@ fun MockCanvas.addEnrollment(
     type: Enrollment.EnrollmentType,
     observedUser: User? = null,
     courseSectionId: Long = 0,
-    currentScore: Double = 88.1,
-    currentGrade: String = "B+",
+    currentScore: Double? = 88.1,
+    currentGrade: String? = "B+",
     enrollmentState: String = EnrollmentAPI.STATE_ACTIVE
 ): Enrollment {
     val enrollment = Enrollment(

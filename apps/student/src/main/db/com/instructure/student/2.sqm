@@ -1,1 +1,0 @@
-ALTER TABLE submission ADD COLUMN isDraft INTEGER AS Boolean DEFAULT 0;

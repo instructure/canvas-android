@@ -18,16 +18,18 @@ package com.instructure.student.mobius.assignmentDetails.submission.url
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 
 
-class UrlSubmissionUploadEffectHandler : EffectHandler<UrlSubmissionUploadView, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect>() {
+class UrlSubmissionUploadEffectHandler(private val submissionHelper: SubmissionHelper) : EffectHandler<UrlSubmissionUploadView, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect>() {
     override fun accept(effect: UrlSubmissionUploadEffect) {
         when (effect) {
             is UrlSubmissionUploadEffect.ShowUrlPreview -> {
                 view?.showPreviewUrl(effect.url)
             }
             is UrlSubmissionUploadEffect.SubmitUrl -> {
-                view?.onSubmitUrl(effect.course, effect.assignmentId, effect.assignmentName, effect.url)
+                submissionHelper.startUrlSubmission(effect.course, effect.assignmentId, effect.assignmentName, effect.url)
+                view?.goBack()
             }
             is UrlSubmissionUploadEffect.InitializeUrl -> {
                 view?.setInitialUrl(effect.url)

@@ -38,6 +38,9 @@ object UserAPI {
         @GET("users/self/colors")
         fun getColors(): Call<CanvasColor>
 
+        @GET("users/self/colors")
+        suspend fun getColors(@Tag params: RestParams): DataResult<CanvasColor>
+
         @GET("users/self/profile")
         fun getSelf(): Call<User>
 

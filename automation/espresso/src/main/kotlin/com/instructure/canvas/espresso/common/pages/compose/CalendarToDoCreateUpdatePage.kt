@@ -89,7 +89,7 @@ class CalendarToDoCreateUpdatePage(private val composeTestRule: ComposeTestRule)
     fun selectCanvasContext(canvasContext: String) {
         composeTestRule.onNodeWithTag("canvasContextRow").performScrollTo().performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText(canvasContext).performClick()
+        composeTestRule.onNodeWithTag("calendar_$canvasContext").performClick()
         composeTestRule.waitForIdle()
     }
 

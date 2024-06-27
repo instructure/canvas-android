@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,57 +12,46 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui
+ */package com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT
-import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
-import com.instructure.student.Submission
-import com.instructure.student.databinding.FragmentSubmissionDetailsEmptyContentBinding
-import com.instructure.student.db.Db
-import com.instructure.student.db.getInstance
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEmptyContentEventBusSource
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.*
-import com.instructure.student.mobius.common.DBSource
-import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
+import com.instructure.student.mobius.common.LiveDataSource
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateSubmissionEntity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@ScreenView(SCREEN_VIEW_SUBMISSION_DETAILS_EMPTY_CONTENT)
-class SubmissionDetailsEmptyContentFragment :
-        MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState, FragmentSubmissionDetailsEmptyContentBinding>() {
+@AndroidEntryPoint
+class SubmissionDetailsEmptyContentFragment : BaseSubmissionDetailsEmptyContentFragment() {
 
-    val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
-    val isStudioEnabled by BooleanArg(key = Const.IS_STUDIO_ENABLED)
-    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
-    val quiz by NullableParcelableArg<Quiz>(key = Const.QUIZ)
-    val studioLTITool by NullableParcelableArg<LTITool>(key = Const.STUDIO_LTI_TOOL)
-    val isObserver by BooleanArg(key = Const.IS_OBSERVER, default = false)
-    private var ltiTool: LTITool? by NullableParcelableArg(key = Const.LTI_TOOL, default = null)
+    @Inject
+    lateinit var submissionHelper: SubmissionHelper
 
-    override fun makeEffectHandler() = SubmissionDetailsEmptyContentEffectHandler(requireContext(), assignment.id)
-    override fun makeUpdate() = SubmissionDetailsEmptyContentUpdate()
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyContentView(canvasContext, inflater, parent)
-    override fun makePresenter() = SubmissionDetailsEmptyContentPresenter
-    override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext, isStudioEnabled, quiz, studioLTITool = studioLTITool, isObserver = isObserver, ltiTool = ltiTool)
+    @Inject
+    lateinit var studentDb: StudentDb
+
+    override fun makeEffectHandler() = SubmissionDetailsEmptyContentEffectHandler(requireContext(), assignment.id, submissionHelper)
+
     override fun getExternalEventSources() = listOf(
         SubmissionDetailsEmptyContentEventBusSource(),
-        DBSource.ofSingle<Submission, SubmissionDetailsEmptyContentEvent>(
-            Db.getInstance(ContextKeeper.appContext)
-                .submissionQueries
-                .getSubmissionsByAssignmentId(assignment.id, ApiPrefs.user?.id ?: -1),
-            performInitialQuery = false
+        LiveDataSource.of<CreateSubmissionEntity, SubmissionDetailsEmptyContentEvent>(
+            studentDb.submissionDao()
+                .findSubmissionByAssignmentIdLiveData(assignment.id, ApiPrefs.user?.id ?: -1)
         ) { submission ->
             if (submission != null && submission.progress == null) {
                 // Submission was just inserted - back out to the assignment details screen
-               SubmissionDetailsEmptyContentEvent.SubmissionStarted
+                SubmissionDetailsEmptyContentEvent.SubmissionStarted
             } else // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
                 null
         }

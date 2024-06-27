@@ -17,7 +17,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:id="@+id/fullWindowFrame"
@@ -40,39 +41,46 @@
         android:background="@color/translucentBlack"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingTop="4dp">
 
-            <ImageButton
-                android:id="@id/exo_rew"
-                style="@style/ExoMediaButton.Rewind"
-                tools:ignore="ContentDescription"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <ImageButton
-                android:id="@id/exo_play"
-                style="@style/ExoMediaButton.Play"
-                tools:ignore="ContentDescription"/>
+                <ImageButton
+                    android:id="@id/exo_rew"
+                    style="@style/ExoMediaButton.Rewind"
+                    tools:ignore="ContentDescription"/>
 
-            <ImageButton
-                android:id="@id/exo_pause"
-                style="@style/ExoMediaButton.Pause"
-                tools:ignore="ContentDescription"/>
+                <ImageButton
+                    android:id="@id/exo_play_pause"
+                    style="@style/ExoStyledControls.Button.Center.PlayPause"
+                    tools:ignore="ContentDescription"/>
 
-            <ImageButton
-                android:id="@id/exo_ffwd"
-                style="@style/ExoMediaButton.FastForward"
-                tools:ignore="ContentDescription"/>
+                <ImageButton
+                    android:id="@id/exo_ffwd"
+                    style="@style/ExoMediaButton.FastForward"
+                    tools:ignore="ContentDescription"/>
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/fullscreenButton"
                 style="@style/ExoMediaButton.Fullscreen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="ContentDescription"/>
 
-        </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,7 +100,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold"/>
 
-            <com.google.android.exoplayer2.ui.DefaultTimeBar
+            <androidx.media3.ui.DefaultTimeBar
                 android:id="@id/exo_progress"
                 android:layout_width="0dp"
                 android:layout_height="36dp"

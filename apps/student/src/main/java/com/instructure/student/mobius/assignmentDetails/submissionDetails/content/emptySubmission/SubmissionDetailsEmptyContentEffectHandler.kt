@@ -22,19 +22,21 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
 import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.util.getResourceSelectorUrl
 
-class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assignmentId: Long) :
+class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assignmentId: Long, val submissionHelper: SubmissionHelper) :
     EffectHandler<SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect>() {
 
     override fun accept(effect: SubmissionDetailsEmptyContentEffect) {
         when (effect) {
-            SubmissionDetailsEmptyContentEffect.ShowVideoRecordingView -> context.launchVideo({SubmissionDetailsEmptyContentEvent.StoreVideoUri(it)}, { view?.showPermissionDeniedToast() }, consumer, SubmissionDetailsEmptyContentFragment.VIDEO_REQUEST_CODE)
-            SubmissionDetailsEmptyContentEffect.ShowAudioRecordingView -> context.launchAudio({ view?.showPermissionDeniedToast() }, { view?.showAudioRecordingView() })
+            SubmissionDetailsEmptyContentEffect.ShowVideoRecordingView -> context.getFragmentActivity().launchVideo({SubmissionDetailsEmptyContentEvent.StoreVideoUri(it)}, { view?.showPermissionDeniedToast() }, consumer, SubmissionDetailsEmptyContentFragment.VIDEO_REQUEST_CODE)
+            SubmissionDetailsEmptyContentEffect.ShowAudioRecordingView -> context.getFragmentActivity().launchAudio({ view?.showPermissionDeniedToast() }, { view?.showAudioRecordingView() })
             SubmissionDetailsEmptyContentEffect.ShowMediaPickerView -> launchMediaPicker()
             SubmissionDetailsEmptyContentEffect.ShowVideoRecordingError -> view?.showVideoRecordingError()
             SubmissionDetailsEmptyContentEffect.ShowAudioRecordingError -> view?.showAudioRecordingError()
@@ -53,7 +55,7 @@ class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assig
 
             is SubmissionDetailsEmptyContentEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
             is SubmissionDetailsEmptyContentEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
-            is SubmissionDetailsEmptyContentEffect.UploadAudioSubmission -> uploadAudioRecording(context, effect.file, effect.assignment, effect.course)
+            is SubmissionDetailsEmptyContentEffect.UploadAudioSubmission -> uploadAudioRecording(submissionHelper, effect.file, effect.assignment, effect.course)
             is SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {
                     Assignment.SubmissionType.ONLINE_QUIZ -> {
@@ -78,7 +80,7 @@ class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assig
 
     private fun launchMediaPicker() {
        chooseMediaIntent.let {
-            (context as Activity).startActivityForResult(it, SubmissionDetailsEmptyContentFragment.CHOOSE_MEDIA_REQUEST_CODE)
+            context.getFragmentActivity().startActivityForResult(it, SubmissionDetailsEmptyContentFragment.CHOOSE_MEDIA_REQUEST_CODE)
         }
     }
 }

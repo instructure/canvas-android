@@ -315,7 +315,7 @@ class CanvasWebView @JvmOverloads constructor(
         }
 
         override fun onPermissionRequest(request: PermissionRequest) {
-            (context as? Activity)?.requestWebPermissions(request)
+            context.getFragmentActivity().requestWebPermissions(request)
         }
 
         override fun onCreateWindow(view: WebView, isDialog: Boolean, isUserGesture: Boolean, msg: Message): Boolean {

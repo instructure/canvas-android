@@ -61,8 +61,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(topicName)
         discussionListPage.selectTopic(topicName)
-        discussionDetailsPage.assertTitleText(topicName)
-        discussionDetailsPage.assertDescriptionText(topicDescription)
+        nativeDiscussionDetailsPage.assertTitleText(topicName)
+        nativeDiscussionDetailsPage.assertDescriptionText(topicDescription)
     }
 
     // Tests the creation of a discussion with an attachment.
@@ -101,10 +101,10 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(topicName)
         discussionListPage.selectTopic(topicName)
-        discussionDetailsPage.assertTitleText(topicName)
-        discussionDetailsPage.assertDescriptionText(topicDescription)
-        discussionDetailsPage.assertMainAttachmentDisplayed()
-        discussionDetailsPage.previewAndCheckMainAttachment(
+        nativeDiscussionDetailsPage.assertTitleText(topicName)
+        nativeDiscussionDetailsPage.assertDescriptionText(topicDescription)
+        nativeDiscussionDetailsPage.assertMainAttachmentDisplayed()
+        nativeDiscussionDetailsPage.previewAndCheckMainAttachment(
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "-- Socrates")
         )
@@ -145,7 +145,7 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicName)
-        discussionDetailsPage.clickLinkInDescription(course2LinkElementId) // Should navigate to course2
+        nativeDiscussionDetailsPage.clickLinkInDescription(course2LinkElementId) // Should navigate to course2
 
         courseBrowserPage.assertTitleCorrect(course2)
     }
@@ -180,8 +180,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.assertUnreadCount(topicHeader.title!!, 1)
         discussionListPage.selectTopic(topicHeader.title!!)
         sleep(3000) // let's allow time for the webview to become populated/visible before we scroll to it
-        discussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
-        discussionDetailsPage.waitForUnreadIndicatorToDisappear(discussionEntry)
+        nativeDiscussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
+        nativeDiscussionDetailsPage.waitForUnreadIndicatorToDisappear(discussionEntry)
         Espresso.pressBack() // Back to discussionListPage
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 0)
@@ -222,9 +222,9 @@ class DiscussionsInteractionTest : StudentTest() {
 
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
-        discussionDetailsPage.assertMainAttachmentDisplayed()
-        discussionDetailsPage.previewAndCheckMainAttachment(
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        nativeDiscussionDetailsPage.assertMainAttachmentDisplayed()
+        nativeDiscussionDetailsPage.previewAndCheckMainAttachment(
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "No matter where you go")
         )
@@ -262,14 +262,14 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.selectTopic(topicName)
 
         // Check that favoriting works as expected
-        discussionDetailsPage.assertFavoritingEnabled(discussionEntry)
-        discussionDetailsPage.assertLikeCount(discussionEntry, 0)
-        discussionDetailsPage.clickLikeOnEntry(discussionEntry)
+        nativeDiscussionDetailsPage.assertFavoritingEnabled(discussionEntry)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 0)
+        nativeDiscussionDetailsPage.clickLikeOnEntry(discussionEntry)
         sleep(1000) // Small wait to allow "like" to propagate
-        discussionDetailsPage.assertLikeCount(discussionEntry, 1, refreshesAllowed = 2)
-        discussionDetailsPage.clickLikeOnEntry(discussionEntry)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 1, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.clickLikeOnEntry(discussionEntry)
         sleep(1000) // Small wait to allow "unlike" to propagate
-        discussionDetailsPage.assertLikeCount(discussionEntry, 0)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 0)
     }
 
     // Tests that like count is shown if only graders can like
@@ -305,8 +305,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.selectTopic(topicName)
 
         // Check that ratings show
-        discussionDetailsPage.assertFavoritingDisabled(discussionEntry)
-        discussionDetailsPage.assertLikeCount(discussionEntry, 1)
+        nativeDiscussionDetailsPage.assertFavoritingDisabled(discussionEntry)
+        nativeDiscussionDetailsPage.assertLikeCount(discussionEntry, 1)
     }
 
     // Tests that discussion entry liking is not available when disabled
@@ -335,7 +335,7 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.assertTopicDisplayed(topicHeader.title!!)
         discussionListPage.selectTopic(topicHeader.title!!)
 
-        discussionDetailsPage.assertFavoritingDisabled(discussionEntry)
+        nativeDiscussionDetailsPage.assertFavoritingDisabled(discussionEntry)
     }
 
     // Test basic discussion view
@@ -355,7 +355,7 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(topicHeader.title!!)
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(topicHeader)
     }
 
     // Test that you can reply to a discussion (if enabled)
@@ -380,9 +380,9 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertRepliesDisplayed()
+        nativeDiscussionDetailsPage.assertRepliesDisplayed()
 
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(discussionEntry)
     }
 
     // Test that replies are not possible when they are not enabled
@@ -403,7 +403,7 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertRepliesDisabled()
+        nativeDiscussionDetailsPage.assertRepliesDisabled()
     }
 
     // Test that a reply is displayed properly
@@ -422,14 +422,14 @@ class DiscussionsInteractionTest : StudentTest() {
         courseBrowserPage.selectDiscussions()
         discussionListPage.pullToUpdate()
         discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
-        discussionDetailsPage.assertRepliesEnabled()
+        nativeDiscussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        nativeDiscussionDetailsPage.assertRepliesEnabled()
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
         val discussionEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(discussionEntry, refreshesAllowed = 2)
     }
 
     // Tests replying with an attachment.
@@ -454,7 +454,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
 
         // Now let's append the attachment after-the-fact, since it is very hard
         // to manually attach anything via Espresso, since it would require manipulating
@@ -480,9 +480,9 @@ class DiscussionsInteractionTest : StudentTest() {
         Espresso.pressBack()
         discussionListPage.selectTopic(topicHeader.title!!)
 
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
-        discussionDetailsPage.assertReplyAttachment(discussionEntry)
-        discussionDetailsPage.previewAndCheckReplyAttachment(
+        nativeDiscussionDetailsPage.assertReplyDisplayed(discussionEntry)
+        nativeDiscussionDetailsPage.assertReplyAttachment(discussionEntry)
+        nativeDiscussionDetailsPage.previewAndCheckReplyAttachment(
             discussionEntry,
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "That's one small step")
@@ -509,19 +509,19 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
 
         // Verify that our reply has made it to the screen
         val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
 
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        discussionDetailsPage.replyToReply(replyEntry, replyReplyText)
+        nativeDiscussionDetailsPage.replyToReply(replyEntry, replyReplyText)
 
         // And verify that our reply-to-reply is showing
         val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
-        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyReplyEntry, refreshesAllowed = 2)
     }
 
     // Tests that we can make a threaded reply with an attachment
@@ -546,15 +546,15 @@ class DiscussionsInteractionTest : StudentTest() {
 
         // Let's reply via the app
         val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
+        nativeDiscussionDetailsPage.sendReply(replyText)
 
         // Make sure that the reply is displayed, so that we can reply to it
         val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
 
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        discussionDetailsPage.replyToReply(replyEntry, replyReplyText)
+        nativeDiscussionDetailsPage.replyToReply(replyEntry, replyReplyText)
 
         // And verify that our reply-to-reply is showing
         val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
@@ -580,9 +580,9 @@ class DiscussionsInteractionTest : StudentTest() {
         Espresso.pressBack()
         discussionListPage.selectTopic(topicHeader.title!!)
 
-        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
-        discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
-        discussionDetailsPage.previewAndCheckReplyAttachment(
+        nativeDiscussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
+        nativeDiscussionDetailsPage.assertReplyAttachment(replyReplyEntry)
+        nativeDiscussionDetailsPage.previewAndCheckReplyAttachment(
             replyReplyEntry,
             WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
             WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear")
@@ -628,7 +628,7 @@ class DiscussionsInteractionTest : StudentTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(discussion.title!!)
-        discussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
+        nativeDiscussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
     }
 
     // Tests a discussion with a linked assignment, show possible points if not restricted
@@ -672,7 +672,7 @@ class DiscussionsInteractionTest : StudentTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(discussion.title!!)
-        discussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
+        nativeDiscussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
     }
 
 
@@ -717,7 +717,7 @@ class DiscussionsInteractionTest : StudentTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(discussion.title!!)
-        discussionDetailsPage.assertPointsPossibleNotDisplayed()
+        nativeDiscussionDetailsPage.assertPointsPossibleNotDisplayed()
     }
 
     //

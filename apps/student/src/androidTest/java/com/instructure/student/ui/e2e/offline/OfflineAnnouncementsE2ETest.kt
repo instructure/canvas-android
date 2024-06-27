@@ -95,18 +95,18 @@ class OfflineAnnouncementsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Select '${lockedAnnouncement.title}' announcement and assert if we are landing on the Discussion Details Page.")
         announcementListPage.selectTopic(lockedAnnouncement.title)
-        discussionDetailsPage.assertTitleText(lockedAnnouncement.title)
+        nativeDiscussionDetailsPage.assertTitleText(lockedAnnouncement.title)
 
         Log.d(STEP_TAG, "Assert that the 'Reply' button is not available on a locked announcement. Navigate back to Announcement List Page.")
-        discussionDetailsPage.assertReplyButtonNotDisplayed()
+        nativeDiscussionDetailsPage.assertReplyButtonNotDisplayed()
         Espresso.pressBack()
 
         Log.d(STEP_TAG,"Select '${announcement.title}' announcement and assert if we are landing on the Discussion Details Page.")
         announcementListPage.selectTopic(announcement.title)
-        discussionDetailsPage.assertTitleText(announcement.title)
+        nativeDiscussionDetailsPage.assertTitleText(announcement.title)
 
         Log.d(STEP_TAG, "Click on the 'Reply' button and assert that the 'No Internet Connection' dialog has displayed. Dismiss the dialog.")
-        discussionDetailsPage.clickReply()
+        nativeDiscussionDetailsPage.clickReply()
         OfflineTestUtils.assertNoInternetConnectionDialog()
         OfflineTestUtils.dismissNoInternetConnectionDialog()
 

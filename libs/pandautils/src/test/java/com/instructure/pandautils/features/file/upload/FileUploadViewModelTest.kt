@@ -32,6 +32,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -263,6 +264,37 @@ class FileUploadViewModelTest {
 
         viewModel.onGalleryClicked()
         assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Remove file to upload`() {
+        val uri: Uri = mockk(relaxed = true)
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf"))
+        val submitObject = createSubmitObject("test.pdf")
+
+        every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns submitObject
+
+        mockkStatic(Uri::class)
+        every { Uri.fromFile(any()) } returns uri
+
+        viewModel.setData(assignment, arrayListOf(), FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L, null)
+
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.addFile(uri)
+
+        assertEquals(viewModel.data.value?.files?.size, 1)
+
+        viewModel.data.value?.files?.get(0)?.onRemoveClick?.invoke(submitObject.fullPath)
+
+        assertEquals(0, viewModel.data.value?.files?.size)
+
+        verify {
+            fileUploadUtilsHelper.deleteTempFile(submitObject.fullPath)
+        }
     }
 
     @Test

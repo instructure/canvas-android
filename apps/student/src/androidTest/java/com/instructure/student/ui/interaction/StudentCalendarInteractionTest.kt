@@ -24,7 +24,7 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import com.instructure.student.ui.pages.DashboardPage
-import com.instructure.student.ui.pages.DiscussionDetailsPage
+import com.instructure.student.ui.pages.offline.NativeDiscussionDetailsPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,7 +38,7 @@ class StudentCalendarInteractionTest : CalendarInteractionTest() {
 
     private val dashboardPage = DashboardPage()
     private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
-    private val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions())
+    private val nativeDiscussionDetailsPage = NativeDiscussionDetailsPage(ModuleItemInteractions())
 
     override fun goToCalendar(data: MockCanvas) {
         val student = data.students[0]
@@ -68,6 +68,6 @@ class StudentCalendarInteractionTest : CalendarInteractionTest() {
     }
 
     override fun assertDiscussionDetailsTitle(title: String) {
-        discussionDetailsPage.assertTitleText(title)
+        nativeDiscussionDetailsPage.assertTitleText(title)
     }
 }

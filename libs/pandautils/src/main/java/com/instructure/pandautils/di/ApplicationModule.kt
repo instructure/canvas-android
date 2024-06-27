@@ -35,6 +35,7 @@ import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.StorageUtils
+import com.instructure.pandautils.utils.ThemePrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -125,5 +126,11 @@ class ApplicationModule {
     @Provides
     fun provideClock(): Clock {
         return Clock.systemDefaultZone()
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemePrefs(): ThemePrefs {
+        return ThemePrefs
     }
 }

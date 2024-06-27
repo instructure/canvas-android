@@ -178,8 +178,11 @@ class FileUploadDialogViewModel @Inject constructor(
     }
 
     private fun onRemoveFileClicked(fullPath: String) {
-        filesToUpload.removeIf {
+        val removed = filesToUpload.removeIf {
             it.fullPath == fullPath
+        }
+        if (removed) {
+            fileUploadUtils.deleteTempFile(fullPath)
         }
         updateItems()
     }

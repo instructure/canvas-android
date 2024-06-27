@@ -15,17 +15,15 @@
  */
 package com.instructure.canvasapi2.utils
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.Build
 import android.os.Handler
 import android.os.LocaleList
+import android.os.Looper
 import androidx.core.os.ConfigurationCompat
-import java.util.*
+import java.util.Locale
 import kotlin.system.exitProcess
 
 object LocaleUtils {
@@ -72,14 +70,15 @@ object LocaleUtils {
         return base.createConfigurationContext(config)
     }
 
-    fun restartApp(context: Context, startingClass: Class<*>) {
+    fun restartApp(context: Context) {
         // Restart the App to apply language after a short delay to guarantee shared prefs are saved
-        Handler().postDelayed({
-            val intent = Intent(context, startingClass)
-            intent.putExtra(LANGUAGES_PENDING_INTENT_KEY, LANGUAGES_PENDING_INTENT_ID)
-            val mPendingIntent = PendingIntent.getActivity(context, LANGUAGES_PENDING_INTENT_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
+        Handler(Looper.getMainLooper()).postDelayed({
+            val packageManager = context.packageManager
+            val intent = packageManager.getLaunchIntentForPackage(context.packageName)
+            val componentName = intent?.component
+            val mainIntent = Intent.makeRestartActivityTask(componentName)
+            mainIntent.setPackage(context.packageName)
+            context.startActivity(mainIntent)
             exitProcess(0)
         }, 500)
     }

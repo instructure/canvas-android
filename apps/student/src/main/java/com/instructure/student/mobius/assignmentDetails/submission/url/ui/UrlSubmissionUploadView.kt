@@ -19,7 +19,6 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.WebViewClient
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.onChangeDebounce
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
@@ -28,7 +27,6 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentUrlSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 
 class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<UrlSubmissionUploadViewState, UrlSubmissionUploadEvent, FragmentUrlSubmissionUploadBinding>(
@@ -81,9 +79,7 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
         binding.editUrl.setText(url ?: "")
     }
 
-    fun onSubmitUrl(course: CanvasContext, assignmentId: Long, assignmentName: String?, url: String) {
-        SubmissionService.startUrlSubmission(context, course, assignmentId, assignmentName, url)
-
+    fun goBack() {
         (context as? Activity)?.onBackPressed()
     }
 

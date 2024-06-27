@@ -25,15 +25,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentAnnotationSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.PdfStudentSubmissionView
-import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AnnotationSubmissionUploadFragment : Fragment() {
+
+    @Inject
+    lateinit var submissionHelper: SubmissionHelper
 
     private var submissionId by LongArg(key = SUBMISSION_ID)
     private var annotatableAttachmentId by LongArg(key = ANNOTATABLE_ATTACHMENT_ID)
@@ -71,7 +82,7 @@ class AnnotationSubmissionUploadFragment : Fragment() {
         toolbar.setMenu(R.menu.menu_submit_generic) {
             when (it.itemId) {
                 R.id.menuSubmit -> {
-                    SubmissionService.startStudentAnnotationSubmission(requireContext(), canvasContext, assignmentId, assignmentName, annotatableAttachmentId)
+                    submissionHelper.startStudentAnnotationSubmission(canvasContext, assignmentId, assignmentName, annotatableAttachmentId)
                     requireActivity().onBackPressed()
                 }
             }

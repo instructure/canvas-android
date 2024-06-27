@@ -126,8 +126,8 @@ class HomeroomE2ETest : StudentTest() {
         homeroomPage.assertPageObjects()
         homeroomPage.openCourseAnnouncement(data.announcementsList[1].title)
 
-        Log.d(STEP_TAG, "Assert that the '${data.announcementsList[1].title}' announcement's details page is displayed.")
-        discussionDetailsPage.assertTitleText(data.announcementsList[1].title)
+        Log.d(STEP_TAG, "Assert that the '${data.announcementsList[1].title}' discussion's details page is displayed.")
+        discussionDetailsPage.assertHomeroomToolbarDiscussionTitle(data.announcementsList[1].title)
 
         Log.d(STEP_TAG, "Navigate back to Homeroom Page. Open the Assignment List Page of '${nonHomeroomCourses[2].name}' course.")
         Espresso.pressBack()

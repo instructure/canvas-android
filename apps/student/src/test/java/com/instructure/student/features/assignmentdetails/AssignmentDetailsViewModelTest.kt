@@ -24,6 +24,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Assignment
@@ -44,7 +45,6 @@ import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.AssignmentDetailAction
 import com.instructure.student.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.student.features.assignments.details.AssignmentDetailsViewModel
@@ -52,6 +52,9 @@ import com.instructure.student.features.assignments.details.ReminderChoice
 import com.instructure.student.features.assignments.details.ReminderViewData
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.student.features.assignments.reminder.AlarmScheduler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateSubmissionEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -88,6 +91,7 @@ class AssignmentDetailsViewModelTest {
     private val application: Application = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val database: StudentDb = mockk(relaxed = true)
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
 
     @Before
@@ -108,6 +112,10 @@ class AssignmentDetailsViewModelTest {
 
         every { assignmentDetailsRepository.getRemindersByAssignmentIdLiveData(any(), any()) } returns MutableLiveData()
         every { apiPrefs.user } returns User(id = 1)
+
+        every {
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf())
     }
 
     fun tearDown() {
@@ -117,6 +125,7 @@ class AssignmentDetailsViewModelTest {
     private fun getViewModel() = AssignmentDetailsViewModel(
         savedStateHandle,
         assignmentDetailsRepository,
+        submissionHelper,
         resources,
         htmlContentFormatter,
         colorKeeper,
@@ -126,7 +135,7 @@ class AssignmentDetailsViewModelTest {
         database
     )
 
-    private fun getDbSubmission() = com.instructure.student.Submission(
+    private fun getDbSubmission() = CreateSubmissionEntity(
         id = 0,
         submissionEntry = "",
         lastActivityDate = null,
@@ -250,8 +259,8 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(isDraft = true))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(isDraft = true)))
 
         val viewModel = getViewModel()
 
@@ -472,11 +481,10 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(submissionType = "online_text_entry"))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_text_entry")))
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
         viewModel.onGradeCellClicked()
 
         Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
@@ -490,11 +498,10 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(submissionType = "online_upload"))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_upload")))
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
         viewModel.onGradeCellClicked()
 
         Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUploadStatusScreen)
@@ -508,11 +515,10 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(submissionType = "online_url"))
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns MutableLiveData(listOf(getDbSubmission().copy(submissionType = "online_url")))
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
         viewModel.onGradeCellClicked()
 
         Assert.assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
@@ -645,20 +651,19 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
+        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
+
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission())
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns liveData
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
+
+        liveData.postValue(listOf(getDbSubmission()))
 
         Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
 
-        every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission().copy(errorFlag = true))
-
-        viewModel.queryResultsChanged()
+        liveData.postValue(listOf(getDbSubmission().copy(errorFlag = true)))
 
         Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isFailed!!)
     }
@@ -672,23 +677,22 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
+        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
+
         every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf(getDbSubmission())
+            database.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns liveData
 
         val viewModel = getViewModel()
-        viewModel.queryResultsChanged()
+
+        liveData.postValue(listOf(getDbSubmission()))
 
         Assert.assertTrue(viewModel.data.value?.attempts?.first()?.data?.isUploading!!)
-
-        every {
-            database.submissionQueries.getSubmissionsByAssignmentId(any(), any()).executeAsList()
-        } returns listOf()
 
         val assignment = Assignment(submission = Submission(submissionHistory = listOf(expected)))
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
-        viewModel.queryResultsChanged()
+        liveData.postValue(emptyList())
 
         Assert.assertEquals(expected, viewModel.data.value?.attempts?.last()?.data?.submission)
     }

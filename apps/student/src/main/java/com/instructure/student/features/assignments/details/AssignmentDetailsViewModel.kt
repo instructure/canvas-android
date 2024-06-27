@@ -27,8 +27,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingSchemeRow
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.isDiscussionAuthorNull
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -52,14 +58,15 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
-import com.instructure.student.db.StudentDb
 import com.instructure.student.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.student.features.assignments.details.itemviewmodels.ReminderItemViewModel
 import com.instructure.student.features.assignments.reminder.AlarmScheduler
 import com.instructure.student.mobius.assignmentDetails.getFormattedAttemptDate
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreateSubmissionEntity
 import com.instructure.student.util.getStudioLTITool
-import com.squareup.sqldelight.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
@@ -67,20 +74,20 @@ import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
-import com.instructure.student.Submission as DatabaseSubmission
 
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
+    private val submissionHelper: SubmissionHelper,
     private val resources: Resources,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val colorKeeper: ColorKeeper,
     private val application: Application,
     private val apiPrefs: ApiPrefs,
     private val alarmScheduler: AlarmScheduler,
-    database: StudentDb
-) : ViewModel(), Query.Listener {
+    studentDb: StudentDb
+) : ViewModel() {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -105,7 +112,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private var externalLTITool: LTITool? = null
     private var studioLTITool: LTITool? = null
 
-    private var dbSubmission: DatabaseSubmission? = null
+    private var dbSubmission: CreateSubmissionEntity? = null
     private var isUploading = false
     private var restrictQuantitativeData = false
     private var gradingScheme = emptyList<GradingSchemeRow>()
@@ -115,7 +122,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var selectedSubmission: Submission? = null
 
-    private val submissionQuery = database.submissionQueries.getSubmissionsByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
+    private val submissionLiveData = studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(assignmentId, apiPrefs.user?.id.orDefault())
 
     private val remindersObserver = Observer<List<ReminderEntity>> {
         _data.value?.reminders = mapReminders(it)
@@ -130,21 +137,9 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     var checkingReminderPermission = false
 
-    init {
-        markSubmissionAsRead()
-        submissionQuery.addListener(this)
-        _state.postValue(ViewState.Loading)
-        loadData()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        remindersLiveData.removeObserver(remindersObserver)
-    }
-
-    override fun queryResultsChanged() {
+    private val submissionObserver = Observer<List<CreateSubmissionEntity>> {submissions ->
         viewModelScope.launch {
-            val submission = submissionQuery.executeAsList().lastOrNull()
+            val submission = submissions.lastOrNull()
             dbSubmission = submission
             val attempts = _data.value?.attempts
             submission?.let { dbSubmission ->
@@ -189,6 +184,19 @@ class AssignmentDetailsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    init {
+        markSubmissionAsRead()
+        submissionLiveData.observeForever(submissionObserver)
+        _state.postValue(ViewState.Loading)
+        loadData()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        remindersLiveData.removeObserver(remindersObserver)
+        submissionLiveData.removeObserver(submissionObserver)
     }
 
     private fun markSubmissionAsRead() {
@@ -238,7 +246,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 bookmarker = bookmarker.copy(url = assignmentResult.htmlUrl)
 
-                val dbSubmission = submissionQuery.executeAsList().lastOrNull()
+                val dbSubmission = submissionLiveData.value?.lastOrNull()
                 this@AssignmentDetailsViewModel.dbSubmission = dbSubmission
                 val hasDraft = dbSubmission?.isDraft.orDefault()
 
@@ -607,7 +615,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     fun uploadAudioSubmission(context: Context?, file: File?) {
         val assignment = assignment
         if (context != null && file != null && assignment != null && course != null) {
-            uploadAudioRecording(context, file, assignment, course)
+            uploadAudioRecording(submissionHelper, file, assignment, course)
         } else {
             postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.audioRecordingError)))
         }

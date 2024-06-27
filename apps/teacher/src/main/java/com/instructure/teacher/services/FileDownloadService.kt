@@ -24,7 +24,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -270,7 +272,13 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileDownloadS
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setProgress(0, 0, true)
 
-        startForeground(NOTIFICATION_ID, notificationBuilder?.build())
+        val notification = notificationBuilder?.build()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && notification != null) {
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            startForeground(NOTIFICATION_ID, notification)
+        }
     }
 
     private fun updateNotificationError(message: String) {

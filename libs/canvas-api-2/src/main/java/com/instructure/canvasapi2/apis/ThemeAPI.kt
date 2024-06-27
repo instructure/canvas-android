@@ -21,17 +21,22 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.utils.DataResult
 
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Tag
 
 
 object ThemeAPI {
 
-    internal interface ThemeInterface {
+    interface ThemeInterface {
 
         @GET("brand_variables")
         fun getTheme(): Call<CanvasTheme>
+
+        @GET("brand_variables")
+        suspend fun getTheme(@Tag restParams: RestParams): DataResult<CanvasTheme>
     }
 
     fun getTheme(adapter: RestBuilder, callback: StatusCallback<CanvasTheme>, params: RestParams) {

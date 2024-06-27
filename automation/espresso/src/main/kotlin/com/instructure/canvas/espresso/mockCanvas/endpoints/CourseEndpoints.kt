@@ -18,9 +18,42 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import android.util.Log
 import com.google.gson.Gson
-import com.instructure.canvas.espresso.mockCanvas.*
-import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
+import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
+import com.instructure.canvas.espresso.mockCanvas.endpoint
+import com.instructure.canvas.espresso.mockCanvas.utils.AuthModel
+import com.instructure.canvas.espresso.mockCanvas.utils.DontCareAuthModel
+import com.instructure.canvas.espresso.mockCanvas.utils.LongId
+import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.StringId
+import com.instructure.canvas.espresso.mockCanvas.utils.UserId
+import com.instructure.canvas.espresso.mockCanvas.utils.getJsonFromRequestBody
+import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
+import com.instructure.canvas.espresso.mockCanvas.utils.noContentResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.GradingPeriodResponse
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.Progress
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.QuizSubmissionResponse
+import com.instructure.canvasapi2.models.QuizSubmissionTime
 import com.instructure.canvasapi2.models.postmodels.BulkUpdateProgress
 import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
@@ -28,7 +61,8 @@ import com.instructure.canvasapi2.utils.globalName
 import com.instructure.canvasapi2.utils.toApiString
 import okio.Buffer
 import org.json.JSONObject
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 /**
  * Endpoint that can return a list of courses in which the request user is enrolled.
@@ -45,13 +79,13 @@ object CourseListEndpoint : Endpoint(
                 val courses = data.enrollments
                         .values
                         .filter { it.userId == user.id }
-                        .map {
-                            var course = data.courses[it.courseId]!!
+                        .mapNotNull {
+                            var course = data.courses.getOrDefault(it.courseId, null)
                             if (request.url.queryParameterValues("include[]").contains("tabs")) {
-                                course = course.copy(tabs = data.courseTabs[course.id])
+                                course = course?.copy(tabs = data.courseTabs[course?.id])
                             }
                             if (request.url.queryParameterValues("include[]").contains("permissions")) {
-                                course.permissions = data.coursePermissions[course.id]
+                                course?.permissions = data.coursePermissions[course?.id]
                             }
                             course
                         }
@@ -63,7 +97,7 @@ object CourseListEndpoint : Endpoint(
                                 else -> true
                             }
                         }
-                request.successPaginatedResponse(courses)
+                request.successPaginatedResponse(courses.distinct())
             }
         }
 )

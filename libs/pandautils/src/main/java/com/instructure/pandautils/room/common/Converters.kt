@@ -3,6 +3,7 @@ package com.instructure.pandautils.room.common
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import java.util.*
 
@@ -75,5 +76,15 @@ class Converters {
     @TypeConverter
     fun stringToGradingSchemeRowList(value: String): List<GradingSchemeRow>? {
         return Gson().fromJson(value,  object : TypeToken<List<GradingSchemeRow>>() {}.type)
+    }
+
+    @TypeConverter
+    fun canvasContextToString(value: CanvasContext): String {
+        return value.contextId
+    }
+
+    @TypeConverter
+    fun stringToCanvasContext(value: String): CanvasContext {
+        return CanvasContext.fromContextCode(value) ?: CanvasContext.defaultCanvasContext()
     }
 }

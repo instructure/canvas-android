@@ -149,15 +149,14 @@ class   ModulesE2ETest : TeacherComposeTest() {
         editPageDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
         editPageDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
 
-        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${discussionTopic.title}' discussion module item's details page is displayed. Assert that the module name is displayed at the bottom.")
+        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${discussionTopic.title}' discussion module item's details (web view) page is displayed. Assert that the module name is displayed at the bottom.")
         editPageDetailsPage.moduleItemInteractions.clickOnNextArrow()
-        discussionsDetailsPage.assertDiscussionTitle(discussionTopic.title)
-        discussionsDetailsPage.assertDiscussionPublished()
-        discussionsDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
+        discussionDetailsPage.assertToolbarDiscussionTitle(discussionTopic.title)
+        discussionDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
 
         Log.d(STEP_TAG, "Assert that the next arrow button is not displayed because the user is on the last assignment's details page, but the previous arrow button is displayed.")
-        discussionsDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
-        discussionsDetailsPage.moduleItemInteractions.assertNextArrowNotDisplayed()
+        discussionDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
+        discussionDetailsPage.moduleItemInteractions.assertNextArrowNotDisplayed()
 
         Log.d(STEP_TAG, "Click on the previous arrow button and assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
         quizDetailsPage.moduleItemInteractions.clickOnPreviousArrow()

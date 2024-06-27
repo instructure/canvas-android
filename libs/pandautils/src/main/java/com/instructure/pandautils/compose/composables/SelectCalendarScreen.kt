@@ -33,11 +33,16 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -100,7 +105,10 @@ private fun SelectCalendarContent(
         LazyColumn(
             modifier = modifier
         ) {
-            items(uiState.users, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { user ->
+            items(
+                uiState.users,
+                key = { it.contextId },
+                contentType = { FILTER_ITEM_CONTENT_TYPE }) { user ->
                 val selected = user.contextId == uiState.selectedCanvasContext?.contextId
                 SelectCalendarItem(user, selected, onCalendarSelected, Modifier.fillMaxWidth())
             }
@@ -108,16 +116,27 @@ private fun SelectCalendarContent(
                 item(key = COURSES_KEY, contentType = HEADER_CONTENT_TYPE) {
                     ListHeaderItem(text = stringResource(id = R.string.calendarFilterCourse))
                 }
-                items(uiState.courses, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
+                items(
+                    uiState.courses,
+                    key = { it.contextId },
+                    contentType = { FILTER_ITEM_CONTENT_TYPE }) { course ->
                     val selected = course.contextId == uiState.selectedCanvasContext?.contextId
-                    SelectCalendarItem(course, selected, onCalendarSelected, Modifier.fillMaxWidth())
+                    SelectCalendarItem(
+                        course,
+                        selected,
+                        onCalendarSelected,
+                        Modifier.fillMaxWidth()
+                    )
                 }
             }
             if (uiState.groups.isNotEmpty()) {
                 item(key = GROUPS_KEY, contentType = HEADER_CONTENT_TYPE) {
                     ListHeaderItem(text = stringResource(id = R.string.calendarFilterGroup))
                 }
-                items(uiState.groups, key = { it.contextId }, contentType = { FILTER_ITEM_CONTENT_TYPE }) { group ->
+                items(
+                    uiState.groups,
+                    key = { it.contextId },
+                    contentType = { FILTER_ITEM_CONTENT_TYPE }) { group ->
                     val selected = group.contextId == uiState.selectedCanvasContext?.contextId
                     SelectCalendarItem(group, selected, onCalendarSelected, Modifier.fillMaxWidth())
                 }
@@ -126,6 +145,7 @@ private fun SelectCalendarContent(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SelectCalendarItem(
     canvasContext: CanvasContext,
@@ -133,6 +153,7 @@ private fun SelectCalendarItem(
     onCalendarSelected: (CanvasContext) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val color = Color(
         if (canvasContext is User) {
             ThemePrefs.brandColor
@@ -146,17 +167,41 @@ private fun SelectCalendarItem(
             .clickable {
                 onCalendarSelected(canvasContext)
             }
-            .padding(start = 8.dp, end = 16.dp), verticalAlignment = Alignment.CenterVertically
+            .padding(start = 8.dp, end = 16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription =
+                    if (selected) {
+                        context.getString(
+                            R.string.a11y_selectedCalendar,
+                            canvasContext.name.orEmpty()
+                        )
+                    } else {
+                        canvasContext.name.orEmpty()
+                    }
+                testTag = "calendar_${canvasContext.name}"
+            }, verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
-            selected = selected, onClick = {
+            selected = selected,
+            modifier = Modifier.clearAndSetSemantics {
+                testTag = "radioButton_${canvasContext.name}"
+            },
+            onClick = {
                 onCalendarSelected(canvasContext)
-            }, colors = RadioButtonDefaults.colors(
+            },
+            colors = RadioButtonDefaults.colors(
                 selectedColor = color,
                 unselectedColor = color
             )
         )
-        Text(canvasContext.name.orEmpty(), color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
+        Text(
+            modifier = Modifier.clearAndSetSemantics {
+                testTag = "title_${canvasContext.name}"
+            },
+            text = canvasContext.name.orEmpty(),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp
+        )
     }
 }
 
@@ -192,5 +237,16 @@ private fun SelectCalendarPreview() {
         ),
         onCalendarSelected = {},
         navigationActionClick = {}
+    )
+}
+
+@Preview
+@Composable
+private fun SelectCalendarItemPreview() {
+    SelectCalendarItem(
+        canvasContext = Course(id = 1, name = "Black Holes"),
+        selected = false,
+        onCalendarSelected = {},
+        modifier = Modifier.fillMaxWidth()
     )
 }

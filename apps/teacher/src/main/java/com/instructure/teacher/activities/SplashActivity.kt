@@ -80,7 +80,7 @@ class SplashActivity : AppCompatActivity() {
                     val shouldRestartForLocaleChange = setupUser(user)
                     if (shouldRestartForLocaleChange) {
                         if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
-                        LocaleUtils.restartApp(this@SplashActivity, LoginActivity::class.java)
+                        LocaleUtils.restartApp(this@SplashActivity)
                         return@weave
                     }
 
@@ -192,7 +192,7 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
-                val crashlytics = FirebaseCrashlytics.getInstance();
+                val crashlytics = FirebaseCrashlytics.getInstance()
                 crashlytics.setUserId("")
 
                 startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))

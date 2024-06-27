@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,47 +12,26 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */
-package com.instructure.student.mobius.assignmentDetails.submission.text.ui
+ */package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.analytics.SCREEN_VIEW_TEXT_SUBMISSION_UPLOAD
-import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
-import com.instructure.student.databinding.FragmentTextSubmissionUploadBinding
-import com.instructure.student.mobius.assignmentDetails.submission.text.*
-import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.withArgs
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffectHandler
+import com.instructure.student.mobius.common.ui.SubmissionHelper
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@ScreenView(SCREEN_VIEW_TEXT_SUBMISSION_UPLOAD)
-class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect, TextSubmissionUploadView, TextSubmissionUploadViewState, FragmentTextSubmissionUploadBinding>() {
+@AndroidEntryPoint
+class TextSubmissionUploadFragment : BaseTextSubmissionUploadFragment() {
 
-    private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
-    private val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
-    private val initialText by StringArg(key = Const.TEXT)
-    private val isFailure by BooleanArg(key = Const.IS_FAILURE)
-    private val assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
+    @Inject
+    lateinit var submissionHelper: SubmissionHelper
 
-    override fun makeEffectHandler() = TextSubmissionUploadEffectHandler()
-
-    override fun makeUpdate() = TextSubmissionUploadUpdate()
-
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = TextSubmissionUploadView(inflater, parent)
-
-    override fun makePresenter() = TextSubmissionUploadPresenter
-
-    override fun makeInitModel(): TextSubmissionUploadModel {
-        return TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
-    }
-
-    override fun getExternalEventSources() = listOf(TextSubmissionUploadEventBusSource())
-
-    override fun handleBackPressed(): Boolean {
-        return view.onBackPressed()
-    }
+    override fun makeEffectHandler() = TextSubmissionUploadEffectHandler(submissionHelper)
 
     companion object {
 

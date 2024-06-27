@@ -38,7 +38,7 @@ class AnnouncementsE2ETest : TeacherTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     //Because of naming conventions, we are using 'announcementDetailsPage' naming in this class to make the code more readable and straightforward.
-    private val announcementDetailsPage = discussionsDetailsPage
+    private val announcementDetailsPage = discussionDetailsPage
 
     @E2E
     @Test
@@ -56,10 +56,10 @@ class AnnouncementsE2ETest : TeacherTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Assert ${course.name} course is displayed.")
+        Log.d(STEP_TAG, "Assert ${course.name} course is displayed.")
         dashboardPage.assertDisplaysCourse(course)
 
-        Log.d(STEP_TAG,"Open ${course.name} course and navigate to it's Announcements Page. Assert that the ${announcement.title} announcement has been displayed.")
+        Log.d(STEP_TAG, "Open ${course.name} course and navigate to it's Announcements Page. Assert that the ${announcement.title} announcement has been displayed.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openAnnouncementsTab()
         announcementsListPage.assertHasAnnouncement(announcement)
@@ -76,36 +76,31 @@ class AnnouncementsE2ETest : TeacherTest() {
         announcementsListPage.searchable.clickOnClearSearchButton()
         announcementsListPage.assertSearchResultCount(2)
 
-        Log.d(STEP_TAG,"Edit ${announcement.title} announcement's name to 'Haha'. Save the modifications.")
+        Log.d(STEP_TAG, "Open the '${announcement.title}' announcement. Assert that it's title is displayed on the (web view) page's toolbar title and the 'Reply' button is also displayed.")
         announcementsListPage.clickAnnouncement(announcement)
-        announcementDetailsPage.openEdit()
-        editAnnouncementDetailsPage.editAnnouncementTitle("Haha")
-        editAnnouncementDetailsPage.saveAnnouncement()
+        announcementDetailsPage.assertToolbarDiscussionTitle(announcement.title)
+        announcementDetailsPage.waitForReplyButtonDisplayed()
+        announcementDetailsPage.assertReplyButtonDisplayed()
 
-        Log.d(STEP_TAG,"Navigate back to the Announcements Page. Refresh the page and assert that the announcement name has been changed to 'Haha'.")
+        Log.d(STEP_TAG, "Click on the more menu of the announcement and assert if the more menu items are all displayed.")
+        announcementDetailsPage.clickOnDiscussionMoreMenu()
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Unread")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Edit")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Delete")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Send To...")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Copy To...")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Share to Commons")
+
+        Log.d(STEP_TAG, "Navigate back to the Announcement List Page.")
         Espresso.pressBack()
-        announcementsListPage.refresh()
-        announcementsListPage.assertHasAnnouncement("Haha")
 
-        Log.d(STEP_TAG,"Delete the 'Haha' titled announcement.")
-        announcementsListPage.clickAnnouncement("Haha")
-        announcementDetailsPage.openEdit()
-        editAnnouncementDetailsPage.deleteAnnouncement()
-
-        Log.d(STEP_TAG, "")
-        announcementsListPage.clickAnnouncement(announcement2.title)
-        announcementDetailsPage.openEdit()
-        editAnnouncementDetailsPage.deleteAnnouncement()
-
-        Log.d(STEP_TAG,"Refresh the Announcements Page and assert that there is no announcement displayed. Assert that empty view is displayed.")
-        announcementsListPage.refresh()
-        announcementsListPage.assertEmpty()
-
-        Log.d(STEP_TAG,"Create a new valid announcement.")
+        Log.d(STEP_TAG, "Create a new valid announcement.")
         announcementsListPage.createAnnouncement(announcementName = "I am an announcement", announcementDetails = "I am the detail")
 
-        Log.d(STEP_TAG,"Refresh the Announcements Page and assert that the previously created announcement is displayed.")
+        Log.d(STEP_TAG, "Refresh the Announcements Page and assert that the previously created announcement is displayed. Assert that there are 3 announcements displayed on the Announcement List Page.")
         announcementsListPage.refresh()
         announcementsListPage.assertHasAnnouncement("I am an announcement")
+        announcementsListPage.assertSearchResultCount(3)
     }
 }

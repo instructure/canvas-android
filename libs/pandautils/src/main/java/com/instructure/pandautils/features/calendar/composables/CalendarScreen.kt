@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -145,7 +146,7 @@ fun CalendarScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_add),
                             tint = Color.White,
-                            contentDescription = stringResource(id = R.string.calendarAddButtonContentDescription)
+                            contentDescription = stringResource(id = R.string.calendarAddNewCalendarItemContentDescription)
                         )
                     },
                     expanded = fabExpandedState,
@@ -154,20 +155,24 @@ fun CalendarScreen(
                             ExpandableFabItem(
                                 icon = painterResource(id = R.drawable.ic_todo),
                                 text = stringResource(id = R.string.calendarAddToDo),
-                                modifier = Modifier.clickable {
-                                    fabExpandedState.value = false
-                                    actionHandler(CalendarAction.AddToDoTapped)
-                                }
+                                modifier = Modifier
+                                    .clickable {
+                                        fabExpandedState.value = false
+                                        actionHandler(CalendarAction.AddToDoTapped)
+                                    }
+                                    .semantics { traversalIndex = 1f }
                             )
                         },
                         {
                             ExpandableFabItem(
                                 icon = painterResource(id = R.drawable.ic_calendar_month_24),
                                 text = stringResource(id = R.string.calendarAddEvent),
-                                modifier = Modifier.clickable {
-                                    fabExpandedState.value = false
-                                    actionHandler(CalendarAction.AddEventTapped)
-                                }
+                                modifier = Modifier
+                                    .clickable {
+                                        fabExpandedState.value = false
+                                        actionHandler(CalendarAction.AddEventTapped)
+                                    }
+                                    .semantics { traversalIndex = 2f }
                             )
                         }
                     )

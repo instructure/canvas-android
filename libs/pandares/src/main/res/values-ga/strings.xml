@@ -15,6 +15,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Níor aimsíodh aon Chomhaid</string>
     <string name="searchFilesHint">Cuardaigh comhaid</string>
     <string name="fileSearchInstructions">Cuir isteach téarma cuardaigh a bhfuil trí charachtar nó níos mó ann</string>
@@ -32,7 +33,6 @@
     <string name="selectedListItem">Roghnaithe: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Sonraí Tasc</string>
     <string name="submission_types">Sóirt Uaslódálacha</string>
@@ -68,6 +68,43 @@
     <string name="missingSubmissionLabel">ar Iarraidh</string>
     <string name="gradedSubmissionLabel">Marcáilte</string>
 
+    <string name="reminderTitle">Meabhrúchán</string>
+    <string name="reminderDescription">Cuir fógraí meabhrúcháin dáta dlite faoin tasc seo leis ar an ngléas seo.</string>
+    <string name="a11y_addReminder">Cuir meabhrúchán leis</string>
+    <string name="a11y_removeReminder">Bain meabhrúchán</string>
+    <string name="reminderBefore">%s Roimh</string>
+    <plurals name="reminderMinute">
+        <item quantity="one">Nóiméad 1</item>
+        <item quantity="other">%d Nóiméad</item>
+    </plurals>
+    <plurals name="reminderHour">
+        <item quantity="one">Uair 1</item>
+        <item quantity="other">%d Uair</item>
+    </plurals>
+    <plurals name="reminderDay">
+        <item quantity="one">Lá 1</item>
+        <item quantity="other">%d Lá</item>
+    </plurals>
+    <plurals name="reminderWeek">
+        <item quantity="one">Seachtain 1</item>
+        <item quantity="other">%d Seachtain</item>
+    </plurals>
+    <string name="reminderCustom">Saincheaptha</string>
+    <string name="customReminderTitle">Meabhrúchán Saincheaptha</string>
+    <string name="customReminderQuantityHint">Cainníocht</string>
+    <string name="customReminderMinutes">Nóiméid Roimh</string>
+    <string name="customReminderHours">Uaireanta Roimh</string>
+    <string name="customReminderDays">Laethanta Roimh</string>
+    <string name="customReminderWeeks">Seachtaine Roimh</string>
+    <string name="reminderNotificationChannelName">Fógraí Meabhrúcháin</string>
+    <string name="reminderNotificationChannelDescription">Fógraí Canvas le haghaidh meabhrúcháin tascanna.</string>
+    <string name="reminderNotificationTitle">Meabhrúchán Dáta Dlite</string>
+    <string name="reminderNotificationDescription">Tá an tasc seo dlite i %s: %s</string>
+    <string name="reminderInPast">Roghnaigh am amach anseo le haghaidh do mheabhrúchán!</string>
+    <string name="reminderAlreadySet">Tá meabhrúchán socraithe agat don am seo cheana féin</string>
+    <string name="deleteReminderTitle">Scrios Meabhrúchán</string>
+    <string name="deleteReminderMessage">An bhfuil tú cinnte gur mhaith leat an meabhrúchán seo a scriosadh?</string>
+    <string name="reminderPermissionNotGrantedError">Ní mór duit cead aláram beacht a chumasú don ghníomh seo</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Níl réamhamharc ar fáil do URLanna a úsáideann \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Cuir isteach URL bailí</string>
@@ -957,6 +994,8 @@
     <string name="inviteAccepted">Glacadh leis an gcuireadh!</string>
     <string name="inviteDeclined">Diúltaíodh don chuireadh.</string>
     <string name="latePenalty">Pionós déanach (-%s)</string>
+    <string name="latePenaltyUpdated">Pionós Déanach: -%s pte</string>
+    <string name="yourGrade">Do Mharc: %s pts</string>
     <string name="finalGrade">Marc Deiridh</string>
 
     <string name="max_count">99+</string>
@@ -1046,7 +1085,6 @@
     <string name="rateOnThePlayStore">Rátáil ar an Play Store</string>
 
     <!-- Panda Avatar Content Descriptions -->
-
     <string name="content_description_chosen_head">Ceann roghnaithe: %s</string>
     <string name="content_description_chosen_body">Comhlacht roghnaithe: %s</string>
     <string name="content_description_chosen_feet">Cosa roghnaithe: %s</string>
@@ -1460,7 +1498,7 @@
     <string name="syncProgress_offlineContentSyncFailed">Theip ar Shioncronú Ábhar As Líne</string>
     <string name="syncProgress_cancelConfirmationTitle">Cealaigh Sioncronú?</string>
     <string name="syncProgress_cancelConfirmationMessage">Cuirfidh sé stop le sioncronú ábhair as líne. Is féidir leat é a dhéanamh arís níos déanaí.</string>
-    <string name="syncProgress_syncErrorSubtitle">Theip ar chomhad amháin nó níos mó a shioncronú. Seiceáil do nasc idirlín agus bain triail eile as é a chur isteach.</string>
+    <string name="syncProgress_syncErrorSubtitle">Theip ar mhír amháin nó níos mó a shioncronú. Seiceáil do nasc idirlín agus bain triail as sioncronú arís.</string>
     <string name="syncProgress_downloadStarting">Íoslódáil ag tosú</string>
     <string name="coursesCannotBeFavoritedOffline">Ní féidir cúrsaí a chur le ceanáin as líne.</string>
     <string name="allCoursesScreenHeader">Cúrsaí Ar Fad</string>
@@ -1488,4 +1526,77 @@
         <item quantity="other">Sioncronaíodh %d cúrsa</item>
     </plurals>
     <string name="syncProgressAdditionalCourseContent">Ábhar cúrsa breise</string>
+    <string name="failedToUpdateDashboardOrder">Theip ar ordú cártaí an Deais a nuashonrú</string>
+    <string name="publishAllModulesAndItems">Foilsigh gach Modúl agus Mír</string>
+    <string name="publishModulesOnly">Foilsigh Modúil amháin</string>
+    <string name="unpublishAllModulesAndItems">Gach Modúl agus Mír a dhífhoilsiú</string>
+    <string name="moduleOptions">Roghanna Modúl</string>
+    <string name="publishModuleAndItems">Foilsigh Modúl agus gach Mír</string>
+    <string name="publishModuleOnly">Foilsigh Modúl amháin</string>
+    <string name="unpublishModuleAndItems">Dífhoilsigh Modúl agus gach Mír</string>
+    <string name="a11y_contentDescription_moduleOptions">Roghanna modúl le haghaidh %s</string>
+    <string name="a11y_contentDescription_moduleItemOptions">Roghanna míreanna modúl le haghaidh %s</string>
+    <string name="publishModuleItem">Mír an Mhodúil a fhoilsiú</string>
+    <string name="unpublishModuleItem">Mír an Mhodúil a dhífhoilsiú</string>
+    <string name="publishDialogTitle">Foilsigh?</string>
+    <string name="publishModuleDialogMessage">Ní dhéanfaidh sé seo ach an modúl amach infheicthe do mhic léinn.</string>
+    <string name="publishModuleAndItemsDialogMessage">Déanfaidh sé seo an modúl agus na míreanna go léir infheicthe do mhic léinn.</string>
+    <string name="unpublishDialogTitle">Dífhoilsigh?</string>
+    <string name="unpublishModuleAndItemsDialogMessage">Fágfaidh sé seo go mbeidh an modúl agus gach mír dofheicthe ag mic léinn.</string>
+    <string name="publishModuleItemDialogMessage">Ní bheidh ach an mhír seo infheicthe do mhic léinn.</string>
+    <string name="unpublishModuleItemDialogMessage">Déanfaidh sé seo ach an modúl seo dofheicthe do mhic léinn.</string>
+    <string name="publishModulesAndItemsDialogMessage">Déanfaidh sé seo na modúil agus na míreanna go léir infheicthe do mhic léinn.</string>
+    <string name="publishModulesDialogMessage">Déanfaidh sé seo ach na modúil a infheicthe do mhic léinn.</string>
+    <string name="unpublishModulesAndItemsDialogMessage">Déanfaidh sé seo ach na modúil agus míreanna a dofheicthe do mhic léinn.</string>
+    <string name="only_available_with_link">Ar fáil le nasc amháin</string>
+    <string name="schedule_availability">Infhaighteacht sceideal</string>
+    <string name="moduleItemPublished">Mír foilsithe</string>
+    <string name="moduleItemUnpublished">Mír neamhfhoilsithe</string>
+    <string name="onlyModulePublished">Modúl amháin foilsithe</string>
+    <string name="moduleAndAllItemsPublished">Modúl agus gach Mír foilsithe</string>
+    <string name="moduleAndAllItemsUnpublished">Modúl agus gach Mír neamhfhoilsithe</string>
+    <string name="onlyModulesPublished">Modúil Amháin a foilsíodh</string>
+    <string name="allModulesAndAllItemsPublished">Gach Modúl agus gach Mír foilsithe</string>
+    <string name="allModulesAndAllItemsUnpublished">Gach Modúl agus gach Mír neamhfhoilsithe</string>
+    <string name="inherit_from_course">Faigh le hOidhreacht ó Chúrsa</string>
+    <string name="course_members">Baill an Chúrsa</string>
+    <string name="institution_members">Baill Institiúide</string>
+    <string name="public_title">Poiblí</string>
+    <string name="edit_permissions">Cuir Ceadanna in Eagar</string>
+    <string name="update">Nuashonraigh</string>
+    <string name="availability_title">Infhaighteacht</string>
+    <string name="visibility_title">Infheictheacht</string>
+    <string name="available_from">Ar fáil ó</string>
+    <string name="available_until">Ar fáil Go dtí</string>
+    <string name="from">Ó</string>
+    <string name="until">Go dtí</string>
+    <string name="date">Dáta</string>
+    <string name="time">Am</string>
+    <string name="a11y_contentDescription_clearAvailableFromDate">Glan Ó Dáta</string>
+    <string name="a11y_contentDescription_clearAvailableUntilDate">Glan Dáta go Dtí</string>
+    <string name="progressMessage">D\'fhéadfadh an próiseas seo cúpla nóiméad a ghlacadh. Is féidir leat an modúl a dhúnadh nó dul ón leathanach le linn an phróisis seo.</string>
+    <string name="noteTitle">Tabhair faoi deara</string>
+    <string name="allModules">Gach Modúil</string>
+    <string name="allModulesAndItems">Gach Modúl agus Mír</string>
+    <string name="selectedModulesAndItems">Modúil Roghnaithe agus Míreanna</string>
+    <string name="selectedModules">Modúil Roghnaithe</string>
+    <string name="publishing">Foilsitheoireacht</string>
+    <string name="unpublishing">Dífhoilsiú</string>
+    <string name="moduleBulkUpdateNote">Ní rachaidh modúil agus míreanna atá próiseáilte cheana féin ar ais chuig a staid roimhe sin nuair a scoirtear den phróiseas.</string>
+    <string name="success">Rath!</string>
+    <string name="updateFailed">Theip ar an nuashonrú</string>
+    <string name="updateCancelled">Nuashonrú cealaithe</string>
+    <string name="a11y_hidden">I bhfolach</string>
+    <string name="a11y_scheduled">Sceidealta</string>
+    <string name="a11y_published">Foilsithe</string>
+    <string name="a11y_unpublished">Neamhfhoilsithe</string>
+    <plurals name="moduleItemPoints">
+        <item quantity="one">%.0f pt</item>
+        <item quantity="other">%.0f pts</item>
+    </plurals>
+    <string name="publishModuleItemAction">Foilsigh</string>
+    <string name="unpublishModuleItemAction">Dífhoilsiú</string>
+    <string name="publishDialogPositiveButton">Foilsigh</string>
+    <string name="unpublishDialogPositiveButton">Dífhoilsiú</string>
+    <string name="discussionMenuRefresh">Athnuaigh</string>
 </resources>

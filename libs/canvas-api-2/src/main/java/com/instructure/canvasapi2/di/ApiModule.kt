@@ -256,4 +256,9 @@ class ApiModule {
     fun providePlannerApiInterfaceSerializeNulls(): PlannerAPI.PlannerInterface {
         return RestBuilder().buildSerializeNulls(PlannerAPI.PlannerInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideThemeApi(): ThemeAPI.ThemeInterface {
+        return RestBuilder().build(ThemeAPI.ThemeInterface::class.java, RestParams())
+    }
 }

@@ -23,12 +23,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentTextSubmissionUploadBinding
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 
 class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
@@ -104,17 +108,6 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         binding.toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
     }
 
-    fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
-        SubmissionService.startTextSubmission(context, canvasContext, assignmentId, assignmentName, text)
-        canPressBack = true
-        (context as? Activity)?.onBackPressed()
-    }
-
-    fun saveDraft(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
-        SubmissionService.saveDraft(context, canvasContext, assignmentId, assignmentName, text)
-        (context as? Activity)?.onBackPressed()
-    }
-
     fun retrieveCameraImage(): Uri? {
         return (context as? Activity)?.let { activity ->
             MediaUploadUtils.handleCameraPicResult(activity, null)
@@ -150,5 +143,10 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         } else {
             false
         }
+    }
+
+    fun goBack() {
+        canPressBack = true
+        (context as? Activity)?.onBackPressed()
     }
 }

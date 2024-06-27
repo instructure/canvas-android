@@ -19,6 +19,8 @@ package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CreateDiscussionTopic
 import com.instructure.dataseeding.model.DiscussionApiModel
+import com.instructure.dataseeding.model.DiscussionTopicEntryRequest
+import com.instructure.dataseeding.model.DiscussionTopicEntryResponse
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
@@ -30,10 +32,22 @@ object DiscussionTopicsApi {
     interface DiscussionTopicsService {
         @POST("courses/{courseId}/discussion_topics")
         fun createDiscussionTopic(@Path("courseId") courseId: Long, @Body createDiscussionTopic: CreateDiscussionTopic): Call<DiscussionApiModel>
+
+        @POST("courses/{courseId}/discussion_topics/{discussionId}/entries")
+        fun createEntryToDiscussionTopic(@Path("courseId") courseId: Long, @Path("discussionId") discussionId: Long, @Body discussionTopicEntry: DiscussionTopicEntryRequest): Call<DiscussionTopicEntryResponse>
+
     }
 
     private fun discussionTopicsService(token: String): DiscussionTopicsService
             = CanvasNetworkAdapter.retrofitWithToken(token).create(DiscussionTopicsService::class.java)
+
+    fun createEntryToDiscussionTopic(token: String, courseId: Long, discussionId: Long, replyMessage: String): DiscussionTopicEntryResponse {
+        val discussionTopicEntry = DiscussionTopicEntryRequest(replyMessage)
+        return discussionTopicsService(token)
+            .createEntryToDiscussionTopic(courseId, discussionId, discussionTopicEntry)
+            .execute()
+            .body()!!
+    }
 
     fun createDiscussion(courseId: Long, token: String, isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false): DiscussionApiModel {
         val discussionTopic = Randomizer.randomDiscussion(isAnnouncement, lockedForUser, locked)

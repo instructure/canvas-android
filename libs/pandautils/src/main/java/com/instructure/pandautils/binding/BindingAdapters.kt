@@ -334,3 +334,14 @@ fun bindOnClickWithNetworkCheck(view: View, clickListener: OnClickListener) {
 fun addOnPageChangeListener(viewPager: ViewPager, listener: ViewPager.OnPageChangeListener?) {
     listener?.let { viewPager.addOnPageChangeListener(it) }
 }
+
+@BindingAdapter("rotationAnim")
+fun rotationAnim(view: View, rotation: Int) {
+    if (view.rotation == rotation.toFloat()) return
+    view.animate().setDuration(300).rotation(rotation.toFloat()).start()
+}
+
+@BindingAdapter("expandCollapseAnim")
+fun expandCollapseAnim(view: View, visible: Boolean) {
+    if (visible) view.expand() else view.collapse()
+}
