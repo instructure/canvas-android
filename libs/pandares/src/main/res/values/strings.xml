@@ -1618,7 +1618,7 @@
     <string name="calendarFromTo">%1$s from %2$s to %3$s</string>
     <string name="calendarPageError">There was an error loading your calendar</string>
     <string name="calendarRefreshFailed">Failed to refresh calendar</string>
-    <string name="calendarAddButtonContentDescription">Add new</string>
+    <string name="calendarAddNewCalendarItemContentDescription">Add new calendar item</string>
     <string name="calendarFilterCalendars">Calendars</string>
     <string name="calendarFilterUser">User</string>
     <string name="calendarFilterCourse">Courses</string>
@@ -1747,4 +1747,8 @@
     <string name="parentNoCoursesMessage">Your student’s courses might not be published yet.</string>
     <string name="a11y_selectedCalendar">%s, selected calendar</string>
     <string name="a11y_calendarSelected">%s selected</string>
+    <string name="a11y_calendarOpenAddActions">Open actions</string>
+    <string name="a11y_calendarCloseAddActions">Close actions</string>
+    <string name="a11y_calendarActionsOpen">Actions open. Navigate forward for actions</string>
+    <string name="a11y_calendarActionsClosed">Actions closed</string>
 </resources>
