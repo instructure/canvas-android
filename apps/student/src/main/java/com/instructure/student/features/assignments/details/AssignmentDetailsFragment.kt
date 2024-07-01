@@ -383,6 +383,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setupDescriptionView() {
+        binding?.descriptionWebViewWrapper?.webView?.addVideoClient(requireActivity())
         binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
