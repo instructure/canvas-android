@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -58,6 +59,9 @@ class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     @Inject
     lateinit var calendarRouter: CalendarRouter
 
+    // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
+    private var triggerCalendarScreenAccessibilityFocus = mutableStateOf(false)
+
     @OptIn(ExperimentalFoundationApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,11 +76,15 @@ class CalendarFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 val actionHandler = { action: CalendarAction -> viewModel.handleAction(action) }
-                CalendarScreen(title(), uiState, actionHandler) {
+                CalendarScreen(title(), uiState, triggerCalendarScreenAccessibilityFocus.value, actionHandler) {
                     calendarRouter.openNavigationDrawer()
                 }
             }
         }
+    }
+
+    fun calendarTabSelected() {
+        triggerCalendarScreenAccessibilityFocus.value = !triggerCalendarScreenAccessibilityFocus.value
     }
 
     private fun handleAction(action: CalendarViewModelAction) {
