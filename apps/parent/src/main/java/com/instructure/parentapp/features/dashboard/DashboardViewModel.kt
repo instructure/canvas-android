@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -26,38 +26,29 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: MainRepository,
+    private val repository: DashboardRepository,
     private val previousUsersUtils: PreviousUsersUtils,
     private val apiPrefs: ApiPrefs,
     private val parentPrefs: ParentPrefs,
-    private val colorKeeper: ColorKeeper,
-    private val themePrefs: ThemePrefs,
     private val selectedStudentHolder: SelectedStudentHolder
 ) : ViewModel() {
 
-    private val _events = Channel<MainAction>()
-    val events = _events.receiveAsFlow()
-
-    private val _data = MutableStateFlow(MainViewData())
+    private val _data = MutableStateFlow(DashboardViewData())
     val data = _data.asStateFlow()
 
     private val _state = MutableStateFlow<ViewState>(ViewState.Loading)
@@ -66,23 +57,14 @@ class MainViewModel @Inject constructor(
     private val currentUser = previousUsersUtils.getSignedInUser(context, apiPrefs.domain, apiPrefs.user?.id.orDefault())
 
     init {
-        loadInitialData()
+        loadData()
     }
 
-    private fun loadInitialData() {
+    private fun loadData() {
         viewModelScope.tryLaunch {
             _state.value = ViewState.Loading
 
-            val user = repository.getSelf()
-            user?.let { saveUserInfo(it) }
-
-            val colors = repository.getColors()
-            colors?.let { colorKeeper.addToCache(it) }
-
-            val theme = repository.getTheme()
-            theme?.let { themePrefs.applyCanvasTheme(it, context) }
-
-            loadUserInfo()
+            setupUserInfo()
 
             loadStudents()
 
@@ -102,15 +84,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun saveUserInfo(user: User) {
-        val oldLocale = apiPrefs.effectiveLocale
-        apiPrefs.user = user
-        if (apiPrefs.effectiveLocale != oldLocale) {
-            _events.send(MainAction.LocaleChanged)
-        }
-    }
-
-    private fun loadUserInfo() {
+    private fun setupUserInfo() {
         apiPrefs.user?.let { user ->
             _data.update {
                 it.copy(
@@ -150,6 +124,16 @@ class MainViewModel @Inject constructor(
                 selectedStudent = selectedStudent
             )
         }
+
+        if (_data.value.studentItems.isEmpty()) {
+            _state.value = ViewState.Empty(
+                R.string.noStudentsError,
+                R.string.noStudentsErrorDescription,
+                R.drawable.panda_manage_students
+            )
+        } else {
+            _state.value = ViewState.Success
+        }
     }
 
     private fun onStudentSelected(student: User) {
@@ -171,12 +155,6 @@ class MainViewModel @Inject constructor(
     fun toggleStudentSelector() {
         _data.update {
             it.copy(studentSelectorExpanded = !it.studentSelectorExpanded)
-        }
-    }
-
-    fun closeStudentSelector() {
-        _data.update {
-            it.copy(studentSelectorExpanded = false)
         }
     }
 }

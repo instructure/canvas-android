@@ -15,19 +15,24 @@
  *
  */
 
-package com.instructure.parentapp.utils
+package com.instructure.parentapp.ui.pages
 
-import com.instructure.canvas.espresso.CanvasTest
-import com.instructure.parentapp.BuildConfig
-import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.DashboardPage
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 
 
-abstract class ParentTest : CanvasTest() {
+class NotAParentPage(private val composeTestRule: ComposeTestRule) {
 
-    override val isTesting = BuildConfig.IS_TESTING
+    fun expandAppOptions() {
+        composeTestRule.onNodeWithText("Are you a student or teacher?").performClick()
+    }
 
-    override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
+    fun tapReturnToLogin() {
+        composeTestRule.onNodeWithText("Return to login").performClick()
+    }
 
-    val dashboardPage = DashboardPage()
+    fun tapApp(appName: String) {
+        composeTestRule.onNodeWithText(appName).performClick()
+    }
 }

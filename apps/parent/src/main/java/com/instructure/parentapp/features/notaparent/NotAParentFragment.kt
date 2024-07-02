@@ -15,52 +15,52 @@
  *
  */
 
-package com.instructure.parentapp.features.courses.list
+package com.instructure.parentapp.features.notaparent
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.parentapp.util.navigation.Navigation
+import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.parentapp.util.ParentLogoutTask
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class CoursesFragment : Fragment() {
-
-    private val viewModel: CoursesViewModel by viewModels()
-
-    @Inject
-    lateinit var navigation: Navigation
+class NotAParentFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-
         return ComposeView(requireActivity()).apply {
             setContent {
-                val uiState by viewModel.uiState.collectAsState()
-                CoursesScreen(uiState, viewModel::handleAction)
+                NotAParentScreen(
+                    returnToLoginClick = {
+                        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                    },
+                    onStudentClick = {
+                        openStore("com.instructure.candroid")
+                    },
+                    onTeacherClick = {
+                        openStore("com.instructure.teacher")
+                    }
+                )
             }
         }
     }
 
-    private fun handleAction(action: CoursesViewModelAction) {
-        when (action) {
-            is CoursesViewModelAction.NavigateToCourseDetails -> {
-                navigation.navigate(activity, navigation.courseDetailsRoute(action.courseId))
-            }
+    private fun openStore(packageName: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+        } catch (e: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
         }
     }
 }

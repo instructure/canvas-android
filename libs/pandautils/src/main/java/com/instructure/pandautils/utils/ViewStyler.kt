@@ -36,7 +36,12 @@ import android.widget.ProgressBar
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.*
+import androidx.appcompat.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatRadioButton
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.appcompat.widget.SwitchCompat
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -253,12 +258,12 @@ fun SwitchCompat.applyTheme(@ColorInt color: Int = ThemePrefs.brandColor) {
     ViewStyler.themeSwitch(context, this, color)
 }
 
-fun AlertDialog.Builder.showThemed() {
+fun AlertDialog.Builder.showThemed(@ColorInt color: Int = ThemePrefs.textButtonColor) {
     val dialog = create()
     dialog.setOnShowListener {
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ThemePrefs.textButtonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ThemePrefs.textButtonColor)
-        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(ThemePrefs.textButtonColor)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(color)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(color)
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(color)
     }
     dialog.show()
 }

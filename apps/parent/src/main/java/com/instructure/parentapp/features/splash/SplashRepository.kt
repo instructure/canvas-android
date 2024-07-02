@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.splash
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
@@ -27,22 +27,11 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
 
 
-class MainRepository(
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
+class SplashRepository(
     private val userApi: UserAPI.UsersInterface,
-    private val themeApi: ThemeAPI.ThemeInterface
+    private val themeApi: ThemeAPI.ThemeInterface,
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
 ) {
-
-    suspend fun getStudents(): List<User> {
-        val params = RestParams(usePerPageQueryParam = true)
-        return enrollmentApi.firstPageObserveeEnrollmentsParent(params).depaginate {
-            enrollmentApi.getNextPage(it, params)
-        }.dataOrNull
-            .orEmpty()
-            .mapNotNull { it.observedUser }
-            .distinct()
-            .sortedBy { it.sortableName }
-    }
 
     suspend fun getSelf(): User? {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -57,5 +46,14 @@ class MainRepository(
     suspend fun getTheme(): CanvasTheme? {
         val params = RestParams(isForceReadFromNetwork = true)
         return themeApi.getTheme(params).dataOrNull
+    }
+
+    suspend fun getStudents(): List<User> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true)
+        return enrollmentApi.firstPageObserveeEnrollmentsParent(params).depaginate {
+            enrollmentApi.getNextPage(it, params)
+        }.dataOrNull
+            .orEmpty()
+            .mapNotNull { it.observedUser }
     }
 }

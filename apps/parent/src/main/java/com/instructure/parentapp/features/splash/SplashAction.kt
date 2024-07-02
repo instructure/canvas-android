@@ -15,20 +15,11 @@
  *
  */
 
-package com.instructure.parentapp.utils
-
-import com.instructure.canvasapi2.models.User
-import com.instructure.parentapp.features.login.LoginActivity
+package com.instructure.parentapp.features.splash
 
 
-fun ParentTest.tokenLogin(domain: String, token: String, user: User, assertDashboard: Boolean = true) {
-    activityRule.runOnUiThread {
-        (originalActivity as LoginActivity).loginWithToken(
-            token,
-            domain,
-            user
-        )
-    }
-
-    if (assertDashboard) dashboardPage.assertPageObjects()
+sealed class SplashAction {
+    data object LocaleChanged : SplashAction()
+    data object InitialDataLoadingFinished : SplashAction()
+    data object NavigateToNotAParentScreen : SplashAction()
 }
