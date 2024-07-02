@@ -49,120 +49,14 @@ object FileUploadUtils {
         "key" to "application/vnd.apple.keynote",
     )
 
-    /**
-     * Get a file path from a Uri. This will get the the path for Storage Access
-     * Framework Documents, as well as the _data field for the MediaStore and
-     * other file-based ContentProviders.
-     *
-     * http://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework
-     *
-     * @param context An Android Context
-     * @param uri      The Uri to query.
-     * @author paulburke
-     */
-    fun getPath(context: Context, uri: Uri): String? {
-        // DocumentProvider
-        if (DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":".toRegex()).toTypedArray()
-                val type = split[0]
-                if ("primary".equals(type, ignoreCase = true)) {
-                    return Environment.getExternalStorageDirectory().toString() + "/" + split[1]
-                }
-                // TODO handle non-primary volumes
-            } else if (isDownloadsDocument(uri)) {
-                val id = DocumentsContract.getDocumentId(uri)
-                if (id.startsWith("raw:")) {
-                    return id.replaceFirst("raw:".toRegex(), "")
-                }
-                val contentUri = ContentUris.withAppendedId(
-                    Uri.parse("content://downloads/public_downloads"), id.toLong()
-                )
-                return getDataColumn(context.contentResolver, contentUri, null, null)
-            } else if (isMediaDocument(uri)) {
-                val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":".toRegex()).toTypedArray()
-                val contentUri: Uri = when (val type = split[0]) {
-                    "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                    "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-                    else -> throw IllegalArgumentException("Unhandled content type: $type")
-                }
-                val selection = "_id=?"
-                val selectionArgs = arrayOf(split[1])
-                return getDataColumn(context.contentResolver, contentUri, selection, selectionArgs)
-            }
-        } else if (CONTENT_SCHEME.equals(uri.scheme, ignoreCase = true)) {
-            // Return the remote address
-            return getDataColumn(context.contentResolver, uri, null, null)
-        } else if (FILE_SCHEME.equals(uri.scheme, ignoreCase = true)) {
-            return uri.path
-        }
-        return null
-    }
-
-    /**
-     * Get the value of the data column for this Uri. This is useful for
-     * MediaStore Uris, and other file-based ContentProviders.
-     */
-    private fun getDataColumn(resolver: ContentResolver, uri: Uri, selection: String?, selectionArgs: Array<String>?): String? {
-        Log.v(Const.PANDA_UTILS_FILE_UPLOAD_UTILS_LOG, "getDataColumn uri: $uri selection: $selection args: " + Arrays.toString(selectionArgs))
-        var filePath = ""
-        var cursor: Cursor? = null
-        val column = MediaStore.MediaColumns.DATA
-        val projection = arrayOf(column)
-        try {
-            cursor = resolver.query(uri, projection, selection, selectionArgs, null)
-            if (cursor != null && cursor.moveToFirst()) {
-                val columnIndex = cursor.getColumnIndexOrThrow(column)
-                filePath = cursor.getString(columnIndex)
-            }
-        } catch (e: Exception) {
-            // An exception will be raised if the _data column does not exist.
-            // This is mostly likely caused by new fileProvider permissions in kitkat+, in those cases, we fall back to using openFileDescriptor
-            // to get access to the shared file.
-            Log.e(Const.PANDA_UTILS_FILE_UPLOAD_UTILS_LOG, "cursor $e")
-            return ""
-        } finally {
-            cursor?.close()
-        }
-        return filePath
-    }
-
     @SuppressLint("Recycle")
-    fun getFileNameFromUri(resolver: ContentResolver, uri: Uri): String? {
+    private fun getFileNameFromUri(resolver: ContentResolver, uri: Uri): String? {
         val cursor = resolver.query(uri, null, null, null, null) ?: return null
         val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
         cursor.moveToFirst()
         val name = cursor.getString(nameIndex)
         cursor.close()
         return name
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    private fun isExternalStorageDocument(uri: Uri): Boolean {
-        return "com.android.externalstorage.documents" == uri.authority
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    private fun isDownloadsDocument(uri: Uri): Boolean {
-        return "com.android.providers.downloads.documents" == uri.authority
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    private fun isMediaDocument(uri: Uri): Boolean {
-        return "com.android.providers.media.documents" == uri.authority
     }
 
     fun getFile(context: Context, uri: Uri): FileSubmitObject? {
@@ -331,21 +225,6 @@ object FileUploadUtils {
     fun deleteTempFile(filename: String?): Boolean {
         val file = File(filename)
         return file.delete()
-    }
-
-    fun deleteTempDirectory(context: Context): Boolean {
-        return deleteDirectory(getCacheDir(context)) && deleteDirectory(getExternalCacheDir(context))
-    }
-
-    private fun deleteDirectory(fileFolder: File): Boolean {
-        if (fileFolder.isDirectory) {
-            val children = fileFolder.list()
-            for (aChildren in children) {
-                val success = deleteDirectory(File(fileFolder, aChildren))
-                if (!success) return false
-            }
-        }
-        return fileFolder.delete()
     }
 
     fun getExternalCacheDir(context: Context): File {

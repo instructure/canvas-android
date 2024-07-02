@@ -242,6 +242,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         calendarScreenPage.clickOnItem(event.title!!)
+        composeTestRule.waitForIdle()
         val expectedTime = DateHelper.getFormattedTime(activityRule.activity, calendar.time)
         calendarEventDetailsPage.assertEventDateContains(expectedTime!!)
     }

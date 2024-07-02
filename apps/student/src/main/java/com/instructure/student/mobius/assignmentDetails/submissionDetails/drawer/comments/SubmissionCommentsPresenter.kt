@@ -22,39 +22,50 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.textAndIconColor
 import com.instructure.student.R
-import com.instructure.student.db.Db
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.common.ui.Presenter
-import java.util.*
+import com.instructure.student.room.StudentDb
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.runBlocking
+import java.util.Date
 
-object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, SubmissionCommentsViewState> {
+class SubmissionCommentsPresenter(private val studentDb: StudentDb) : Presenter<SubmissionCommentsModel, SubmissionCommentsViewState> {
 
     private fun Date?.getSubmissionFormattedDate(context: Context): String {
         val atSeparator = context.getString(R.string.at)
         return DateHelper.getMonthDayAtTime(context, this, atSeparator) ?: ""
     }
 
-    override fun present(model: SubmissionCommentsModel, context: Context): SubmissionCommentsViewState {
-        val self = ApiPrefs.user ?: return SubmissionCommentsViewState(false, listOf(CommentItemState.Empty))
+    override fun present(
+        model: SubmissionCommentsModel,
+        context: Context
+    ): SubmissionCommentsViewState {
+        val self = ApiPrefs.user ?: return SubmissionCommentsViewState(
+            false,
+            listOf(CommentItemState.Empty)
+        )
 
         val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).textAndIconColor
 
-        val comments = model.comments.filter { it.attempt == null || it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }.map { comment ->
-            val date = comment.createdAt ?: Date(0)
-            CommentItemState.CommentItem(
-                id = comment.id,
-                authorName = comment.author?.displayName.orEmpty(),
-                authorPronouns = comment.author?.pronouns,
-                avatarUrl = comment.author?.avatarImageUrl.orEmpty(),
-                sortDate = date,
-                dateText = date.getSubmissionFormattedDate(context),
-                message = comment.comment.orEmpty(),
-                isAudience = comment.authorId != self.id,
-                media = comment.mediaComment,
-                attachments = comment.attachments,
-                tint = tint
-            )
-        }
+        val comments =
+            model.comments.filter { it.attempt == null || it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }
+                .map { comment ->
+                    val date = comment.createdAt ?: Date(0)
+                    CommentItemState.CommentItem(
+                        id = comment.id,
+                        authorName = comment.author?.displayName.orEmpty(),
+                        authorPronouns = comment.author?.pronouns,
+                        avatarUrl = comment.author?.avatarImageUrl.orEmpty(),
+                        sortDate = date,
+                        dateText = date.getSubmissionFormattedDate(context),
+                        message = comment.comment.orEmpty(),
+                        isAudience = comment.authorId != self.id,
+                        media = comment.mediaComment,
+                        attachments = comment.attachments,
+                        tint = tint
+                    )
+                }
 
         val submissions = model.submissionHistory
             .filter { it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }
@@ -71,22 +82,22 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
                     tint = tint
                 )
             }
-
-        val pendingItems = Db.getInstance(context)
-            .pendingSubmissionCommentQueries
-            .getCommentsByAccountAssignment(ApiPrefs.domain, model.assignment.id)
-            .executeAsList()
-            .filter { it.attemptId == model.attemptId || !model.assignmentEnhancementsEnabled }
-            .map { pendingComment ->
-                val date = Date(pendingComment.lastActivityDate.toInstant().toEpochMilli())
-                CommentItemState.PendingCommentItem(
-                    authorName = self.shortName ?: self.name,
-                    authorPronouns = self.pronouns,
-                    avatarUrl = self.avatarUrl.orEmpty(),
-                    sortDate = date,
-                    pendingComment = pendingComment
-                )
-            }
+        val pendingItems = runBlocking {
+            studentDb
+                .pendingSubmissionCommentDao()
+                .findCommentsByAccountAndAssignmentId(ApiPrefs.domain, model.assignment.id)
+                .filter { it.attemptId == model.attemptId || !model.assignmentEnhancementsEnabled }
+                .map { pendingComment ->
+                    val date = Date(pendingComment.lastActivityDate.toInstant().toEpochMilli())
+                    CommentItemState.PendingCommentItem(
+                        authorName = self.shortName ?: self.name,
+                        authorPronouns = self.pronouns,
+                        avatarUrl = self.avatarUrl.orEmpty(),
+                        sortDate = date,
+                        pendingComment = pendingComment
+                    )
+                }
+        }
 
         val items = (comments + submissions + pendingItems).sortedByDescending {
             when (it) {

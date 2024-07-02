@@ -25,7 +25,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- For Studio -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -225,13 +226,22 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <service android:name=".services.FileDownloadService" />
-        <service android:name="com.instructure.pandautils.services.NotoriousUploadService"/>
+        <service
+            android:name=".services.FileDownloadService"
+            android:foregroundServiceType="dataSync" />
+        <service
+            android:name="com.instructure.pandautils.services.NotoriousUploadService"
+            android:foregroundServiceType="dataSync" />
 
         <service
             android:name=".services.TeacherPageViewService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
 
         <!--Push Notifications-->
 

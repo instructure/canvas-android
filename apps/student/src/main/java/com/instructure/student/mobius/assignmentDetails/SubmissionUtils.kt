@@ -30,11 +30,12 @@ import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ConsumerQueueWrapper
-import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 fun Uri?.getVideoIntent(): Intent? = Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -100,9 +101,8 @@ fun Context.needsPermissions(successCallback: () -> Unit, failureCallback: () ->
     return true
 }
 
-fun uploadAudioRecording(context: Context, file: File, assignment: Assignment, course: Course) {
-    SubmissionService.startMediaSubmission(
-        context = context,
+fun uploadAudioRecording(submissionHelper: SubmissionHelper, file: File, assignment: Assignment, course: Course) {
+    submissionHelper.startMediaSubmission(
         canvasContext = course,
         assignmentId = assignment.id,
         assignmentGroupCategoryId = assignment.groupCategoryId,

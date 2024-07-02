@@ -20,10 +20,10 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.student.FileSubmission
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
+import com.instructure.student.room.entities.CreateFileSubmissionEntity
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -69,7 +69,7 @@ class UploadStatusSubmissionRenderTest : StudentRenderTest() {
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysInProgressState() {
         loadPageWithModel(baseModel.copy(files = listOf(
-            FileSubmission(0, 0, null, null, null, null, null, null, false)
+            CreateFileSubmissionEntity(0, 0, null, null, null, null, null, null, false)
         )))
         uploadStatusSubmissionViewRenderPage.assertInProgressVisible()
     }

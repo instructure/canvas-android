@@ -1,0 +1,80 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">आपको पहले इसे पूरा करना चाहिए:</string>
+    <string name="unlockedAt">इसे इस समय अनलॉक किया जाएगा:</string>
+    <string name="goToModules">मॉड्यूल पर जाएं</string>
+
+    <!--Events-->
+    <string name="Starts">इस समय शुरू हो रहा है:</string>
+    <string name="Ends">इस समय समाप्त हो रहा है:</string>
+    <string name="allDayEvent">दिन भर की घटना</string>
+    <string name="at">यहां:</string>
+    <string name="to">को</string>
+
+    <!--StreamItems-->
+    <string name="Message">संदेश</string>
+    <string name="Loading">लोड किया जा रहा है&#8230;</string>
+    <string name="Deleted">मिटाया गया</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">ऑनलाइन</string>
+    <string name="canvasAPI_onPaper">दस्तावेज़ पर</string>
+    <string name="canvasAPI_discussion">चर्चा</string>
+    <string name="canvasAPI_quiz">प्रश्नोत्तरी</string>
+    <string name="canvasAPI_externalTool">बाहरी उपकरण</string>
+    <string name="canvasAPI_none">कोई सबमिशन नहीं</string>
+
+    <string name="canvasAPI_passFail">पास फ़ेल</string>
+    <string name="canvasAPI_percent">प्रतिशत</string>
+    <string name="canvasAPI_letterGrade">अक्षर ग्रेड</string>
+    <string name="canvasAPI_points">पॉइंट्स</string>
+    <string name="canvasAPI_gpaScale">GPA स्केल</string>
+    <string name="canvasAPI_notGraded">ग्रेड नहीं किया गया</string>
+
+    <string name="canvasAPI_onlineQuiz">प्रश्नोत्तरी</string>
+    <string name="canvasAPI_discussionTopic">चर्चा का विषय</string>
+    <string name="canvasAPI_onlineUpload">फ़ाइल अपलोड करें</string>
+    <string name="canvasAPI_onlineTextEntry">पाठ प्रवेश</string>
+    <string name="canvasAPI_onlineURL">वेबसाइट URL</string>
+    <string name="canvasAPI_mediaRecording">मीडिया रिकॉर्डिंग</string>
+    <string name="canvasAPI_attendance">उपस्थिति</string>
+    <string name="canvasAPI_studentAnnotation">छात्र एनोटेशन</string>
+    <string name="quiz_scoring_policy_highest">उच्चतम</string>
+    <string name="quiz_scoring_policy_average">औसत</string>
+    <string name="quiz_scoring_policy_latest">नवीनतम</string>
+    <string name="no">नहीं</string>
+    <string name="always">हमेशा</string>
+    <string name="graded_quiz">ग्रेड की गई प्रश्नोत्तरी</string>
+    <string name="practice_quiz">अभ्यास प्रश्नोत्तरी</string>
+    <string name="graded_survey">ग्रेड किया गया सर्वेक्षण</string>
+    <string name="ungraded_survey">बिना ग्रेड किया गया सर्वेक्षण</string>
+    <string name="andMore">\u0020और %d अधिक</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">छात्र</string>
+    <string name="enrollmentTypeTeacher">शिक्षक</string>
+    <string name="enrollmentTypeObserver">समीक्षक</string>
+    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeDesigner">डिज़ाइनर</string>
+    <string name="enrollmentTypeUnknown">अज्ञात</string>
+
+</resources>

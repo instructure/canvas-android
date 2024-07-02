@@ -37,6 +37,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -152,7 +153,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private val isDrawerOpen: Boolean
         get() = binding.drawerLayout.isDrawerOpen(GravityCompat.START)
 
-    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        val intent = Intent(Const.COURSE_THING_CHANGED)
+        intent.putExtras(Bundle().apply { putBoolean(Const.COURSE_FAVORITES, true) })
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+    }
 
     override fun onStart() {
         super.onStart()

@@ -37,7 +37,6 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Test
-import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class OfflineDiscussionsE2ETest : StudentTest() {
@@ -63,6 +62,9 @@ class OfflineDiscussionsE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG,"Seed another discussion topic for '${course.name}' course.")
         val discussion2 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
+        Log.d(PREPARATION_TAG,"Seed an entry ('main reply') for the '${course.name}' course's '${discussion1.title}' discussion topic.")
+        DiscussionTopicsApi.createEntryToDiscussionTopic(student.token, course.id, discussion1.id, "My reply")
+
         Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
@@ -75,15 +77,13 @@ class OfflineDiscussionsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Select '$discussion1' discussion topic and assert that there is no reply on the details page as well.")
         discussionListPage.selectTopic(discussion1.title)
-        discussionDetailsPage.assertNoRepliesDisplayed()
 
-        val replyMessage = "My reply"
-        Log.d(STEP_TAG,"Send a reply with text: '$replyMessage'.")
-        discussionDetailsPage.sendReply(replyMessage)
-        sleep(2000) // Allow some time for reply to propagate
+        Log.d(STEP_TAG, "Assert that the 'Reply' button is displayed on the Discussion Details (Web view) Page.")
+        discussionDetailsPage.waitForReplyButton()
+        discussionDetailsPage.assertReplyButtonDisplayed()
 
-        Log.d(STEP_TAG,"Assert the the previously sent reply '$replyMessage', is displayed on the details page.")
-        discussionDetailsPage.assertRepliesDisplayed()
+        Log.d(STEP_TAG,"Assert the the previously sent reply 'My reply', is displayed on the (online) details page.")
+        discussionDetailsPage.assertEntryDisplayed("My reply")
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard page.")
         ViewUtils.pressBackButton(3)
@@ -145,15 +145,15 @@ class OfflineDiscussionsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Select '${discussion1.title}' discussion and assert if the corresponding discussion title is displayed.")
         discussionListPage.selectTopic(discussion1.title)
-        discussionDetailsPage.assertTitleText(discussion1.title)
+        nativeDiscussionDetailsPage.assertTitleText(discussion1.title)
 
         Log.d(STEP_TAG, "Try to click on the (main) 'Reply' button and assert that the 'No Internet Connection' dialog has displayed. Dismiss the dialog.")
-        discussionDetailsPage.clickReply()
+        nativeDiscussionDetailsPage.clickReply()
         OfflineTestUtils.assertNoInternetConnectionDialog()
         OfflineTestUtils.dismissNoInternetConnectionDialog()
 
         Log.d(STEP_TAG, "Try to click on the (inner) 'Reply' button (so try to 'reply to a reply') and assert that the 'No Internet Connection' dialog has displayed. Dismiss the dialog.")
-        discussionDetailsPage.clickOnInnerReply()
+        nativeDiscussionDetailsPage.clickOnInnerReply()
         OfflineTestUtils.assertNoInternetConnectionDialog()
         OfflineTestUtils.dismissNoInternetConnectionDialog()
 
@@ -162,12 +162,12 @@ class OfflineDiscussionsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Select '${discussion2.title}' discussion and assert if the Discussion Details page is displayed and there is no reply for the discussion yet.")
         discussionListPage.selectTopic(discussion2.title)
-        discussionDetailsPage.assertTitleText(discussion2.title)
-        discussionDetailsPage.assertNoRepliesDisplayed()
+        nativeDiscussionDetailsPage.assertTitleText(discussion2.title)
+        nativeDiscussionDetailsPage.assertNoRepliesDisplayed()
 
         Log.d(STEP_TAG, "Try to click on 'Add Bookmark' overflow menu and assert that the 'Functionality unavailable while offline' toast message is displayed.")
         openOverflowMenu()
-        discussionDetailsPage.clickOnAddBookmarkMenu()
+        nativeDiscussionDetailsPage.clickOnAddBookmarkMenu()
         checkToastText(R.string.notAvailableOffline, activityRule.activity)
     }
 

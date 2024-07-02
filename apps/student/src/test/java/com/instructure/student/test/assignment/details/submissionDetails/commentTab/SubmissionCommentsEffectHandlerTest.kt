@@ -19,6 +19,7 @@
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
 import android.app.Activity
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
@@ -31,11 +32,13 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
 import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.test.util.receiveOnce
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
@@ -44,11 +47,13 @@ import org.junit.Test
 import java.io.File
 import java.util.concurrent.Executors
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SubmissionCommentsEffectHandlerTest : Assert(){
 
     private val mockView: SubmissionCommentsView = mockk(relaxed = true)
-    private val context: Activity = mockk(relaxed = true)
-    private val effectHandler = SubmissionCommentsEffectHandler(context).apply { view = mockView }
+    private val context: FragmentActivity = mockk(relaxed = true)
+    private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
+    private val effectHandler = SubmissionCommentsEffectHandler(context, submissionHelper).apply { view = mockView }
     private val eventConsumer: Consumer<SubmissionCommentsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
@@ -80,14 +85,13 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
         )
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.startMediaCommentUpload(any(), any(), any(), any(), any(), any(), any())
+            submissionHelper.startMediaCommentUpload(any(), any(), any(), any(), any(), any())
         } returns Unit
 
         connection.accept(effect)
 
         verify(timeout = 100) {
-            SubmissionService.startMediaCommentUpload(
-                context,
+            submissionHelper.startMediaCommentUpload(
                 Course(123L),
                 123L,
                 "Test Assignment",
@@ -97,7 +101,7 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             )
         }
 
-        confirmVerified(SubmissionService)
+        confirmVerified(submissionHelper)
     }
 
     @Test
@@ -208,14 +212,13 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
 
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any(), any())
+            submissionHelper.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
         } returns Unit
 
         connection.accept(effect)
 
         verify(timeout = 100) {
-            SubmissionService.startCommentUpload(
-                context = context,
+            submissionHelper.startCommentUpload(
                 canvasContext = Course(456L),
                 assignmentId = 123L,
                 assignmentName = "Test Assignment",
@@ -226,7 +229,7 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             )
         }
 
-        confirmVerified(SubmissionService)
+        confirmVerified(submissionHelper)
     }
 
     @Test
@@ -270,13 +273,13 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
         val effect = SubmissionCommentsEffect.RetryCommentUpload(123L)
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.retryCommentUpload(any(), any())
+            submissionHelper.retryCommentUpload(any())
         } returns Unit
 
         connection.accept(effect)
 
         verify(timeout = 100) {
-            SubmissionService.retryCommentUpload(context, 123L)
+            submissionHelper.retryCommentUpload(123L)
         }
 
         confirmVerified(SubmissionService)
@@ -287,13 +290,13 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
         val effect = SubmissionCommentsEffect.DeletePendingComment(123L)
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.deletePendingComment(any(), any())
+            submissionHelper.deletePendingComment(any())
         } returns Unit
 
         connection.accept(effect)
 
         verify(timeout = 100) {
-            SubmissionService.deletePendingComment(context, 123L)
+            submissionHelper.deletePendingComment(123L)
         }
 
         confirmVerified(SubmissionService)

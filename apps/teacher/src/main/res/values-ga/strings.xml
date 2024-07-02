@@ -313,7 +313,6 @@
     <string name="assignments_list">Liosta Tascanna</string>
     <string name="syllabus">Siollabas</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dátaí Dlite Iolracha</string>
     <string name="everyone">Gach duine</string>
@@ -899,4 +898,5 @@
     <string name="excuse">Ná bac le</string>
     <string name="speed_grader_overgraded_by">Rómharcáilte ag %s</string>
 
+    <string name="error_unpublishable_module_item">Ní féidir é a dhífhoilsiú %s má tá uaslódálacha mac léinn ann</string>
 </resources>

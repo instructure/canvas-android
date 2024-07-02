@@ -22,11 +22,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.annotation.OptIn
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
 import com.bumptech.glide.Glide
-import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
-import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
@@ -143,7 +145,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
                 }
             }
 
-            override fun onError(cause: Throwable?) {
+            @OptIn(UnstableApi::class) override fun onError(cause: Throwable?) {
                 speedGraderMediaPlayerView.setGone()
                 mediaProgressBar.setGone()
                 mediaPlaybackErrorView.setVisible()

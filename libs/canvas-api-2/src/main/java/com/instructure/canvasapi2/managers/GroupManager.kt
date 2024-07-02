@@ -134,8 +134,8 @@ object GroupManager {
 
     fun getPermissionsAsync(
         groupId: Long,
-        forceNetwork: Boolean = false,
-        requestedPermissions: List<String> = emptyList()
+        requestedPermissions: List<String> = emptyList(),
+        forceNetwork: Boolean = false
     ) = apiAsync<CanvasContextPermission> {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

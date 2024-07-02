@@ -38,7 +38,7 @@ import dagger.hilt.android.components.ViewModelComponent
 class InboxFragmentModule {
 
     @Provides
-    fun providesInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
+    fun provideInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
         return ParentInboxRouter(activity, fragment)
     }
 }

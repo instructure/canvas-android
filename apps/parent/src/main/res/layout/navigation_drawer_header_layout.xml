@@ -13,38 +13,55 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="12dp"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/nav_header_image"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@null" />
+    <data>
 
-    <TextView
-        android:id="@+id/nav_header_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        <variable
+            name="userViewData"
+            type="com.instructure.parentapp.features.main.UserViewData" />
+
+        <import type="com.instructure.canvasapi2.utils.Pronouns" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="12dp"
-        android:textStyle="bold" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/nav_header_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp" />
+        <ImageView
+            android:id="@+id/nav_header_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="@null"
+            app:userAvatar="@{userViewData.avatarUrl}"
+            app:userName="@{userViewData.shortName}" />
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="?android:attr/listDivider" />
+        <TextView
+            android:id="@+id/nav_header_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:text="@{Pronouns.INSTANCE.span(userViewData.name, userViewData.pronouns)}"
+            android:textStyle="bold" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/nav_header_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="@{userViewData.email}" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider" />
+
+    </LinearLayout>
+</layout>

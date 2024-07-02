@@ -37,19 +37,23 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
 import com.instructure.student.mobius.common.ui.MobiusView
+import com.instructure.student.room.StudentDb
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 
 class SubmissionCommentsView(
     inflater: LayoutInflater,
-    parent: ViewGroup
+    parent: ViewGroup,
+    studentDb: StudentDb
 ) : MobiusView<SubmissionCommentsViewState, SubmissionCommentsEvent, FragmentSubmissionCommentsBinding>(
     inflater,
     FragmentSubmissionCommentsBinding::inflate,
     parent
 ) {
 
-    private val adapter = SubmissionCommentsAdapter(object : SubmissionCommentsAdapterCallback {
+    private val adapter = SubmissionCommentsAdapter(
+        studentDb = studentDb,
+        callback = object : SubmissionCommentsAdapterCallback {
         override fun onRetryPendingComment(pendingCommentId: Long) {
             consumer?.accept(SubmissionCommentsEvent.RetryCommentUploadClicked(pendingCommentId))
         }

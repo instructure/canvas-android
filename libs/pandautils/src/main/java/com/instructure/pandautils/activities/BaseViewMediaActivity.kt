@@ -19,29 +19,40 @@ package com.instructure.pandautils.activities
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import androidx.annotation.OptIn
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
+import androidx.core.content.ContextCompat
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
 import com.bumptech.glide.Glide
-import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
-import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.ActivityViewMediaBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.models.EditableFile
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ExoAgent
+import com.instructure.pandautils.utils.ExoAgentState
+import com.instructure.pandautils.utils.ExoInfoListener
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsCloseButton
+import com.instructure.pandautils.utils.viewExternally
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -158,7 +169,7 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onError(cause: Throwable?) {
+            @OptIn(UnstableApi::class) override fun onError(cause: Throwable?) {
                 mediaPlayerView.setGone()
                 mediaProgressBar.setGone()
                 mediaPlaybackErrorView.setVisible()

@@ -21,6 +21,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,18 +47,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -102,6 +106,9 @@ internal fun CreateUpdateEventScreenWrapper(
     actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val localView = LocalView.current
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     CanvasTheme {
@@ -118,6 +125,9 @@ internal fun CreateUpdateEventScreenWrapper(
             SelectCalendarScreen(
                 uiState = uiState.selectCalendarUiState,
                 onCalendarSelected = {
+                    localView.announceForAccessibility(
+                        context.getString(R.string.a11y_calendarSelected, it.name.orEmpty())
+                    )
                     actionHandler(CreateUpdateEventAction.UpdateCanvasContext(it))
                     coroutineScope.launch {
                         // We need to add this delay to give the user some feedback about the selection before closing the screen
@@ -213,7 +223,9 @@ private fun CreateUpdateEventTopAppBar(
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.textDarkest),
                     strokeWidth = 3.dp,
-                    modifier = Modifier.size(32.dp).testTag("savingProgressIndicator")
+                    modifier = Modifier
+                        .size(32.dp)
+                        .testTag("savingProgressIndicator")
                 )
             } else {
                 ActionsSegment(
@@ -235,20 +247,21 @@ private fun ActionsSegment(
     actionHandler: (CreateUpdateEventAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val showModifyScopeDialog = remember { mutableStateOf(false) }
-    if (showModifyScopeDialog.value) {
+    var showModifyScopeDialog by rememberSaveable { mutableStateOf(false) }
+    if (showModifyScopeDialog) {
         SingleChoiceAlertDialog(
             dialogTitle = stringResource(id = R.string.eventUpdateRecurringTitle),
-            items = CalendarEventAPI.ModifyEventScope.entries.take(if (uiState.isSeriesHead) 2 else 3).map {
-                stringResource(id = it.stringRes)
-            },
+            items = CalendarEventAPI.ModifyEventScope.entries.take(if (uiState.isSeriesHead) 2 else 3)
+                .map {
+                    stringResource(id = it.stringRes)
+                },
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.confirm),
             onDismissRequest = {
-                showModifyScopeDialog.value = false
+                showModifyScopeDialog = false
             },
             onConfirmation = {
-                showModifyScopeDialog.value = false
+                showModifyScopeDialog = false
                 actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.entries[it]))
             }
         )
@@ -260,7 +273,7 @@ private fun ActionsSegment(
         onClick = {
             focusManager.clearFocus()
             if (uiState.isSeriesEvent) {
-                showModifyScopeDialog.value = true
+                showModifyScopeDialog = true
             } else {
                 actionHandler(CreateUpdateEventAction.Save(CalendarEventAPI.ModifyEventScope.ONE))
             }
@@ -284,33 +297,73 @@ private fun CreateUpdateEventContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val datePickerDialog = remember {
-        getDatePickerDialog(
-            context = context,
-            date = uiState.date,
-            onDateSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateDate(it))
-            }
-        )
+    var showDatePickerDialog by rememberSaveable {
+        mutableStateOf(false)
     }
-    val startTimePickerDialog = remember {
-        getTimePickerDialog(
-            context = context,
-            time = uiState.startTime ?: LocalTime.of(0, 0),
-            onTimeSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
-            }
-        )
+    LaunchedEffect(showDatePickerDialog) {
+        if (showDatePickerDialog) {
+            getDatePickerDialog(
+                context = context,
+                date = uiState.date,
+                onDateSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateDate(it))
+                    showDatePickerDialog = false
+                },
+                onCancel = {
+                    showDatePickerDialog = false
+                },
+                onDismiss = {
+                    showDatePickerDialog = false
+                }
+            ).show()
+        }
     }
-    val endTimePickerDialog = remember {
-        getTimePickerDialog(
-            context = context,
-            time = uiState.endTime ?: LocalTime.of(0, 0),
-            onTimeSelected = {
-                actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
-            }
-        )
+
+    var showStartTimePickerDialog by rememberSaveable {
+        mutableStateOf(false)
     }
+    var showEndTimePickerDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(showStartTimePickerDialog) {
+        if (showStartTimePickerDialog) {
+            getTimePickerDialog(
+                context = context,
+                time = uiState.startTime ?: LocalTime.of(0, 0),
+                onTimeSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateStartTime(it))
+                    showStartTimePickerDialog = false
+                },
+                onCancel = {
+                    showStartTimePickerDialog = false
+                },
+                onDismiss = {
+                    showStartTimePickerDialog = false
+                }
+            ).show()
+        }
+    }
+
+    LaunchedEffect(showEndTimePickerDialog) {
+        if (showEndTimePickerDialog) {
+            getTimePickerDialog(
+                context = context,
+                time = uiState.endTime ?: LocalTime.of(0, 0),
+                onTimeSelected = {
+                    actionHandler(CreateUpdateEventAction.UpdateEndTime(it))
+                    showEndTimePickerDialog = false
+                },
+                onCancel = {
+                    showEndTimePickerDialog = false
+                },
+                onDismiss = {
+                    showEndTimePickerDialog = false
+                }
+            ).show()
+        }
+    }
+
     if (uiState.selectFrequencyUiState.showFrequencyDialog) {
         val frequencies = uiState.selectFrequencyUiState.frequencies.keys.toList()
         SingleChoiceAlertDialog(
@@ -358,48 +411,22 @@ private fun CreateUpdateEventContent(
         ) {
             val focusManager = LocalFocusManager.current
 
-            BasicTextField(
-                value = uiState.title,
-                decorationBox = {
-                    Box(contentAlignment = Alignment.CenterStart) {
-                        if (uiState.title.isEmpty()) {
-                            Text(
-                                text = stringResource(id = R.string.createEventTitleHint),
-                                color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
-                                fontSize = 16.sp
-                            )
-                        }
-                        it()
-                    }
-                },
-                onValueChange = {
-                    actionHandler(CreateUpdateEventAction.UpdateTitle(it))
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(horizontal = 16.dp)
-                    .onFocusChanged {
-                        focusedTextFields = if (it.hasFocus) {
-                            focusedTextFields + TITLE
-                        } else {
-                            focusedTextFields - TITLE
-                        }
-                    }
-                    .testTag("addTitleField"),
-                cursorBrush = SolidColor(colorResource(id = R.color.textDarkest)),
-                textStyle = TextStyle(
-                    color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
-                ),
-                singleLine = true
-            )
+            TitleInput(title = uiState.title, onFocusChanged = {
+                focusedTextFields = if (it.hasFocus) {
+                    focusedTextFields + TITLE
+                } else {
+                    focusedTextFields - TITLE
+                }
+            }, onTitleUpdate = {
+                actionHandler(CreateUpdateEventAction.UpdateTitle(it))
+            })
+
             LabelValueRow(
                 label = stringResource(R.string.createEventDateLabel),
                 value = uiState.formattedDate,
                 onClick = {
                     focusManager.clearFocus()
-                    datePickerDialog.show()
+                    showDatePickerDialog = true
                 }
             )
             val preferredTimePattern = DateHelper.getPreferredTimeFormat(context).toPattern()
@@ -409,7 +436,7 @@ private fun CreateUpdateEventContent(
                     ?: stringResource(id = R.string.createEventStartTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
-                    startTimePickerDialog.show()
+                    showStartTimePickerDialog = true
                 }
             )
             LabelValueRow(
@@ -418,7 +445,7 @@ private fun CreateUpdateEventContent(
                     ?: stringResource(id = R.string.createEventEndTimeNotSelected),
                 onClick = {
                     focusManager.clearFocus()
-                    endTimePickerDialog.show()
+                    showEndTimePickerDialog = true
                 }
             )
             LabelValueRow(
@@ -444,13 +471,15 @@ private fun CreateUpdateEventContent(
                 onValueChange = {
                     actionHandler(CreateUpdateEventAction.UpdateLocation(it))
                 },
-                modifier = Modifier.onFocusChanged {
-                    focusedTextFields = if (it.hasFocus) {
-                        focusedTextFields + LOCATION
-                    } else {
-                        focusedTextFields - LOCATION
+                modifier = Modifier
+                    .onFocusChanged {
+                        focusedTextFields = if (it.hasFocus) {
+                            focusedTextFields + LOCATION
+                        } else {
+                            focusedTextFields - LOCATION
+                        }
                     }
-                }.testTag("locationTextField"),
+                    .testTag("locationTextField"),
             )
             LabeledTextField(
                 label = stringResource(id = R.string.createEventAddressLabel),
@@ -458,13 +487,15 @@ private fun CreateUpdateEventContent(
                 onValueChange = {
                     actionHandler(CreateUpdateEventAction.UpdateAddress(it))
                 },
-                modifier = Modifier.onFocusChanged {
-                    focusedTextFields = if (it.hasFocus) {
-                        focusedTextFields + ADDRESS
-                    } else {
-                        focusedTextFields - ADDRESS
+                modifier = Modifier
+                    .onFocusChanged {
+                        focusedTextFields = if (it.hasFocus) {
+                            focusedTextFields + ADDRESS
+                        } else {
+                            focusedTextFields - ADDRESS
+                        }
                     }
-                }.testTag("addressTextField"),
+                    .testTag("addressTextField"),
             )
             Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
             Column(
@@ -482,7 +513,8 @@ private fun CreateUpdateEventContent(
                     html = uiState.details,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp).testTag("detailsComposeRCE"),
+                        .padding(horizontal = 16.dp)
+                        .testTag("detailsComposeRCE"),
                 ) {
                     actionHandler(CreateUpdateEventAction.UpdateDetails(it))
                 }
@@ -531,6 +563,59 @@ private fun LabeledTextField(
     }
 }
 
+@Composable
+private fun TitleInput(
+    title: String,
+    modifier: Modifier = Modifier,
+    onFocusChanged: (FocusState) -> Unit,
+    onTitleUpdate: (String) -> Unit
+) {
+    Row(
+        modifier = modifier
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(vertical = 16.dp, horizontal = 16.dp)
+    ) {
+
+        Text(
+            text = stringResource(id = R.string.createEventTitleLabel),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp,
+            modifier = Modifier.padding(end = 12.dp)
+        )
+
+        BasicTextField(
+            value = title,
+            decorationBox = {
+                Box(contentAlignment = Alignment.CenterStart) {
+                    if (title.isEmpty()) {
+                        Text(
+                            text = stringResource(id = R.string.createEventTitleHint),
+                            color = colorResource(id = R.color.textDarkest).copy(alpha = .4f),
+                            fontSize = 16.sp
+                        )
+                    }
+                    it()
+                }
+            },
+            onValueChange = {
+                onTitleUpdate(it)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged {
+                    onFocusChanged(it)
+                }
+                .testTag("addTitleField"),
+            cursorBrush = SolidColor(colorResource(id = R.color.textDark)),
+            textStyle = TextStyle(
+                color = colorResource(id = R.color.textDark),
+                fontSize = 16.sp
+            ),
+            maxLines = 2
+        )
+    }
+}
+
 @ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
@@ -554,4 +639,20 @@ private fun CreateUpdateEventPreview() {
         ),
         actionHandler = {}
     )
+}
+
+@Preview
+@Composable
+private fun TitleInputPreview() {
+    TitleInput("really really really really really really really really really long",
+        onFocusChanged = {},
+        onTitleUpdate = {})
+}
+
+@Preview
+@Composable
+private fun TitleInputEmptyPreview() {
+    TitleInput("",
+        onFocusChanged = {},
+        onTitleUpdate = {})
 }
