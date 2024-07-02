@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.calendar.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -65,6 +68,7 @@ import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -74,9 +78,12 @@ import org.threeten.bp.LocalDate
 fun CalendarScreen(
     title: String,
     calendarScreenUiState: CalendarScreenUiState,
+    triggerAccessibilityFocus: Boolean,
     actionHandler: (CalendarAction) -> Unit,
     navigationActionClick: () -> Unit
 ) {
+    val focusRequester = remember { FocusRequester() }
+
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
         val localCoroutineScope = rememberCoroutineScope()
@@ -121,7 +128,10 @@ fun CalendarScreen(
                     },
                     navigationActionClick = navigationActionClick,
                     navIconRes = R.drawable.ic_hamburger,
-                    navIconContentDescription = stringResource(id = R.string.navigation_drawer_open)
+                    navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
+                    modifier = Modifier
+                        .focusable()
+                        .focusRequester(focusRequester)
                 )
             },
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
@@ -180,6 +190,12 @@ fun CalendarScreen(
             }
         )
     }
+
+    // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
+    LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
+        delay(1000)
+        focusRequester.requestFocus()
+    })
 }
 
 @ExperimentalFoundationApi
@@ -219,5 +235,5 @@ fun CalendarScreenPreview() {
                     )
                 )
             )
-        ), {}) {}
+        ), false, {}) {}
 }
