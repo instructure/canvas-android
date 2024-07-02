@@ -17,16 +17,16 @@
     <item
         android:id="@+id/courses"
         android:contentDescription=""
-        android:icon="@drawable/ic_bottom_nav_courses_selected"
+        android:icon="@drawable/bottom_nav_courses"
         android:title="@string/screenTitleCourses" />
     <item
         android:id="@+id/calendar"
         android:contentDescription=""
-        android:icon="@drawable/ic_bottom_nav_calendar_selected"
+        android:icon="@drawable/bottom_nav_calendar"
         android:title="@string/screenTitleCalendar" />
     <item
         android:id="@+id/alerts"
         android:contentDescription=""
-        android:icon="@drawable/ic_bottom_nav_alerts_selected"
+        android:icon="@drawable/bottom_nav_alerts"
         android:title="@string/screenTitleAlerts" />
 </menu>

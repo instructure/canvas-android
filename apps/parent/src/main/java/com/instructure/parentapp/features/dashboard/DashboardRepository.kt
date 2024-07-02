@@ -15,33 +15,26 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.dashboard
 
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.depaginate
 
 
-data class MainViewData(
-    val userViewData: UserViewData? = null,
-    val studentSelectorExpanded: Boolean = false,
-    val studentItems: List<StudentItemViewModel> = emptyList(),
-    val selectedStudent: User? = null
-)
+class DashboardRepository(
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
+) {
 
-sealed class MainAction {
-    data class ShowToast(val message: String) : MainAction()
-    data object LocaleChanged : MainAction()
+    suspend fun getStudents(): List<User> {
+        val params = RestParams(usePerPageQueryParam = true)
+        return enrollmentApi.firstPageObserveeEnrollmentsParent(params).depaginate {
+            enrollmentApi.getNextPage(it, params)
+        }.dataOrNull
+            .orEmpty()
+            .mapNotNull { it.observedUser }
+            .distinct()
+            .sortedBy { it.sortableName }
+    }
 }
-
-data class StudentItemViewData(
-    val studentId: Long,
-    val studentName: String,
-    val avatarUrl: String
-)
-
-data class UserViewData(
-    val name: String?,
-    val pronouns: String?,
-    val shortName: String?,
-    val avatarUrl: String?,
-    val email: String?
-)

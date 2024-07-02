@@ -20,11 +20,10 @@ package com.instructure.parentapp.features.courses.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.parentapp.features.main.SelectedStudentHolder
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +38,6 @@ import javax.inject.Inject
 class CoursesViewModel @Inject constructor(
     private val repository: CoursesRepository,
     private val colorKeeper: ColorKeeper,
-    private val apiPrefs: ApiPrefs,
     private val selectedStudentHolder: SelectedStudentHolder,
     private val courseGradeFormatter: CourseGradeFormatter
 ) : ViewModel() {
@@ -115,11 +113,7 @@ class CoursesViewModel @Inject constructor(
         when (action) {
             is CoursesAction.CourseTapped -> {
                 viewModelScope.launch {
-                    _events.send(
-                        CoursesViewModelAction.NavigateToCourseDetails(
-                            "${apiPrefs.fullDomain}/courses/${action.courseId}"
-                        )
-                    )
+                    _events.send(CoursesViewModelAction.NavigateToCourseDetails(action.courseId))
                 }
             }
 

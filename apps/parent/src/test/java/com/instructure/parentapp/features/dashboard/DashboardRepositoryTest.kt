@@ -15,13 +15,9 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.ThemeAPI
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.canvasapi2.models.CanvasColor
-import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
@@ -33,14 +29,11 @@ import org.junit.Assert
 import org.junit.Test
 
 
-class MainRepositoryTest {
+class DashboardRepositoryTest {
 
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
-    private val themeApi: ThemeAPI.ThemeInterface = mockk(relaxed = true)
-    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
 
-
-    private val repository = MainRepository(enrollmentApi, userApi, themeApi)
+    private val repository = DashboardRepository(enrollmentApi)
 
     @Test
     fun `Get students successfully returns data`() = runTest {
@@ -83,67 +76,5 @@ class MainRepositoryTest {
 
         val result = repository.getStudents()
         Assert.assertEquals(expected, result)
-    }
-
-    @Test
-    fun `Get students returns empty list when enrollments call fails`() = runTest {
-        coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Fail()
-
-        val result = repository.getStudents()
-        Assert.assertTrue(result.isEmpty())
-    }
-
-    @Test
-    fun `Get self successfully returns data`() = runTest {
-        val expected = User(id = 1L)
-
-        coEvery { userApi.getSelf(any()) } returns DataResult.Success(expected)
-
-        val result = repository.getSelf()
-        Assert.assertEquals(expected, result)
-    }
-
-    @Test
-    fun `Get self returns null when call fails`() = runTest {
-        coEvery { userApi.getSelf(any()) } returns DataResult.Fail()
-
-        val result = repository.getSelf()
-        Assert.assertNull(result)
-    }
-
-    @Test
-    fun `Get colors successfully returns data`() = runTest {
-        val expected = CanvasColor()
-
-        coEvery { userApi.getColors(any()) } returns DataResult.Success(expected)
-
-        val result = repository.getColors()
-        Assert.assertEquals(expected, result)
-    }
-
-    @Test
-    fun `Get colors returns null when call fails`() = runTest {
-        coEvery { userApi.getColors(any()) } returns DataResult.Fail()
-
-        val result = repository.getColors()
-        Assert.assertNull(result)
-    }
-
-    @Test
-    fun `Get theme successfully returns data`() = runTest {
-        val expected = CanvasTheme("", "", "", "", "", "", "", "")
-
-        coEvery { themeApi.getTheme(any()) } returns DataResult.Success(expected)
-
-        val result = repository.getTheme()
-        Assert.assertEquals(expected, result)
-    }
-
-    @Test
-    fun `Get theme returns null when call fails`() = runTest {
-        coEvery { themeApi.getTheme(any()) } returns DataResult.Fail()
-
-        val result = repository.getTheme()
-        Assert.assertNull(result)
     }
 }
