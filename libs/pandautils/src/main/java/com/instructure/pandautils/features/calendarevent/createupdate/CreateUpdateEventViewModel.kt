@@ -137,7 +137,7 @@ class CreateUpdateEventViewModel @Inject constructor(
                 _uiState.update { it.copy(details = action.details) }
             }
 
-            is CreateUpdateEventAction.Save -> save(action.modifyEventScope)
+            is CreateUpdateEventAction.Save -> save(action.modifyEventScope, action.isSeriesEvent)
 
             is CreateUpdateEventAction.SnackbarDismissed -> {
                 _uiState.update { it.copy(errorSnack = null) }
@@ -461,7 +461,7 @@ class CreateUpdateEventViewModel @Inject constructor(
         }
     }
 
-    private fun save(modifyEventScope: CalendarEventAPI.ModifyEventScope) = with(uiState.value) {
+    private fun save(modifyEventScope: CalendarEventAPI.ModifyEventScope, isSeriesEvent: Boolean) = with(uiState.value) {
         _uiState.update { it.copy(saving = true) }
         viewModelScope.tryLaunch {
             val startDate = LocalDateTime.of(date, startTime ?: LocalTime.of(6, 0)).toApiString().orEmpty()
@@ -480,7 +480,8 @@ class CreateUpdateEventViewModel @Inject constructor(
                     locationName = location,
                     locationAddress = address,
                     description = details,
-                    modifyEventScope = modifyEventScope
+                    modifyEventScope = modifyEventScope,
+                    isSeriesEvent = isSeriesEvent
                 ).also {
                     CanvasRestAdapter.clearCacheUrls("calendar_events/")
                 }

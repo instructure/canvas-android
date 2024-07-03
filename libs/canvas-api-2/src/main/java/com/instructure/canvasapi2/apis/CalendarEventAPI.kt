@@ -107,6 +107,14 @@ object CalendarEventAPI {
         ): DataResult<List<ScheduleItem>>
 
         @PUT("calendar_events/{eventId}")
+        suspend fun updateRecurringCalendarEventOneOccurrence(
+            @Path("eventId") eventId: Long,
+            @Query(value = "which") modifyEventScope: String,
+            @Body body: ScheduleItem.ScheduleItemParamsWrapper,
+            @Tag restParams: RestParams
+        ): DataResult<ScheduleItem>
+
+        @PUT("calendar_events/{eventId}")
         suspend fun updateCalendarEvent(
             @Path("eventId") eventId: Long,
             @Body body: ScheduleItem.ScheduleItemParamsWrapper,
