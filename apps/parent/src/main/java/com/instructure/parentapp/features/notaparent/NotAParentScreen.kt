@@ -59,11 +59,12 @@ import com.instructure.parentapp.R
 internal fun NotAParentScreen(
     returnToLoginClick: () -> Unit,
     onStudentClick: () -> Unit,
-    onTeacherClick: () -> Unit
+    onTeacherClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         color = colorResource(id = R.color.backgroundLightest),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
@@ -112,11 +113,12 @@ internal fun NotAParentScreen(
 private fun AppOptions(
     bottomExpanded: Boolean,
     onStudentClick: () -> Unit,
-    onTeacherClick: () -> Unit
+    onTeacherClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
+        modifier = modifier
             .animateContentSize()
             .height(if (bottomExpanded) 180.dp else 0.dp)
     ) {
@@ -130,18 +132,16 @@ private fun AppOptions(
         AppOption(
             stringResource(id = R.string.studentApp),
             stringResource(id = R.string.canvasStudentApp),
-            colorResource(id = R.color.login_studentAppTheme)
-        ) {
-            onStudentClick()
-        }
+            colorResource(id = R.color.login_studentAppTheme),
+            { onStudentClick() }
+        )
         Spacer(modifier = Modifier.height(12.dp))
         AppOption(
             stringResource(id = R.string.teacherApp),
             stringResource(id = R.string.canvasTeacherApp),
-            colorResource(id = R.color.login_teacherAppTheme)
-        ) {
-            onTeacherClick()
-        }
+            colorResource(id = R.color.login_teacherAppTheme),
+            { onTeacherClick() }
+        )
     }
 }
 
@@ -150,11 +150,12 @@ private fun AppOption(
     name: String,
     label: String,
     color: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .clickable(onClick = onClick)
             .semantics(mergeDescendants = true) {
                 contentDescription = label

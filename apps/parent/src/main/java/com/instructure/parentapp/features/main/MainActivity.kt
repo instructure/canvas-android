@@ -25,7 +25,6 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        val deeplinkIntent = intent.parcelCopy()
+        val deeplinkUri = intent.data
         intent.data = null
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -72,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(navigation.courses)
             navController.graph.setStartDestination(navigation.courses)
 
-            handleDeeplink(deeplinkIntent.data)
+            handleDeeplink(deeplinkUri)
         }
     }
 
