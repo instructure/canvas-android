@@ -17,11 +17,16 @@
 
 package com.instructure.parentapp.ui.interaction
 
+import androidx.compose.ui.platform.ComposeView
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.parentapp.utils.ParentTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
 import org.junit.Test
 
 
@@ -44,10 +49,11 @@ class DashboardInteractionTest : ParentTest() {
 
         goToDashboard(data)
 
-        dashboardPage.assertSelectedStudent(data.students.first().shortName!!)
+        val students = data.students.sortedBy { it.sortableName }
+        dashboardPage.assertSelectedStudent(students.first().shortName!!)
         dashboardPage.openStudentSelector()
         dashboardPage.selectStudent(data.students.last().shortName!!)
-        dashboardPage.assertSelectedStudent(data.students.last().shortName!!)
+        dashboardPage.assertSelectedStudent(students.last().shortName!!)
     }
 
     private fun initData(): MockCanvas {
@@ -66,5 +72,20 @@ class DashboardInteractionTest : ParentTest() {
 
     override fun displaysPageObjects() = Unit
 
-    override fun enableAndConfigureAccessibilityChecks() = Unit
+    override fun enableAndConfigureAccessibilityChecks() {
+        extraAccessibilitySupressions = Matchers.allOf(
+            AccessibilityCheckResultUtils.matchesCheck(
+                SpeakableTextPresentCheck::class.java
+            ),
+            AccessibilityCheckResultUtils.matchesViews(
+                ViewMatchers.withParent(
+                    ViewMatchers.withClassName(
+                        Matchers.equalTo(ComposeView::class.java.name)
+                    )
+                )
+            )
+        )
+
+        super.enableAndConfigureAccessibilityChecks()
+    }
 }

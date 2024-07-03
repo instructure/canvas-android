@@ -25,8 +25,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCourse
 import com.instructure.canvas.espresso.mockCanvas.addEnrollment
-import com.instructure.canvas.espresso.mockCanvas.addTerm
 import com.instructure.canvas.espresso.mockCanvas.addUser
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.updateUserEnrollments
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.loginapi.login.R
@@ -103,12 +104,12 @@ class NotAParentInteractionsTest : ParentComposeTest() {
     }
 
     private fun initData(): MockCanvas {
-        return MockCanvas().apply {
-            val parent = addUser()
-            addTerm()
-            val course = addCourse()
-            addEnrollment(parent, course, Enrollment.EnrollmentType.Observer)
-        }
+        val data = MockCanvas.init()
+        val parent = data.addUser()
+        val course = data.addCourse()
+        data.addEnrollment(parent, course, Enrollment.EnrollmentType.Observer)
+        data.updateUserEnrollments()
+        return data
     }
 
     private fun goToNotAParentScreen(data: MockCanvas) {
