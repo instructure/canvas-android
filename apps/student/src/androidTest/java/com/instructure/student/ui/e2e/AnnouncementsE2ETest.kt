@@ -24,7 +24,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
-import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -49,48 +48,52 @@ class AnnouncementsE2ETest : StudentTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
-        val announcement = data.announcementsList[0]
+        val replyMessage = "Reply text"
 
+        Log.d(PREPARATION_TAG, "Seed an announcement for '${course.name}' course and a (message) entry for this announcement with the '$replyMessage' as a student.")
+        val announcement = data.announcementsList[0]
+        DiscussionTopicsApi.createEntryToDiscussionTopic(student.token, course.id, announcement.id, replyMessage)
+
+        Log.d(PREPARATION_TAG, "Seed another announcement for '${course.name}' which is locked so replies not allowed for it.")
         val lockedAnnouncement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token, locked = true)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to ${course.name} course's announcements page.")
+        Log.d(STEP_TAG,"Navigate to '${course.name}' course's announcements page.")
         dashboardPage.assertDisplaysCourse(course)
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAnnouncements()
 
-        Log.d(STEP_TAG,"Assert that ${announcement.title} announcement is displayed.")
+        Log.d(STEP_TAG,"Assert that '${announcement.title}' announcement is displayed.")
         announcementListPage.assertTopicDisplayed(announcement.title)
 
-        Log.d(STEP_TAG, "Assert that ${lockedAnnouncement.title} announcement is really locked so that the 'locked' icon is displayed.")
+        Log.d(STEP_TAG, "Assert that '${lockedAnnouncement.title}' announcement is really locked so that the 'locked' icon is displayed.")
         announcementListPage.assertAnnouncementLocked(lockedAnnouncement.title)
 
-        Log.d(STEP_TAG, "Select ${lockedAnnouncement.title} announcement and assert if we are landing on the Discussion Details Page.")
+        Log.d(STEP_TAG, "Select '${lockedAnnouncement.title}' announcement.")
         announcementListPage.selectTopic(lockedAnnouncement.title)
-        discussionDetailsPage.assertTitleText(lockedAnnouncement.title)
+
+        Log.d(STEP_TAG, "Assert that the '${lockedAnnouncement.title}' announcement's title is displayed on the toolbar.")
+        discussionDetailsPage.assertToolbarDiscussionTitle(lockedAnnouncement.title)
 
         Log.d(STEP_TAG, "Assert that the 'Reply' button is not available on a locked announcement. Navigate back to Announcement List Page.")
         discussionDetailsPage.assertReplyButtonNotDisplayed()
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Select ${announcement.title} announcement and assert if we are landing on the Discussion Details Page.")
+        Log.d(STEP_TAG,"Select '${announcement.title}' announcement.")
         announcementListPage.selectTopic(announcement.title)
-        discussionDetailsPage.assertTitleText(announcement.title)
 
-        val replyMessage = "Reply text"
-        Log.d(STEP_TAG,"Send a reply to the selected announcement with message: $replyMessage.")
-        discussionDetailsPage.sendReply(replyMessage)
-        discussionDetailsPage.assertPageObjects()
+        Log.d(STEP_TAG, "Assert that the '${announcement.title}' announcement's title is displayed on the toolbar and the 'Reply' button is displayed as this announcement is not locked.")
+        discussionDetailsPage.assertToolbarDiscussionTitle(announcement.title)
+        discussionDetailsPage.waitForReplyButton()
+        discussionDetailsPage.assertReplyButtonDisplayed()
 
-        Log.d(STEP_TAG,"Assert that the previously sent reply has been displayed.")
-        val announcementReply  = DiscussionEntry(message = replyMessage)
-        discussionDetailsPage.assertIfThereIsAReply()
-        discussionDetailsPage.assertReplyDisplayed(announcementReply)
+        Log.d(STEP_TAG,"Assert the the previously seeded reply, '$replyMessage', is displayed on the (online) details page.")
+        discussionDetailsPage.assertEntryDisplayed(replyMessage)
 
-        Log.d(STEP_TAG,"Click on Search button and type ${announcement.title} to the search input field.")
+        Log.d(STEP_TAG,"Click on Search button and type '${announcement.title}' to the search input field.")
         Espresso.pressBack()
         announcementListPage.searchable.clickOnSearchButton()
         announcementListPage.searchable.typeToSearchBar(announcement.title)

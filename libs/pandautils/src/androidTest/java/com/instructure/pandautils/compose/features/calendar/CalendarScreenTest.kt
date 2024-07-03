@@ -165,7 +165,7 @@ class CalendarScreenTest {
             )
         }
 
-        val fab = composeTestRule.onNode(hasContentDescription("Add new"))
+        val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.assertIsDisplayed()
         val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
         addToDoItem.assertIsNotDisplayed()
@@ -193,7 +193,7 @@ class CalendarScreenTest {
             )
         }
 
-        val fab = composeTestRule.onNode(hasContentDescription("Add new"))
+        val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.assertIsDisplayed()
         fab.performClick()
         composeTestRule.waitForIdle()
@@ -225,7 +225,7 @@ class CalendarScreenTest {
             )
         }
 
-        val fab = composeTestRule.onNode(hasContentDescription("Add new"))
+        val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.performClick()
         composeTestRule.waitForIdle()
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))
@@ -257,7 +257,7 @@ class CalendarScreenTest {
             )
         }
 
-        val fab = composeTestRule.onNode(hasContentDescription("Add new"))
+        val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.performClick()
         composeTestRule.waitForIdle()
         val addToDo = composeTestRule.onNode((hasText("Add To Do")))

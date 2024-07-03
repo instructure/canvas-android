@@ -20,7 +20,7 @@ import android.os.Parcelable
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.User
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class SignedInUser(
@@ -34,7 +34,8 @@ data class SignedInUser(
         var clientSecret: String?,
         var calendarFilterPrefs: ArrayList<String>?,
         var lastLogoutDate: Date? = null,
-        var canvasForElementary: Boolean = false
+        var canvasForElementary: Boolean = false,
+        var selectedStudentId: Long? = null
 ) : Comparable<SignedInUser>, Parcelable {
     override fun compareTo(other: SignedInUser): Int {
         // We want newest first.

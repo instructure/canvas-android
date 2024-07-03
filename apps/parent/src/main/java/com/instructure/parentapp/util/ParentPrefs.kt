@@ -17,9 +17,13 @@
 
 package com.instructure.parentapp.util
 
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.GsonPref
 import com.instructure.canvasapi2.utils.PrefManager
 
 
 object ParentPrefs : PrefManager("parentSP") {
+
+    var currentStudent: User? by GsonPref(User::class.java, null, "current_student", false)
 
 }

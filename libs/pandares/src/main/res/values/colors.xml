@@ -121,6 +121,10 @@
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
 
+    <!-- Additional Colors for customization -->
+    <color name="jeffGoldplum">#FF5F4DCE</color>
+    <color name="raspberry">#FFE9162E</color>
+
     <!-- Attachment View colors -->
     <color name="attachmentColorDoc">#2ca3de</color>
     <color name="attachmentColorPdf">#f2422e</color>

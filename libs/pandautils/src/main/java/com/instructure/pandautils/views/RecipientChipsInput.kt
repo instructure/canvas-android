@@ -35,8 +35,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.RecipientManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -44,7 +47,11 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.AdapterRecipientSearchResultBinding
 import com.instructure.pandautils.databinding.ViewRecipientChipsInputBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setVisible
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -62,6 +69,7 @@ class RecipientChipsInput @JvmOverloads constructor(
     private val searchResults: MutableList<Recipient> = mutableListOf()
     private var searchJob: Job? = null
     private var lastQuery: String = ""
+    private val permissionMap = mutableMapOf<CanvasContext, Boolean>()
 
     private val searchAdapter: ArrayAdapter<Recipient> = object : ArrayAdapter<Recipient>(context, 0, searchResults) {
         private val filter = object : Filter() {
@@ -156,8 +164,22 @@ class RecipientChipsInput @JvmOverloads constructor(
             } else {
                 delay(400)
                 try {
+                    val canvasContext = canvasContext ?: return@weave
+                    val canSendMessageToAll = permissionMap.getOrPut(canvasContext) {
+                        val permissionRequest = if (canvasContext.isCourse) {
+                            CourseManager.getPermissionsAsync(canvasContext.id, listOf(CanvasContextPermission.SEND_MESSAGES_ALL))
+                        } else {
+                            GroupManager.getPermissionsAsync(canvasContext.id, listOf(CanvasContextPermission.SEND_MESSAGES_ALL))
+                        }
+
+                        permissionRequest.await().dataOrNull?.send_messages_all == true
+                    }
                     val recipients: List<Recipient> = awaitApi {
-                        RecipientManager.searchAllRecipients(false, query, canvasContext!!.contextId, it)
+                        if (canSendMessageToAll) {
+                            RecipientManager.searchAllRecipients(false, query, canvasContext.contextId, it)
+                        } else {
+                            RecipientManager.searchAllRecipientsNoSyntheticContexts(false, query, canvasContext.contextId, it)
+                        }
                     }
                     searchResults.clear()
                     searchResults.addAll(recipients - this@RecipientChipsInput.recipients)

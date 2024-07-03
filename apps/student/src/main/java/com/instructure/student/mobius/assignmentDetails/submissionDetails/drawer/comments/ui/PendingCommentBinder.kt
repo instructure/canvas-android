@@ -24,21 +24,25 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
 import com.instructure.student.databinding.AdapterSubmissionCommentPendingBinding
-import com.instructure.student.db.Db
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
-import com.squareup.sqldelight.Query
+import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
+import kotlinx.coroutines.runBlocking
 
-class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem, SubmissionCommentsAdapterCallback>() {
+class PendingCommentBinder(
+    private val studentDb: () -> StudentDb
+) : BasicItemBinder<CommentItemState.PendingCommentItem, SubmissionCommentsAdapterCallback>() {
 
     override val layoutResId = R.layout.adapter_submission_comment_pending
 
@@ -49,12 +53,12 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
     override val bindBehavior = ItemWithHolder { holder, item, callback, _ ->
         check(holder is PendingCommentHolder) { "Invalid holder type for PendingCommentBinder" }
         val binding = AdapterSubmissionCommentPendingBinding.bind(this)
-        with (binding) {
+        with(binding) {
             commentHolder.direction = CommentDirection.OUTGOING
             commentHolder.usernameText = Pronouns.span(item.authorName, item.authorPronouns)
             commentHolder.setAvatar(item.avatarUrl, item.authorName)
 
-            holder.setListenerForItem(item.pendingComment.id) { comment ->
+            holder.setListenerForItem(studentDb(), item.pendingComment.id) { comment ->
                 commentHolder.commentText = comment.message
                 if (comment.errorFlag) {
                     onClick { displayRetryOptions(errorLayout, comment.id, callback) }
@@ -66,14 +70,14 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
                     commentHolder.dateText = context.getString(R.string.sending)
                     errorLayout.setGone()
                     sendingLayout.setVisible()
-                    if (comment.fileCount == 0L) {
+                    if (comment.fileCount == 0) {
                         indeterminateProgressBar.setVisible()
                         progressBar.setGone()
                     } else {
                         indeterminateProgressBar.setGone()
                         progressBar.setVisible()
                         progressBar.max = 1000
-                        val progress = 1000 * (comment.progress ?: 0.0)
+                        val progress = 1000 * (comment.progress ?: 0.0f)
                         progressBar.setProgress(progress.toInt(), true)
                     }
                 }
@@ -81,7 +85,11 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
         }
     }
 
-    private fun displayRetryOptions(anchor: View, commentId: Long, callback: SubmissionCommentsAdapterCallback) {
+    private fun displayRetryOptions(
+        anchor: View,
+        commentId: Long,
+        callback: SubmissionCommentsAdapterCallback
+    ) {
         val popup = PopupMenu(anchor.context, anchor)
         popup.menu.add(0, 0, 0, R.string.retry)
         popup.menu.add(0, 1, 0, R.string.delete).apply {
@@ -106,26 +114,26 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
 
     private class PendingCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        private val db = Db.instance.pendingSubmissionCommentQueries
+        private var observer: Observer<CreatePendingSubmissionCommentEntity?>? = null
 
-        private var listener: Query.Listener? = null
+        private var liveData: LiveData<CreatePendingSubmissionCommentEntity?>? = null
 
-        private var query: Query<PendingSubmissionComment>? = null
+        fun clearListener() {
+            observer?.let { liveData?.removeObserver(it) }
+        }
 
-        fun clearListener() = listener?.let { query?.removeListener(it) }
-
-        fun setListenerForItem(itemId: Long, onUpdate: (PendingSubmissionComment) -> Unit) {
+        fun setListenerForItem(db: StudentDb, itemId: Long, onUpdate: (CreatePendingSubmissionCommentEntity) -> Unit) {
             clearListener()
-            query = db.getCommentById(itemId)
-            listener = object : Query.Listener {
-                override fun queryResultsChanged() {
-                    query?.executeAsOneOrNull()?.let {
-                        Handler(Looper.getMainLooper()).post { onUpdate(it) }
-                    }
+            liveData = db.pendingSubmissionCommentDao().findCommentByIdLiveData(itemId)
+            observer = Observer<CreatePendingSubmissionCommentEntity?> { pending ->
+                pending?.let {
+                    Handler(Looper.getMainLooper()).post { onUpdate(it) }
                 }
+            }.also { liveData?.observeForever(it) }
+
+            runBlocking {
+                db.pendingSubmissionCommentDao().findCommentById(itemId)?.let { Handler(Looper.getMainLooper()).post { onUpdate(it) } }
             }
-            query!!.addListener(listener!!)
-            query!!.executeAsOneOrNull()?.let { onUpdate(it) }
         }
     }
 }

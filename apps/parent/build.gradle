@@ -42,9 +42,12 @@ android {
         versionCode 50
         versionName "3.10.0"
 
+        buildConfigField "boolean", "IS_TESTING", "false"
+        testInstrumentationRunner 'com.instructure.parentapp.ui.espresso.ParentHiltTestRunner'
+        testInstrumentationRunnerArguments disableAnalytics: 'true'
+
         /* Add private data */
         PrivateData.merge(project, "parent")
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     packagingOptions {
@@ -140,10 +143,14 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        compose true
     }
     hilt {
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
 }
 
@@ -186,6 +193,7 @@ dependencies {
     kapt Libs.HILT_COMPILER
     implementation Libs.HILT_ANDROIDX_WORK
     kapt Libs.HILT_ANDROIDX_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
 
     /* ROOM */
     implementation Libs.ROOM
@@ -206,4 +214,6 @@ dependencies {
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_IN_APP_UPDATES
+
+    androidTestImplementation Libs.COMPOSE_UI_TEST
 }

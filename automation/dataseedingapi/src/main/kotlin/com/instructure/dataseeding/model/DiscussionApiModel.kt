@@ -44,3 +44,14 @@ data class CreateDiscussionTopic(
         val locked: Boolean = true,
         val published: Boolean = true
 )
+
+data class DiscussionTopicEntryRequest(
+        @SerializedName("message")
+        val message: String
+)
+
+data class DiscussionTopicEntryResponse(
+        val id: String,
+        @SerializedName("message")
+        val message: String
+)

@@ -19,7 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.student.PendingSubmissionComment
+import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
 import java.util.Date
 
 data class SubmissionCommentsViewState(
@@ -49,7 +49,7 @@ sealed class CommentItemState {
         val authorPronouns: String?,
         val avatarUrl: String,
         val sortDate: Date,
-        val pendingComment: PendingSubmissionComment
+        val pendingComment: CreatePendingSubmissionCommentEntity
     ) : CommentItemState()
 
     data class SubmissionItem(

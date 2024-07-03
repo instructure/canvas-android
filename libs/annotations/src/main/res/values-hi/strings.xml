@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">इनपुट पाठ</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="comment">टिप्पणी</string>
+    <string name="skip">छोड़ें</string>
+    <string name="comments">टिप्पणियां</string>
+    <string name="error_loading_submission">यह सबमिशन लोड करने में समस्या आई थी।</string>
+    <string name="retry">फिर से कोशिश करें</string>
+    <string name="annotationErrorOccurred">एनोटेशन लोड करते समय अनपेक्षित त्रुटि उत्पन्न हुई।</string>
+    <string name="annotationError">एनोटेशन त्रुटि</string>
+    <string name="annotationDialogMessage">एनोटेशन को किसी अन्य स्रोत से मिटा दिया गया है।</string>
+    <string name="errorSendingMessage">यह संदेश भेजा नहीं जा सका। फिर से कोशिश करने के लिए टैप करें।</string>
+    <string name="addAnnotationComment">टिप्पणी जोड़ें</string>
+    <string name="editComment">टिप्पणी संपादित करें</string>
+    <string name="deleteComment">टिप्पणी मिटाएं</string>
+    <string name="deleteAnnotation">एनोटेशन मिटाएं</string>
+    <string name="deleteCommentConfirmation">क्या आप सच में इस टिप्पणी को मिटाना चाहते हैं?</string>
+    <string name="deleteHeadCommentConfirmation">इस टिप्पणी को मिटाने से इस एनोटेशन से जुड़ी सभी टिप्पणियां मिटा दी जाएंगी। क्या आप सच में ऐसा करना चाहते हैं?</string>
+    <string name="sendingSimple">भेजा जा रहा है</string>
+    <string name="pspdf__annotation_type_stamp">नोट का रंग</string>
+    <string name="removedComment">%1$s को %2$s द्वारा निकाला गया</string>
+    <string name="pspdf__stamp_standard_section"></string>
+
+</resources>
