@@ -22,6 +22,7 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
@@ -29,6 +30,7 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withText
 import com.instructure.parentapp.R
+import org.hamcrest.Matchers.equalToIgnoringCase
 
 class DashboardPage : BasePage(R.id.drawer_layout) {
 
@@ -62,7 +64,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
 
     fun assertLogoutDialog() {
         onViewWithText(R.string.logout_warning).assertDisplayed()
-        onViewWithText(android.R.string.cancel).assertDisplayed()
+        onViewWithText(equalToIgnoringCase(getStringFromResource(android.R.string.cancel))).assertDisplayed()
         onViewWithText(android.R.string.ok).assertDisplayed()
     }
 
