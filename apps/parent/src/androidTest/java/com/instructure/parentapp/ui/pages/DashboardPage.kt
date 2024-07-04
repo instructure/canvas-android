@@ -69,7 +69,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     }
 
     fun tapOk() {
-        onViewWithText(R.string.ok).click()
+        onViewWithText(android.R.string.ok).click()
     }
 
     fun tapSwitchUsers() {
