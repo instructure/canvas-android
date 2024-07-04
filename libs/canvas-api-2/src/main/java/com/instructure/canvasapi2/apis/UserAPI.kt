@@ -131,6 +131,9 @@ object UserAPI {
 
         @PUT("users/self/dashboard_positions")
         suspend fun updateDashboardPositions(@Body positions: DashboardPositions, @Tag restParams: RestParams): DataResult<DashboardPositions>
+
+        @GET("users/self/observer_alerts/{studentId}")
+        suspend fun getObserverAlerts(@Path("studentId") studentId: Long, @Tag restParams: RestParams): DataResult<List<Alert>>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {
