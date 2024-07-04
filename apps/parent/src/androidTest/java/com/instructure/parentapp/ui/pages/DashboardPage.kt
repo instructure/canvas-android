@@ -65,7 +65,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     fun assertLogoutDialog() {
         onViewWithText(R.string.logout_warning).assertDisplayed()
         onViewWithText(equalToIgnoringCase(getStringFromResource(android.R.string.cancel))).assertDisplayed()
-        onViewWithText(android.R.string.ok).assertDisplayed()
+        onViewWithText(equalToIgnoringCase(getStringFromResource(android.R.string.ok))).assertDisplayed()
     }
 
     fun tapOk() {
