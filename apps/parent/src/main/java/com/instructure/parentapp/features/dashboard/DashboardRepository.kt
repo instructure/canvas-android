@@ -15,20 +15,26 @@
  *
  */
 
-package com.instructure.parentapp.utils
+package com.instructure.parentapp.features.dashboard
 
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.User
-import com.instructure.parentapp.features.login.LoginActivity
+import com.instructure.canvasapi2.utils.depaginate
 
 
-fun ParentTest.tokenLogin(domain: String, token: String, user: User, assertDashboard: Boolean = true) {
-    activityRule.runOnUiThread {
-        (originalActivity as LoginActivity).loginWithToken(
-            token,
-            domain,
-            user
-        )
+class DashboardRepository(
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
+) {
+
+    suspend fun getStudents(): List<User> {
+        val params = RestParams(usePerPageQueryParam = true)
+        return enrollmentApi.firstPageObserveeEnrollmentsParent(params).depaginate {
+            enrollmentApi.getNextPage(it, params)
+        }.dataOrNull
+            .orEmpty()
+            .mapNotNull { it.observedUser }
+            .distinct()
+            .sortedBy { it.sortableName }
     }
-
-    if (assertDashboard) dashboardPage.assertPageObjects()
 }

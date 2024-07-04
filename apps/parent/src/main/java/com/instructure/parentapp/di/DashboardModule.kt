@@ -18,11 +18,9 @@
 package com.instructure.parentapp.di
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.ThemeAPI
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.parentapp.features.main.MainRepository
-import com.instructure.parentapp.features.main.SelectedStudentHolder
-import com.instructure.parentapp.features.main.SelectedStudentHolderImpl
+import com.instructure.parentapp.features.dashboard.DashboardRepository
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,15 +30,13 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class MainModule {
+class DashboardModule {
 
     @Provides
-    fun provideMainRepository(
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-        userApi: UserAPI.UsersInterface,
-        themeApi: ThemeAPI.ThemeInterface
-    ): MainRepository {
-        return MainRepository(enrollmentApi, userApi, themeApi)
+    fun provideDashboardRepository(
+        enrollmentApi: EnrollmentAPI.EnrollmentInterface
+    ): DashboardRepository {
+        return DashboardRepository(enrollmentApi)
     }
 }
 

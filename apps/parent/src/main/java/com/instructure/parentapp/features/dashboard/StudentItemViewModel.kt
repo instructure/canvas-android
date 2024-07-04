@@ -15,24 +15,20 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.dashboard
+
+import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.parentapp.R
 
 
-import com.instructure.canvasapi2.models.User
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+data class StudentItemViewModel(
+    val studentItemViewData: StudentItemViewData,
+    private val onStudentSelected: (Long) -> Unit
+) : ItemViewModel {
 
-interface SelectedStudentHolder {
-    val selectedStudentFlow: SharedFlow<User>
-    suspend fun updateSelectedStudent(user: User)
-}
+    override val layoutId = R.layout.item_student
 
-class SelectedStudentHolderImpl : SelectedStudentHolder {
-    private val _selectedStudentFlow = MutableSharedFlow<User>()
-    override val selectedStudentFlow = _selectedStudentFlow.asSharedFlow()
-
-    override suspend fun updateSelectedStudent(user: User) {
-        _selectedStudentFlow.emit(user)
+    fun onStudentClick() {
+        onStudentSelected(studentItemViewData.studentId)
     }
 }

@@ -20,7 +20,7 @@
 
         <variable
             name="userViewData"
-            type="com.instructure.parentapp.features.main.UserViewData" />
+            type="com.instructure.parentapp.features.dashboard.UserViewData" />
 
         <import type="com.instructure.canvasapi2.utils.Pronouns" />
     </data>

@@ -15,20 +15,24 @@
  *
  */
 
-package com.instructure.parentapp.utils
+package com.instructure.parentapp.features.dashboard
+
 
 import com.instructure.canvasapi2.models.User
-import com.instructure.parentapp.features.login.LoginActivity
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
+interface SelectedStudentHolder {
+    val selectedStudentFlow: SharedFlow<User>
+    suspend fun updateSelectedStudent(user: User)
+}
 
-fun ParentTest.tokenLogin(domain: String, token: String, user: User, assertDashboard: Boolean = true) {
-    activityRule.runOnUiThread {
-        (originalActivity as LoginActivity).loginWithToken(
-            token,
-            domain,
-            user
-        )
+class SelectedStudentHolderImpl : SelectedStudentHolder {
+    private val _selectedStudentFlow = MutableSharedFlow<User>(replay = 1)
+    override val selectedStudentFlow = _selectedStudentFlow.asSharedFlow()
+
+    override suspend fun updateSelectedStudent(user: User) {
+        _selectedStudentFlow.emit(user)
     }
-
-    if (assertDashboard) dashboardPage.assertPageObjects()
 }

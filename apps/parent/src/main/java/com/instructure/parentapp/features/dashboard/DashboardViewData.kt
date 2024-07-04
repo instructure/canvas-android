@@ -15,22 +15,17 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.models.User
 
 
-data class MainViewData(
+data class DashboardViewData(
     val userViewData: UserViewData? = null,
     val studentSelectorExpanded: Boolean = false,
     val studentItems: List<StudentItemViewModel> = emptyList(),
     val selectedStudent: User? = null
 )
-
-sealed class MainAction {
-    data class ShowToast(val message: String) : MainAction()
-    data object LocaleChanged : MainAction()
-}
 
 data class StudentItemViewData(
     val studentId: Long,
