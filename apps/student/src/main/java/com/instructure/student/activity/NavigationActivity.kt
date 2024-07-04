@@ -995,6 +995,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
         ft.show(fragment)
         ft.commitAllowingStateLoss()
+
+        if (fragment is CalendarFragment) {
+            fragment.calendarTabSelected()
+        }
     }
 
     private fun getBottomBarFragments(selectedFragmentName: String): List<Fragment> {
