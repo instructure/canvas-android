@@ -15,51 +15,27 @@
  *
  */
 
-package com.instructure.parentapp.features.courses.list
+package com.instructure.parentapp.features.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.Text
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.instructure.pandautils.utils.collectOneOffEvents
-import com.instructure.parentapp.util.navigation.Navigation
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 
-@AndroidEntryPoint
-class CoursesFragment : Fragment() {
-
-    private val viewModel: CoursesViewModel by viewModels()
-
-    @Inject
-    lateinit var navigation: Navigation
+class SettingsFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-
         return ComposeView(requireActivity()).apply {
             setContent {
-                val uiState by viewModel.uiState.collectAsState()
-                CoursesScreen(uiState, viewModel::handleAction)
-            }
-        }
-    }
-
-    private fun handleAction(action: CoursesViewModelAction) {
-        when (action) {
-            is CoursesViewModelAction.NavigateToCourseDetails -> {
-                navigation.navigate(activity, navigation.courseDetailsRoute(action.courseId))
+                Text(text = "Settings")
             }
         }
     }

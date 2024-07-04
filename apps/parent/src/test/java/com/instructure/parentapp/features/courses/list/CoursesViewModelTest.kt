@@ -23,10 +23,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import com.instructure.parentapp.features.main.TestSelectStudentHolder
+import com.instructure.parentapp.features.dashboard.TestSelectStudentHolder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -59,7 +58,6 @@ class CoursesViewModelTest {
 
     private val repository: CoursesRepository = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val selectedStudentFlow = MutableSharedFlow<User>()
     private val selectedStudentHolder = TestSelectStudentHolder(selectedStudentFlow)
     private val courseGradeFormatter: CourseGradeFormatter = mockk(relaxed = true)
@@ -164,8 +162,6 @@ class CoursesViewModelTest {
 
     @Test
     fun `Navigate to course details`() = runTest {
-        coEvery { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
-
         createViewModel()
 
         val events = mutableListOf<CoursesViewModelAction>()
@@ -175,11 +171,11 @@ class CoursesViewModelTest {
 
         viewModel.handleAction(CoursesAction.CourseTapped(1L))
 
-        val expected = CoursesViewModelAction.NavigateToCourseDetails("https://canvas.instructure.com/courses/1")
+        val expected = CoursesViewModelAction.NavigateToCourseDetails(1L)
         Assert.assertEquals(expected, events.last())
     }
 
     private fun createViewModel() {
-        viewModel = CoursesViewModel(repository, colorKeeper, apiPrefs, selectedStudentHolder, courseGradeFormatter)
+        viewModel = CoursesViewModel(repository, colorKeeper, selectedStudentHolder, courseGradeFormatter)
     }
 }

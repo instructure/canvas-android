@@ -15,20 +15,30 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.managestudents
 
-import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.parentapp.R
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.compose.material.Text
+import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 
 
-data class StudentItemViewModel(
-    val studentItemViewData: StudentItemViewData,
-    private val onStudentSelected: (Long) -> Unit
-) : ItemViewModel {
+@AndroidEntryPoint
+class ManageStudentsFragment : Fragment() {
 
-    override val layoutId = R.layout.item_student
-
-    fun onStudentClick() {
-        onStudentSelected(studentItemViewData.studentId)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return ComposeView(requireActivity()).apply {
+            setContent {
+                Text(text = "Manage Students")
+            }
+        }
     }
 }

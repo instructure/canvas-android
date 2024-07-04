@@ -15,36 +15,28 @@
  *
  */
 
-package com.instructure.parentapp.features.main
+package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.instructure.canvasapi2.models.CanvasColor
-import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
@@ -54,7 +46,7 @@ import org.junit.Test
 
 
 @ExperimentalCoroutinesApi
-class MainViewModelTest {
+class DashboardViewModelTest {
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -64,15 +56,13 @@ class MainViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val context: Context = mockk(relaxed = true)
-    private val repository: MainRepository = mockk(relaxed = true)
+    private val repository: DashboardRepository = mockk(relaxed = true)
     private val previousUsersUtils: PreviousUsersUtils = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
-    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
-    private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
 
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: DashboardViewModel
 
     @Before
     fun setup() {
@@ -84,46 +74,6 @@ class MainViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-    }
-
-    @Test
-    fun `Load and store initial data`() {
-        val user = User(id = 1L)
-        coEvery { repository.getSelf() } returns user
-
-        val colors = CanvasColor()
-        coEvery { repository.getColors() } returns colors
-
-        val theme = CanvasTheme("", "", "", "", "", "", "", "")
-        coEvery { repository.getTheme() } returns theme
-
-        val students = User(id = 2L)
-        coEvery { repository.getStudents() } returns listOf(students)
-
-        createViewModel()
-
-        coVerify { apiPrefs.user = user }
-        coVerify { colorKeeper.addToCache(colors) }
-        coVerify { themePrefs.applyCanvasTheme(theme, context) }
-        Assert.assertEquals(ViewState.Success, viewModel.state.value)
-    }
-
-    @Test
-    fun `User stored and locale changed`() = runTest {
-        val user = User(id = 1L, effective_locale = "en")
-        coEvery { repository.getSelf() } returns user
-        every { apiPrefs.user = any() } answers {
-            every { apiPrefs.effectiveLocale } returns user.effective_locale.orEmpty()
-        }
-
-        createViewModel()
-
-        val events = mutableListOf<MainAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
-
-        Assert.assertEquals(MainAction.LocaleChanged, events.last())
     }
 
     @Test
@@ -235,26 +185,13 @@ class MainViewModelTest {
         Assert.assertFalse(viewModel.data.value.studentSelectorExpanded)
     }
 
-    @Test
-    fun `Close student selector`() {
-        createViewModel()
-
-        viewModel.toggleStudentSelector()
-        Assert.assertTrue(viewModel.data.value.studentSelectorExpanded)
-
-        viewModel.closeStudentSelector()
-        Assert.assertFalse(viewModel.data.value.studentSelectorExpanded)
-    }
-
     private fun createViewModel() {
-        viewModel = MainViewModel(
+        viewModel = DashboardViewModel(
             context = context,
             repository = repository,
             previousUsersUtils = previousUsersUtils,
             apiPrefs = apiPrefs,
             parentPrefs = parentPrefs,
-            colorKeeper = colorKeeper,
-            themePrefs = themePrefs,
             selectedStudentHolder = selectedStudentHolder
         )
     }
