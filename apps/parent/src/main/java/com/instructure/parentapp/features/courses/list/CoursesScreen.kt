@@ -18,10 +18,8 @@
 package com.instructure.parentapp.features.courses.list
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -106,8 +104,6 @@ private fun CourseListContent(
         modifier = modifier.pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
             items(uiState.courseListItems) {
@@ -140,6 +136,7 @@ private fun CourseListItem(
             .clickable {
                 actionHandler(CoursesAction.CourseTapped(uiState.courseId))
             }
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text = uiState.courseName,

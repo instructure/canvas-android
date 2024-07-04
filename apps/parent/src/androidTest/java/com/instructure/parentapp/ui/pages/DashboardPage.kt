@@ -55,4 +55,22 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     fun selectStudent(name: String) {
         onView(withText(name) + withAncestor(R.id.student_list)).click()
     }
+
+    fun tapLogout() {
+        onViewWithText(R.string.logout).click()
+    }
+
+    fun assertLogoutDialog() {
+        onViewWithText(R.string.logout_warning).assertDisplayed()
+        onViewWithText(R.string.cancel).assertDisplayed()
+        onViewWithText(R.string.ok).assertDisplayed()
+    }
+
+    fun tapOk() {
+        onViewWithText(R.string.ok).click()
+    }
+
+    fun tapSwitchUsers() {
+        onViewWithText(R.string.navigationDrawerSwitchUsers).click()
+    }
 }

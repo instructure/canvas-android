@@ -18,11 +18,14 @@
 package com.instructure.parentapp.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.loginapi.login.R
 import com.instructure.parentapp.utils.ParentTest
 import com.instructure.parentapp.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -54,6 +57,38 @@ class DashboardInteractionTest : ParentTest() {
         dashboardPage.openStudentSelector()
         dashboardPage.selectStudent(data.students.last().shortName!!)
         dashboardPage.assertSelectedStudent(students.last().shortName!!)
+    }
+
+    @Test
+    fun testLogout() {
+        val data = initData()
+
+        goToDashboard(data)
+
+        dashboardPage.openNavigationDrawer()
+        dashboardPage.tapLogout()
+        dashboardPage.assertLogoutDialog()
+        dashboardPage.tapOk()
+        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
+            ViewAssertions.matches(
+                ViewMatchers.isDisplayed()
+            )
+        )
+    }
+
+    @Test
+    fun testSwitchUsers() {
+        val data = initData()
+
+        goToDashboard(data)
+
+        dashboardPage.openNavigationDrawer()
+        dashboardPage.tapSwitchUsers()
+        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
+            ViewAssertions.matches(
+                ViewMatchers.isDisplayed()
+            )
+        )
     }
 
     private fun initData(): MockCanvas {
