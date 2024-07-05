@@ -18,16 +18,21 @@
 package com.instructure.parentapp.features.dashboard
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.BundleCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
@@ -65,6 +70,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
 
+    private var inboxBadge: TextView? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,13 +89,19 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         setupNavigation()
 
         lifecycleScope.launch {
-            viewModel.data.collectLatest {
+            viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupAppColors(it.selectedStudent)
+                updateUnreadCount(it.unreadCount)
             }
         }
 
         handleDeeplink()
+    }
+
+    private fun updateUnreadCount(unreadCount: Int) {
+        inboxBadge?.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
+        inboxBadge?.text = unreadCount.toString()
     }
 
     private fun setupNavigation() {
@@ -130,6 +143,11 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         val navView = binding.navView
 
         headerLayoutBinding = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
+
+        inboxBadge = (navView.menu.findItem(R.id.inbox)).actionView as TextView
+        inboxBadge?.setTypeface(null, Typeface.BOLD)
+        inboxBadge?.gravity = Gravity.CENTER
+        inboxBadge?.visibility = View.GONE
 
         navView.setNavigationItemSelectedListener {
             closeNavigationDrawer()
@@ -186,6 +204,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         } else {
             binding.toolbar.animateCircularBackgroundColorChange(color, binding.toolbarImage)
         }
+        inboxBadge?.setTextColor(color)
         binding.bottomNav.applyTheme(color, requireActivity().getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(requireActivity(), color)
     }

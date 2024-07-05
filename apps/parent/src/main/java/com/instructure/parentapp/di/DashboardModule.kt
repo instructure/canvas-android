@@ -18,7 +18,9 @@
 package com.instructure.parentapp.di
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.parentapp.features.dashboard.DashboardRepository
+import com.instructure.parentapp.features.dashboard.InboxCountUpdater
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolderImpl
 import dagger.Module
@@ -34,9 +36,10 @@ class DashboardModule {
 
     @Provides
     fun provideDashboardRepository(
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface
+        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
+        unreadCountsApi: UnreadCountAPI.UnreadCountsInterface
     ): DashboardRepository {
-        return DashboardRepository(enrollmentApi)
+        return DashboardRepository(enrollmentApi, unreadCountsApi)
     }
 }
 
@@ -48,5 +51,11 @@ class SelectedStudentHolderModule {
     @Singleton
     fun provideSelectedStudentHolder(): SelectedStudentHolder {
         return SelectedStudentHolderImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideInboxCountUpdater(): InboxCountUpdater {
+        return InboxCountUpdater()
     }
 }
