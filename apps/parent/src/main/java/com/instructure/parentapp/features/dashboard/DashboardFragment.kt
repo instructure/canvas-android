@@ -18,13 +18,14 @@
 package com.instructure.parentapp.features.dashboard
 
 import android.content.Intent
-import android.graphics.Typeface
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.BundleCompat
@@ -45,6 +46,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
@@ -101,7 +103,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private fun updateUnreadCount(unreadCount: Int) {
         inboxBadge?.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
-        inboxBadge?.text = unreadCount.toString()
+        inboxBadge?.text = if (unreadCount <= 99) unreadCount.toString() else requireContext().getString(R.string.inboxUnreadCountMoreThan99)
     }
 
     private fun setupNavigation() {
@@ -144,10 +146,20 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
         headerLayoutBinding = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
 
-        inboxBadge = (navView.menu.findItem(R.id.inbox)).actionView as TextView
-        inboxBadge?.setTypeface(null, Typeface.BOLD)
+        val actionView = (navView.menu.findItem(R.id.inbox)).actionView as LinearLayout
+        actionView.gravity = Gravity.CENTER
+
+        inboxBadge = TextView(requireContext())
+        actionView.addView(inboxBadge)
+
+        inboxBadge?.width = 24.toPx
+        inboxBadge?.height = 24.toPx
         inboxBadge?.gravity = Gravity.CENTER
+        inboxBadge?.textSize = 10f
+        inboxBadge?.setTextColor(requireContext().getColor(R.color.white))
+        inboxBadge?.setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
         inboxBadge?.visibility = View.GONE
+
 
         navView.setNavigationItemSelectedListener {
             closeNavigationDrawer()
@@ -204,7 +216,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         } else {
             binding.toolbar.animateCircularBackgroundColorChange(color, binding.toolbarImage)
         }
-        inboxBadge?.setTextColor(color)
+        inboxBadge?.backgroundTintList = ColorStateList(arrayOf(intArrayOf()), intArrayOf(color))
         binding.bottomNav.applyTheme(color, requireActivity().getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(requireActivity(), color)
     }

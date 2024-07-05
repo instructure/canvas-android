@@ -1760,4 +1760,5 @@
     <string name="canvasStudentApp">Canvas Student</string>
     <string name="teacherApp">TEACHER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
+    <string name="inboxUnreadCountMoreThan99">99+</string>
 </resources>

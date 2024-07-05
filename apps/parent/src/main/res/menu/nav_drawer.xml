@@ -21,7 +21,7 @@
             android:contentDescription=""
             android:icon="@drawable/ic_mail"
             android:title="@string/screenTitleInbox"
-            app:actionViewClass="android.widget.TextView"/>
+            app:actionViewClass="android.widget.LinearLayout"/>
         <item
             android:id="@+id/manage_students"
             android:contentDescription=""
