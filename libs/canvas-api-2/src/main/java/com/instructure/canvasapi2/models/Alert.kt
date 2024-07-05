@@ -19,9 +19,9 @@ import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 data class Alert(
-    val id: String,
+    val id: Long,
     @SerializedName("observer_alert_threshold_id")
-    val observerAlertThresholdId: String,
+    val observerAlertThresholdId: Long,
     @SerializedName("context_type")
     val contextType: String,
     @SerializedName("context_id")
@@ -40,7 +40,7 @@ data class Alert(
     @SerializedName("html_url")
     val htmlUrl: String,
     @SerializedName("locked_for_user")
-    val lockedForUser: Boolean,
+    val lockedForUser: Boolean
 )
 
 enum class AlertType {

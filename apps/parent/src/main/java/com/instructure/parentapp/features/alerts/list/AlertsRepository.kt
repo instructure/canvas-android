@@ -16,5 +16,30 @@
  */
 package com.instructure.parentapp.features.alerts.list
 
-class AlertsRepository {
+import com.instructure.canvasapi2.apis.ObserverAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Alert
+import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.canvasapi2.utils.depaginate
+
+class AlertsRepository(private val observerApi: ObserverAPI.ObserverInterface) {
+
+    suspend fun getAlertsForStudent(studentId: Long, forceNetwork: Boolean): List<Alert> {
+        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        return observerApi.getObserverAlerts(studentId, restParams).depaginate {
+            observerApi.getNextPageObserverAlerts(it, restParams)
+        }.dataOrThrow
+    }
+
+    suspend fun getAlertThresholdForStudent(studentId: Long, forceNetwork: Boolean): List<AlertThreshold> {
+        val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
+        return observerApi.getObserverAlertThresholds(studentId, restParams).dataOrNull ?: emptyList()
+    }
+
+    suspend fun updateAlertWorkflow(studentId: Long, workflowState: AlertWorkflowState): Alert {
+        val restParams = RestParams(isForceReadFromNetwork = true)
+        return observerApi.updateAlertWorkflow(studentId, workflowState, restParams).dataOrThrow
+    }
+
 }

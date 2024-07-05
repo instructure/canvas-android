@@ -21,21 +21,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.utils.collectOneOffEvents
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class AlertsFragment : Fragment() {
+
+    private val viewModel: AlertsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         return ComposeView(requireActivity()).apply {
             setContent {
-                Text(text = "Alerts")
+                val uiState by viewModel.uiState.collectAsState()
+                AlertsScreen(uiState = uiState, actionHandler = viewModel::handleAction)
+            }
+        }
+    }
+
+    private fun handleAction(action: AlertsViewModelAction) {
+        when (action) {
+            else -> {
             }
         }
     }

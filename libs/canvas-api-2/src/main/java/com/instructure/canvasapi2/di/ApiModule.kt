@@ -261,4 +261,9 @@ class ApiModule {
     fun provideThemeApi(): ThemeAPI.ThemeInterface {
         return RestBuilder().build(ThemeAPI.ThemeInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideObserverApi(): ObserverAPI.ObserverInterface {
+        return RestBuilder().build(ObserverAPI.ObserverInterface::class.java, RestParams())
+    }
 }

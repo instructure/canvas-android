@@ -1760,4 +1760,15 @@
     <string name="canvasStudentApp">Canvas Student</string>
     <string name="teacherApp">TEACHER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
+    <string name="parentNoAlerts">No Alerts</string>
+    <string name="parentNoAlersMessage">There\'s nothing to be notified of yet.</string>
+    <string name="errorLoadingAlerts">There was an error loading your student’s alerts.</string>
+    <string name="assignmentMissingAlertTitle">Assignment missing</string>
+    <string name="assignmentGradeHighAlertTitle">Assignment Grade Above %s</string>
+    <string name="assignmentGradeLowAlertTitle">Assignment Grade Below %s</string>
+    <string name="courseGradeHighAlertTitle">Course Grade Above %s</string>
+    <string name="courseGradeLowAlertTitle">Course Grade Below %s</string>
+    <string name="courseAnnouncementAlertTitle">Course Announcement</string>
+    <string name="institutionAnnouncementAlertTitle">Institution Announcement</string>
+    <string name="a11y_contentDescription_observerAlertDelete">Delete Alert</string>
 </resources>

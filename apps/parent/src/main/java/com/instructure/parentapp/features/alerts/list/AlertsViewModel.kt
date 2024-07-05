@@ -17,8 +17,86 @@
 package com.instructure.parentapp.features.alerts.list
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Alert
+import com.instructure.canvasapi2.models.AlertThreshold
+import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class AlertsViewModel : ViewModel() {
+class AlertsViewModel @Inject constructor(
+    private val repository: AlertsRepository,
+    private val colorKeeper: ColorKeeper,
+    private val selectedStudentHolder: SelectedStudentHolder,
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(AlertsUiState())
+    val uiState = _uiState.asStateFlow()
+
+    private val _events = Channel<AlertsViewModelAction>()
+    val events = _events.receiveAsFlow()
+
+    private var selectedStudent: User? = null
+    private var thresholds: Map<Long, AlertThreshold> = emptyMap()
+
+    init {
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentFlow.collect {
+                studentChanged(it)
+            }
+        }
+    }
+
+    private suspend fun studentChanged(student: User?) {
+        if (selectedStudent != student) {
+            selectedStudent = student
+            loadThresholds()
+            loadAlerts()
+        }
+    }
+
+    private suspend fun loadThresholds(forceNetwork: Boolean = false) {
+        selectedStudent?.let {
+            val thresholds = repository.getAlertThresholdForStudent(it.id, forceNetwork)
+            this.thresholds = thresholds.associateBy { it.id }
+        }
+    }
+
+    private suspend fun loadAlerts(forceNetwork: Boolean = false) {
+        val color = colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor()
+        selectedStudent?.let { student ->
+            val alerts = repository.getAlertsForStudent(student.id, forceNetwork)
+            val alertItems = alerts.map { createAlertItem(it) }
+            _uiState.update {
+                it.copy(alerts = alertItems, isLoading = false, isError = false, studentColor = color)
+            }
+        } ?: _uiState.update {
+            it.copy(isLoading = false, isError = true)
+        }
+    }
+
+    fun handleAction(action: AlertsAction) {
+
+    }
+
+    private fun createAlertItem(alert: Alert): AlertsItemUiState {
+        return AlertsItemUiState(
+            title = alert.title,
+            alertType = alert.alertType,
+            date = alert.actionDate,
+            observerAlertThreshold = thresholds[alert.observerAlertThresholdId],
+            lockedForUser = alert.lockedForUser,
+            unread = alert.workflowState == AlertWorkflowState.UNREAD
+        )
+    }
 }
