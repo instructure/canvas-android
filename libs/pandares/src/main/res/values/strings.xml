@@ -1761,4 +1761,5 @@
     <string name="teacherApp">TEACHER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
+    <string name="a11y_parentOpenNavigationDrawerWithBadge">Open navigation drawer, %s unread messages</string>
 </resources>

@@ -77,7 +77,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
-                                android:src="@drawable/ic_hamburger"/>
+                                android:src="@drawable/ic_hamburger"
+                                android:importantForAccessibility="no"/>
 
                             <TextView
                                 android:id="@+id/unreadCountBadge"
@@ -90,7 +91,8 @@
                                 android:gravity="center"
                                 android:textSize="10sp"
                                 android:textColor="@color/textDarkest"
-                                android:visibility="gone"/>
+                                android:visibility="gone"
+                                android:importantForAccessibility="no"/>
 
                         </FrameLayout>
 

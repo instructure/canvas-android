@@ -110,6 +110,13 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         inboxBadge?.text = unreadCountText
         binding.unreadCountBadge.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
         binding.unreadCountBadge.text = unreadCountText
+
+        val navButtonContentDescription = if (unreadCount == 0) {
+            getString(R.string.navigation_drawer_open)
+        } else {
+            getString(R.string.a11y_parentOpenNavigationDrawerWithBadge, unreadCountText)
+        }
+        binding.navigationButtonHolder.contentDescription = navButtonContentDescription
     }
 
     private fun setupNavigation() {
@@ -139,8 +146,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupToolbar() {
-        val toolbar = binding.toolbar
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open) // TODO A11y
+        binding.navigationButtonHolder.contentDescription = getString(R.string.navigation_drawer_open)
         binding.navigationButtonHolder.onClick {
             openNavigationDrawer()
         }
