@@ -116,6 +116,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         } else {
             getString(R.string.a11y_parentOpenNavigationDrawerWithBadge, unreadCountText)
         }
+
         binding.navigationButtonHolder.contentDescription = navButtonContentDescription
     }
 
