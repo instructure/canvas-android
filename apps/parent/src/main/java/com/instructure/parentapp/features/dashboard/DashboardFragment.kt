@@ -19,6 +19,7 @@ package com.instructure.parentapp.features.dashboard
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -45,6 +46,8 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
@@ -102,8 +105,11 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun updateUnreadCount(unreadCount: Int) {
+        val unreadCountText = if (unreadCount <= 99) unreadCount.toString() else requireContext().getString(R.string.inboxUnreadCountMoreThan99)
         inboxBadge?.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
-        inboxBadge?.text = if (unreadCount <= 99) unreadCount.toString() else requireContext().getString(R.string.inboxUnreadCountMoreThan99)
+        inboxBadge?.text = unreadCountText
+        binding.unreadCountBadge.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
+        binding.unreadCountBadge.text = unreadCountText
     }
 
     private fun setupNavigation() {
@@ -134,9 +140,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private fun setupToolbar() {
         val toolbar = binding.toolbar
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-        toolbar.setNavigationOnClickListener {
+        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open) // TODO A11y
+        binding.navigationButtonHolder.onClick {
             openNavigationDrawer()
         }
     }
@@ -219,6 +224,11 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         inboxBadge?.backgroundTintList = ColorStateList(arrayOf(intArrayOf()), intArrayOf(color))
         binding.bottomNav.applyTheme(color, requireActivity().getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(requireActivity(), color)
+
+        val gradientDrawable = requireContext().getDrawableCompat(R.drawable.bg_button_full_rounded_filled_with_border) as? GradientDrawable
+        gradientDrawable?.setStroke(2.toPx, color)
+        binding.unreadCountBadge.background = gradientDrawable
+        binding.unreadCountBadge.setTextColor(color)
     }
 
     private fun openNavigationDrawer() {
