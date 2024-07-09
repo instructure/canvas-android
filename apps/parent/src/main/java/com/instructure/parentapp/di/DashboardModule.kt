@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.parentapp.features.dashboard.DashboardRepository
 import com.instructure.parentapp.features.dashboard.InboxCountUpdater
+import com.instructure.parentapp.features.dashboard.InboxCountUpdaterImpl
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolderImpl
 import dagger.Module
@@ -56,6 +57,6 @@ class SelectedStudentHolderModule {
     @Provides
     @Singleton
     fun provideInboxCountUpdater(): InboxCountUpdater {
-        return InboxCountUpdater()
+        return InboxCountUpdaterImpl()
     }
 }

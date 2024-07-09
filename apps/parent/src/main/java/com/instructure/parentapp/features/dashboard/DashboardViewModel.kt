@@ -65,8 +65,8 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             inboxCountUpdater.shouldRefreshInboxCountFlow.collect {shouldUpdate ->
                 if (shouldUpdate) {
-                    inboxCountUpdater.updateShouldRefreshInboxCount(false)
                     updateUnreadCount()
+                    inboxCountUpdater.updateShouldRefreshInboxCount(false)
                 }
             }
         }

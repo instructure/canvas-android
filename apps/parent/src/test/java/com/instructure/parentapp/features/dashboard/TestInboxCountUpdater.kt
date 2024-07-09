@@ -17,19 +17,11 @@
 package com.instructure.parentapp.features.dashboard
 
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 
-interface InboxCountUpdater {
-    val shouldRefreshInboxCountFlow: SharedFlow<Boolean>
-    suspend fun updateShouldRefreshInboxCount(shouldRefresh: Boolean)
-}
-
-class InboxCountUpdaterImpl : InboxCountUpdater {
-    private val _shouldRefreshInboxCountFlow = MutableSharedFlow<Boolean>(replay = 1)
-    override val shouldRefreshInboxCountFlow = _shouldRefreshInboxCountFlow.asSharedFlow()
-
+class TestInboxCountUpdater(
+    override val shouldRefreshInboxCountFlow: MutableSharedFlow<Boolean>
+) : InboxCountUpdater {
     override suspend fun updateShouldRefreshInboxCount(shouldRefresh: Boolean) {
-        _shouldRefreshInboxCountFlow.emit(shouldRefresh)
+        shouldRefreshInboxCountFlow.emit(shouldRefresh)
     }
 }

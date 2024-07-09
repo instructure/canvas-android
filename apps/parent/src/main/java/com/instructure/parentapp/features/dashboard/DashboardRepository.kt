@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.pandautils.utils.orDefault
 
 
 class DashboardRepository(
@@ -43,6 +44,6 @@ class DashboardRepository(
     suspend fun getUnreadCounts(): Int {
         val params = RestParams(isForceReadFromNetwork = true)
         val unreadCount = unreadCountApi.getUnreadConversationCount(params).dataOrNull?.unreadCount ?: "0"
-        return unreadCount.toInt()
+        return unreadCount.toIntOrNull().orDefault()
     }
 }
