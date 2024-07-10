@@ -63,7 +63,7 @@ class DashboardInteractionTest : StudentTest() {
         val data = setUpData(courseCount = 1, favoriteCourseCount = 1)
         goToDashboard(data)
         dashboardPage.clickInboxTab()
-        inboxPage.goToDashboard()
+        dashboardPage.goToDashboard()
         dashboardPage.assertDisplaysCourse(data.courses.values.first()) // disambiguates via isDisplayed()
 
         // These get confused by the existence of multiple DashboardPages in the layout

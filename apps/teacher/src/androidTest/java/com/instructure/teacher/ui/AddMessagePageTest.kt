@@ -47,7 +47,7 @@ class AddMessagePageTest: TeacherTest() {
     fun displayPageObjectsNewMessage() {
         logIn()
         dashboardPage.clickInboxTab()
-        inboxPage.clickAddMessageFAB()
+        inboxPage.pressNewMessageButton()
         addMessagePage.assertComposeNewMessageObjectsDisplayed()
     }
 
@@ -67,7 +67,7 @@ class AddMessagePageTest: TeacherTest() {
         dashboardPage.clickInboxTab()
 
         val chosenConversation = data.conversations.values.first { item -> item.isStarred }
-        inboxPage.clickConversation(chosenConversation)
+        inboxPage.openConversation(chosenConversation)
         inboxMessagePage.clickReply()
     }
 }

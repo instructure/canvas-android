@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.ui.pages
+package com.instructure.canvas.espresso.common.pages
 
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions
@@ -31,7 +31,6 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
-import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
 import com.instructure.espresso.WaitForViewWithId
@@ -51,22 +50,17 @@ import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeLeft
 import com.instructure.espresso.swipeRight
-import com.instructure.student.R
+import com.instructure.pandautils.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 
 class InboxPage : BasePage(R.id.inboxPage) {
 
-    private val toolbar by OnViewWithId(R.id.toolbar)
     private val createMessageButton by OnViewWithId(R.id.addMessage)
     private val scopeButton by OnViewWithId(R.id.scopeFilter)
     private val filterButton by OnViewWithId(R.id.courseFilter)
     private val inboxRecyclerView by WaitForViewWithId(R.id.inboxRecyclerView)
     private val editToolbar by OnViewWithId(R.id.editToolbar, autoAssert = false)
-
-    fun assertConversationDisplayed(conversation: ConversationApiModel) {
-        assertConversationDisplayed(conversation.subject)
-    }
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
@@ -76,10 +70,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun assertConversationWithRecipientsDisplayed(recipients: String) {
         val matcher = withId(R.id.userName) + withAncestor(R.id.inboxRecyclerView) + withText(recipients)
         onView(matcher).scrollTo().assertDisplayed()
-    }
-
-    fun assertConversationNotDisplayed(conversation: ConversationApiModel) {
-        assertConversationNotDisplayed(conversation.subject)
     }
 
     fun assertConversationNotDisplayed(subject: String) {
@@ -105,10 +95,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).scrollTo().click()
     }
 
-    fun openConversation(conversation: ConversationApiModel) {
-        openConversation(conversation.subject)
-    }
-
     fun openConversation(conversation: Conversation) {
         waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversation.subject)
@@ -128,12 +114,18 @@ class InboxPage : BasePage(R.id.inboxPage) {
         waitForViewWithText(course.name).click()
     }
 
-    fun pressNewMessageButton() {
-        createMessageButton.click()
+    fun selectInboxFilter(courseName: String) {
+        filterButton.click()
+        waitForViewWithText(courseName).click()
     }
 
-    fun goToDashboard() {
-        onView(withId(R.id.bottomNavigationHome)).click()
+    fun clearCourseFilter() {
+        waitForView(withId(R.id.courseFilter)).click()
+        onView(withId(R.id.clear) + withText(R.string.inboxClearFilter)).click()
+    }
+
+    fun pressNewMessageButton() {
+        createMessageButton.click()
     }
 
     fun assertConversationStarred(subject: String) {
@@ -158,9 +150,9 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun assertUnreadMarkerVisibility(conversation: Conversation, visibility: ViewMatchers.Visibility) {
         val matcher = allOf(
-                withId(R.id.unreadMark),
-                withEffectiveVisibility(visibility),
-                hasSibling(allOf(withId(R.id.message), withText(conversation.lastMessage))))
+            withId(R.id.unreadMark),
+            withEffectiveVisibility(visibility),
+            hasSibling(allOf(withId(R.id.message), withText(conversation.lastMessage))))
 
         if(visibility == ViewMatchers.Visibility.VISIBLE) {
             waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
@@ -211,10 +203,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
         selectConversation(conversation.subject!!)
     }
 
-    fun selectConversation(conversation: ConversationApiModel) {
-        selectConversation(conversation.subject!!)
-    }
-
     fun clickArchive() {
         waitForViewWithId(R.id.inboxArchiveSelected).click()
     }
@@ -262,10 +250,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).scrollTo().swipeRight()
     }
 
-    fun swipeConversationRight(conversation: ConversationApiModel) {
-        swipeConversationRight(conversation.subject!!)
-    }
-
     fun swipeConversationRight(conversation: Conversation) {
         swipeConversationRight(conversation.subject!!)
     }
@@ -278,10 +262,6 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun swipeConversationLeft(conversation: Conversation) {
-        swipeConversationLeft(conversation.subject!!)
-    }
-
-    fun swipeConversationLeft(conversation: ConversationApiModel) {
         swipeConversationLeft(conversation.subject!!)
     }
 
@@ -304,4 +284,12 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(withId(R.id.subjectView) + withText(expectedSubject) + withAncestor(R.id.inboxRecyclerView)).assertDisplayed()
     }
 
+    fun refreshInbox() {
+        refresh()
+    }
+
+    fun assertThereIsAnUnreadMessage(unread: Boolean) {
+        if(unread) onView(withId(R.id.unreadMark)).assertDisplayed()
+        else onView(withId(R.id.unreadMark) + withEffectiveVisibility(ViewMatchers.Visibility.GONE))
+    }
 }
