@@ -19,6 +19,7 @@
 package com.instructure.parentapp.features.alerts.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -57,10 +58,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
 import java.util.Date
 
 
@@ -74,29 +77,59 @@ fun AlertsScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             content = { padding ->
-                if (uiState.isError) {
-                    ErrorContent(
-                        errorMessage = stringResource(id = R.string.errorLoadingAlerts),
-                        retryClick = {
-                            actionHandler(AlertsAction.Refresh)
-                        }, modifier = Modifier.fillMaxSize()
-                    )
-                } else if (uiState.alerts.isEmpty()) {
-                    EmptyContent(
-                        emptyTitle = stringResource(id = R.string.parentNoAlerts),
-                        emptyMessage = stringResource(id = R.string.parentNoAlersMessage),
-                        imageRes = R.drawable.ic_panda_noalerts,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                } else {
-                    AlertsListContent(
-                        uiState = uiState,
-                        actionHandler = actionHandler,
+                val pullRefreshState = rememberPullRefreshState(
+                    refreshing = uiState.isRefreshing,
+                    onRefresh = {
+                        actionHandler(AlertsAction.Refresh)
+                    }
+                )
+                Box(modifier = modifier.pullRefresh(pullRefreshState)) {
+                    when {
+                        uiState.isError -> {
+                            ErrorContent(
+                                errorMessage = stringResource(id = R.string.errorLoadingAlerts),
+                                retryClick = {
+                                    actionHandler(AlertsAction.Refresh)
+                                }, modifier = Modifier.fillMaxSize()
+                            )
+                        }
+
+                        uiState.isLoading -> {
+                            Loading(
+                                modifier = Modifier.fillMaxSize(),
+                                color = Color(uiState.studentColor)
+                            )
+                        }
+
+                        uiState.alerts.isEmpty() -> {
+                            EmptyContent(
+                                emptyTitle = stringResource(id = R.string.parentNoAlerts),
+                                emptyMessage = stringResource(id = R.string.parentNoAlersMessage),
+                                imageRes = R.drawable.ic_panda_noalerts,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+
+                        else -> {
+                            AlertsListContent(
+                                uiState = uiState,
+                                actionHandler = actionHandler,
+                                modifier = Modifier
+                                    .padding(padding)
+                                    .fillMaxSize()
+                            )
+                        }
+                    }
+                    PullRefreshIndicator(
+                        refreshing = uiState.isRefreshing,
+                        state = pullRefreshState,
                         modifier = Modifier
-                            .padding(padding)
-                            .fillMaxSize()
+                            .align(Alignment.TopCenter)
+                            .testTag("pullRefreshIndicator"),
+                        contentColor = Color(uiState.studentColor)
                     )
                 }
+
             },
             modifier = modifier
         )
@@ -109,32 +142,16 @@ fun AlertsListContent(
     actionHandler: (AlertsAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = uiState.isLoading,
-        onRefresh = {
-            actionHandler(AlertsAction.Refresh)
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(vertical = 8.dp)) {
+        items(uiState.alerts) { alert ->
+            AlertsListItem(
+                alert = alert,
+                userColor = uiState.studentColor,
+                actionHandler = actionHandler,
+                modifier = Modifier.padding(16.dp)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
         }
-    )
-    Box(modifier = modifier.pullRefresh(pullRefreshState)) {
-        LazyColumn(contentPadding = PaddingValues(vertical = 8.dp)) {
-            items(uiState.alerts) { alert ->
-                AlertsListItem(
-                    alert = alert,
-                    userColor = uiState.studentColor,
-                    actionHandler = actionHandler,
-                    modifier = Modifier.padding(16.dp)
-                )
-                Spacer(modifier = Modifier.size(8.dp))
-            }
-        }
-        PullRefreshIndicator(
-            refreshing = uiState.isLoading,
-            state = pullRefreshState,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .testTag("pullRefreshIndicator"),
-            contentColor = Color(uiState.studentColor)
-        )
     }
 }
 
@@ -193,7 +210,13 @@ fun AlertsListItem(
         }
     }
 
-    Row(modifier = modifier.fillMaxWidth()) {
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .clickable(enabled = alert.htmlUrl != null) {
+            alert.htmlUrl?.let {
+                actionHandler(AlertsAction.Navigate(it))
+            }
+        }) {
         if (alert.unread) {
             Box(
                 modifier = Modifier
@@ -251,7 +274,8 @@ fun AlertsScreenPreview() {
                     date = Date(),
                     observerAlertThreshold = null,
                     lockedForUser = false,
-                    unread = true
+                    unread = true,
+                    htmlUrl = ""
                 ),
                 AlertsItemUiState(
                     title = "Assignment missing",
@@ -259,7 +283,8 @@ fun AlertsScreenPreview() {
                     date = Date(),
                     observerAlertThreshold = null,
                     lockedForUser = false,
-                    unread = false
+                    unread = false,
+                    htmlUrl = ""
                 ),
             )
         ),
@@ -287,6 +312,16 @@ fun AlertsScreenEmptyPreview() {
 
 @Preview
 @Composable
+fun AlertsScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AlertsScreen(
+        uiState = AlertsUiState(isLoading = true),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
 fun AlertsListItemPreview() {
     AlertsListItem(
         alert = AlertsItemUiState(
@@ -295,7 +330,8 @@ fun AlertsListItemPreview() {
             date = Date(),
             observerAlertThreshold = null,
             lockedForUser = false,
-            unread = true
+            unread = true,
+            htmlUrl = ""
         ),
         userColor = Color.Blue.toArgb(),
         actionHandler = {}

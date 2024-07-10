@@ -25,7 +25,8 @@ data class AlertsUiState(
     val alerts: List<AlertsItemUiState> = emptyList(),
     @ColorInt val studentColor: Int = Color.BLACK,
     val isLoading: Boolean = false,
-    val isError: Boolean = false
+    val isError: Boolean = false,
+    val isRefreshing: Boolean = false
 )
 
 data class AlertsItemUiState(
@@ -34,13 +35,16 @@ data class AlertsItemUiState(
     val date: Date?,
     val observerAlertThreshold: AlertThreshold?,
     val lockedForUser: Boolean,
-    val unread: Boolean
+    val unread: Boolean,
+    val htmlUrl: String?
 )
 
 sealed class AlertsViewModelAction {
+    data class Navigate(val route: String): AlertsViewModelAction()
 }
 
 sealed class AlertsAction {
-    object Refresh : AlertsAction()
+    data object Refresh : AlertsAction()
+    data class Navigate(val route: String) : AlertsAction()
     data class DeleteAlert(val studentId: Long, val forceNetwork: Boolean) : AlertsAction()
 }

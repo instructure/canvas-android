@@ -28,10 +28,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AlertsFragment : Fragment() {
+
+    @Inject
+    lateinit var navigation: Navigation
 
     private val viewModel: AlertsViewModel by viewModels()
 
@@ -51,6 +56,9 @@ class AlertsFragment : Fragment() {
 
     private fun handleAction(action: AlertsViewModelAction) {
         when (action) {
+            is AlertsViewModelAction.Navigate -> {
+                navigation.navigate(requireActivity(), action.route)
+            }
             else -> {
             }
         }

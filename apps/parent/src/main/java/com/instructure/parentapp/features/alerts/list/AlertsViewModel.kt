@@ -60,33 +60,61 @@ class AlertsViewModel @Inject constructor(
     private suspend fun studentChanged(student: User?) {
         if (selectedStudent != student) {
             selectedStudent = student
+            _uiState.update {
+                it.copy(
+                    studentColor = colorKeeper.getOrGenerateUserColor(student).textAndIconColor(),
+                    isLoading = true
+                )
+            }
             loadThresholds()
             loadAlerts()
         }
     }
 
     private suspend fun loadThresholds(forceNetwork: Boolean = false) {
-        selectedStudent?.let {
-            val thresholds = repository.getAlertThresholdForStudent(it.id, forceNetwork)
+        selectedStudent?.let { student ->
+            val thresholds = repository.getAlertThresholdForStudent(student.id, forceNetwork)
             this.thresholds = thresholds.associateBy { it.id }
         }
     }
 
     private suspend fun loadAlerts(forceNetwork: Boolean = false) {
-        val color = colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor()
         selectedStudent?.let { student ->
             val alerts = repository.getAlertsForStudent(student.id, forceNetwork)
             val alertItems = alerts.map { createAlertItem(it) }
             _uiState.update {
-                it.copy(alerts = alertItems, isLoading = false, isError = false, studentColor = color)
+                it.copy(
+                    alerts = alertItems,
+                    isLoading = false,
+                    isError = false,
+                    isRefreshing = false,
+                )
             }
         } ?: _uiState.update {
-            it.copy(isLoading = false, isError = true)
+            it.copy(isLoading = false, isError = true, isRefreshing = false)
         }
     }
 
     fun handleAction(action: AlertsAction) {
+        when (action) {
+            is AlertsAction.Navigate -> {
+                viewModelScope.launch {
+                    _events.send(AlertsViewModelAction.Navigate(action.route))
+                }
+            }
 
+            is AlertsAction.Refresh -> {
+                viewModelScope.launch {
+                    _uiState.update { it.copy(isRefreshing = true) }
+                    loadThresholds(true)
+                    loadAlerts(true)
+                }
+            }
+
+            else -> {
+
+            }
+        }
     }
 
     private fun createAlertItem(alert: Alert): AlertsItemUiState {
@@ -96,7 +124,8 @@ class AlertsViewModel @Inject constructor(
             date = alert.actionDate,
             observerAlertThreshold = thresholds[alert.observerAlertThresholdId],
             lockedForUser = alert.lockedForUser,
-            unread = alert.workflowState == AlertWorkflowState.UNREAD
+            unread = alert.workflowState == AlertWorkflowState.UNREAD,
+            htmlUrl = alert.htmlUrl
         )
     }
 }

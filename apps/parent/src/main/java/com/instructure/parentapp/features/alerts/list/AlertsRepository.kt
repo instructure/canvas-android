@@ -29,12 +29,16 @@ class AlertsRepository(private val observerApi: ObserverAPI.ObserverInterface) {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
         return observerApi.getObserverAlerts(studentId, restParams).depaginate {
             observerApi.getNextPageObserverAlerts(it, restParams)
-        }.dataOrThrow
+        }.dataOrThrow.sortedByDescending { it.actionDate }
     }
 
-    suspend fun getAlertThresholdForStudent(studentId: Long, forceNetwork: Boolean): List<AlertThreshold> {
+    suspend fun getAlertThresholdForStudent(
+        studentId: Long,
+        forceNetwork: Boolean
+    ): List<AlertThreshold> {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-        return observerApi.getObserverAlertThresholds(studentId, restParams).dataOrNull ?: emptyList()
+        return observerApi.getObserverAlertThresholds(studentId, restParams).dataOrNull
+            ?: emptyList()
     }
 
     suspend fun updateAlertWorkflow(studentId: Long, workflowState: AlertWorkflowState): Alert {

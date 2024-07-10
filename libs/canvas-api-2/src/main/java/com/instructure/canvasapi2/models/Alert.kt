@@ -38,7 +38,7 @@ data class Alert(
     @SerializedName("observer_id")
     val observerId: Long,
     @SerializedName("html_url")
-    val htmlUrl: String,
+    val htmlUrl: String?,
     @SerializedName("locked_for_user")
     val lockedForUser: Boolean
 )
