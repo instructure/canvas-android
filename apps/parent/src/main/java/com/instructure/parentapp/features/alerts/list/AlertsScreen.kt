@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
@@ -211,6 +212,13 @@ fun AlertsListItem(
         }
     }
 
+    fun dateTime(dateTime: Date): String {
+        val date = DateHelper.getDayMonthDateString(context, dateTime)
+        val time = DateHelper.getFormattedTime(context, dateTime)
+
+        return context.getString(R.string.alertDateTime, date, time)
+    }
+
     Row(modifier = modifier
         .fillMaxWidth()
         .clickable(enabled = alert.htmlUrl != null) {
@@ -245,10 +253,15 @@ fun AlertsListItem(
                 overflow = TextOverflow.Ellipsis,
                 style = TextStyle(color = colorResource(id = R.color.textDarkest), fontSize = 16.sp)
             )
-            Text(
-                text = alert.date.toString(),
-                style = TextStyle(color = colorResource(id = R.color.textDark), fontSize = 12.sp)
-            )
+            alert.date?.let {
+                Text(
+                    text = dateTime(alert.date),
+                    style = TextStyle(
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 12.sp
+                    )
+                )
+            }
         }
         IconButton(onClick = { actionHandler(AlertsAction.DismissAlert(alert.alertId)) }) {
             Icon(

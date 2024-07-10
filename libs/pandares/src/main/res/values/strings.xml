@@ -1771,4 +1771,5 @@
     <string name="courseAnnouncementAlertTitle">Course Announcement</string>
     <string name="institutionAnnouncementAlertTitle">Institution Announcement</string>
     <string name="a11y_contentDescription_observerAlertDelete">Delete Alert</string>
+    <string name="alertDateTime">%s at %s</string>
 </resources>
