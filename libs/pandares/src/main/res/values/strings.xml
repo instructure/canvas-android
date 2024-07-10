@@ -1772,4 +1772,8 @@
     <string name="institutionAnnouncementAlertTitle">Institution Announcement</string>
     <string name="a11y_contentDescription_observerAlertDelete">Delete Alert</string>
     <string name="alertDateTime">%s at %s</string>
+    <string name="alertDismissMessage">Alert dismissed</string>
+    <string name="alertDismissAction">Undo</string>
+    <string name="alertDismissActionErrorMessage">Failed to undo alert dismissal</string>
+    <string name="alertDismissErrorMessage">Failed to dismiss alert</string>
 </resources>

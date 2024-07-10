@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -113,12 +114,44 @@ class AlertsViewModel @Inject constructor(
 
             is AlertsAction.DismissAlert -> {
                 viewModelScope.launch {
-                    val alerts = _uiState.value.alerts.toMutableList()
-                    alerts.removeIf { it.alertId == action.alertId }
-                    _uiState.update { it.copy(alerts = alerts) }
-                    repository.updateAlertWorkflow(action.alertId, AlertWorkflowState.DISMISSED)
+                    dismissAlert(action.alertId)
                 }
             }
+        }
+    }
+
+    private suspend fun dismissAlert(alertId: Long) {
+        fun resetAlert(alert: AlertsItemUiState) {
+            val alerts = _uiState.value.alerts.toMutableList()
+            alerts.add(alert)
+            alerts.sortByDescending { it.date }
+            _uiState.update { it.copy(alerts = alerts) }
+        }
+
+        val alerts = _uiState.value.alerts.toMutableList()
+        val alert = alerts.find { it.alertId == alertId } ?: return
+        alerts.removeIf { it.alertId == alertId }
+        _uiState.update { it.copy(alerts = alerts) }
+
+        try {
+            repository.updateAlertWorkflow(alertId, AlertWorkflowState.DISMISSED)
+            _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissMessage, R.string.alertDismissAction) {
+                viewModelScope.launch {
+                    try {
+                        repository.updateAlertWorkflow(
+                            alert.alertId,
+                            if (alert.unread) AlertWorkflowState.UNREAD else AlertWorkflowState.READ
+                        )
+                        resetAlert(alert)
+                    } catch (e: Exception) {
+                        _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissActionErrorMessage, null, null))
+                    }
+                }
+
+            })
+        } catch (e: Exception) {
+            _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissErrorMessage, null, null))
+            resetAlert(alert)
         }
     }
 

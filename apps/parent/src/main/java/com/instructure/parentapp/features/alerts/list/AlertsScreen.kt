@@ -273,7 +273,6 @@ fun AlertsListItem(
             )
         }
     }
-
 }
 
 @Preview
