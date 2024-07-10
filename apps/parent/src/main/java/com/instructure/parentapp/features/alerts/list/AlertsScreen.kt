@@ -67,6 +67,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import java.util.Date
 
 
+@ExperimentalMaterialApi
 @Composable
 fun AlertsScreen(
     uiState: AlertsUiState,
@@ -249,7 +250,7 @@ fun AlertsListItem(
                 style = TextStyle(color = colorResource(id = R.color.textDark), fontSize = 12.sp)
             )
         }
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { actionHandler(AlertsAction.DismissAlert(alert.alertId)) }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_close),
                 tint = colorResource(id = R.color.textDark),
@@ -269,6 +270,7 @@ fun AlertsScreenPreview() {
         uiState = AlertsUiState(
             alerts = listOf(
                 AlertsItemUiState(
+                    alertId = 1L,
                     title = "Alert title",
                     alertType = AlertType.COURSE_ANNOUNCEMENT,
                     date = Date(),
@@ -278,6 +280,7 @@ fun AlertsScreenPreview() {
                     htmlUrl = ""
                 ),
                 AlertsItemUiState(
+                    alertId = 2L,
                     title = "Assignment missing",
                     alertType = AlertType.ASSIGNMENT_MISSING,
                     date = Date(),
@@ -325,6 +328,7 @@ fun AlertsScreenLoadingPreview() {
 fun AlertsListItemPreview() {
     AlertsListItem(
         alert = AlertsItemUiState(
+            alertId = 1L,
             title = "Alert title",
             alertType = AlertType.COURSE_ANNOUNCEMENT,
             date = Date(),

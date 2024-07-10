@@ -111,14 +111,20 @@ class AlertsViewModel @Inject constructor(
                 }
             }
 
-            else -> {
-
+            is AlertsAction.DismissAlert -> {
+                viewModelScope.launch {
+                    val alerts = _uiState.value.alerts.toMutableList()
+                    alerts.removeIf { it.alertId == action.alertId }
+                    _uiState.update { it.copy(alerts = alerts) }
+                    repository.updateAlertWorkflow(action.alertId, AlertWorkflowState.DISMISSED)
+                }
             }
         }
     }
 
     private fun createAlertItem(alert: Alert): AlertsItemUiState {
         return AlertsItemUiState(
+            alertId = alert.id,
             title = alert.title,
             alertType = alert.alertType,
             date = alert.actionDate,

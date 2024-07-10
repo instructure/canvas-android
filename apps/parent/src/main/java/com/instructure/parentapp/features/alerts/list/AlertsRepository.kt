@@ -41,9 +41,9 @@ class AlertsRepository(private val observerApi: ObserverAPI.ObserverInterface) {
             ?: emptyList()
     }
 
-    suspend fun updateAlertWorkflow(studentId: Long, workflowState: AlertWorkflowState): Alert {
+    suspend fun updateAlertWorkflow(alertId: Long, workflowState: AlertWorkflowState): Alert {
         val restParams = RestParams(isForceReadFromNetwork = true)
-        return observerApi.updateAlertWorkflow(studentId, workflowState, restParams).dataOrThrow
+        return observerApi.updateAlertWorkflow(alertId, workflowState.name.lowercase(), restParams).dataOrThrow
     }
 
 }

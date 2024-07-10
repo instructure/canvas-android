@@ -30,6 +30,7 @@ data class AlertsUiState(
 )
 
 data class AlertsItemUiState(
+    val alertId: Long,
     val title: String,
     val alertType: AlertType,
     val date: Date?,
@@ -46,5 +47,5 @@ sealed class AlertsViewModelAction {
 sealed class AlertsAction {
     data object Refresh : AlertsAction()
     data class Navigate(val route: String) : AlertsAction()
-    data class DeleteAlert(val studentId: Long, val forceNetwork: Boolean) : AlertsAction()
+    data class DismissAlert(val alertId: Long) : AlertsAction()
 }
