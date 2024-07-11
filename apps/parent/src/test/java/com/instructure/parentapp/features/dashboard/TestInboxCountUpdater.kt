@@ -14,30 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.parentapp.features.dashboard
 
-import com.instructure.canvasapi2.models.User
+import kotlinx.coroutines.flow.MutableSharedFlow
 
-
-data class DashboardViewData(
-    val userViewData: UserViewData? = null,
-    val studentSelectorExpanded: Boolean = false,
-    val studentItems: List<StudentItemViewModel> = emptyList(),
-    val selectedStudent: User? = null,
-    val unreadCount: Int = 0
-)
-
-data class StudentItemViewData(
-    val studentId: Long,
-    val studentName: String,
-    val avatarUrl: String
-)
-
-data class UserViewData(
-    val name: String?,
-    val pronouns: String?,
-    val shortName: String?,
-    val avatarUrl: String?,
-    val email: String?
-)
+class TestInboxCountUpdater(
+    override val shouldRefreshInboxCountFlow: MutableSharedFlow<Boolean>
+) : InboxCountUpdater {
+    override suspend fun updateShouldRefreshInboxCount(shouldRefresh: Boolean) {
+        shouldRefreshInboxCountFlow.emit(shouldRefresh)
+    }
+}

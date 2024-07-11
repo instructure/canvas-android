@@ -24,7 +24,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithContentDescription
+import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
@@ -43,7 +43,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     }
 
     fun openNavigationDrawer() {
-        onViewWithContentDescription(R.string.navigation_drawer_open).click()
+        onViewWithId(R.id.navigationButtonHolder).click()
     }
 
     fun assertSelectedStudent(name: String) {
@@ -74,5 +74,9 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
 
     fun tapSwitchUsers() {
         onViewWithText(R.string.navigationDrawerSwitchUsers).click()
+    }
+
+    fun clickInbox() {
+        onViewWithText(R.string.inbox).click()
     }
 }

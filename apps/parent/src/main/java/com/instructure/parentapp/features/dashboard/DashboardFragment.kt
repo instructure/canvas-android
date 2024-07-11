@@ -18,16 +18,23 @@
 package com.instructure.parentapp.features.dashboard
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.BundleCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
@@ -39,7 +46,10 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.showThemed
+import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
@@ -65,6 +75,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
 
+    private var inboxBadge: TextView? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,13 +94,30 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         setupNavigation()
 
         lifecycleScope.launch {
-            viewModel.data.collectLatest {
+            viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupAppColors(it.selectedStudent)
+                updateUnreadCount(it.unreadCount)
             }
         }
 
         handleDeeplink()
+    }
+
+    private fun updateUnreadCount(unreadCount: Int) {
+        val unreadCountText = if (unreadCount <= 99) unreadCount.toString() else requireContext().getString(R.string.inboxUnreadCountMoreThan99)
+        inboxBadge?.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
+        inboxBadge?.text = unreadCountText
+        binding.unreadCountBadge.visibility = if (unreadCount == 0) View.GONE else View.VISIBLE
+        binding.unreadCountBadge.text = unreadCountText
+
+        val navButtonContentDescription = if (unreadCount == 0) {
+            getString(R.string.navigation_drawer_open)
+        } else {
+            getString(R.string.a11y_parentOpenNavigationDrawerWithBadge, unreadCountText)
+        }
+
+        binding.navigationButtonHolder.contentDescription = navButtonContentDescription
     }
 
     private fun setupNavigation() {
@@ -118,10 +147,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     }
 
     private fun setupToolbar() {
-        val toolbar = binding.toolbar
-        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
-        toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
-        toolbar.setNavigationOnClickListener {
+        binding.navigationButtonHolder.contentDescription = getString(R.string.navigation_drawer_open)
+        binding.navigationButtonHolder.onClick {
             openNavigationDrawer()
         }
     }
@@ -130,6 +157,21 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         val navView = binding.navView
 
         headerLayoutBinding = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
+
+        val actionView = (navView.menu.findItem(R.id.inbox)).actionView as LinearLayout
+        actionView.gravity = Gravity.CENTER
+
+        inboxBadge = TextView(requireContext())
+        actionView.addView(inboxBadge)
+
+        inboxBadge?.width = 24.toPx
+        inboxBadge?.height = 24.toPx
+        inboxBadge?.gravity = Gravity.CENTER
+        inboxBadge?.textSize = 10f
+        inboxBadge?.setTextColor(requireContext().getColor(R.color.white))
+        inboxBadge?.setBackgroundResource(R.drawable.bg_button_full_rounded_filled)
+        inboxBadge?.visibility = View.GONE
+
 
         navView.setNavigationItemSelectedListener {
             closeNavigationDrawer()
@@ -186,8 +228,14 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         } else {
             binding.toolbar.animateCircularBackgroundColorChange(color, binding.toolbarImage)
         }
+        inboxBadge?.backgroundTintList = ColorStateList(arrayOf(intArrayOf()), intArrayOf(color))
         binding.bottomNav.applyTheme(color, requireActivity().getColor(R.color.textDarkest))
         ViewStyler.setStatusBarDark(requireActivity(), color)
+
+        val gradientDrawable = requireContext().getDrawableCompat(R.drawable.bg_button_full_rounded_filled_with_border) as? GradientDrawable
+        gradientDrawable?.setStroke(2.toPx, color)
+        binding.unreadCountBadge.background = gradientDrawable
+        binding.unreadCountBadge.setTextColor(color)
     }
 
     private fun openNavigationDrawer() {

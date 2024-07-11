@@ -17,11 +17,12 @@
 
 package com.instructure.parentapp.utils
 
+import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvasapi2.models.User
 import com.instructure.parentapp.features.login.LoginActivity
 
 
-fun ParentTest.tokenLogin(domain: String, token: String, user: User, assertDashboard: Boolean = true) {
+fun CanvasTest.tokenLogin(domain: String, token: String, user: User, assertDashboard: Boolean = true) {
     activityRule.runOnUiThread {
         (originalActivity as LoginActivity).loginWithToken(
             token,
@@ -30,5 +31,7 @@ fun ParentTest.tokenLogin(domain: String, token: String, user: User, assertDashb
         )
     }
 
-    if (assertDashboard) dashboardPage.assertPageObjects()
+    if (assertDashboard && this is ParentTest) {
+        dashboardPage.assertPageObjects()
+    }
 }

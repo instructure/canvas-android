@@ -24,6 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -56,7 +57,6 @@ import com.instructure.teacher.ui.pages.EditSyllabusPage
 import com.instructure.teacher.ui.pages.FileListPage
 import com.instructure.teacher.ui.pages.HelpPage
 import com.instructure.teacher.ui.pages.InboxMessagePage
-import com.instructure.teacher.ui.pages.InboxPage
 import com.instructure.teacher.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.teacher.ui.pages.LegalPage
 import com.instructure.teacher.ui.pages.LoginFindSchoolPage

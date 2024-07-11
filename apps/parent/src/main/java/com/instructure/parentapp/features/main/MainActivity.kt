@@ -23,26 +23,33 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityMainBinding
+import com.instructure.parentapp.features.dashboard.InboxCountUpdater
 import com.instructure.parentapp.features.splash.SplashFragment
 import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnUnreadCountInvalidated {
 
     private val binding by viewBinding(ActivityMainBinding::inflate)
 
     @Inject
     lateinit var navigation: Navigation
+
+    @Inject
+    lateinit var inboxCountUpdater: InboxCountUpdater
 
     private lateinit var navController: NavController
 
@@ -93,10 +100,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun invalidateUnreadCount() {
+        lifecycleScope.launch {
+            inboxCountUpdater.updateShouldRefreshInboxCount(true)
+        }
+    }
+
     companion object {
         fun createIntent(context: Context, uri: Uri): Intent {
             val intent = Intent(context, MainActivity::class.java)
-            intent.setData(uri)
+            intent.data = uri
             return intent
         }
 

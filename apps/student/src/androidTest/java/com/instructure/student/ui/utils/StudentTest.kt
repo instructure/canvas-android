@@ -65,7 +65,7 @@ import com.instructure.student.ui.pages.HelpPage
 import com.instructure.student.ui.pages.HomeroomPage
 import com.instructure.student.ui.pages.ImportantDatesPage
 import com.instructure.student.ui.pages.InboxConversationPage
-import com.instructure.student.ui.pages.InboxPage
+import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.LegalPage
 import com.instructure.student.ui.pages.LoginFindSchoolPage

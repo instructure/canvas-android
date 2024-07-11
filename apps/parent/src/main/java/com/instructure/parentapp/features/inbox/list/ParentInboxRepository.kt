@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
@@ -37,7 +38,7 @@ class ParentInboxRepository(
 ) : InboxRepository(inboxApi, groupsApi, progressApi) {
 
     override suspend fun getCourses(params: RestParams): DataResult<List<Course>> {
-        val coursesResult = coursesApi.getFirstPageCourses(params)
+        val coursesResult = coursesApi.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, params)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, params) }
 
         if (coursesResult.isFail) return coursesResult
