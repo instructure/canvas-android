@@ -13,13 +13,15 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:id="@+id/group_1">
         <item
             android:id="@+id/inbox"
             android:contentDescription=""
             android:icon="@drawable/ic_mail"
-            android:title="@string/screenTitleInbox" />
+            android:title="@string/screenTitleInbox"
+            app:actionViewClass="android.widget.LinearLayout"/>
         <item
             android:id="@+id/manage_students"
             android:contentDescription=""

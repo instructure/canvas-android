@@ -208,7 +208,7 @@ class PeopleE2ETest: TeacherTest() {
         inboxPage.assertInboxEmpty()
 
         Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
-        inboxPage.filterMessageScope("Sent")
+        inboxPage.filterInbox("Sent")
 
         Log.d(STEP_TAG,"Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()

@@ -45,7 +45,8 @@ class DashboardViewModel @Inject constructor(
     private val previousUsersUtils: PreviousUsersUtils,
     private val apiPrefs: ApiPrefs,
     private val parentPrefs: ParentPrefs,
-    private val selectedStudentHolder: SelectedStudentHolder
+    private val selectedStudentHolder: SelectedStudentHolder,
+    private val inboxCountUpdater: InboxCountUpdater
 ) : ViewModel() {
 
     private val _data = MutableStateFlow(DashboardViewData())
@@ -61,12 +62,21 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun loadData() {
+        viewModelScope.launch {
+            inboxCountUpdater.shouldRefreshInboxCountFlow.collect {shouldUpdate ->
+                if (shouldUpdate) {
+                    updateUnreadCount()
+                    inboxCountUpdater.updateShouldRefreshInboxCount(false)
+                }
+            }
+        }
+
         viewModelScope.tryLaunch {
             _state.value = ViewState.Loading
 
             setupUserInfo()
-
             loadStudents()
+            updateUnreadCount()
 
             if (_data.value.studentItems.isEmpty()) {
                 _state.value = ViewState.Empty(
@@ -148,6 +158,15 @@ class DashboardViewModel @Inject constructor(
             it.copy(
                 studentSelectorExpanded = false,
                 selectedStudent = student
+            )
+        }
+    }
+
+    private suspend fun updateUnreadCount() {
+        val unreadCount = repository.getUnreadCounts()
+        _data.update { data ->
+            data.copy(
+                unreadCount = unreadCount
             )
         }
     }

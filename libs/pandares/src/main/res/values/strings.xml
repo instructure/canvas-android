@@ -1760,6 +1760,8 @@
     <string name="canvasStudentApp">Canvas Student</string>
     <string name="teacherApp">TEACHER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
+    <string name="inboxUnreadCountMoreThan99">99+</string>
+    <string name="a11y_parentOpenNavigationDrawerWithBadge">Open navigation drawer, %s unread messages</string>
     <string name="parentNoAlerts">No Alerts</string>
     <string name="parentNoAlersMessage">There\'s nothing to be notified of yet.</string>
     <string name="errorLoadingAlerts">There was an error loading your student’s alerts.</string>

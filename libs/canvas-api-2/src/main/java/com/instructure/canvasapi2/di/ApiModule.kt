@@ -266,4 +266,9 @@ class ApiModule {
     fun provideObserverApi(): ObserverAPI.ObserverInterface {
         return RestBuilder().build(ObserverAPI.ObserverInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideUnreadCountApi(): UnreadCountAPI.UnreadCountsInterface {
+        return RestBuilder().build(UnreadCountAPI.UnreadCountsInterface::class.java, RestParams())
+    }
 }

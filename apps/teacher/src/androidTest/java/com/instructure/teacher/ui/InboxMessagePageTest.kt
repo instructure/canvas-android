@@ -54,6 +54,6 @@ class InboxMessagePageTest: TeacherTest() {
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
         dashboardPage.clickInboxTab()
-        inboxPage.clickConversation(chosenConversation)
+        inboxPage.openConversation(chosenConversation)
     }
 }

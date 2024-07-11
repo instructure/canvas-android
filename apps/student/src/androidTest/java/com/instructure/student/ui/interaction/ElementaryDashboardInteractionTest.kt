@@ -40,7 +40,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
         goToElementaryDashboard(courseCount = 1, favoriteCourseCount = 1)
         elementaryDashboardPage.assertPageObjects()
         elementaryDashboardPage.clickOnBottomNavigationBarInbox()
-        inboxPage.goToDashboard()
+        dashboardPage.goToDashboard()
         elementaryDashboardPage.assertToolbarTitle()
         elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.HOMEROOM)
     }

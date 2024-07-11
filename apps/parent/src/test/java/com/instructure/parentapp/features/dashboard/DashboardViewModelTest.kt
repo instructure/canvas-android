@@ -35,11 +35,14 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -61,6 +64,8 @@ class DashboardViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
+    private val inboxCountUpdaterFlow = MutableSharedFlow<Boolean>()
+    private val inboxCountUpdater: InboxCountUpdater = TestInboxCountUpdater(inboxCountUpdaterFlow)
 
     private lateinit var viewModel: DashboardViewModel
 
@@ -92,7 +97,7 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        Assert.assertEquals(expected, viewModel.data.value.userViewData)
+        assertEquals(expected, viewModel.data.value.userViewData)
     }
 
     @Test
@@ -111,7 +116,7 @@ class DashboardViewModelTest {
             StudentItemViewData(2L, "Student Two", "avatar2")
         )
 
-        Assert.assertEquals(expected, viewModel.data.value.studentItems.map { it.studentItemViewData })
+        assertEquals(expected, viewModel.data.value.studentItems.map { it.studentItemViewData })
     }
 
     @Test
@@ -126,7 +131,7 @@ class DashboardViewModelTest {
             R.drawable.panda_manage_students
         )
 
-        Assert.assertEquals(expected, viewModel.state.value)
+        assertEquals(expected, viewModel.state.value)
     }
 
     @Test
@@ -151,7 +156,7 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        Assert.assertEquals(expected, viewModel.data.value.selectedStudent)
+        assertEquals(expected, viewModel.data.value.selectedStudent)
     }
 
     @Test
@@ -165,12 +170,12 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        Assert.assertEquals(students.first(), viewModel.data.value.selectedStudent)
+        assertEquals(students.first(), viewModel.data.value.selectedStudent)
 
         viewModel.data.value.studentItems.last().onStudentClick()
 
-        Assert.assertEquals(students.last(), viewModel.data.value.selectedStudent)
-        Assert.assertFalse(viewModel.data.value.studentSelectorExpanded)
+        assertEquals(students.last(), viewModel.data.value.selectedStudent)
+        assertFalse(viewModel.data.value.studentSelectorExpanded)
         coVerify { selectedStudentHolder.updateSelectedStudent(students.last()) }
     }
 
@@ -179,10 +184,26 @@ class DashboardViewModelTest {
         createViewModel()
 
         viewModel.toggleStudentSelector()
-        Assert.assertTrue(viewModel.data.value.studentSelectorExpanded)
+        assertTrue(viewModel.data.value.studentSelectorExpanded)
 
         viewModel.toggleStudentSelector()
-        Assert.assertFalse(viewModel.data.value.studentSelectorExpanded)
+        assertFalse(viewModel.data.value.studentSelectorExpanded)
+    }
+
+    @Test
+    fun `Update unread count when the update unread count flow triggers an update`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents() } returns students
+        coEvery { repository.getUnreadCounts() } returns 0
+
+        createViewModel()
+
+        assertEquals(0, viewModel.data.value.unreadCount)
+
+        coEvery { repository.getUnreadCounts() } returns 1
+        inboxCountUpdaterFlow.emit(true)
+
+        assertEquals(1, viewModel.data.value.unreadCount)
     }
 
     private fun createViewModel() {
@@ -192,7 +213,8 @@ class DashboardViewModelTest {
             previousUsersUtils = previousUsersUtils,
             apiPrefs = apiPrefs,
             parentPrefs = parentPrefs,
-            selectedStudentHolder = selectedStudentHolder
+            selectedStudentHolder = selectedStudentHolder,
+            inboxCountUpdater = inboxCountUpdater
         )
     }
 }

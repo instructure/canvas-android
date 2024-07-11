@@ -18,7 +18,9 @@
 package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
@@ -26,14 +28,16 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Test
 
 
 class DashboardRepositoryTest {
 
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
+    private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface = mockk(relaxed = true)
 
-    private val repository = DashboardRepository(enrollmentApi)
+    private val repository = DashboardRepository(enrollmentApi, unreadCountApi)
 
     @Test
     fun `Get students successfully returns data`() = runTest {
@@ -43,7 +47,7 @@ class DashboardRepositoryTest {
         coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(enrollments)
 
         val result = repository.getStudents()
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
     }
 
     @Test
@@ -60,7 +64,7 @@ class DashboardRepositoryTest {
         coEvery { enrollmentApi.getNextPage("page_2_url", any()) } returns DataResult.Success(enrollments2)
 
         val result = repository.getStudents()
-        Assert.assertEquals(page1 + page2, result)
+        assertEquals(page1 + page2, result)
     }
 
     @Test
@@ -75,6 +79,30 @@ class DashboardRepositoryTest {
         coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(enrollments + otherEnrollments)
 
         val result = repository.getStudents()
-        Assert.assertEquals(expected, result)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Get unread count return 0 when the request fails`() = runTest {
+        coEvery { unreadCountApi.getUnreadConversationCount(any()) } returns DataResult.Fail()
+
+        val result = repository.getUnreadCounts()
+        assertEquals(0, result)
+    }
+
+    @Test
+    fun `Get unread count return 0 when the response cannot be parsed`() = runTest {
+        coEvery { unreadCountApi.getUnreadConversationCount(any()) } returns DataResult.Success(UnreadConversationCount(unreadCount = "not a number"))
+
+        val result = repository.getUnreadCounts()
+        assertEquals(0, result)
+    }
+
+    @Test
+    fun `Get unread count return the unread count when the response is successful`() = runTest {
+        coEvery { unreadCountApi.getUnreadConversationCount(any()) } returns DataResult.Success(UnreadConversationCount(unreadCount = "42"))
+
+        val result = repository.getUnreadCounts()
+        assertEquals(42, result)
     }
 }
