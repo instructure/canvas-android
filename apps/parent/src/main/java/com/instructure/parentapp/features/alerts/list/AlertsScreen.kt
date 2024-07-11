@@ -56,7 +56,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DateHelper
@@ -166,30 +165,26 @@ fun AlertsListItem(
 ) {
     val context = LocalContext.current
 
-    fun alertTitle(alertType: AlertType, alertThreshold: AlertThreshold?): String {
-        val threshold = alertThreshold?.threshold ?: ""
+    fun alertTitle(alertType: AlertType, alertThreshold: String?): String {
+        val threshold = alertThreshold.orEmpty()
         return when (alertType) {
             AlertType.ASSIGNMENT_MISSING -> context.getString(R.string.assignmentMissingAlertTitle)
             AlertType.ASSIGNMENT_GRADE_HIGH -> context.getString(
                 R.string.assignmentGradeHighAlertTitle,
                 threshold
             )
-
             AlertType.ASSIGNMENT_GRADE_LOW -> context.getString(
                 R.string.assignmentGradeLowAlertTitle,
                 threshold
             )
-
             AlertType.COURSE_GRADE_HIGH -> context.getString(
                 R.string.courseGradeHighAlertTitle,
                 threshold
             )
-
             AlertType.COURSE_GRADE_LOW -> context.getString(
                 R.string.courseGradeLowAlertTitle,
                 threshold
             )
-
             AlertType.COURSE_ANNOUNCEMENT -> context.getString(R.string.courseAnnouncementAlertTitle)
             AlertType.INSTITUTION_ANNOUNCEMENT -> context.getString(R.string.institutionAnnouncementAlertTitle)
         }
@@ -197,7 +192,7 @@ fun AlertsListItem(
 
     fun alertIcon(alertType: AlertType, lockedForUser: Boolean): Int {
         return when {
-            lockedForUser -> R.drawable.ic_lock
+            lockedForUser -> R.drawable.ic_lock_lined
             listOf(AlertType.COURSE_ANNOUNCEMENT, AlertType.INSTITUTION_ANNOUNCEMENT).contains(
                 alertType
             ) -> R.drawable.ic_info
@@ -223,24 +218,26 @@ fun AlertsListItem(
         .fillMaxWidth()
         .clickable(enabled = alert.htmlUrl != null) {
             alert.htmlUrl?.let {
-                actionHandler(AlertsAction.Navigate(it))
+                actionHandler(AlertsAction.Navigate(alert.alertId, it))
             }
         }) {
-        if (alert.unread) {
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(Color(userColor))
+        Row {
+            if (alert.unread) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(Color(userColor))
+                )
+            }
+
+            Icon(
+                modifier = Modifier.padding(start = if (alert.unread) 0.dp else 8.dp, end = 32.dp),
+                painter = painterResource(id = alertIcon(alert.alertType, alert.lockedForUser)),
+                contentDescription = null,
+                tint = colorResource(id = R.color.textDark)
             )
         }
-
-        Icon(
-            modifier = Modifier.padding(start = if (alert.unread) 0.dp else 8.dp, end = 32.dp),
-            painter = painterResource(id = alertIcon(alert.alertType, alert.lockedForUser)),
-            contentDescription = null,
-            tint = colorResource(id = R.color.textDark)
-        )
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = alertTitle(alert.alertType, alert.observerAlertThreshold),
@@ -263,7 +260,8 @@ fun AlertsListItem(
                 )
             }
         }
-        IconButton(onClick = { actionHandler(AlertsAction.DismissAlert(alert.alertId)) }) {
+        IconButton(
+            onClick = { actionHandler(AlertsAction.DismissAlert(alert.alertId)) }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_close),
                 tint = colorResource(id = R.color.textDark),
@@ -301,6 +299,66 @@ fun AlertsScreenPreview() {
                     unread = false,
                     htmlUrl = ""
                 ),
+                AlertsItemUiState(
+                    alertId = 3L,
+                    title = "Course grade low",
+                    alertType = AlertType.COURSE_GRADE_LOW,
+                    date = Date(),
+                    observerAlertThreshold = "8",
+                    lockedForUser = false,
+                    unread = false,
+                    htmlUrl = ""
+                ),
+                AlertsItemUiState(
+                    alertId = 4L,
+                    title = "Course grade high",
+                    alertType = AlertType.COURSE_GRADE_HIGH,
+                    date = Date(),
+                    observerAlertThreshold = "80%",
+                    lockedForUser = false,
+                    unread = false,
+                    htmlUrl = ""
+                ),
+                AlertsItemUiState(
+                    alertId = 5L,
+                    title = "Institution announcement",
+                    alertType = AlertType.INSTITUTION_ANNOUNCEMENT,
+                    date = Date(),
+                    observerAlertThreshold = null,
+                    lockedForUser = false,
+                    unread = false,
+                    htmlUrl = ""
+                ),
+                AlertsItemUiState(
+                    alertId = 6L,
+                    title = "Assignment grade low",
+                    alertType = AlertType.ASSIGNMENT_GRADE_LOW,
+                    date = Date(),
+                    observerAlertThreshold = "8",
+                    lockedForUser = false,
+                    unread = false,
+                    htmlUrl = ""
+                ),
+                AlertsItemUiState(
+                    alertId = 7L,
+                    title = "Assignment grade high",
+                    alertType = AlertType.ASSIGNMENT_GRADE_HIGH,
+                    date = Date(),
+                    observerAlertThreshold = "80%",
+                    lockedForUser = false,
+                    unread = false,
+                    htmlUrl = ""
+                ),
+                AlertsItemUiState(
+                    alertId = 8L,
+                    title = "Locked alert",
+                    alertType = AlertType.COURSE_ANNOUNCEMENT,
+                    date = Date(),
+                    observerAlertThreshold = null,
+                    lockedForUser = true,
+                    unread = false,
+                    htmlUrl = ""
+                )
             )
         ),
         actionHandler = {}

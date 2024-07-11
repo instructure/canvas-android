@@ -101,6 +101,7 @@ class AlertsViewModel @Inject constructor(
             is AlertsAction.Navigate -> {
                 viewModelScope.launch {
                     _events.send(AlertsViewModelAction.Navigate(action.route))
+                    markAlertRead(action.alertId)
                 }
             }
 
@@ -117,6 +118,14 @@ class AlertsViewModel @Inject constructor(
                     dismissAlert(action.alertId)
                 }
             }
+        }
+    }
+
+    private suspend fun markAlertRead(alertId: Long) {
+        try {
+            repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
+        } catch (e: Exception) {
+            //No need to do anything. The alert will stay unread.
         }
     }
 
@@ -161,7 +170,7 @@ class AlertsViewModel @Inject constructor(
             title = alert.title,
             alertType = alert.alertType,
             date = alert.actionDate,
-            observerAlertThreshold = thresholds[alert.observerAlertThresholdId],
+            observerAlertThreshold = thresholds[alert.observerAlertThresholdId]?.threshold,
             lockedForUser = alert.lockedForUser,
             unread = alert.workflowState == AlertWorkflowState.UNREAD,
             htmlUrl = alert.htmlUrl

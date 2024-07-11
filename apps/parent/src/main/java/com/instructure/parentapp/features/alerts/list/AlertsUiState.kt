@@ -17,7 +17,6 @@
 
 import android.graphics.Color
 import androidx.annotation.ColorInt
-import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
 import java.util.Date
 
@@ -34,7 +33,7 @@ data class AlertsItemUiState(
     val title: String,
     val alertType: AlertType,
     val date: Date?,
-    val observerAlertThreshold: AlertThreshold?,
+    val observerAlertThreshold: String?,
     val lockedForUser: Boolean,
     val unread: Boolean,
     val htmlUrl: String?
@@ -47,6 +46,6 @@ sealed class AlertsViewModelAction {
 
 sealed class AlertsAction {
     data object Refresh : AlertsAction()
-    data class Navigate(val route: String) : AlertsAction()
+    data class Navigate(val alertId: Long, val route: String) : AlertsAction()
     data class DismissAlert(val alertId: Long) : AlertsAction()
 }
