@@ -46,4 +46,9 @@ class DashboardRepository(
         val unreadCount = unreadCountApi.getUnreadConversationCount(params).dataOrNull?.unreadCount ?: "0"
         return unreadCount.toIntOrNull().orDefault()
     }
+
+    suspend fun getAlertCount(studentId: Long): Int {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return unreadCountApi.getUnreadAlertCount(studentId, params).dataOrNull?.unreadCount ?: 0
+    }
 }

@@ -98,10 +98,18 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
+                updateAlertCount(it.alertCount)
             }
         }
 
         handleDeeplink()
+    }
+
+    private fun updateAlertCount(alertCount: Int) {
+        val badge = binding.bottomNav.getOrCreateBadge(R.id.alerts)
+        badge.setVisible(alertCount != 0, true)
+        badge.maxNumber = 99
+        badge.number = alertCount
     }
 
     private fun updateUnreadCount(unreadCount: Int) {

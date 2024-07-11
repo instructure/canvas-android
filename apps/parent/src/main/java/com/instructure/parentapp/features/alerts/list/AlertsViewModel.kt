@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -39,6 +40,7 @@ class AlertsViewModel @Inject constructor(
     private val repository: AlertsRepository,
     private val colorKeeper: ColorKeeper,
     private val selectedStudentHolder: SelectedStudentHolder,
+    private val alertCountUpdater: AlertCountUpdater
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AlertsUiState())
@@ -94,6 +96,8 @@ class AlertsViewModel @Inject constructor(
         } ?: _uiState.update {
             it.copy(isLoading = false, isError = true, isRefreshing = false)
         }
+
+        alertCountUpdater.updateShouldRefreshAlertCount(false)
     }
 
     fun handleAction(action: AlertsAction) {
@@ -102,6 +106,7 @@ class AlertsViewModel @Inject constructor(
                 viewModelScope.launch {
                     _events.send(AlertsViewModelAction.Navigate(action.route))
                     markAlertRead(action.alertId)
+                    alertCountUpdater.updateShouldRefreshAlertCount(true)
                 }
             }
 

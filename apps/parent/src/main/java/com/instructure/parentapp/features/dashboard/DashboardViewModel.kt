@@ -46,7 +46,8 @@ class DashboardViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val parentPrefs: ParentPrefs,
     private val selectedStudentHolder: SelectedStudentHolder,
-    private val inboxCountUpdater: InboxCountUpdater
+    private val inboxCountUpdater: InboxCountUpdater,
+    private val alertCountUpdater: AlertCountUpdater
 ) : ViewModel() {
 
     private val _data = MutableStateFlow(DashboardViewData())
@@ -63,10 +64,19 @@ class DashboardViewModel @Inject constructor(
 
     private fun loadData() {
         viewModelScope.launch {
-            inboxCountUpdater.shouldRefreshInboxCountFlow.collect {shouldUpdate ->
+            inboxCountUpdater.shouldRefreshInboxCountFlow.collect { shouldUpdate ->
                 if (shouldUpdate) {
                     updateUnreadCount()
                     inboxCountUpdater.updateShouldRefreshInboxCount(false)
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            alertCountUpdater.shouldRefreshAlertCountFlow.collect { shouldUpdate ->
+                if (shouldUpdate) {
+                    updateAlertCount()
+                    alertCountUpdater.updateShouldRefreshAlertCount(false)
                 }
             }
         }
@@ -77,6 +87,7 @@ class DashboardViewModel @Inject constructor(
             setupUserInfo()
             loadStudents()
             updateUnreadCount()
+            updateAlertCount()
 
             if (_data.value.studentItems.isEmpty()) {
                 _state.value = ViewState.Empty(
@@ -168,6 +179,17 @@ class DashboardViewModel @Inject constructor(
             data.copy(
                 unreadCount = unreadCount
             )
+        }
+    }
+
+    private suspend fun updateAlertCount() {
+        _data.value.selectedStudent?.id?.let {
+            val alertCount = repository.getAlertCount(it)
+            _data.update {
+                it.copy(
+                    alertCount = alertCount
+                )
+            }
         }
     }
 
