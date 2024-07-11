@@ -20,6 +20,7 @@ package com.instructure.parentapp.features.alerts.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -143,13 +144,13 @@ fun AlertsListContent(
     actionHandler: (AlertsAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(vertical = 8.dp)) {
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(8.dp),
+        verticalArrangement = spacedBy(16.dp)) {
         items(uiState.alerts) { alert ->
             AlertsListItem(
                 alert = alert,
                 userColor = uiState.studentColor,
-                actionHandler = actionHandler,
-                modifier = Modifier.padding(16.dp)
+                actionHandler = actionHandler
             )
             Spacer(modifier = Modifier.size(8.dp))
         }

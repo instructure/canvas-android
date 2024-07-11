@@ -123,6 +123,13 @@ class AlertsViewModel @Inject constructor(
 
     private suspend fun markAlertRead(alertId: Long) {
         try {
+            _uiState.update {
+                it.copy(
+                    alerts = it.alerts.map {
+                        if (it.alertId == alertId) it.copy(unread = false) else it
+                    }
+                )
+            }
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
         } catch (e: Exception) {
             //No need to do anything. The alert will stay unread.
