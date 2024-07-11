@@ -107,6 +107,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private fun updateAlertCount(alertCount: Int) {
         val badge = binding.bottomNav.getOrCreateBadge(R.id.alerts)
+        badge.verticalOffset = 10
+        badge.horizontalOffset = 10
         badge.setVisible(alertCount != 0, true)
         badge.maxNumber = 99
         badge.number = alertCount
