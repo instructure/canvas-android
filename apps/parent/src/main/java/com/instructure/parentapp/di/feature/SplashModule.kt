@@ -15,27 +15,28 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import android.content.Context
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.about.AboutRepository
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.ThemeAPI
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.parentapp.features.splash.SplashRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
+
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class AboutModule {
+class SplashModule {
 
     @Provides
-    fun provideAboutRepository(
-        @ApplicationContext context: Context,
-        apiPrefs: ApiPrefs
-    ): AboutRepository {
-        // TODO: Implement
-        throw NotImplementedError()
+    fun provideSplashRepository(
+        userApi: UserAPI.UsersInterface,
+        themeApi: ThemeAPI.ThemeInterface,
+        enrollmentApi: EnrollmentAPI.EnrollmentInterface
+    ): SplashRepository {
+        return SplashRepository(userApi, themeApi, enrollmentApi)
     }
 }

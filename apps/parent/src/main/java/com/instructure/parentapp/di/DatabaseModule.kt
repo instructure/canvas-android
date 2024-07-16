@@ -44,7 +44,8 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideCalendarDatabase(@ApplicationContext context: Context): CalendarFilterDatabase {
-        // TODO: Implement
-        throw NotImplementedError()
+        // TODO We might need to use different db name and schema for migration
+        return Room.databaseBuilder(context, CalendarFilterDatabase::class.java, "db-calendar-parent")
+            .build()
     }
 }

@@ -15,35 +15,23 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
-import com.instructure.pandautils.features.help.HelpLinkFilter
-import com.instructure.parentapp.features.help.ParentHelpDialogFragmentBehavior
-import com.instructure.parentapp.features.help.ParentHelpLinkFilter
+import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.parentapp.features.calendarevent.ParentEventRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
-import dagger.hilt.android.components.ViewModelComponent
-
-@Module
-@InstallIn(ViewModelComponent::class)
-class HelpDialogModule {
-
-    @Provides
-    fun provideHelpLinkFilter(): HelpLinkFilter {
-        return ParentHelpLinkFilter()
-    }
-}
 
 @Module
 @InstallIn(FragmentComponent::class)
-class HelpDialogFragmentModule {
+class EventModule {
 
     @Provides
-    fun provideHelpDialogFragmentBehavior(activity: FragmentActivity): HelpDialogFragmentBehavior {
-        return ParentHelpDialogFragmentBehavior(activity)
+    fun provideEventRouter(activity: FragmentActivity, navigation: Navigation): EventRouter {
+        return ParentEventRouter(activity, navigation)
     }
 }

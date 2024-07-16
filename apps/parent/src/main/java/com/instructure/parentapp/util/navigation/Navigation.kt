@@ -10,11 +10,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.dialog
 import androidx.navigation.fragment.fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
-import com.instructure.parentapp.features.calendar.CalendarFragment
+import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
 import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
@@ -41,7 +42,11 @@ class Navigation(apiPrefs: ApiPrefs) {
     val manageStudents = "$baseUrl/manage-students"
     val settings = "$baseUrl/settings"
 
+    private val eventId = "event-id"
+    private val calendarEvent = "$baseUrl/courses/{$courseId}/calendar_events/{$eventId}"
+
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
+    fun calendarEventRoute(courseId: Long, eventId: Long) = "$baseUrl/courses/$courseId/calendar_events/$eventId"
 
     fun crateMainNavGraph(navController: NavController): NavGraph {
         return navController.createGraph(
@@ -81,6 +86,19 @@ class Navigation(apiPrefs: ApiPrefs) {
                     uriPattern = courseDetails
                 }
             }
+            fragment<EventFragment>(calendarEvent) {
+                argument(courseId) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                argument(eventId) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = calendarEvent
+                }
+            }
         }
     }
 
@@ -93,7 +111,7 @@ class Navigation(apiPrefs: ApiPrefs) {
                     uriPattern = courses
                 }
             }
-            fragment<CalendarFragment>(calendar) {
+            fragment<ParentCalendarFragment>(calendar) {
                 deepLink {
                     uriPattern = calendar
                 }

@@ -15,30 +15,29 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import android.content.Context
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.parentapp.features.courses.list.CourseGradeFormatter
-import com.instructure.parentapp.features.courses.list.CoursesRepository
+import androidx.fragment.app.FragmentActivity
+import com.instructure.loginapi.login.LoginNavigation
+import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.parentapp.features.login.ParentLoginNavigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
-
+import dagger.hilt.android.components.ActivityComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
-class CoursesModule {
+@InstallIn(ActivityComponent::class)
+class LoginModule {
 
     @Provides
-    fun provideCoursesRepository(courseApi: CourseAPI.CoursesInterface): CoursesRepository {
-        return CoursesRepository(courseApi)
+    fun provideAcceptableUsePolicyRouter(activity: FragmentActivity): AcceptableUsePolicyRouter {
+        // TODO: Implement
+        throw NotImplementedError()
     }
 
     @Provides
-    fun provideCourseGradeFormatter(@ApplicationContext context: Context): CourseGradeFormatter {
-        return CourseGradeFormatter(context)
+    fun provideLoginNavigation(activity: FragmentActivity): LoginNavigation {
+        return ParentLoginNavigation(activity)
     }
 }

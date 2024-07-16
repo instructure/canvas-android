@@ -15,28 +15,27 @@
  *
  */
 
-package com.instructure.parentapp.features.calendar
+package com.instructure.parentapp.di.feature
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.material.Text
-import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+import android.content.Context
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.about.AboutRepository
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
+@Module
+@InstallIn(ViewModelComponent::class)
+class AboutModule {
 
-class CalendarFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireActivity()).apply {
-            setContent {
-                Text(text = "Calendar")
-            }
-        }
+    @Provides
+    fun provideAboutRepository(
+        @ApplicationContext context: Context,
+        apiPrefs: ApiPrefs
+    ): AboutRepository {
+        // TODO: Implement
+        throw NotImplementedError()
     }
 }

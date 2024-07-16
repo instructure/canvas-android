@@ -15,45 +15,31 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.ProgressAPI
-import com.instructure.pandautils.features.inbox.list.InboxRepository
-import com.instructure.pandautils.features.inbox.list.InboxRouter
-import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
-import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
 
-@Module
-@InstallIn(FragmentComponent::class)
-class InboxFragmentModule {
-
-    @Provides
-    fun provideInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
-        return ParentInboxRouter(activity, fragment)
-    }
-}
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class InboxModule {
+class CreateUpdateEventModule {
 
     @Provides
-    fun provideInboxRepository(
-        inboxApi: InboxApi.InboxInterface,
+    fun provideCreateUpdateEventRepository(
+        calendarEventApi: CalendarEventAPI.CalendarEventInterface,
         coursesApi: CourseAPI.CoursesInterface,
         groupsApi: GroupAPI.GroupInterface,
-        progressApi: ProgressAPI.ProgressInterface
-    ): InboxRepository {
-        return ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+        apiPrefs: ApiPrefs
+    ): CreateUpdateEventRepository {
+        // TODO: Implement
+        throw NotImplementedError()
     }
 }

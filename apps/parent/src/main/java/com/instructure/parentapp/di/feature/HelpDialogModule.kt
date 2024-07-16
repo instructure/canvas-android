@@ -14,15 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di
+
+package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.calendar.CalendarRepository
-import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
+import com.instructure.pandautils.features.help.HelpLinkFilter
+import com.instructure.parentapp.features.help.ParentHelpDialogFragmentBehavior
+import com.instructure.parentapp.features.help.ParentHelpLinkFilter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,28 +29,21 @@ import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(FragmentComponent::class)
-class CalendarModule {
+@InstallIn(ViewModelComponent::class)
+class HelpDialogModule {
 
     @Provides
-    fun provideCalendarRouter(activity: FragmentActivity): CalendarRouter {
-        // TODO: Implement
-        throw NotImplementedError()
+    fun provideHelpLinkFilter(): HelpLinkFilter {
+        return ParentHelpLinkFilter()
     }
 }
 
 @Module
-@InstallIn(ViewModelComponent::class)
-class CalendarViewModelModule {
+@InstallIn(FragmentComponent::class)
+class HelpDialogFragmentModule {
 
     @Provides
-    fun provideCalendarRepository(
-        plannerApi: PlannerAPI.PlannerInterface,
-        coursesApi: CourseAPI.CoursesInterface,
-        groupsApi: GroupAPI.GroupInterface,
-        apiPrefs: ApiPrefs
-    ): CalendarRepository {
-        // TODO: Implement
-        throw NotImplementedError()
+    fun provideHelpDialogFragmentBehavior(activity: FragmentActivity): HelpDialogFragmentBehavior {
+        return ParentHelpDialogFragmentBehavior(activity)
     }
 }
