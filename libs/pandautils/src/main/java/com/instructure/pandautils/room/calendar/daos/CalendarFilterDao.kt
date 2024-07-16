@@ -41,4 +41,7 @@ interface CalendarFilterDao {
 
     @Query("SELECT * FROM calendar_filter WHERE user_id = :userId AND user_domain = :domain")
     suspend fun findByUserIdAndDomain(userId: Long, domain: String): CalendarFilterEntity?
+
+    @Query("SELECT * FROM calendar_filter WHERE user_id = :userId AND user_domain = :domain AND observeeId = :observeeId")
+    suspend fun findByUserIdAndDomainAndObserveeId(userId: Long, domain: String, observeeId: Long): CalendarFilterEntity?
 }

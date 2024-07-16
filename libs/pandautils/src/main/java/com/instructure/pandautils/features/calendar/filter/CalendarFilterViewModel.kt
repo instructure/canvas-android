@@ -19,15 +19,12 @@ import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarRepository
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,8 +36,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarFilterViewModel @Inject constructor(
     private val calendarRepository: CalendarRepository,
-    private val calendarFilterDao: CalendarFilterDao,
-    private val apiPrefs: ApiPrefs,
     private val resources: Resources
 ) : ViewModel() {
 
@@ -68,7 +63,7 @@ class CalendarFilterViewModel @Inject constructor(
                 canvasContexts = result.data
 
                 filterLimit = calendarRepository.getCalendarFilterLimit()
-                val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+                val filters = calendarRepository.getCalendarFilters()
                 if (filters != null) {
                     filterEntityForCurrentUser = filters
                     contextIdFilters.addAll(filters.filters)
@@ -122,7 +117,7 @@ class CalendarFilterViewModel @Inject constructor(
         viewModelScope.launch {
             filterEntityForCurrentUser?.let {
                 val newFilter = it.copy(filters = contextIdFilters)
-                calendarFilterDao.insertOrUpdate(newFilter)
+                calendarRepository.updateCalendarFilters(newFilter)
             }
             _uiState.emit(createNewUiState(snackbarMessage = snackbarMessage))
         }
@@ -139,7 +134,7 @@ class CalendarFilterViewModel @Inject constructor(
         viewModelScope.launch {
             filterEntityForCurrentUser?.let {
                 val newFilter = it.copy(filters = contextIdFilters)
-                calendarFilterDao.insertOrUpdate(newFilter)
+                calendarRepository.updateCalendarFilters(newFilter)
             }
             _uiState.emit(createNewUiState())
         }
@@ -158,7 +153,7 @@ class CalendarFilterViewModel @Inject constructor(
         viewModelScope.launch {
             filterEntityForCurrentUser?.let {
                 val newFilter = it.copy(filters = contextIdFilters)
-                calendarFilterDao.insertOrUpdate(newFilter)
+                calendarRepository.updateCalendarFilters(newFilter)
             }
             _uiState.emit(createNewUiState(snackbarMessage = snackbarMessage))
         }

@@ -62,8 +62,7 @@ class CalendarViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val clock: Clock,
     private val calendarPrefs: CalendarPrefs,
-    private val calendarStateMapper: CalendarStateMapper,
-    private val calendarFilterDao: CalendarFilterDao
+    private val calendarStateMapper: CalendarStateMapper
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now(clock)
@@ -117,7 +116,7 @@ class CalendarViewModel @Inject constructor(
                     userId = apiPrefs.user!!.id.toString(),
                     filters = contextIdFilters
                 )
-                calendarFilterDao.insert(filter)
+                calendarRepository.updateCalendarFilters(filter)
             } else if (calendarPrefs.firstStart) { // Case where we already have filters in the DB from the Flutter version, this can only happen in the student app
                 calendarPrefs.firstStart = false
                 if (contextIdFilters.isEmpty()) {
@@ -133,7 +132,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     private suspend fun initFiltersFromDb(): CalendarFilterEntity? {
-        val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+        val filters = calendarRepository.getCalendarFilters()
         if (filters != null) {
             contextIdFilters.clear()
             contextIdFilters.addAll(filters.filters)
@@ -433,6 +432,7 @@ class CalendarViewModel @Inject constructor(
     private suspend fun clearAndReloadCalendar() {
         eventsByDay.clear()
         loadedMonths.clear()
+        contextIdFilters.clear()
 
         _uiState.emit(createNewUiState(loadingMonths = true))
 

@@ -22,6 +22,7 @@ import androidx.room.Room
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.appDatabaseMigrations
 import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
+import com.instructure.pandautils.room.calendar.calendarDatabaseMigrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,8 +45,8 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideCalendarDatabase(@ApplicationContext context: Context): CalendarFilterDatabase {
-        // TODO We might need to use different db name and schema for migration
         return Room.databaseBuilder(context, CalendarFilterDatabase::class.java, "db-calendar-parent")
+            .addMigrations(*calendarDatabaseMigrations)
             .build()
     }
 }

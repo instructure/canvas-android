@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.util.ParentPrefs
 import kotlinx.coroutines.async
@@ -43,7 +45,8 @@ class ParentCalendarRepository(
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
     private val apiPrefs: ApiPrefs,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
-    private val parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs,
+    private val calendarFilterDao: CalendarFilterDao
 ) : CalendarRepository {
 
     private var canvasContexts: List<CanvasContext> = emptyList()
@@ -153,5 +156,18 @@ class ParentCalendarRepository(
                 )
             }
         }
+    }
+
+    override suspend fun getCalendarFilters(): CalendarFilterEntity? {
+        return calendarFilterDao.findByUserIdAndDomainAndObserveeId(
+            apiPrefs.user?.id.orDefault(),
+            apiPrefs.fullDomain,
+            parentPrefs.currentStudent?.id.orDefault()
+        )
+    }
+
+    override suspend fun updateCalendarFilters(calendarFilterEntity: CalendarFilterEntity) {
+        val updatedEntity = calendarFilterEntity.copy(observeeId = parentPrefs.currentStudent?.id.orDefault(-1))
+        calendarFilterDao.insertOrUpdate(updatedEntity)
     }
 }

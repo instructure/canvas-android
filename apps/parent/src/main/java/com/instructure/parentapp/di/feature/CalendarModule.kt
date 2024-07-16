@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.parentapp.features.calendar.ParentCalendarRepository
 import com.instructure.parentapp.features.calendar.ParentCalendarRouter
 import com.instructure.parentapp.util.ParentPrefs
@@ -55,8 +56,9 @@ class CalendarViewModelModule {
         calendarEventsApi: CalendarEventAPI.CalendarEventInterface,
         apiPrefs: ApiPrefs,
         featuresApi: FeaturesAPI.FeaturesInterface,
-        parentPrefs: ParentPrefs
+        parentPrefs: ParentPrefs,
+        calendarFilterDao: CalendarFilterDao
     ): CalendarRepository {
-        return ParentCalendarRepository(plannerApi, coursesApi, calendarEventsApi, apiPrefs, featuresApi, parentPrefs)
+        return ParentCalendarRepository(plannerApi, coursesApi, calendarEventsApi, apiPrefs, featuresApi, parentPrefs, calendarFilterDao)
     }
 }

@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.calendar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 
 interface CalendarRepository {
 
@@ -31,4 +32,8 @@ interface CalendarRepository {
     suspend fun getCanvasContexts(): DataResult<Map<CanvasContext.Type, List<CanvasContext>>>
 
     suspend fun getCalendarFilterLimit(): Int
+
+    suspend fun getCalendarFilters(): CalendarFilterEntity?
+
+    suspend fun updateCalendarFilters(calendarFilterEntity: CalendarFilterEntity)
 }
