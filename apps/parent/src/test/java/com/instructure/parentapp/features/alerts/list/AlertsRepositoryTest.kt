@@ -13,7 +13,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */    package com.instructure.parentapp.features.alerts.list
+ */
+package com.instructure.parentapp.features.alerts.list
 
 import com.instructure.canvasapi2.apis.ObserverAPI
 import com.instructure.canvasapi2.models.Alert
@@ -45,7 +46,7 @@ class AlertsRepositoryTest {
     }
 
     @Test
-    fun `getAlertsForStudent should return a list of alerts ordered`() = runTest {
+    fun `getAlertsForStudent should return an ordered list of alerts`() = runTest {
         val alerts = listOf(
             Alert(
                 id = 1,

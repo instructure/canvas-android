@@ -83,21 +83,29 @@ class AlertsViewModel @Inject constructor(
 
     private suspend fun loadAlerts(forceNetwork: Boolean = false) {
         selectedStudent?.let { student ->
-            val alerts = repository.getAlertsForStudent(student.id, forceNetwork)
-            val alertItems = alerts.map { createAlertItem(it) }
-            _uiState.update {
-                it.copy(
-                    alerts = alertItems,
-                    isLoading = false,
-                    isError = false,
-                    isRefreshing = false,
-                )
+            try {
+                val alerts = repository.getAlertsForStudent(student.id, forceNetwork)
+                val alertItems = alerts.map { createAlertItem(it) }
+                _uiState.update {
+                    it.copy(
+                        alerts = alertItems,
+                        isLoading = false,
+                        isError = false,
+                        isRefreshing = false,
+                    )
+                }
+            } catch (e: Exception) {
+                setError()
             }
-        } ?: _uiState.update {
-            it.copy(isLoading = false, isError = true, isRefreshing = false)
-        }
+        } ?: setError()
 
         alertCountUpdater.updateShouldRefreshAlertCount(false)
+    }
+
+    private fun setError() {
+        _uiState.update {
+            it.copy(isLoading = false, isError = true, isRefreshing = false, alerts = emptyList())
+        }
     }
 
     fun handleAction(action: AlertsAction) {
@@ -137,7 +145,7 @@ class AlertsViewModel @Inject constructor(
             }
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
         } catch (e: Exception) {
-            //No need to do anything. The alert will stay unread.
+            //No need to do anything. The alert will stay read.
         }
     }
 
