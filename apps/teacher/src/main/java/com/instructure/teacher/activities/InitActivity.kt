@@ -102,7 +102,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(),
     InitActivityView, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
-    MasqueradingDialog.OnMasqueradingSet, ErrorReportDialog.ErrorReportDialogResultListener, OnUnreadCountInvalidated {
+    MasqueradingDialog.OnMasqueradingSet, OnUnreadCountInvalidated {
 
     private val binding by viewBinding(ActivityInitBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
@@ -666,16 +666,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     //endregion
-
-    override fun onTicketPost() {
-        dismissHelpDialog()
-        Toast.makeText(applicationContext, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {
-        dismissHelpDialog()
-        Toast.makeText(applicationContext, R.string.errorOccurred, Toast.LENGTH_LONG).show()
-    }
 
     private fun dismissHelpDialog() {
         val fragment = supportFragmentManager.findFragmentByTag(HelpDialogFragment.TAG)

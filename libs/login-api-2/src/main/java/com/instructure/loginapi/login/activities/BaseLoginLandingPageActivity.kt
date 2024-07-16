@@ -20,7 +20,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -137,7 +136,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     }
 
     private fun requestLoginHelp() {
-        ErrorReportDialog().also {
+        ErrorReportDialog(this).also {
             it.arguments = ErrorReportDialog.createBundle(
                 appName = getString(appTypeName()),
                 fromLogin = true,
