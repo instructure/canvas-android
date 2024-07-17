@@ -17,9 +17,12 @@
 
 package com.instructure.parentapp.utils
 
+import androidx.annotation.DrawableRes
+import androidx.compose.ui.test.SemanticsMatcher
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvasapi2.models.User
 import com.instructure.parentapp.features.login.LoginActivity
+import com.instructure.parentapp.util.DrawableId
 
 
 fun CanvasTest.tokenLogin(domain: String, token: String, user: User, assertDashboard: Boolean = true) {
@@ -35,3 +38,6 @@ fun CanvasTest.tokenLogin(domain: String, token: String, user: User, assertDashb
         dashboardPage.assertPageObjects()
     }
 }
+
+fun hasDrawable(@DrawableRes id: Int): SemanticsMatcher =
+    SemanticsMatcher.expectValue(DrawableId, id)

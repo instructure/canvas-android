@@ -52,6 +52,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,6 +66,7 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.parentapp.util.drawableId
 import java.util.Date
 
 
@@ -98,7 +100,7 @@ fun AlertsScreen(
 
                         uiState.isLoading -> {
                             Loading(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier.fillMaxSize().testTag("loading"),
                                 color = Color(uiState.studentColor)
                             )
                         }
@@ -144,8 +146,10 @@ fun AlertsListContent(
     actionHandler: (AlertsAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(8.dp),
-        verticalArrangement = spacedBy(16.dp)) {
+    LazyColumn(
+        modifier = modifier, contentPadding = PaddingValues(8.dp),
+        verticalArrangement = spacedBy(16.dp)
+    ) {
         items(uiState.alerts) { alert ->
             AlertsListItem(
                 alert = alert,
@@ -221,7 +225,7 @@ fun AlertsListItem(
             alert.htmlUrl?.let {
                 actionHandler(AlertsAction.Navigate(alert.alertId, it))
             }
-        }) {
+        }.testTag("alertItem")) {
         Row {
             if (alert.unread) {
                 Box(
@@ -229,12 +233,18 @@ fun AlertsListItem(
                         .size(8.dp)
                         .clip(CircleShape)
                         .background(Color(userColor))
+                        .testTag("unreadIndicator")
                 )
             }
 
+            val iconId = alertIcon(alert.alertType, alert.lockedForUser)
             Icon(
-                modifier = Modifier.padding(start = if (alert.unread) 0.dp else 8.dp, end = 32.dp),
-                painter = painterResource(id = alertIcon(alert.alertType, alert.lockedForUser)),
+                modifier = Modifier
+                    .padding(start = if (alert.unread) 0.dp else 8.dp, end = 32.dp)
+                    .semantics {
+                        drawableId = iconId
+                    },
+                painter = painterResource(id = iconId),
                 contentDescription = null,
                 tint = colorResource(id = R.color.textDark)
             )
@@ -390,6 +400,15 @@ fun AlertsScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     AlertsScreen(
         uiState = AlertsUiState(isLoading = true),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun AlertsScreenRefreshingPreview() {
+    AlertsScreen(
+        uiState = AlertsUiState(isRefreshing = true),
         actionHandler = {}
     )
 }
