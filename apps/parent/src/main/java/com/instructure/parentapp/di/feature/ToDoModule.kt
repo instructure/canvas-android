@@ -19,6 +19,8 @@ package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import com.instructure.parentapp.features.calendartodo.ParentToDoRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,8 +31,7 @@ import dagger.hilt.android.components.FragmentComponent
 class ToDoModule {
 
     @Provides
-    fun provideToDoRouter(activity: FragmentActivity): ToDoRouter {
-        // TODO: Implement
-        throw NotImplementedError()
+    fun provideToDoRouter(activity: FragmentActivity, navigation: Navigation): ToDoRouter {
+        return ParentToDoRouter(activity, navigation)
     }
 }

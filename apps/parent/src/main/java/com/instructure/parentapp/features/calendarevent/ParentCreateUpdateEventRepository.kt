@@ -14,16 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package com.instructure.parentapp.features.calendarevent
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.pandautils.features.calendarevent.details.EventRouter
-import com.instructure.parentapp.util.navigation.Navigation
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
 
-class ParentEventRouter(private val activity: FragmentActivity, private val navigation: Navigation) : EventRouter {
 
-    override fun openEditEvent(scheduleItem: ScheduleItem) {
-        navigation.navigate(activity, navigation.updateEventRoute(scheduleItem))
+class ParentCreateUpdateEventRepository(
+    calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+    private val apiPrefs: ApiPrefs,
+) : CreateUpdateEventRepository(calendarEventApi) {
+
+    override suspend fun getCanvasContexts(): List<CanvasContext> {
+        return apiPrefs.user?.let { listOf(it) } ?: emptyList()
     }
 }

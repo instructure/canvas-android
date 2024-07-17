@@ -31,31 +31,31 @@ class ParentCalendarRouter(
     override fun openNavigationDrawer() = Unit
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {
-        // TODO Implement when in the assignment details ticket
+        // TODO Implement in the assignment details ticket
     }
 
     override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long) {
-        // TODO Implement when in the assignment details ticket
+        // TODO Implement in the assignment details ticket
     }
 
     override fun openQuiz(canvasContext: CanvasContext, htmlUrl: String) {
-        // TODO Implement when in the assignment details ticket
+        // TODO Implement in the assignment details ticket
     }
 
     override fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long) {
-        navigation.navigate(activity, navigation.calendarEventRoute(canvasContext.id, eventId))
+        navigation.navigate(activity, navigation.calendarEventRoute(canvasContext.type, canvasContext.id, eventId))
     }
 
     override fun openToDo(plannerItem: PlannerItem) {
-        // TODO
+        navigation.navigate(activity, navigation.toDoRoute(plannerItem))
     }
 
     override fun openCreateToDo(initialDateString: String?) {
-        // TODO
+        navigation.navigate(activity, navigation.createToDoRoute(initialDateString))
     }
 
     override fun openCreateEvent(initialDateString: String?) {
-        // TODO
+        navigation.navigate(activity, navigation.createEventRoute(initialDateString))
     }
 
     // This is a no-op in the Parent app, navigation drawer is already handled in the Activity

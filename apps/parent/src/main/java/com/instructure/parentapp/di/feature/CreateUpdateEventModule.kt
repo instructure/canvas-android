@@ -18,10 +18,9 @@
 package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
+import com.instructure.parentapp.features.calendarevent.ParentCreateUpdateEventRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,11 +34,8 @@ class CreateUpdateEventModule {
     @Provides
     fun provideCreateUpdateEventRepository(
         calendarEventApi: CalendarEventAPI.CalendarEventInterface,
-        coursesApi: CourseAPI.CoursesInterface,
-        groupsApi: GroupAPI.GroupInterface,
         apiPrefs: ApiPrefs
     ): CreateUpdateEventRepository {
-        // TODO: Implement
-        throw NotImplementedError()
+        return ParentCreateUpdateEventRepository(calendarEventApi, apiPrefs)
     }
 }
