@@ -70,7 +70,6 @@ import com.instructure.parentapp.util.drawableId
 import java.util.Date
 
 
-@ExperimentalMaterialApi
 @Composable
 fun AlertsScreen(
     uiState: AlertsUiState,
