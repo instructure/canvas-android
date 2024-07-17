@@ -1760,4 +1760,8 @@
     <string name="canvasStudentApp">Canvas Student</string>
     <string name="teacherApp">TEACHER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
+    <string name="errorLoadingStudents">There was an error loading your students.</string>
+    <string name="addNewStudent">Add new student</string>
+    <string name="selectStudentColor">Select Student Color</string>
+    <string name="errorSavingColor">An error occurred while saving your selection. Please try again.</string>
 </resources>

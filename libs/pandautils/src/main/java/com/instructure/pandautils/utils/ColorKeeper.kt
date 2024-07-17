@@ -84,18 +84,22 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
        }
     }
 
-    private fun generateUserColor(user: User): ThemedColor {
-        val colors = listOf(
-            R.color.electric,
-            R.color.jeffGoldplum,
-            R.color.barney,
-            R.color.raspberry,
-            R.color.fire,
-            R.color.shamrock
-        )
+    private val userColors = listOf(
+        R.color.studentBlue,
+        R.color.studentPurple,
+        R.color.studentPink,
+        R.color.studentRed,
+        R.color.studentOrange,
+        R.color.studentGreen
+    )
 
-        val index = user.id.absoluteValue % colors.size
-        val color = ContextCompat.getColor(ContextKeeper.appContext, colors[index.toInt()])
+    fun getThemedUserColors() = userColors.associateWith {
+        createThemedColor(ContextCompat.getColor(ContextKeeper.appContext, it))
+    }
+
+    private fun generateUserColor(user: User): ThemedColor {
+        val index = user.id.absoluteValue % userColors.size
+        val color = ContextCompat.getColor(ContextKeeper.appContext, userColors[index.toInt()])
         val themedColor = createThemedColor(color)
         cachedThemedColors += user.contextId to themedColor
         return themedColor
