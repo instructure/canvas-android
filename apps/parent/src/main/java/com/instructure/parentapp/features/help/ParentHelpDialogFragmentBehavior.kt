@@ -32,7 +32,7 @@ class ParentHelpDialogFragmentBehavior(private val parentActivity: FragmentActiv
 
     override fun reportProblem() {
         errorReportDialog = ErrorReportDialog(this).apply {
-            arguments = ErrorReportDialog.createBundle(parentActivity.getString(R.string.appUserTypeStudent))
+            arguments = ErrorReportDialog.createBundle(parentActivity.getString(R.string.appUserTypeParent))
             show(parentActivity.supportFragmentManager, ErrorReportDialog.TAG)
         }
     }
