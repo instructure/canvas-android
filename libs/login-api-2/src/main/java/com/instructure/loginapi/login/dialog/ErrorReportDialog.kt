@@ -28,10 +28,12 @@ import android.widget.Toast
 import androidx.core.util.PatternsCompat
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.apis.ErrorReportAPI
+import com.instructure.canvasapi2.managers.ErrorReportManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.ErrorReport
 import com.instructure.canvasapi2.models.ErrorReportPreFill
+import com.instructure.canvasapi2.models.ErrorReportResult
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.validOrNull
@@ -223,7 +225,7 @@ class ErrorReportDialog : DialogFragment() {
                 cancelButton.setInvisible()
                 sendButton.setInvisible()
                 progressBar.setVisible()
-                //awaitApi<ErrorReportResult> { ErrorReportManager.postErrorReport(report, useDefaultDomain, it) }
+                awaitApi<ErrorReportResult> { ErrorReportManager.postErrorReport(report, useDefaultDomain, it) }
                 onTicketPost()
                 dismiss()
             } catch (e: Throwable) {
