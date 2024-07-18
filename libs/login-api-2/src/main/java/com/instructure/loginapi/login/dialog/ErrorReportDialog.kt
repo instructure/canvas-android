@@ -221,18 +221,16 @@ class ErrorReportDialog : DialogFragment() {
                     severity = severity
             )
 
+            cancelButton.setInvisible()
+            sendButton.setInvisible()
+            progressBar.setVisible()
+
             try {
-                cancelButton.setInvisible()
-                sendButton.setInvisible()
-                progressBar.setVisible()
                 awaitApi<ErrorReportResult> { ErrorReportManager.postErrorReport(report, useDefaultDomain, it) }
+
                 onTicketPost()
-                dismiss()
             } catch (e: Throwable) {
                 onTicketError()
-                cancelButton.setVisible()
-                sendButton.setVisible()
-                progressBar.setGone()
             }
         }
     }
@@ -243,7 +241,11 @@ class ErrorReportDialog : DialogFragment() {
         dismissHelpDialog()
     }
 
-    private fun onTicketError() {
+    private fun onTicketError() = with(binding) {
+        cancelButton.setVisible()
+        sendButton.setVisible()
+        progressBar.setGone()
+
         Toast.makeText(activity, R.string.errorOccurred, Toast.LENGTH_LONG).show()
         dismiss()
         dismissHelpDialog()

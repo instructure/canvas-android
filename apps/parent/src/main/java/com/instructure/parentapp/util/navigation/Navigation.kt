@@ -35,7 +35,6 @@ class Navigation(apiPrefs: ApiPrefs) {
     val calendar = "$baseUrl/calendar"
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
-    val help = "$baseUrl/help"
     val manageStudents = "$baseUrl/manage-students"
     val settings = "$baseUrl/settings"
 
