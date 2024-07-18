@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.pandautils.R
 
 @Composable
@@ -74,17 +75,30 @@ private fun getDefaultCanvasTextFieldColors(): TextFieldColors {
         textColor = Color(R.color.textDarkest),
         disabledTextColor = Color(R.color.textDark),
         backgroundColor = Color(R.color.backgroundLightest),
-        cursorColor = MaterialTheme.colors.primary,
-        errorCursorColor = MaterialTheme.colors.error,
-        focusedIndicatorColor = MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
-        unfocusedIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = UnfocusedIndicatorLineOpacity),
+        cursorColor = Color(R.color.textDarkest),
+        errorCursorColor = Color(R.color.textDanger),
+        focusedIndicatorColor = Color(R.color.textDarkest).copy(alpha = ContentAlpha.high),
+        unfocusedIndicatorColor = Color(R.color.textDark).copy(alpha = UnfocusedIndicatorLineOpacity),
         errorIndicatorColor = Color(R.color.textDanger),
-        leadingIconColor = MaterialTheme.colors.onSurface.copy(alpha = IconOpacity),
-        trailingIconColor = MaterialTheme.colors.onSurface.copy(alpha = IconOpacity),
-        errorTrailingIconColor = MaterialTheme.colors.error,
-        focusedLabelColor = MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
-        unfocusedLabelColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
-        errorLabelColor = MaterialTheme.colors.error,
-        placeholderColor = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium),
+        leadingIconColor = Color(R.color.textDark).copy(alpha = IconOpacity),
+        trailingIconColor = Color(R.color.textDark).copy(alpha = IconOpacity),
+        errorTrailingIconColor = Color(R.color.textDanger),
+        focusedLabelColor = Color(R.color.textDarkest).copy(alpha = ContentAlpha.high),
+        unfocusedLabelColor = Color(R.color.textDark).copy(ContentAlpha.medium),
+        errorLabelColor = Color(R.color.textDanger),
+        placeholderColor = Color(R.color.textDark).copy(ContentAlpha.medium),
+    )
+}
+
+@Composable
+@Preview
+fun CanvasThemedTextFieldPreview() {
+    CanvasThemedTextField(
+        value = "Value",
+        onValueChange = {},
+        label = { /*TODO*/ },
+        placeholder = { /*TODO*/ },
+        leadingIcon = { /*TODO*/ },
+        trailingIcon = { /*TODO*/ }
     )
 }
