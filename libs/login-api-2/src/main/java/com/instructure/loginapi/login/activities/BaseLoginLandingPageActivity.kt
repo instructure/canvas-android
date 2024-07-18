@@ -67,7 +67,7 @@ import com.instructure.pandautils.utils.*
 import java.util.*
 import javax.inject.Inject
 
-abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
+abstract class BaseLoginLandingPageActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivityLoginLandingPageBinding::inflate)
 
@@ -136,7 +136,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     }
 
     private fun requestLoginHelp() {
-        ErrorReportDialog(this).also {
+        ErrorReportDialog().also {
             it.arguments = ErrorReportDialog.createBundle(
                 appName = getString(appTypeName()),
                 fromLogin = true,
@@ -380,14 +380,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         } else {
             NoInternetConnectionDialog.show(supportFragmentManager)
         }
-    }
-
-    override fun onTicketPost() {
-        toast(R.string.errorReportThankyou)
-    }
-
-    override fun onTicketError() {
-        toast(R.string.errorOccurred)
     }
 
     companion object {

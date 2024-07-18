@@ -18,7 +18,6 @@
 package com.instructure.parentapp.features.help
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
@@ -27,11 +26,9 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
 import com.instructure.parentapp.R
 
-class ParentHelpDialogFragmentBehavior(private val parentActivity: FragmentActivity) : HelpDialogFragmentBehavior, ErrorReportDialog.ErrorReportDialogResultListener {
-    private var errorReportDialog: ErrorReportDialog? = null
-
+class ParentHelpDialogFragmentBehavior(private val parentActivity: FragmentActivity) : HelpDialogFragmentBehavior {
     override fun reportProblem() {
-        errorReportDialog = ErrorReportDialog(this).apply {
+        ErrorReportDialog().apply {
             arguments = ErrorReportDialog.createBundle(parentActivity.getString(R.string.appUserTypeParent))
             show(parentActivity.supportFragmentManager, ErrorReportDialog.TAG)
         }
@@ -46,15 +43,5 @@ class ParentHelpDialogFragmentBehavior(private val parentActivity: FragmentActiv
     override fun openWebView(url: String, title: String) {
         val intent = Intent(Intent.ACTION_VIEW, url.toUri())
         parentActivity.startActivity(intent)
-    }
-
-    override fun onTicketPost() {
-        errorReportDialog?.dismiss()
-        Toast.makeText(parentActivity, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {
-        errorReportDialog?.dismiss()
-        Toast.makeText(parentActivity, R.string.errorOccurred, Toast.LENGTH_LONG).show()
     }
 }

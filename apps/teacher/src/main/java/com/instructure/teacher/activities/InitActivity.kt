@@ -667,17 +667,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     //endregion
 
-    private fun dismissHelpDialog() {
-        val fragment = supportFragmentManager.findFragmentByTag(HelpDialogFragment.TAG)
-        if (fragment is HelpDialogFragment) {
-            try {
-                fragment.dismiss()
-            } catch (e: IllegalStateException) {
-                Logger.e("Committing a transaction after activities saved state was called: " + e)
-            }
-        }
-    }
-
     companion object {
         private const val SELECTED_TAB = "selectedTab"
 
