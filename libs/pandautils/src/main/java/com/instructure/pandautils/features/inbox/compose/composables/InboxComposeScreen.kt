@@ -16,19 +16,70 @@
  */
 package com.instructure.pandautils.features.inbox.compose.composables
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
+import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.LabelSwitchRow
+import com.instructure.pandautils.compose.composables.LabelTextFieldRow
+import com.instructure.pandautils.compose.composables.LabelValueRow
+import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 
 @Composable
-fun InboxComposeScreen() {
+fun InboxComposeScreen(
+    uiState: InboxComposeUiState,
+    onDismiss: () -> Unit = {}
+) {
+    val scrollState = rememberScrollState()
     CanvasTheme {
         Scaffold(
+            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            topBar = {
+                CanvasThemedAppBar(
+                    title = uiState.title,
+                    navigationActionClick = onDismiss
+                )
+            },
             content = { padding ->
-                Text("Inbox Compose Screen", modifier = Modifier.padding(padding))
+                Column(Modifier.scrollable(scrollState, Orientation.Vertical)) {
+                    LabelValueRow(
+                        label = "Course",
+                        value = uiState.course,
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.padding(padding)
+                    )
+
+                    LabelMultipleValuesRow(
+                        label = "To",
+                        selectedValues = listOf("Person 1", "Person 2", "Person 3", "Person 4", "Person 5"),
+                        onSelect = {},
+                        addValueClicked = { /*TODO*/ },
+                        modifier = Modifier.padding(padding)
+                    )
+
+                    LabelSwitchRow(
+                        label = "Send individual message to each recipient",
+                        checked = uiState.sendIndividual,
+                        onCheckedChange = { uiState.sendIndividual = it },
+                        modifier = Modifier.padding(padding)
+                    )
+
+                    LabelTextFieldRow(
+                        label = "Subject",
+                        value = uiState.subject,
+                        onValueChange = {
+                            uiState.subject = it
+                        },
+                    )
+                }
             }
         )
     }

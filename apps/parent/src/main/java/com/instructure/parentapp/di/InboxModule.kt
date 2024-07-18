@@ -23,8 +23,10 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.pandautils.features.inbox.compose.InboxComposeRouter
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeRouter
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
 import com.instructure.parentapp.util.navigation.Navigation
@@ -41,6 +43,16 @@ class InboxFragmentModule {
     @Provides
     fun provideInboxRouter(activity: FragmentActivity, fragment: Fragment, navigation: Navigation): InboxRouter {
         return ParentInboxRouter(activity, fragment, navigation)
+    }
+}
+
+@Module
+@InstallIn(FragmentComponent::class)
+class InboxComposeFragmentModule {
+
+    @Provides
+    fun provideInboxComposeRouter(activity: FragmentActivity, navigation: Navigation): InboxComposeRouter {
+        return ParentInboxComposeRouter(activity, navigation)
     }
 }
 
