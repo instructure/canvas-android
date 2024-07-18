@@ -11,6 +11,7 @@ import androidx.navigation.fragment.dialog
 import androidx.navigation.fragment.fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.help.HelpDialogFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
@@ -37,6 +38,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     val calendar = "$baseUrl/calendar"
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
+    val inboxCompose = "$baseUrl/conversations/compose"
     val help = "$baseUrl/help"
     val manageStudents = "$baseUrl/manage-students"
     val settings = "$baseUrl/settings"
@@ -67,6 +69,11 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<InboxFragment>(inbox) {
                 deepLink {
                     uriPattern = inbox
+                }
+            }
+            fragment<InboxComposeFragment>(inboxCompose) {
+                deepLink {
+                    uriPattern = inboxCompose
                 }
             }
             fragment<ManageStudentsFragment>(manageStudents)

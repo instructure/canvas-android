@@ -24,10 +24,15 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.parentapp.util.navigation.Navigation
 import org.greenrobot.eventbus.Subscribe
 
 
-class ParentInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
+class ParentInboxRouter(
+    private val activity: FragmentActivity,
+    private val fragment: Fragment,
+    private val navigation: Navigation
+) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
         // TODO: Implement
@@ -40,7 +45,8 @@ class ParentInboxRouter(private val activity: FragmentActivity, private val frag
     }
 
     override fun routeToNewMessage() {
-        // TODO: Implement
+        val route = navigation.inboxCompose
+        navigation.navigate(activity, route)
     }
 
     override fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope) {

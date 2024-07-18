@@ -27,6 +27,7 @@ import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,8 +39,8 @@ import dagger.hilt.android.components.ViewModelComponent
 class InboxFragmentModule {
 
     @Provides
-    fun provideInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
-        return ParentInboxRouter(activity, fragment)
+    fun provideInboxRouter(activity: FragmentActivity, fragment: Fragment, navigation: Navigation): InboxRouter {
+        return ParentInboxRouter(activity, fragment, navigation)
     }
 }
 
