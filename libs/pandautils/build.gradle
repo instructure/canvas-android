@@ -220,6 +220,7 @@ dependencies {
     api Libs.COMPOSE_ACTIVITY
 
     implementation Libs.FLEXBOX_LAYOUT
+    implementation Libs.COIL_COMPOSE
 
     implementation Libs.RRULE
 
