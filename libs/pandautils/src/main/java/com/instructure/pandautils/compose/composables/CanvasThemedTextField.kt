@@ -1,9 +1,6 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.imeNestedScroll
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,7 +24,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.pandautils.R
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CanvasThemedTextField(
     onValueChange: (String) -> Unit,
@@ -60,7 +56,7 @@ fun CanvasThemedTextField(
             value = it
             onValueChange(it)
         },
-        modifier = modifier.imePadding().imeNestedScroll(),
+        modifier = modifier,
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,

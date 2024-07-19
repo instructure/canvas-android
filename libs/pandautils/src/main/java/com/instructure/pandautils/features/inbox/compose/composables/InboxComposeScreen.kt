@@ -17,6 +17,9 @@
 package com.instructure.pandautils.features.inbox.compose.composables
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.imeNestedScroll
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,6 +37,7 @@ import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InboxComposeScreen(
     uiState: InboxComposeUiState,
@@ -49,7 +53,7 @@ fun InboxComposeScreen(
                 )
             },
             content = { padding ->
-                Column(Modifier.verticalScroll(rememberScrollState())) {
+                Column(Modifier.verticalScroll(rememberScrollState()).imePadding().imeNestedScroll()) {
                     LabelValueRow(
                         label = "Course",
                         value = uiState.course,
