@@ -56,7 +56,12 @@ fun TextFieldWithHeader(
             onIconClick = onIconClick
         )
 
-        CanvasThemedTextField(onValueChange = onValueChange, modifier = Modifier.fillMaxWidth())
+        CanvasThemedTextField(
+            onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp)
+        )
     }
 }
 
