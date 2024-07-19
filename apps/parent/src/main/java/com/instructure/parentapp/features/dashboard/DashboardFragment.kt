@@ -98,6 +98,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         return binding.root
     }
 
+    private fun handleDashboardAction(dashboardAction: DashboardAction) {
+        when (dashboardAction) {
+            is DashboardAction.NavigateDeepLink -> navController.navigate(dashboardAction.deepLinkUri)
+        }
+    }
+
     private fun handleSharedCalendarAction(sharedCalendarAction: SharedCalendarAction) {
         if (sharedCalendarAction is SharedCalendarAction.TodayButtonVisible) {
             binding.todayButtonHolder.setVisible(sharedCalendarAction.visible)
@@ -108,6 +114,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleDashboardAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
@@ -116,8 +123,6 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 updateUnreadCount(it.unreadCount)
             }
         }
-
-        handleDeeplink()
     }
 
     private fun updateUnreadCount(unreadCount: Int) {
