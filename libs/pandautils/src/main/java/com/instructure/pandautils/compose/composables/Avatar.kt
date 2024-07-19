@@ -19,7 +19,6 @@ package com.instructure.pandautils.compose.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
@@ -39,7 +38,6 @@ fun Avatar(user: BasicUser) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .padding(8.dp)
             .size(20.dp)
             .clip(CircleShape)
             .border(1.dp, colorResource(id = R.color.borderDark), CircleShape)

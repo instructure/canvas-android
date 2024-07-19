@@ -54,9 +54,11 @@ fun RecipientChip(
         colors = ChipDefaults.chipColors(
             backgroundColor = colorResource(R.color.backgroundLightest),
         ),
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier.padding(horizontal = 4.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Avatar(recipient)
 
             Spacer(Modifier.width(4.dp))
