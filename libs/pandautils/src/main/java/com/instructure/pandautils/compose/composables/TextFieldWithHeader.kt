@@ -17,13 +17,15 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -42,7 +44,11 @@ fun TextFieldWithHeader(
     iconContentDescription: String? = null,
     onIconClick: (() -> Unit)? = null,
 ) {
-    Column(modifier = modifier.defaultMinSize(minHeight = 100.dp)) {
+    Column(
+        modifier = modifier
+            .defaultMinSize(minHeight = 100.dp)
+            .padding(top = 8.dp, bottom = 8.dp)
+    ) {
         TextFieldHeader(
             label = label,
             headerIconResource = headerIconResource,
@@ -50,7 +56,7 @@ fun TextFieldWithHeader(
             onIconClick = onIconClick
         )
 
-        CanvasThemedTextField(onValueChange = onValueChange)
+        CanvasThemedTextField(onValueChange = onValueChange, modifier = Modifier.fillMaxWidth())
     }
 }
 
@@ -61,10 +67,9 @@ private fun TextFieldHeader(
     iconContentDescription: String?,
     onIconClick: (() -> Unit)?,
 ) {
-    Row {
+    Row(Modifier.padding(start = 16.dp, end = 16.dp)) {
         Text(
             text = label,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
         )
@@ -72,10 +77,18 @@ private fun TextFieldHeader(
         Spacer(Modifier.weight(1f))
 
         headerIconResource?.let { icon ->
-            Icon(
-                modifier = Modifier.clickable { onIconClick?.invoke() },
-                painter = painterResource(id = icon),
-                contentDescription = iconContentDescription)
+            IconButton(
+                onClick = { onIconClick?.invoke() },
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(start = 8.dp, end = 8.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = iconContentDescription,
+                    tint = colorResource(id = R.color.textDark)
+                )
+            }
         }
     }
 }

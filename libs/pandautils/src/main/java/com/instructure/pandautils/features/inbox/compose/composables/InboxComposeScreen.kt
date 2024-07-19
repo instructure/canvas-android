@@ -28,8 +28,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
@@ -53,28 +55,42 @@ fun InboxComposeScreen(
                 )
             },
             content = { padding ->
-                Column(Modifier.verticalScroll(rememberScrollState()).imePadding().imeNestedScroll()) {
+                Column(
+                    Modifier
+                        .verticalScroll(rememberScrollState())
+                        .imePadding()
+                        .imeNestedScroll()
+                        .padding(padding)
+                ) {
                     LabelValueRow(
                         label = "Course",
                         value = uiState.course,
                         onClick = { /*TODO*/ },
-                        modifier = Modifier.padding(padding)
+                    )
+
+                    val users = listOf(
+                        BasicUser(id = 1, name = "Person 1"),
+                        BasicUser(id = 2, name = "Person 2"),
+                        BasicUser(id = 3, name = "Person 3"),
                     )
 
                     LabelMultipleValuesRow(
                         label = "To",
-                        selectedValues = listOf("Person 1", "Person 2", "Person 3", "Person 4", "Person 5"),
+                        selectedValues = users,
+                        itemComposable = { RecipientChip(it) },
                         onSelect = {},
                         addValueClicked = { /*TODO*/ },
-                        modifier = Modifier.padding(padding)
                     )
+
+                    CanvasDivider()
 
                     LabelSwitchRow(
                         label = "Send individual message to each recipient",
                         checked = uiState.sendIndividual,
                         onCheckedChange = { uiState.sendIndividual = it },
-                        modifier = Modifier.padding(padding)
                     )
+
+                    CanvasDivider()
 
                     LabelTextFieldRow(
                         label = "Subject",
@@ -82,6 +98,8 @@ fun InboxComposeScreen(
                             uiState.subject = it
                         },
                     )
+
+                    CanvasDivider()
                     
                     TextFieldWithHeader(
                         label = "Message",

@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.inbox.compose.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -29,6 +28,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,22 +37,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.Avatar
 import com.instructure.pandautils.utils.ThemePrefs
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LabelMultipleValuesRow(
+fun <T> LabelMultipleValuesRow(
     label: String,
-    selectedValues: List<String>,
-    onSelect: (String) -> Unit,
+    selectedValues: List<T>,
+    onSelect: (T) -> Unit,
     addValueClicked: () -> Unit,
+    itemComposable: @Composable (T) -> Unit,
     modifier: Modifier = Modifier,
     loading: Boolean = false
 ) {
@@ -61,11 +62,12 @@ fun LabelMultipleValuesRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .defaultMinSize(minHeight = 48.dp)
+            .padding(start = 16.dp, end = 16.dp)
+            .padding(top = 8.dp, bottom = 8.dp)
     ) {
         Column {
             Text(
                 text = label,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp
             )
@@ -81,30 +83,22 @@ fun LabelMultipleValuesRow(
         } else {
                 FlowRow(Modifier.weight(1f)) {
                     for (value in selectedValues) {
-                        Text(
-                            text = value,
-                            modifier = Modifier
-                                .padding(end = 16.dp)
-                                .clickable {
-                                    onSelect(value)
-                                },
-                            color = colorResource(id = R.color.textDark),
-                            fontSize = 14.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.End
-                        )
+                        itemComposable(value)
                     }
                 }
         }
-        Icon(
-            painter = painterResource(id = R.drawable.ic_add),
-            contentDescription = null,
+
+        IconButton(
+            onClick = { addValueClicked() },
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
-                .clickable { addValueClicked() },
-            tint = colorResource(id = R.color.textDark)
-        )
+                .size(40.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_add),
+                contentDescription = null,
+                tint = colorResource(id = R.color.textDark)
+            )
+        }
     }
 }
 
@@ -112,9 +106,17 @@ fun LabelMultipleValuesRow(
 @Composable
 fun LabelMultipleValuesRowPreview() {
     ContextKeeper.appContext = LocalContext.current
+    val users = listOf(
+        BasicUser(id = 1, name = "Person 1"),
+        BasicUser(id = 2, name = "Person 2"),
+        BasicUser(id = 3, name = "Person 3"),
+    )
     LabelMultipleValuesRow(
         label = "To",
-        selectedValues = listOf("Person 1", "Person 2", "Person 3", "Person 4", "Person 5"),
+        selectedValues = users,
+        itemComposable = { user ->
+            Avatar(user)
+        },
         onSelect = {},
         addValueClicked = {},
         loading = false

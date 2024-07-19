@@ -40,7 +40,7 @@ fun Avatar(user: BasicUser) {
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .padding(8.dp)
-            .size(40.dp)
+            .size(20.dp)
             .clip(CircleShape)
             .border(1.dp, colorResource(id = R.color.borderDark), CircleShape)
             .background(colorResource(id = R.color.backgroundLightest))

@@ -17,6 +17,7 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
@@ -39,18 +40,19 @@ fun LabelTextFieldRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .height(48.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
             color = colorResource(id = R.color.textDarkest),
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            modifier = Modifier.padding(end = 16.dp)
         )
 
         CanvasThemedTextField(
             onValueChange = onValueChange,
             singleLine = true,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

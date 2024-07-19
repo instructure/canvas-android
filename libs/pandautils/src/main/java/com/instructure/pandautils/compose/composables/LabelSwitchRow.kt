@@ -44,10 +44,11 @@ fun LabelSwitchRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .height(48.dp)
+            .padding(start = 16.dp, end = 16.dp)
+            .padding(top = 8.dp, bottom = 8.dp)
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(start = 16.dp),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
         )
