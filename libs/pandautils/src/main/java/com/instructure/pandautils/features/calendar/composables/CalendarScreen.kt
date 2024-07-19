@@ -130,7 +130,10 @@ fun CalendarScreen(
                         },
                         navigationActionClick = navigationActionClick,
                         navIconRes = R.drawable.ic_hamburger,
-                        navIconContentDescription = stringResource(id = R.string.navigation_drawer_open)
+                        navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
+                        modifier = Modifier
+                            .focusable()
+                            .focusRequester(focusRequester)
                     )
                 }
             },
@@ -187,18 +190,17 @@ fun CalendarScreen(
                         }
                     )
                 )
-            },
-            modifier = Modifier
-                .focusable()
-                .focusRequester(focusRequester)
+            }
         )
     }
 
-    // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
-    LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
-        delay(1000)
-        focusRequester.requestFocus()
-    })
+    if (showToolbar) {
+        // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
+        LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
+            delay(1000)
+            focusRequester.requestFocus()
+        })
+    }
 }
 
 @ExperimentalFoundationApi
