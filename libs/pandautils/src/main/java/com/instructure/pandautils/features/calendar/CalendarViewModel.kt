@@ -31,9 +31,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -62,7 +60,8 @@ class CalendarViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val clock: Clock,
     private val calendarPrefs: CalendarPrefs,
-    private val calendarStateMapper: CalendarStateMapper
+    private val calendarStateMapper: CalendarStateMapper,
+    private val calendarSharedEvents: CalendarSharedEvents
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now(clock)
@@ -277,16 +276,16 @@ class CalendarViewModel @Inject constructor(
                 contextIdFilters.contains(plannerItem.canvasContext.contextId)
             }
             ?.map {
-            EventUiState(
-                it.plannable.id,
-                contextName = getContextNameForPlannerItem(it),
-                canvasContext = it.canvasContext,
-                iconRes = getIconForPlannerItem(it),
-                name = it.plannable.title,
-                date = getDateForPlannerItem(it),
-                status = getStatusForPlannerItem(it)
-            )
-        } ?: emptyList()
+                EventUiState(
+                    it.plannable.id,
+                    contextName = getContextNameForPlannerItem(it),
+                    canvasContext = it.canvasContext,
+                    iconRes = getIconForPlannerItem(it),
+                    name = it.plannable.title,
+                    date = getDateForPlannerItem(it),
+                    status = getStatusForPlannerItem(it)
+                )
+            } ?: emptyList()
 
         return CalendarEventsPageUiState(
             date = date,
@@ -343,7 +342,7 @@ class CalendarViewModel @Inject constructor(
                     context.getString(R.string.calendarFromTo, dateText, startText, endText)
                 }
             } else null
-        } else  {
+        } else {
             plannerItem.plannable.dueAt?.let {
                 val dateText = DateHelper.dayMonthDateFormat.format(it)
                 val timeText = DateHelper.getFormattedTime(context, it)
@@ -475,6 +474,7 @@ class CalendarViewModel @Inject constructor(
 
     private fun selectedDayChanged(newDay: LocalDate) {
         selectedDay = newDay
+        calendarSharedEvents.sendEvent(viewModelScope, SharedCalendarAction.TodayButtonVisible(selectedDay != LocalDate.now(clock)))
         viewModelScope.launch {
             _uiState.emit(createNewUiState())
         }

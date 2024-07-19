@@ -134,4 +134,6 @@ sealed class SharedCalendarAction {
     data class FiltersClosed(val changed: Boolean) : SharedCalendarAction()
     data object CloseToDoScreen : SharedCalendarAction()
     data object CloseEventScreen : SharedCalendarAction()
+    data class TodayButtonVisible(val visible: Boolean) : SharedCalendarAction()
+    data object TodayButtonTapped : SharedCalendarAction()
 }

@@ -69,6 +69,7 @@
                             android:id="@+id/navigationButtonHolder"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="start"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
                             android:foreground="?attr/selectableItemBackground">
@@ -142,6 +143,38 @@
                                 app:tint="@color/textLightest" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <FrameLayout
+                            android:id="@+id/todayButtonHolder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:minWidth="48dp"
+                            android:minHeight="48dp"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:visibility="gone"
+                            android:contentDescription="@string/a11y_contentDescriptionCalendarJumpToToday">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_marginTop="16dp"
+                                android:src="@drawable/ic_calendar_day"
+                                android:importantForAccessibility="no"/>
+
+                            <TextView
+                                android:id="@+id/todayButtonText"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="end|center_vertical"
+                                android:gravity="center"
+                                android:layout_marginTop="6dp"
+                                android:textSize="9sp"
+                                android:textColor="@color/white"
+                                android:importantForAccessibility="no"/>
+
+                        </FrameLayout>
 
                     </FrameLayout>
 

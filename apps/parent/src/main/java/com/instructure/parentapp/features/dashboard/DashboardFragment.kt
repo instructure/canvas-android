@@ -41,13 +41,17 @@ import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import androidx.navigation.fragment.NavHostFragment
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
@@ -59,6 +63,7 @@ import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 
@@ -71,6 +76,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     @Inject
     lateinit var navigation: Navigation
+
+    @Inject
+    lateinit var calendarSharedEvents: CalendarSharedEvents
 
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
@@ -85,7 +93,15 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(calendarSharedEvents.events, ::handleSharedCalendarAction)
         return binding.root
+    }
+
+    private fun handleSharedCalendarAction(sharedCalendarAction: SharedCalendarAction) {
+        if (sharedCalendarAction is SharedCalendarAction.TodayButtonVisible) {
+            binding.todayButtonHolder.setVisible(sharedCalendarAction.visible)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,6 +167,10 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.navigationButtonHolder.onClick {
             openNavigationDrawer()
         }
+        binding.todayButtonHolder.onClick {
+            calendarSharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.TodayButtonTapped)
+        }
+        binding.todayButtonText.text = LocalDate.now().dayOfMonth.toString()
     }
 
     private fun setupNavigationDrawer() {

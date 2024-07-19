@@ -28,6 +28,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
@@ -69,7 +71,10 @@ open class BaseCalendarFragment : Fragment(), NavigationCallbacks, FragmentInter
     ): View {
         applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(sharedViewModel.events, ::handleSharedViewModelAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(
+            sharedViewModel.events.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED),
+            ::handleSharedViewModelAction
+        )
 
         return ComposeView(requireActivity()).apply {
             setContent {
@@ -98,6 +103,7 @@ open class BaseCalendarFragment : Fragment(), NavigationCallbacks, FragmentInter
                 val calendarFilterFragment = CalendarFilterFragment.newInstance()
                 calendarFilterFragment.show(requireActivity().supportFragmentManager, ContextFilterFragment::javaClass.name)
             }
+
             is CalendarViewModelAction.OpenCreateEvent -> calendarRouter.openCreateEvent(action.initialDateString)
         }
     }
@@ -116,6 +122,8 @@ open class BaseCalendarFragment : Fragment(), NavigationCallbacks, FragmentInter
                     viewModel.handleAction(CalendarAction.FiltersRefreshed)
                 }
             }
+
+            SharedCalendarAction.TodayButtonTapped -> viewModel.handleAction(CalendarAction.TodayTapped)
 
             else -> {}
         }
