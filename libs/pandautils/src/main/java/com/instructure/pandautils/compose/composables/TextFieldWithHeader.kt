@@ -16,50 +16,66 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 
 @Composable
-fun LabelTextFieldRow(
+fun TextFieldWithHeader(
     label: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @DrawableRes headerIconResource: Int? = null,
+    iconContentDescription: String? = null,
+    onIconClick: (() -> Unit)? = null,
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .height(48.dp)
-    ) {
+    Column(modifier = modifier.defaultMinSize(minHeight = 100.dp)) {
+        TextFieldHeader(
+            label = label,
+            headerIconResource = headerIconResource,
+            iconContentDescription = iconContentDescription,
+            onIconClick = onIconClick
+        )
+
+        CanvasThemedTextField(onValueChange = onValueChange)
+    }
+}
+
+@Composable
+private fun TextFieldHeader(
+    label: String,
+    @DrawableRes headerIconResource: Int?,
+    iconContentDescription: String?,
+    onIconClick: (() -> Unit)?,
+) {
+    Row {
         Text(
             text = label,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
         )
+        
+        Spacer(Modifier.weight(1f))
 
-        CanvasThemedTextField(
-            onValueChange = onValueChange,
-            singleLine = true,
-            modifier = Modifier.weight(1f)
-        )
+        headerIconResource?.let { icon ->
+            Icon(
+                modifier = Modifier.clickable { onIconClick?.invoke() },
+                painter = painterResource(id = icon),
+                contentDescription = iconContentDescription)
+        }
     }
-}
-
-@Composable
-@Preview
-fun LabelTextFieldRowPreview() {
-    LabelTextFieldRow(
-        label = "Label",
-        onValueChange = {}
-    )
 }

@@ -1,6 +1,9 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.imeNestedScroll
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,7 +15,10 @@ import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TextFieldDefaults.IconOpacity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
@@ -21,9 +27,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.pandautils.R
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CanvasThemedTextField(
-    value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -44,10 +50,17 @@ fun CanvasThemedTextField(
     shape: Shape = MaterialTheme.shapes.small.copy(bottomEnd = ZeroCornerSize, bottomStart = ZeroCornerSize),
     colors: TextFieldColors = getDefaultCanvasTextFieldColors()
 ) {
+    var value by remember {
+        mutableStateOf("")
+    }
+
     TextField(
         value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
+        onValueChange = {
+            value = it
+            onValueChange(it)
+        },
+        modifier = modifier.imePadding().imeNestedScroll(),
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -58,7 +71,7 @@ fun CanvasThemedTextField(
         isError = isError,
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
-        keyboardActions =keyboardActions,
+        keyboardActions = keyboardActions,
         singleLine = singleLine,
         maxLines = maxLines,
         minLines = minLines,
@@ -93,7 +106,6 @@ private fun getDefaultCanvasTextFieldColors(): TextFieldColors {
 @Preview
 fun CanvasThemedTextFieldPreview() {
     CanvasThemedTextField(
-        value = "Value",
         onValueChange = {},
         label = { /*TODO*/ },
         placeholder = { /*TODO*/ },
