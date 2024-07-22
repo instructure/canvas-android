@@ -236,9 +236,9 @@ class ErrorReportDialog : DialogFragment() {
     }
 
     private fun onTicketPost() {
-        Toast.makeText(activity, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
         dismiss()
         dismissHelpDialog()
+        Toast.makeText(activity, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
     }
 
     private fun onTicketError() = with(binding) {
@@ -246,9 +246,9 @@ class ErrorReportDialog : DialogFragment() {
         sendButton.setVisible()
         progressBar.setGone()
 
-        Toast.makeText(activity, R.string.errorOccurred, Toast.LENGTH_LONG).show()
         dismiss()
         dismissHelpDialog()
+        Toast.makeText(activity, R.string.errorOccurred, Toast.LENGTH_LONG).show()
     }
 
     private fun dismissHelpDialog() {
