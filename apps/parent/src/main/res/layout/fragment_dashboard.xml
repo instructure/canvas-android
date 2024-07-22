@@ -19,6 +19,7 @@
     <data>
 
         <import type="android.view.View" />
+        <import type="com.instructure.canvasapi2.utils.Pronouns" />
 
         <variable
             name="viewModel"
@@ -120,7 +121,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="@{viewModel.data.selectedStudent.shortName + ` (` + viewModel.data.selectedStudent.pronouns + `)`}"
+                                android:text="@{Pronouns.INSTANCE.span(viewModel.data.selectedStudent.shortName, viewModel.data.selectedStudent.pronouns)}"
                                 android:textColor="@color/textLightest"
                                 app:layout_constraintEnd_toStartOf="@id/student_selector_arrow"
                                 app:layout_constraintHorizontal_chainStyle="packed"
