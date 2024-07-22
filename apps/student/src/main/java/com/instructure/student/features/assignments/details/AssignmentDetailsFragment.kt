@@ -456,6 +456,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }
+            viewModel.checkingReminderPermission = false
         }
     }
 
