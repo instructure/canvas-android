@@ -19,7 +19,11 @@ package com.instructure.student.test.assignment.details.submission
 import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.student.mobius.assignmentDetails.submission.picker.*
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
@@ -197,7 +201,7 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     }
 
     @Test
-    fun `OnFileRemoved event results in model change to files and no effects`() {
+    fun `OnFileRemoved event results in model change to files and RemoveTempFile effect`() {
         val startModel = initModel.copy(files = listOf(initFile))
         val expectedModel = startModel.copy(files = emptyList())
 
@@ -207,7 +211,9 @@ class PickerSubmissionUploadUpdateTest : Assert() {
             .then(
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel),
-                    NextMatchers.hasNoEffects()
+                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                        PickerSubmissionUploadEffect.RemoveTempFile(initFile.fullPath)
+                    )
                 )
             )
     }
