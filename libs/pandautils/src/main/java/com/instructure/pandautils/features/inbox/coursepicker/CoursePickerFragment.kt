@@ -29,9 +29,12 @@ class CoursePickerFragment: BottomSheetDialogFragment(), FragmentInteractions {
         return ComposeView(requireActivity()).apply {
             setContent {
                 CoursePickerScreen(
+                    title = title(),
+                    onNavigateBack = { dismiss() },
                     coursePickerViewModel = viewModel,
                     onContextSelected = { context ->
-                        // Do something with the selected context
+                        dismiss()
+
                     }
                 )
             }
@@ -41,7 +44,7 @@ class CoursePickerFragment: BottomSheetDialogFragment(), FragmentInteractions {
     override val navigation: Navigation?
         get() = activity as? Navigation
 
-    override fun title(): String = getString(R.string.new_message)
+    override fun title(): String = getString(R.string.select_a_team)
 
     override fun applyTheme() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
