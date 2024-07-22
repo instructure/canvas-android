@@ -7,10 +7,6 @@ import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.TextFieldColors
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.TextFieldDefaults.IconOpacity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -84,53 +80,6 @@ fun CanvasThemedTextField(
         interactionSource = interactionSource,
         cursorBrush = cursorBrush,
         decorationBox = decorationBox,
-    )
-
-//    TextField(
-//        value = value,
-//        onValueChange = {
-//            value = it
-//            onValueChange(it)
-//        },
-//        modifier = modifier,
-//        enabled = enabled,
-//        readOnly = readOnly,
-//        textStyle = textStyle,
-//        label = label,
-//        placeholder = placeholder,
-//        leadingIcon = leadingIcon,
-//        trailingIcon = trailingIcon,
-//        isError = isError,
-//        visualTransformation = visualTransformation,
-//        keyboardOptions = keyboardOptions,
-//        keyboardActions = keyboardActions,
-//        singleLine = singleLine,
-//        maxLines = maxLines,
-//        minLines = minLines,
-//        interactionSource = interactionSource,
-//        shape = shape,
-//        colors = colors
-//    )
-}
-
-@Composable
-private fun getDefaultCanvasTextFieldColors(): TextFieldColors {
-    return TextFieldDefaults.textFieldColors(
-        textColor = colorResource(R.color.textDarkest),
-        disabledTextColor = colorResource(R.color.textDark),
-        backgroundColor = colorResource(R.color.backgroundLightest),
-        cursorColor = colorResource(R.color.textDarkest),
-        errorCursorColor = colorResource(R.color.textDanger),
-        focusedIndicatorColor = colorResource(R.color.backgroundLightest),
-        unfocusedIndicatorColor = colorResource(R.color.backgroundLightest),
-        errorIndicatorColor = colorResource(R.color.textDanger),
-        leadingIconColor = colorResource(R.color.textDark).copy(alpha = IconOpacity),
-        trailingIconColor = colorResource(R.color.textDark).copy(alpha = IconOpacity),
-        errorTrailingIconColor = colorResource(R.color.textDanger),
-        focusedLabelColor = colorResource(R.color.textDarkest).copy(alpha = ContentAlpha.high),
-        unfocusedLabelColor = colorResource(R.color.textDark).copy(ContentAlpha.medium),
-        errorLabelColor = colorResource(R.color.textDanger),
-        placeholderColor = colorResource(R.color.textDark).copy(ContentAlpha.medium),
     )
 }
 
