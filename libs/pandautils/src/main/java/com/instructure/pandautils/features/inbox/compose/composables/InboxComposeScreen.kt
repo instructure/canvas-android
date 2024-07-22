@@ -44,6 +44,7 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 @Composable
 fun InboxComposeScreen(
     uiState: InboxComposeUiState,
+    openCoursePicker: () -> Unit,
     onDismiss: () -> Unit = {}
 ) {
     CanvasTheme {
@@ -66,7 +67,7 @@ fun InboxComposeScreen(
                     LabelValueRow(
                         label = "Course",
                         value = uiState.course,
-                        onClick = { /*TODO*/ },
+                        onClick = { openCoursePicker() },
                     )
 
                     val users = listOf(

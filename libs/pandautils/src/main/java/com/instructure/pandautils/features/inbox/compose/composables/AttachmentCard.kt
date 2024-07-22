@@ -69,7 +69,7 @@ fun AttachmentCard(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(128.dp)
+                    .size(96.dp)
             ){
                 if (attachment.thumbnailUrl != null) {
                     AsyncImage(
@@ -91,7 +91,7 @@ fun AttachmentCard(
                 Text(
                     attachment.filename ?: "",
                     color = colorResource(id = R.color.textDarkest),
-                    fontSize = 16.sp
+                    fontSize = 20.sp
                 )
 
                 Spacer(Modifier.height(8.dp))

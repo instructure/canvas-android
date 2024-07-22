@@ -13,6 +13,7 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
+import com.instructure.pandautils.features.inbox.coursepicker.CoursePickerFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 
@@ -31,6 +32,10 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
 
                 InboxComposeScreen(
                     uiState = uiState,
+                    openCoursePicker = {
+                        val fragment = CoursePickerFragment()
+                        fragment.show(requireActivity().supportFragmentManager, CoursePickerFragment::javaClass.name)
+                    },
                     onDismiss = { activity?.supportFragmentManager?.popBackStack() }
                 )
             }
