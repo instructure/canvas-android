@@ -32,7 +32,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -99,7 +101,9 @@ fun AlertsScreen(
 
                         uiState.isLoading -> {
                             Loading(
-                                modifier = Modifier.fillMaxSize().testTag("loading"),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .testTag("loading"),
                                 color = Color(uiState.studentColor)
                             )
                         }
@@ -109,7 +113,10 @@ fun AlertsScreen(
                                 emptyTitle = stringResource(id = R.string.parentNoAlerts),
                                 emptyMessage = stringResource(id = R.string.parentNoAlersMessage),
                                 imageRes = R.drawable.ic_panda_noalerts,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .testTag("emptyAlerts")
+                                    .verticalScroll(rememberScrollState())
                             )
                         }
 
@@ -224,7 +231,8 @@ fun AlertsListItem(
             alert.htmlUrl?.let {
                 actionHandler(AlertsAction.Navigate(alert.alertId, it))
             }
-        }.testTag("alertItem")) {
+        }
+        .testTag("alertItem")) {
         Row {
             if (alert.unread) {
                 Box(
@@ -271,6 +279,7 @@ fun AlertsListItem(
             }
         }
         IconButton(
+            modifier = Modifier.testTag("dismissButton"),
             onClick = { actionHandler(AlertsAction.DismissAlert(alert.alertId)) }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_close),

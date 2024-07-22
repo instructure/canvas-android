@@ -90,6 +90,8 @@ object Randomizer {
     /** Creates random name for an assignment */
     fun randomAssignmentName(): String = "${faker.starTrek().character()} ${UUID.randomUUID()}"
 
+    fun randomAlertTitle(): String = faker.starTrek().location()
+
 }
 
 /** Represents a fake user name */
