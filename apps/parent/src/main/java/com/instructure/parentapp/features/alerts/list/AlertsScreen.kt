@@ -204,17 +204,18 @@ fun AlertsListItem(
     fun alertIcon(alertType: AlertType, lockedForUser: Boolean): Int {
         return when {
             lockedForUser -> R.drawable.ic_lock_lined
-            listOf(AlertType.COURSE_ANNOUNCEMENT, AlertType.INSTITUTION_ANNOUNCEMENT).contains(
-                alertType
-            ) -> R.drawable.ic_info
-
-            listOf(
-                AlertType.ASSIGNMENT_MISSING,
-                AlertType.ASSIGNMENT_GRADE_LOW,
-                AlertType.COURSE_GRADE_LOW
-            ).contains(alertType) -> R.drawable.ic_warning
-
+            alertType.isAlertInfo() || alertType.isAlertPositive() -> R.drawable.ic_info
+            alertType.isAlertNegative() -> R.drawable.ic_warning
             else -> R.drawable.ic_info
+        }
+    }
+
+    fun alertColor(alertType: AlertType): Int {
+        return when {
+            alertType.isAlertInfo() -> context.getColor(R.color.ash)
+            alertType.isAlertNegative() -> context.getColor(R.color.textDanger)
+            alertType.isAlertPositive() -> userColor
+            else -> context.getColor(R.color.ash)
         }
     }
 
@@ -253,13 +254,13 @@ fun AlertsListItem(
                     },
                 painter = painterResource(id = iconId),
                 contentDescription = null,
-                tint = colorResource(id = R.color.textDark)
+                tint = Color(alertColor(alert.alertType))
             )
         }
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = alertTitle(alert.alertType, alert.observerAlertThreshold),
-                style = TextStyle(color = colorResource(id = R.color.textDark), fontSize = 12.sp)
+                style = TextStyle(color = Color(alertColor(alert.alertType)), fontSize = 12.sp)
             )
             Text(
                 modifier = Modifier.padding(vertical = 4.dp),

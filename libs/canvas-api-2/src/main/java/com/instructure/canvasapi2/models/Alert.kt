@@ -57,7 +57,13 @@ enum class AlertType {
     @SerializedName("course_announcement")
     COURSE_ANNOUNCEMENT,
     @SerializedName("institution_announcement")
-    INSTITUTION_ANNOUNCEMENT
+    INSTITUTION_ANNOUNCEMENT;
+
+    fun isAlertInfo() = listOf(INSTITUTION_ANNOUNCEMENT, COURSE_ANNOUNCEMENT).contains(this)
+
+    fun isAlertPositive() = listOf(COURSE_GRADE_HIGH, ASSIGNMENT_GRADE_HIGH).contains(this)
+
+    fun isAlertNegative() = listOf(ASSIGNMENT_MISSING, ASSIGNMENT_GRADE_LOW, COURSE_GRADE_LOW).contains(this)
 }
 
 enum class AlertWorkflowState {
