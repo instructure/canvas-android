@@ -24,10 +24,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -109,17 +110,21 @@ fun InboxComposeScreen(
                         },
                     )
 
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
-                    Text("Attachments")
+                    AttachmentCard(
+                        Attachment(
+                            id = 1,
+                            contentType = "image/png",
+                            filename = "image.png",
+                            displayName = "image.png",
+                            url = "https://www.example.com/image.png",
+                            thumbnailUrl = null,
+                            previewUrl = null,
+                            size = 1024
+                        ),
+                        AttachmentStatus.UPLOADED,
+                        {},
+                        LocalContext.current
+                    )
                 }
             }
         )
