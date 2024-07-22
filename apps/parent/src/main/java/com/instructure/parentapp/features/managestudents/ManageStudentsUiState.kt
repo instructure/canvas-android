@@ -29,11 +29,17 @@ data class ManageStudentsUiState(
     val colorPickerDialogUiState: ColorPickerDialogUiState = ColorPickerDialogUiState()
 )
 
+data class UserColor(
+    val colorRes: Int = 0,
+    val color: ThemedColor = ThemedColor(Color.Black.toArgb()),
+    val contentDescriptionRes: Int = 0
+)
+
 data class ColorPickerDialogUiState(
     val showColorPickerDialog: Boolean = false,
     val studentId: Long = 0,
-    val initialColorIndex: Int = 0,
-    val userColors: List<ThemedColor> = emptyList(),
+    val initialUserColor: UserColor? = null,
+    val userColors: List<UserColor> = emptyList(),
     val isSavingColor: Boolean = false,
     val isSavingColorError: Boolean = false
 )
@@ -51,7 +57,7 @@ sealed class ManageStudentsAction {
     data object AddStudent : ManageStudentsAction()
     data class ShowColorPickerDialog(val studentId: Long, val studentColor: ThemedColor) : ManageStudentsAction()
     data object HideColorPickerDialog : ManageStudentsAction()
-    data class StudentColorChanged(val studentId: Long, val colorIndex: Int) : ManageStudentsAction()
+    data class StudentColorChanged(val studentId: Long, val userColor: UserColor) : ManageStudentsAction()
 }
 
 sealed class ManageStudentsViewModelAction {

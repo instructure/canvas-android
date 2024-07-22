@@ -24,6 +24,9 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.createThemedColor
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.parentapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -52,7 +55,24 @@ class ManageStudentViewModel @Inject constructor(
         loadStudents()
     }
 
-    private val userColors = colorKeeper.getThemedUserColors()
+    private val userColorContentDescriptionMap = mapOf(
+        R.color.studentBlue to R.string.studentColorContentDescriptionBlue,
+        R.color.studentPurple to R.string.studentColorContentDescriptionPurple,
+        R.color.studentPink to R.string.studentColorContentDescriptionPink,
+        R.color.studentRed to R.string.studentColorContentDescriptionRed,
+        R.color.studentOrange to R.string.studentColorContentDescriptionOrange,
+        R.color.studentGreen to R.string.studentColorContentDescriptionGreen,
+    )
+
+    private val userColors by lazy {
+        colorKeeper.userColors.map {
+            UserColor(
+                colorRes = it,
+                color = createThemedColor(context.getColor(it)),
+                contentDescriptionRes = userColorContentDescriptionMap[it].orDefault()
+            )
+        }
+    }
 
     private fun loadStudents(forceRefresh: Boolean = false) {
         viewModelScope.tryLaunch {
@@ -72,7 +92,7 @@ class ManageStudentViewModel @Inject constructor(
                         StudentItemUiState(
                             studentId = it.id,
                             avatarUrl = it.avatarUrl,
-                            studentName = it.name,
+                            studentName = it.shortName.orEmpty(),
                             studentColor = colorKeeper.getOrGenerateUserColor(it)
                         )
                     }
@@ -88,10 +108,10 @@ class ManageStudentViewModel @Inject constructor(
         }
     }
 
-    private fun saveStudentColor(studentId: Long, colorIndex: Int) {
+    private fun saveStudentColor(studentId: Long, selected: UserColor) {
         viewModelScope.tryLaunch {
             val contextId = "user_$studentId"
-            val color = ContextCompat.getColor(context, userColors.keys.elementAt(colorIndex))
+            val color = ContextCompat.getColor(context, selected.colorRes)
 
             _uiState.update {
                 it.copy(
@@ -109,7 +129,7 @@ class ManageStudentViewModel @Inject constructor(
                         colorPickerDialogUiState = ColorPickerDialogUiState(),
                         studentListItems = it.studentListItems.map { studentItem ->
                             if (studentItem.studentId == studentId) {
-                                studentItem.copy(studentColor = userColors.values.elementAt(colorIndex))
+                                studentItem.copy(studentColor = selected.color)
                             } else {
                                 studentItem
                             }
@@ -159,8 +179,10 @@ class ManageStudentViewModel @Inject constructor(
                     colorPickerDialogUiState = it.colorPickerDialogUiState.copy(
                         showColorPickerDialog = true,
                         studentId = action.studentId,
-                        initialColorIndex = userColors.values.indexOf(action.studentColor),
-                        userColors = userColors.values.toList()
+                        initialUserColor = userColors.find { userColor ->
+                            userColor.color == action.studentColor
+                        },
+                        userColors = userColors
                     )
                 )
             }
@@ -169,7 +191,7 @@ class ManageStudentViewModel @Inject constructor(
                 it.copy(colorPickerDialogUiState = ColorPickerDialogUiState())
             }
 
-            is ManageStudentsAction.StudentColorChanged -> saveStudentColor(action.studentId, action.colorIndex)
+            is ManageStudentsAction.StudentColorChanged -> saveStudentColor(action.studentId, action.userColor)
         }
     }
 }

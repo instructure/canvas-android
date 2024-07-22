@@ -51,6 +51,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -147,7 +149,7 @@ private fun StudentListContent(
     val dialogUiState = uiState.colorPickerDialogUiState
     if (dialogUiState.showColorPickerDialog) {
         StudentColorPickerDialog(
-            initialColorIndex = dialogUiState.initialColorIndex,
+            initialUserColor = dialogUiState.initialUserColor,
             userColors = dialogUiState.userColors,
             saving = dialogUiState.isSavingColor,
             error = dialogUiState.isSavingColorError,
@@ -209,14 +211,18 @@ private fun StudentListItem(
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.weight(1f))
+        val changeColorContentDescription = stringResource(id = R.string.changeStudentColorLabel, uiState.studentName)
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = changeColorContentDescription
+                }
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(color = Color(uiState.studentColor.backgroundColor())),
+                    indication = rememberRipple(color = Color(uiState.studentColor.backgroundColor()))
                 ) {
                     actionHandler(ManageStudentsAction.ShowColorPickerDialog(uiState.studentId, uiState.studentColor))
                 }

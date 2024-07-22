@@ -29,7 +29,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -38,7 +38,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -47,6 +47,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,20 +57,20 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.createThemedColor
 
 
 @Composable
 internal fun StudentColorPickerDialog(
-    initialColorIndex: Int,
-    userColors: List<ThemedColor>,
+    initialUserColor: UserColor?,
+    userColors: List<UserColor>,
     saving: Boolean,
     error: Boolean,
     onDismiss: () -> Unit,
-    onColorSelected: (Int) -> Unit,
+    onColorSelected: (UserColor) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var colorIndex by remember { mutableIntStateOf(initialColorIndex) }
+    var selected by remember { mutableStateOf(initialUserColor) }
 
     Dialog(
         onDismissRequest = {
@@ -91,22 +93,30 @@ internal fun StudentColorPickerDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp)
                 ) {
-                    itemsIndexed(userColors) { index, color ->
+                    items(userColors) {
+                        val colorContentDescription = stringResource(id = it.contentDescriptionRes)
+                        val selectedContentDescription = stringResource(id = R.string.selectedListItem, colorContentDescription)
                         Box(
                             modifier = Modifier
                                 .size(48.dp)
                                 .let { modifier ->
-                                    if (index == colorIndex) {
-                                        modifier.border(3.dp, Color(color.backgroundColor()), CircleShape)
-                                    } else {
+                                    if (selected == it) {
                                         modifier
+                                            .border(3.dp, Color(it.color.backgroundColor()), CircleShape)
+                                            .semantics {
+                                                contentDescription = selectedContentDescription
+                                            }
+                                    } else {
+                                        modifier.semantics {
+                                            contentDescription = colorContentDescription
+                                        }
                                     }
                                 }
                                 .padding(8.dp)
                                 .clip(shape = CircleShape)
-                                .background(color = Color(color.backgroundColor()))
+                                .background(color = Color(it.color.backgroundColor()))
                                 .clickable {
-                                    colorIndex = index
+                                    selected = it
                                 }
                         )
                     }
@@ -146,10 +156,10 @@ internal fun StudentColorPickerDialog(
                         }
                         TextButton(
                             onClick = {
-                                if (colorIndex == initialColorIndex) {
+                                if (selected == null || selected == initialUserColor) {
                                     onDismiss()
                                 } else {
-                                    onColorSelected(colorIndex)
+                                    onColorSelected(selected!!)
                                 }
                             },
                         ) {
@@ -168,10 +178,19 @@ internal fun StudentColorPickerDialog(
 @Preview
 @Composable
 fun StudentColorPickerDialogPreview() {
-    ContextKeeper.appContext = LocalContext.current
+    val context = LocalContext.current
+    ContextKeeper.appContext = context
+    val colors = ColorKeeper.userColors.map {
+        UserColor(
+            colorRes = it,
+            color = createThemedColor(context.getColor(it)),
+            contentDescriptionRes = 0
+        )
+    }
+    
     StudentColorPickerDialog(
-        initialColorIndex = 0,
-        userColors = ColorKeeper.getThemedUserColors().values.toList(),
+        initialUserColor = colors.first(),
+        userColors = colors,
         error = false,
         saving = false,
         onDismiss = {},

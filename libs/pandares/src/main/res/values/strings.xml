@@ -1764,4 +1764,11 @@
     <string name="addNewStudent">Add new student</string>
     <string name="selectStudentColor">Select Student Color</string>
     <string name="errorSavingColor">An error occurred while saving your selection. Please try again.</string>
+    <string name="changeStudentColorLabel">Change color for %s</string>
+    <string name="studentColorContentDescriptionBlue">Electric, Blue</string>
+    <string name="studentColorContentDescriptionPurple">Plum, Purple</string>
+    <string name="studentColorContentDescriptionPink">Barney, Fuschia</string>
+    <string name="studentColorContentDescriptionRed">Raspberry, Red</string>
+    <string name="studentColorContentDescriptionOrange">Fire, Orange</string>
+    <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
 </resources>
