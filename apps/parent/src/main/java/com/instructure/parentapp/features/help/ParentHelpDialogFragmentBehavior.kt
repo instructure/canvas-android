@@ -17,6 +17,8 @@
 
 package com.instructure.parentapp.features.help
 
+import android.content.Intent
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
@@ -24,23 +26,22 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
 import com.instructure.parentapp.R
 
-class ParentHelpDialogFragmentBehavior(private val activity: FragmentActivity) : HelpDialogFragmentBehavior {
-
+class ParentHelpDialogFragmentBehavior(private val parentActivity: FragmentActivity) : HelpDialogFragmentBehavior {
     override fun reportProblem() {
-        val dialog = ErrorReportDialog()
-        dialog.arguments = ErrorReportDialog.createBundle(activity.getString(R.string.appUserTypeStudent))
-        dialog.show(activity.supportFragmentManager, ErrorReportDialog.TAG)
+        ErrorReportDialog().apply {
+            arguments = ErrorReportDialog.createBundle(parentActivity.getString(R.string.appUserTypeParent))
+            show(parentActivity.supportFragmentManager, ErrorReportDialog.TAG)
+        }
     }
 
     override fun rateTheApp() {
-        Utils.goToAppStore(AppType.PARENT, activity)
+        Utils.goToAppStore(AppType.PARENT, parentActivity)
     }
 
-    override fun askInstructor() {
-        // TODO: Implement
-    }
+    override fun askInstructor() = Unit
 
     override fun openWebView(url: String, title: String) {
-        // TODO: Implement
+        val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+        parentActivity.startActivity(intent)
     }
 }
