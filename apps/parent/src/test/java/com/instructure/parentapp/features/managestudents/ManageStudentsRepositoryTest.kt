@@ -1,0 +1,99 @@
+/*
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+package com.instructure.parentapp.features.managestudents
+
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.models.ColorChangeResponse
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.LinkHeaders
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert
+import org.junit.Test
+
+
+class ManageStudentsRepositoryTest {
+
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
+    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
+
+    private val repository = ManageStudentsRepository(enrollmentApi, userApi)
+
+    @Test
+    fun `Get students successfully returns data`() = runTest {
+        val expected = listOf(User(id = 1L))
+        val enrollments = expected.map { Enrollment(observedUser = it) }
+
+        coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(enrollments)
+
+        val result = repository.getStudents(true)
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Get students with pagination successfully returns data`() = runTest {
+        val page1 = listOf(User(id = 1L))
+        val enrollments1 = page1.map { Enrollment(observedUser = it) }
+        val page2 = listOf(User(id = 2L))
+        val enrollments2 = page2.map { Enrollment(observedUser = it) }
+
+        coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(
+            enrollments1,
+            linkHeaders = LinkHeaders(nextUrl = "page_2_url")
+        )
+        coEvery { enrollmentApi.getNextPage("page_2_url", any()) } returns DataResult.Success(enrollments2)
+
+        val result = repository.getStudents(true)
+        Assert.assertEquals(page1 + page2, result)
+    }
+
+    @Test
+    fun `Get students returns empty list when enrollments call fails`() = runTest {
+        coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Fail()
+
+        val result = repository.getStudents(true)
+        Assert.assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `Save student color successfully returns data`() = runTest {
+        val contextId = "user_1"
+        val color = "#000000"
+        val expected = ColorChangeResponse(hexCode = color)
+
+        coEvery { userApi.setColor(contextId, color, any()) } returns DataResult.Success(expected)
+
+        val result = repository.saveStudentColor(contextId, color)
+        Assert.assertEquals(color, result)
+    }
+
+    @Test
+    fun `Save student color returns null when call fails`() = runTest {
+        val contextId = "user_1"
+        val color = "000000"
+
+        coEvery { userApi.setColor(contextId, color, any()) } returns DataResult.Fail()
+
+        val result = repository.saveStudentColor(contextId, color)
+        Assert.assertNull(result)
+    }
+}

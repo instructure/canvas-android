@@ -245,8 +245,37 @@ private fun ManageStudentsPreview() {
         uiState = ManageStudentsUiState(
             isLoading = false,
             studentListItems = listOf(
-                StudentItemUiState(studentId = 1, studentName = "Student 1")
+                StudentItemUiState(studentId = 1, studentName = "Student 1"),
+                StudentItemUiState(studentId = 2, studentName = "Student 2"),
+                StudentItemUiState(studentId = 3, studentName = "Student 3"),
             )
+        ),
+        actionHandler = {},
+        navigationActionClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ManageStudentsEmptyPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    ManageStudentsScreen(
+        uiState = ManageStudentsUiState(
+            isLoading = false,
+            studentListItems = emptyList()
+        ),
+        actionHandler = {},
+        navigationActionClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ManageStudentsErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    ManageStudentsScreen(
+        uiState = ManageStudentsUiState(
+            isLoadError = true
         ),
         actionHandler = {},
         navigationActionClick = {}
