@@ -21,10 +21,11 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.teacher.BuildConfig
+import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.AssignmentDetailsPage
 import com.instructure.teacher.ui.pages.DashboardPage
-import com.instructure.teacher.ui.pages.NativeDiscussionsDetailsPage
+import com.instructure.teacher.ui.pages.DiscussionsDetailsPage
 import com.instructure.teacher.ui.utils.TeacherActivityTestRule
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,7 +39,7 @@ class TeacherCalendarPageTest : CalendarInteractionTest() {
 
     private val dashboardPage = DashboardPage()
     private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
-    private val discussionDetailsPage = NativeDiscussionsDetailsPage(ModuleItemInteractions())
+    private val discussionDetailsPage = DiscussionsDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
 
     override fun goToCalendar(data: MockCanvas) {
         val teacher = data.teachers[0]
@@ -67,6 +68,6 @@ class TeacherCalendarPageTest : CalendarInteractionTest() {
     }
 
     override fun assertDiscussionDetailsTitle(title: String) {
-        discussionDetailsPage.assertDiscussionTitle(title)
+        discussionDetailsPage.assertToolbarDiscussionTitle(title)
     }
 }
