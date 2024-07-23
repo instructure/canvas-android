@@ -211,7 +211,7 @@ fun AlertsListItem(
 
     fun alertColor(alertType: AlertType): Int {
         return when {
-            alertType.isAlertInfo() -> context.getColor(R.color.ash)
+            alertType.isAlertInfo() -> context.getColor(R.color.textDark)
             alertType.isAlertNegative() -> context.getColor(R.color.textDanger)
             alertType.isAlertPositive() -> userColor
             else -> context.getColor(R.color.textDark)
