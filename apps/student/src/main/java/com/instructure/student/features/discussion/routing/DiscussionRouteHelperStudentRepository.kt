@@ -13,16 +13,12 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 
 class DiscussionRouteHelperStudentRepository(
     localDataSource: DiscussionRouteHelperLocalDataSource,
-    private val networkDataSource: DiscussionRouteHelperNetworkDataSource,
+    networkDataSource: DiscussionRouteHelperNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider
 ) : DiscussionRouteHelperRepository, Repository<DiscussionRouteHelperDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider) {
-    override suspend fun getEnabledFeaturesForCourse(
-        canvasContext: CanvasContext,
-        forceNetwork: Boolean
-    ): Boolean {
-        return networkDataSource.getEnabledFeaturesForCourse(canvasContext, forceNetwork)
-    }
+
+    override suspend fun shouldShowDiscussionRedesign(): Boolean = isOnline() || !isOfflineEnabled()
 
     override suspend fun getDiscussionTopicHeader(
         canvasContext: CanvasContext,

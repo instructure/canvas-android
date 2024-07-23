@@ -4,7 +4,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperLocalDataSource
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperNetworkDataSource
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
@@ -31,25 +30,36 @@ class DiscussionRouteHelperStudentRepositoryTest {
     }
 
     @Test
-    fun `Call getEnabledFeaturesForCourse function when device is online`() = runTest {
+    fun `Show discussion redesign when device is online`() = runTest {
         val expected = true
 
         coEvery { networkStateProvider.isOnline() } returns true
-        coEvery { networkDataSource.getEnabledFeaturesForCourse(any(), any()) } returns expected
 
-        val result = repository.getEnabledFeaturesForCourse(mockk(), false)
+        val result = repository.shouldShowDiscussionRedesign()
 
         assertEquals(expected, result)
     }
 
     @Test
-    fun `Call getEnabledFeaturesForCourse function when device is offline`() = runTest {
+    fun `Show discussion redesign when device is offline and offline is disabled`() = runTest {
         val expected = true
 
         coEvery { networkStateProvider.isOnline() } returns false
-        coEvery { networkDataSource.getEnabledFeaturesForCourse(any(), any()) } returns expected
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
 
-        val result = repository.getEnabledFeaturesForCourse(mockk(), false)
+        val result = repository.shouldShowDiscussionRedesign()
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Dont show discussion redesign when device is offline and offline is enabled`() = runTest {
+        val expected = false
+
+        coEvery { networkStateProvider.isOnline() } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+
+        val result = repository.shouldShowDiscussionRedesign()
 
         assertEquals(expected, result)
     }

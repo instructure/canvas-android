@@ -11,8 +11,8 @@ class DiscussionRouteHelper(
     private val discussionRouteHelperRepository: DiscussionRouteHelperRepository,
 ) {
 
-    suspend fun isDiscussionRedesignEnabled(canvasContext: CanvasContext): Boolean {
-        return discussionRouteHelperRepository.getEnabledFeaturesForCourse(canvasContext, false)
+    suspend fun shouldShowDiscussionRedesign(): Boolean {
+        return discussionRouteHelperRepository.shouldShowDiscussionRedesign()
     }
 
     suspend fun getDiscussionHeader(
