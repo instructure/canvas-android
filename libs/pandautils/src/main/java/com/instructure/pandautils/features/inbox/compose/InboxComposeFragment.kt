@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
@@ -17,7 +19,7 @@ import com.instructure.pandautils.features.inbox.coursepicker.CoursePickerFragme
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 
-class InboxComposeFragment : Fragment(), FragmentInteractions {
+class InboxComposeFragment : Fragment(), FragmentInteractions, CoursePickerFragment.CoursePickerListener {
 
     private val viewModel: InboxComposeViewModel by viewModels()
 
@@ -33,7 +35,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                 InboxComposeScreen(
                     uiState = uiState,
                     openCoursePicker = {
-                        val fragment = CoursePickerFragment()
+                        val fragment = CoursePickerFragment(this@InboxComposeFragment)
                         fragment.show(requireActivity().supportFragmentManager, CoursePickerFragment::javaClass.name)
                     },
                     onDismiss = { activity?.supportFragmentManager?.popBackStack() }
@@ -53,5 +55,9 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
 
     override fun getFragment(): Fragment {
         return this
+    }
+
+    override fun onCourseSelected(context: CanvasContext) {
+        Log.d("InboxComposeFragment", "onCourseSelected: $context")
     }
 }

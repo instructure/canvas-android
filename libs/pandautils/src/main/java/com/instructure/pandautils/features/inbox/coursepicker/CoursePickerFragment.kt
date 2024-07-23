@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
@@ -18,7 +19,9 @@ import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CoursePickerFragment: BottomSheetDialogFragment(), FragmentInteractions {
+class CoursePickerFragment(
+    private val listener: CoursePickerListener? = null
+): BottomSheetDialogFragment(), FragmentInteractions {
     private val viewModel: CoursePickerViewModel by viewModels()
 
     override fun onCreateView(
@@ -26,6 +29,9 @@ class CoursePickerFragment: BottomSheetDialogFragment(), FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        if (listener != null) {
+            viewModel.listener = listener
+        }
         return ComposeView(requireActivity()).apply {
             setContent {
                 CoursePickerScreen(
@@ -33,8 +39,8 @@ class CoursePickerFragment: BottomSheetDialogFragment(), FragmentInteractions {
                     onNavigateBack = { dismiss() },
                     coursePickerViewModel = viewModel,
                     onContextSelected = { context ->
+                        viewModel.listener?.onCourseSelected(context)
                         dismiss()
-
                     }
                 )
             }
@@ -65,5 +71,9 @@ class CoursePickerFragment: BottomSheetDialogFragment(), FragmentInteractions {
         sheetContainer.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
         (dialog as? BottomSheetDialog)?.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
         (dialog as? BottomSheetDialog)?.behavior?.isDraggable = false
+    }
+
+    interface CoursePickerListener {
+        fun onCourseSelected(context: CanvasContext)
     }
 }

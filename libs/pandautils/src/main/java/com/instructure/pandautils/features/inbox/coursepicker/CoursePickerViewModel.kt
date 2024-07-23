@@ -25,6 +25,8 @@ class CoursePickerViewModel @Inject constructor(
 
     val state = MutableStateFlow(State.LOADING)
 
+    var listener: CoursePickerFragment.CoursePickerListener? = null
+
     init {
         loadData()
     }
