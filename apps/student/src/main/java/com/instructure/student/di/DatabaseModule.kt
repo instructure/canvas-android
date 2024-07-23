@@ -42,6 +42,7 @@ class DatabaseModule {
     fun provideStudentDb(@ApplicationContext context: Context): StudentDb {
         return Room.databaseBuilder(context, StudentDb::class.java, "student.db")
             .addMigrations(*studentDbMigrations)
+            .fallbackToDestructiveMigration()
             .build()
     }
 }
