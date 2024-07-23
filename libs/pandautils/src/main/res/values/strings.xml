@@ -489,4 +489,5 @@
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
     <string name="new_message">New Message</string>
     <string name="select_a_team">Select a Team</string>
+    <string name="select_recipients">Select recipients</string>
 </resources>
