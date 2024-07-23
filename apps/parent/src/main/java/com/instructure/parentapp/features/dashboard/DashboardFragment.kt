@@ -246,6 +246,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         gradientDrawable?.setStroke(2.toPx, color)
         binding.unreadCountBadge.background = gradientDrawable
         binding.unreadCountBadge.setTextColor(color)
+
+        binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
     }
 
     private fun openNavigationDrawer() {

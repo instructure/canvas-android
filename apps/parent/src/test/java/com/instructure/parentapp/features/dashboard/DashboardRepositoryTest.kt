@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.UnreadConversationCount
-import com.instructure.canvasapi2.models.UnreadCount
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
@@ -103,22 +102,6 @@ class DashboardRepositoryTest {
         coEvery { unreadCountApi.getUnreadConversationCount(any()) } returns DataResult.Success(UnreadConversationCount(unreadCount = "42"))
 
         val result = repository.getUnreadCounts()
-        assertEquals(42, result)
-    }
-
-    @Test
-    fun `Get alert count returns 0 when the request fails`() = runTest {
-        coEvery { unreadCountApi.getUnreadAlertCount(any(), any()) } returns DataResult.Fail()
-
-        val result = repository.getAlertCount(1L)
-        assertEquals(0, result)
-    }
-
-    @Test
-    fun `Get alert count returns the alert count when the response is successful`() = runTest {
-        coEvery { unreadCountApi.getUnreadAlertCount(any(), any()) } returns DataResult.Success(UnreadCount(unreadCount = 42))
-
-        val result = repository.getAlertCount(1L)
         assertEquals(42, result)
     }
 }

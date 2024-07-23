@@ -16,11 +16,14 @@
  */
 package com.instructure.parentapp.features.alerts.list
 
-import com.instructure.canvasapi2.apis.ObserverAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.ObserverApi
 import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
@@ -36,13 +39,16 @@ import java.util.Date
 
 class AlertsRepositoryTest {
 
-    private val observerApi: ObserverAPI.ObserverInterface = mockk(relaxed = true)
+    private val observerApi: ObserverApi = mockk(relaxed = true)
+    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
 
     private lateinit var alertsRepository: AlertsRepository
 
     @Before
     fun setup() {
         createRepository()
+
+        coEvery { courseApi.getCourse(any(), any()) } returns DataResult.Success(Course(id = 1L))
     }
 
     @Test
@@ -235,7 +241,139 @@ class AlertsRepositoryTest {
         alertsRepository.updateAlertWorkflow(1L, AlertWorkflowState.UNREAD)
     }
 
+    @Test
+    fun `get alerts count`() = runTest {
+        val alerts = listOf(
+            Alert(
+                id = 1,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-03T00:00:00Z")
+                ),
+                title = "Alert 1",
+                workflowState = AlertWorkflowState.READ,
+                alertType = AlertType.ASSIGNMENT_MISSING,
+                htmlUrl = "https://example.com/alert1",
+                contextId = 1L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 1L,
+                observerId = 1L,
+                userId = 2L
+            ),
+            Alert(
+                id = 1,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-01T00:00:00Z")
+                ),
+                title = "Alert 2",
+                workflowState = AlertWorkflowState.UNREAD,
+                alertType = AlertType.ASSIGNMENT_MISSING,
+                htmlUrl = "https://example.com/alert2",
+                contextId = 1L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 1L,
+                observerId = 1L,
+                userId = 2L
+            ),
+            Alert(
+                id = 1,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-02T00:00:00Z")
+                ),
+                title = "Alert 3",
+                workflowState = AlertWorkflowState.UNREAD,
+                alertType = AlertType.ASSIGNMENT_MISSING,
+                htmlUrl = "https://example.com/alert3",
+                contextId = 1L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 1L,
+                observerId = 1L,
+                userId = 2L
+            ),
+        )
+        coEvery { observerApi.getObserverAlerts(any(), any()) } returns DataResult.Success(alerts)
+
+        val result = alertsRepository.getUnreadAlertCount(1L)
+
+        assertEquals(2, result)
+    }
+
+    @Test
+    fun `alert count set to 0 if call fails`() = runTest {
+
+        coEvery { observerApi.getObserverAlerts(any(), any()) } returns DataResult.Fail()
+
+        val result = alertsRepository.getUnreadAlertCount(1L)
+
+        assertEquals(0, result)
+    }
+
+    @Test
+    fun `filter quantitative data if restricted`() = runTest {
+        val alerts = listOf(
+            Alert(
+                id = 1,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-03T00:00:00Z")
+                ),
+                title = "Alert 1",
+                workflowState = AlertWorkflowState.READ,
+                alertType = AlertType.COURSE_GRADE_LOW,
+                htmlUrl = "https://example.com/alert1",
+                contextId = 1L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 1L,
+                observerId = 1L,
+                userId = 2L
+            ),
+            Alert(
+                id = 2,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-01T00:00:00Z")
+                ),
+                title = "Alert 2",
+                workflowState = AlertWorkflowState.UNREAD,
+                alertType = AlertType.ASSIGNMENT_MISSING,
+                htmlUrl = "https://example.com/alert2",
+                contextId = 2L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 2L,
+                observerId = 1L,
+                userId = 2L
+            ),
+            Alert(
+                id = 3,
+                actionDate = Date.from(
+                    Instant.parse("2024-01-02T00:00:00Z")
+                ),
+                title = "Alert 3",
+                workflowState = AlertWorkflowState.UNREAD,
+                alertType = AlertType.COURSE_GRADE_HIGH,
+                htmlUrl = "https://example.com/alert3",
+                contextId = 2L,
+                contextType = "Course",
+                lockedForUser = false,
+                observerAlertThresholdId = 3L,
+                observerId = 1L,
+                userId = 2L
+            ),
+        )
+
+        coEvery { observerApi.getObserverAlerts(any(), any()) } returns DataResult.Success(alerts)
+        coEvery { courseApi.getCourseSettings(1L, any()) } returns DataResult.Success(CourseSettings(restrictQuantitativeData = false))
+        coEvery { courseApi.getCourseSettings(2L, any()) } returns DataResult.Success(CourseSettings(restrictQuantitativeData = true))
+
+        val result = alertsRepository.getAlertsForStudent(1L, false)
+
+        assertEquals(2, result.size)
+        assertEquals(alerts.subList(0, 2), result)
+    }
+
     private fun createRepository() {
-        alertsRepository = AlertsRepository(observerApi)
+        alertsRepository = AlertsRepository(observerApi, courseApi)
     }
 }

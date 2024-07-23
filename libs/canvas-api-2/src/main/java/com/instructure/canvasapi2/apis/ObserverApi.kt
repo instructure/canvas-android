@@ -25,20 +25,17 @@ import retrofit2.http.Query
 import retrofit2.http.Tag
 import retrofit2.http.Url
 
-object ObserverAPI {
+interface ObserverApi {
 
-    interface ObserverInterface {
+    @GET("users/self/observer_alerts/{studentId}")
+    suspend fun getObserverAlerts(@Path("studentId") studentId: Long, @Tag restParams: RestParams): DataResult<List<Alert>>
 
-        @GET("users/self/observer_alerts/{studentId}")
-        suspend fun getObserverAlerts(@Path("studentId") studentId: Long, @Tag restParams: RestParams): DataResult<List<Alert>>
+    @GET
+    suspend fun getNextPageObserverAlerts(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Alert>>
 
-        @GET
-        suspend fun getNextPageObserverAlerts(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Alert>>
+    @PUT("users/self/observer_alerts/{alertId}/{workflowState}")
+    suspend fun updateAlertWorkflow(@Path("alertId") alertId: Long, @Path("workflowState") workflowState: String, @Tag restParams: RestParams): DataResult<Alert>
 
-        @PUT("users/self/observer_alerts/{alertId}/{workflowState}")
-        suspend fun updateAlertWorkflow(@Path("alertId") alertId: Long, @Path("workflowState") workflowState: String, @Tag restParams: RestParams): DataResult<Alert>
-
-        @GET("users/self/observer_alert_thresholds")
-        suspend fun getObserverAlertThresholds(@Query("student_id") studentId: Long, @Tag restParams: RestParams): DataResult<List<AlertThreshold>>
-    }
+    @GET("users/self/observer_alert_thresholds")
+    suspend fun getObserverAlertThresholds(@Query("student_id") studentId: Long, @Tag restParams: RestParams): DataResult<List<AlertThreshold>>
 }

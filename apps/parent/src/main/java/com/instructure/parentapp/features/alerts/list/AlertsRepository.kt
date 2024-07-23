@@ -16,20 +16,39 @@
  */
 package com.instructure.parentapp.features.alerts.list
 
-import com.instructure.canvasapi2.apis.ObserverAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.ObserverApi
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertWorkflowState
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.depaginate
 
-class AlertsRepository(private val observerApi: ObserverAPI.ObserverInterface) {
+class AlertsRepository(
+    private val observerApi: ObserverApi,
+    private val courseApi: CourseAPI.CoursesInterface
+) {
 
     suspend fun getAlertsForStudent(studentId: Long, forceNetwork: Boolean): List<Alert> {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-        return observerApi.getObserverAlerts(studentId, restParams).depaginate {
+        val allAlerts = observerApi.getObserverAlerts(studentId, restParams).depaginate {
             observerApi.getNextPageObserverAlerts(it, restParams)
         }.dataOrThrow.sortedByDescending { it.actionDate }
+
+        val coursesMap = mutableMapOf<Long, CourseSettings?>()
+        val filteredAlerts = allAlerts.filter { alert ->
+            if (!alert.isQuantitativeRestrictionApplies()) return@filter true
+
+            alert.getCourseId()?.let { courseId ->
+                val settings = coursesMap.getOrPut(
+                    courseId
+                ) { courseApi.getCourseSettings(courseId, restParams).dataOrNull }
+                settings?.restrictQuantitativeData?.not() ?: true
+            } ?: true
+        }
+
+        return filteredAlerts
     }
 
     suspend fun getAlertThresholdForStudent(
@@ -43,7 +62,20 @@ class AlertsRepository(private val observerApi: ObserverAPI.ObserverInterface) {
 
     suspend fun updateAlertWorkflow(alertId: Long, workflowState: AlertWorkflowState): Alert {
         val restParams = RestParams(isForceReadFromNetwork = true)
-        return observerApi.updateAlertWorkflow(alertId, workflowState.name.lowercase(), restParams).dataOrThrow
+        return observerApi.updateAlertWorkflow(
+            alertId,
+            workflowState.name.lowercase(),
+            restParams
+        ).dataOrThrow
+    }
+
+    suspend fun getUnreadAlertCount(studentId: Long): Int {
+        val alerts = try {
+            getAlertsForStudent(studentId, true)
+        } catch (e: Exception) {
+            emptyList()
+        }
+        return alerts.count { it.workflowState == AlertWorkflowState.UNREAD }
     }
 
 }

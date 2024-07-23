@@ -28,6 +28,7 @@ import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,6 +43,7 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: DashboardRepository,
+    private val alertsRepository: AlertsRepository,
     private val previousUsersUtils: PreviousUsersUtils,
     private val apiPrefs: ApiPrefs,
     private val parentPrefs: ParentPrefs,
@@ -162,14 +164,15 @@ class DashboardViewModel @Inject constructor(
         currentUser?.let {
             previousUsersUtils.add(context, it.copy(selectedStudentId = student.id))
         }
-        viewModelScope.launch {
-            selectedStudentHolder.updateSelectedStudent(student)
-        }
         _data.update {
             it.copy(
                 studentSelectorExpanded = false,
                 selectedStudent = student
             )
+        }
+        viewModelScope.launch {
+            selectedStudentHolder.updateSelectedStudent(student)
+            updateAlertCount()
         }
     }
 
@@ -184,7 +187,7 @@ class DashboardViewModel @Inject constructor(
 
     private suspend fun updateAlertCount() {
         _data.value.selectedStudent?.id?.let {
-            val alertCount = repository.getAlertCount(it)
+            val alertCount = alertsRepository.getUnreadAlertCount(it)
             _data.update {
                 it.copy(
                     alertCount = alertCount

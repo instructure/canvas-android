@@ -99,7 +99,7 @@ class AlertsViewModel @Inject constructor(
             }
         } ?: setError()
 
-        alertCountUpdater.updateShouldRefreshAlertCount(false)
+        alertCountUpdater.updateShouldRefreshAlertCount(true)
     }
 
     private fun setError() {
@@ -136,14 +136,15 @@ class AlertsViewModel @Inject constructor(
 
     private suspend fun markAlertRead(alertId: Long) {
         try {
-            _uiState.update {
-                it.copy(
-                    alerts = it.alerts.map {
-                        if (it.alertId == alertId) it.copy(unread = false) else it
+            _uiState.update { uiState ->
+                uiState.copy(
+                    alerts = uiState.alerts.map { alertItem ->
+                        if (alertItem.alertId == alertId) alertItem.copy(unread = false) else alertItem
                     }
                 )
             }
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.READ)
+            alertCountUpdater.updateShouldRefreshAlertCount(true)
         } catch (e: Exception) {
             //No need to do anything. The alert will stay read.
         }
@@ -155,6 +156,9 @@ class AlertsViewModel @Inject constructor(
             alerts.add(alert)
             alerts.sortByDescending { it.date }
             _uiState.update { it.copy(alerts = alerts) }
+            viewModelScope.launch {
+                alertCountUpdater.updateShouldRefreshAlertCount(true)
+            }
         }
 
         val alerts = _uiState.value.alerts.toMutableList()
@@ -164,6 +168,7 @@ class AlertsViewModel @Inject constructor(
 
         try {
             repository.updateAlertWorkflow(alertId, AlertWorkflowState.DISMISSED)
+            alertCountUpdater.updateShouldRefreshAlertCount(true)
             _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissMessage, R.string.alertDismissAction) {
                 viewModelScope.launch {
                     try {
@@ -176,7 +181,6 @@ class AlertsViewModel @Inject constructor(
                         _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissActionErrorMessage, null, null))
                     }
                 }
-
             })
         } catch (e: Exception) {
             _events.send(AlertsViewModelAction.ShowSnackbar(R.string.alertDismissErrorMessage, null, null))

@@ -14,16 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 
 package com.instructure.parentapp.features.alerts.list
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -68,7 +67,7 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.parentapp.util.drawableId
+import com.instructure.pandautils.utils.drawableId
 import java.util.Date
 
 
@@ -153,14 +152,14 @@ fun AlertsListContent(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier, contentPadding = PaddingValues(8.dp),
-        verticalArrangement = spacedBy(16.dp)
+        modifier = modifier
     ) {
-        items(uiState.alerts) { alert ->
+        items(uiState.alerts, key = { it.alertId }) { alert ->
             AlertsListItem(
                 alert = alert,
                 userColor = uiState.studentColor,
-                actionHandler = actionHandler
+                actionHandler = actionHandler,
+                modifier = Modifier.animateItemPlacement()
             )
             Spacer(modifier = Modifier.size(8.dp))
         }
@@ -215,7 +214,7 @@ fun AlertsListItem(
             alertType.isAlertInfo() -> context.getColor(R.color.ash)
             alertType.isAlertNegative() -> context.getColor(R.color.textDanger)
             alertType.isAlertPositive() -> userColor
-            else -> context.getColor(R.color.ash)
+            else -> context.getColor(R.color.textDark)
         }
     }
 
@@ -233,8 +232,10 @@ fun AlertsListItem(
                 actionHandler(AlertsAction.Navigate(alert.alertId, it))
             }
         }
-        .testTag("alertItem")) {
-        Row {
+        .padding(8.dp)
+        .testTag("alertItem"),
+        verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.align(Alignment.Top)) {
             if (alert.unread) {
                 Box(
                     modifier = Modifier
@@ -280,7 +281,8 @@ fun AlertsListItem(
             }
         }
         IconButton(
-            modifier = Modifier.testTag("dismissButton"),
+            modifier = Modifier
+                .testTag("dismissButton"),
             onClick = { actionHandler(AlertsAction.DismissAlert(alert.alertId)) }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_close),

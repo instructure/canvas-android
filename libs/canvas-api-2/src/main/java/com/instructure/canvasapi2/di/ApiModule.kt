@@ -263,8 +263,8 @@ class ApiModule {
     }
 
     @Provides
-    fun provideObserverApi(): ObserverAPI.ObserverInterface {
-        return RestBuilder().build(ObserverAPI.ObserverInterface::class.java, RestParams())
+    fun provideObserverApi(): ObserverApi {
+        return RestBuilder().build(ObserverApi::class.java, RestParams())
     }
 
     @Provides

@@ -29,6 +29,7 @@ import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -61,6 +62,7 @@ class DashboardViewModelTest {
 
     private val context: Context = mockk(relaxed = true)
     private val repository: DashboardRepository = mockk(relaxed = true)
+    private val alertsRepository: AlertsRepository = mockk(relaxed = true)
     private val previousUsersUtils: PreviousUsersUtils = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
@@ -219,13 +221,13 @@ class DashboardViewModelTest {
     fun `Update alert count when the update alert count flow triggers`() = runTest {
         val students = listOf(User(id = 1L), User(id = 2L))
         coEvery { repository.getStudents() } returns students
-        coEvery { repository.getAlertCount(1L) } returns 0
+        coEvery { alertsRepository.getUnreadAlertCount(1L) } returns 0
 
         createViewModel()
 
         assertEquals(0, viewModel.data.value.alertCount)
 
-        coEvery { repository.getAlertCount(1L) } returns 1
+        coEvery { alertsRepository.getUnreadAlertCount(1L) } returns 1
         alertCountUpdaterFlow.emit(true)
 
         assertEquals(1, viewModel.data.value.alertCount)
@@ -235,6 +237,7 @@ class DashboardViewModelTest {
         viewModel = DashboardViewModel(
             context = context,
             repository = repository,
+            alertsRepository = alertsRepository,
             previousUsersUtils = previousUsersUtils,
             apiPrefs = apiPrefs,
             parentPrefs = parentPrefs,

@@ -16,7 +16,8 @@
  */
 package com.instructure.parentapp.di
 
-import com.instructure.canvasapi2.apis.ObserverAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.ObserverApi
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import dagger.Module
 import dagger.Provides
@@ -28,7 +29,7 @@ import dagger.hilt.android.components.ViewModelComponent
 class AlertsModule {
 
     @Provides
-    fun provideAlertsRepository(observerApi: ObserverAPI.ObserverInterface): AlertsRepository {
-        return AlertsRepository(observerApi)
+    fun provideAlertsRepository(observerApi: ObserverApi, courseApi: CourseAPI.CoursesInterface): AlertsRepository {
+        return AlertsRepository(observerApi, courseApi)
     }
 }

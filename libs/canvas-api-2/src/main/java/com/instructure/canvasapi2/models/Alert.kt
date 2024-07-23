@@ -41,7 +41,24 @@ data class Alert(
     val htmlUrl: String?,
     @SerializedName("locked_for_user")
     val lockedForUser: Boolean
-)
+) {
+    fun getCourseId(): Long? {
+        return when(alertType) {
+            AlertType.COURSE_GRADE_LOW, AlertType.COURSE_GRADE_HIGH, AlertType.COURSE_ANNOUNCEMENT -> contextId
+            AlertType.ASSIGNMENT_GRADE_HIGH, AlertType.ASSIGNMENT_GRADE_LOW, AlertType.ASSIGNMENT_MISSING -> {
+                Regex("courses/(\\d+)/").find(htmlUrl.orEmpty())?.groupValues?.get(1)?.toLong()
+            }
+            else -> null
+        }
+    }
+
+    fun isQuantitativeRestrictionApplies(): Boolean {
+        return when (alertType) {
+            AlertType.COURSE_GRADE_LOW, AlertType.COURSE_GRADE_HIGH, AlertType.ASSIGNMENT_GRADE_HIGH, AlertType.ASSIGNMENT_GRADE_LOW -> true
+            else -> false
+        }
+    }
+}
 
 enum class AlertType {
     @SerializedName("assignment_missing")

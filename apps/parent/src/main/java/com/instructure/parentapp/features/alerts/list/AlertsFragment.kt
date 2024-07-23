@@ -65,7 +65,7 @@ class AlertsFragment : Fragment() {
             is AlertsViewModelAction.ShowSnackbar -> {
                 Snackbar.make(requireView(), action.message, Snackbar.LENGTH_SHORT).apply {
                     action.action?.let { setAction(it) { action.actionCallback?.invoke() } }
-                    setActionTextColor(resources.getColor(R.color.textLightest, resources.newTheme()))
+                    setActionTextColor(resources.getColor(R.color.white, resources.newTheme()))
                 }.show()
             }
         }
