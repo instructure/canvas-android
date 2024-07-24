@@ -17,7 +17,138 @@
 
 package com.instructure.parentapp.ui.compose
 
+import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.pandares.R
+import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.parentapp.features.managestudents.ColorPickerDialogUiState
+import com.instructure.parentapp.features.managestudents.ManageStudentsScreen
+import com.instructure.parentapp.features.managestudents.ManageStudentsUiState
+import com.instructure.parentapp.features.managestudents.StudentItemUiState
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 
+
+@RunWith(AndroidJUnit4::class)
 class ManageStudentsScreenTest {
 
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
+    @Test
+    fun assertEmptyContent() {
+        composeTestRule.setContent {
+            ManageStudentsScreen(
+                uiState = ManageStudentsUiState(
+                    isLoading = false,
+                    studentListItems = emptyList()
+                ),
+                actionHandler = {},
+                navigationActionClick = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("You are not observing any students.")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retry")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+        composeTestRule.onNodeWithTag(R.drawable.panda_manage_students.toString())
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertErrorContent() {
+        composeTestRule.setContent {
+            ManageStudentsScreen(
+                uiState = ManageStudentsUiState(
+                    isLoadError = true,
+                    studentListItems = emptyList()
+                ),
+                actionHandler = {},
+                navigationActionClick = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("There was an error loading your students.")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Retry")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    @Test
+    fun assertStudentListContent() {
+        composeTestRule.setContent {
+            ManageStudentsScreen(
+                uiState = ManageStudentsUiState(
+                    studentListItems = listOf(
+                        StudentItemUiState(
+                            studentId = 1,
+                            studentName = "John Doe",
+                            studentColor = ThemedColor(R.color.studentGreen)
+                        ),
+                        StudentItemUiState(
+                            studentId = 2,
+                            studentName = "Jane Doe",
+                            studentColor = ThemedColor(R.color.studentPink)
+                        )
+                    )
+                ),
+                actionHandler = {},
+                navigationActionClick = {}
+            )
+        }
+
+        fun studentItemMatcher(name: String) = hasTestTag("studentListItem") and hasAnyChild(hasText(name))
+        composeTestRule.onNode(studentItemMatcher("John Doe"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(studentItemMatcher("Jane Doe"), true)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertColorPickerDialogError() {
+        composeTestRule.setContent {
+            ManageStudentsScreen(
+                uiState = ManageStudentsUiState(
+                    studentListItems = listOf(
+                        StudentItemUiState(
+                            studentId = 1,
+                            studentName = "John Doe",
+                            studentColor = ThemedColor(R.color.studentGreen)
+                        )
+                    ),
+                    colorPickerDialogUiState = ColorPickerDialogUiState(
+                        showColorPickerDialog = true,
+                        studentId = 1,
+                        initialUserColor = null,
+                        userColors = emptyList(),
+                        isSavingColorError = true
+                    )
+                ),
+                actionHandler = {},
+                navigationActionClick = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Select Student Color")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("An error occurred while saving your selection. Please try again.")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Cancel")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+        composeTestRule.onNodeWithText("OK")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
 }

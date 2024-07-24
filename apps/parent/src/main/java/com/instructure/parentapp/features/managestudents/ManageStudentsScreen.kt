@@ -196,7 +196,8 @@ private fun StudentListItem(
             .clickable {
                 actionHandler(ManageStudentsAction.StudentTapped(uiState.studentId))
             }
-            .padding(top = 16.dp, bottom = 16.dp, start = 16.dp),
+            .padding(top = 16.dp, bottom = 16.dp, start = 16.dp)
+            .testTag("studentListItem"),
         verticalAlignment = Alignment.CenterVertically
     ) {
         UserAvatar(
@@ -217,6 +218,7 @@ private fun StudentListItem(
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
+                .testTag("studentColor")
                 .semantics(mergeDescendants = true) {
                     contentDescription = changeColorContentDescription
                 }

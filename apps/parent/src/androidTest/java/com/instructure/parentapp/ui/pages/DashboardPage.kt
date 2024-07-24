@@ -75,4 +75,8 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     fun tapSwitchUsers() {
         onViewWithText(R.string.navigationDrawerSwitchUsers).click()
     }
+
+    fun tapManageStudents() {
+        onViewWithText(R.string.screenTitleManageStudents).click()
+    }
 }
