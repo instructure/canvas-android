@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="chooseMedia">Choose Media</string>
+    <string name="takeVideo">Take Video</string>
+    <string name="noCameraOnDevice">No Camera</string>
+    <string name="takePhoto">Take Photo</string>
+    <string name="choosePhotoFromGallery">Choose Photo From Gallery</string>
+
+    <string name="utils_edit">Edit</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Uploading to Canvas</string>
+    <string name="preparingUpload">Preparing upload</string>
+    <string name="loadingFilesIndeterminate">Loading Files&#8230;</string>
+    <string name="fileUploadSuccess">Upload Successful</string>
+    <string name="noNetwork">Network not available - please try again later.</string>
+    <string name="uploadMessage">"Upload in progress. Check notifications for upload status.</string>
+    <string name="uploadingFile">Uploading file&#8230;</string>
+    <string name="errorUploadingFile">An error occurred uploading your file. Please try again.</string>
+    <string name="fileSubmission">Submit File(s)</string>
+    <string name="uploadFiles">Upload File(s)</string>
+    <string name="upload">Upload</string>
+    <string name="errorSendingMessage">An error occurred sending your message. Please try again.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Upload Notifications</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing uploads.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="addFile">Add File</string>
+
+    <string name="fromCamera">Camera</string>
+    <string name="fromGallery">Gallery</string>
+    <string name="fromDevice">Device</string>
+    <string name="fromDocumentScanning">Scanner</string>
+    <string name="fromOtherApplication">Other</string>
+    <string name="Domain">Domain</string>
+    <string name="files">Files</string>
+    <string name="file">File</string>
+    <string name="fileTalkBack">File %s</string>
+    <string name="folderTalkBack">Folder %s</string>
+    <string name="addItem">Add Item</string>
+    <string name="assignment">Assignment</string>
+    <string name="attachedFiles">Attached Files</string>
+    <string name="turnIn">Turn in</string>
+    <string name="course">Course</string>
+    <string name="sending">Sending&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Star Rating One</string>
+    <string name="star2">Star Rating Two</string>
+    <string name="star3">Star Rating Three</string>
+    <string name="star4">Star Rating Four</string>
+    <string name="star5">Star Rating Five</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">You have currently exceeded your file storage quota.</string>
+    <string name="errorSubmittingFiles">An error occurred turning in your files. Please try again.</string>
+    <string name="errorLoadingFiles">An error occurred loading your file. Please check your internet connection and try again.</string>
+    <string name="filesUploadedSuccessfully">Files uploaded successfully.</string>
+    <string name="filesSubmittedSuccessfully">Files submitted successfully.</string>
+    <string name="messageSentSuccessfully">Message sent successfully.</string>
+    <string name="shareWithCanvas">Other apps can share files with Canvas! Look for the icon below in apps and tap on Canvas.</string>
+    <string name="shareWithCanvas2">That will open this app. Then just select which course and assignment that you want to turn in the file to.</string>
+    <string name="contentDescriptionSocialShare">Share icon</string>
+    <string name="submitAssignment">Submit Assignment</string>
+    <string name="assignmentHeader">Assignment :</string>
+    <string name="submittingAssignment">Submitting assignment&#8230;</string>
+    <string name="conversations">Conversations </string>
+    <string name="inbox">Inbox </string>
+    <string name="divider">Divider</string>
+    <string name="legal">Legal</string>
+    <string name="completeHomework">COMPLETE your Homework</string>
+    <string name="takeExam">Take an Exam</string>
+    <string name="fileIcon">File Icon</string>
+    <string name="uploadingFileNum" formatted="false">Uploading %d of %d</string>
+    <string name="fileLocked" formatted="false">%s has been locked.</string>
+    <string name="filePermissionGranted">File is now ready to download, please try again.</string>
+    <string name="filePermissionDenied">The file cannot be downloaded without granting permission.</string>
+    <string name="pleaseTryAgain">Permission Granted, please try again.</string>
+    <string name="pickFile">Select a File</string>
+    <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
+    <string name="assignmentSubmissionError">Submission failed for %s</string>
+    <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">An unexpected error occurred.</string>
+    <string name="serverError">A server error has occurred.</string>
+    <string name="unauthorized">You are unauthorized to access this. Either you don\'t have permissions or you don\'t have access yet (like your course hasn\'t started yet)</string>
+    <string name="fileNoLongerExists">That file no longer exists.</string>
+    <string name="invalidAccessToken">Your session has expired. Please login to start a new session.</string>
+    <string name="uploadingFromSourceFailed">Uploading a file from this source could not be completed.</string>
+    <string name="errorGettingPhoto">There was an error getting the photo. Please try again.</string>
+    <string name="errorTextMissing">Add some text to send a message</string>
+
+    <string name="fileUploadNotSupported">You can\'t upload files to the selected assignment.</string>
+    <string name="noCourseSelected">Please select a course</string>
+    <string name="selectCourse">Select a course</string>
+    <string name="selectAssignment">Select an assignment</string>
+    <string name="loadingAssignments">Loading Assignments…</string>
+    <string name="noAssignmentSelected">Please select an assignment</string>
+    <string name="noAssignmentsWithFileUpload">This course has no assignments that allow file uploads.</string>
+    <string name="teacherNotAllowedFileSubmission">As a teacher in this course, you can\'t submit files</string>
+    <string name="noFilesUploaded">You haven\'t selected any files.</string>
+    <string name="oneOrMoreExtensionNotAllowed">One or more files has a file extension that isn\'t allowed</string>
+    <string name="extensionNotAllowed">The selected file type is not allowed.</string>
+    <string name="allowedExtensions">Allowed extensions:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Please check your data connection and try again. </string>
+    <string name="noApps">Your device doesn\'t have any applications installed that can handle this file.</string>
+    <string name="noAppsShort">Cannot open</string>
+    <string name="unexpectedErrorOpeningFile">An unexpected error occurred while trying to open the file.</string>
+    <string name="unexpectedErrorDownloadingFile">An unexpected error occurred while trying to download the file.</string>
+
+    <string name="done">Done</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">To use this feature, permission must first be granted.</string>
+    <string name="noConnection">No Connection</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Your favorited courses &amp; groups show up here.</string>
+    <string name="addCoursesGroups">Add Courses/Groups</string>
+    <string name="noDiscussions">No Discussions</string>
+    <string name="noDiscussionsSubtext">Start a conversation with others.</string>
+    <string name="noDiscussionsTeacher">Start a conversation with your students.</string>
+    <string name="nothingUnread">Inbox Zero!</string>
+    <string name="nothingUnreadSubtext">You\'re all caught up!</string>
+    <string name="nothingStarred">No Starred Messages</string>
+    <string name="nothingStarredSubtext">Keep important messages in this section by tapping the star in each message.</string>
+    <string name="nothingSent">Nothing Sent</string>
+    <string name="nothingSentSubtext">You haven\'t sent any messages.</string>
+    <string name="nothingArchived">Nothing Archived</string>
+    <string name="nothingArchivedSubtext">You haven\'t archived any messages.</string>
+    <string name="noQuizzes">No Quizzes</string>
+    <string name="noQuizzesSubtext">Sorry, no quizzes exist yet.</string>
+    <string name="noQuizzesTeacher">There are no published quizzes to display.</string>
+    <string name="noAnnouncements">No Announcements</string>
+    <string name="noAnnouncementsSubtext">Nothing has been announced yet.</string>
+    <string name="noCourses">No Courses</string>
+    <string name="noCoursesSubtext">It looks like there aren\'t any courses associated with this account. Visit the web to create a course today.</string>
+    <string name="noAssignments">No Assignments</string>
+    <string name="noAssignmentsSubtext">It looks like assignments haven\'t been created in this space. Time to go out and explore.</string>
+    <string name="noAssignmentsTeacher">It looks like no assignments have been published yet.</string>
+    <string name="noFiles">No Files</string>
+    <string name="noFilesForAssignment">There are no files for this submission</string>
+    <string name="noFilesSubtext">There are no files associated with this account.</string>
+    <string name="emptyFolder">This folder is empty</string>
+    <string name="notSupported">Not Supported</string>
+    <string name="noEvents">No Events Today!</string>
+    <string name="noEventsSubtext">It looks like a great day to rest and relax.</string>
+    <string name="noSubmission">No Submission</string>
+    <string name="noSubmissionTeacher">This student doesn\'t have a submission yet.</string>
+    <string name="locked">Locked</string>
+    <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
+    <string name="chooseFile">Choose a File</string>
+    <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
+    <string name="chooseFileForUploadSubtext">Select a file to upload by tapping an option below</string>
+    <string name="noNotifications">No Notifications</string>
+    <string name="noNotificationsSubtext">There\'s nothing to be notified of yet.</string>
+    <string name="noTodos">Well Done!</string>
+    <string name="noTodosSubtext">Your to-do list is empty. Time to recharge.</string>
+    <string name="noSyllabus">No Syllabus</string>
+    <string name="noSyllabusSubtext">A syllabus has not been created yet.</string>
+    <string name="noBookmarks">No Bookmarks</string>
+    <string name="noBookmarksSubtext">Bookmarks are shortcuts for any screen in the app. Add them on the screen you\'d like to bookmark.</string>
+    <string name="noModules">No Modules</string>
+    <string name="noModulesSubtext">It looks like there aren\'t any modules created yet.</string>
+    <string name="noPages">No Pages</string>
+    <string name="noPagesSubtext">It looks like no pages have been created yet.</string>
+    <string name="modulesLockedSubtext">Modules have been disabled for this course.</string>
+    <string name="modulesLocked">Something Went Wrong</string>
+
+    <!--General-->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="inbox_all">Inbox</string>
+    <string name="inbox_unread">Unread</string>
+    <string name="inbox_starred">Starred</string>
+    <string name="inbox_sent">Sent</string>
+    <string name="inbox_archived">Archived</string>
+
+    <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
+
+    <string name="like">Like</string>
+    <string name="likes">Likes</string>
+    <string name="lockedAssignmentNotModule">This assignment is locked.</string>
+    <string name="deletedEntryNoChildren">This deleted discussion entry has no replies.</string>
+    <string name="deleted">Deleted</string>
+    <string name="deleted_by">[Deleted by %1$s]</string>
+    <string name="lockedDiscussionDesc">This discussion is part of the module %s and has not been unlocked yet.</string>
+    <string name="gradedDiscussion">Graded Discussion</string>
+    <string name="pointsPossible">Points Possible</string>
+    <string name="sideCommentEntry">In this type of discussion, you cannot comment on any entry on this level.</string>
+
+    <string name="accessibility_overflow">Overflow</string>
+
+    <string name="discussion_response">Comment</string>
+    <string name="discussion_responses">Comments</string>
+    <string name="discussion_unread">Unread</string>
+    <string name="discussion_reply">Reply</string>
+    <string name="close">Close</string>
+
+    <string name="noInternetConnectionTitle">No Internet Connection</string>
+    <string name="noInternetConnectionMessage">This action requires an internet connection.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
+    <string name="formattedAvatarAction">View user details for %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">How are we doing?</string>
+    <string name="utils_rateUs">How would you rate us?</string>
+    <string name="utils_doBetter">What can we do better?</string>
+    <string name="utils_sendFeedback">Send Feedback</string>
+    <string name="utils_suggestions">Suggestions for Android</string>
+    <string name="utils_domain">Domain</string>
+    <string name="utils_versionNum">Version:</string>
+    <string name="utils_userId">User ID</string>
+    <string name="utils_email">Email</string>
+    <string name="utils_dontShowAgain">Don\'t show again</string>
+    <string name="utils_installDate">Install Date:</string>
+    <string name="utils_device">Device</string>
+    <string name="utils_osVersion">OS Version</string>
+    <string name="loading">Loading</string>
+    <string name="save">Save</string>
+    <string name="cropInstructions">Pinch and drag to adjust the image.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s Reply</item>
+        <item quantity="other">%s Replies</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Deleted this reply %s</string>
+    <string name="utils_discussionsUnknownAuthor">Unknown Author</string>
+    <string name="utils_discussionsReply">Reply</string>
+    <string name="utils_discussionsEdit">Edit</string>
+    <string name="utils_discussionsDeleteWarning">Are you sure you want to delete this reply?</string>
+    <string name="utils_availableToLabel">Available to:</string>
+    <string name="utils_availableFromLabel">Available from:</string>
+    <string name="utils_dueDateHeaderLabel">Due</string>
+    <string name="utils_dueLabel">Due:</string>
+    <string name="utils_delete">Delete</string>
+    <string name="utils_dueDateAtTime" formatted="false">Due %1s at %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Availability:</string>
+    <string name="utils_pinnedIcon">Icon for pinned discussion</string>
+    <string name="utils_pinDiscussion">Pin Discussion</string>
+    <string name="utils_unpinDiscussion">Unpin Discussion</string>
+    <string name="utils_discussionPinned">Discussion Pinned</string>
+    <string name="utils_pinnedDiscussions">Pinned</string>
+    <string name="utils_discussionUnpinned">Discussions</string>
+    <string name="utils_emptyDiscussions">There are no discussions to show in this section.</string>
+    <string name="utils_description">Description</string>
+    <string name="utils_allowThreadedReplies">Allow threaded replies</string>
+    <string name="utils_usersMustPost">Students must post before seeing replies</string>
+    <string name="utils_discussionsClosed">Closed for Comments</string>
+    <string name="utils_discussionsOpen">Open for Comments</string>
+    <string name="utils_discussionsPin">Pin</string>
+    <string name="utils_discussionsUnpin">Unpin</string>
+    <string name="utils_discussionsOptions">Options</string>
+    <string name="utils_discussionsDeleteTitle">Delete Discussion?</string>
+    <string name="utils_discussionsDelete">Delete Discussion</string>
+    <string name="utils_discussionsDeleteMessage">This will delete the whole discussion and thread.</string>
+    <string name="utils_discussionSentSuccess">The discussion reply was successful.</string>
+    <string name="utils_discussionUpdateSuccess">The discussion edit was successful.</string>
+    <string name="utils_discussionSentEmpty">The discussion reply cannot be empty.</string>
+    <string name="utils_discussionSentFailure">The discussion reply was unable to be sent at this time.</string>
+    <string name="utils_createDiscussion">New Discussion</string>
+    <string name="utils_editDiscussion">Edit Discussion</string>
+    <string name="utils_discussionDetails">Discussion Details</string>
+    <string name="utils_discussionSuccessfullyUpdated">Discussion successfully updated.</string>
+    <string name="utils_saving">Saving</string>
+    <string name="utils_discussionSuccessfullyCreated">Discussion successfully created.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">The attachment could not be added to this discussion. Please check your file quota and try again.</string>
+    <string name="utils_noTitle">No Title</string>
+    <string name="utils_discussionsReplies_Title">Replies</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">More options</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Last post %s</string>
+    <string name="utils_postedOnDate">Posted on %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Replies are only visible to those who have posted at least one reply.</string>
+    <string name="utils_createAnnouncementDelayPosting">Delay Posting</string>
+    <string name="utils_postAt">Post At</string>
+    <string name="utils_postDate">Post Date</string>
+    <string name="utils_postTime">Post Time</string>
+    <string name="utils_editAnnouncementTitle">Edit Announcement</string>
+    <string name="utils_createAnnouncementTitle">New Announcement</string>
+    <string name="utils_announcementDetails">Announcement Details</string>
+    <string name="utils_createAnnouncementNoDescription">A description is required</string>
+    <string name="utils_errorSavingAnnouncement">An error occurred trying to save this announcement. Try again.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Announcement successfully updated.</string>
+    <string name="utils_announcementSuccessfullyCreated">Announcement successfully created.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s Unread</item>
+        <item quantity="other">%s Unread</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Add Attachment</item>
+        <item quantity="one">Add Attachment</item>
+        <item quantity="other">Add Attachments</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+
+    <string name="utils_unlockAfterDueDateError">Unlock date cannot be after due date</string>
+    <string name="utils_lockBeforeDueDateError">Lock date cannot be before due date</string>
+    <string name="utils_lockAfterUnlockError">Lock date cannot be before unlock date</string>
+    <string name="utils_assigneeBlankError">Assignee cannot be blank</string>
+    <string name="utils_assignTo">Assign To</string>
+    <string name="utils_availableFrom">Available From</string>
+    <string name="utils_availableTo">Available To</string>
+    <string name="utils_availableFromDate">Available From Date</string>
+    <string name="utils_availableFromTime">Available From Time</string>
+    <string name="utils_availableToDate">Available To Date</string>
+    <string name="utils_availableToTime">Available To Time</string>
+    <string name="utils_dueDate">Due Date</string>
+    <string name="utils_dueTime">Due Time</string>
+    <string name="utils_addNew">Add New</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Download Attachment</string>
+    <string name="utils_removeAttachment">Remove attachment</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Continue without saving?</string>
+    <string name="utils_continueWithoutSavingMessage">Are you sure you would like to continue without saving?</string>
+    <string name="utils_continueUnsaved">Continue</string>
+    <string name="utils_exitWithoutSavingTitle">Exit without saving?</string>
+    <string name="utils_exitWithoutSavingMessage">Are you sure you would like to exit without saving?</string>
+    <string name="utils_exitUnsaved">Exit</string>
+    <string name="utils_cancel">Cancel</string>
+
+    <string name="utils_contentDescriptionFiles">File icon</string>
+    <string name="utils_turn_in">Turn in</string>
+    <string name="utils_upload">Upload</string>
+    <string name="utils_okay">Okay</string>
+    <string name="utils_loadingFilesIndeterminate">Loading Files&#8230;</string>
+    <string name="utils_allowedExtensions">Allowed extensions:&#160;</string>
+    <string name="utils_extensionNotAllowed">The selected file type is not allowed.</string>
+    <string name="utils_errorUploadingFile">An error occurred uploading your file. Please try again.</string>
+    <string name="utils_filesUploadedSuccessfully">Files uploaded successfully.</string>
+    <string name="utils_uploadingFiles">Uploading files&#8230;</string>
+    <string name="utils_uploadingFile">Uploading file&#8230;</string>
+    <string name="utils_noApps">Your device does not have any applications installed that can handle this file.</string>
+    <string name="utils_errorGettingPhoto">There was an error getting the photo. Please try again.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">One or more files has a file extension that is not allowed</string>
+    <string name="utils_fileUploadNotSupported">You cannot upload files to the selected assignment.</string>
+    <string name="utils_noFilesUploaded">You have not selected any files.</string>
+    <string name="utils_attachments">Attachments</string>
+    <string name="utils_uploadTo">Upload To </string>
+    <string name="utils_uploadToCanvas">Upload To Canvas</string>
+    <string name="utils_uploadMyFiles">My Files</string>
+    <string name="utils_uploadCourseFiles">Course Files</string>
+    <string name="utils_uploadGroupFiles">Group Files</string>
+    <string name="utils_uploadToSubmissionComment">Upload to Submission Comment</string>
+    <string name="utils_attachFile">Attach a file</string>
+    <string name="utils_with">with</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas Notification</string>
+    <string name="notificationChannelNamePrimary">General Canvas Notifications</string>
+    <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
+    <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
+        <item quantity="other">%d new notifications</item>
+    </plurals>
+
+    <string name="copyLinkAddress">Copy link address</string>
+    <string name="copyLink">Copy Link</string>
+    <string name="linkCopied">Link copied</string>
+    <string name="link">Link</string>
+    <string name="fileExists">File Exists</string>
+    <string name="replace">Replace</string>
+    <string name="shareLink">Share link</string>
+
+    <string name="utils_launchExternalTool">Launch External Tool</string>
+    <string name="utils_externalToolTitle">External Tool</string>
+    <string name="utils_placeholderTitle">External Tool</string>
+    <string name="utils_placeholderDescription">Visit your Canvas web account to edit this external tool.</string>
+    <string name="utils_unableToViewInBrowser">We are unable to find an external app to view this LTI tool.</string>
+
+    <string name="utils_unsupportedFileMessage">This file could not be displayed. Use the button below to open the file with another app on your device.</string>
+    <string name="utils_openWithAnotherApp">Open with…</string>
+    <string name="utils_couldNotPlayFormat">This media format is not supported</string>
+    <string name="utils_fullscreen">fullscreen</string>
+
+    <string name="utils_dataUsageWarningTitle">Data Usage Warning</string>
+    <string name="utils_dataUsageWarningMessage">This action might consume a large amount of data, potentially incurring overage charges. Would you like to continue?</string>
+    <string name="utils_doNotShowMessageAgain">Do not show this message again</string>
+
+    <string name="utils_no_data_connection">Please check your data connection and try again.</string>
+    <string name="utils_playMedia">Play media</string>
+    <string name="utils_tryAgain">Try again</string>
+    <string name="image_uploading">Image Uploading...</string>
+    <string name="image_upload_error">Image Upload Error</string>
+    <string name="retry">Retry</string>
+    <string name="search">Search</string>
+    <string name="searchAssignmentsHint">Search Assignments</string>
+    <string name="searchAnnouncementsHint">Search Announcements</string>
+    <string name="searchDiscussionsHint">Search Discussions</string>
+    <string name="searchPagesHint">Search Pages</string>
+    <string name="searchQuizzesHint">Search Quizzes</string>
+    <string name="noItemsMatchingQuery">No items match \"%s\"</string>
+
+    <string name="selected">Selected</string>
+
+    <string name="notificationChannelNameInAppUpdate">App update notifications</string>
+    <string name="notificationChannelDescriptionInAppUpdate">Canvas notifications for in-app updates.</string>
+    <string name="appUpdateReadyTitle">App ready to update</string>
+    <string name="appUpdateReadyDescription">Restart the app to install the new version</string>
+    <string name="nothing_planned_yet">Nothing planned yet</string>
+    <string name="schedule_tag_graded">Graded</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="one">%d Reply</item>
+        <item quantity="other">%d Replies></item>
+    </plurals>
+    <string name="schedule_tag_feedback">Feedback</string>
+    <string name="schedule_tag_late">Late</string>
+    <string name="schedule_tag_redo">Redo</string>
+    <string name="schedule_tag_excused">Excused</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="schedule_calendar_event_due_text">At %s</string>
+    <string name="schedule_calendar_event_interval_text">%1$s to %2$s</string>
+    <string name="schedule_todo_due_text">To Do: %s</string>
+    <string name="schedule_due_text">Due: %s</string>
+    <string name="show_missing_items_title">Show %d missing items</string>
+    <string name="hide_missing_items_title">Hide %d missing items</string>
+    <string name="schedule_error_message">Unable to fetch your schedule</string>
+    <string name="schedule_todo_title">To Do</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s pt</item>
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s pts</item>
+    </plurals>
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f points</item>
+        <item quantity="one">%.1f point</item>
+        <item quantity="other">%.1f points</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">All Day</string>
+    <string name="schedule_tag_missing">Missing</string>
+    <string name="previous_week">Previous Week</string>
+    <string name="next_week">Next Week</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">Course %s</string>
+    <string name="a11y_announcement">Announcement</string>
+    <string name="a11y_discussion_topic">Discussion</string>
+    <string name="a11y_calendar_event">Calendar event</string>
+    <string name="a11y_assignment">Assignment</string>
+    <string name="a11y_planner_note">Planner note</string>
+    <string name="a11y_quiz">Quiz</string>
+    <string name="a11y_todo">To Do</string>
+    <string name="a11y_page">Page</string>
+    <string name="a11y_assessment_request">Assessment request</string>
+    <string name="a11y_marked_as_done">Marked as done</string>
+    <string name="a11y_not_marked_as_done">Not marked as done</string>
+    <string name="error_loading_course_details">Uh oh! An error occurred while loading the course details.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s marked as not done</string>
+    <string name="a11y_markAsDoneWithName">%s Mark as done</string>
+    <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+</resources>

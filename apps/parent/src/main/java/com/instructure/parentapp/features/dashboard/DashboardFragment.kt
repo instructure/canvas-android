@@ -41,6 +41,7 @@ import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import androidx.navigation.fragment.NavHostFragment
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
@@ -179,7 +180,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 R.id.inbox -> menuItemSelected { navigation.navigate(activity, navigation.inbox) }
                 R.id.manage_students -> menuItemSelected { navigation.navigate(activity, navigation.manageStudents) }
                 R.id.settings -> menuItemSelected { navigation.navigate(activity, navigation.settings) }
-                R.id.help -> menuItemSelected { navigation.navigate(activity, navigation.help) }
+                R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
                 R.id.switch_users -> menuItemSelected { onSwitchUsers() }
                 else -> false

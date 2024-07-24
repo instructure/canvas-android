@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">You must first complete:</string>
+    <string name="unlockedAt">It will be unlocked at:</string>
+    <string name="goToModules">Go To Modules</string>
+
+    <!--Events-->
+    <string name="Starts">Starts</string>
+    <string name="Ends">Ends</string>
+    <string name="allDayEvent">All Day Event</string>
+    <string name="at">at</string>
+    <string name="to">to</string>
+
+    <!--StreamItems-->
+    <string name="Message">Message</string>
+    <string name="Loading">Loading&#8230;</string>
+    <string name="Deleted">Deleted</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Online</string>
+    <string name="canvasAPI_onPaper">On Paper</string>
+    <string name="canvasAPI_discussion">Discussion</string>
+    <string name="canvasAPI_quiz">Quiz</string>
+    <string name="canvasAPI_externalTool">External Tool</string>
+    <string name="canvasAPI_none">No Submission</string>
+
+    <string name="canvasAPI_passFail">Pass Fail</string>
+    <string name="canvasAPI_percent">Percent</string>
+    <string name="canvasAPI_letterGrade">Letter Grade</string>
+    <string name="canvasAPI_points">Points</string>
+    <string name="canvasAPI_gpaScale">GPA Scale</string>
+    <string name="canvasAPI_notGraded">Not Graded</string>
+
+    <string name="canvasAPI_onlineQuiz">Quiz</string>
+    <string name="canvasAPI_discussionTopic">Discussion Topic</string>
+    <string name="canvasAPI_onlineUpload">File Upload</string>
+    <string name="canvasAPI_onlineTextEntry">Text Entry</string>
+    <string name="canvasAPI_onlineURL">Website URL</string>
+    <string name="canvasAPI_mediaRecording">Media Recording</string>
+    <string name="canvasAPI_attendance">Attendance</string>
+    <string name="canvasAPI_studentAnnotation">Student Annotation</string>
+    <string name="quiz_scoring_policy_highest">Highest</string>
+    <string name="quiz_scoring_policy_average">Average</string>
+    <string name="quiz_scoring_policy_latest">Latest</string>
+    <string name="no">No</string>
+    <string name="always">Always</string>
+    <string name="graded_quiz">Graded Quiz</string>
+    <string name="practice_quiz">Practice Quiz</string>
+    <string name="graded_survey">Graded Survey</string>
+    <string name="ungraded_survey">Ungraded Survey</string>
+    <string name="andMore">\u0020and %d more</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Student</string>
+    <string name="enrollmentTypeTeacher">Teacher</string>
+    <string name="enrollmentTypeObserver">Observer</string>
+    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeDesigner">Designer</string>
+    <string name="enrollmentTypeUnknown">Unknown</string>
+
+</resources>
