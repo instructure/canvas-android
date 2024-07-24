@@ -3,10 +3,8 @@ package com.instructure.pandautils.di
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
-import com.instructure.pandautils.features.inbox.coursepicker.CoursePickerRepository
-import com.instructure.pandautils.features.inbox.coursepicker.CoursePickerRepositoryImpl
-import com.instructure.pandautils.features.inbox.recipientpicker.RecipientPickerRepository
-import com.instructure.pandautils.features.inbox.recipientpicker.RecipientPickerRepositoryImpl
+import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.features.inbox.compose.InboxComposeRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,15 +16,9 @@ class InboxComposeModule {
     @Provides
     fun provideCoursePickerRepository(
         courseAPI: CourseAPI.CoursesInterface,
-        groupAPI: GroupAPI.GroupInterface
-    ): CoursePickerRepository {
-        return CoursePickerRepositoryImpl(courseAPI, groupAPI)
-    }
-
-    @Provides
-    fun provideRecipientPickerRepository(
+        groupAPI: GroupAPI.GroupInterface,
         recipientAPI: RecipientAPI.RecipientInterface,
-    ): RecipientPickerRepository {
-        return RecipientPickerRepositoryImpl(recipientAPI)
+    ): InboxComposeRepository {
+        return InboxComposeRepositoryImpl(courseAPI, groupAPI, recipientAPI)
     }
 }

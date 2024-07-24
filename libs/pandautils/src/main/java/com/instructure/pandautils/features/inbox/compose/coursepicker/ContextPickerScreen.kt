@@ -14,12 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.inbox.coursepicker
+package com.instructure.pandautils.features.inbox.compose.coursepicker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,74 +28,86 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.features.inbox.compose.ContextPickerActionHandler
+import com.instructure.pandautils.features.inbox.compose.ContextPickerUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CoursePickerScreen(
+fun ContextPickerScreen(
     title: String,
-    onNavigateBack: () -> Unit,
-    coursePickerViewModel: CoursePickerViewModel,
-    onContextSelected: (CanvasContext) -> Unit,
+    uiState: ContextPickerUiState,
+    actionHandler: (ContextPickerActionHandler) -> Unit,
 ) {
-    val screenState = coursePickerViewModel.state.collectAsState()
     val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
-        coursePickerViewModel.loadData()
+        actionHandler(ContextPickerActionHandler.RefreshCalled)
     })
-    val courses by coursePickerViewModel.courses.collectAsState()
-    val groups by coursePickerViewModel.groups.collectAsState()
 
     Scaffold(
-        topBar = { CanvasThemedAppBar(title = title, navigationActionClick = onNavigateBack) },
+        topBar = { CanvasThemedAppBar(
+            title = title,
+            navigationActionClick = {
+                actionHandler(
+                    ContextPickerActionHandler.DoneClicked
+                )
+            }
+        )},
         content = { padding ->
-            LazyColumn(
+            Box(
                 modifier = Modifier
-                    .pullRefresh(pullToRefreshState)
+                    .fillMaxSize()
                     .padding(padding)
+                    .pullRefresh(pullToRefreshState)
             ) {
-                when (val state = screenState.value) {
-                    CoursePickerViewModel.State.LOADING -> {
-                        item {
-                            CircularProgressIndicator()
-                        }
-                    }
-                    CoursePickerViewModel.State.DATA -> {
-                        item {
-                            SectionHeaderView("Courses")
+                LazyColumn {
+                    if (!uiState.isLoading) {
+                        if (uiState.courses.isNotEmpty()) {
+                            item {
+                                SectionHeaderView("Courses")
+                            }
+
+                            items(uiState.courses) {
+                                DataRow(it, actionHandler)
+                            }
                         }
 
-                        items(courses) {
-                            DataRow(it, onContextSelected)
-                        }
+                        if (uiState.groups.isNotEmpty()) {
+                            item {
+                                SectionHeaderView("Groups")
+                            }
 
-                        item {
-                            SectionHeaderView("Groups")
-                        }
-
-                        items(groups) {
-                            DataRow(it, onContextSelected)
+                            items(uiState.groups) {
+                                DataRow(it, actionHandler)
+                            }
                         }
                     }
                 }
+
+                PullRefreshIndicator(
+                    refreshing = uiState.isLoading,
+                    state = pullToRefreshState,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .testTag("pullRefreshIndicator"),
+                )
             }
         }
     )
@@ -122,7 +135,7 @@ private fun SectionHeaderView(subTitle: String) {
 }
 
 @Composable
-private fun DataRow(context: CanvasContext, onContextSelected: (CanvasContext) -> Unit) {
+private fun DataRow(context: CanvasContext, actionHandler: (ContextPickerActionHandler) -> Unit) {
     val color = if (context.type == CanvasContext.Type.USER) ThemePrefs.brandColor else context.backgroundColor
     
     Row(
@@ -130,7 +143,7 @@ private fun DataRow(context: CanvasContext, onContextSelected: (CanvasContext) -
         modifier = Modifier
             .background(colorResource(id = R.color.backgroundLightest))
             .fillMaxWidth()
-            .clickable { onContextSelected(context) }
+            .clickable { actionHandler(ContextPickerActionHandler.ContextClicked(context)) }
             .height(50.dp)
     ) {
         Box(

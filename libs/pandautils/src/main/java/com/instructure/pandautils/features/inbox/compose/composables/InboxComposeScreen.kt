@@ -38,23 +38,23 @@ import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
 import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
+import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InboxComposeScreen(
+    title: String,
     uiState: InboxComposeUiState,
-    openCoursePickerSelected: () -> Unit,
-    openRecipientPickerSelected: () -> Unit,
-    onDismiss: () -> Unit = {}
+    actionHandler: (InboxComposeActionHandler) -> Unit,
 ) {
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasThemedAppBar(
-                    title = uiState.title,
-                    navigationActionClick = onDismiss
+                    title = title,
+                    navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelClicked) },
                 )
             },
             content = { padding ->
@@ -67,8 +67,8 @@ fun InboxComposeScreen(
                 ) {
                     LabelValueRow(
                         label = "Course",
-                        value = uiState.course,
-                        onClick = { openCoursePickerSelected() },
+                        value = uiState.contextPickerUiState.selectedContext?.name ?: "",
+                        onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
                     )
 
                     val users = listOf(
@@ -82,7 +82,7 @@ fun InboxComposeScreen(
                         selectedValues = users,
                         itemComposable = { RecipientChip(it) },
                         onSelect = {},
-                        addValueClicked = { openRecipientPickerSelected() },
+                        addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
                     )
 
                     CanvasDivider()

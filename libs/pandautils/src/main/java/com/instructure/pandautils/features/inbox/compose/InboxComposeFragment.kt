@@ -1,7 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,18 +9,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Recipient
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
-import com.instructure.pandautils.features.inbox.coursepicker.CoursePickerFragment
-import com.instructure.pandautils.features.inbox.recipientpicker.RecipientPickerFragment
+import com.instructure.pandautils.features.inbox.compose.coursepicker.ContextPickerScreen
+import com.instructure.pandautils.features.inbox.compose.recipientpicker.RecipientPickerScreen
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import dagger.hilt.android.AndroidEntryPoint
 
-class InboxComposeFragment : Fragment(), FragmentInteractions, CoursePickerFragment.CoursePickerListener, RecipientPickerFragment.RecipientPickerListener {
+@AndroidEntryPoint
+class InboxComposeFragment : Fragment(), FragmentInteractions {
 
     private val viewModel: InboxComposeViewModel by viewModels()
 
@@ -34,18 +33,63 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, CoursePickerFragm
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
 
-                InboxComposeScreen(
-                    uiState = uiState,
-                    openCoursePickerSelected = {
-                        val fragment = CoursePickerFragment(this@InboxComposeFragment)
-                        fragment.show(requireActivity().supportFragmentManager, CoursePickerFragment::javaClass.name)
-                    },
-                    openRecipientPickerSelected = {
-                        val fragment = RecipientPickerFragment(this@InboxComposeFragment)
-                        fragment.show(requireActivity().supportFragmentManager, CoursePickerFragment::javaClass.name)
-                    },
-                    onDismiss = { activity?.supportFragmentManager?.popBackStack() }
-                )
+                when (uiState.screenOption) {
+                    InboxComposeScreenOptions.None -> {
+                        InboxComposeScreen(
+                            title = "New Message",
+                            uiState = uiState,
+                            actionHandler = { action ->
+                                when (action) {
+                                    InboxComposeActionHandler.CancelClicked -> {
+                                        activity?.supportFragmentManager?.popBackStack()
+                                    }
+                                    InboxComposeActionHandler.OpenContextPicker -> {
+                                        viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.ContextPicker))
+                                    }
+                                    InboxComposeActionHandler.OpenRecipientPicker -> {
+                                        viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.RecipientPicker))
+                                    }
+
+                                    is InboxComposeActionHandler.BodyChanged -> TODO()
+                                    is InboxComposeActionHandler.SendClicked -> TODO()
+                                    is InboxComposeActionHandler.SubjectChanged -> TODO()
+                                }
+                            }
+                        )
+                    }
+                    InboxComposeScreenOptions.ContextPicker -> {
+                        ContextPickerScreen(title = "Select a Team", uiState = uiState.contextPickerUiState) { action ->
+                            when (action) {
+                                ContextPickerActionHandler.DoneClicked -> {
+                                    viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.None))
+                                }
+                                ContextPickerActionHandler.RefreshCalled -> {
+                                    viewModel.loadContexts()
+                                }
+                                is ContextPickerActionHandler.ContextClicked -> {
+                                    viewModel.updateUiState(uiState.copy(contextPickerUiState = uiState.contextPickerUiState.copy(selectedContext = action.context)))
+
+                                    viewModel.loadRecipients("", action.context)
+                                    viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.None))
+                                }
+                            }
+                            
+                        }
+                    }
+                    InboxComposeScreenOptions.RecipientPicker -> {
+                        RecipientPickerScreen(title = "Select Recipients", uiState = uiState.recipientsState) { action ->
+                            when (action) {
+                                RecipientPickerActionHandler.DoneClicked -> {
+                                    viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.None))
+                                }
+                                is RecipientPickerActionHandler.RecipientClicked -> {
+                                    viewModel.updateUiState(uiState.copy(recipientsState = uiState.recipientsState.copy(selectedRecipients = uiState.recipientsState.selectedRecipients + action.recipient)))
+                                }
+                            }
+
+                        }
+                    }
+                }
             }
         }
     }
@@ -61,13 +105,5 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, CoursePickerFragm
 
     override fun getFragment(): Fragment {
         return this
-    }
-
-    override fun onCourseSelected(context: CanvasContext) {
-        Log.d("InboxComposeFragment", "onCourseSelected: $context")
-    }
-
-    override fun selectedRecipientsChanged(recipients: List<Recipient>) {
-        Log.d("InboxComposeFragment", "selectedRecipientsChanged: $recipients")
     }
 }
