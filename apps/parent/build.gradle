@@ -152,6 +152,8 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Versions.KOTLIN_COMPOSE_COMPILER_VERSION
     }
+
+    testOptions.animationsDisabled = true
 }
 
 dependencies {

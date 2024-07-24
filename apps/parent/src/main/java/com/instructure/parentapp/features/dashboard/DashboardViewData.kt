@@ -24,7 +24,8 @@ data class DashboardViewData(
     val userViewData: UserViewData? = null,
     val studentSelectorExpanded: Boolean = false,
     val studentItems: List<StudentItemViewModel> = emptyList(),
-    val selectedStudent: User? = null
+    val selectedStudent: User? = null,
+    val unreadCount: Int = 0
 )
 
 data class StudentItemViewData(

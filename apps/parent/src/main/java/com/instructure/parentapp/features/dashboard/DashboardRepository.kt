@@ -18,13 +18,16 @@
 package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.pandautils.utils.orDefault
 
 
 class DashboardRepository(
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
+    private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface
 ) {
 
     suspend fun getStudents(): List<User> {
@@ -36,5 +39,11 @@ class DashboardRepository(
             .mapNotNull { it.observedUser }
             .distinct()
             .sortedBy { it.sortableName }
+    }
+
+    suspend fun getUnreadCounts(): Int {
+        val params = RestParams(isForceReadFromNetwork = true)
+        val unreadCount = unreadCountApi.getUnreadConversationCount(params).dataOrNull?.unreadCount ?: "0"
+        return unreadCount.toIntOrNull().orDefault()
     }
 }

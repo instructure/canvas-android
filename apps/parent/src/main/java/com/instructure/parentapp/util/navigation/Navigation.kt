@@ -7,10 +7,8 @@ import androidx.navigation.NavGraph
 import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.dialog
 import androidx.navigation.fragment.fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
@@ -37,7 +35,6 @@ class Navigation(apiPrefs: ApiPrefs) {
     val calendar = "$baseUrl/calendar"
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
-    val help = "$baseUrl/help"
     val manageStudents = "$baseUrl/manage-students"
     val settings = "$baseUrl/settings"
 
@@ -71,7 +68,6 @@ class Navigation(apiPrefs: ApiPrefs) {
             }
             fragment<ManageStudentsFragment>(manageStudents)
             fragment<SettingsFragment>(settings)
-            dialog<HelpDialogFragment>(help)
             fragment<CourseDetailsFragment>(courseDetails) {
                 argument(courseId) {
                     type = NavType.LongType
