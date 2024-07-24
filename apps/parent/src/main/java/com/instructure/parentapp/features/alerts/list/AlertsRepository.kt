@@ -41,9 +41,9 @@ class AlertsRepository(
             if (!alert.isQuantitativeRestrictionApplies()) return@filter true
 
             alert.getCourseId()?.let { courseId ->
-                val settings = coursesMap.getOrPut(
-                    courseId
-                ) { courseApi.getCourseSettings(courseId, restParams).dataOrNull }
+                val settings = coursesMap.getOrPut(courseId) {
+                    courseApi.getCourseSettings(courseId, restParams).dataOrNull
+                }
                 settings?.restrictQuantitativeData?.not() ?: true
             } ?: true
         }

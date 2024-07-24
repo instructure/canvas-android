@@ -30,6 +30,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ class AlertsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            selectedStudentHolder.selectedStudentFlow.collect {
+            selectedStudentHolder.selectedStudentFlow.collectLatest {
                 studentChanged(it)
             }
         }
@@ -112,9 +113,11 @@ class AlertsViewModel @Inject constructor(
         when (action) {
             is AlertsAction.Navigate -> {
                 viewModelScope.launch {
-                    _events.send(AlertsViewModelAction.Navigate(action.route))
                     markAlertRead(action.alertId)
                     alertCountUpdater.updateShouldRefreshAlertCount(true)
+                }
+                viewModelScope.launch {
+                    _events.send(AlertsViewModelAction.Navigate(action.route))
                 }
             }
 

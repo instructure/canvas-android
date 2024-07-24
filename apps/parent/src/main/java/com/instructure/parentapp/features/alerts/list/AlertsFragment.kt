@@ -59,7 +59,7 @@ class AlertsFragment : Fragment() {
     private fun handleAction(action: AlertsViewModelAction) {
         when (action) {
             is AlertsViewModelAction.Navigate -> {
-                navigation.navigate(requireActivity(), action.route)
+                navigation.navigate(activity, action.route)
             }
 
             is AlertsViewModelAction.ShowSnackbar -> {
