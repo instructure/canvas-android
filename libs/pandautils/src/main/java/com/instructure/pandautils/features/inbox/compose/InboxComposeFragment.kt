@@ -60,7 +60,9 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                                         viewModel.updateUiState(uiState.copy(body = action.body))
                                     }
                                     is InboxComposeActionHandler.SendClicked -> {
-                                        viewModel.createConversation()
+                                        viewModel.createConversation {
+                                            (this@InboxComposeFragment).activity?.supportFragmentManager?.popBackStack()
+                                        }
                                     }
                                     is InboxComposeActionHandler.SubjectChanged -> {
                                         viewModel.updateUiState(uiState.copy(subject = action.subject))

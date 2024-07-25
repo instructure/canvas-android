@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -60,16 +61,22 @@ fun InboxComposeScreen(
                 CanvasThemedAppBar(
                     title = title,
                     actions = {
-                        IconButton(
-                            onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
-                            modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                        ) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_send),
-                                contentDescription = "Send",
-                                tint = Color(ThemePrefs.primaryTextColor)
+                        if (uiState.isSending) {
+                            CircularProgressIndicator(
+                                Modifier.padding(4.dp),
                             )
+                        } else {
+                            IconButton(
+                                onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
+                                modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_send),
+                                    contentDescription = "Send",
+                                    tint = Color(ThemePrefs.primaryTextColor)
+                                )
+                            }
                         }
                     },
                     navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelClicked) },

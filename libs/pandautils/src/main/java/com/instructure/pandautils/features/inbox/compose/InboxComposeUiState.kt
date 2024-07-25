@@ -11,6 +11,7 @@ data class InboxComposeUiState(
     var sendIndividual: Boolean = false,
     var subject: TextFieldValue = TextFieldValue(""),
     var body: TextFieldValue = TextFieldValue(""),
+    var isSending: Boolean = false,
 )
 
 sealed class InboxComposeActionHandler {

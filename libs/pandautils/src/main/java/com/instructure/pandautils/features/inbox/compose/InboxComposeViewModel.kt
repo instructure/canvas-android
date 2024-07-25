@@ -93,9 +93,13 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    fun createConversation() {
+    fun createConversation(
+        onFinished: () -> Unit = {}
+    ) {
         uiState.value.selectedContext?.let { context ->
             viewModelScope.launch {
+                updateUiState(uiState.value.copy(isSending = true))
+
                 inboxComposeRepository.createConversation(
                     recipients = uiState.value.selectedRecipients,
                     subject = uiState.value.subject.text,
@@ -104,6 +108,8 @@ class InboxComposeViewModel @Inject constructor(
                     attachments = emptyList(),
                     isIndividual = uiState.value.sendIndividual
                 )
+
+                onFinished()
             }
         }
     }
