@@ -83,9 +83,6 @@ object DiscussionAPI {
         suspend fun getFirstPageDiscussionTopicHeaders(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
 
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}?include[]=sections")
-        fun getDetailedDiscussion(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
-
-        @GET("{contextType}/{contextId}/discussion_topics/{topicId}?include[]=sections")
         suspend fun getDetailedDiscussion(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Tag params: RestParams): DataResult<DiscussionTopicHeader>
 
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}/view")
@@ -95,16 +92,10 @@ object DiscussionAPI {
         suspend fun getFullDiscussionTopic(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Query("include_new_entries") includeNewEntries: Int, @Tag params: RestParams): DataResult<DiscussionTopic>
 
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/rating")
-        fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int): Call<Void>
-
-        @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/rating")
         suspend fun rateDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Query("rating") rating: Int, @Tag params: RestParams): DataResult<Unit>
 
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/read")
         fun markDiscussionTopicRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<Void>
-
-        @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
-        fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
 
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
         suspend fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Unit>
@@ -122,20 +113,11 @@ object DiscussionAPI {
         fun deleteDiscussionTopic(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long): Call<Void>
 
         @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}")
-        fun deleteDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
-
-        @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}")
         suspend fun deleteDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Unit>
 
         @Multipart
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/replies")
         fun postDiscussionReply(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Part("message") message: RequestBody): Call<DiscussionEntry>
-
-        @Multipart
-        @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/replies")
-        fun postDiscussionReplyWithAttachment(@Path("contextType") contextType: String, @Path("contextId") contextId: Long,
-                                              @Path("topicId") topicId: Long, @Path("entryId") entryId: Long,
-                                              @Part("message") message: RequestBody, @Part attachment: MultipartBody.Part): Call<DiscussionEntry>
 
         @Multipart
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries")
@@ -245,31 +227,11 @@ object DiscussionAPI {
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).getNextPage(nextUrl)).enqueue(callback)
     }
 
-    fun getFullDiscussionTopic(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopic>, params: RestParams) {
-        val contextType = CanvasContext.getApiContext(canvasContext)
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).getFullDiscussionTopic(contextType, canvasContext.id, topicId, 1)).enqueue(callback)
-    }
-
-    fun getDetailedDiscussion(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {
-        val contextType = CanvasContext.getApiContext(canvasContext)
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).getDetailedDiscussion(contextType, canvasContext.id, topicId)).enqueue(callback)
-    }
-
     fun replyToDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, message: String, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
 
         val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionReply(contextType, canvasContext.id, topicId, entryId, messagePart)).enqueue(callback)
-    }
-
-    fun replyToDiscussionEntryWithAttachment(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long,
-                                             message: String, attachment: File, mimeType: String, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
-        val contextType = CanvasContext.getApiContext(canvasContext)
-        val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val requestFile = attachment.asRequestBody(mimeType.toMediaTypeOrNull())
-        val attachmentPart = MultipartBody.Part.createFormData("attachment", attachment.name, requestFile)
-
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionReplyWithAttachment(contextType, canvasContext.id, topicId, entryId, messagePart, attachmentPart)).enqueue(callback)
     }
 
     fun updateDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, updatedEntry: DiscussionEntryPostBody, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
@@ -295,24 +257,9 @@ object DiscussionAPI {
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionEntryWithAttachment(contextType, canvasContext.id, topicId, messagePart, attachmentPart)).enqueue(callback)
     }
 
-    fun rateDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, rating: Int, callback: StatusCallback<Void>, params: RestParams) {
-        val contextType = CanvasContext.getApiContext(canvasContext)
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).rateDiscussionEntry(contextType, canvasContext.id, topicId, entryId, rating)).enqueue(callback)
-    }
-
     fun markDiscussionTopicRead(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<Void>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).markDiscussionTopicRead(contextType, canvasContext.id, topicId)).enqueue(callback)
-    }
-
-    fun markDiscussionTopicEntryRead(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
-        val contextType = CanvasContext.getApiContext(canvasContext)
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).markDiscussionTopicEntryRead(contextType, canvasContext.id, topicId, entryId)).enqueue(callback)
-    }
-
-    fun markDiscussionTopicEntryUnread(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
-        val contextType = CanvasContext.getApiContext(canvasContext)
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).markDiscussionTopicEntryUnread(contextType, canvasContext.id, topicId, entryId)).enqueue(callback)
     }
 
     fun pinDiscussion(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {
@@ -337,10 +284,6 @@ object DiscussionAPI {
 
     fun editDiscussionTopic(canvasContext: CanvasContext, topicId: Long, body: DiscussionTopicPostBody, adapter: RestBuilder, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).editDiscussionTopic(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId, body)).enqueue(callback)
-    }
-
-    fun deleteDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
-        callback.addCall(adapter.build(DiscussionInterface::class.java, params).deleteDiscussionEntry(CanvasContext.getApiContext(canvasContext), canvasContext.id, topicId, entryId)).enqueue(callback)
     }
 
     fun getDiscussionTopicHeader(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {
