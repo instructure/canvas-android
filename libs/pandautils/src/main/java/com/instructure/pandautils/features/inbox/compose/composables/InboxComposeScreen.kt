@@ -30,11 +30,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
@@ -137,22 +135,6 @@ fun InboxComposeScreen(
                         onValueChange = {
                             actionHandler(InboxComposeActionHandler.BodyChanged(it))
                         },
-                    )
-
-                    AttachmentCard(
-                        Attachment(
-                            id = 1,
-                            contentType = "image/png",
-                            filename = "image.png",
-                            displayName = "image.png",
-                            url = "https://www.example.com/image.png",
-                            thumbnailUrl = null,
-                            previewUrl = null,
-                            size = 1024
-                        ),
-                        AttachmentStatus.UPLOADED,
-                        {},
-                        LocalContext.current
                     )
                 }
             }

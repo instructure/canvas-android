@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -59,8 +60,73 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
+    fun handleAction(action: InboxComposeActionHandler, activity: FragmentActivity?) {
+        when (action) {
+            is InboxComposeActionHandler.CancelClicked -> {
+                activity?.supportFragmentManager?.popBackStack()
+            }
+            is InboxComposeActionHandler.OpenContextPicker -> {
+                updateUiState(uiState.value.copy(screenOption = InboxComposeScreenOptions.ContextPicker))
+            }
+            is InboxComposeActionHandler.RemoveRecipient -> {
+                updateUiState(uiState.value.copy(selectedRecipients = uiState.value.selectedRecipients - action.recipient))
+                updateUiState(recipientPickerUiState.value.copy(selectedRecipients = recipientPickerUiState.value.selectedRecipients - action.recipient))
+            }
+            is InboxComposeActionHandler.OpenRecipientPicker -> {
+                updateUiState(uiState.value.copy(screenOption = InboxComposeScreenOptions.RecipientPicker))
+            }
+            is InboxComposeActionHandler.BodyChanged -> {
+                updateUiState(uiState.value.copy(body = action.body))
+            }
+            is InboxComposeActionHandler.SendClicked -> {
+                createConversation {
+                    activity?.supportFragmentManager?.popBackStack()
+                }
+            }
+            is InboxComposeActionHandler.SubjectChanged -> {
+                updateUiState(uiState.value.copy(subject = action.subject))
+            }
+            is InboxComposeActionHandler.SendIndividualChanged -> {
+                updateUiState(uiState.value.copy(sendIndividual = action.sendIndividual))
+            }
+        }
+    }
 
-    fun loadContexts() {
+    fun handleAction(action: ContextPickerActionHandler) {
+        when (action) {
+            is ContextPickerActionHandler.DoneClicked -> {
+                updateUiState(uiState.value.copy(screenOption = InboxComposeScreenOptions.None))
+            }
+            is ContextPickerActionHandler.RefreshCalled -> {
+                loadContexts()
+            }
+            is ContextPickerActionHandler.ContextClicked -> {
+                updateUiState(
+                    uiState.value.copy(selectedContext = action.context, screenOption = InboxComposeScreenOptions.None)
+                )
+
+                loadRecipients("", action.context)
+            }
+        }
+    }
+
+    fun handleAction(action: RecipientPickerActionHandler) {
+        when (action) {
+            is RecipientPickerActionHandler.DoneClicked -> {
+                updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Roles))
+                updateUiState(uiState.value.copy(screenOption = InboxComposeScreenOptions.None))
+            }
+            is RecipientPickerActionHandler.RoleClicked -> {
+                updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Recipients))
+            }
+            is RecipientPickerActionHandler.RecipientClicked -> {
+                updateUiState(uiState.value.copy(selectedRecipients = uiState.value.selectedRecipients + action.recipient))
+                updateUiState(recipientPickerUiState.value.copy(selectedRecipients = recipientPickerUiState.value.selectedRecipients + action.recipient))
+            }
+        }
+    }
+
+    private fun loadContexts() {
         updateUiState(
             contextPickerUiState.value.copy(
                 isLoading = true
@@ -93,7 +159,7 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    fun createConversation(
+    private fun createConversation(
         onFinished: () -> Unit = {}
     ) {
         uiState.value.selectedContext?.let { context ->

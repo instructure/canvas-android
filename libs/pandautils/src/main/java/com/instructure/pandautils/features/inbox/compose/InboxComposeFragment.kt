@@ -41,75 +41,18 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                             title = "New Message",
                             uiState = uiState,
                             actionHandler = { action ->
-                                when (action) {
-                                    is InboxComposeActionHandler.CancelClicked -> {
-                                        activity?.supportFragmentManager?.popBackStack()
-                                    }
-                                    is InboxComposeActionHandler.OpenContextPicker -> {
-                                        viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.ContextPicker))
-                                    }
-                                    is InboxComposeActionHandler.RemoveRecipient -> {
-                                        viewModel.updateUiState(uiState.copy(selectedRecipients = uiState.selectedRecipients - action.recipient))
-                                        viewModel.updateUiState(recipientPickerState.copy(selectedRecipients = recipientPickerState.selectedRecipients - action.recipient))
-                                    }
-                                    is InboxComposeActionHandler.OpenRecipientPicker -> {
-                                        viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.RecipientPicker))
-                                    }
-
-                                    is InboxComposeActionHandler.BodyChanged -> {
-                                        viewModel.updateUiState(uiState.copy(body = action.body))
-                                    }
-                                    is InboxComposeActionHandler.SendClicked -> {
-                                        viewModel.createConversation {
-                                            (this@InboxComposeFragment).activity?.supportFragmentManager?.popBackStack()
-                                        }
-                                    }
-                                    is InboxComposeActionHandler.SubjectChanged -> {
-                                        viewModel.updateUiState(uiState.copy(subject = action.subject))
-                                    }
-                                    is InboxComposeActionHandler.SendIndividualChanged -> {
-                                        viewModel.updateUiState(uiState.copy(sendIndividual = action.sendIndividual))
-                                    }
-                                }
+                                viewModel.handleAction(action, activity)
                             }
                         )
                     }
                     InboxComposeScreenOptions.ContextPicker -> {
                         ContextPickerScreen(title = "Select a Team", uiState = contextPickerState) { action ->
-                            when (action) {
-                                is ContextPickerActionHandler.DoneClicked -> {
-                                    viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.None))
-                                }
-                                is ContextPickerActionHandler.RefreshCalled -> {
-                                    viewModel.loadContexts()
-                                }
-                                is ContextPickerActionHandler.ContextClicked -> {
-                                    viewModel.updateUiState(
-                                        uiState.copy(selectedContext = action.context, screenOption = InboxComposeScreenOptions.None)
-                                    )
-
-                                    viewModel.loadRecipients("", action.context)
-                                }
-                            }
-                            
+                            viewModel.handleAction(action)
                         }
                     }
                     InboxComposeScreenOptions.RecipientPicker -> {
                         RecipientPickerScreen(title = "Select Recipients", uiState = recipientPickerState) { action ->
-                            when (action) {
-                                is RecipientPickerActionHandler.DoneClicked -> {
-                                    viewModel.updateUiState(recipientPickerState.copy(screenOption = RecipientPickerScreenOption.Roles))
-                                    viewModel.updateUiState(uiState.copy(screenOption = InboxComposeScreenOptions.None))
-                                }
-                                is RecipientPickerActionHandler.RoleClicked -> {
-                                    viewModel.updateUiState(recipientPickerState.copy(screenOption = RecipientPickerScreenOption.Recipients))
-                                }
-                                is RecipientPickerActionHandler.RecipientClicked -> {
-                                    viewModel.updateUiState(uiState.copy(selectedRecipients = uiState.selectedRecipients + action.recipient))
-                                    viewModel.updateUiState(recipientPickerState.copy(selectedRecipients = recipientPickerState.selectedRecipients + action.recipient))
-                                }
-                            }
-
+                            viewModel.handleAction(action)
                         }
                     }
                 }
