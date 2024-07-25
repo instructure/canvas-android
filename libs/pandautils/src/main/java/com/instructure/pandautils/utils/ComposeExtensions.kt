@@ -12,19 +12,10 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
- */
+ */    package com.instructure.pandautils.utils
 
-package com.instructure.parentapp.features.dashboard
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 
-import com.instructure.canvasapi2.models.User
-import kotlinx.coroutines.flow.MutableStateFlow
-
-
-class TestSelectStudentHolder(
-    override val selectedStudentFlow: MutableStateFlow<User?>
-) : SelectedStudentHolder {
-    override suspend fun updateSelectedStudent(user: User) {
-        selectedStudentFlow.emit(user)
-    }
-}
+val DrawableId = SemanticsPropertyKey<Int>("DrawableResId")
+var SemanticsPropertyReceiver.drawableId by DrawableId

@@ -99,10 +99,20 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
+                updateAlertCount(it.alertCount)
             }
         }
 
         handleDeeplink()
+    }
+
+    private fun updateAlertCount(alertCount: Int) {
+        val badge = binding.bottomNav.getOrCreateBadge(R.id.alerts)
+        badge.verticalOffset = 10
+        badge.horizontalOffset = 10
+        badge.setVisible(alertCount != 0, true)
+        badge.maxNumber = 99
+        badge.number = alertCount
     }
 
     private fun updateUnreadCount(unreadCount: Int) {
@@ -237,6 +247,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         gradientDrawable?.setStroke(2.toPx, color)
         binding.unreadCountBadge.background = gradientDrawable
         binding.unreadCountBadge.setTextColor(color)
+
+        binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
     }
 
     private fun openNavigationDrawer() {

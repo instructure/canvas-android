@@ -36,6 +36,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val bottomNavigationView by OnViewWithId(R.id.bottom_nav)
+    private val alertsItem by OnViewWithId(R.id.alerts)
 
     fun assertObserverData(user: User) {
         onViewWithText(user.name).assertDisplayed()
@@ -78,5 +79,9 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
 
     fun clickInbox() {
         onViewWithText(R.string.inbox).click()
+    }
+
+    fun clickAlerts() {
+        alertsItem.click()
     }
 }

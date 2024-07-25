@@ -12,19 +12,18 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
+package com.instructure.canvasapi2.models
 
-package com.instructure.parentapp.features.dashboard
+import com.google.gson.annotations.SerializedName
 
-import com.instructure.canvasapi2.models.User
-import kotlinx.coroutines.flow.MutableStateFlow
-
-
-class TestSelectStudentHolder(
-    override val selectedStudentFlow: MutableStateFlow<User?>
-) : SelectedStudentHolder {
-    override suspend fun updateSelectedStudent(user: User) {
-        selectedStudentFlow.emit(user)
-    }
-}
+data class AlertThreshold(
+    val id: Long,
+    @SerializedName("alert_type")
+    val alertType: AlertType,
+    val threshold: String?,
+    @SerializedName("user_id")
+    val userId: Long,
+    @SerializedName("observer_id")
+    val observerId: Long
+)
