@@ -36,7 +36,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -64,7 +64,7 @@ class AlertsViewModelTest {
     private val repository: AlertsRepository = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val alertCountUpdater: AlertCountUpdater = mockk(relaxed = true)
-    private val selectedStudentFlow = MutableSharedFlow<User>()
+    private val selectedStudentFlow = MutableStateFlow<User?>(null)
     private val selectedStudentHolder = TestSelectStudentHolder(selectedStudentFlow)
 
     private lateinit var viewModel: AlertsViewModel
