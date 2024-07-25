@@ -123,6 +123,30 @@ object DiscussionManager {
         DiscussionAPI.replyToDiscussionEntry(adapter, canvasContext, topicId, entryId, message, callback, params)
     }
 
+    fun replyToDiscussionEntry(
+        canvasContext: CanvasContext,
+        topicId: Long,
+        entryId: Long,
+        message: String,
+        attachment: File,
+        mimeType: String,
+        callback: StatusCallback<DiscussionEntry>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        DiscussionAPI.replyToDiscussionEntryWithAttachment(
+            adapter,
+            canvasContext,
+            topicId,
+            entryId,
+            message,
+            attachment,
+            mimeType,
+            callback,
+            params
+        )
+    }
+
     fun updateDiscussionEntry(
         canvasContext: CanvasContext,
         topicId: Long,

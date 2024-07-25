@@ -124,6 +124,12 @@ object DiscussionAPI {
         fun postDiscussionEntry(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Part("message") message: RequestBody): Call<DiscussionEntry>
 
         @Multipart
+        @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/replies")
+        fun postDiscussionReplyWithAttachment(@Path("contextType") contextType: String, @Path("contextId") contextId: Long,
+                                              @Path("topicId") topicId: Long, @Path("entryId") entryId: Long,
+                                              @Part("message") message: RequestBody, @Part attachment: MultipartBody.Part): Call<DiscussionEntry>
+
+        @Multipart
         @POST("{contextType}/{contextId}/discussion_topics/{topicId}/entries")
         fun postDiscussionEntryWithAttachment(@Path("contextType") contextType: String, @Path("contextId") contextId: Long,
                                               @Path("topicId") topicId: Long, @Part("message") message: RequestBody, @Part attachment: MultipartBody.Part): Call<DiscussionEntry>
@@ -232,6 +238,16 @@ object DiscussionAPI {
 
         val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionReply(contextType, canvasContext.id, topicId, entryId, messagePart)).enqueue(callback)
+    }
+
+    fun replyToDiscussionEntryWithAttachment(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long,
+                                             message: String, attachment: File, mimeType: String, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
+        val contextType = CanvasContext.getApiContext(canvasContext)
+        val messagePart = message.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val requestFile = attachment.asRequestBody(mimeType.toMediaTypeOrNull())
+        val attachmentPart = MultipartBody.Part.createFormData("attachment", attachment.name, requestFile)
+
+        callback.addCall(adapter.build(DiscussionInterface::class.java, params).postDiscussionReplyWithAttachment(contextType, canvasContext.id, topicId, entryId, messagePart, attachmentPart)).enqueue(callback)
     }
 
     fun updateDiscussionEntry(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, updatedEntry: DiscussionEntryPostBody, callback: StatusCallback<DiscussionEntry>, params: RestParams) {
