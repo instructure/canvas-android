@@ -113,11 +113,9 @@ class AlertsViewModel @Inject constructor(
         when (action) {
             is AlertsAction.Navigate -> {
                 viewModelScope.launch {
+                    _events.send(AlertsViewModelAction.Navigate(action.route))
                     markAlertRead(action.alertId)
                     alertCountUpdater.updateShouldRefreshAlertCount(true)
-                }
-                viewModelScope.launch {
-                    _events.send(AlertsViewModelAction.Navigate(action.route))
                 }
             }
 
