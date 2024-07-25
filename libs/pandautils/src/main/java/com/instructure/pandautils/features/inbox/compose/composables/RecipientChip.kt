@@ -35,14 +35,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Avatar
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecipientChip(
-    recipient: BasicUser,
+    recipient: Recipient,
     onRemove: () -> Unit = {}
 ) {
     Chip(
@@ -87,10 +87,9 @@ fun RecipientChip(
 @Preview
 fun RecipientChipPreview() {
     RecipientChip(
-        recipient = BasicUser(
-            id = 1,
+        recipient = Recipient(
             name = "John Doe",
-            avatarUrl = null
+            avatarURL = null
         )
     )
 }

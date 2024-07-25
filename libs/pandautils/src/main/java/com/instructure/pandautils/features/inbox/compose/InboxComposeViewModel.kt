@@ -13,24 +13,29 @@ import javax.inject.Inject
 class InboxComposeViewModel @Inject constructor(
     private val inboxComposeRepository: InboxComposeRepository
 ): ViewModel() {
-    private val contextPickerUiState = ContextPickerUiState(
-        courses = emptyList(),
-        groups = emptyList(),
-        selectedContext = null,
-        isLoading = true
-    )
-    private val recipientPickerUiState = RecipientPickerUiState(
-        recipients = emptyList(),
-        selectedRecipients = emptyList(),
-        isLoading = true
-    )
     private val _uiState = MutableStateFlow(
-        InboxComposeUiState(
-            contextPickerUiState = contextPickerUiState,
-            recipientsState = recipientPickerUiState,
-        )
+        InboxComposeUiState()
     )
     val uiState = _uiState.asStateFlow()
+
+    private val _contextPickerUiState = MutableStateFlow(
+        ContextPickerUiState(
+            courses = emptyList(),
+            groups = emptyList(),
+            selectedContext = null,
+            isLoading = true
+        )
+    )
+    val contextPickerUiState = _contextPickerUiState.asStateFlow()
+
+    private val _recipientPickerUiState = MutableStateFlow(
+        RecipientPickerUiState(
+            recipients = emptyList(),
+            selectedRecipients = emptyList(),
+            isLoading = true
+        )
+    )
+    val recipientPickerUiState = _recipientPickerUiState.asStateFlow()
 
     init {
         loadContexts()
@@ -42,12 +47,23 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
+    fun updateUiState(uiState: ContextPickerUiState) {
+        viewModelScope.launch {
+            _contextPickerUiState.emit(uiState)
+        }
+    }
+
+    fun updateUiState(uiState: RecipientPickerUiState) {
+        viewModelScope.launch {
+            _recipientPickerUiState.emit(uiState)
+        }
+    }
+
+
     fun loadContexts() {
         updateUiState(
-            uiState.value.copy(
-                contextPickerUiState = contextPickerUiState.copy(
-                    isLoading = true
-                )
+            contextPickerUiState.value.copy(
+                isLoading = true
             )
         )
 
@@ -55,12 +71,10 @@ class InboxComposeViewModel @Inject constructor(
             val courses = inboxComposeRepository.getCourses()
             val groups = inboxComposeRepository.getGroups()
             updateUiState(
-                uiState.value.copy(
-                    contextPickerUiState = contextPickerUiState.copy(
-                        courses = courses,
-                        groups = groups,
-                        isLoading = false
-                    )
+                contextPickerUiState.value.copy(
+                    courses = courses,
+                    groups = groups,
+                    isLoading = false
                 )
             )
         }
@@ -70,12 +84,10 @@ class InboxComposeViewModel @Inject constructor(
         viewModelScope.launch {
             val recipients = inboxComposeRepository.getRecipients(searchQuery, context)
             updateUiState(
-                uiState.value.copy(
-                    recipientsState = recipientPickerUiState.copy(
-                        recipients = recipients,
-                        roles = recipients.map { it.recipientType.name }.distinct(),
-                        isLoading = false
-                    )
+                recipientPickerUiState.value.copy(
+                    recipients = recipients,
+                    roles = recipients.map { it.recipientType.name }.distinct(),
+                    isLoading = false
                 )
             )
         }

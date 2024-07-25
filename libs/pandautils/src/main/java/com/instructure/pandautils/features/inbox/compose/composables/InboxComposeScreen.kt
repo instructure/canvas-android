@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
@@ -67,23 +66,19 @@ fun InboxComposeScreen(
                 ) {
                     LabelValueRow(
                         label = "Course",
-                        value = uiState.contextPickerUiState.selectedContext?.name ?: "",
+                        value = uiState.selectedContext?.name ?: "",
                         onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
                     )
 
-                    val users = listOf(
-                        BasicUser(id = 1, name = "Person 1"),
-                        BasicUser(id = 2, name = "Person 2"),
-                        BasicUser(id = 3, name = "Person 3"),
-                    )
-
-                    LabelMultipleValuesRow(
-                        label = "To",
-                        selectedValues = users,
-                        itemComposable = { RecipientChip(it) },
-                        onSelect = {},
-                        addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
-                    )
+                    if (uiState.selectedContext != null) {
+                        LabelMultipleValuesRow(
+                            label = "To",
+                            selectedValues = uiState.selectedRecipients,
+                            itemComposable = { RecipientChip(it) },
+                            onSelect = {},
+                            addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
+                        )
+                    }
 
                     CanvasDivider()
 

@@ -40,7 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Avatar
@@ -107,9 +107,9 @@ fun <T> LabelMultipleValuesRow(
 fun LabelMultipleValuesRowPreview() {
     ContextKeeper.appContext = LocalContext.current
     val users = listOf(
-        BasicUser(id = 1, name = "Person 1"),
-        BasicUser(id = 2, name = "Person 2"),
-        BasicUser(id = 3, name = "Person 3"),
+        Recipient(name = "Person 1"),
+        Recipient(name = "Person 2"),
+        Recipient(name = "Person 3"),
     )
     LabelMultipleValuesRow(
         label = "To",

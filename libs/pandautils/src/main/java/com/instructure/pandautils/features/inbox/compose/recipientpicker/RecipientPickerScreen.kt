@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Avatar
@@ -121,7 +120,7 @@ private fun RoleRow(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Avatar(user = BasicUser(name = name))
+        Avatar(user = Recipient(name = name))
 
         Spacer(Modifier.width(8.dp))
 
@@ -141,18 +140,12 @@ private fun RecipientRow(
     recipient: Recipient,
     onSelect: () -> Unit,
 ) {
-    val basicUser = BasicUser(
-        id = recipient.idAsLong,
-        name = recipient.name,
-        avatarUrl = recipient.avatarURL,
-        pronouns = recipient.pronouns
-    )
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        Avatar(user = basicUser)
+        Avatar(user = recipient)
 
         Spacer(Modifier.width(8.dp))
 

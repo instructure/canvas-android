@@ -30,11 +30,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.R
 
 @Composable
-fun Avatar(user: BasicUser) {
+fun Avatar(user: Recipient) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -43,9 +43,9 @@ fun Avatar(user: BasicUser) {
             .border(1.dp, colorResource(id = R.color.borderDark), CircleShape)
             .background(colorResource(id = R.color.backgroundLightest))
     ) {
-        if (user.avatarUrl != null) {
+        if (user.avatarURL != null) {
             AsyncImage(
-                model = user.avatarUrl,
+                model = user.avatarURL,
                 contentDescription = user.name,
             )
         } else {
@@ -59,9 +59,9 @@ fun Avatar(user: BasicUser) {
 @Preview
 fun AvatarPreview() {
     Avatar(
-        BasicUser(
+        Recipient(
             name = "John Doe",
-            avatarUrl = null
+            avatarURL = null
         )
     )
 }

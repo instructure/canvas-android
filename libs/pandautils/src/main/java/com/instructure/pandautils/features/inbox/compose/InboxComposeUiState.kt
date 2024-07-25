@@ -4,8 +4,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 
 data class InboxComposeUiState(
-    var contextPickerUiState: ContextPickerUiState,
-    var recipientsState: RecipientPickerUiState,
+    var selectedContext: CanvasContext? = null,
+    var selectedRecipients: List<Recipient> = emptyList(),
     var screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     var sendIndividual: Boolean = false,
     var subject: String = "",
