@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.interactions.FragmentInteractions
@@ -38,7 +39,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                 when (uiState.screenOption) {
                     InboxComposeScreenOptions.None -> {
                         InboxComposeScreen(
-                            title = "New Message",
+                            title = stringResource(id = R.string.new_message),
                             uiState = uiState,
                             actionHandler = { action ->
                                 viewModel.handleAction(action, activity)
@@ -46,12 +47,12 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                         )
                     }
                     InboxComposeScreenOptions.ContextPicker -> {
-                        ContextPickerScreen(title = "Select a Team", uiState = contextPickerState) { action ->
+                        ContextPickerScreen(title = stringResource(id = R.string.select_a_team), uiState = contextPickerState) { action ->
                             viewModel.handleAction(action)
                         }
                     }
                     InboxComposeScreenOptions.RecipientPicker -> {
-                        RecipientPickerScreen(title = "Select Recipients", uiState = recipientPickerState) { action ->
+                        RecipientPickerScreen(title = stringResource(id = R.string.select_recipients), uiState = recipientPickerState) { action ->
                             viewModel.handleAction(action)
                         }
                     }

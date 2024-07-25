@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -71,7 +72,7 @@ fun InboxComposeScreen(
                             ) {
                                 Icon(
                                     painterResource(id = R.drawable.ic_send),
-                                    contentDescription = "Send",
+                                    contentDescription = stringResource(R.string.a11y_send_message),
                                     tint = Color(ThemePrefs.primaryTextColor)
                                 )
                             }
@@ -89,14 +90,14 @@ fun InboxComposeScreen(
                         .padding(padding)
                 ) {
                     LabelValueRow(
-                        label = "Course",
+                        label = stringResource(id = R.string.course),
                         value = uiState.selectedContext?.name ?: "",
                         onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
                     )
 
                     if (uiState.selectedContext != null) {
                         LabelMultipleValuesRow(
-                            label = "To",
+                            label = stringResource(R.string.recipients_to),
                             selectedValues = uiState.selectedRecipients,
                             itemComposable = { RecipientChip(it) {
                                 actionHandler(InboxComposeActionHandler.RemoveRecipient(it)) }
@@ -109,7 +110,7 @@ fun InboxComposeScreen(
                     CanvasDivider()
 
                     LabelSwitchRow(
-                        label = "Send individual message to each recipient",
+                        label = stringResource(R.string.send_individual_message_to_each_recipient),
                         checked = uiState.sendIndividual,
                         onCheckedChange = {
                             actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
@@ -120,7 +121,7 @@ fun InboxComposeScreen(
 
                     LabelTextFieldRow(
                         value = uiState.subject,
-                        label = "Subject",
+                        label = stringResource(R.string.subject),
                         onValueChange = {
                             actionHandler(InboxComposeActionHandler.SubjectChanged(it))
                         },
@@ -129,7 +130,7 @@ fun InboxComposeScreen(
                     CanvasDivider()
                     
                     TextFieldWithHeader(
-                        label = "Message",
+                        label = stringResource(R.string.message),
                         value = uiState.body,
                         headerIconResource = R.drawable.ic_attachment,
                         onValueChange = {

@@ -15,9 +15,9 @@ import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
 
 interface InboxComposeRepository {
-    suspend fun getCourses(): List<Course>
-    suspend fun getGroups(): List<Group>
-    suspend fun getRecipients(searchQuery: String, context: CanvasContext): List<Recipient>
+    suspend fun getCourses(forceRefresh: Boolean = false): List<Course>
+    suspend fun getGroups(forceRefresh: Boolean = false): List<Group>
+    suspend fun getRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false): List<Recipient>
     suspend fun createConversation(recipients: List<Recipient>, subject: String, message: String, context: CanvasContext, attachments: List<Attachment>, isIndividual: Boolean, ): List<Conversation>
 }
 
@@ -27,24 +27,24 @@ class InboxComposeRepositoryImpl @Inject constructor(
     private val recipientAPI: RecipientAPI.RecipientInterface,
     private val inboxAPI: InboxApi.InboxInterface,
 ): InboxComposeRepository {
-    override suspend fun getCourses(): List<Course> {
-        val params = RestParams(usePerPageQueryParam = true)
+    override suspend fun getCourses(forceRefresh: Boolean): List<Course> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
 
         return courseAPI.getFirstPageCourses(params).depaginate {
             courseAPI.next(it, params)
         }.dataOrNull ?: emptyList()
     }
 
-    override suspend fun getGroups(): List<Group> {
-        val params = RestParams(usePerPageQueryParam = true)
+    override suspend fun getGroups(forceRefresh: Boolean): List<Group> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
 
         return groupAPI.getFirstPageGroups(params).depaginate {
             groupAPI.getNextPageGroups(it, params)
         }.dataOrNull ?: emptyList()
     }
 
-    override suspend fun getRecipients(searchQuery: String, context: CanvasContext): List<Recipient> {
-        val params = RestParams(usePerPageQueryParam = true)
+    override suspend fun getRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean): List<Recipient> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return recipientAPI.getFirstPageRecipientList(
             searchQuery = searchQuery,
             context = context.apiContext(),

@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
@@ -92,7 +93,7 @@ private fun RecipientPickerPeopleScreen(
 ) {
     Scaffold (
         topBar = {
-            CanvasThemedAppBar(title = title, navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) })
+            CanvasThemedAppBar(title = title, navigationActionClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) })
         },
         content = { padding ->
             LazyColumn(
@@ -169,7 +170,7 @@ private fun RecipientRow(
         if (isSelected) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_checkmark),
-                contentDescription = "Selected",
+                contentDescription = stringResource(R.string.a11y_selected),
                 tint = colorResource(id = R.color.textDarkest),
             )
         }

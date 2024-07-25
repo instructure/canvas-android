@@ -53,6 +53,7 @@ data class RecipientPickerUiState(
 
 sealed class RecipientPickerActionHandler {
     data class RoleClicked(val role: Recipient.Enrollment) : RecipientPickerActionHandler()
+    data object RecipientBackClicked : RecipientPickerActionHandler()
     data class RecipientClicked(val recipient: Recipient) : RecipientPickerActionHandler()
     data object DoneClicked : RecipientPickerActionHandler()
 }

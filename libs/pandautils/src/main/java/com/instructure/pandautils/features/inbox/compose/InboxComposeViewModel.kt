@@ -42,24 +42,6 @@ class InboxComposeViewModel @Inject constructor(
         loadContexts()
     }
 
-    fun updateUiState(uiState: InboxComposeUiState) {
-        viewModelScope.launch {
-            _uiState.emit(uiState)
-        }
-    }
-
-    fun updateUiState(uiState: ContextPickerUiState) {
-        viewModelScope.launch {
-            _contextPickerUiState.emit(uiState)
-        }
-    }
-
-    fun updateUiState(uiState: RecipientPickerUiState) {
-        viewModelScope.launch {
-            _recipientPickerUiState.emit(uiState)
-        }
-    }
-
     fun handleAction(action: InboxComposeActionHandler, activity: FragmentActivity?) {
         when (action) {
             is InboxComposeActionHandler.CancelClicked -> {
@@ -98,7 +80,7 @@ class InboxComposeViewModel @Inject constructor(
                 updateUiState(uiState.value.copy(screenOption = InboxComposeScreenOptions.None))
             }
             is ContextPickerActionHandler.RefreshCalled -> {
-                loadContexts()
+                loadContexts(forceRefresh = true)
             }
             is ContextPickerActionHandler.ContextClicked -> {
                 updateUiState(
@@ -116,6 +98,9 @@ class InboxComposeViewModel @Inject constructor(
                 updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Roles))
                 updateUiState(uiState.value.copy(screenOption = InboxComposeScreenOptions.None))
             }
+            is RecipientPickerActionHandler.RecipientBackClicked -> {
+                updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Roles))
+            }
             is RecipientPickerActionHandler.RoleClicked -> {
                 updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Recipients))
             }
@@ -126,7 +111,25 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    private fun loadContexts() {
+    private fun updateUiState(uiState: InboxComposeUiState) {
+        viewModelScope.launch {
+            _uiState.emit(uiState)
+        }
+    }
+
+    private fun updateUiState(uiState: ContextPickerUiState) {
+        viewModelScope.launch {
+            _contextPickerUiState.emit(uiState)
+        }
+    }
+
+    private fun updateUiState(uiState: RecipientPickerUiState) {
+        viewModelScope.launch {
+            _recipientPickerUiState.emit(uiState)
+        }
+    }
+
+    private fun loadContexts(forceRefresh: Boolean = false) {
         updateUiState(
             contextPickerUiState.value.copy(
                 isLoading = true
@@ -134,8 +137,8 @@ class InboxComposeViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            val courses = inboxComposeRepository.getCourses()
-            val groups = inboxComposeRepository.getGroups()
+            val courses = inboxComposeRepository.getCourses(forceRefresh)
+            val groups = inboxComposeRepository.getGroups(forceRefresh)
             updateUiState(
                 contextPickerUiState.value.copy(
                     courses = courses,
@@ -146,9 +149,9 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    fun loadRecipients(searchQuery: String, context: CanvasContext) {
+    private fun loadRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false) {
         viewModelScope.launch {
-            val recipients = inboxComposeRepository.getRecipients(searchQuery, context)
+            val recipients = inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh)
             updateUiState(
                 recipientPickerUiState.value.copy(
                     recipients = recipients,
