@@ -18,7 +18,7 @@ sealed class InboxComposeActionHandler {
     data object OpenRecipientPicker : InboxComposeActionHandler()
     data class RemoveRecipient(val recipient: Recipient) : InboxComposeActionHandler()
     data object CancelClicked : InboxComposeActionHandler()
-    data class SendClicked(val sendIndividual: Boolean, val subject: String, val body: String) : InboxComposeActionHandler()
+    data object SendClicked : InboxComposeActionHandler()
     data class SendIndividualChanged(val sendIndividual: Boolean) : InboxComposeActionHandler()
     data class SubjectChanged(val subject: TextFieldValue) : InboxComposeActionHandler()
     data class BodyChanged(val body: TextFieldValue) : InboxComposeActionHandler()

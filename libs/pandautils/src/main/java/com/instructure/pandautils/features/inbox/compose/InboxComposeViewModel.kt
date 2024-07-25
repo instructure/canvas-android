@@ -92,4 +92,19 @@ class InboxComposeViewModel @Inject constructor(
             )
         }
     }
+
+    fun createConversation() {
+        uiState.value.selectedContext?.let { context ->
+            viewModelScope.launch {
+                inboxComposeRepository.createConversation(
+                    recipients = uiState.value.selectedRecipients,
+                    subject = uiState.value.subject.text,
+                    message = uiState.value.body.text,
+                    context = context,
+                    attachments = emptyList(),
+                    isIndividual = uiState.value.sendIndividual
+                )
+            }
+        }
+    }
 }

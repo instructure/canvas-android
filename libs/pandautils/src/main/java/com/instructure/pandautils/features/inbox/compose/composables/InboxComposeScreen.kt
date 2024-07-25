@@ -23,11 +23,16 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -39,6 +44,7 @@ import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
+import com.instructure.pandautils.utils.ThemePrefs
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -53,6 +59,19 @@ fun InboxComposeScreen(
             topBar = {
                 CanvasThemedAppBar(
                     title = title,
+                    actions = {
+                        IconButton(
+                            onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
+                            modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                        ) {
+                            Icon(
+                                painterResource(id = R.drawable.ic_send),
+                                contentDescription = "Send",
+                                tint = Color(ThemePrefs.primaryTextColor)
+                            )
+                        }
+                    },
                     navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelClicked) },
                 )
             },

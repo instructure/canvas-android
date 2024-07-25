@@ -60,7 +60,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                                         viewModel.updateUiState(uiState.copy(body = action.body))
                                     }
                                     is InboxComposeActionHandler.SendClicked -> {
-
+                                        viewModel.createConversation()
                                     }
                                     is InboxComposeActionHandler.SubjectChanged -> {
                                         viewModel.updateUiState(uiState.copy(subject = action.subject))
