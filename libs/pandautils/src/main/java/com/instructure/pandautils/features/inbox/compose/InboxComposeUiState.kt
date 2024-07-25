@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
+import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 
@@ -8,17 +9,19 @@ data class InboxComposeUiState(
     var selectedRecipients: List<Recipient> = emptyList(),
     var screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     var sendIndividual: Boolean = false,
-    var subject: String = "",
-    var body: String = "",
+    var subject: TextFieldValue = TextFieldValue(""),
+    var body: TextFieldValue = TextFieldValue(""),
 )
 
 sealed class InboxComposeActionHandler {
     data object OpenContextPicker : InboxComposeActionHandler()
     data object OpenRecipientPicker : InboxComposeActionHandler()
+    data class RemoveRecipient(val recipient: Recipient) : InboxComposeActionHandler()
     data object CancelClicked : InboxComposeActionHandler()
     data class SendClicked(val sendIndividual: Boolean, val subject: String, val body: String) : InboxComposeActionHandler()
-    data class SubjectChanged(val subject: String) : InboxComposeActionHandler()
-    data class BodyChanged(val body: String) : InboxComposeActionHandler()
+    data class SendIndividualChanged(val sendIndividual: Boolean) : InboxComposeActionHandler()
+    data class SubjectChanged(val subject: TextFieldValue) : InboxComposeActionHandler()
+    data class BodyChanged(val body: TextFieldValue) : InboxComposeActionHandler()
 }
 
 sealed class InboxComposeScreenOptions {
@@ -41,13 +44,14 @@ sealed class ContextPickerActionHandler {
 
 data class RecipientPickerUiState(
     var recipients: List<Recipient> = emptyList(),
-    var roles: List<String> = emptyList(),
+    var roles: List<Recipient.Enrollment> = emptyList(),
     var selectedRecipients: List<Recipient> = emptyList(),
     var screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
     var isLoading: Boolean = false,
 )
 
 sealed class RecipientPickerActionHandler {
+    data class RoleClicked(val role: Recipient.Enrollment) : RecipientPickerActionHandler()
     data class RecipientClicked(val recipient: Recipient) : RecipientPickerActionHandler()
     data object DoneClicked : RecipientPickerActionHandler()
 }

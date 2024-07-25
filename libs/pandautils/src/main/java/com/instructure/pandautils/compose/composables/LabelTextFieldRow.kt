@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +34,8 @@ import com.instructure.pandautils.R
 @Composable
 fun LabelTextFieldRow(
     label: String,
-    onValueChange: (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -50,6 +52,7 @@ fun LabelTextFieldRow(
         )
 
         CanvasThemedTextField(
+            value = value,
             onValueChange = onValueChange,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -62,6 +65,7 @@ fun LabelTextFieldRow(
 fun LabelTextFieldRowPreview() {
     LabelTextFieldRow(
         label = "Label",
+        value = TextFieldValue("Some text"),
         onValueChange = {}
     )
 }

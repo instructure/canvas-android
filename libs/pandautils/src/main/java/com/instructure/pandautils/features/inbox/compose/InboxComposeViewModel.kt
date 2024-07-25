@@ -86,7 +86,7 @@ class InboxComposeViewModel @Inject constructor(
             updateUiState(
                 recipientPickerUiState.value.copy(
                     recipients = recipients,
-                    roles = recipients.map { it.recipientType.name }.distinct(),
+                    roles = recipients.map { it.enrollment }.distinct(),
                     isLoading = false
                 )
             )

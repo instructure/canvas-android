@@ -23,10 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,7 +40,6 @@ fun LabelSwitchRow(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var value by remember { mutableStateOf(checked) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -61,9 +56,8 @@ fun LabelSwitchRow(
         Spacer(modifier = Modifier.weight(1f))
 
         Switch(
-            checked = value,
+            checked = checked,
             onCheckedChange = {
-                value = it
                 onCheckedChange(it)
             },
         )

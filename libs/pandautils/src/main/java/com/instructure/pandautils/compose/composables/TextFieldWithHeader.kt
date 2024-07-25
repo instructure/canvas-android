@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
@@ -38,7 +39,8 @@ import com.instructure.pandautils.R
 @Composable
 fun TextFieldWithHeader(
     label: String,
-    onValueChange: (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     @DrawableRes headerIconResource: Int? = null,
     iconContentDescription: String? = null,
@@ -57,6 +59,7 @@ fun TextFieldWithHeader(
         )
 
         CanvasThemedTextField(
+            value = value,
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()

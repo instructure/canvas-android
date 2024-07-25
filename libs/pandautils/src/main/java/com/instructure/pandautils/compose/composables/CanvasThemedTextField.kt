@@ -8,11 +8,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -31,7 +28,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CanvasThemedTextField(
-    onValueChange: (String) -> Unit,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -50,15 +48,13 @@ fun CanvasThemedTextField(
     cursorBrush: Brush = SolidColor(Color.Black),
     decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit = @Composable { innerTextField -> innerTextField() }
 ) {
-    var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
 
     BasicTextField(
-        value = textFieldValue,
+        value = value,
         onValueChange = {
-            textFieldValue = it
-            onValueChange(it.text)
+            onValueChange(it)
         },
         modifier = modifier
             .bringIntoViewRequester(bringIntoViewRequester),
@@ -72,7 +68,7 @@ fun CanvasThemedTextField(
         minLines = minLines,
         visualTransformation = visualTransformation,
         onTextLayout = {
-            val cursorRect = it.getCursorRect(textFieldValue.selection.start)
+            val cursorRect = it.getCursorRect(value.selection.start)
             coroutineScope.launch {
                 bringIntoViewRequester.bringIntoView(cursorRect)
             }
@@ -87,6 +83,7 @@ fun CanvasThemedTextField(
 @Preview
 fun CanvasThemedTextFieldPreview() {
     CanvasThemedTextField(
+        value = TextFieldValue("Some text"),
         onValueChange = {},
     )
 }

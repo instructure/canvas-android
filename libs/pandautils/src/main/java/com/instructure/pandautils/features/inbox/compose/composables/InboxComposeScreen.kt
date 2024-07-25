@@ -74,8 +74,10 @@ fun InboxComposeScreen(
                         LabelMultipleValuesRow(
                             label = "To",
                             selectedValues = uiState.selectedRecipients,
-                            itemComposable = { RecipientChip(it) },
-                            onSelect = {},
+                            itemComposable = { RecipientChip(it) {
+                                actionHandler(InboxComposeActionHandler.RemoveRecipient(it)) }
+                            },
+                            onSelect = {  },
                             addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
                         )
                     }
@@ -85,15 +87,18 @@ fun InboxComposeScreen(
                     LabelSwitchRow(
                         label = "Send individual message to each recipient",
                         checked = uiState.sendIndividual,
-                        onCheckedChange = { uiState.sendIndividual = it },
+                        onCheckedChange = {
+                            actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
+                        },
                     )
 
                     CanvasDivider()
 
                     LabelTextFieldRow(
+                        value = uiState.subject,
                         label = "Subject",
                         onValueChange = {
-                            uiState.subject = it
+                            actionHandler(InboxComposeActionHandler.SubjectChanged(it))
                         },
                     )
 
@@ -101,9 +106,10 @@ fun InboxComposeScreen(
                     
                     TextFieldWithHeader(
                         label = "Message",
+                        value = uiState.body,
                         headerIconResource = R.drawable.ic_attachment,
                         onValueChange = {
-                            uiState.body = it
+                            actionHandler(InboxComposeActionHandler.BodyChanged(it))
                         },
                     )
 

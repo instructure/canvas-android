@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.compose.recipientpicker
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,12 +25,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
@@ -69,8 +72,8 @@ private fun RecipientPickerRoleScreen(
                     .padding(padding)
             ) {
                 items(uiState.roles) { roleRecipient ->
-                    RoleRow(name = roleRecipient, onSelect = {
-                        uiState.screenOption = RecipientPickerScreenOption.Recipients
+                    RoleRow(name = roleRecipient.name, onSelect = {
+                        actionHandler(RecipientPickerActionHandler.RoleClicked(roleRecipient))
                     })
 
                     Divider(color = colorResource(id = R.color.borderLight), thickness = 1.dp)
@@ -98,8 +101,8 @@ private fun RecipientPickerPeopleScreen(
                     .padding(padding)
             ) {
                 items(uiState.recipients) { recipient ->
-                    RecipientRow(recipient = recipient, onSelect = {
-                        uiState.screenOption = RecipientPickerScreenOption.Recipients
+                    RecipientRow(recipient = recipient, isSelected = uiState.selectedRecipients.contains(recipient), onSelect = {
+                        actionHandler(RecipientPickerActionHandler.RecipientClicked(recipient))
                     })
 
                     Divider(color = colorResource(id = R.color.borderLight), thickness = 1.dp)
@@ -119,6 +122,9 @@ private fun RoleRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable {
+                onSelect()
+            }
     ) {
         Avatar(user = Recipient(name = name))
 
@@ -138,12 +144,14 @@ private fun RoleRow(
 @Composable
 private fun RecipientRow(
     recipient: Recipient,
+    isSelected: Boolean,
     onSelect: () -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { onSelect() }
     ) {
         Avatar(user = recipient)
 
@@ -157,5 +165,13 @@ private fun RecipientRow(
         )
         
         Spacer(Modifier.weight(1f))
+
+        if (isSelected) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_checkmark),
+                contentDescription = "Selected",
+                tint = colorResource(id = R.color.textDarkest),
+            )
+        }
     }
 }
