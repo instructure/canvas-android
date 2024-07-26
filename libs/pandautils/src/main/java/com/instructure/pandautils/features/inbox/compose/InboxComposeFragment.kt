@@ -4,6 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -30,30 +35,57 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val animationLabel = "ScreenSlideTransition"
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 val contextPickerState by viewModel.contextPickerUiState.collectAsState()
                 val recipientPickerState by viewModel.recipientPickerUiState.collectAsState()
 
-                when (uiState.screenOption) {
-                    InboxComposeScreenOptions.None -> {
-                        InboxComposeScreen(
-                            title = stringResource(id = R.string.new_message),
-                            uiState = uiState,
-                            actionHandler = { action ->
-                                viewModel.handleAction(action, activity)
+                AnimatedContent(
+                    label = animationLabel,
+                    targetState = uiState.screenOption,
+                    transitionSpec = {
+                        when(uiState.screenOption) {
+                            is InboxComposeScreenOptions.None -> {
+                                slideInHorizontally(animationSpec = tween(200), initialOffsetX = { -it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { it / 2 })
                             }
-                        )
-                    }
-                    InboxComposeScreenOptions.ContextPicker -> {
-                        ContextPickerScreen(title = stringResource(id = R.string.select_a_team), uiState = contextPickerState) { action ->
-                            viewModel.handleAction(action)
+                            is InboxComposeScreenOptions.ContextPicker -> {
+                                slideInHorizontally(animationSpec = tween(200), initialOffsetX = { it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { -it / 2 })
+                            }
+                            is InboxComposeScreenOptions.RecipientPicker -> {
+                                slideInHorizontally(animationSpec = tween(200), initialOffsetX = { it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { -it / 2 })
+                            }
                         }
                     }
-                    InboxComposeScreenOptions.RecipientPicker -> {
-                        RecipientPickerScreen(title = stringResource(id = R.string.select_recipients), uiState = recipientPickerState) { action ->
-                            viewModel.handleAction(action)
+                ) { screenOption ->
+                    when (screenOption) {
+                        InboxComposeScreenOptions.None -> {
+                            InboxComposeScreen(
+                                title = stringResource(id = R.string.new_message),
+                                uiState = uiState,
+                                actionHandler = { action ->
+                                    viewModel.handleAction(action, activity)
+                                }
+                            )
+                        }
+
+                        InboxComposeScreenOptions.ContextPicker -> {
+                            ContextPickerScreen(
+                                title = stringResource(id = R.string.select_a_team),
+                                uiState = contextPickerState
+                            ) { action ->
+                                viewModel.handleAction(action)
+                            }
+                        }
+
+                        InboxComposeScreenOptions.RecipientPicker -> {
+                            RecipientPickerScreen(
+                                title = stringResource(id = R.string.select_recipients),
+                                uiState = recipientPickerState
+                            ) { action ->
+                                viewModel.handleAction(action)
+                            }
                         }
                     }
                 }

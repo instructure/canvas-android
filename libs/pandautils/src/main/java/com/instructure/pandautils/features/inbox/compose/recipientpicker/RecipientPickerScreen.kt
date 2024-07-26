@@ -16,6 +16,11 @@
  */
 package com.instructure.pandautils.features.inbox.compose.recipientpicker
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,9 +55,34 @@ fun RecipientPickerScreen(
     uiState: RecipientPickerUiState,
     actionHandler: (RecipientPickerActionHandler) -> Unit,
 ) {
-    when (uiState.screenOption) {
-        is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(title, uiState, actionHandler)
-        is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(title, uiState, actionHandler)
+    val animationLabel = "RecipientPickerScreenSlideTransition"
+    AnimatedContent(
+        label = animationLabel,
+        targetState = uiState.screenOption,
+        transitionSpec = {
+            when(uiState.screenOption) {
+                is  RecipientPickerScreenOption.Recipients -> {
+                    slideInHorizontally(animationSpec = tween(200), initialOffsetX = { it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { -it / 2 })
+                }
+                is RecipientPickerScreenOption.Roles -> {
+                    slideInHorizontally(animationSpec = tween(200), initialOffsetX = { -it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { it / 2 })
+                }
+            }
+        }
+    ){ screenOption ->
+        when (screenOption) {
+            is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
+                title,
+                uiState,
+                actionHandler
+            )
+
+            is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(
+                title,
+                uiState,
+                actionHandler
+            )
+        }
     }
 }
 

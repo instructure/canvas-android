@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.compose.composables
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -57,6 +58,7 @@ fun <T> LabelMultipleValuesRow(
     modifier: Modifier = Modifier,
     loading: Boolean = false
 ) {
+    val animationLabel = "LabelMultipleValuesRowTransition"
     Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -83,7 +85,12 @@ fun <T> LabelMultipleValuesRow(
         } else {
                 FlowRow(Modifier.weight(1f)) {
                     for (value in selectedValues) {
-                        itemComposable(value)
+                        AnimatedContent(
+                            label = animationLabel,
+                            targetState = value,
+                        ){
+                            itemComposable(it)
+                        }
                     }
                 }
         }

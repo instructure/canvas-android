@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.compose.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.imeNestedScroll
@@ -99,14 +100,16 @@ fun InboxComposeScreen(
                         onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
                     )
 
-                    if (uiState.selectedContext != null) {
+                    AnimatedVisibility(visible = uiState.selectedContext != null) {
                         LabelMultipleValuesRow(
                             label = stringResource(R.string.recipients_to),
                             selectedValues = uiState.selectedRecipients,
-                            itemComposable = { RecipientChip(it) {
-                                actionHandler(InboxComposeActionHandler.RemoveRecipient(it)) }
+                            itemComposable = {
+                                RecipientChip(it) {
+                                    actionHandler(InboxComposeActionHandler.RemoveRecipient(it))
+                                }
                             },
-                            onSelect = {  },
+                            onSelect = { },
                             addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
                         )
                     }
