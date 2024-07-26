@@ -41,6 +41,7 @@ import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import androidx.navigation.fragment.NavHostFragment
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
@@ -98,10 +99,20 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 setupNavigationDrawerHeader(it.userViewData)
                 setupAppColors(it.selectedStudent)
                 updateUnreadCount(it.unreadCount)
+                updateAlertCount(it.alertCount)
             }
         }
 
         handleDeeplink()
+    }
+
+    private fun updateAlertCount(alertCount: Int) {
+        val badge = binding.bottomNav.getOrCreateBadge(R.id.alerts)
+        badge.verticalOffset = 10
+        badge.horizontalOffset = 10
+        badge.setVisible(alertCount != 0, true)
+        badge.maxNumber = 99
+        badge.number = alertCount
     }
 
     private fun updateUnreadCount(unreadCount: Int) {
@@ -179,7 +190,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 R.id.inbox -> menuItemSelected { navigation.navigate(activity, navigation.inbox) }
                 R.id.manage_students -> menuItemSelected { navigation.navigate(activity, navigation.manageStudents) }
                 R.id.settings -> menuItemSelected { navigation.navigate(activity, navigation.settings) }
-                R.id.help -> menuItemSelected { navigation.navigate(activity, navigation.help) }
+                R.id.help -> menuItemSelected { activity?.let { HelpDialogFragment.show(it) } }
                 R.id.log_out -> menuItemSelected { onLogout() }
                 R.id.switch_users -> menuItemSelected { onSwitchUsers() }
                 else -> false
@@ -236,6 +247,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         gradientDrawable?.setStroke(2.toPx, color)
         binding.unreadCountBadge.background = gradientDrawable
         binding.unreadCountBadge.setTextColor(color)
+
+        binding.bottomNav.getOrCreateBadge(R.id.alerts).backgroundColor = color
     }
 
     private fun openNavigationDrawer() {

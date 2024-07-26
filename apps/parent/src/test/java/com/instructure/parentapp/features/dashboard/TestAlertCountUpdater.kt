@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,13 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.viewinterface
+package com.instructure.parentapp.features.dashboard
 
-import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.teacher.interfaces.RceMediaUploadView
-import instructure.androidblueprint.FragmentViewInterface
+import kotlinx.coroutines.flow.MutableSharedFlow
 
-interface DiscussionsReplyView : FragmentViewInterface, RceMediaUploadView {
-    fun messageSuccess(entry: DiscussionEntry)
-    fun messageFailure(reason: Int)
+class TestAlertCountUpdater(override val shouldRefreshAlertCountFlow: MutableSharedFlow<Boolean>) :
+    AlertCountUpdater {
+    override suspend fun updateShouldRefreshAlertCount(shouldRefresh: Boolean) {
+        shouldRefreshAlertCountFlow.emit(shouldRefresh)
+    }
 }

@@ -7,10 +7,8 @@ import androidx.navigation.NavGraph
 import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.dialog
 import androidx.navigation.fragment.fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.parentapp.R
@@ -78,7 +76,6 @@ class Navigation(apiPrefs: ApiPrefs) {
             }
             fragment<ManageStudentsFragment>(manageStudents)
             fragment<SettingsFragment>(settings)
-            dialog<HelpDialogFragment>(help)
             fragment<CourseDetailsFragment>(courseDetails) {
                 argument(courseId) {
                     type = NavType.LongType

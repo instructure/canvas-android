@@ -19,40 +19,17 @@
 package com.instructure.pandautils.features.discussion.router
 
 import com.instructure.canvasapi2.apis.DiscussionAPI
-import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.isCourse
-import com.instructure.pandautils.utils.isGroup
 
 class DiscussionRouteHelperNetworkDataSource(
     private val discussionApi: DiscussionAPI.DiscussionInterface,
-    private val groupApi: GroupAPI.GroupInterface,
-    private val featuresApi: FeaturesAPI.FeaturesInterface,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val groupApi: GroupAPI.GroupInterface
 ) : DiscussionRouteHelperDataSource {
-    suspend fun getEnabledFeaturesForCourse(canvasContext: CanvasContext, forceNetwork: Boolean): Boolean {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return if (canvasContext.isCourse) {
-            val featureFlags = featuresApi.getEnabledFeaturesForCourse(canvasContext.id, params).dataOrNull
-            featureFlags?.contains("react_discussions_post") ?: false
-        } else if (canvasContext.isGroup) {
-            val group = canvasContext as Group
-            if (group.courseId == 0L) {
-                featureFlagProvider.getDiscussionRedesignFeatureFlag()
-            } else {
-                val featureFlags = featuresApi.getEnabledFeaturesForCourse(group.courseId, params).dataOrNull
-                featureFlags?.contains("react_discussions_post") ?: false
-            }
-        } else {
-            false
-        }
-    }
 
     override suspend fun getDiscussionTopicHeader(
         canvasContext: CanvasContext,

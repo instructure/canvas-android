@@ -25,23 +25,23 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.dialog.AskInstructorDialogStyled
 
-class StudentHelpDialogFragmentBehavior(private val activity: FragmentActivity) : HelpDialogFragmentBehavior {
-
+class StudentHelpDialogFragmentBehavior(private val parentActivity: FragmentActivity) : HelpDialogFragmentBehavior {
     override fun reportProblem() {
-        val dialog = ErrorReportDialog()
-        dialog.arguments = ErrorReportDialog.createBundle(activity.getString(R.string.appUserTypeStudent))
-        dialog.show(activity.supportFragmentManager, ErrorReportDialog.TAG)
+        ErrorReportDialog().apply {
+            arguments = ErrorReportDialog.createBundle(parentActivity.getString(R.string.appUserTypeStudent))
+            show(parentActivity.supportFragmentManager, ErrorReportDialog.TAG)
+        }
     }
 
     override fun rateTheApp() {
-        Utils.goToAppStore(AppType.STUDENT, activity)
+        Utils.goToAppStore(AppType.STUDENT, parentActivity)
     }
 
     override fun askInstructor() {
-        AskInstructorDialogStyled().show(activity.supportFragmentManager, AskInstructorDialogStyled.TAG)
+        AskInstructorDialogStyled().show(parentActivity.supportFragmentManager, AskInstructorDialogStyled.TAG)
     }
 
     override fun openWebView(url: String, title: String) {
-        activity.startActivity(InternalWebViewActivity.createIntent(activity, url, title, false))
+        parentActivity.startActivity(InternalWebViewActivity.createIntent(parentActivity, url, title, false))
     }
 }

@@ -1762,4 +1762,20 @@
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
     <string name="a11y_parentOpenNavigationDrawerWithBadge">Open navigation drawer, %s unread messages</string>
+    <string name="parentNoAlerts">No Alerts</string>
+    <string name="parentNoAlersMessage">There\'s nothing to be notified of yet.</string>
+    <string name="errorLoadingAlerts">There was an error loading your student’s alerts.</string>
+    <string name="assignmentMissingAlertTitle">Assignment missing</string>
+    <string name="assignmentGradeHighAlertTitle">Assignment Grade Above %s</string>
+    <string name="assignmentGradeLowAlertTitle">Assignment Grade Below %s</string>
+    <string name="courseGradeHighAlertTitle">Course Grade Above %s</string>
+    <string name="courseGradeLowAlertTitle">Course Grade Below %s</string>
+    <string name="courseAnnouncementAlertTitle">Course Announcement</string>
+    <string name="institutionAnnouncementAlertTitle">Institution Announcement</string>
+    <string name="a11y_contentDescription_observerAlertDelete">Delete Alert</string>
+    <string name="alertDateTime">%s at %s</string>
+    <string name="alertDismissMessage">Alert dismissed</string>
+    <string name="alertDismissAction">Undo</string>
+    <string name="alertDismissActionErrorMessage">Failed to undo alert dismissal</string>
+    <string name="alertDismissErrorMessage">Failed to dismiss alert</string>
 </resources>

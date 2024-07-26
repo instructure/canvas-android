@@ -49,7 +49,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -147,7 +146,7 @@ class ModuleProgressionViewModelTest {
             listOf(
                 ModuleItemViewData.Page("pageUrl"),
                 ModuleItemViewData.Assignment(1L),
-                ModuleItemViewData.Discussion(true, 2L),
+                ModuleItemViewData.Discussion(2L),
                 ModuleItemViewData.Quiz(3L),
                 ModuleItemViewData.External("mockUri", "Title 1"),
                 ModuleItemViewData.External("mockUri", "Title 2"),
@@ -158,7 +157,7 @@ class ModuleProgressionViewModelTest {
             0
         )
 
-        coEvery { discussionRouteHelperRepository.getEnabledFeaturesForCourse(any(), any()) } returns true
+        coEvery { discussionRouteHelperRepository.shouldShowDiscussionRedesign() } returns true
 
         coEvery { repository.getModulesWithItems(any()) } returns listOf(
             ModuleObject(

@@ -21,21 +21,52 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
+import com.instructure.pandautils.utils.collectOneOffEvents
+import com.instructure.parentapp.R
+import com.instructure.parentapp.util.navigation.Navigation
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class AlertsFragment : Fragment() {
+
+    @Inject
+    lateinit var navigation: Navigation
+
+    private val viewModel: AlertsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         return ComposeView(requireActivity()).apply {
             setContent {
-                Text(text = "Alerts")
+                val uiState by viewModel.uiState.collectAsState()
+                AlertsScreen(uiState = uiState, actionHandler = viewModel::handleAction)
+            }
+        }
+    }
+
+    private fun handleAction(action: AlertsViewModelAction) {
+        when (action) {
+            is AlertsViewModelAction.Navigate -> {
+                navigation.navigate(activity, action.route)
+            }
+
+            is AlertsViewModelAction.ShowSnackbar -> {
+                Snackbar.make(requireView(), action.message, Snackbar.LENGTH_SHORT).apply {
+                    action.action?.let { setAction(it) { action.actionCallback?.invoke() } }
+                    setActionTextColor(resources.getColor(R.color.white, resources.newTheme()))
+                }.show()
             }
         }
     }

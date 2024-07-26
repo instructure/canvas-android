@@ -23,15 +23,33 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ActivityResult
+import com.instructure.pandautils.utils.FilePrefs
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
-import com.instructure.student.mobius.assignmentDetails.submission.picker.*
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.every
+import io.mockk.invoke
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkObject
+import io.mockk.unmockkStatic
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -553,5 +571,17 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     @Test
     fun `isPickerRequest with invalid code return false`() {
         assertFalse(PickerSubmissionUploadEffectHandler.isPickerRequest(1))
+    }
+
+    @Test
+    fun `RemoveTempFile removes temp file`() {
+        mockkObject(FileUploadUtils)
+        connection.accept(PickerSubmissionUploadEffect.RemoveTempFile("path"))
+
+        verify {
+            FileUploadUtils.deleteTempFile("path")
+        }
+
+        unmockkObject(FileUploadUtils)
     }
 }
