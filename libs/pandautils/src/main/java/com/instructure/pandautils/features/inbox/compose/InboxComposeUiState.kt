@@ -12,7 +12,10 @@ data class InboxComposeUiState(
     var subject: TextFieldValue = TextFieldValue(""),
     var body: TextFieldValue = TextFieldValue(""),
     var isSending: Boolean = false,
-)
+) {
+    val isSendButtonEnabled: Boolean
+        get() = selectedContext != null && selectedRecipients.isNotEmpty() && subject.text.isNotEmpty() && body.text.isNotEmpty()
+}
 
 sealed class InboxComposeActionHandler {
     data object OpenContextPicker : InboxComposeActionHandler()

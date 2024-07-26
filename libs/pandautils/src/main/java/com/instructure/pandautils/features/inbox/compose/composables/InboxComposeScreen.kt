@@ -26,6 +26,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -69,13 +70,14 @@ fun InboxComposeScreen(
                         } else {
                             IconButton(
                                 onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
+                                enabled = uiState.isSendButtonEnabled,
                                 modifier = Modifier
                                     .padding(horizontal = 12.dp)
                             ) {
                                 Icon(
                                     painterResource(id = R.drawable.ic_send),
                                     contentDescription = stringResource(R.string.a11y_send_message),
-                                    tint = Color(ThemePrefs.primaryTextColor)
+                                    tint = colorResource(id = R.color.textLightest).copy(alpha = LocalContentAlpha.current)
                                 )
                             }
                         }

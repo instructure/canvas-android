@@ -105,8 +105,13 @@ class InboxComposeViewModel @Inject constructor(
                 updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Recipients))
             }
             is RecipientPickerActionHandler.RecipientClicked -> {
-                updateUiState(uiState.value.copy(selectedRecipients = uiState.value.selectedRecipients + action.recipient))
-                updateUiState(recipientPickerUiState.value.copy(selectedRecipients = recipientPickerUiState.value.selectedRecipients + action.recipient))
+                if (recipientPickerUiState.value.selectedRecipients.contains(action.recipient)) {
+                    updateUiState(uiState.value.copy(selectedRecipients = uiState.value.selectedRecipients - action.recipient))
+                    updateUiState(recipientPickerUiState.value.copy(selectedRecipients = recipientPickerUiState.value.selectedRecipients - action.recipient))
+                } else {
+                    updateUiState(uiState.value.copy(selectedRecipients = uiState.value.selectedRecipients + action.recipient))
+                    updateUiState(recipientPickerUiState.value.copy(selectedRecipients = recipientPickerUiState.value.selectedRecipients + action.recipient))
+                }
             }
         }
     }
