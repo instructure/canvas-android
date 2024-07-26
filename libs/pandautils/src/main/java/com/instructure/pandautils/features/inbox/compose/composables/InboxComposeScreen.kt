@@ -62,7 +62,9 @@ fun InboxComposeScreen(
                     actions = {
                         if (uiState.isSending) {
                             CircularProgressIndicator(
-                                Modifier.padding(4.dp),
+                                color = Color(ThemePrefs.brandColor),
+                                modifier = Modifier
+                                    .padding(4.dp),
                             )
                         } else {
                             IconButton(
