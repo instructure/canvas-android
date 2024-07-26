@@ -28,10 +28,10 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.post
-import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateDiscussionView
 import instructure.androidblueprint.FragmentPresenter
@@ -138,7 +138,7 @@ class CreateDiscussionPresenter(private val canvasContext: CanvasContext, privat
         DiscussionManager.deleteDiscussionTopicHeader(canvasContext, discussionTopicHeaderId, object : StatusCallback<Void>() {
             override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
                 if (response.code() in 200..299) {
-                    DiscussionTopicHeaderDeletedEvent(discussionTopicHeaderId, (DiscussionsDetailsFragment::class.java.toString() + ".onResume()")).post()
+                    DiscussionTopicHeaderDeletedEvent(discussionTopicHeaderId, (DiscussionDetailsWebViewFragment::class.java.toString() + ".onResume()")).post()
                     viewCallback?.discussionDeletedSuccessfully(discussionTopicHeaderId)
                 }
             }

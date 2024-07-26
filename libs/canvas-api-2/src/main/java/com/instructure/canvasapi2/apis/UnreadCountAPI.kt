@@ -26,6 +26,9 @@ object UnreadCountAPI {
 
         @GET("users/self/observer_alerts/unread_count")
         fun getUnreadAlertCount(@Query("student_id") studentId: Long): Call<UnreadCount>
+
+        @GET("users/self/observer_alerts/unread_count")
+        suspend fun getUnreadAlertCount(@Query("student_id") studentId: Long, @Tag params: RestParams): DataResult<UnreadCount>
     }
 
     fun getUnreadConversationCount(adapter: RestBuilder, params: RestParams, callback: StatusCallback<UnreadConversationCount>) {

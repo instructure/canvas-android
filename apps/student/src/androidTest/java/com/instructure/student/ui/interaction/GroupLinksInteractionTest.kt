@@ -134,7 +134,7 @@ class GroupLinksInteractionTest : StudentTest() {
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectAnnouncements()
         discussionListPage.selectTopic(announcement.title!!)
-        nativeDiscussionDetailsPage.assertTopicInfoShowing(announcement)
+        discussionDetailsPage.assertToolbarDiscussionTitle(announcement.title!!)
 
     }
 
@@ -156,7 +156,7 @@ class GroupLinksInteractionTest : StudentTest() {
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(discussion.title!!)
-        nativeDiscussionDetailsPage.assertTopicInfoShowing(discussion)
+        discussionDetailsPage.assertToolbarDiscussionTitle(discussion.title!!)
     }
 
     // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"

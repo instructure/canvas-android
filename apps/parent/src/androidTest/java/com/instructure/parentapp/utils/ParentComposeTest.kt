@@ -19,6 +19,7 @@ package com.instructure.parentapp.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.instructure.parentapp.features.login.LoginActivity
+import com.instructure.parentapp.ui.pages.AlertsPage
 import org.junit.Rule
 
 
@@ -26,6 +27,8 @@ abstract class ParentComposeTest : ParentTest() {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
+
+    protected val alertsPage = AlertsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }

@@ -18,11 +18,11 @@
 package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.models.User
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class TestSelectStudentHolder(
-    override val selectedStudentFlow: MutableSharedFlow<User>
+    override val selectedStudentFlow: MutableStateFlow<User?>
 ) : SelectedStudentHolder {
     override suspend fun updateSelectedStudent(user: User) {
         selectedStudentFlow.emit(user)

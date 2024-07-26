@@ -3,6 +3,7 @@ package com.instructure.pandautils.utils
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import com.instructure.pandautils.R
 import java.io.File
@@ -29,4 +30,9 @@ fun Uri.viewExternally(context: Context, contentType: String, onNoApps: () -> Un
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     val appCount = context.packageManager.queryIntentActivities(intent, 0).size
     if (appCount > 0) context.startActivity(intent) else onNoApps()
+}
+
+fun isAudioVisualExtension(extension: String): Boolean {
+    val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+    return type?.startsWith("audio/") == true || type?.startsWith("video/") == true
 }
