@@ -68,7 +68,6 @@ class HtmlContentFragment : Fragment() {
         canvasWebView.settings.loadWithOverviewMode = true
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)
-        canvasWebView.settings.userAgentString = ApiPrefs.userAgent
         canvasWebView.addVideoClient(requireActivity())
         canvasWebView.setInitialScale(100)
 

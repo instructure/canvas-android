@@ -75,9 +75,6 @@ open class InternalWebViewFragment : BaseFragment() {
 
     override fun layoutResId() = R.layout.fragment_internal_webview
 
-    // Used for external urls that reject the candroid user agent string
-    var originalUserAgentString: String = ""
-
     override fun onPause() {
         super.onPause()
         binding.canvasWebView.onPause()
@@ -139,8 +136,6 @@ open class InternalWebViewFragment : BaseFragment() {
         canvasWebView.settings.loadWithOverviewMode = true
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)
-        originalUserAgentString = canvasWebView.settings.userAgentString
-        canvasWebView.settings.userAgentString = ApiPrefs.userAgent
         canvasWebView.addVideoClient(requireActivity())
         canvasWebView.setInitialScale(100)
 
@@ -229,9 +224,6 @@ open class InternalWebViewFragment : BaseFragment() {
                         url = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }.sessionUrl
                     } catch (e: StatusCallbackError) {
                     }
-                } else {
-                    // External URL, use the non-Canvas specific user agent string
-                    canvasWebView.settings.userAgentString = originalUserAgentString
                 }
 
                 canvasWebView.loadUrl(url, getReferer())
