@@ -90,7 +90,7 @@ internal fun StudentColorPickerDialog(
                     modifier = Modifier.padding(20.dp)
                 )
                 LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     contentPadding = PaddingValues(horizontal = 12.dp)
                 ) {
                     items(userColors) {
