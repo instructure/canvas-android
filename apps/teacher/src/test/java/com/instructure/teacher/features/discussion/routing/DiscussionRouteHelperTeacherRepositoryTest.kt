@@ -17,12 +17,10 @@ class DiscussionRouteHelperTeacherRepositoryTest {
     private val repository = DiscussionRouteHelperTeacherRepository(networkDataSource)
 
     @Test
-    fun `getEnabledFeaturesForCourse() calls networkDataSource`() = runTest {
+    fun `Always show discussion redesign`() = runTest {
         val expected = true
 
-        coEvery { networkDataSource.getEnabledFeaturesForCourse(any(), any()) } returns expected
-
-        val result = repository.getEnabledFeaturesForCourse(mockk(), true)
+        val result = repository.shouldShowDiscussionRedesign()
 
         assertEquals(expected, result)
     }

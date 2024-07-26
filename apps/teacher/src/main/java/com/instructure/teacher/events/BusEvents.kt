@@ -164,14 +164,8 @@ class DiscussionUpdatedEvent(discussionTopicHeader: DiscussionTopicHeader, skipI
 /** Convenience function for posting this event to the EventBus */
 fun RationedBusEvent<*>.post() = EventBus.getDefault().postSticky(this)
 
-/** A RationedBusEvent for DiscussionEntry changes. @see [RationedBusEvent] */
-class DiscussionEntryEvent(discussionEntry: DiscussionEntry, skipId: String? = null) : RationedBusEvent<DiscussionEntry>(discussionEntry, skipId)
-
 /** A RationedBusEvent for DiscussionEntry updates. @see [RationedBusEvent] */
 class DiscussionEntryUpdatedEvent(discussionEntry: DiscussionEntry, skipId: String? = null) : RationedBusEvent<DiscussionEntry>(discussionEntry, skipId)
-
-/** A RationedBusEvent for DiscussionTopic changes. @see [RationedBusEvent] */
-class DiscussionTopicEvent(discussionTopic: DiscussionTopic, skipId: String? = null) : RationedBusEvent<DiscussionTopic>(discussionTopic, skipId)
 
 /** A RationedBusEvent for DiscussionTopicHeader changes. @see [RationedBusEvent] */
 class DiscussionTopicHeaderEvent(discussionTopicHeader: DiscussionTopicHeader, skipId: String? = null) : RationedBusEvent<DiscussionTopicHeader>(discussionTopicHeader, skipId)

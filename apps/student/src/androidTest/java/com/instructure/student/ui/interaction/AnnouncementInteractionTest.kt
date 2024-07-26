@@ -19,6 +19,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -53,6 +54,7 @@ class AnnouncementInteractionTest : StudentTest() {
     // (This kind of seems like more of a test of the mocked endpoint, but we'll go with it.)
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testAnnouncement_replyToSectionSpecificAnnouncement() {
 
         val data = getToCourse(createSections = true)
@@ -91,6 +93,7 @@ class AnnouncementInteractionTest : StudentTest() {
     // User can preview an announcement attachment
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testAnnouncement_previewAttachment() {
 
         val data = getToCourse()
@@ -133,6 +136,7 @@ class AnnouncementInteractionTest : StudentTest() {
     // View/reply to an announcement
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testAnnouncement_reply() {
 
         val data = getToCourse()
