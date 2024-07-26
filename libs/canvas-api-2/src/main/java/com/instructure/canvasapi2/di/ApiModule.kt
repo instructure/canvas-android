@@ -16,6 +16,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.apis.ObserverApi
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
