@@ -93,6 +93,7 @@ class ManageStudentViewModel @Inject constructor(
                             studentId = it.id,
                             avatarUrl = it.avatarUrl,
                             studentName = it.shortName ?: it.name,
+                            studentPronouns = it.pronouns,
                             studentColor = colorKeeper.getOrGenerateUserColor(it)
                         )
                     }

@@ -48,6 +48,7 @@ data class StudentItemUiState(
     val studentId: Long = 0,
     val avatarUrl: String? = null,
     val studentName: String = "",
+    val studentPronouns: String? = null,
     val studentColor: ThemedColor = ThemedColor(Color.Black.toArgb())
 )
 

@@ -94,6 +94,7 @@ class ManageStudentsScreenTest {
                         StudentItemUiState(
                             studentId = 1,
                             studentName = "John Doe",
+                            studentPronouns = "He/Him",
                             studentColor = ThemedColor(R.color.studentGreen)
                         ),
                         StudentItemUiState(
@@ -109,7 +110,7 @@ class ManageStudentsScreenTest {
         }
 
         fun studentItemMatcher(name: String) = hasTestTag("studentListItem") and hasAnyChild(hasText(name))
-        composeTestRule.onNode(studentItemMatcher("John Doe"), true)
+        composeTestRule.onNode(studentItemMatcher("John Doe (He/Him)"), true)
             .assertIsDisplayed()
         composeTestRule.onNode(studentItemMatcher("Jane Doe"), true)
             .assertIsDisplayed()

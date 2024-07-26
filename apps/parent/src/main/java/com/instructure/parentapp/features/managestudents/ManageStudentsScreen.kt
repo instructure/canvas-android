@@ -53,6 +53,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -207,7 +211,14 @@ private fun StudentListItem(
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = uiState.studentName,
+            text = buildAnnotatedString {
+                append(uiState.studentName)
+                if (!uiState.studentPronouns.isNullOrEmpty()) {
+                    withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
+                        append(" (${uiState.studentPronouns})")
+                    }
+                }
+            },
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp
         )
@@ -247,7 +258,7 @@ private fun ManageStudentsPreview() {
         uiState = ManageStudentsUiState(
             isLoading = false,
             studentListItems = listOf(
-                StudentItemUiState(studentId = 1, studentName = "Student 1"),
+                StudentItemUiState(studentId = 1, studentName = "Student 1", studentPronouns = "They/Them"),
                 StudentItemUiState(studentId = 2, studentName = "Student 2"),
                 StudentItemUiState(studentId = 3, studentName = "Student 3"),
             )

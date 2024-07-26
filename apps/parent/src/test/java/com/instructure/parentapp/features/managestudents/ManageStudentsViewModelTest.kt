@@ -88,10 +88,10 @@ class ManageStudentsViewModelTest {
 
     @Test
     fun `Load students`() {
-        val students = listOf(User(id = 1, shortName = "Student 1"))
+        val students = listOf(User(id = 1, shortName = "Student 1", pronouns = "He/Him"))
         val expectedState = ManageStudentsUiState(
             studentListItems = listOf(
-                StudentItemUiState(1, null, "Student 1", ThemedColor(1))
+                StudentItemUiState(1, null, "Student 1", "He/Him", ThemedColor(1))
             )
         )
         coEvery { repository.getStudents(any()) } returns students
@@ -216,7 +216,7 @@ class ManageStudentsViewModelTest {
         val expectedUiState = ManageStudentsUiState(
             colorPickerDialogUiState = ColorPickerDialogUiState(),
             studentListItems = listOf(
-                StudentItemUiState(1, null, "Student 1", ThemedColor(2))
+                StudentItemUiState(1, null, "Student 1", null, ThemedColor(2))
             )
         )
         val selectedUserColor = UserColor(
@@ -242,7 +242,7 @@ class ManageStudentsViewModelTest {
         val expectedUiState = ManageStudentsUiState(
             colorPickerDialogUiState = ColorPickerDialogUiState(isSavingColorError = true),
             studentListItems = listOf(
-                StudentItemUiState(1, null, "Student 1", ThemedColor(1))
+                StudentItemUiState(1, null, "Student 1", null, ThemedColor(1))
             )
         )
         val selectedUserColor = UserColor(
