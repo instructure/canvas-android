@@ -33,13 +33,29 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.DiscussionManager
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.mapToAttachment
 import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -51,7 +67,29 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.discussions.DiscussionCaching
 import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.DiscussionEntryEvent
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.OnBackStackChangedEvent
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getModuleItemId
+import com.instructure.pandautils.utils.isAccessibilityEnabled
+import com.instructure.pandautils.utils.isGroup
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.loadHtmlWithIframes
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -61,7 +99,11 @@ import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
-import com.instructure.student.fragment.*
+import com.instructure.student.fragment.DiscussionsReplyFragment
+import com.instructure.student.fragment.DiscussionsUpdateFragment
+import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LtiLaunchFragment
+import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import dagger.hilt.android.AndroidEntryPoint
@@ -73,7 +115,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
-import java.util.*
+import java.util.Date
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -634,12 +676,16 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.setGone()
         swipeRefreshLayout.isEnabled = false
         openInBrowser.onClick {
-            discussionTopicHeader.htmlUrl?.let { url ->
-                InternalWebviewFragment.loadInternalWebView(
-                    activity,
-                    InternalWebviewFragment.makeRoute(canvasContext, url, true, true)
-                )
+
+            if(repository.isOnline()) {
+                discussionTopicHeader.htmlUrl?.let { url ->
+                    InternalWebviewFragment.loadInternalWebView(
+                        activity,
+                        InternalWebviewFragment.makeRoute(canvasContext, url, true, true)
+                    )
+                }
             }
+            else NoInternetConnectionDialog.show(requireFragmentManager())
         }
     }
 
