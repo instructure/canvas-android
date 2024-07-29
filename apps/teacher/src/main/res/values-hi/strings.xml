@@ -898,4 +898,5 @@
     <string name="excuse">माफ़ करें</string>
     <string name="speed_grader_overgraded_by">%s द्वारा ओवरग्रेड किया गया</string>
 
+    <string name="error_unpublishable_module_item">यदि छात्र सबमिशन हैं, तो %s को अप्रकाशित नहीं किया जा सकता</string>
 </resources>
