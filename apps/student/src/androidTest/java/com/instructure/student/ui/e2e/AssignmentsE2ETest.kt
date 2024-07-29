@@ -39,6 +39,7 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.R
 import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.utils.StudentTest
@@ -785,8 +786,10 @@ class AssignmentsE2ETest: StudentTest() {
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
         Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
-        dashboardPage.refresh()
-        dashboardPage.assertCourseGrade(course.name, "B-")
+        retryWithIncreasingDelay(times = 10, maxDelay = 4000) {
+            dashboardPage.refresh()
+            dashboardPage.assertCourseGrade(course.name, "B-")
+        }
 
         Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
         val percentageAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.PERCENT, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
@@ -937,8 +940,10 @@ class AssignmentsE2ETest: StudentTest() {
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
         Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
-        dashboardPage.refresh()
-        dashboardPage.assertCourseGrade(course.name, "B-")
+        retryWithIncreasingDelay(times = 10, maxDelay = 4000) {
+            dashboardPage.refresh()
+            dashboardPage.assertCourseGrade(course.name, "B-")
+        }
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val percentageAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.PERCENT, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
