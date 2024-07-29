@@ -3,6 +3,8 @@ package com.instructure.pandautils.features.inbox.compose
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.type.EnrollmentType
+import java.util.EnumMap
 
 data class InboxComposeUiState(
     var selectedContext: CanvasContext? = null,
@@ -47,15 +49,15 @@ sealed class ContextPickerActionHandler {
 }
 
 data class RecipientPickerUiState(
-    var recipients: List<Recipient> = emptyList(),
-    var roles: List<Recipient.Enrollment> = emptyList(),
+    var recipientsByRole: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java),
+    var selectedRole: EnrollmentType? = null,
     var selectedRecipients: List<Recipient> = emptyList(),
     var screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
     var isLoading: Boolean = false,
 )
 
 sealed class RecipientPickerActionHandler {
-    data class RoleClicked(val role: Recipient.Enrollment) : RecipientPickerActionHandler()
+    data class RoleClicked(val role: EnrollmentType) : RecipientPickerActionHandler()
     data object RecipientBackClicked : RecipientPickerActionHandler()
     data class RecipientClicked(val recipient: Recipient) : RecipientPickerActionHandler()
     data object DoneClicked : RecipientPickerActionHandler()

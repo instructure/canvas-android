@@ -4,10 +4,14 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.pandautils.utils.isCourse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.EnumMap
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +35,7 @@ class InboxComposeViewModel @Inject constructor(
 
     private val _recipientPickerUiState = MutableStateFlow(
         RecipientPickerUiState(
-            recipients = emptyList(),
+            recipientsByRole = EnumMap(EnrollmentType::class.java),
             selectedRecipients = emptyList(),
             isLoading = true
         )
@@ -102,7 +106,10 @@ class InboxComposeViewModel @Inject constructor(
                 updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Roles))
             }
             is RecipientPickerActionHandler.RoleClicked -> {
-                updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Recipients))
+                updateUiState(recipientPickerUiState.value.copy(
+                    screenOption = RecipientPickerScreenOption.Recipients,
+                    selectedRole = action.role
+                ))
             }
             is RecipientPickerActionHandler.RecipientClicked -> {
                 if (recipientPickerUiState.value.selectedRecipients.contains(action.recipient)) {
@@ -156,11 +163,35 @@ class InboxComposeViewModel @Inject constructor(
 
     private fun loadRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false) {
         viewModelScope.launch {
+
             val recipients = inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh)
+            val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+
+            recipients.forEach { recipient ->
+                if (context.isCourse) {
+                    recipient.commonCourses?.let { commonCourse ->
+                        commonCourse[context.id.toString()]?.forEach { role ->
+                            val enrollmentType = EnrollmentType.safeValueOf(role)
+                            if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
+                                roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
+                            }
+                        }
+                    }
+                } else {
+                    recipient.commonGroups?.let { commonGroup ->
+                        commonGroup[context.id.toString()]?.forEach { role ->
+                            val enrollmentType = EnrollmentType.safeValueOf(role)
+                            if (roleRecipients[enrollmentType] == null || roleRecipients[enrollmentType]?.contains(recipient) == false) {
+                                roleRecipients[enrollmentType] = roleRecipients[enrollmentType]?.plus(recipient) ?: listOf(recipient)
+                            }
+                        }
+                    }
+                }
+            }
+
             updateUiState(
                 recipientPickerUiState.value.copy(
-                    recipients = recipients,
-                    roles = recipients.map { it.enrollment }.distinct(),
+                    recipientsByRole = roleRecipients,
                     isLoading = false
                 )
             )

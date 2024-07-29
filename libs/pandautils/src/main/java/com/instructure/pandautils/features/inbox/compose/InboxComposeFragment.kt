@@ -19,7 +19,7 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
-import com.instructure.pandautils.features.inbox.compose.coursepicker.ContextPickerScreen
+import com.instructure.pandautils.features.inbox.compose.contextpicker.ContextPickerScreen
 import com.instructure.pandautils.features.inbox.compose.recipientpicker.RecipientPickerScreen
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -48,13 +48,13 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                     transitionSpec = {
                         when(uiState.screenOption) {
                             is InboxComposeScreenOptions.None -> {
-                                slideInHorizontally(animationSpec = tween(200), initialOffsetX = { -it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { it / 2 })
+                                slideInHorizontally(animationSpec = tween(300), initialOffsetX = { -it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { it })
                             }
                             is InboxComposeScreenOptions.ContextPicker -> {
-                                slideInHorizontally(animationSpec = tween(200), initialOffsetX = { it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { -it / 2 })
+                                slideInHorizontally(animationSpec = tween(300), initialOffsetX = { it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { -it })
                             }
                             is InboxComposeScreenOptions.RecipientPicker -> {
-                                slideInHorizontally(animationSpec = tween(200), initialOffsetX = { it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { -it / 2 })
+                                slideInHorizontally(animationSpec = tween(300), initialOffsetX = { it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { -it })
                             }
                         }
                     }

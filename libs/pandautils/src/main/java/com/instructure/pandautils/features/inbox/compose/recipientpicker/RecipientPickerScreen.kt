@@ -48,6 +48,7 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
+import com.instructure.pandautils.utils.displayText
 
 @Composable
 fun RecipientPickerScreen(
@@ -62,10 +63,10 @@ fun RecipientPickerScreen(
         transitionSpec = {
             when(uiState.screenOption) {
                 is  RecipientPickerScreenOption.Recipients -> {
-                    slideInHorizontally(animationSpec = tween(200), initialOffsetX = { it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { -it / 2 })
+                    slideInHorizontally(animationSpec = tween(300), initialOffsetX = { it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { -it })
                 }
                 is RecipientPickerScreenOption.Roles -> {
-                    slideInHorizontally(animationSpec = tween(200), initialOffsetX = { -it / 2 }) togetherWith slideOutHorizontally(animationSpec = tween(200), targetOffsetX = { it / 2 })
+                    slideInHorizontally(animationSpec = tween(300), initialOffsetX = { -it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { it })
                 }
             }
         }
@@ -102,9 +103,9 @@ private fun RecipientPickerRoleScreen(
                     .fillMaxWidth()
                     .padding(padding)
             ) {
-                items(uiState.roles) { roleRecipient ->
-                    RoleRow(name = roleRecipient.name, onSelect = {
-                        actionHandler(RecipientPickerActionHandler.RoleClicked(roleRecipient))
+                items(uiState.recipientsByRole.keys.toList()) { role ->
+                    RoleRow(name = role.displayText, onSelect = {
+                        actionHandler(RecipientPickerActionHandler.RoleClicked(role))
                     })
 
                     Divider(color = colorResource(id = R.color.borderLight), thickness = 1.dp)
@@ -131,7 +132,7 @@ private fun RecipientPickerPeopleScreen(
                     .fillMaxWidth()
                     .padding(padding)
             ) {
-                items(uiState.recipients) { recipient ->
+                items(uiState.recipientsByRole[uiState.selectedRole] ?: emptyList()) { recipient ->
                     RecipientRow(recipient = recipient, isSelected = uiState.selectedRecipients.contains(recipient), onSelect = {
                         actionHandler(RecipientPickerActionHandler.RecipientClicked(recipient))
                     })
