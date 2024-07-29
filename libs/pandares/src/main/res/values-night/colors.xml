@@ -88,10 +88,6 @@
     <color name="colorBloodOrange">#FFF2581B</color>
     <color name="colorSriracha">#FFF2422E</color>
 
-    <!-- Additional Colors for customization -->
-    <color name="jeffGoldplum">#FF7667D5</color>
-    <color name="raspberry">#FFEC3349</color>
-
     <!-- Override these colors to change the text colors of the date picker -->
     <color name="blue">@color/textDarkest</color>
     <color name="darker_blue">@color/textDarkest</color>
