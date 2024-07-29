@@ -84,6 +84,7 @@ import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.loadHtmlWithIframes
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setInvisible
@@ -675,17 +676,14 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         openInBrowser.setVisible(discussionTopicHeader.htmlUrl?.isNotEmpty() == true)
         replyToDiscussionTopic.setGone()
         swipeRefreshLayout.isEnabled = false
-        openInBrowser.onClick {
 
-            if(repository.isOnline()) {
-                discussionTopicHeader.htmlUrl?.let { url ->
-                    InternalWebviewFragment.loadInternalWebView(
-                        activity,
-                        InternalWebviewFragment.makeRoute(canvasContext, url, true, true)
-                    )
-                }
+        openInBrowser.onClickWithRequireNetwork {
+            discussionTopicHeader.htmlUrl?.let { url ->
+                InternalWebviewFragment.loadInternalWebView(
+                    activity,
+                    InternalWebviewFragment.makeRoute(canvasContext, url, true, true)
+                )
             }
-            else NoInternetConnectionDialog.show(requireFragmentManager())
         }
     }
 
