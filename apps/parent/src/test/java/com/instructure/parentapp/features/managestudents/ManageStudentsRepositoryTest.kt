@@ -67,6 +67,21 @@ class ManageStudentsRepositoryTest {
     }
 
     @Test
+    fun `Get students returns data distinctly and sorted`() = runTest {
+        val expected = listOf(User(id = 1L, sortableName = "First"), User(id = 2L, sortableName = "Second"))
+        val enrollments = expected.asReversed().map { Enrollment(observedUser = it) }
+        val otherEnrollments = listOf(
+            Enrollment(user = User(id = 3L)),
+            Enrollment(observedUser = User(id = 1L))
+        )
+
+        coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Success(enrollments + otherEnrollments)
+
+        val result = repository.getStudents(true)
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
     fun `Get students returns empty list when enrollments call fails`() = runTest {
         coEvery { enrollmentApi.firstPageObserveeEnrollmentsParent(any()) } returns DataResult.Fail()
 
