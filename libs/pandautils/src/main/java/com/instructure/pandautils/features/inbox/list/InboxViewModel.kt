@@ -268,8 +268,12 @@ class InboxViewModel @Inject constructor(
     }
 
     fun markAsUnreadSelected() {
-        performBatchOperation("mark_as_unread") { ids, _ ->
-            updateItems(ids, unread = true)
+        performBatchOperation("mark_as_unread") { ids, progress ->
+            if (scope == InboxApi.Scope.ARCHIVED) {
+                removeItemsAndSilentUpdate(ids, progress)
+            } else {
+                updateItems(ids, unread = true)
+            }
             _events.value = Event(InboxAction.ShowConfirmationSnackbar(resources.getString(R.string.inboxMarkAsUnreadConfirmation, ids.size)))
             _events.value = Event(InboxAction.UpdateUnreadCount)
         }
