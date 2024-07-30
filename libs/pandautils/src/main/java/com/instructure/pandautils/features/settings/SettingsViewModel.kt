@@ -20,6 +20,8 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
+import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,7 +62,12 @@ class SettingsViewModel @Inject constructor(
                     }
             }
         }
-        _uiState.update { it.copy(items = settingsBehaviour.settingsItems) }
+        val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        _uiState.update { it.copy(items = settingsBehaviour.settingsItems, appTheme = appTheme.themeNameRes) }
+    }
+
+    fun onThemeSelected(theme: AppTheme) {
+        _uiState.update { it.copy(appTheme = theme.themeNameRes) }
     }
 
     private fun onItemClick(item: SettingsItem) {

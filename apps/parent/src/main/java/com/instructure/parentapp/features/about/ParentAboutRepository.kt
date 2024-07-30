@@ -14,28 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package com.instructure.parentapp.di
+package com.instructure.parentapp.features.about
 
 import android.content.Context
+import com.caverock.androidsvg.BuildConfig
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.about.AboutRepository
-import com.instructure.parentapp.features.about.ParentAboutRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class AboutModule {
+class ParentAboutRepository(context: Context, apiPrefs: ApiPrefs) :
+    AboutRepository(context, apiPrefs) {
 
-    @Provides
-    fun provideAboutRepository(
-        @ApplicationContext context: Context,
-        apiPrefs: ApiPrefs
-    ): AboutRepository {
-        return ParentAboutRepository(context, apiPrefs)
-    }
+    override val appVersion: String = BuildConfig.VERSION_NAME
 }

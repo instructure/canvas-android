@@ -26,10 +26,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.features.about.AboutFragment
+import com.instructure.pandautils.utils.AppThemeSelector
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment() {
+
+    @Inject
+    lateinit var settingsRouter: SettingsRouter
 
     private val viewModel: SettingsViewModel by viewModels()
 
@@ -38,12 +48,59 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 SettingsScreen(uiState) {
                     requireActivity().onBackPressed()
                 }
+            }
+        }
+    }
+
+    private fun handleAction(action: SettingsViewModelAction) {
+        when (action) {
+            is SettingsViewModelAction.Navigate -> {
+                navigate(action.item)
+            }
+        }
+    }
+
+    private fun navigate(item: SettingsItem) {
+        when (item) {
+            SettingsItem.ABOUT -> {
+                AboutFragment.newInstance().show(childFragmentManager, null)
+            }
+
+            SettingsItem.APP_THEME -> {
+                AppThemeSelector.showAppThemeSelectorDialog(
+                    requireContext(),
+                    viewModel::onThemeSelected
+                )
+            }
+
+            SettingsItem.PROFILE_SETTINGS -> {
+                settingsRouter.navigateToProfileSettings()
+            }
+
+            SettingsItem.PUSH_NOTIFICATIONS -> {
+                settingsRouter.navigateToPushNotificationsSettings()
+            }
+
+            SettingsItem.EMAIL_NOTIFICATIONS -> {
+                settingsRouter.navigateToEmailNotificationsSettings()
+            }
+
+            SettingsItem.PAIR_WITH_OBSERVER -> {
+                settingsRouter.navigateToPairWithObserver()
+            }
+
+            else -> {
+
             }
         }
     }

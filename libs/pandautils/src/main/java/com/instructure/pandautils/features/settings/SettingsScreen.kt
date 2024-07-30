@@ -35,8 +35,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.LabelValueVerticalItem
-import com.instructure.pandautils.utils.AppTheme
-import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun SettingsScreen(
@@ -45,14 +43,16 @@ fun SettingsScreen(
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
-        Scaffold(topBar = {
-            CanvasThemedAppBar(
-                title = stringResource(id = R.string.screenTitleSettings),
-                navigationActionClick = {
-                    navigationActionClick()
-                }
-            )
-        }) { padding ->
+        Scaffold(
+            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            topBar = {
+                CanvasThemedAppBar(
+                    title = stringResource(id = R.string.screenTitleSettings),
+                    navigationActionClick = {
+                        navigationActionClick()
+                    }
+                )
+            }) { padding ->
             SettingsContent(
                 uiState = uiState,
                 modifier = modifier.padding(padding)
@@ -66,7 +66,6 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
 
     @Composable
     fun createAppThemeItem() {
-        val initialAppTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
         return LabelValueVerticalItem(
             modifier = Modifier
                 .clickable {
@@ -77,7 +76,7 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
                     vertical = 4.dp
                 ),
             label = stringResource(R.string.appThemeSettingsTitle),
-            value = stringResource(initialAppTheme.themeNameRes)
+            value = uiState.appTheme?.let { stringResource(it) }
         )
     }
 

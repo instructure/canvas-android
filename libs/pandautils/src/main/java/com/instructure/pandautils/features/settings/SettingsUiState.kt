@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.settings
 data class SettingsUiState(
     val items: Map<Int, List<SettingsItem>> = emptyMap(),
     val offlineState: Int? = null,
+    val appTheme: Int? = null,
     val onClick: (SettingsItem) -> Unit
 )
 
