@@ -21,10 +21,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun LabelSwitchRow(
@@ -43,9 +46,9 @@ fun LabelSwitchRow(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .height(48.dp)
-            .padding(start = 16.dp, end = 16.dp)
-            .padding(top = 8.dp, bottom = 8.dp)
+            .height(52.dp)
+            .padding(start = 16.dp, end = 8.dp)
+            .padding(vertical = 8.dp)
     ) {
         Text(
             text = label,
@@ -60,6 +63,10 @@ fun LabelSwitchRow(
             onCheckedChange = {
                 onCheckedChange(it)
             },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = Color(ThemePrefs.brandColor),
+                checkedTrackColor = Color(ThemePrefs.brandColor).copy(alpha = 0.5f),
+            )
         )
 
     }

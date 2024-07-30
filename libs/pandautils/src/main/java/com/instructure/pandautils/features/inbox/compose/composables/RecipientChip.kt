@@ -16,14 +16,15 @@
  */
 package com.instructure.pandautils.features.inbox.compose.composables
 
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Chip
-import androidx.compose.material.ChipDefaults
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -31,10 +32,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Avatar
@@ -45,26 +48,29 @@ fun RecipientChip(
     recipient: Recipient,
     onRemove: () -> Unit = {}
 ) {
-    Chip(
-        onClick = {},
-        border = BorderStroke(
-            ChipDefaults.OutlinedBorderSize,
-            colorResource(id = R.color.borderDark)
-        ),
-        colors = ChipDefaults.chipColors(
-            backgroundColor = colorResource(R.color.backgroundLightest),
-        ),
-        modifier = Modifier.padding(horizontal = 4.dp)
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .clip(CircleShape)
+            .background(colorResource(R.color.backgroundLightest))
+            .border(1.dp, colorResource(R.color.borderMedium), CircleShape)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Avatar(recipient)
+            Avatar(
+                recipient,
+                Modifier
+                    .size(30.dp)
+                    .padding(2.dp)
+            )
 
             Spacer(Modifier.width(4.dp))
 
             Text(
                 text = recipient.name ?: "",
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 14.sp,
             )
 
             Spacer(Modifier.width(4.dp))
@@ -76,9 +82,12 @@ fun RecipientChip(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = null,
-                    tint = colorResource(id = R.color.textDark)
+                    tint = colorResource(id = R.color.textDarkest),
+                    modifier = Modifier.size(16.dp)
                 )
             }
+
+            Spacer(Modifier.width(4.dp))
         }
     }
 }

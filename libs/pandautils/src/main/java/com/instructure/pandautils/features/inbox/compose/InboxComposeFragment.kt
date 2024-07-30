@@ -5,10 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -18,6 +14,8 @@ import androidx.fragment.app.viewModels
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
+import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
 import com.instructure.pandautils.features.inbox.compose.contextpicker.ContextPickerScreen
 import com.instructure.pandautils.features.inbox.compose.recipientpicker.RecipientPickerScreen
@@ -48,13 +46,13 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                     transitionSpec = {
                         when(uiState.screenOption) {
                             is InboxComposeScreenOptions.None -> {
-                                slideInHorizontally(animationSpec = tween(300), initialOffsetX = { -it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { it })
+                                ScreenSlideBackTransition
                             }
                             is InboxComposeScreenOptions.ContextPicker -> {
-                                slideInHorizontally(animationSpec = tween(300), initialOffsetX = { it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { -it })
+                                ScreenSlideTransition
                             }
                             is InboxComposeScreenOptions.RecipientPicker -> {
-                                slideInHorizontally(animationSpec = tween(300), initialOffsetX = { it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { -it })
+                                ScreenSlideTransition
                             }
                         }
                     }

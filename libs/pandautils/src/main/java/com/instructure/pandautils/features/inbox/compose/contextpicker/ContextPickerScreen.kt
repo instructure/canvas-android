@@ -31,8 +31,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -42,12 +45,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.features.inbox.compose.ContextPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.ContextPickerUiState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -65,14 +70,28 @@ fun ContextPickerScreen(
     })
 
     Scaffold(
-        topBar = { CanvasThemedAppBar(
-            title = title,
-            navigationActionClick = {
-                actionHandler(
-                    ContextPickerActionHandler.DoneClicked
+        topBar = { TopAppBar(
+            title = {
+                Text(
+                    title,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(id = R.color.textDarkest),
                 )
+            },
+            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            elevation = 0.dp,
+            navigationIcon = {
+                IconButton(onClick = { actionHandler(ContextPickerActionHandler.DoneClicked) }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_close),
+                        contentDescription = stringResource(R.string.a11y_close_recipient_picker),
+                        tint = colorResource(id = R.color.textDarkest),
+                    )
+                }
             }
-        )},
+        )
+        },
         content = { padding ->
             Box(
                 modifier = Modifier
@@ -94,6 +113,9 @@ fun ContextPickerScreen(
                     LazyColumn(
                         Modifier.fillMaxSize()
                     ) {
+                        item {
+                            CanvasDivider()
+                        }
                         if (!uiState.isLoading) {
                             if (uiState.courses.isNotEmpty()) {
                                 item {
@@ -101,7 +123,7 @@ fun ContextPickerScreen(
                                 }
 
                                 items(uiState.courses) {
-                                    DataRow(it, actionHandler)
+                                    DataRow(it, actionHandler, uiState.selectedContext == it)
                                 }
                             }
 
@@ -111,7 +133,7 @@ fun ContextPickerScreen(
                                 }
 
                                 items(uiState.groups) {
-                                    DataRow(it, actionHandler)
+                                    DataRow(it, actionHandler, uiState.selectedContext == it)
                                 }
                             }
                         }
@@ -143,16 +165,16 @@ private fun SectionHeaderView(subTitle: String) {
         Text(
             subTitle,
             color = colorResource(id = R.color.textDark),
-            fontSize = 16.sp,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(vertical = 8.dp)
+                .padding(16.dp)
         )
     }
 }
 
 @Composable
-private fun DataRow(context: CanvasContext, actionHandler: (ContextPickerActionHandler) -> Unit) {
+private fun DataRow(context: CanvasContext, actionHandler: (ContextPickerActionHandler) -> Unit, isSelected: Boolean) {
     val color = if (context.type == CanvasContext.Type.USER) ThemePrefs.brandColor else context.backgroundColor
     
     Row(
@@ -164,19 +186,30 @@ private fun DataRow(context: CanvasContext, actionHandler: (ContextPickerActionH
             .height(50.dp)
     ) {
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-                .size(20.dp)
+                .size(36.dp)
                 .background(Color(color), CircleShape)
-        )
+        ) {
+            if (isSelected) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_checkmark_lined),
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.textLightest),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
 
         Text(
-            context.name ?: "",
+            context.name ?: context.contextId,
             color = colorResource(id = R.color.textDarkest),
             fontSize = 16.sp,
             modifier = Modifier
                 .padding(end = 16.dp)
                 .padding(vertical = 8.dp)
         )
+
     }
 }

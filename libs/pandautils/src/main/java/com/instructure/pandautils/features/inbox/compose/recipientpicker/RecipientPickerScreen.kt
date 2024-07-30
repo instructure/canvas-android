@@ -17,34 +17,35 @@
 package com.instructure.pandautils.features.inbox.compose.recipientpicker
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
+import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.compose.composables.Avatar
-import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
@@ -63,10 +64,10 @@ fun RecipientPickerScreen(
         transitionSpec = {
             when(uiState.screenOption) {
                 is  RecipientPickerScreenOption.Recipients -> {
-                    slideInHorizontally(animationSpec = tween(300), initialOffsetX = { it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { -it })
+                    ScreenSlideTransition
                 }
                 is RecipientPickerScreenOption.Roles -> {
-                    slideInHorizontally(animationSpec = tween(300), initialOffsetX = { -it }) togetherWith slideOutHorizontally(animationSpec = tween(300), targetOffsetX = { it })
+                    ScreenSlideBackTransition
                 }
             }
         }
@@ -95,7 +96,39 @@ private fun RecipientPickerRoleScreen(
 ) {
     Scaffold (
         topBar = {
-            CanvasThemedAppBar(title = title, navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) })
+            TopAppBar(
+                title = {
+                    Text(
+                        title,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colorResource(id = R.color.textDarkest),
+                    )
+                },
+                backgroundColor = colorResource(id = R.color.backgroundLightest),
+                elevation = 0.dp,
+                navigationIcon = {
+                    IconButton(onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) }) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_close),
+                            contentDescription = stringResource(R.string.a11y_close_recipient_picker),
+                            tint = colorResource(id = R.color.textDarkest),
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.done),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colorResource(id = R.color.textDarkest),
+                        )
+                    }
+                }
+            )
          },
         content = { padding ->
             LazyColumn(
@@ -104,11 +137,9 @@ private fun RecipientPickerRoleScreen(
                     .padding(padding)
             ) {
                 items(uiState.recipientsByRole.keys.toList()) { role ->
-                    RoleRow(name = role.displayText, onSelect = {
+                    RoleRow(name = role.displayText, roleCount = uiState.recipientsByRole[role]?.size ?: 0, onSelect = {
                         actionHandler(RecipientPickerActionHandler.RoleClicked(role))
                     })
-
-                    Divider(color = colorResource(id = R.color.borderLight), thickness = 1.dp)
                 }
             }
 
@@ -124,7 +155,39 @@ private fun RecipientPickerPeopleScreen(
 ) {
     Scaffold (
         topBar = {
-            CanvasThemedAppBar(title = title, navigationActionClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) })
+            TopAppBar(
+                title = {
+                    Text(
+                        title,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colorResource(id = R.color.textDarkest),
+                    )
+                },
+                backgroundColor = colorResource(id = R.color.backgroundLightest),
+                elevation = 0.dp,
+                navigationIcon = {
+                    IconButton(onClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) }) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_back_arrow),
+                            contentDescription = stringResource(R.string.a11y_close_recipient_picker),
+                            tint = colorResource(id = R.color.textDarkest),
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.done),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colorResource(id = R.color.textDarkest),
+                        )
+                    }
+                }
+            )
         },
         content = { padding ->
             LazyColumn(
@@ -136,8 +199,6 @@ private fun RecipientPickerPeopleScreen(
                     RecipientRow(recipient = recipient, isSelected = uiState.selectedRecipients.contains(recipient), onSelect = {
                         actionHandler(RecipientPickerActionHandler.RecipientClicked(recipient))
                     })
-
-                    Divider(color = colorResource(id = R.color.borderLight), thickness = 1.dp)
                 }
             }
 
@@ -148,6 +209,7 @@ private fun RecipientPickerPeopleScreen(
 @Composable
 private fun RoleRow(
     name: String,
+    roleCount: Int,
     onSelect: () -> Unit,
 ) {
     Row(
@@ -156,18 +218,31 @@ private fun RoleRow(
             .clickable {
                 onSelect()
             }
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 16.dp)
     ) {
-        Avatar(user = Recipient(name = name))
+        Avatar(
+            Recipient(name = name),
+            Modifier
+                .size(36.dp)
+                .padding(2.dp)
+        )
 
         Spacer(Modifier.width(8.dp))
 
-        Text(
-            text = name,
-            fontSize = 20.sp,
-            color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.padding(8.dp)
-        )
+        Column {
+            Text(
+                text = name,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(id = R.color.textDarkest),
+            )
+
+            Text(
+                text = roleCount.toString() + " " + if (roleCount == 1) "Person" else "People",
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.textDark),
+            )
+        }
 
         Spacer(Modifier.weight(1f))
     }
@@ -183,17 +258,21 @@ private fun RecipientRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .clickable { onSelect() }
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 16.dp)
     ) {
-        Avatar(user = recipient)
+        Avatar(
+            recipient,
+            Modifier
+                .size(36.dp)
+                .padding(2.dp)
+        )
 
         Spacer(Modifier.width(8.dp))
 
         Text(
             text = recipient.name ?: "",
-            fontSize = 20.sp,
+            fontSize = 16.sp,
             color = colorResource(id = R.color.textDarkest),
-            modifier = Modifier.padding(8.dp)
         )
         
         Spacer(Modifier.weight(1f))

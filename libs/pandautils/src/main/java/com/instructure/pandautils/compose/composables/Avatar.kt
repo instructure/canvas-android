@@ -19,7 +19,6 @@ package com.instructure.pandautils.compose.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,13 +33,15 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.R
 
 @Composable
-fun Avatar(user: Recipient) {
+fun Avatar(
+    user: Recipient,
+    modifier: Modifier = Modifier
+) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(20.dp)
+        modifier = modifier
             .clip(CircleShape)
-            .border(1.dp, colorResource(id = R.color.borderDark), CircleShape)
+            .border(1.dp, colorResource(id = R.color.borderMedium), CircleShape)
             .background(colorResource(id = R.color.backgroundLightest))
     ) {
         if (user.avatarURL != null) {

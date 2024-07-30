@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,12 +29,17 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 
 @Composable
@@ -49,13 +55,13 @@ fun TextFieldWithHeader(
     Column(
         modifier = modifier
             .defaultMinSize(minHeight = 100.dp)
-            .padding(top = 8.dp, bottom = 8.dp)
+            .fillMaxHeight()
     ) {
         TextFieldHeader(
             label = label,
             headerIconResource = headerIconResource,
             iconContentDescription = iconContentDescription,
-            onIconClick = onIconClick
+            onIconClick = onIconClick,
         )
 
         CanvasThemedTextField(
@@ -64,6 +70,7 @@ fun TextFieldWithHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp)
+                .fillMaxHeight()
         )
     }
 }
@@ -75,10 +82,15 @@ private fun TextFieldHeader(
     iconContentDescription: String?,
     onIconClick: (() -> Unit)?,
 ) {
-    Row(Modifier.padding(start = 16.dp, end = 16.dp)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
         Text(
             text = label,
             color = colorResource(id = R.color.textDarkest),
+            fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp
         )
         
@@ -88,15 +100,27 @@ private fun TextFieldHeader(
             IconButton(
                 onClick = { onIconClick?.invoke() },
                 modifier = Modifier
-                    .size(40.dp)
-                    .padding(start = 8.dp, end = 8.dp)
+                    .size(24.dp)
             ) {
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = iconContentDescription,
-                    tint = colorResource(id = R.color.textDark)
+                    tint = colorResource(id = R.color.textDarkest)
                 )
             }
         }
     }
+}
+
+@Composable
+@Preview
+fun TextFieldWithHeaderPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    TextFieldWithHeader(
+        label = "Label",
+        value = TextFieldValue("Some text"),
+        headerIconResource = R.drawable.ic_attachment,
+        onValueChange = {}
+    )
 }

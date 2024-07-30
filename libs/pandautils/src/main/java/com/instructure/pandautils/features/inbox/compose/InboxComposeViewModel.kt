@@ -90,6 +90,9 @@ class InboxComposeViewModel @Inject constructor(
                 updateUiState(
                     uiState.value.copy(selectedContext = action.context, screenOption = InboxComposeScreenOptions.None)
                 )
+                updateUiState(
+                    contextPickerUiState.value.copy(selectedContext = action.context)
+                )
 
                 loadRecipients("", action.context)
             }

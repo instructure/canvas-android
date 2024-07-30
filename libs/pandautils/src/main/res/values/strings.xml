@@ -504,4 +504,6 @@
     <string name="enrollment_type_tas">Teaching Assistants</string>
     <string name="enrollment_type_course_designer">Course Designers</string>
     <string name="enrollment_type_others">Others</string>
+    <string name="a11y_open_course_picker">Open Course Picker</string>
+    <string name="a11y_close_recipient_picker">Close recipient picker</string>
 </resources>

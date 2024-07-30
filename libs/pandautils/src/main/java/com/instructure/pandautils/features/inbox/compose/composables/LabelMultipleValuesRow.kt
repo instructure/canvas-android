@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -38,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -59,18 +59,17 @@ fun <T> LabelMultipleValuesRow(
     loading: Boolean = false
 ) {
     val animationLabel = "LabelMultipleValuesRowTransition"
-    Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .defaultMinSize(minHeight = 48.dp)
             .padding(start = 16.dp, end = 16.dp)
-            .padding(top = 8.dp, bottom = 8.dp)
+            .defaultMinSize(minHeight = 52.dp)
     ) {
         Column {
             Text(
                 text = label,
                 color = colorResource(id = R.color.textDarkest),
+                fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
         }
@@ -83,27 +82,31 @@ fun <T> LabelMultipleValuesRow(
             )
             Spacer(modifier = Modifier.width(16.dp))
         } else {
-                FlowRow(Modifier.weight(1f)) {
-                    for (value in selectedValues) {
-                        AnimatedContent(
-                            label = animationLabel,
-                            targetState = value,
-                        ){
-                            itemComposable(it)
-                        }
+            Spacer(modifier = Modifier.width(8.dp))
+
+            FlowRow(Modifier.weight(1f)) {
+                for (value in selectedValues) {
+                    AnimatedContent(
+                        label = animationLabel,
+                        targetState = value,
+                    ){
+                        itemComposable(it)
                     }
                 }
+            }
         }
+
+        Spacer(modifier = Modifier.width(8.dp))
 
         IconButton(
             onClick = { addValueClicked() },
             modifier = Modifier
-                .size(40.dp)
+                .size(24.dp)
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_add),
+                painter = painterResource(id = R.drawable.ic_add_lined),
                 contentDescription = null,
-                tint = colorResource(id = R.color.textDark)
+                tint = colorResource(id = R.color.textDarkest)
             )
         }
     }
