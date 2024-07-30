@@ -13,30 +13,21 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
+ */    package com.instructure.parentapp.di
 
-package com.instructure.parentapp.features.settings
+import com.instructure.parentapp.features.settings.ParentSettingsBehaviour
+import com.instructure.pandautils.features.settings.SettingsBehaviour
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.material.Text
-import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+@Module
+@InstallIn(ViewModelComponent::class)
+class SettingsModule {
 
-
-class SettingsFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireActivity()).apply {
-            setContent {
-                Text(text = "Settings")
-            }
-        }
+    @Provides
+    fun provideSettingsBehaviour(): SettingsBehaviour {
+        return ParentSettingsBehaviour()
     }
 }
