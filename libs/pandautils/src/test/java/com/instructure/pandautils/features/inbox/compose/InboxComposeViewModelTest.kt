@@ -4,6 +4,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.type.EnrollmentType
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
@@ -43,6 +45,27 @@ class InboxComposeViewModelTest {
 
         coVerify(exactly = 1) { inboxComposeRepository.getCourses(any()) }
         coVerify(exactly = 1) { inboxComposeRepository.getGroups(any()) }
+
+    }
+
+    @Test
+    fun `Load Recipients on Context selection`() {
+        val viewModel = getViewModel()
+        val courseId: Long = 1
+        val recipients = listOf(
+            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue())))
+        )
+        coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns recipients
+
+        viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = courseId)))
+
+        assertEquals(recipients[0], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.STUDENTENROLLMENT]?.first())
+        assertEquals(recipients[1], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.TEACHERENROLLMENT]?.first())
+        assertEquals(recipients[2], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.OBSERVERENROLLMENT]?.first())
+        assertEquals(recipients[3], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.TAENROLLMENT]?.first())
 
     }
 
@@ -200,7 +223,7 @@ class InboxComposeViewModelTest {
     @Test
     fun `Role Clicked action handler`() {
         val viewmodel = getViewModel()
-        val role: Recipient.Enrollment = mockk(relaxed = true)
+        val role: EnrollmentType = mockk(relaxed = true)
         viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(role))
 
         assertEquals(viewmodel.recipientPickerUiState.value.screenOption, RecipientPickerScreenOption.Recipients)

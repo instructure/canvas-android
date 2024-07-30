@@ -153,10 +153,10 @@ private fun RoleRow(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable {
                 onSelect()
             }
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Avatar(user = Recipient(name = name))
 
@@ -182,8 +182,8 @@ private fun RecipientRow(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable { onSelect() }
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Avatar(user = recipient)
 

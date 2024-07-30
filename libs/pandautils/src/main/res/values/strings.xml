@@ -498,4 +498,10 @@
     <string name="groups">Groups</string>
     <string name="a11y_selected">Selected</string>
     <string name="recipients_to">To</string>
+    <string name="enrollment_type_students">Students</string>
+    <string name="enrollment_type_teachers">Teachers</string>
+    <string name="enrollment_type_observers">Observers</string>
+    <string name="enrollment_type_tas">Teaching Assistants</string>
+    <string name="enrollment_type_course_designer">Course Designers</string>
+    <string name="enrollment_type_others">Others</string>
 </resources>
