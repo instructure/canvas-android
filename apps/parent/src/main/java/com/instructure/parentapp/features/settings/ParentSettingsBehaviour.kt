@@ -22,7 +22,7 @@ import com.instructure.parentapp.R
 class ParentSettingsBehaviour : SettingsBehaviour {
     override val settingsItems: Map<Int, List<SettingsItem>>
         get() = mapOf(
-            R.string.preferences to listOf(SettingsItem.APP_THEME, SettingsItem.OFFLINE_SYNCHRONIZATION),
+            R.string.preferences to listOf(SettingsItem.APP_THEME),
             R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL)
         )
 }

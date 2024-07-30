@@ -65,7 +65,7 @@ fun SettingsScreen(
 fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
 
     @Composable
-    fun createAppThemeItem() {
+    fun AppThemeItem() {
         return LabelValueVerticalItem(
             modifier = Modifier
                 .clickable {
@@ -81,7 +81,7 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
     }
 
     @Composable
-    fun createOfflineSyncItem() {
+    fun OfflineSyncItem() {
         return LabelValueVerticalItem(
             modifier = Modifier
                 .clickable {
@@ -97,13 +97,15 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
     }
 
     LazyColumn(modifier = modifier) {
-        for ((sectionTitle, items) in uiState.items) {
+        uiState.items.onEachIndexed { index, entry ->
+            val (sectionTitle, items) = entry
             item {
                 Text(
                     modifier = Modifier.padding(
                         top = 24.dp,
                         start = 16.dp,
-                        end = 16.dp
+                        end = 16.dp,
+                        bottom = 8.dp
                     ),
                     text = stringResource(sectionTitle),
                     color = colorResource(id = R.color.textDark)
@@ -112,11 +114,11 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
             items(items) { settingsItem ->
                 when (settingsItem) {
                     SettingsItem.APP_THEME -> {
-                        createAppThemeItem()
+                        AppThemeItem()
                     }
 
                     SettingsItem.OFFLINE_SYNCHRONIZATION -> {
-                        createOfflineSyncItem()
+                        OfflineSyncItem()
                     }
 
                     else -> {
@@ -135,8 +137,13 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
                 }
             }
 
-            item {
-                Divider()
+            if (index < uiState.items.size - 1) {
+                item {
+                    Divider(
+                        color = colorResource(id = R.color.rce_divider),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
         }
     }

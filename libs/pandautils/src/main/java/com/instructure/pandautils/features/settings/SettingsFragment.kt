@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.pandautils.features.about.AboutFragment
+import com.instructure.pandautils.features.legal.LegalDialogFragment
 import com.instructure.pandautils.utils.AppThemeSelector
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
@@ -97,6 +98,10 @@ class SettingsFragment : Fragment() {
 
             SettingsItem.PAIR_WITH_OBSERVER -> {
                 settingsRouter.navigateToPairWithObserver()
+            }
+
+            SettingsItem.LEGAL -> {
+                LegalDialogFragment().show(childFragmentManager, null)
             }
 
             else -> {
