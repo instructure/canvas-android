@@ -25,10 +25,12 @@ import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.matchToolbarText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.swipeDown
@@ -37,6 +39,11 @@ import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
 open class SyllabusPage : BasePage(R.id.syllabusPage) {
+
+    fun assertToolbarCourseTitle(courseName: String) {
+        onView(withId(R.id.toolbar) + withAncestor(R.id.syllabusPage)).assertDisplayed().check(ViewAssertions.matches(matchToolbarText(Matchers.`is`(getStringFromResource(R.string.syllabus)), true)))
+        onView(withId(R.id.toolbar) + withAncestor(R.id.syllabusPage)).assertDisplayed().check(ViewAssertions.matches(matchToolbarText(Matchers.`is`(courseName), false)))
+    }
 
     fun assertItemDisplayed(itemText: String) {
         scrollRecyclerView(R.id.syllabusEventsRecycler, itemText)
