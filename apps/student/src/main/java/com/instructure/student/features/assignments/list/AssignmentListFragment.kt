@@ -104,7 +104,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
     private val allTermsGradingPeriod by lazy {
-        GradingPeriod().apply { title = getString(R.string.assignmentsListAllGradingPeriods) }
+        GradingPeriod().apply { title = getString(R.string.assignmentsListDisplayGradingPeriod) }
     }
 
     private val adapterToAssignmentsCallback = object : AdapterToAssignmentsCallback {
