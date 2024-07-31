@@ -2,11 +2,14 @@ package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun CanvasThemedTextField(
     value: TextFieldValue,
@@ -46,7 +49,7 @@ fun CanvasThemedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     cursorBrush: Brush = SolidColor(Color.Black),
-    decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit = @Composable { innerTextField -> innerTextField() }
+    placeholder: String? = null,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
@@ -75,7 +78,22 @@ fun CanvasThemedTextField(
         },
         interactionSource = interactionSource,
         cursorBrush = cursorBrush,
-        decorationBox = decorationBox,
+        decorationBox = { innerTextField ->
+            if (value.text.isEmpty() && placeholder != null) {
+                Box {
+                    innerTextField()
+
+                    Text(
+                        placeholder,
+                        color = colorResource(R.color.textDark),
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.lato_font_family)),
+                    )
+                }
+            } else {
+                innerTextField()
+            }
+        },
     )
 }
 

@@ -51,7 +51,9 @@ sealed class ContextPickerActionHandler {
 data class RecipientPickerUiState(
     var recipientsByRole: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java),
     var selectedRole: EnrollmentType? = null,
+    var recipientsToShow: List<Recipient> = emptyList(),
     var selectedRecipients: List<Recipient> = emptyList(),
+    var searchValue: TextFieldValue = TextFieldValue(""),
     var screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
     var isLoading: Boolean = false,
 )
@@ -61,6 +63,7 @@ sealed class RecipientPickerActionHandler {
     data object RecipientBackClicked : RecipientPickerActionHandler()
     data class RecipientClicked(val recipient: Recipient) : RecipientPickerActionHandler()
     data object DoneClicked : RecipientPickerActionHandler()
+    data class SearchValueChanged(val searchText: TextFieldValue) : RecipientPickerActionHandler()
 }
 
 sealed class RecipientPickerScreenOption {

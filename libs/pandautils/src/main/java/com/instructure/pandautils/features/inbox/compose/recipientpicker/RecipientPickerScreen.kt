@@ -38,6 +38,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
@@ -46,6 +48,8 @@ import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
 import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.compose.composables.Avatar
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasThemedTextField
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
@@ -119,11 +123,25 @@ private fun RecipientPickerRoleScreen(
                     .fillMaxWidth()
                     .padding(padding)
             ) {
-                items(uiState.recipientsByRole.keys.toList()) { role ->
-                    RoleRow(name = role.displayText, roleCount = uiState.recipientsByRole[role]?.size ?: 0, onSelect = {
-                        actionHandler(RecipientPickerActionHandler.RoleClicked(role))
-                    })
+                item {
+                    SearchField(uiState.searchValue, actionHandler)
                 }
+
+                val showSearchResults = uiState.searchValue.text.isNotEmpty()
+                if (showSearchResults) {
+                    items(uiState.recipientsToShow) { recipient ->
+                        RecipientRow(recipient = recipient, isSelected = uiState.selectedRecipients.contains(recipient), onSelect = {
+                            actionHandler(RecipientPickerActionHandler.RecipientClicked(recipient))
+                        })
+                    }
+                } else {
+                    items(uiState.recipientsByRole.keys.toList()) { role ->
+                        RoleRow(name = role.displayText, roleCount = uiState.recipientsByRole[role]?.size ?: 0, onSelect = {
+                            actionHandler(RecipientPickerActionHandler.RoleClicked(role))
+                        })
+                    }
+                }
+
             }
 
         }
@@ -163,7 +181,11 @@ private fun RecipientPickerPeopleScreen(
                     .fillMaxWidth()
                     .padding(padding)
             ) {
-                items(uiState.recipientsByRole[uiState.selectedRole] ?: emptyList()) { recipient ->
+                item {
+                    SearchField(uiState.searchValue, actionHandler)
+                }
+
+                items(uiState.recipientsToShow) { recipient ->
                     RecipientRow(recipient = recipient, isSelected = uiState.selectedRecipients.contains(recipient), onSelect = {
                         actionHandler(RecipientPickerActionHandler.RecipientClicked(recipient))
                     })
@@ -253,4 +275,47 @@ private fun RecipientRow(
             )
         }
     }
+}
+
+@Composable
+private fun SearchField(
+    value: TextFieldValue,
+    actionHandler: (RecipientPickerActionHandler) -> Unit
+) {
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search_white_24dp),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(20.dp)
+                    .padding(2.dp)
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            CanvasThemedTextField(
+                value = value,
+                onValueChange = { actionHandler(RecipientPickerActionHandler.SearchValueChanged(it)) },
+                singleLine = true,
+                placeholder = "Search",
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        CanvasDivider()
+    }
+}
+
+@Preview
+@Composable
+fun SearchFieldPreview() {
+    SearchField(
+        value = TextFieldValue(""),
+        actionHandler = {}
+    )
 }

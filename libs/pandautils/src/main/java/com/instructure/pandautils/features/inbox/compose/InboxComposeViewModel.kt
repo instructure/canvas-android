@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.instructure.pandautils.utils.isCourse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.EnumMap
 import javax.inject.Inject
@@ -104,14 +106,17 @@ class InboxComposeViewModel @Inject constructor(
             is RecipientPickerActionHandler.DoneClicked -> {
                 updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Roles))
                 updateUiState(uiState.value.copy(screenOption = InboxComposeScreenOptions.None))
+                handleAction(RecipientPickerActionHandler.SearchValueChanged(TextFieldValue("")))
             }
             is RecipientPickerActionHandler.RecipientBackClicked -> {
                 updateUiState(recipientPickerUiState.value.copy(screenOption = RecipientPickerScreenOption.Roles))
+                handleAction(RecipientPickerActionHandler.SearchValueChanged(TextFieldValue("")))
             }
             is RecipientPickerActionHandler.RoleClicked -> {
                 updateUiState(recipientPickerUiState.value.copy(
                     screenOption = RecipientPickerScreenOption.Recipients,
-                    selectedRole = action.role
+                    selectedRole = action.role,
+                    recipientsToShow = recipientPickerUiState.value.recipientsByRole[action.role] ?: emptyList()
                 ))
             }
             is RecipientPickerActionHandler.RecipientClicked -> {
@@ -122,6 +127,10 @@ class InboxComposeViewModel @Inject constructor(
                     updateUiState(uiState.value.copy(selectedRecipients = uiState.value.selectedRecipients + action.recipient))
                     updateUiState(recipientPickerUiState.value.copy(selectedRecipients = recipientPickerUiState.value.selectedRecipients + action.recipient))
                 }
+            }
+            is RecipientPickerActionHandler.SearchValueChanged -> {
+                _recipientPickerUiState.update { it.copy(searchValue = action.searchText) }
+                loadRecipients(action.searchText.text, contextPickerUiState.value.selectedContext ?: return)
             }
         }
     }
@@ -192,10 +201,16 @@ class InboxComposeViewModel @Inject constructor(
                 }
             }
 
+            val recipientsToShow = if (recipientPickerUiState.value.searchValue.text.isEmpty() && recipientPickerUiState.value.selectedRole != null) {
+                roleRecipients[recipientPickerUiState.value.selectedRole] ?: emptyList()
+            } else {
+                recipients
+            }
             updateUiState(
                 recipientPickerUiState.value.copy(
                     recipientsByRole = roleRecipients,
-                    isLoading = false
+                    isLoading = false,
+                    recipientsToShow = recipientsToShow
                 )
             )
         }
