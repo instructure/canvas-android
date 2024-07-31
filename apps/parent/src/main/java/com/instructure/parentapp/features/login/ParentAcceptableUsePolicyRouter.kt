@@ -13,31 +13,32 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
+ */    package com.instructure.parentapp.features.login
 
-package com.instructure.parentapp.di.feature
-
+import android.content.Intent
+import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
-import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
-import com.instructure.parentapp.features.login.ParentAcceptableUsePolicyRouter
-import com.instructure.parentapp.features.login.ParentLoginNavigation
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.parentapp.features.main.MainActivity
+import com.instructure.parentapp.util.ParentLogoutTask
 
-@Module
-@InstallIn(ActivityComponent::class)
-class LoginModule {
-
-    @Provides
-    fun provideAcceptableUsePolicyRouter(activity: FragmentActivity): AcceptableUsePolicyRouter {
-        return ParentAcceptableUsePolicyRouter(activity)
+class ParentAcceptableUsePolicyRouter(
+    private val activity: FragmentActivity
+) : AcceptableUsePolicyRouter {
+    override fun openPolicy(content: String) {
+        TODO("Not yet implemented")
     }
 
-    @Provides
-    fun provideLoginNavigation(activity: FragmentActivity): LoginNavigation {
-        return ParentLoginNavigation(activity)
+    override fun startApp() {
+        CookieManager.getInstance().flush()
+
+        val intent = Intent(activity, MainActivity::class.java)
+        activity.intent?.extras?.let { intent.putExtras(it) }
+        activity.startActivity(intent)
+    }
+
+    override fun logout() {
+        ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
     }
 }

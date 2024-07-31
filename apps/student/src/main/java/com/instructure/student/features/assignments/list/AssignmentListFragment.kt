@@ -44,7 +44,18 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.databinding.AssignmentListLayoutBinding
@@ -93,7 +104,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
     private val allTermsGradingPeriod by lazy {
-        GradingPeriod().apply { title = getString(R.string.assignmentsListAllGradingPeriods) }
+        GradingPeriod().apply { title = getString(R.string.assignmentsListDisplayGradingPeriod) }
     }
 
     private val adapterToAssignmentsCallback = object : AdapterToAssignmentsCallback {
@@ -291,7 +302,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         termSpinner.adapter = adapter
         termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
-                if (adapter.getItem(i)!!.title == getString(R.string.assignmentsListAllGradingPeriods)) {
+                if (adapter.getItem(i)!!.title == getString(R.string.assignmentsListDisplayGradingPeriod)) {
                     recyclerAdapter?.loadAssignment()
                 } else {
                     recyclerAdapter?.loadAssignmentsForGradingPeriod(adapter.getItem(i)!!.id, true)
