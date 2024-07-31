@@ -51,7 +51,8 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
     fun testOfflineSyllabusE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body")
+        val syllabusBody = "this is the syllabus body"
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = syllabusBody)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -89,7 +90,7 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
 
         Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that the syllabus body string is displayed. Assert that the toolbar subtitle is the '${course.name}' course name.")
         courseBrowserPage.selectSyllabus()
-        syllabusPage.assertSyllabusBody("this is the syllabus body")
+        syllabusPage.assertSyllabusBody(syllabusBody)
         syllabusPage.assertToolbarCourseTitle(course.name)
 
         Log.d(STEP_TAG,"Navigate to 'Summary' tab. Assert that all of the items, so '${assignment.name}' assignment is displayed.")
@@ -98,7 +99,6 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
 
         Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Page List Page.")
         assertOfflineIndicator()
-
     }
 
     @After
