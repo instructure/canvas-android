@@ -37,6 +37,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
+                uiState.onDismiss = { requireActivity().supportFragmentManager.popBackStack() }
 
                 AnimatedContent(
                     label = animationLabel,
@@ -61,7 +62,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                                 title = stringResource(id = R.string.new_message),
                                 uiState = uiState
                             ) { action ->
-                                viewModel.handleAction(action, requireActivity())
+                                viewModel.handleAction(action)
                             }
                         }
 

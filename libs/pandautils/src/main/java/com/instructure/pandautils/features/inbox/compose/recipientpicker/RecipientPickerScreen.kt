@@ -18,9 +18,11 @@ package com.instructure.pandautils.features.inbox.compose.recipientpicker
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,6 +36,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
@@ -50,10 +55,12 @@ import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasThemedTextField
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
+import java.util.EnumMap
 
 @Composable
 fun RecipientPickerScreen(
@@ -76,18 +83,22 @@ fun RecipientPickerScreen(
             }
         }
     ){ screenOption ->
-        when (screenOption) {
-            is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
-                title,
-                uiState,
-                actionHandler
-            )
+        if (uiState.isLoading) {
+            LoadingScreen(title, actionHandler)
+        } else {
+            when (screenOption) {
+                is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
+                    title,
+                    uiState,
+                    actionHandler
+                )
 
-            is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(
-                title,
-                uiState,
-                actionHandler
-            )
+                is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(
+                    title,
+                    uiState,
+                    actionHandler
+                )
+            }
         }
     }
 }
@@ -192,6 +203,43 @@ private fun RecipientPickerPeopleScreen(
                 }
             }
 
+        }
+    )
+}
+
+@Composable
+fun LoadingScreen(
+    title: String,
+    actionHandler: (RecipientPickerActionHandler) -> Unit,
+) {
+    Scaffold (
+        topBar = {
+            CanvasAppBar(
+                title = title,
+                navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+                actions = {
+                    IconButton(
+                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.done),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colorResource(id = R.color.textDarkest),
+                        )
+                    }
+                }
+            )
+        },
+        content = { padding ->
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+            ) {
+                Loading()
+            }
         }
     )
 }
@@ -315,9 +363,148 @@ private fun SearchField(
 
 @Preview
 @Composable
+fun RecipientPickerRolesScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+    roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
+        Recipient(name = "John Doe 1"),
+        Recipient(name = "John Smith 1"),
+    )
+
+    roleRecipients[EnrollmentType.TEACHERENROLLMENT] = listOf(
+        Recipient(name = "John Doe 2"),
+        Recipient(name = "John Smith 2"),
+    )
+
+
+    RecipientPickerScreen(
+        title = "Select Recipients",
+        uiState = RecipientPickerUiState(
+            screenOption = RecipientPickerScreenOption.Roles,
+            isLoading = false,
+            searchValue = TextFieldValue(""),
+            selectedRecipients = emptyList(),
+            recipientsByRole = roleRecipients,
+            recipientsToShow = emptyList()
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun RecipientPickerRecipientsScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+    roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
+        Recipient(name = "John Doe 1"),
+        Recipient(name = "John Smith 1"),
+    )
+
+    roleRecipients[EnrollmentType.TEACHERENROLLMENT] = listOf(
+        Recipient(name = "John Doe 2"),
+        Recipient(name = "John Smith 2"),
+    )
+
+
+    RecipientPickerScreen(
+        title = "Select Recipients",
+        uiState = RecipientPickerUiState(
+            screenOption = RecipientPickerScreenOption.Recipients,
+            isLoading = false,
+            searchValue = TextFieldValue(""),
+            selectedRole = EnrollmentType.TEACHERENROLLMENT,
+            selectedRecipients = listOf(roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first()),
+            recipientsByRole = roleRecipients,
+            recipientsToShow = roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!,
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun RecipientPickerSearchScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
+    roleRecipients[EnrollmentType.STUDENTENROLLMENT] = listOf(
+        Recipient(name = "John Doe 1"),
+        Recipient(name = "John Smith 1"),
+    )
+
+    roleRecipients[EnrollmentType.TEACHERENROLLMENT] = listOf(
+        Recipient(name = "John Doe 2"),
+        Recipient(name = "John Smith 2"),
+    )
+
+
+    RecipientPickerScreen(
+        title = "Select Recipients",
+        uiState = RecipientPickerUiState(
+            screenOption = RecipientPickerScreenOption.Roles,
+            isLoading = false,
+            searchValue = TextFieldValue("John"),
+            selectedRecipients = listOf(roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first()),
+            recipientsByRole = roleRecipients,
+            recipientsToShow = listOf(
+                roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first(),
+                roleRecipients[EnrollmentType.STUDENTENROLLMENT]!!.first()
+            )
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun RecipientPickerLoadingScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    RecipientPickerScreen(
+        title = "Select Recipients",
+        uiState = RecipientPickerUiState(
+            screenOption = RecipientPickerScreenOption.Roles,
+            isLoading = true,
+            searchValue = TextFieldValue(""),
+            selectedRecipients = emptyList(),
+            recipientsByRole = EnumMap(EnrollmentType::class.java),
+            recipientsToShow = emptyList()
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
 fun SearchFieldPreview() {
     SearchField(
         value = TextFieldValue(""),
         actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun RoleRowPreview() {
+    RoleRow(
+        name = "Teacher",
+        roleCount = 5,
+        onSelect = {}
+    )
+}
+
+@Preview
+@Composable
+fun RecipientRowPreview() {
+    RecipientRow(
+        recipient = Recipient(
+            name = "John Doe",
+            avatarURL = null
+        ),
+        isSelected = false,
+        onSelect = {}
     )
 }

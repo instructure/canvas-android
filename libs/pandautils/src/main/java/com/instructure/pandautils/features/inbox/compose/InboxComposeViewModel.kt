@@ -1,7 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -29,7 +28,7 @@ class InboxComposeViewModel @Inject constructor(
         loadContexts()
     }
 
-    fun handleAction(action: InboxComposeActionHandler, activity: FragmentActivity) {
+    fun handleAction(action: InboxComposeActionHandler) {
         when (action) {
             is InboxComposeActionHandler.CancelDismissDialog -> {
                 _uiState.update { it.copy(
@@ -37,7 +36,7 @@ class InboxComposeViewModel @Inject constructor(
                 ) }
             }
             is InboxComposeActionHandler.Close -> {
-                activity.supportFragmentManager.popBackStack()
+                uiState.value.onDismiss()
             }
             is InboxComposeActionHandler.OpenContextPicker -> {
                 _uiState.update { it.copy(screenOption = InboxComposeScreenOptions.ContextPicker) }
@@ -56,7 +55,7 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { it.copy(body = action.body) }
             }
             is InboxComposeActionHandler.SendClicked -> {
-                createConversation(activity)
+                createConversation()
             }
             is InboxComposeActionHandler.SubjectChanged -> {
                 _uiState.update { it.copy(subject = action.subject) }
@@ -212,7 +211,7 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    private fun createConversation(activity: FragmentActivity) {
+    private fun createConversation() {
         uiState.value.contextPickerUiState.selectedContext?.let { context ->
             viewModelScope.launch {
                 _uiState.update { uiState.value.copy(isSending = true) }
@@ -226,7 +225,7 @@ class InboxComposeViewModel @Inject constructor(
                     isIndividual = uiState.value.sendIndividual
                 )
 
-                handleAction(InboxComposeActionHandler.Close, activity)
+                handleAction(InboxComposeActionHandler.Close)
             }
         }
     }

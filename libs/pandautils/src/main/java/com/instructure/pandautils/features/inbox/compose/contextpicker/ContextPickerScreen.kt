@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -41,16 +40,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.inbox.compose.ContextPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.ContextPickerUiState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -86,9 +91,7 @@ fun ContextPickerScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
                     ) {
-                        CircularProgressIndicator(
-                            color = Color(ThemePrefs.brandColor),
-                        )
+                        Loading()
                     }
                 } else {
                     LazyColumn(
@@ -188,6 +191,65 @@ private fun DataRow(context: CanvasContext, actionHandler: (ContextPickerActionH
                 .padding(end = 16.dp)
                 .padding(vertical = 8.dp)
         )
-
     }
+}
+
+@Preview
+@Composable
+fun ContextPickerScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val courses = listOf(
+        Course(id = 1, name = "Course 1", courseColor = "#FF0000"),
+        Course(id = 1, name = "Course 2", courseColor = "#00FF00"),
+        Course(id = 1, name = "Course 3", courseColor = "#0000FF"),
+    )
+    val groups = listOf(
+        Group(id = 1, name = "Group 1"),
+        Group(id = 1, name = "Group 2"),
+        Group(id = 1, name = "Group 3"),
+    )
+    ContextPickerScreen(
+        uiState = ContextPickerUiState(
+            courses = courses,
+            groups = groups,
+            selectedContext = null,
+            isLoading = false
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun ContextPickerScreenCoursesPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val courses = listOf(
+        Course(id = 1, name = "Course 1", courseColor = "#FF0000"),
+        Course(id = 1, name = "Course 2", courseColor = "#00FF00"),
+        Course(id = 1, name = "Course 3", courseColor = "#0000FF"),
+    )
+    ContextPickerScreen(
+        uiState = ContextPickerUiState(
+            courses = courses,
+            groups = emptyList(),
+            selectedContext = null,
+            isLoading = false
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun ContextPickerScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    ContextPickerScreen(
+        uiState = ContextPickerUiState(
+            courses = emptyList(),
+            groups = emptyList(),
+            selectedContext = null,
+            isLoading = true
+        ),
+        actionHandler = {}
+    )
 }

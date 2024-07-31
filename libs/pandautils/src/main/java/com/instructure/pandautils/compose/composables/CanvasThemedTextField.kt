@@ -3,6 +3,7 @@ package com.instructure.pandautils.compose.composables
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.BasicTextField
@@ -102,5 +103,7 @@ fun CanvasThemedTextFieldPreview() {
     CanvasThemedTextField(
         value = TextFieldValue("Some text"),
         onValueChange = {},
+        modifier = Modifier
+            .fillMaxWidth()
     )
 }

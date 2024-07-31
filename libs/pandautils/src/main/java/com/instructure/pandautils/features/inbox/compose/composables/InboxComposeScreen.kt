@@ -31,9 +31,15 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
@@ -42,8 +48,10 @@ import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
+import com.instructure.pandautils.features.inbox.compose.ContextPickerUiState
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
+import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -162,4 +170,50 @@ private fun ContentScreen(
             },
         )
     }
+}
+
+@Preview
+@Composable
+fun InboxComposeScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val uiState = InboxComposeUiState(
+        contextPickerUiState = ContextPickerUiState(
+            selectedContext = Course(id = 1, name = "Course 1", courseColor = "#FF0000"),
+        ),
+        recipientPickerUiState = RecipientPickerUiState(
+            selectedRecipients = listOf(Recipient(stringId = "1", name = "Person 1"), Recipient(stringId = "2", name = "Person 2")),
+        ),
+        sendIndividual = true,
+        subject = TextFieldValue("Test Subject"),
+        body = TextFieldValue("Test Body"),
+        isSending = false,
+        showConfirmationDialog = false,
+    )
+    InboxComposeScreen(
+        title = "New Message",
+        uiState = uiState,
+    ) {}
+}
+
+@Preview
+@Composable
+fun InboxComposeScreenConfirmDialogPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val uiState = InboxComposeUiState(
+        contextPickerUiState = ContextPickerUiState(
+            selectedContext = Course(id = 1, name = "Course 1", courseColor = "#FF0000"),
+        ),
+        recipientPickerUiState = RecipientPickerUiState(
+            selectedRecipients = listOf(Recipient(name = "Person 1"), Recipient(name = "Person 2")),
+        ),
+        sendIndividual = true,
+        subject = TextFieldValue("Test Subject"),
+        body = TextFieldValue("Test Body"),
+        isSending = false,
+        showConfirmationDialog = true,
+    )
+    InboxComposeScreen(
+        title = "New Message",
+        uiState = uiState,
+    ) {}
 }

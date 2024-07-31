@@ -15,6 +15,7 @@ data class InboxComposeUiState(
     var body: TextFieldValue = TextFieldValue(""),
     var isSending: Boolean = false,
     var showConfirmationDialog: Boolean = false,
+    var onDismiss: () -> Unit = {},
 ) {
     val isSendButtonEnabled: Boolean
         get() = contextPickerUiState.selectedContext != null &&
