@@ -18,10 +18,13 @@
 package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
+import android.content.Intent
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -33,6 +36,7 @@ import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,11 +75,13 @@ class DashboardViewModelTest {
     private val inboxCountUpdater: InboxCountUpdater = TestInboxCountUpdater(inboxCountUpdaterFlow)
     private val alertCountUpdaterFlow = MutableSharedFlow<Boolean>()
     private val alertCountUpdater: AlertCountUpdater = TestAlertCountUpdater(alertCountUpdaterFlow)
+    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
 
     @Before
     fun setup() {
+        every { savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT) } returns null
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
@@ -243,7 +249,8 @@ class DashboardViewModelTest {
             parentPrefs = parentPrefs,
             selectedStudentHolder = selectedStudentHolder,
             inboxCountUpdater = inboxCountUpdater,
-            alertCountUpdater = alertCountUpdater
+            alertCountUpdater = alertCountUpdater,
+            savedStateHandle = savedStateHandle
         )
     }
 }

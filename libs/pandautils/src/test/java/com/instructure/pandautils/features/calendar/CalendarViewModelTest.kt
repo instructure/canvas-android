@@ -65,6 +65,7 @@ class CalendarViewModelTest {
     private val calendarPrefs: CalendarPrefs = mockk(relaxed = true)
     private val calendarStateMapper: CalendarStateMapper = mockk(relaxed = true)
     private val calendarFilterDao: CalendarFilterDao = mockk(relaxed = true)
+    private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarViewModel
 
@@ -1162,8 +1163,17 @@ class CalendarViewModelTest {
         assertEquals(newExpectedState, viewModel.uiState.value)
     }
 
+    @Test
+    fun `Send shared today button visible event when selected day is changed`() = runTest {
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.DaySelected(LocalDate.of(2023, 4, 22)))
+
+        coVerify { calendarSharedEvents.sendEvent(any(), SharedCalendarAction.TodayButtonVisible(true)) }
+    }
+
     private fun initViewModel() {
-        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarFilterDao)
+        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents)
     }
 
     private fun createPlannerItem(
