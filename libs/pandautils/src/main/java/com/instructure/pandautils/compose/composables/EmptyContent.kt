@@ -42,10 +42,10 @@ import com.instructure.pandautils.R
 
 @Composable
 fun EmptyContent(
-    emptyTitle: String,
     emptyMessage: String,
     @DrawableRes imageRes: Int,
     modifier: Modifier = Modifier,
+    emptyTitle: String? = null,
     buttonText: String? = null,
     buttonClick: (() -> Unit)? = null
 ) {
@@ -62,16 +62,18 @@ fun EmptyContent(
                 .testTag(imageRes.toString())
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = emptyTitle,
-            fontSize = 20.sp,
-            color = colorResource(
-                id = R.color.textDarkest
-            ),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        emptyTitle?.let {
+            Text(
+                text = emptyTitle,
+                fontSize = 20.sp,
+                color = colorResource(
+                    id = R.color.textDarkest
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 32.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
         Text(
             text = emptyMessage,
             fontSize = 16.sp,

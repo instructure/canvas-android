@@ -39,6 +39,7 @@ sealed class PickerSubmissionUploadEffect {
     data class HandleSubmit(val model: PickerSubmissionUploadModel) : PickerSubmissionUploadEffect()
     data class LoadFileContents(val uri: Uri, val allowedExtensions: List<String>) :
         PickerSubmissionUploadEffect()
+    data class RemoveTempFile(val path: String) : PickerSubmissionUploadEffect()
 }
 
 data class PickerSubmissionUploadModel(

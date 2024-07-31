@@ -323,7 +323,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             setupDialogRow(
                 dialog,
                 dialogBinding.submissionEntryStudio,
-                (submissionTypes.contains(SubmissionType.ONLINE_UPLOAD) && assignment.isStudioEnabled)
+                viewModel.isStudioAccepted()
             ) {
                 navigateToStudioScreen(assignment, studioLTITool)
             }
@@ -456,6 +456,7 @@ class AssignmentDetailsFragment : ParentFragment(), Bookmarkable {
             } else {
                 Snackbar.make(requireView(), getString(R.string.reminderPermissionNotGrantedError), Snackbar.LENGTH_LONG).show()
             }
+            viewModel.checkingReminderPermission = false
         }
     }
 

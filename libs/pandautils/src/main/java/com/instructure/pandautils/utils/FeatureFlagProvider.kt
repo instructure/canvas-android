@@ -43,10 +43,6 @@ class FeatureFlagProvider(
         }
     }
 
-    suspend fun getDiscussionRedesignFeatureFlag(): Boolean {
-        return checkEnvironmentFeatureFlag("react_discussions_post")
-    }
-
     suspend fun fetchEnvironmentFeatureFlags() {
         val restParams = RestParams(isForceReadFromNetwork = true, shouldIgnoreToken = true)
         val featureFlags = featuresApi.getEnvironmentFeatureFlags(restParams).dataOrNull ?: return

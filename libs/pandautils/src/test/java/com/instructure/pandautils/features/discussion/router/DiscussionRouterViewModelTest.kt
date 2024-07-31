@@ -46,7 +46,7 @@ class DiscussionRouterViewModelTest {
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
-        coEvery { discussionRouteHelper.isDiscussionRedesignEnabled(any()) } returns true
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns true
 
         viewModel = DiscussionRouterViewModel(discussionRouteHelper, resources)
 
@@ -58,7 +58,7 @@ class DiscussionRouterViewModelTest {
         val course = Course()
         val discussionTopicHeader = DiscussionTopicHeader(1L)
 
-        coEvery { discussionRouteHelper.isDiscussionRedesignEnabled(any()) } returns false
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns false
 
         viewModel.events.observe(lifecycleOwner) {}
 
@@ -75,7 +75,7 @@ class DiscussionRouterViewModelTest {
         val course = Course()
         val discussionTopicHeader = DiscussionTopicHeader(1L)
 
-        coEvery { discussionRouteHelper.isDiscussionRedesignEnabled(any()) } returns true
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns true
 
         viewModel.events.observe(lifecycleOwner) {}
 
@@ -93,7 +93,7 @@ class DiscussionRouterViewModelTest {
         val discussionTopicHeader = DiscussionTopicHeader(1L, groupTopicChildren = listOf(GroupTopicChild(2L, 1L)))
         val groupDiscussionTopicHeader = DiscussionTopicHeader(2L)
 
-        coEvery { discussionRouteHelper.isDiscussionRedesignEnabled(any()) } returns false
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns false
         coEvery { discussionRouteHelper.getDiscussionGroup(discussionTopicHeader) } returns Pair(group, 2L)
         coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns groupDiscussionTopicHeader
 
@@ -113,7 +113,7 @@ class DiscussionRouterViewModelTest {
         val discussionTopicHeader = DiscussionTopicHeader(1L, groupTopicChildren = listOf(GroupTopicChild(2L, 1L)))
         val groupDiscussionTopicHeader = DiscussionTopicHeader(2L)
 
-        coEvery { discussionRouteHelper.isDiscussionRedesignEnabled(any()) } returns true
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns true
         coEvery { discussionRouteHelper.getDiscussionGroup(discussionTopicHeader) } returns Pair(group, 2L)
         coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns groupDiscussionTopicHeader
 

@@ -156,6 +156,7 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that '${seededConversation.subject}' conversation is NOT displayed because it is archived yet.")
         inboxPage.filterInbox("Inbox")
+        sleep(2000)
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and Select the conversation. Star it, and assert that it has displayed in the 'STARRED' scope.")

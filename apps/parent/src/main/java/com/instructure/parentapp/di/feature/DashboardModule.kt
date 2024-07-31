@@ -19,6 +19,8 @@ package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
+import com.instructure.parentapp.features.dashboard.AlertCountUpdater
+import com.instructure.parentapp.features.dashboard.AlertCountUpdaterImpl
 import com.instructure.parentapp.features.dashboard.DashboardRepository
 import com.instructure.parentapp.features.dashboard.InboxCountUpdater
 import com.instructure.parentapp.features.dashboard.InboxCountUpdaterImpl
@@ -58,5 +60,11 @@ class SelectedStudentHolderModule {
     @Singleton
     fun provideInboxCountUpdater(): InboxCountUpdater {
         return InboxCountUpdaterImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlertCountUpdater(): AlertCountUpdater {
+        return AlertCountUpdaterImpl()
     }
 }

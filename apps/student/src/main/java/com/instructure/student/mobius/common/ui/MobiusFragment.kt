@@ -103,7 +103,6 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        retainInstance = true
 
         update = makeUpdate().apply { initialized = overrideInitModel != null || overrideInitViewState != null }
         globalEventSource = GlobalEventSource(update)

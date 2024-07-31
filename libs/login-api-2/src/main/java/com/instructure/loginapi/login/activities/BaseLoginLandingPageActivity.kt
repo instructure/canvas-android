@@ -20,7 +20,6 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -68,7 +67,7 @@ import com.instructure.pandautils.utils.*
 import java.util.*
 import javax.inject.Inject
 
-abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
+abstract class BaseLoginLandingPageActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivityLoginLandingPageBinding::inflate)
 
@@ -381,14 +380,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         } else {
             NoInternetConnectionDialog.show(supportFragmentManager)
         }
-    }
-
-    override fun onTicketPost() {
-        toast(R.string.errorReportThankyou)
-    }
-
-    override fun onTicketError() {
-        toast(R.string.errorOccurred)
     }
 
     companion object {

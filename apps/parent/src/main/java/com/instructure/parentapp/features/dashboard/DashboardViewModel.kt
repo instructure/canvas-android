@@ -32,6 +32,7 @@ import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -48,11 +49,13 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: DashboardRepository,
+    private val alertsRepository: AlertsRepository,
     private val previousUsersUtils: PreviousUsersUtils,
     private val apiPrefs: ApiPrefs,
     private val parentPrefs: ParentPrefs,
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
+    private val alertCountUpdater: AlertCountUpdater
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -89,10 +92,19 @@ class DashboardViewModel @Inject constructor(
 
     private fun loadData() {
         viewModelScope.launch {
-            inboxCountUpdater.shouldRefreshInboxCountFlow.collect {shouldUpdate ->
+            inboxCountUpdater.shouldRefreshInboxCountFlow.collect { shouldUpdate ->
                 if (shouldUpdate) {
                     updateUnreadCount()
                     inboxCountUpdater.updateShouldRefreshInboxCount(false)
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            alertCountUpdater.shouldRefreshAlertCountFlow.collect { shouldUpdate ->
+                if (shouldUpdate) {
+                    updateAlertCount()
+                    alertCountUpdater.updateShouldRefreshAlertCount(false)
                 }
             }
         }
@@ -103,6 +115,7 @@ class DashboardViewModel @Inject constructor(
             setupUserInfo()
             loadStudents()
             updateUnreadCount()
+            updateAlertCount()
 
             if (_data.value.studentItems.isEmpty()) {
                 _state.value = ViewState.Empty(
@@ -177,14 +190,15 @@ class DashboardViewModel @Inject constructor(
         currentUser?.let {
             previousUsersUtils.add(context, it.copy(selectedStudentId = student.id))
         }
-        viewModelScope.launch {
-            selectedStudentHolder.updateSelectedStudent(student)
-        }
         _data.update {
             it.copy(
                 studentSelectorExpanded = false,
                 selectedStudent = student
             )
+        }
+        viewModelScope.launch {
+            selectedStudentHolder.updateSelectedStudent(student)
+            updateAlertCount()
         }
     }
 
@@ -194,6 +208,17 @@ class DashboardViewModel @Inject constructor(
             data.copy(
                 unreadCount = unreadCount
             )
+        }
+    }
+
+    private suspend fun updateAlertCount() {
+        _data.value.selectedStudent?.id?.let {
+            val alertCount = alertsRepository.getUnreadAlertCount(it)
+            _data.update {
+                it.copy(
+                    alertCount = alertCount
+                )
+            }
         }
     }
 

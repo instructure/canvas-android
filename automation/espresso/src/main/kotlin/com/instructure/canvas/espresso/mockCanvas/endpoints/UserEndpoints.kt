@@ -64,6 +64,16 @@ object UserListEndpoint : Endpoint(
  * - `enrollments` -> [UserEnrollmentEndpoint]
  */
 object UserEndpoint : Endpoint(
+    Segment("observer_alerts") to ObserverAlertsEndpoint,
+    Segment("observer_alert_thresholds") to Endpoint(
+        response = {
+            GET {
+                val userId = request.url.queryParameter("student_id")?.toLong() ?: 0L
+                val response = data.observerAlertThresholds[userId] ?: emptyList()
+                request.successResponse(response)
+            }
+        }
+    ),
     Segment("profile") to UserProfileEndpoint,
     Segment("colors") to UserColorsEndpoint,
     Segment("pandata_events_token") to endpoint {

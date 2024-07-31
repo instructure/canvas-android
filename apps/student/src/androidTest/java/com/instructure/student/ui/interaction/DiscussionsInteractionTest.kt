@@ -21,6 +21,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -51,6 +52,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Verify that a discussion header shows up properly after discussion creation
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionCreate_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
 
@@ -70,6 +72,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // so the attachment is done behind the scenes, after the fact.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionCreate_withAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -125,6 +128,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests that links to other Canvas content routes properly
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_linksRouteInApp() {
         val data = getToCourse(studentCount = 2, courseCount = 2, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -153,6 +157,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Replies automatically get marked as read as the user scrolls through the list
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_postsGetMarkedAsRead() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -192,6 +197,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // NOTE: Very similar to testDiscussionCreate_withAttachment
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_previewAttachment() {
 
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
@@ -234,6 +240,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests that users can like entries and the correct like count is displayed, if the liking is enabled
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionLikePost_base() {
 
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
@@ -275,6 +282,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests that like count is shown if only graders can like
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionLikes_whenOnlyGradersCanRate() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -341,6 +349,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Test basic discussion view
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionView_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -361,6 +370,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Test that you can reply to a discussion (if enabled)
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionView_replies() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -388,6 +398,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Test that replies are not possible when they are not enabled
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionView_repliesHiddenWhenNotPermitted() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -409,6 +420,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Test that a reply is displayed properly
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -437,6 +449,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // so we add the attachments programmatically.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_withAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -492,6 +505,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests that we can make a threaded reply to a reply
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_threaded() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -529,6 +543,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // so we add the attachments programmatically.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussionReply_threadedWithAttachment() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -593,6 +608,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests a discussion with a linked assignment.
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_linkedAssignment() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -634,6 +650,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests a discussion with a linked assignment, show possible points if not restricted
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_showPointsIfNotRestricted() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -679,6 +696,7 @@ class DiscussionsInteractionTest : StudentTest() {
     // Tests a discussion with a linked assignment, hide possible points if restricted
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    @Stub("This can only test the old discussions, will be modified later to test the old discussions in offline mode")
     fun testDiscussion_hidePointsIfRestricted() {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
 

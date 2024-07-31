@@ -29,6 +29,7 @@ import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -41,8 +42,9 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -60,12 +62,15 @@ class DashboardViewModelTest {
 
     private val context: Context = mockk(relaxed = true)
     private val repository: DashboardRepository = mockk(relaxed = true)
+    private val alertsRepository: AlertsRepository = mockk(relaxed = true)
     private val previousUsersUtils: PreviousUsersUtils = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val selectedStudentHolder: SelectedStudentHolder = mockk(relaxed = true)
     private val inboxCountUpdaterFlow = MutableSharedFlow<Boolean>()
     private val inboxCountUpdater: InboxCountUpdater = TestInboxCountUpdater(inboxCountUpdaterFlow)
+    private val alertCountUpdaterFlow = MutableSharedFlow<Boolean>()
+    private val alertCountUpdater: AlertCountUpdater = TestAlertCountUpdater(alertCountUpdaterFlow)
 
     private lateinit var viewModel: DashboardViewModel
 
@@ -92,7 +97,13 @@ class DashboardViewModelTest {
             avatarUrl = "avatar"
         )
 
-        val expected = UserViewData(user.name, user.pronouns, user.shortName, user.avatarUrl, user.primaryEmail)
+        val expected = UserViewData(
+            user.name,
+            user.pronouns,
+            user.shortName,
+            user.avatarUrl,
+            user.primaryEmail
+        )
         coEvery { apiPrefs.user } returns user
 
         createViewModel()
@@ -206,15 +217,33 @@ class DashboardViewModelTest {
         assertEquals(1, viewModel.data.value.unreadCount)
     }
 
+    @Test
+    fun `Update alert count when the update alert count flow triggers`() = runTest {
+        val students = listOf(User(id = 1L), User(id = 2L))
+        coEvery { repository.getStudents() } returns students
+        coEvery { alertsRepository.getUnreadAlertCount(1L) } returns 0
+
+        createViewModel()
+
+        assertEquals(0, viewModel.data.value.alertCount)
+
+        coEvery { alertsRepository.getUnreadAlertCount(1L) } returns 1
+        alertCountUpdaterFlow.emit(true)
+
+        assertEquals(1, viewModel.data.value.alertCount)
+    }
+
     private fun createViewModel() {
         viewModel = DashboardViewModel(
             context = context,
             repository = repository,
+            alertsRepository = alertsRepository,
             previousUsersUtils = previousUsersUtils,
             apiPrefs = apiPrefs,
             parentPrefs = parentPrefs,
             selectedStudentHolder = selectedStudentHolder,
-            inboxCountUpdater = inboxCountUpdater
+            inboxCountUpdater = inboxCountUpdater,
+            alertCountUpdater = alertCountUpdater
         )
     }
 }

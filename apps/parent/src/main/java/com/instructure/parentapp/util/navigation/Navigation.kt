@@ -9,7 +9,6 @@ import androidx.navigation.NavGraph
 import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.dialog
 import androidx.navigation.fragment.fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
@@ -48,7 +47,6 @@ class Navigation(apiPrefs: ApiPrefs) {
     val calendar = "$baseUrl/calendar"
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
-    val help = "$baseUrl/help"
     val manageStudents = "$baseUrl/manage-students"
     val settings = "$baseUrl/settings"
 
@@ -99,7 +97,6 @@ class Navigation(apiPrefs: ApiPrefs) {
             }
             fragment<ManageStudentsFragment>(manageStudents)
             fragment<SettingsFragment>(settings)
-            dialog<HelpDialogFragment>(help)
             fragment<CourseDetailsFragment>(courseDetails) {
                 argument(courseId) {
                     type = NavType.LongType
