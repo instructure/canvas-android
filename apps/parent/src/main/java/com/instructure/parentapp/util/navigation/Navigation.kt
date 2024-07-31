@@ -64,11 +64,7 @@ class Navigation(apiPrefs: ApiPrefs) {
                     uriPattern = alerts
                 }
             }
-            fragment<InboxFragment>(inbox) {
-                deepLink {
-                    uriPattern = inbox
-                }
-            }
+            fragment<InboxFragment>(inbox)
             fragment<InboxComposeFragment>(inboxCompose) {
                 deepLink {
                     uriPattern = inboxCompose

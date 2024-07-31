@@ -488,7 +488,8 @@
     <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
     <string name="new_message">New Message</string>
-    <string name="select_a_team">Select a Team</string>
+    <string name="select_course">Select a Course</string>
+    <string name="select_course_or_group">Select a Course or a Group</string>
     <string name="select_recipients">Select recipients</string>
     <string name="message">Message</string>
     <string name="subject">Subject</string>
@@ -498,12 +499,6 @@
     <string name="groups">Groups</string>
     <string name="a11y_selected">Selected</string>
     <string name="recipients_to">To</string>
-    <string name="enrollment_type_students">Students</string>
-    <string name="enrollment_type_teachers">Teachers</string>
-    <string name="enrollment_type_observers">Observers</string>
-    <string name="enrollment_type_tas">Teaching Assistants</string>
-    <string name="enrollment_type_course_designer">Course Designers</string>
-    <string name="enrollment_type_others">Others</string>
     <string name="a11y_open_course_picker">Open Course Picker</string>
     <string name="a11y_close_recipient_picker">Close recipient picker</string>
     <string name="a11y_close_course_picker">Close Course Picker</string>

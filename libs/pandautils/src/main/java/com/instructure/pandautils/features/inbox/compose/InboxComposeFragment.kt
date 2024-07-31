@@ -63,13 +63,12 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                                 title = stringResource(id = R.string.new_message),
                                 uiState = uiState
                             ) { action ->
-                                viewModel.handleAction(action, activity)
+                                viewModel.handleAction(action)
                             }
                         }
 
                         InboxComposeScreenOptions.ContextPicker -> {
                             ContextPickerScreen(
-                                title = stringResource(id = R.string.select_a_team),
                                 uiState = contextPickerState
                             ) { action ->
                                 viewModel.handleAction(action)

@@ -43,11 +43,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.iconRes
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun AttachmentCard(
     attachment: Attachment,
@@ -72,10 +74,12 @@ fun AttachmentCard(
                     .size(96.dp)
             ){
                 if (attachment.thumbnailUrl != null) {
-                    AsyncImage(
+                    GlideImage(
                         model = attachment.thumbnailUrl,
-                        contentDescription = attachment.filename
-                    )
+                        contentDescription = null,
+                    ) {
+                        it.placeholder(attachment.iconRes)
+                    }
                 } else {
                     Icon(
                         painter = painterResource(id = attachment.iconRes),

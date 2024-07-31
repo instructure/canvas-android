@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.Avatar
+import com.instructure.pandautils.compose.composables.UserAvatar
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -58,8 +58,9 @@ fun RecipientChip(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Avatar(
-                recipient,
+            UserAvatar(
+                recipient.avatarURL,
+                recipient.name ?: "",
                 Modifier
                     .size(30.dp)
                     .padding(2.dp)

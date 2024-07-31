@@ -18,7 +18,6 @@
 package com.instructure.parentapp.features.inbox.list
 
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
@@ -28,11 +27,7 @@ import com.instructure.parentapp.util.navigation.Navigation
 import org.greenrobot.eventbus.Subscribe
 
 
-class ParentInboxRouter(
-    private val activity: FragmentActivity,
-    private val fragment: Fragment,
-    private val navigation: Navigation
-) : InboxRouter {
+class ParentInboxRouter(private val activity: FragmentActivity, private val navigation: Navigation) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
         // TODO: Implement

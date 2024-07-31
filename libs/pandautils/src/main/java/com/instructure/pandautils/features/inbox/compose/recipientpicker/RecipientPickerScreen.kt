@@ -43,17 +43,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
 import com.instructure.pandautils.compose.animations.ScreenSlideTransition
-import com.instructure.pandautils.compose.composables.Avatar
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasThemedTextField
+import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
-import com.instructure.pandautils.utils.displayText
 
 @Composable
 fun RecipientPickerScreen(
@@ -210,8 +210,9 @@ private fun RoleRow(
             }
             .padding(horizontal = 8.dp, vertical = 16.dp)
     ) {
-        Avatar(
-            Recipient(name = name),
+        UserAvatar(
+            null,
+            name,
             Modifier
                 .size(36.dp)
                 .padding(2.dp)
@@ -250,8 +251,9 @@ private fun RecipientRow(
             .clickable { onSelect() }
             .padding(horizontal = 8.dp, vertical = 16.dp)
     ) {
-        Avatar(
-            recipient,
+        UserAvatar(
+            recipient.avatarURL,
+            recipient.name ?: "",
             Modifier
                 .size(36.dp)
                 .padding(2.dp)

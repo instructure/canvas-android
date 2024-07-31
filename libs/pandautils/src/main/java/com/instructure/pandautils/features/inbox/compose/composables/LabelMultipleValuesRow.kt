@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.Avatar
+import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.utils.ThemePrefs
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -125,7 +125,7 @@ fun LabelMultipleValuesRowPreview() {
         label = "To",
         selectedValues = users,
         itemComposable = { user ->
-            Avatar(user)
+            UserAvatar(user.avatarURL, user.name ?: "")
         },
         onSelect = {},
         addValueClicked = {},

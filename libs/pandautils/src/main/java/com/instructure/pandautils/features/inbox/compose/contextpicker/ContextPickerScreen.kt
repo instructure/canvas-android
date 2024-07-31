@@ -59,7 +59,6 @@ import com.instructure.pandautils.utils.backgroundColor
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ContextPickerScreen(
-    title: String,
     uiState: ContextPickerUiState,
     actionHandler: (ContextPickerActionHandler) -> Unit,
 ) {
@@ -70,7 +69,7 @@ fun ContextPickerScreen(
     Scaffold(
         topBar = {
             CanvasAppBar(
-                title = title,
+                title = if (uiState.groups.isEmpty()) stringResource(R.string.select_course) else stringResource(R.string.select_course_or_group),
                 navigationActionClick = { actionHandler(ContextPickerActionHandler.DoneClicked) },
             )
         },

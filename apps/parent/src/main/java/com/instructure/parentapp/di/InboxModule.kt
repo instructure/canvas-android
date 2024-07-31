@@ -17,7 +17,6 @@
 
 package com.instructure.parentapp.di
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
@@ -39,8 +38,8 @@ import dagger.hilt.android.components.ViewModelComponent
 class InboxFragmentModule {
 
     @Provides
-    fun provideInboxRouter(activity: FragmentActivity, fragment: Fragment, navigation: Navigation): InboxRouter {
-        return ParentInboxRouter(activity, fragment, navigation)
+    fun provideInboxRouter(activity: FragmentActivity, navigation: Navigation): InboxRouter {
+        return ParentInboxRouter(activity, navigation)
     }
 }
 

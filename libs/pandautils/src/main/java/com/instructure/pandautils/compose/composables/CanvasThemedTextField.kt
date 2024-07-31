@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
@@ -48,7 +47,7 @@ fun CanvasThemedTextField(
     minLines: Int = 1,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    cursorBrush: Brush = SolidColor(Color.Black),
+    cursorBrush: Brush = SolidColor(colorResource(id = R.color.textDark)),
     placeholder: String? = null,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
