@@ -302,7 +302,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         termSpinner.adapter = adapter
         termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
-                if (adapter.getItem(i)!!.title == getString(R.string.assignmentsListAllGradingPeriods)) {
+                if (adapter.getItem(i)!!.title == getString(R.string.assignmentsListDisplayGradingPeriod)) {
                     recyclerAdapter?.loadAssignment()
                 } else {
                     recyclerAdapter?.loadAssignmentsForGradingPeriod(adapter.getItem(i)!!.id, true)
