@@ -506,4 +506,6 @@
     <string name="enrollment_type_others">Others</string>
     <string name="a11y_open_course_picker">Open Course Picker</string>
     <string name="a11y_close_recipient_picker">Close recipient picker</string>
+    <string name="a11y_close_course_picker">Close Course Picker</string>
+    <string name="a11y_cancel_new_message">Cancel new message</string>
 </resources>

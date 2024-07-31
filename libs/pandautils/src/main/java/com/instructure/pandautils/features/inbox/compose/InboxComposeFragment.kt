@@ -61,11 +61,10 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                         InboxComposeScreenOptions.None -> {
                             InboxComposeScreen(
                                 title = stringResource(id = R.string.new_message),
-                                uiState = uiState,
-                                actionHandler = { action ->
-                                    viewModel.handleAction(action, activity)
-                                }
-                            )
+                                uiState = uiState
+                            ) { action ->
+                                viewModel.handleAction(action, activity)
+                            }
                         }
 
                         InboxComposeScreenOptions.ContextPicker -> {

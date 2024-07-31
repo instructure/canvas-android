@@ -28,18 +28,14 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
@@ -58,36 +54,18 @@ fun InboxComposeScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            title,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(id = R.color.textDarkest),
-                        )
-                    },
-                    backgroundColor = colorResource(id = R.color.backgroundLightest),
-                    elevation = 0.dp,
-                    navigationIcon = {
-                        IconButton(onClick = { actionHandler(InboxComposeActionHandler.CancelClicked) }) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_close),
-                                contentDescription = stringResource(R.string.a11y_close_recipient_picker),
-                                tint = colorResource(id = R.color.textDarkest),
-                            )
-                        }
-                    },
+                CanvasAppBar(
+                    title = title,
+                    navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelClicked) },
                     actions = {
                         IconButton(
                             onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
                             enabled = uiState.isSendButtonEnabled,
-                            modifier = Modifier
                         ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_send),
                                 contentDescription = stringResource(R.string.a11y_send_message),
-                                tint = colorResource(id = R.color.textLightest).copy(alpha = LocalContentAlpha.current)
+                                tint = colorResource(id = R.color.textDarkest).copy(alpha = LocalContentAlpha.current)
                             )
                         }
                     },
@@ -101,8 +79,6 @@ fun InboxComposeScreen(
                         .imeNestedScroll()
                         .padding(padding)
                 ) {
-                    CanvasDivider()
-
                     ContextValueRow(
                         label = stringResource(id = R.string.course),
                         value = uiState.selectedContext,

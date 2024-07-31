@@ -32,10 +32,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -52,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.features.inbox.compose.ContextPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.ContextPickerUiState
 import com.instructure.pandautils.utils.ThemePrefs
@@ -70,27 +68,11 @@ fun ContextPickerScreen(
     })
 
     Scaffold(
-        topBar = { TopAppBar(
-            title = {
-                Text(
-                    title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = colorResource(id = R.color.textDarkest),
-                )
-            },
-            backgroundColor = colorResource(id = R.color.backgroundLightest),
-            elevation = 0.dp,
-            navigationIcon = {
-                IconButton(onClick = { actionHandler(ContextPickerActionHandler.DoneClicked) }) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_close),
-                        contentDescription = stringResource(R.string.a11y_close_recipient_picker),
-                        tint = colorResource(id = R.color.textDarkest),
-                    )
-                }
-            }
-        )
+        topBar = {
+            CanvasAppBar(
+                title = title,
+                navigationActionClick = { actionHandler(ContextPickerActionHandler.DoneClicked) },
+            )
         },
         content = { padding ->
             Box(
@@ -113,9 +95,6 @@ fun ContextPickerScreen(
                     LazyColumn(
                         Modifier.fillMaxSize()
                     ) {
-                        item {
-                            CanvasDivider()
-                        }
                         if (!uiState.isLoading) {
                             if (uiState.courses.isNotEmpty()) {
                                 item {

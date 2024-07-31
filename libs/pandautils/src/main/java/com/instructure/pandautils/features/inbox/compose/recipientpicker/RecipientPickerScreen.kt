@@ -31,7 +31,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +45,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
 import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.compose.composables.Avatar
+import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
@@ -96,26 +96,9 @@ private fun RecipientPickerRoleScreen(
 ) {
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        title,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colorResource(id = R.color.textDarkest),
-                    )
-                },
-                backgroundColor = colorResource(id = R.color.backgroundLightest),
-                elevation = 0.dp,
-                navigationIcon = {
-                    IconButton(onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) }) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_close),
-                            contentDescription = stringResource(R.string.a11y_close_recipient_picker),
-                            tint = colorResource(id = R.color.textDarkest),
-                        )
-                    }
-                },
+            CanvasAppBar(
+                title = title,
+                navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
                 actions = {
                     IconButton(
                         onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
@@ -155,26 +138,11 @@ private fun RecipientPickerPeopleScreen(
 ) {
     Scaffold (
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        title,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colorResource(id = R.color.textDarkest),
-                    )
-                },
-                backgroundColor = colorResource(id = R.color.backgroundLightest),
-                elevation = 0.dp,
-                navigationIcon = {
-                    IconButton(onClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) }) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_back_arrow),
-                            contentDescription = stringResource(R.string.a11y_close_recipient_picker),
-                            tint = colorResource(id = R.color.textDarkest),
-                        )
-                    }
-                },
+            CanvasAppBar(
+                title = title,
+                navigationActionClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) },
+                navIconRes = R.drawable.ic_back_arrow,
+                navIconContentDescription = stringResource(R.string.a11y_close_recipient_picker),
                 actions = {
                     IconButton(
                         onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
