@@ -19,6 +19,7 @@ package com.instructure.student.ui.e2e.offline
 import android.util.Log
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.FeatureCategory
+import com.instructure.canvas.espresso.KnownBug
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -46,6 +47,7 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @OfflineE2E
+    @KnownBug(bugLink = "https://instructure.atlassian.net/browse/MBL-17787", explanation = "Syllabus tabs are not displaying in offline mode while only assignment summary type items exists.")
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineSyllabusE2E() {
