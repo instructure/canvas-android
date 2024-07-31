@@ -7,23 +7,27 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import java.util.EnumMap
 
 data class InboxComposeUiState(
-    var selectedContext: CanvasContext? = null,
-    var selectedRecipients: List<Recipient> = emptyList(),
+    var contextPickerUiState: ContextPickerUiState = ContextPickerUiState(),
+    var recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
     var screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     var sendIndividual: Boolean = false,
     var subject: TextFieldValue = TextFieldValue(""),
     var body: TextFieldValue = TextFieldValue(""),
     var isSending: Boolean = false,
+    var showConfirmationDialog: Boolean = false,
 ) {
     val isSendButtonEnabled: Boolean
-        get() = selectedContext != null && selectedRecipients.isNotEmpty() && subject.text.isNotEmpty() && body.text.isNotEmpty()
+        get() = contextPickerUiState.selectedContext != null &&
+                    recipientPickerUiState.selectedRecipients.isNotEmpty() &&
+                    subject.text.isNotEmpty() && body.text.isNotEmpty()
 }
 
 sealed class InboxComposeActionHandler {
-    data object OpenContextPicker : InboxComposeActionHandler()
-    data object OpenRecipientPicker : InboxComposeActionHandler()
-    data class RemoveRecipient(val recipient: Recipient) : InboxComposeActionHandler()
-    data object CancelClicked : InboxComposeActionHandler()
+    data object OpenContextPicker: InboxComposeActionHandler()
+    data object OpenRecipientPicker: InboxComposeActionHandler()
+    data class RemoveRecipient(val recipient: Recipient): InboxComposeActionHandler()
+    data object Close: InboxComposeActionHandler()
+    data class CancelDismissDialog(val isShow: Boolean): InboxComposeActionHandler()
     data object SendClicked : InboxComposeActionHandler()
     data class SendIndividualChanged(val sendIndividual: Boolean) : InboxComposeActionHandler()
     data class SubjectChanged(val subject: TextFieldValue) : InboxComposeActionHandler()

@@ -52,7 +52,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 fun <T> LabelMultipleValuesRow(
     label: String,
     selectedValues: List<T>,
-    onSelect: (T) -> Unit,
     addValueClicked: () -> Unit,
     itemComposable: @Composable (T) -> Unit,
     modifier: Modifier = Modifier,
@@ -127,7 +126,6 @@ fun LabelMultipleValuesRowPreview() {
         itemComposable = { user ->
             UserAvatar(user.avatarURL, user.name ?: "")
         },
-        onSelect = {},
         addValueClicked = {},
         loading = false
     )

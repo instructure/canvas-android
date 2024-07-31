@@ -37,8 +37,6 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                val contextPickerState by viewModel.contextPickerUiState.collectAsState()
-                val recipientPickerState by viewModel.recipientPickerUiState.collectAsState()
 
                 AnimatedContent(
                     label = animationLabel,
@@ -63,13 +61,13 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                                 title = stringResource(id = R.string.new_message),
                                 uiState = uiState
                             ) { action ->
-                                viewModel.handleAction(action)
+                                viewModel.handleAction(action, requireActivity())
                             }
                         }
 
                         InboxComposeScreenOptions.ContextPicker -> {
                             ContextPickerScreen(
-                                uiState = contextPickerState
+                                uiState = uiState.contextPickerUiState
                             ) { action ->
                                 viewModel.handleAction(action)
                             }
@@ -78,7 +76,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                         InboxComposeScreenOptions.RecipientPicker -> {
                             RecipientPickerScreen(
                                 title = stringResource(id = R.string.select_recipients),
-                                uiState = recipientPickerState
+                                uiState = uiState.recipientPickerUiState
                             ) { action ->
                                 viewModel.handleAction(action)
                             }

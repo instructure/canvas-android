@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.inbox.compose.composables
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,7 @@ import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
+import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
@@ -56,7 +58,7 @@ fun InboxComposeScreen(
             topBar = {
                 CanvasAppBar(
                     title = title,
-                    navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelClicked) },
+                    navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelDismissDialog(true)) },
                     actions = {
                         IconButton(
                             onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
@@ -72,69 +74,92 @@ fun InboxComposeScreen(
                 )
             },
             content = { padding ->
-                Column(
-                    Modifier
-                        .verticalScroll(rememberScrollState())
-                        .imePadding()
-                        .imeNestedScroll()
-                        .padding(padding)
-                ) {
-                    ContextValueRow(
-                        label = stringResource(id = R.string.course),
-                        value = uiState.selectedContext,
-                        onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
-                    )
-
-                    CanvasDivider()
-
-                    AnimatedVisibility(visible = uiState.selectedContext != null) {
-                        Column {
-                            LabelMultipleValuesRow(
-                                label = stringResource(R.string.recipients_to),
-                                selectedValues = uiState.selectedRecipients,
-                                itemComposable = {
-                                    RecipientChip(it) {
-                                        actionHandler(InboxComposeActionHandler.RemoveRecipient(it))
-                                    }
-                                },
-                                onSelect = { },
-                                addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
-                            )
-
-                            CanvasDivider()
-                        }
-                    }
-
-                    LabelSwitchRow(
-                        label = stringResource(R.string.send_individual_message_to_each_recipient),
-                        checked = uiState.sendIndividual,
-                        onCheckedChange = {
-                            actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
-                        },
-                    )
-
-                    CanvasDivider()
-
-                    LabelTextFieldRow(
-                        value = uiState.subject,
-                        label = stringResource(R.string.subject),
-                        onValueChange = {
-                            actionHandler(InboxComposeActionHandler.SubjectChanged(it))
-                        },
-                    )
-
-                    CanvasDivider()
-                    
-                    TextFieldWithHeader(
-                        label = stringResource(R.string.message),
-                        value = uiState.body,
-                        headerIconResource = R.drawable.ic_attachment,
-                        onValueChange = {
-                            actionHandler(InboxComposeActionHandler.BodyChanged(it))
-                        },
-                    )
-                }
+                ContentScreen(padding, uiState, actionHandler)
             }
+        )
+}
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ContentScreen(
+    padding: PaddingValues,
+    uiState: InboxComposeUiState,
+    actionHandler: (InboxComposeActionHandler) -> Unit,
+) {
+    if (uiState.showConfirmationDialog) {
+        SimpleAlertDialog(
+            dialogTitle = stringResource(id = R.string.exitWithoutSavingTitle),
+            dialogText = stringResource(id = R.string.exitWithoutSavingMessage),
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.exitUnsaved),
+            onDismissRequest = {
+                actionHandler(InboxComposeActionHandler.CancelDismissDialog(false))
+            },
+            onConfirmation = {
+                actionHandler(InboxComposeActionHandler.Close)
+            }
+        )
+    }
+    Column(
+        Modifier
+            .verticalScroll(rememberScrollState())
+            .imePadding()
+            .imeNestedScroll()
+            .padding(padding)
+    ) {
+        ContextValueRow(
+            label = stringResource(id = R.string.course),
+            value = uiState.contextPickerUiState.selectedContext,
+            onClick = { actionHandler(InboxComposeActionHandler.OpenContextPicker) },
+        )
+
+        CanvasDivider()
+
+        AnimatedVisibility(visible = uiState.contextPickerUiState.selectedContext != null) {
+            Column {
+                LabelMultipleValuesRow(
+                    label = stringResource(R.string.recipients_to),
+                    selectedValues = uiState.recipientPickerUiState.selectedRecipients,
+                    itemComposable = {
+                        RecipientChip(it) {
+                            actionHandler(InboxComposeActionHandler.RemoveRecipient(it))
+                        }
+                    },
+                    addValueClicked = { actionHandler(InboxComposeActionHandler.OpenRecipientPicker) },
+                )
+
+                CanvasDivider()
+            }
+        }
+
+        LabelSwitchRow(
+            label = stringResource(R.string.send_individual_message_to_each_recipient),
+            checked = uiState.sendIndividual,
+            onCheckedChange = {
+                actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
+            },
+        )
+
+        CanvasDivider()
+
+        LabelTextFieldRow(
+            value = uiState.subject,
+            label = stringResource(R.string.subject),
+            onValueChange = {
+                actionHandler(InboxComposeActionHandler.SubjectChanged(it))
+            },
+        )
+
+        CanvasDivider()
+
+        TextFieldWithHeader(
+            label = stringResource(R.string.message),
+            value = uiState.body,
+            headerIconResource = R.drawable.ic_attachment,
+            onValueChange = {
+                actionHandler(InboxComposeActionHandler.BodyChanged(it))
+            },
         )
     }
 }
