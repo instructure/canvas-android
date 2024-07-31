@@ -55,7 +55,7 @@ class DashboardViewModel @Inject constructor(
     private val parentPrefs: ParentPrefs,
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
-    private val alertCountUpdater: AlertCountUpdater
+    private val alertCountUpdater: AlertCountUpdater,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
