@@ -22,9 +22,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class TestSelectStudentHolder(
-    override val selectedStudentFlow: MutableStateFlow<User?>
+    override val selectedStudentState: MutableStateFlow<User?>
 ) : SelectedStudentHolder {
     override suspend fun updateSelectedStudent(user: User) {
-        selectedStudentFlow.emit(user)
+        selectedStudentState.emit(user)
     }
 }

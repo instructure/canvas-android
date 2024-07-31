@@ -39,7 +39,7 @@ class ParentCalendarFragment : BaseCalendarFragment() {
     override fun onStart() {
         super.onStart()
         lifecycleScope.launch {
-            selectedStudentHolder.selectedStudentFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
+            selectedStudentHolder.selectedStudentChangedFlow.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
                 delay(100)
                 refreshCalendar()
             }
