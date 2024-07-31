@@ -242,8 +242,7 @@
     <string name="sortByTime">Sort by Time</string>
     <string name="sortByType">Sort by Type</string>
     <string name="sortByDialogCancel">Cancel</string>
-    <string name="assignmentsListGradingPeriodLabel">Grading Period</string>
-    <string name="assignmentsListAllGradingPeriods">All</string>
+    <string name="assignmentsListDisplayGradingPeriod">Grading Period: All</string>
     <string name="a11y_sortByTimeButton">Sort assignments button, sort by time</string>
     <string name="a11y_sortByTypeButton">Sort assignments button, sort by type</string>
     <string name="a11y_assignmentsSortedByTime">Assignments sorted by time</string>
