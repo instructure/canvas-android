@@ -1,7 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
@@ -30,8 +29,8 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val uiState = viewmodel.uiState.value
 
-        assertEquals(uiState.selectedContext, null)
-        assertEquals(uiState.selectedRecipients, emptyList<Recipient>())
+        assertEquals(uiState.contextPickerUiState.selectedContext, null)
+        assertEquals(uiState.recipientPickerUiState.selectedRecipients, emptyList<Recipient>())
         assertEquals(uiState.screenOption, InboxComposeScreenOptions.None)
         assertEquals(uiState.sendIndividual, false)
         assertEquals(uiState.subject, TextFieldValue(""))
@@ -62,28 +61,27 @@ class InboxComposeViewModelTest {
 
         viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = courseId)))
 
-        assertEquals(recipients[0], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.STUDENTENROLLMENT]?.first())
-        assertEquals(recipients[1], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.TEACHERENROLLMENT]?.first())
-        assertEquals(recipients[2], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.OBSERVERENROLLMENT]?.first())
-        assertEquals(recipients[3], viewModel.recipientPickerUiState.value.recipientsByRole[EnrollmentType.TAENROLLMENT]?.first())
+        assertEquals(recipients[0], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.STUDENTENROLLMENT]?.first())
+        assertEquals(recipients[1], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.TEACHERENROLLMENT]?.first())
+        assertEquals(recipients[2], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.OBSERVERENROLLMENT]?.first())
+        assertEquals(recipients[3], viewModel.uiState.value.recipientPickerUiState.recipientsByRole[EnrollmentType.TAENROLLMENT]?.first())
 
     }
 
     //region Context Picker action handler
     @Test
-    fun `Cancel action handler`() {
+    fun `Close action handler`() {
         val viewmodel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.CancelClicked, activity)
+        viewmodel.uiState.value.onDismiss = mockk(relaxed = true)
+        viewmodel.handleAction(InboxComposeActionHandler.Close)
 
-        coVerify(exactly = 1) { activity.supportFragmentManager.popBackStack() }
+        coVerify(exactly = 1) { viewmodel.uiState.value.onDismiss() }
     }
 
     @Test
     fun `Open Context Picker action handler`() {
         val viewmodel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.OpenContextPicker, activity)
+        viewmodel.handleAction(InboxComposeActionHandler.OpenContextPicker)
 
         assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.ContextPicker)
     }
@@ -96,23 +94,21 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(recipient1))
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(recipient2))
 
-        assertEquals(viewmodel.uiState.value.selectedRecipients.size, 2)
-        assertEquals(viewmodel.uiState.value.selectedRecipients.contains(recipient1), true)
-        assertEquals(viewmodel.uiState.value.selectedRecipients.contains(recipient2), true)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size, 2)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient1), true)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient2), true)
 
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.RemoveRecipient(recipient1), activity)
+        viewmodel.handleAction(InboxComposeActionHandler.RemoveRecipient(recipient1))
 
-        assertEquals(viewmodel.uiState.value.selectedRecipients.size, 1)
-        assertEquals(viewmodel.uiState.value.selectedRecipients.contains(recipient1), false)
-        assertEquals(viewmodel.uiState.value.selectedRecipients.contains(recipient2), true)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size, 1)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient1), false)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient2), true)
     }
 
     @Test
     fun `Open Recipient Picker action handler`() {
         val viewmodel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.OpenRecipientPicker, activity)
+        viewmodel.handleAction(InboxComposeActionHandler.OpenRecipientPicker)
 
         assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.RecipientPicker)
     }
@@ -124,8 +120,7 @@ class InboxComposeViewModelTest {
 
         assertEquals(viewmodel.uiState.value.body, TextFieldValue(""))
 
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(expected), activity)
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(expected))
 
         assertEquals(viewmodel.uiState.value.body, expected)
     }
@@ -137,8 +132,7 @@ class InboxComposeViewModelTest {
 
         assertEquals(viewmodel.uiState.value.subject, TextFieldValue(""))
 
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(expected), activity)
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(expected))
 
         assertEquals(viewmodel.uiState.value.subject, expected)
     }
@@ -150,8 +144,7 @@ class InboxComposeViewModelTest {
 
         assertEquals(viewmodel.uiState.value.sendIndividual, false)
 
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.SendIndividualChanged(expected), activity)
+        viewmodel.handleAction(InboxComposeActionHandler.SendIndividualChanged(expected))
 
         assertEquals(viewmodel.uiState.value.sendIndividual, expected)
     }
@@ -159,12 +152,12 @@ class InboxComposeViewModelTest {
     @Test
     fun `Send Message action handler`() {
         val viewmodel = getViewModel()
+        viewmodel.uiState.value.onDismiss = mockk(relaxed = true)
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(mockk(relaxed = true)))
 
-        val activity: FragmentActivity = mockk(relaxed = true)
-        viewmodel.handleAction(InboxComposeActionHandler.SendClicked, activity)
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
 
-        coVerify(exactly = 1) { activity.supportFragmentManager.popBackStack() }
+        coVerify(exactly = 1) { viewmodel.uiState.value.onDismiss() }
         coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
     }
     //endregion
@@ -193,7 +186,7 @@ class InboxComposeViewModelTest {
         val context = Course()
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(context))
 
-        assertEquals(viewmodel.uiState.value.selectedContext, context)
+        assertEquals(viewmodel.uiState.value.contextPickerUiState.selectedContext, context)
         assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.None)
 
         coVerify(exactly = 1) { inboxComposeRepository.getRecipients(any(), context, any()) }
@@ -207,7 +200,7 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(mockk(relaxed = true)))
         viewmodel.handleAction(RecipientPickerActionHandler.DoneClicked)
 
-        assertEquals(viewmodel.recipientPickerUiState.value.screenOption, RecipientPickerScreenOption.Roles)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.screenOption, RecipientPickerScreenOption.Roles)
         assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.None)
     }
 
@@ -217,7 +210,7 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(mockk(relaxed = true)))
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientBackClicked)
 
-        assertEquals(viewmodel.recipientPickerUiState.value.screenOption, RecipientPickerScreenOption.Roles)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.screenOption, RecipientPickerScreenOption.Roles)
     }
 
     @Test
@@ -226,7 +219,7 @@ class InboxComposeViewModelTest {
         val role: EnrollmentType = mockk(relaxed = true)
         viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(role))
 
-        assertEquals(viewmodel.recipientPickerUiState.value.screenOption, RecipientPickerScreenOption.Recipients)
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.screenOption, RecipientPickerScreenOption.Recipients)
     }
 
     @Test
@@ -235,8 +228,8 @@ class InboxComposeViewModelTest {
         val expected: Recipient = mockk(relaxed = true)
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(expected))
 
-        assertEquals(viewmodel.recipientPickerUiState.value.selectedRecipients, listOf(expected))
-        assertEquals(viewmodel.uiState.value.selectedRecipients, listOf(expected))
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients, listOf(expected))
+        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients, listOf(expected))
     }
     //endregion
 

@@ -9,7 +9,9 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.test.runTest
@@ -41,6 +43,17 @@ class InboxComposeRepositoryTest {
     }
 
     @Test
+    fun `Test courses paging`() = runTest {
+        val expected = listOf(Course(id = 1), Course(id = 2))
+
+        coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Success(expected, LinkHeaders(nextUrl = "next"))
+
+        inboxComposeRepository.getCourses()
+
+        coVerify(exactly = 1) { courseAPI.next("next", any()) }
+    }
+
+    @Test
     fun `Get courses with error`() = runTest {
         val expected = emptyList<Course>()
         coEvery { courseAPI.getFirstPageCourses(any()) } returns DataResult.Fail()
@@ -59,6 +72,17 @@ class InboxComposeRepositoryTest {
         val result = inboxComposeRepository.getGroups()
 
         assertEquals(result, expected)
+    }
+
+    @Test
+    fun `Test groups paging`() = runTest {
+        val expected = listOf(Group(id = 1), Group(id = 2))
+
+        coEvery { groupAPI.getFirstPageGroups(any()) } returns DataResult.Success(expected, LinkHeaders(nextUrl = "next"))
+
+        inboxComposeRepository.getGroups()
+
+        coVerify(exactly = 1) { groupAPI.getNextPageGroups("next", any()) }
     }
 
     @Test
