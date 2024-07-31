@@ -41,7 +41,6 @@ object Versions {
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.7.7"
     const val MEDIA3 = "1.3.1"
-    const val COIL = "2.7.0"
 }
 
 object Libs {
@@ -180,7 +179,7 @@ object Libs {
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.6.4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
     const val COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
-    const val COIL_COMPOSE = "io.coil-kt:coil-compose:${Versions.COIL}"
+    const val COMPOSE_GLIDE = "com.github.bumptech.glide:compose:1.0.0-beta01"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"

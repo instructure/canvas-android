@@ -84,4 +84,8 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     fun clickAlerts() {
         alertsItem.click()
     }
+
+    fun tapManageStudents() {
+        onViewWithText(R.string.screenTitleManageStudents).click()
+    }
 }

@@ -35,6 +35,8 @@ import com.instructure.teacher.adapters.QuizListAdapter
 import com.instructure.teacher.databinding.FragmentQuizListBinding
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.factory.QuizListPresenterFactory
+import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.presenters.QuizListPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
@@ -117,7 +119,13 @@ class QuizListFragment : BaseExpandableSyncFragment<
     override fun createAdapter(): QuizListAdapter {
         return QuizListAdapter(requireContext(), presenter, canvasContext.textAndIconColor) { quiz ->
             if (RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl, ApiPrefs.domain, false)) {
-                RouteMatcher.routeUrl(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain)
+                val route = RouteMatcher.getInternalRoute(quiz.htmlUrl!!, ApiPrefs.domain)
+                val secondaryClass = when (route?.primaryClass) {
+                    QuizListFragment::class.java -> QuizDetailsFragment::class.java
+                    AssignmentListFragment::class.java -> AssignmentDetailsFragment::class.java
+                    else -> null
+                }
+                RouteMatcher.route(requireActivity(), route?.copy(secondaryClass = secondaryClass))
             } else {
                 val args = QuizDetailsFragment.makeBundle(quiz)
                 RouteMatcher.route(requireActivity(), Route(null, QuizDetailsFragment::class.java, canvasContext, args))

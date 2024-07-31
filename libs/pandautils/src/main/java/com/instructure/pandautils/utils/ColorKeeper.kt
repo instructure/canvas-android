@@ -84,18 +84,18 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
        }
     }
 
-    private fun generateUserColor(user: User): ThemedColor {
-        val colors = listOf(
-            R.color.electric,
-            R.color.jeffGoldplum,
-            R.color.barney,
-            R.color.raspberry,
-            R.color.fire,
-            R.color.shamrock
-        )
+    val userColors = listOf(
+        R.color.studentBlue,
+        R.color.studentPurple,
+        R.color.studentPink,
+        R.color.studentRed,
+        R.color.studentOrange,
+        R.color.studentGreen
+    )
 
-        val index = user.id.absoluteValue % colors.size
-        val color = ContextCompat.getColor(ContextKeeper.appContext, colors[index.toInt()])
+    private fun generateUserColor(user: User): ThemedColor {
+        val index = user.id.absoluteValue % userColors.size
+        val color = ContextCompat.getColor(ContextKeeper.appContext, userColors[index.toInt()])
         val themedColor = createThemedColor(color)
         cachedThemedColors += user.contextId to themedColor
         return themedColor
@@ -250,7 +250,7 @@ object ColorApiHelper {
     suspend fun awaitSync(): Boolean = suspendCancellableCoroutine { cr -> performSync { cr.resumeSafely(it) } }
 }
 
-private fun createThemedColor(@ColorInt color: Int): ThemedColor {
+fun createThemedColor(@ColorInt color: Int): ThemedColor {
     val light = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.white))
     val darkBackgroundColor = ColorUtils.correctContrastForButtonBackground(color, ContextKeeper.appContext.getColor(R.color.backgroundDarkMode), ContextKeeper.appContext.getColor(R.color.white))
     val darkTextAndIconColor = ColorUtils.correctContrastForText(color, ContextKeeper.appContext.getColor(R.color.elevatedDarkColor))
