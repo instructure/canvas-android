@@ -30,13 +30,13 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val uiState = viewmodel.uiState.value
 
-        assertEquals(uiState.contextPickerUiState.selectedContext, null)
-        assertEquals(uiState.recipientPickerUiState.selectedRecipients, emptyList<Recipient>())
-        assertEquals(uiState.screenOption, InboxComposeScreenOptions.None)
-        assertEquals(uiState.sendIndividual, false)
-        assertEquals(uiState.subject, TextFieldValue(""))
-        assertEquals(uiState.body, TextFieldValue(""))
-        assertEquals(uiState.screenState, ScreenState.Data)
+        assertEquals(null, uiState.contextPickerUiState.selectedContext)
+        assertEquals(emptyList<Recipient>(), uiState.recipientPickerUiState.selectedRecipients)
+        assertEquals(InboxComposeScreenOptions.None, uiState.screenOption)
+        assertEquals(false, uiState.sendIndividual)
+        assertEquals(TextFieldValue(""), uiState.subject)
+        assertEquals(TextFieldValue(""), uiState.body)
+        assertEquals(ScreenState.Data, uiState.screenState)
     }
 
     @Test
@@ -69,7 +69,7 @@ class InboxComposeViewModelTest {
 
     }
 
-    //region Context Picker action handler
+    //region Inbox Compose action handler
     @Test
     fun `Close action handler`() {
         val viewmodel = getViewModel()
@@ -80,11 +80,21 @@ class InboxComposeViewModelTest {
     }
 
     @Test
+    fun `Cancel action handler`() {
+        val viewModel = getViewModel()
+        assertEquals(false, viewModel.uiState.value.showConfirmationDialog)
+        viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(true))
+        assertEquals(true, viewModel.uiState.value.showConfirmationDialog)
+        viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(false))
+        assertEquals(false, viewModel.uiState.value.showConfirmationDialog)
+    }
+
+    @Test
     fun `Open Context Picker action handler`() {
         val viewmodel = getViewModel()
         viewmodel.handleAction(InboxComposeActionHandler.OpenContextPicker)
 
-        assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.ContextPicker)
+        assertEquals(InboxComposeScreenOptions.ContextPicker, viewmodel.uiState.value.screenOption)
     }
 
     @Test
@@ -95,15 +105,15 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(recipient1))
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(recipient2))
 
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size, 2)
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient1), true)
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient2), true)
+        assertEquals(2, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size)
+        assertEquals(true, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient1))
+        assertEquals(true, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient2))
 
         viewmodel.handleAction(InboxComposeActionHandler.RemoveRecipient(recipient1))
 
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size, 1)
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient1), false)
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient2), true)
+        assertEquals(1, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.size)
+        assertEquals(false, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient1))
+        assertEquals(true, viewmodel.uiState.value.recipientPickerUiState.selectedRecipients.contains(recipient2))
     }
 
     @Test
@@ -111,7 +121,7 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         viewmodel.handleAction(InboxComposeActionHandler.OpenRecipientPicker)
 
-        assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.RecipientPicker)
+        assertEquals(InboxComposeScreenOptions.RecipientPicker, viewmodel.uiState.value.screenOption)
     }
 
     @Test
@@ -119,11 +129,11 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val expected = TextFieldValue("expected")
 
-        assertEquals(viewmodel.uiState.value.body, TextFieldValue(""))
+        assertEquals(TextFieldValue(""), viewmodel.uiState.value.body)
 
         viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(expected))
 
-        assertEquals(viewmodel.uiState.value.body, expected)
+        assertEquals(expected, viewmodel.uiState.value.body)
     }
 
     @Test
@@ -131,11 +141,11 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val expected = TextFieldValue("expected")
 
-        assertEquals(viewmodel.uiState.value.subject, TextFieldValue(""))
+        assertEquals(TextFieldValue(""), viewmodel.uiState.value.subject)
 
         viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(expected))
 
-        assertEquals(viewmodel.uiState.value.subject, expected)
+        assertEquals(expected, viewmodel.uiState.value.subject)
     }
 
     @Test
@@ -143,11 +153,11 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val expected = true
 
-        assertEquals(viewmodel.uiState.value.sendIndividual, false)
+        assertEquals(false ,viewmodel.uiState.value.sendIndividual)
 
         viewmodel.handleAction(InboxComposeActionHandler.SendIndividualChanged(expected))
 
-        assertEquals(viewmodel.uiState.value.sendIndividual, expected)
+        assertEquals(expected, viewmodel.uiState.value.sendIndividual)
     }
 
     @Test
@@ -169,7 +179,7 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         viewmodel.handleAction(ContextPickerActionHandler.DoneClicked)
 
-        assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.None)
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
     }
 
     @Test
@@ -187,8 +197,8 @@ class InboxComposeViewModelTest {
         val context = Course()
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(context))
 
-        assertEquals(viewmodel.uiState.value.contextPickerUiState.selectedContext, context)
-        assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.None)
+        assertEquals(context, viewmodel.uiState.value.contextPickerUiState.selectedContext)
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
 
         coVerify(exactly = 1) { inboxComposeRepository.getRecipients(any(), context, any()) }
     }
@@ -201,8 +211,8 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(mockk(relaxed = true)))
         viewmodel.handleAction(RecipientPickerActionHandler.DoneClicked)
 
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.screenOption, RecipientPickerScreenOption.Roles)
-        assertEquals(viewmodel.uiState.value.screenOption, InboxComposeScreenOptions.None)
+        assertEquals(RecipientPickerScreenOption.Roles, viewmodel.uiState.value.recipientPickerUiState.screenOption)
+        assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
     }
 
     @Test
@@ -211,7 +221,7 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(mockk(relaxed = true)))
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientBackClicked)
 
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.screenOption, RecipientPickerScreenOption.Roles)
+        assertEquals(RecipientPickerScreenOption.Roles, viewmodel.uiState.value.recipientPickerUiState.screenOption)
     }
 
     @Test
@@ -220,7 +230,7 @@ class InboxComposeViewModelTest {
         val role: EnrollmentType = mockk(relaxed = true)
         viewmodel.handleAction(RecipientPickerActionHandler.RoleClicked(role))
 
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.screenOption, RecipientPickerScreenOption.Recipients)
+        assertEquals(RecipientPickerScreenOption.Recipients, viewmodel.uiState.value.recipientPickerUiState.screenOption)
     }
 
     @Test
@@ -229,8 +239,45 @@ class InboxComposeViewModelTest {
         val expected: Recipient = mockk(relaxed = true)
         viewmodel.handleAction(RecipientPickerActionHandler.RecipientClicked(expected))
 
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients, listOf(expected))
-        assertEquals(viewmodel.uiState.value.recipientPickerUiState.selectedRecipients, listOf(expected))
+        assertEquals(listOf(expected), viewmodel.uiState.value.recipientPickerUiState.selectedRecipients)
+        assertEquals(listOf(expected), viewmodel.uiState.value.recipientPickerUiState.selectedRecipients)
+    }
+
+    @Test
+    fun `Refresh action handler`() {
+        val course = Course()
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(course))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        val viewmodel = getViewModel()
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(course))
+        viewmodel.handleAction(RecipientPickerActionHandler.RefreshCalled)
+
+        coVerify(exactly = 1) { inboxComposeRepository.getRecipients("", course, true) }
+    }
+
+    @Test
+    fun `Search value changed action handler`() {
+        val searchValue = TextFieldValue("searchValue")
+        val courseId: Long = 1
+        val course = Course(id = courseId)
+        val recipients = listOf(
+            Recipient(stringId = "1", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue())))
+        )
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(course))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.getRecipients("", any(), any()) } returns DataResult.Success(recipients)
+        val viewmodel = getViewModel()
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(course))
+        assertEquals(recipients, viewmodel.uiState.value.recipientPickerUiState.recipientsToShow)
+
+        coEvery { inboxComposeRepository.getRecipients(searchValue.text, any(), any()) } returns DataResult.Success(listOf(recipients.first()))
+        viewmodel.handleAction(RecipientPickerActionHandler.SearchValueChanged(searchValue))
+        assertEquals(listOf(recipients.first()), viewmodel.uiState.value.recipientPickerUiState.recipientsToShow)
     }
     //endregion
 

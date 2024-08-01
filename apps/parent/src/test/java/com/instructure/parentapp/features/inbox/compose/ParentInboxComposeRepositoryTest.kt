@@ -10,6 +10,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
@@ -94,13 +95,36 @@ class ParentInboxComposeRepositoryTest {
 
     @Test
     fun `Get recipients successfully`() = runTest {
-        val expected = listOf(Recipient(stringId = "1"), Recipient(stringId = "2"))
+        val course = Course(id = 1)
+        val expected = listOf(
+            Recipient(stringId = "1", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())))
+        )
 
         coEvery { recipientAPI.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(expected)
 
-        val result = inboxComposeRepository.getRecipients("", Course(), true).dataOrThrow
+        val result = inboxComposeRepository.getRecipients("", course, true).dataOrThrow
 
-        assertEquals(result, expected)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Test recipients filtering`() = runTest {
+        val course = Course(id = 1)
+        val recipients = listOf(
+            Recipient(stringId = "1", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
+            Recipient(stringId = "2", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue()))),
+            Recipient(stringId = "3", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
+            Recipient(stringId = "4", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
+            Recipient(stringId = "5", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.DESIGNERENROLLMENT.rawValue()))),
+        )
+        val expected = recipients.subList(0, 2)
+
+        coEvery { recipientAPI.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(recipients)
+
+        val result = inboxComposeRepository.getRecipients("", course, true).dataOrThrow
+
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -118,7 +142,7 @@ class ParentInboxComposeRepositoryTest {
 
         val result = inboxComposeRepository.createConversation(emptyList(), "", "", Course(), emptyList(), false).dataOrThrow
 
-        assertEquals(result, expected)
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
