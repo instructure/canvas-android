@@ -19,7 +19,6 @@ import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
 import com.instructure.pandautils.features.inbox.compose.contextpicker.ContextPickerScreen
 import com.instructure.pandautils.features.inbox.compose.recipientpicker.RecipientPickerScreen
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,6 +32,8 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        applyTheme()
+
         val animationLabel = "ScreenSlideTransition"
         return ComposeView(requireActivity()).apply {
             setContent {
@@ -94,7 +95,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
     override fun title(): String = getString(R.string.newMessage)
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+        ViewStyler.setStatusBarLight(requireActivity())
     }
 
     override fun getFragment(): Fragment {

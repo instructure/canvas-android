@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.compose.contextpicker
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -53,6 +54,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
@@ -73,111 +75,122 @@ fun ContextPickerScreen(
         actionHandler(ContextPickerActionHandler.RefreshCalled)
     })
 
-    Scaffold(
-        topBar = {
-            CanvasAppBar(
-                title = if (uiState.groups.isEmpty()) stringResource(R.string.selectCourse) else stringResource(R.string.selectCourseOrGroup),
-                navIconRes = R.drawable.ic_back_arrow,
-                navIconContentDescription = stringResource(id = R.string.a11y_closeCoursePicker),
-                navigationActionClick = { actionHandler(ContextPickerActionHandler.DoneClicked) },
-            )
-        },
-        content = { padding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .pullRefresh(pullToRefreshState)
-            ) {
-                when (uiState.screenState) {
-                    is ScreenState.Loading -> {
-                        LazyColumn(
-                            Modifier.fillMaxSize()
-                        ) {
-                            item {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(padding)
-                                ) {
-                                    Loading()
-                                }
-                            }
-                        }
-                    }
-                    is ScreenState.Error -> {
-                        LazyColumn(
-                            Modifier.fillMaxSize()
-                        ) {
-                            item {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(padding)
-                                ) {
-                                    ErrorContent(errorMessage = stringResource(R.string.failedToLoadCoursesAndGroups))
-                                }
-                            }
-                        }
-                    }
-                    is ScreenState.Empty -> {
-                        LazyColumn(
-                            Modifier.fillMaxSize()
-                        ) {
-                            item {
-                                Box(
-                                    contentAlignment = Alignment.Center,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(padding)
-                                ) {
-                                    EmptyContent(
-                                        emptyMessage = stringResource(id = R.string.noCourses),
-                                        imageRes = R.drawable.ic_panda_nocourses
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    is ScreenState.Data -> {
-                        LazyColumn(
-                            Modifier.fillMaxSize()
-                        ) {
-                            if (uiState.courses.isNotEmpty()) {
-                                item {
-                                    SectionHeaderView(stringResource(R.string.courses))
-                                }
+    BackHandler {
+        actionHandler(ContextPickerActionHandler.DoneClicked)
+    }
 
-                                items(uiState.courses) {
-                                    DataRow(it, actionHandler, uiState.selectedContext == it)
-                                }
-                            }
-
-                            if (uiState.groups.isNotEmpty()) {
-                                item {
-                                    SectionHeaderView(stringResource(R.string.groups))
-                                }
-
-                                items(uiState.groups) {
-                                    DataRow(it, actionHandler, uiState.selectedContext == it)
-                                }
-                            }
-                        }
-                    }
-                }
-
-                PullRefreshIndicator(
-                    refreshing = uiState.screenState == ScreenState.Loading,
-                    state = pullToRefreshState,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .testTag("pullRefreshIndicator"),
+    CanvasTheme {
+        Scaffold(
+            topBar = {
+                CanvasAppBar(
+                    title = if (uiState.groups.isEmpty()) stringResource(R.string.selectCourse) else stringResource(
+                        R.string.selectCourseOrGroup
+                    ),
+                    navIconRes = R.drawable.ic_back_arrow,
+                    navIconContentDescription = stringResource(id = R.string.a11y_closeCoursePicker),
+                    navigationActionClick = { actionHandler(ContextPickerActionHandler.DoneClicked) },
                 )
+            },
+            content = { padding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .pullRefresh(pullToRefreshState)
+                ) {
+                    when (uiState.screenState) {
+                        is ScreenState.Loading -> {
+                            LazyColumn(
+                                Modifier.fillMaxSize()
+                            ) {
+                                item {
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(padding)
+                                    ) {
+                                        Loading()
+                                    }
+                                }
+                            }
+                        }
+
+                        is ScreenState.Error -> {
+                            LazyColumn(
+                                Modifier.fillMaxSize()
+                            ) {
+                                item {
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(padding)
+                                    ) {
+                                        ErrorContent(errorMessage = stringResource(R.string.failedToLoadCoursesAndGroups))
+                                    }
+                                }
+                            }
+                        }
+
+                        is ScreenState.Empty -> {
+                            LazyColumn(
+                                Modifier.fillMaxSize()
+                            ) {
+                                item {
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(padding)
+                                    ) {
+                                        EmptyContent(
+                                            emptyMessage = stringResource(id = R.string.noCourses),
+                                            imageRes = R.drawable.ic_panda_nocourses
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        is ScreenState.Data -> {
+                            LazyColumn(
+                                Modifier.fillMaxSize()
+                            ) {
+                                if (uiState.courses.isNotEmpty()) {
+                                    item {
+                                        SectionHeaderView(stringResource(R.string.courses))
+                                    }
+
+                                    items(uiState.courses) {
+                                        DataRow(it, actionHandler, uiState.selectedContext == it)
+                                    }
+                                }
+
+                                if (uiState.groups.isNotEmpty()) {
+                                    item {
+                                        SectionHeaderView(stringResource(R.string.groups))
+                                    }
+
+                                    items(uiState.groups) {
+                                        DataRow(it, actionHandler, uiState.selectedContext == it)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    PullRefreshIndicator(
+                        refreshing = uiState.screenState == ScreenState.Loading,
+                        state = pullToRefreshState,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .testTag("pullRefreshIndicator"),
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 

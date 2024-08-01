@@ -18,6 +18,7 @@
 
 package com.instructure.pandautils.features.inbox.compose.recipientpicker
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -57,6 +58,7 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
 import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.compose.composables.CanvasAppBar
@@ -97,47 +99,71 @@ fun RecipientPickerScreen(
             actionHandler(RecipientPickerActionHandler.RefreshCalled)
         })
 
-        Scaffold (
-            topBar = { TopBar(title, uiState, actionHandler) },
-            content = { padding ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .pullRefresh(pullToRefreshState)
-                ){
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                    ) {
-                        if (uiState.screenState != ScreenState.Loading && uiState.screenState != ScreenState.Error) {
-                            SearchField(value = uiState.searchValue, actionHandler = actionHandler)
-                        }
+        BackHandler {
+            when (uiState.screenOption) {
+                is RecipientPickerScreenOption.Recipients -> {
+                    actionHandler(RecipientPickerActionHandler.RecipientBackClicked)
+                }
 
-                        when (uiState.screenState) {
-                            is ScreenState.Data -> {
-                                when (screenOption) {
-                                    is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(uiState, actionHandler)
-
-                                    is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(uiState, actionHandler)
-                                }
-                            }
-                            else -> {
-                                StateScreen(uiState)
-                            }
-                        }
-                    }
-
-                    PullRefreshIndicator(
-                        refreshing = uiState.screenState == ScreenState.Loading,
-                        state = pullToRefreshState,
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .testTag("pullRefreshIndicator"),
-                    )
+                is RecipientPickerScreenOption.Roles -> {
+                    actionHandler(RecipientPickerActionHandler.DoneClicked)
                 }
             }
-        )
+        }
+
+        CanvasTheme {
+            Scaffold(
+                topBar = { TopBar(title, uiState, actionHandler) },
+                content = { padding ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .pullRefresh(pullToRefreshState)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding)
+                        ) {
+                            if (uiState.screenState != ScreenState.Loading && uiState.screenState != ScreenState.Error) {
+                                SearchField(
+                                    value = uiState.searchValue,
+                                    actionHandler = actionHandler
+                                )
+                            }
+
+                            when (uiState.screenState) {
+                                is ScreenState.Data -> {
+                                    when (screenOption) {
+                                        is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
+                                            uiState,
+                                            actionHandler
+                                        )
+
+                                        is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(
+                                            uiState,
+                                            actionHandler
+                                        )
+                                    }
+                                }
+
+                                else -> {
+                                    StateScreen(uiState)
+                                }
+                            }
+                        }
+
+                        PullRefreshIndicator(
+                            refreshing = uiState.screenState == ScreenState.Loading,
+                            state = pullToRefreshState,
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .testTag("pullRefreshIndicator"),
+                        )
+                    }
+                }
+            )
+        }
     }
 }
 

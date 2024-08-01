@@ -17,11 +17,13 @@
 package com.instructure.pandautils.features.inbox.compose.composables
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.imeNestedScroll
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -30,13 +32,16 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -54,13 +59,15 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 import com.instructure.pandautils.features.inbox.compose.ScreenState
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InboxComposeScreen(
     title: String,
     uiState: InboxComposeUiState,
     actionHandler: (InboxComposeActionHandler) -> Unit,
 ) {
+    val subjectFocusRequester = remember { FocusRequester() }
+    val bodyFocusRequester = remember { FocusRequester() }
+
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
@@ -76,23 +83,41 @@ fun InboxComposeScreen(
                             Icon(
                                 painterResource(id = R.drawable.ic_send),
                                 contentDescription = stringResource(R.string.a11y_sendMessage),
-                                tint = colorResource(id = R.color.textDarkest).copy(alpha = LocalContentAlpha.current)
+                                tint =
+                                if (uiState.isSendButtonEnabled)
+                                    colorResource(id = R.color.textDarkest)
+                                else
+                                    colorResource(id = R.color.textDarkest).copy(alpha = LocalContentAlpha.current),
                             )
                         }
                     },
                 )
             },
             content = { padding ->
-                ContentScreen(padding, uiState, actionHandler)
+                Column(
+                   modifier = Modifier.fillMaxSize()
+                ) {
+                    ContentScreen(padding, subjectFocusRequester, bodyFocusRequester, uiState, actionHandler)
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            bodyFocusRequester.requestFocus()
+                        }
+                    )
+                }
             }
         )
-}
+    }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ContentScreen(
     padding: PaddingValues,
+    subjectFocusRequester: FocusRequester,
+    bodyFocusRequester: FocusRequester,
     uiState: InboxComposeUiState,
     actionHandler: (InboxComposeActionHandler) -> Unit,
 ) {
@@ -113,9 +138,8 @@ private fun ContentScreen(
     Column(
         Modifier
             .verticalScroll(rememberScrollState())
-            .imePadding()
-            .imeNestedScroll()
             .padding(padding)
+            .fillMaxSize()
     ) {
         ContextValueRow(
             label = stringResource(id = R.string.course),
@@ -158,6 +182,7 @@ private fun ContentScreen(
             onValueChange = {
                 actionHandler(InboxComposeActionHandler.SubjectChanged(it))
             },
+            focusRequester = subjectFocusRequester,
         )
 
         CanvasDivider()
@@ -169,6 +194,9 @@ private fun ContentScreen(
             onValueChange = {
                 actionHandler(InboxComposeActionHandler.BodyChanged(it))
             },
+            focusRequester = bodyFocusRequester,
+            modifier = Modifier
+                .defaultMinSize(minHeight = 100.dp)
         )
     }
 }

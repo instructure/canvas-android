@@ -77,6 +77,11 @@ class InboxComposeViewModel @Inject constructor(
             is ContextPickerActionHandler.ContextClicked -> {
                 _uiState.update { it.copy(
                     contextPickerUiState = it.contextPickerUiState.copy(selectedContext = action.context),
+                    recipientPickerUiState = it.recipientPickerUiState.copy(
+                        screenOption = RecipientPickerScreenOption.Roles,
+                        selectedRole = null,
+                        selectedRecipients = emptyList()
+                    ),
                     screenOption = InboxComposeScreenOptions.None
                 ) }
 
