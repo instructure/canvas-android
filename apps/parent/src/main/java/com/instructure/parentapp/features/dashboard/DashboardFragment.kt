@@ -17,11 +17,9 @@
 
 package com.instructure.parentapp.features.dashboard
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +27,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.BundleCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,7 +34,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import androidx.navigation.fragment.NavHostFragment
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -52,6 +48,7 @@ import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toPx
@@ -162,22 +159,6 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         setupBottomNavigationView()
     }
 
-    private fun handleDeeplink() {
-        try {
-            val uri = BundleCompat.getParcelable(
-                arguments ?: return,
-                KEY_DEEP_LINK_INTENT,
-                Intent::class.java
-            )?.data
-
-            uri?.let {
-                navController.navigate(it)
-            }
-        } catch (e: Exception) {
-            Log.e(this.javaClass.simpleName, e.message.orEmpty())
-        }
-    }
-
     private fun setupToolbar() {
         binding.navigationButtonHolder.contentDescription = getString(R.string.navigation_drawer_open)
         binding.navigationButtonHolder.onClick {
@@ -233,9 +214,15 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.courses -> navigateWithPopBackStack(navigation.courses)
+                R.id.courses -> {
+                    binding.todayButtonHolder.setGone()
+                    navigateWithPopBackStack(navigation.courses)
+                }
                 R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
-                R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
+                R.id.alerts -> {
+                    binding.todayButtonHolder.setGone()
+                    navigateWithPopBackStack(navigation.alerts)
+                }
                 else -> false
             }
         }

@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -64,7 +63,6 @@ class CalendarViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val calendarPrefs: CalendarPrefs = mockk(relaxed = true)
     private val calendarStateMapper: CalendarStateMapper = mockk(relaxed = true)
-    private val calendarFilterDao: CalendarFilterDao = mockk(relaxed = true)
     private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarViewModel
@@ -127,7 +125,7 @@ class CalendarViewModelTest {
         )
 
         coEvery { calendarRepository.getCalendarFilterLimit() } returns -1
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             1,
             "",
             "1",
@@ -912,7 +910,7 @@ class CalendarViewModelTest {
             createPlannerItem(null, 7, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12), userId = 6),
         )
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             1,
             "",
             "1",
@@ -954,7 +952,7 @@ class CalendarViewModelTest {
                 createPlannerItem(null, 7, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12), userId = 6),
             )
             every { apiPrefs.user } returns User(5)
-            coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns null
+            coEvery { calendarRepository.getCalendarFilters() } returns null
             coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
             coEvery { calendarRepository.getCanvasContexts() } returns DataResult.Success(
                 mapOf(
@@ -998,7 +996,7 @@ class CalendarViewModelTest {
             createPlannerItem(null, 7, PlannableType.PLANNER_NOTE, createDate(2023, 4, 20, 12), userId = 6),
         )
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             1,
             "",
             "1",
@@ -1022,7 +1020,7 @@ class CalendarViewModelTest {
         assertEquals(expectedState, viewModel.uiState.value)
 
         // Change filters
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             1,
             "",
             "1",
@@ -1054,7 +1052,7 @@ class CalendarViewModelTest {
         coEvery { calendarRepository.getCalendarFilterLimit() } returns 10
         coEvery { calendarRepository.getPlannerItems(any(), any(), listOf("course_1"), any()) } returns events.subList(0, 1)
         coEvery { calendarRepository.getPlannerItems(any(), any(), listOf("course_2"), any()) } returns events.subList(1, 2)
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             1,
             "",
             "1",
@@ -1079,7 +1077,7 @@ class CalendarViewModelTest {
         assertEquals(expectedState, viewModel.uiState.value)
 
         // Change filters
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             1,
             "",
             "1",

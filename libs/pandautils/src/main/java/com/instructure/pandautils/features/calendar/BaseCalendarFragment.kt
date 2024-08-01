@@ -28,8 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
@@ -72,7 +70,7 @@ open class BaseCalendarFragment : Fragment(), NavigationCallbacks, FragmentInter
         applyTheme()
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(
-            sharedViewModel.events.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED),
+            sharedViewModel.events,
             ::handleSharedViewModelAction
         )
 
