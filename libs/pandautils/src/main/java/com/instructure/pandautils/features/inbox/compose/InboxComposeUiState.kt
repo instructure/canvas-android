@@ -13,7 +13,7 @@ data class InboxComposeUiState(
     var sendIndividual: Boolean = false,
     var subject: TextFieldValue = TextFieldValue(""),
     var body: TextFieldValue = TextFieldValue(""),
-    var isSending: Boolean = false,
+    var screenState: ScreenState = ScreenState.Data,
     var showConfirmationDialog: Boolean = false,
     var onDismiss: () -> Unit = {},
 ) {
@@ -44,7 +44,7 @@ data class ContextPickerUiState(
     var courses: List<CanvasContext> = emptyList(),
     var groups: List<CanvasContext> = emptyList(),
     var selectedContext: CanvasContext? = null,
-    var isLoading: Boolean = false,
+    var screenState: ScreenState = ScreenState.Data,
 )
 
 sealed class ContextPickerActionHandler {
@@ -60,7 +60,7 @@ data class RecipientPickerUiState(
     var selectedRecipients: List<Recipient> = emptyList(),
     var searchValue: TextFieldValue = TextFieldValue(""),
     var screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
-    var isLoading: Boolean = false,
+    var screenState: ScreenState = ScreenState.Data,
 )
 
 sealed class RecipientPickerActionHandler {
@@ -74,4 +74,11 @@ sealed class RecipientPickerActionHandler {
 sealed class RecipientPickerScreenOption {
     data object Roles : RecipientPickerScreenOption()
     data object Recipients : RecipientPickerScreenOption()
+}
+
+sealed class ScreenState {
+    data object Loading: ScreenState()
+    data object Data: ScreenState()
+    data object Empty: ScreenState()
+    data object Error: ScreenState()
 }

@@ -52,6 +52,7 @@ import com.instructure.pandautils.features.inbox.compose.ContextPickerUiState
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
+import com.instructure.pandautils.features.inbox.compose.ScreenState
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -74,7 +75,7 @@ fun InboxComposeScreen(
                         ) {
                             Icon(
                                 painterResource(id = R.drawable.ic_send),
-                                contentDescription = stringResource(R.string.a11y_send_message),
+                                contentDescription = stringResource(R.string.a11y_sendMessage),
                                 tint = colorResource(id = R.color.textDarkest).copy(alpha = LocalContentAlpha.current)
                             )
                         }
@@ -127,7 +128,7 @@ private fun ContentScreen(
         AnimatedVisibility(visible = uiState.contextPickerUiState.selectedContext != null) {
             Column {
                 LabelMultipleValuesRow(
-                    label = stringResource(R.string.recipients_to),
+                    label = stringResource(R.string.recipientsTo),
                     selectedValues = uiState.recipientPickerUiState.selectedRecipients,
                     itemComposable = {
                         RecipientChip(it) {
@@ -142,7 +143,7 @@ private fun ContentScreen(
         }
 
         LabelSwitchRow(
-            label = stringResource(R.string.send_individual_message_to_each_recipient),
+            label = stringResource(R.string.sendIndividualMessageToEachRecipient),
             checked = uiState.sendIndividual,
             onCheckedChange = {
                 actionHandler(InboxComposeActionHandler.SendIndividualChanged(it))
@@ -186,7 +187,7 @@ fun InboxComposeScreenPreview() {
         sendIndividual = true,
         subject = TextFieldValue("Test Subject"),
         body = TextFieldValue("Test Body"),
-        isSending = false,
+        screenState = ScreenState.Data,
         showConfirmationDialog = false,
     )
     InboxComposeScreen(
@@ -209,7 +210,7 @@ fun InboxComposeScreenConfirmDialogPreview() {
         sendIndividual = true,
         subject = TextFieldValue("Test Subject"),
         body = TextFieldValue("Test Body"),
-        isSending = false,
+        screenState = ScreenState.Data,
         showConfirmationDialog = true,
     )
     InboxComposeScreen(

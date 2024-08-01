@@ -79,7 +79,7 @@ fun ContextValueRow(
 
         Icon(
             painter = painterResource(id = R.drawable.ic_chevron_right),
-            contentDescription = stringResource(R.string.a11y_open_course_picker),
+            contentDescription = stringResource(R.string.a11y_openCoursePicker),
             tint = colorResource(id = R.color.textDark),
             modifier = Modifier
                 .size(16.dp)

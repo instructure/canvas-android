@@ -55,11 +55,14 @@ import com.instructure.pandautils.compose.animations.ScreenSlideTransition
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasThemedTextField
+import com.instructure.pandautils.compose.composables.EmptyContent
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
+import com.instructure.pandautils.features.inbox.compose.ScreenState
 import java.util.EnumMap
 
 @Composable
@@ -83,21 +86,24 @@ fun RecipientPickerScreen(
             }
         }
     ){ screenOption ->
-        if (uiState.isLoading) {
-            LoadingScreen(title, actionHandler)
-        } else {
-            when (screenOption) {
-                is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
-                    title,
-                    uiState,
-                    actionHandler
-                )
+        when (uiState.screenState) {
+            is ScreenState.Data -> {
+                when (screenOption) {
+                    is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
+                        title,
+                        uiState,
+                        actionHandler
+                    )
 
-                is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(
-                    title,
-                    uiState,
-                    actionHandler
-                )
+                    is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(
+                        title,
+                        uiState,
+                        actionHandler
+                    )
+                }
+            }
+            else -> {
+                StateScreen(title = title, screenState = uiState.screenState, actionHandler = actionHandler)
             }
         }
     }
@@ -171,7 +177,7 @@ private fun RecipientPickerPeopleScreen(
                 title = title,
                 navigationActionClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) },
                 navIconRes = R.drawable.ic_back_arrow,
-                navIconContentDescription = stringResource(R.string.a11y_close_recipient_picker),
+                navIconContentDescription = stringResource(R.string.a11y_closeRecipientPicker),
                 actions = {
                     IconButton(
                         onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
@@ -208,8 +214,9 @@ private fun RecipientPickerPeopleScreen(
 }
 
 @Composable
-fun LoadingScreen(
+fun StateScreen(
     title: String,
+    screenState: ScreenState,
     actionHandler: (RecipientPickerActionHandler) -> Unit,
 ) {
     Scaffold (
@@ -232,13 +239,41 @@ fun LoadingScreen(
             )
         },
         content = { padding ->
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-            ) {
-                Loading()
+            when (screenState) {
+                is ScreenState.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                    ) {
+                        Loading()
+                    }
+                }
+                is ScreenState.Error -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                    ) {
+                        ErrorContent(errorMessage = stringResource(id = R.string.failedToLoadRecipients))
+                    }
+                }
+                is ScreenState.Empty -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                    ) {
+                        EmptyContent(
+                            emptyMessage = stringResource(id = R.string.noRecipients),
+                            imageRes = R.drawable.ic_panda_nothing_to_see
+                        )
+                    }
+                }
+                else -> { }
             }
         }
     )
@@ -382,7 +417,7 @@ fun RecipientPickerRolesScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Roles,
-            isLoading = false,
+            screenState = ScreenState.Data,
             searchValue = TextFieldValue(""),
             selectedRecipients = emptyList(),
             recipientsByRole = roleRecipients,
@@ -413,7 +448,7 @@ fun RecipientPickerRecipientsScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Recipients,
-            isLoading = false,
+            screenState = ScreenState.Data,
             searchValue = TextFieldValue(""),
             selectedRole = EnrollmentType.TEACHERENROLLMENT,
             selectedRecipients = listOf(roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first()),
@@ -445,7 +480,7 @@ fun RecipientPickerSearchScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Roles,
-            isLoading = false,
+            screenState = ScreenState.Data,
             searchValue = TextFieldValue("John"),
             selectedRecipients = listOf(roleRecipients[EnrollmentType.TEACHERENROLLMENT]!!.first()),
             recipientsByRole = roleRecipients,
@@ -467,7 +502,45 @@ fun RecipientPickerLoadingScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Roles,
-            isLoading = true,
+            screenState = ScreenState.Loading,
+            searchValue = TextFieldValue(""),
+            selectedRecipients = emptyList(),
+            recipientsByRole = EnumMap(EnrollmentType::class.java),
+            recipientsToShow = emptyList()
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun RecipientPickerErrorScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    RecipientPickerScreen(
+        title = "Select Recipients",
+        uiState = RecipientPickerUiState(
+            screenOption = RecipientPickerScreenOption.Roles,
+            screenState = ScreenState.Error,
+            searchValue = TextFieldValue(""),
+            selectedRecipients = emptyList(),
+            recipientsByRole = EnumMap(EnrollmentType::class.java),
+            recipientsToShow = emptyList()
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun RecipientPickerEmptyScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    RecipientPickerScreen(
+        title = "Select Recipients",
+        uiState = RecipientPickerUiState(
+            screenOption = RecipientPickerScreenOption.Roles,
+            screenState = ScreenState.Empty,
             searchValue = TextFieldValue(""),
             selectedRecipients = emptyList(),
             recipientsByRole = EnumMap(EnrollmentType::class.java),

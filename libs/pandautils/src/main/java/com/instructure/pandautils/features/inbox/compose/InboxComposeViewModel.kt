@@ -151,17 +151,26 @@ class InboxComposeViewModel @Inject constructor(
 
     private fun loadContexts(forceRefresh: Boolean = false) {
         _uiState.update { it.copy(
-            contextPickerUiState = it.contextPickerUiState.copy(isLoading = true)
+            contextPickerUiState = it.contextPickerUiState.copy(screenState = ScreenState.Loading)
         ) }
 
         viewModelScope.launch {
-            val courses = inboxComposeRepository.getCourses(forceRefresh)
-            val groups = inboxComposeRepository.getGroups(forceRefresh)
+            var newState: ScreenState = ScreenState.Empty
+            var courses: List<CanvasContext> = emptyList()
+            var groups: List<CanvasContext> = emptyList()
+            try {
+                courses = inboxComposeRepository.getCourses(forceRefresh).dataOrThrow
+                groups = inboxComposeRepository.getGroups(forceRefresh).dataOrThrow
+
+                if ((courses.isEmpty() && groups.isEmpty()).not()) { newState = ScreenState.Data }
+            } catch (e: Exception) {
+                newState = ScreenState.Error
+            }
             _uiState.update { it.copy(
                 contextPickerUiState = it.contextPickerUiState.copy(
                     courses = courses,
                     groups = groups,
-                    isLoading = false
+                    screenState = newState
                 )
             ) }
         }
@@ -170,7 +179,14 @@ class InboxComposeViewModel @Inject constructor(
     private fun loadRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false) {
         viewModelScope.launch {
 
-            val recipients = inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh)
+            var recipients: List<Recipient> = emptyList()
+            var newState: ScreenState = ScreenState.Empty
+            try {
+                recipients = inboxComposeRepository.getRecipients(searchQuery, context, forceRefresh).dataOrThrow
+                if (recipients.isEmpty().not()) { newState = ScreenState.Data }
+            } catch (e: Exception) {
+                newState = ScreenState.Error
+            }
             val roleRecipients: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java)
 
             recipients.forEach { recipient ->
@@ -204,7 +220,7 @@ class InboxComposeViewModel @Inject constructor(
             _uiState.update { it.copy(
                 recipientPickerUiState = it.recipientPickerUiState.copy(
                     recipientsByRole = roleRecipients,
-                    isLoading = false,
+                    screenState = newState,
                     recipientsToShow = recipientsToShow
                 )
             ) }
@@ -214,7 +230,7 @@ class InboxComposeViewModel @Inject constructor(
     private fun createConversation() {
         uiState.value.contextPickerUiState.selectedContext?.let { context ->
             viewModelScope.launch {
-                _uiState.update { uiState.value.copy(isSending = true) }
+                _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
 
                 inboxComposeRepository.createConversation(
                     recipients = uiState.value.recipientPickerUiState.selectedRecipients,

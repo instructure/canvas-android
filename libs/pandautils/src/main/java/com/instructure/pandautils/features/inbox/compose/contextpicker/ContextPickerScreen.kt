@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.inbox.compose.contextpicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,9 +54,12 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.EmptyContent
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.inbox.compose.ContextPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.ContextPickerUiState
+import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
 
@@ -74,7 +76,7 @@ fun ContextPickerScreen(
     Scaffold(
         topBar = {
             CanvasAppBar(
-                title = if (uiState.groups.isEmpty()) stringResource(R.string.select_course) else stringResource(R.string.select_course_or_group),
+                title = if (uiState.groups.isEmpty()) stringResource(R.string.selectCourse) else stringResource(R.string.selectCourseOrGroup),
                 navigationActionClick = { actionHandler(ContextPickerActionHandler.DoneClicked) },
             )
         },
@@ -85,19 +87,50 @@ fun ContextPickerScreen(
                     .padding(padding)
                     .pullRefresh(pullToRefreshState)
             ) {
-                if (uiState.isLoading) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
-                    ) {
-                        Loading()
-                    }
-                } else {
-                    LazyColumn(
-                        Modifier.fillMaxSize()
-                    ) {
-                        if (!uiState.isLoading) {
+                LazyColumn(
+                    Modifier.fillMaxSize()
+                ) {
+                    when (uiState.screenState) {
+                        is ScreenState.Loading -> {
+                            item {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(padding)
+                                ) {
+                                    Loading()
+                                }
+                            }
+                        }
+                        is ScreenState.Error -> {
+                            item {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(padding)
+                                ) {
+                                    ErrorContent(errorMessage = stringResource(R.string.failedToLoadCoursesAndGroups))
+                                }
+                            }
+                        }
+                        is ScreenState.Empty -> {
+                            item {
+                                Box(
+                                    contentAlignment = Alignment.Center,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(padding)
+                                ) {
+                                    EmptyContent(
+                                        emptyMessage = stringResource(id = R.string.noCourses),
+                                        imageRes = R.drawable.ic_panda_nocourses
+                                    )
+                                }
+                            }
+                        }
+                        is ScreenState.Data -> {
                             if (uiState.courses.isNotEmpty()) {
                                 item {
                                     SectionHeaderView(stringResource(R.string.courses))
@@ -122,7 +155,7 @@ fun ContextPickerScreen(
                 }
 
                 PullRefreshIndicator(
-                    refreshing = uiState.isLoading,
+                    refreshing = uiState.screenState == ScreenState.Loading,
                     state = pullToRefreshState,
                     modifier = Modifier
                         .align(Alignment.TopCenter)
@@ -213,7 +246,7 @@ fun ContextPickerScreenPreview() {
             courses = courses,
             groups = groups,
             selectedContext = null,
-            isLoading = false
+            screenState = ScreenState.Data
         ),
         actionHandler = {}
     )
@@ -233,7 +266,7 @@ fun ContextPickerScreenCoursesPreview() {
             courses = courses,
             groups = emptyList(),
             selectedContext = null,
-            isLoading = false
+            screenState = ScreenState.Data
         ),
         actionHandler = {}
     )
@@ -248,7 +281,37 @@ fun ContextPickerScreenLoadingPreview() {
             courses = emptyList(),
             groups = emptyList(),
             selectedContext = null,
-            isLoading = true
+            screenState = ScreenState.Loading
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun ContextPickerScreenErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    ContextPickerScreen(
+        uiState = ContextPickerUiState(
+            courses = emptyList(),
+            groups = emptyList(),
+            selectedContext = null,
+            screenState = ScreenState.Error
+        ),
+        actionHandler = {}
+    )
+}
+
+@Preview
+@Composable
+fun ContextPickerScreenEmptyPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    ContextPickerScreen(
+        uiState = ContextPickerUiState(
+            courses = emptyList(),
+            groups = emptyList(),
+            selectedContext = null,
+            screenState = ScreenState.Empty
         ),
         actionHandler = {}
     )

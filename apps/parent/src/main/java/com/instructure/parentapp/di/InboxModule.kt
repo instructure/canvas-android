@@ -22,8 +22,11 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRepository
 import com.instructure.parentapp.features.inbox.list.ParentInboxRouter
 import com.instructure.parentapp.util.navigation.Navigation
@@ -55,5 +58,15 @@ class InboxModule {
         progressApi: ProgressAPI.ProgressInterface
     ): InboxRepository {
         return ParentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
+    }
+
+    @Provides
+    fun provideInboxComposeRepository(
+        courseAPI: CourseAPI.CoursesInterface,
+        groupAPI: GroupAPI.GroupInterface,
+        recipientAPI: RecipientAPI.RecipientInterface,
+        inboxAPI: InboxApi.InboxInterface,
+    ): InboxComposeRepository {
+        return ParentInboxComposeRepository(courseAPI, groupAPI, recipientAPI, inboxAPI)
     }
 }

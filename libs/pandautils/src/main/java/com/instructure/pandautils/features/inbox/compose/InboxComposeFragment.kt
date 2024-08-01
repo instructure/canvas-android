@@ -59,7 +59,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
                     when (screenOption) {
                         InboxComposeScreenOptions.None -> {
                             InboxComposeScreen(
-                                title = stringResource(id = R.string.new_message),
+                                title = stringResource(id = R.string.newMessage),
                                 uiState = uiState
                             ) { action ->
                                 viewModel.handleAction(action)
@@ -76,7 +76,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
 
                         InboxComposeScreenOptions.RecipientPicker -> {
                             RecipientPickerScreen(
-                                title = stringResource(id = R.string.select_recipients),
+                                title = stringResource(id = R.string.selectRecipients),
                                 uiState = uiState.recipientPickerUiState
                             ) { action ->
                                 viewModel.handleAction(action)
@@ -91,7 +91,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
     override val navigation: Navigation?
         get() = activity as? Navigation
 
-    override fun title(): String = getString(R.string.new_message)
+    override fun title(): String = getString(R.string.newMessage)
 
     override fun applyTheme() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
