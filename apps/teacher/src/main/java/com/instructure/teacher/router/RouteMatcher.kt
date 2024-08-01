@@ -69,7 +69,6 @@ import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
 import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
-import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
@@ -88,7 +87,6 @@ import com.instructure.teacher.fragments.CreateOrEditAnnouncementFragment
 import com.instructure.teacher.fragments.CreateOrEditPageDetailsFragment
 import com.instructure.teacher.fragments.DashboardFragment
 import com.instructure.teacher.fragments.DiscussionsListFragment
-import com.instructure.teacher.fragments.DiscussionsReplyFragment
 import com.instructure.teacher.fragments.DiscussionsUpdateFragment
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
@@ -268,7 +266,6 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(EditQuizDetailsFragment::class.java)
         bottomSheetFragments.add(QuizPreviewWebviewFragment::class.java)
         bottomSheetFragments.add(AddMessageFragment::class.java)
-        bottomSheetFragments.add(DiscussionsReplyFragment::class.java)
         bottomSheetFragments.add(DiscussionsUpdateFragment::class.java)
         bottomSheetFragments.add(ChooseRecipientsFragment::class.java)
         bottomSheetFragments.add(CreateDiscussionFragment::class.java)
@@ -495,7 +492,6 @@ object RouteMatcher : BaseRouteMatcher() {
             AnnouncementListFragment::class.java.isAssignableFrom(cls) -> fragment = AnnouncementListFragment
                 .newInstance(canvasContext!!) // This needs to be above DiscussionsListFragment because it extends it
             DiscussionsListFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionsListFragment.newInstance(canvasContext!!)
-            DiscussionsDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getDiscussionDetailsFragment(canvasContext, route)
             DiscussionDetailsWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionDetailsWebViewFragment.newInstance(route)
             DiscussionRouterFragment::class.java.isAssignableFrom(cls) -> fragment = DiscussionRouterFragment.newInstance(canvasContext!!, route)
             InboxFragment::class.java.isAssignableFrom(cls) -> fragment = InboxFragment.newInstance(route)
@@ -506,8 +502,6 @@ object RouteMatcher : BaseRouteMatcher() {
             ViewMediaFragment::class.java.isAssignableFrom(cls) -> fragment = ViewMediaFragment.newInstance(route.arguments)
             ViewHtmlFragment::class.java.isAssignableFrom(cls) -> fragment = ViewHtmlFragment.newInstance(route.arguments)
             ViewUnsupportedFileFragment::class.java.isAssignableFrom(cls) -> fragment = ViewUnsupportedFileFragment.newInstance(route.arguments)
-            cls.isAssignableFrom(DiscussionsReplyFragment::class.java) -> fragment = DiscussionsReplyFragment
-                .newInstance(canvasContext!!, route.arguments)
             cls.isAssignableFrom(DiscussionsUpdateFragment::class.java) -> fragment = DiscussionsUpdateFragment
                 .newInstance(canvasContext!!, route.arguments)
             ChooseRecipientsFragment::class.java.isAssignableFrom(cls) -> fragment = ChooseRecipientsFragment.newInstance(route.arguments)
@@ -583,27 +577,6 @@ object RouteMatcher : BaseRouteMatcher() {
             val pageId = route.paramsHash[RouterParams.PAGE_ID]
             val args = PageDetailsFragment.makeBundle(pageId ?: "")
             PageDetailsFragment.newInstance(canvasContext!!, args)
-        }
-    }
-
-    private fun getDiscussionDetailsFragment(canvasContext: CanvasContext?, route: Route): DiscussionsDetailsFragment {
-        return when {
-            route.arguments.containsKey(DiscussionsDetailsFragment.DISCUSSION_TOPIC_HEADER) -> DiscussionsDetailsFragment.newInstance(
-                canvasContext!!,
-                route.arguments
-            )
-            route.arguments.containsKey(DiscussionsDetailsFragment.DISCUSSION_TOPIC_HEADER_ID) -> {
-                val discussionTopicHeaderId = route.arguments.getLong(DiscussionsDetailsFragment.DISCUSSION_TOPIC_HEADER_ID)
-                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeaderId)
-                DiscussionsDetailsFragment.newInstance(canvasContext!!, args)
-            }
-            else -> {
-                // Parse the route to get the discussion id
-                val discussionTopicHeaderId = route.paramsHash[RouterParams.MESSAGE_ID]?.toLong() ?: 0L
-                val entryId = route.queryParamsHash[RouterParams.ENTRY_ID]?.toLong() ?: 0L
-                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeaderId, entryId)
-                DiscussionsDetailsFragment.newInstance(canvasContext!!, args)
-            }
         }
     }
 

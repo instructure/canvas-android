@@ -6,21 +6,29 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.models.UnreadCount
 import com.instructure.canvasapi2.models.UnreadNotificationCount
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Tag
 
 
-internal object UnreadCountAPI {
-    internal interface UnreadCountsInterface {
+object UnreadCountAPI {
+    interface UnreadCountsInterface {
         @GET("conversations/unread_count")
         fun getUnreadConversationCount(): Call<UnreadConversationCount>
+
+        @GET("conversations/unread_count")
+        suspend fun getUnreadConversationCount(@Tag params: RestParams): DataResult<UnreadConversationCount>
 
         @GET("users/self/activity_stream/summary?only_active_courses=true")
         fun getNotificationsCount(): Call<List<UnreadNotificationCount>>
 
         @GET("users/self/observer_alerts/unread_count")
         fun getUnreadAlertCount(@Query("student_id") studentId: Long): Call<UnreadCount>
+
+        @GET("users/self/observer_alerts/unread_count")
+        suspend fun getUnreadAlertCount(@Query("student_id") studentId: Long, @Tag params: RestParams): DataResult<UnreadCount>
     }
 
     fun getUnreadConversationCount(adapter: RestBuilder, params: RestParams, callback: StatusCallback<UnreadConversationCount>) {

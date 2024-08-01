@@ -126,6 +126,9 @@ class PickerSubmissionUploadEffectHandler(
             is PickerSubmissionUploadEffect.HandleSubmit -> {
                 handleSubmit(effect.model)
             }
+            is PickerSubmissionUploadEffect.RemoveTempFile -> {
+                removeTempFile(effect.path)
+            }
         }.exhaustive
     }
 
@@ -287,6 +290,10 @@ class PickerSubmissionUploadEffectHandler(
         }
 
         return false
+    }
+
+    private fun removeTempFile(path: String) {
+        FileUploadUtils.deleteTempFile(path)
     }
 
     companion object {

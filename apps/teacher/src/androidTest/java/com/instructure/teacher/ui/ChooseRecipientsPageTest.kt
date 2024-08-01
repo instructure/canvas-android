@@ -74,7 +74,7 @@ class ChooseRecipientsPageTest: TeacherTest() {
         tokenLogin(data.domain, token, teacher)
 
         dashboardPage.clickInboxTab()
-        inboxPage.clickAddMessageFAB()
+        inboxPage.pressNewMessageButton()
         addMessagePage.clickCourseSpinner()
         addMessagePage.selectCourseFromSpinner(course)
         // Sigh... Sometimes, at least on my local machine, it takes a beat for this button to become responsive

@@ -138,7 +138,7 @@ class CreateUpdateEventRepositoryTest {
     }
 
     @Test
-    fun `Update single calendar event successful`() = runTest {
+    fun `Update single calendar event when rrule is empty and event is not recurring`() = runTest {
         val event = ScheduleItem("itemId")
 
         coEvery {
@@ -159,7 +159,8 @@ class CreateUpdateEventRepositoryTest {
             locationName = "locationName",
             locationAddress = "locationAddress",
             description = "description",
-            CalendarEventAPI.ModifyEventScope.ONE
+            CalendarEventAPI.ModifyEventScope.ONE,
+            isSeriesEvent = false
         )
 
         Assert.assertEquals(listOf(event), result)
@@ -188,7 +189,8 @@ class CreateUpdateEventRepositoryTest {
             locationName = "locationName",
             locationAddress = "locationAddress",
             description = "description",
-            CalendarEventAPI.ModifyEventScope.ONE
+            CalendarEventAPI.ModifyEventScope.ONE,
+            isSeriesEvent = false
         )
 
         Assert.assertEquals(events, result)
@@ -220,7 +222,7 @@ class CreateUpdateEventRepositoryTest {
     }
 
     @Test
-    fun `Update recurring calendar event successful`() = runTest {
+    fun `Update recurring calendar event successful when updating all events`() = runTest {
         val event = listOf(ScheduleItem("itemId"))
 
         coEvery {
@@ -242,9 +244,40 @@ class CreateUpdateEventRepositoryTest {
             locationName = "locationName",
             locationAddress = "locationAddress",
             description = "description",
-            CalendarEventAPI.ModifyEventScope.ALL
+            CalendarEventAPI.ModifyEventScope.ALL,
+            isSeriesEvent = true
         )
 
         Assert.assertEquals(event, result)
+    }
+
+    @Test
+    fun `Update recurring calendar event calls only one occurrence api call when only one occurrence is edited`() = runTest {
+        val event = ScheduleItem("itemId")
+
+        coEvery {
+            calendarEventApi.updateRecurringCalendarEventOneOccurrence(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(event)
+
+        val result = repository.updateEvent(
+            1L,
+            title = "title",
+            startDate = "startDate",
+            endDate = "endDate",
+            rrule = "rrule",
+            contextCode = "contextCode",
+            locationName = "locationName",
+            locationAddress = "locationAddress",
+            description = "description",
+            CalendarEventAPI.ModifyEventScope.ONE,
+            isSeriesEvent = true
+        )
+
+        Assert.assertEquals(listOf(event), result)
     }
 }

@@ -31,7 +31,7 @@ import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.R
-import java.util.*
+import java.util.Locale
 
 
 object ProfileUtils {
@@ -72,7 +72,7 @@ object ProfileUtils {
         }
     }
 
-    private fun createAvatarDrawable(context: Context, userName: String, @Dimension borderWidth: Int): Drawable {
+    fun createAvatarDrawable(context: Context, userName: String, @Dimension borderWidth: Int): Drawable {
         val initials = getUserInitials(userName)
         val color = ContextCompat.getColor(context, R.color.textDark)
         return TextDrawable.builder()

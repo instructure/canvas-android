@@ -31,7 +31,6 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -49,7 +48,6 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.DomainAdapter
 import com.instructure.loginapi.login.databinding.ActivityFindSchoolBinding
-import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
 import com.instructure.pandautils.binding.viewBinding
@@ -60,7 +58,7 @@ import retrofit2.Response
 import java.util.Locale
 import java.util.regex.Pattern
 
-abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
+abstract class BaseLoginFindSchoolActivity : AppCompatActivity() {
 
     private val binding by viewBinding(ActivityFindSchoolBinding::inflate)
 
@@ -294,12 +292,6 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
     }
 
     //region Help & Support
-
-    override fun onTicketPost() {
-        Toast.makeText(this, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {}
 
     companion object {
         init {

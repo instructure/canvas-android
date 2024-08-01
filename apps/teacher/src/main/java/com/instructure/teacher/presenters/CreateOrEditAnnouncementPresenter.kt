@@ -30,12 +30,12 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.teacher.events.DiscussionCreatedEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.teacher.events.DiscussionUpdatedEvent
 import com.instructure.teacher.events.post
-import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
 import com.instructure.teacher.interfaces.RceMediaUploadPresenter
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
 import instructure.androidblueprint.FragmentPresenter
@@ -133,8 +133,8 @@ class CreateOrEditAnnouncementPresenter(
     fun deleteAnnouncement() {
         viewCallback?.onSaveStarted()
         apiJob = tryWeave {
-            awaitApi<Void> { DiscussionManager.deleteDiscussionTopicHeader(canvasContext, announcement.id, it) }
-            DiscussionTopicHeaderDeletedEvent(announcement.id, (DiscussionsDetailsFragment::class.java.toString() + ".onResume()")).post()
+            awaitApi { DiscussionManager.deleteDiscussionTopicHeader(canvasContext, announcement.id, it) }
+            DiscussionTopicHeaderDeletedEvent(announcement.id, (DiscussionDetailsWebViewFragment::class.java.toString() + ".onResume()")).post()
             viewCallback?.onDeleteSuccess()
         } catch {
             viewCallback?.onDeleteError()

@@ -74,7 +74,6 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
-import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.binding.viewBinding
@@ -167,8 +166,7 @@ private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
-    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(),
-        ErrorReportDialog.ErrorReportDialogResultListener {
+    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
 
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
@@ -995,6 +993,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
         ft.show(fragment)
         ft.commitAllowingStateLoss()
+
+        if (fragment is CalendarFragment) {
+            fragment.calendarTabSelected()
+        }
     }
 
     private fun getBottomBarFragments(selectedFragmentName: String): List<Fragment> {
@@ -1224,15 +1226,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             root.addView(animation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             animation.playAnimation()
         }
-    }
-
-    override fun onTicketPost() {
-        // The message is a little longer than normal, so show it for LENGTH_LONG instead of LENGTH_SHORT
-        Toast.makeText(this, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {
-        toast(R.string.errorOccurred)
     }
 
     private fun createBottomNavFragment(name: String?): Fragment? {

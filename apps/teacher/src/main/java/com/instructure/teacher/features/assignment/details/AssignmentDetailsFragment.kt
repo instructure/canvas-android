@@ -280,14 +280,14 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         // Show progress bar while loading description
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
-        descriptionWebViewWrapper.webView.setWebChromeClient(object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
+        descriptionWebViewWrapper.webView.addVideoClient(requireActivity())
+        descriptionWebViewWrapper.webView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
+            override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
                 if (newProgress >= 100) {
                     descriptionProgressBar.setGone()
                 }
             }
-        })
+        }
 
         descriptionWebViewWrapper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {

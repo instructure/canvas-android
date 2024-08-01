@@ -198,8 +198,7 @@ class HomeroomInteractionTest : StudentTest() {
 
         homeroomPage.openCourseAnnouncement(courseAnnouncement.title!!)
 
-        nativeDiscussionDetailsPage.assertPageObjects()
-        nativeDiscussionDetailsPage.assertTitleText(courseAnnouncement.title!!)
+        discussionDetailsPage.assertToolbarDiscussionTitle(courseAnnouncement.title!!)
     }
 
     @Test

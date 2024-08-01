@@ -16,6 +16,7 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,10 +42,12 @@ import com.instructure.pandautils.R
 
 @Composable
 fun EmptyContent(
-    emptyTitle: String,
     emptyMessage: String,
     @DrawableRes imageRes: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    emptyTitle: String? = null,
+    buttonText: String? = null,
+    buttonClick: (() -> Unit)? = null
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -56,16 +62,18 @@ fun EmptyContent(
                 .testTag(imageRes.toString())
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = emptyTitle,
-            fontSize = 20.sp,
-            color = colorResource(
-                id = R.color.textDarkest
-            ),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 32.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        emptyTitle?.let {
+            Text(
+                text = emptyTitle,
+                fontSize = 20.sp,
+                color = colorResource(
+                    id = R.color.textDarkest
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 32.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
         Text(
             text = emptyMessage,
             fontSize = 16.sp,
@@ -75,8 +83,27 @@ fun EmptyContent(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 32.dp)
         )
+        buttonClick?.let {
+            Spacer(modifier = Modifier.height(32.dp))
+            OutlinedButton(
+                onClick = { it() },
+                border = BorderStroke(1.dp, colorResource(id = R.color.textDark)),
+                shape = RoundedCornerShape(4.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.backgroundLightest))
+            ) {
+                Text(
+                    text = buttonText.orEmpty(),
+                    fontSize = 16.sp,
+                    color = colorResource(
+                        id = R.color.textDark
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -84,6 +111,8 @@ fun EmptyContentPreview() {
     EmptyContent(
         emptyTitle = "Empty Title",
         emptyMessage = "Empty Message",
-        imageRes = R.drawable.ic_panda_book
+        imageRes = R.drawable.ic_panda_book,
+        buttonText = "Button Text",
+        buttonClick = {}
     )
 }

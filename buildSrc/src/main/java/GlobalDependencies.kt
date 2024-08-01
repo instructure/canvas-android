@@ -7,7 +7,7 @@ object Versions {
     const val TARGET_SDK = 34
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "7.1.3"
+    const val ANDROID_GRADLE_TOOLS = "7.4.2"
     const val BUILD_TOOLS = "34.0.0"
 
     /* Testing */
@@ -179,6 +179,7 @@ object Libs {
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4:1.6.4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
     const val COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.8.2"
+    const val COMPOSE_GLIDE = "com.github.bumptech.glide:compose:1.0.0-beta01"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"

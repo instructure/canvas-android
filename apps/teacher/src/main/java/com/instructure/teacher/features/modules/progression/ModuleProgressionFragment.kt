@@ -38,9 +38,8 @@ import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleProgressionBinding
-import com.instructure.teacher.features.discussion.DiscussionsDetailsFragment
-import com.instructure.teacher.features.files.details.FileDetailsFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.files.details.FileDetailsFragment
 import com.instructure.teacher.fragments.InternalWebViewFragment
 import com.instructure.teacher.fragments.PageDetailsFragment
 import com.instructure.teacher.fragments.QuizDetailsFragment
@@ -115,15 +114,9 @@ class ModuleProgressionFragment : Fragment() {
             canvasContext as Course, AssignmentDetailsFragment.makeBundle(item.assignmentId)
         )
 
-        is ModuleItemViewData.Discussion -> if (item.isDiscussionRedesignEnabled) {
-            DiscussionDetailsWebViewFragment.newInstance(
-                DiscussionDetailsWebViewFragment.makeRoute(canvasContext, item.discussionTopicHeaderId)
-            )!!
-        } else {
-            DiscussionsDetailsFragment.newInstance(
-                canvasContext, DiscussionsDetailsFragment.makeBundle(item.discussionTopicHeaderId)
-            )
-        }
+        is ModuleItemViewData.Discussion -> DiscussionDetailsWebViewFragment.newInstance(
+            DiscussionDetailsWebViewFragment.makeRoute(canvasContext, item.discussionTopicHeaderId)
+        )!!
 
         is ModuleItemViewData.Quiz -> QuizDetailsFragment.newInstance(
             canvasContext as Course, QuizDetailsFragment.makeBundle(item.quizId)

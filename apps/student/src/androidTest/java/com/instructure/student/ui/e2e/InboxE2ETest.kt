@@ -76,10 +76,10 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()
         inboxPage.assertHasConversation()
-        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Assert that is has not been starred already.")
-        inboxPage.openConversation(seededConversation)
+        inboxPage.openConversation(seededConversation.subject)
         inboxConversationPage.assertNotStarred()
 
         Log.d(STEP_TAG,"Toggle Starred to mark '${seededConversation.subject}' conversation as favourite. Assert that it has became starred.")
@@ -92,28 +92,28 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Mark as Unread by clicking on the 'More Options' menu, 'Mark as Unread' menu point.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
-        inboxPage.openConversation(seededConversation)
+        inboxPage.openConversation(seededConversation.subject)
         inboxConversationPage.markUnread() //After select 'Mark as Unread', we will be navigated back to Inbox Page
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
-        inboxPage.openConversation(seededConversation)
+        inboxPage.openConversation(seededConversation.subject)
         inboxConversationPage.archive() //After select 'Archive', we will be navigated back to Inbox Page
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'All' tab.") //TODO: Discuss this logic if it's ok if we don't show Archived messages on 'All' tab...
-        inboxPage.assertConversationNotDisplayed(seededConversation)
+        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
         inboxPage.filterInbox("Archived")
 
         Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
-        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation. Assert that the selected number of conversations on the toolbar is 1." +
                 "Unarchive it, and assert that it is not displayed in the 'ARCHIVED' scope any more.")
-        inboxPage.selectConversation(seededConversation)
+        inboxPage.selectConversation(seededConversation.subject)
         inboxPage.assertSelectedConversationNumber("1")
         inboxPage.clickUnArchive()
         inboxPage.assertInboxEmpty()
@@ -156,6 +156,7 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Navigate to 'INBOX' scope and assert that '${seededConversation.subject}' conversation is NOT displayed because it is archived yet.")
         inboxPage.filterInbox("Inbox")
+        sleep(2000)
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and Select the conversation. Star it, and assert that it has displayed in the 'STARRED' scope.")
@@ -216,7 +217,7 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()
         inboxPage.assertHasConversation()
-        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
@@ -243,7 +244,7 @@ class InboxE2ETest: StudentTest() {
         sleep(2000) // Allow time for messages to propagate
 
         Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
-        inboxPage.goToDashboard()
+        dashboardPage.goToDashboard()
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG,"Log out with '${student1.name}' student.")
@@ -255,7 +256,7 @@ class InboxE2ETest: StudentTest() {
 
         Log.d(STEP_TAG,"Open Inbox Page. Assert that both, the previously seeded 'normal' conversation and the group conversation are displayed.")
         dashboardPage.clickInboxTab()
-        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed(newMessageSubject)
         inboxPage.assertConversationDisplayed("Group Message")
 
@@ -272,7 +273,7 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Delete the whole '$newGroupMessageSubject' subject and assert that it has been removed from the conversation list on the Inbox Page.")
         inboxConversationPage.deleteConversation() //After deletion we will be navigated back to Inbox Page
         inboxPage.assertConversationNotDisplayed(newMessageSubject)
-        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
         inboxPage.assertConversationDisplayed("Group Message")
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope and select '$newGroupMessageSubject' conversation.")
@@ -320,19 +321,19 @@ class InboxE2ETest: StudentTest() {
         Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
         refresh()
         inboxPage.assertHasConversation()
-        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation and swipe it right to make it read. Assert that the conversation became read.")
         inboxPage.selectConversation(seededConversation.subject)
-        inboxPage.swipeConversationRight(seededConversation)
+        inboxPage.swipeConversationRight(seededConversation.subject)
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
 
         Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation and swipe it right again to make it unread. Assert that the conversation became unread.")
-        inboxPage.swipeConversationRight(seededConversation)
+        inboxPage.swipeConversationRight(seededConversation.subject)
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'INBOX' scope because it has became archived.")
-        inboxPage.swipeConversationLeft(seededConversation)
+        inboxPage.swipeConversationLeft(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope. Assert that the '${seededConversation.subject}' conversation is displayed in the 'ARCHIVED' scope.")
@@ -340,7 +341,7 @@ class InboxE2ETest: StudentTest() {
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'ARCHIVED' scope because it has became unarchived.")
-        inboxPage.swipeConversationLeft(seededConversation)
+        inboxPage.swipeConversationLeft(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'INBOX' scope. Assert that the '${seededConversation.subject}' conversation is displayed in the 'INBOX' scope.")
@@ -362,7 +363,7 @@ class InboxE2ETest: StudentTest() {
         }
 
         Log.d(STEP_TAG, "Swipe '${seededConversation.subject}' left and assert it is removed from the 'STARRED' scope because it has became unstarred.")
-        inboxPage.swipeConversationLeft(seededConversation)
+        inboxPage.swipeConversationLeft(seededConversation.subject)
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'UNREAD' scope. Assert that the conversation is displayed in the 'Unread' scope.")

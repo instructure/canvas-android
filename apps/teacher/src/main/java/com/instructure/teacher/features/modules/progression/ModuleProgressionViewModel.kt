@@ -75,13 +75,11 @@ class ModuleProgressionViewModel @Inject constructor(
                 }
             }
 
-            val isDiscussionRedesignEnabled = discussionRouteHelperRepository.getEnabledFeaturesForCourse(canvasContext, true)
-
             val modules = repository.getModulesWithItems(canvasContext)
 
             val items = modules
                 .flatMap { it.items }
-                .map { createModuleItemViewData(it, isDiscussionRedesignEnabled) to it }
+                .map { createModuleItemViewData(it) to it }
                 .filter { it.first != null }
 
             val position = if (currentPosition == -1) {
@@ -110,10 +108,10 @@ class ModuleProgressionViewModel @Inject constructor(
         }
     }
 
-    private fun createModuleItemViewData(item: ModuleItem, isDiscussionRedesignEnabled: Boolean) = when (item.type) {
+    private fun createModuleItemViewData(item: ModuleItem) = when (item.type) {
         Type.Page.name -> ModuleItemViewData.Page(item.pageUrl.orEmpty())
         Type.Assignment.name -> ModuleItemViewData.Assignment(item.contentId)
-        Type.Discussion.name -> ModuleItemViewData.Discussion(isDiscussionRedesignEnabled, item.contentId)
+        Type.Discussion.name -> ModuleItemViewData.Discussion(item.contentId)
         Type.Quiz.name -> ModuleItemViewData.Quiz(item.contentId)
         Type.ExternalUrl.name, Type.ExternalTool.name -> {
             val url = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build().toString()

@@ -65,6 +65,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, LocalDate.now())
                     )
                 ),
+                false,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -98,6 +99,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, selectedDate)
                     )
                 ),
+                false,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -133,6 +135,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, selectedDate)
                     )
                 ),
+                false,
                 actionHandler = { actions.add(it) },
                 navigationActionClick = {},
             )
@@ -160,6 +163,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, selectedDate)
                     )
                 ),
+                false,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -188,6 +192,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, selectedDate)
                     )
                 ),
+                false,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -220,6 +225,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, selectedDate)
                     )
                 ),
+                false,
                 actionHandler = { actions.add(it) },
                 navigationActionClick = {},
             )
@@ -252,6 +258,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, selectedDate)
                     )
                 ),
+                false,
                 actionHandler = { actions.add(it) },
                 navigationActionClick = {},
             )
@@ -282,6 +289,7 @@ class CalendarScreenTest {
                         ), stateMapper.createBodyUiState(true, selectedDate)
                     ), snackbarMessage = "Snackbar message"
                 ),
+                false,
                 actionHandler = {},
                 navigationActionClick = {},
             )
