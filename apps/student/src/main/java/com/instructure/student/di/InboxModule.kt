@@ -22,8 +22,10 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.student.features.inbox.compose.StudentInboxComposeRepository
 import com.instructure.student.features.inbox.list.StudentInboxRepository
 import com.instructure.student.features.inbox.list.StudentInboxRouter
 import dagger.Module
@@ -56,4 +58,8 @@ class InboxModule {
         return StudentInboxRepository(inboxApi, coursesApi, groupsApi, progressApi)
     }
 
+    @Provides
+    fun provideInboxComposeRepository(): InboxComposeRepository {
+        return StudentInboxComposeRepository()
+    }
 }
