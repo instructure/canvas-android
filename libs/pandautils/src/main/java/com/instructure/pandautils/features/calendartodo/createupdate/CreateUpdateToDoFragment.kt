@@ -74,8 +74,8 @@ class CreateUpdateToDoFragment : Fragment(), NavigationCallbacks, FragmentIntera
         when (action) {
             is CreateUpdateToDoViewModelAction.RefreshCalendarDays -> {
                 navigateBack()
-                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseToDoScreen)
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
             }
 
             is CreateUpdateToDoViewModelAction.NavigateBack -> navigateBack()

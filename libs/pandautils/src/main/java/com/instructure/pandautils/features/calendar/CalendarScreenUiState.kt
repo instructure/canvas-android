@@ -128,9 +128,9 @@ sealed class CalendarViewModelAction {
     data class OpenCreateEvent(val initialDateString: String?) : CalendarViewModelAction()
 }
 
-sealed class SharedCalendarAction {
-    data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction()
-    data object RefreshCalendar : SharedCalendarAction()
+sealed class SharedCalendarAction(val delay: Long = 0L) {
+    data class RefreshDays(val days: List<LocalDate>) : SharedCalendarAction(delay = 50)
+    data object RefreshCalendar : SharedCalendarAction(delay = 50)
     data class FiltersClosed(val changed: Boolean) : SharedCalendarAction()
     data object CloseToDoScreen : SharedCalendarAction()
     data object CloseEventScreen : SharedCalendarAction()

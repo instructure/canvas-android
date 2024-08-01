@@ -18,6 +18,7 @@
 package com.instructure.pandautils.features.calendar
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ class CalendarSharedEvents {
 
     fun sendEvent(coroutineScope: CoroutineScope, event: SharedCalendarAction) {
         coroutineScope.launch {
+            delay(event.delay)
             _events.emit(event)
         }
     }
