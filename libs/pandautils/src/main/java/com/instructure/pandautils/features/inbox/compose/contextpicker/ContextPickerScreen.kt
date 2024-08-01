@@ -77,6 +77,8 @@ fun ContextPickerScreen(
         topBar = {
             CanvasAppBar(
                 title = if (uiState.groups.isEmpty()) stringResource(R.string.selectCourse) else stringResource(R.string.selectCourseOrGroup),
+                navIconRes = R.drawable.ic_back_arrow,
+                navIconContentDescription = stringResource(id = R.string.a11y_closeCoursePicker),
                 navigationActionClick = { actionHandler(ContextPickerActionHandler.DoneClicked) },
             )
         },
@@ -87,11 +89,11 @@ fun ContextPickerScreen(
                     .padding(padding)
                     .pullRefresh(pullToRefreshState)
             ) {
-                LazyColumn(
-                    Modifier.fillMaxSize()
-                ) {
-                    when (uiState.screenState) {
-                        is ScreenState.Loading -> {
+                when (uiState.screenState) {
+                    is ScreenState.Loading -> {
+                        LazyColumn(
+                            Modifier.fillMaxSize()
+                        ) {
                             item {
                                 Box(
                                     contentAlignment = Alignment.Center,
@@ -103,7 +105,11 @@ fun ContextPickerScreen(
                                 }
                             }
                         }
-                        is ScreenState.Error -> {
+                    }
+                    is ScreenState.Error -> {
+                        LazyColumn(
+                            Modifier.fillMaxSize()
+                        ) {
                             item {
                                 Box(
                                     contentAlignment = Alignment.Center,
@@ -115,7 +121,11 @@ fun ContextPickerScreen(
                                 }
                             }
                         }
-                        is ScreenState.Empty -> {
+                    }
+                    is ScreenState.Empty -> {
+                        LazyColumn(
+                            Modifier.fillMaxSize()
+                        ) {
                             item {
                                 Box(
                                     contentAlignment = Alignment.Center,
@@ -130,7 +140,11 @@ fun ContextPickerScreen(
                                 }
                             }
                         }
-                        is ScreenState.Data -> {
+                    }
+                    is ScreenState.Data -> {
+                        LazyColumn(
+                            Modifier.fillMaxSize()
+                        ) {
                             if (uiState.courses.isNotEmpty()) {
                                 item {
                                     SectionHeaderView(stringResource(R.string.courses))

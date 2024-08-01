@@ -501,10 +501,11 @@
     <string name="a11y_selected">Selected</string>
     <string name="recipientsTo">To</string>
     <string name="a11y_openCoursePicker">Open Course Picker</string>
-    <string name="a11y_closeRecipientPicker">Close recipient picker</string>
     <string name="a11y_closeCoursePicker">Close Course Picker</string>
     <string name="a11y_cancelNewMessage">Cancel new message</string>
     <string name="failedToLoadCoursesAndGroups">Failed to load Courses and Groups</string>
     <string name="failedToLoadRecipients">Failed to load recipients</string>
     <string name="noRecipientsAvailable">No recipients available</string>
+    <string name="a11y_backToRoles">Back to roles</string>
+    <string name="a11y_closeRecipientPicker">Close recipient picker</string>
 </resources>

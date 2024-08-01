@@ -87,6 +87,9 @@ class InboxComposeViewModel @Inject constructor(
 
     fun handleAction(action: RecipientPickerActionHandler) {
         when (action) {
+            is RecipientPickerActionHandler.RefreshCalled -> {
+                loadRecipients(uiState.value.recipientPickerUiState.searchValue.text, uiState.value.contextPickerUiState.selectedContext ?: return, forceRefresh = true)
+            }
             is RecipientPickerActionHandler.DoneClicked -> {
                 _uiState.update { uiState.value.copy(
                     screenOption = InboxComposeScreenOptions.None,

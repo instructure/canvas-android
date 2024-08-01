@@ -14,6 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package com.instructure.pandautils.features.inbox.compose.recipientpicker
 
 import androidx.compose.animation.AnimatedContent
@@ -29,14 +31,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -86,186 +93,154 @@ fun RecipientPickerScreen(
             }
         }
     ){ screenOption ->
-        when (uiState.screenState) {
-            is ScreenState.Data -> {
-                when (screenOption) {
-                    is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
-                        title,
-                        uiState,
-                        actionHandler
-                    )
+        val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
+            actionHandler(RecipientPickerActionHandler.RefreshCalled)
+        })
 
-                    is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(
-                        title,
-                        uiState,
-                        actionHandler
+        Scaffold (
+            topBar = { TopBar(title, uiState, actionHandler) },
+            content = { padding ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .pullRefresh(pullToRefreshState)
+                ){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                    ) {
+                        if (uiState.screenState != ScreenState.Loading && uiState.screenState != ScreenState.Error) {
+                            SearchField(value = uiState.searchValue, actionHandler = actionHandler)
+                        }
+
+                        when (uiState.screenState) {
+                            is ScreenState.Data -> {
+                                when (screenOption) {
+                                    is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(uiState, actionHandler)
+
+                                    is RecipientPickerScreenOption.Recipients -> RecipientPickerPeopleScreen(uiState, actionHandler)
+                                }
+                            }
+                            else -> {
+                                StateScreen(uiState)
+                            }
+                        }
+                    }
+
+                    PullRefreshIndicator(
+                        refreshing = uiState.screenState == ScreenState.Loading,
+                        state = pullToRefreshState,
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .testTag("pullRefreshIndicator"),
                     )
                 }
             }
-            else -> {
-                StateScreen(title = title, screenState = uiState.screenState, actionHandler = actionHandler)
-            }
-        }
+        )
     }
 }
 
 @Composable
 private fun RecipientPickerRoleScreen(
-    title: String,
     uiState: RecipientPickerUiState,
     actionHandler: (RecipientPickerActionHandler) -> Unit,
 ) {
-    Scaffold (
-        topBar = {
-            CanvasAppBar(
-                title = title,
-                navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                actions = {
-                    IconButton(
-                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.done),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(id = R.color.textDarkest),
+    LazyColumn(
+        Modifier
+            .fillMaxSize()
+    ) {
+        val showSearchResults = uiState.searchValue.text.isNotEmpty()
+        if (showSearchResults) {
+            items(uiState.recipientsToShow) { recipient ->
+                RecipientRow(
+                    recipient = recipient,
+                    isSelected = uiState.selectedRecipients.contains(recipient),
+                    onSelect = {
+                        actionHandler(
+                            RecipientPickerActionHandler.RecipientClicked(
+                                recipient
+                            )
                         )
-                    }
-                }
-            )
-         },
-        content = { padding ->
-            LazyColumn(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(padding)
-            ) {
-                item {
-                    SearchField(uiState.searchValue, actionHandler)
-                }
-
-                val showSearchResults = uiState.searchValue.text.isNotEmpty()
-                if (showSearchResults) {
-                    items(uiState.recipientsToShow) { recipient ->
-                        RecipientRow(recipient = recipient, isSelected = uiState.selectedRecipients.contains(recipient), onSelect = {
-                            actionHandler(RecipientPickerActionHandler.RecipientClicked(recipient))
-                        })
-                    }
-                } else {
-                    items(uiState.recipientsByRole.keys.toList()) { role ->
-                        RoleRow(name = role.displayText, roleCount = uiState.recipientsByRole[role]?.size ?: 0, onSelect = {
-                            actionHandler(RecipientPickerActionHandler.RoleClicked(role))
-                        })
-                    }
-                }
-
+                    })
             }
-
+        } else {
+            items(uiState.recipientsByRole.keys.toList()) { role ->
+                RoleRow(
+                    name = role.displayText,
+                    roleCount = uiState.recipientsByRole[role]?.size ?: 0,
+                    onSelect = {
+                        actionHandler(RecipientPickerActionHandler.RoleClicked(role))
+                    })
+            }
         }
-    )
+
+    }
 }
 
 @Composable
 private fun RecipientPickerPeopleScreen(
-    title: String,
     uiState: RecipientPickerUiState,
     actionHandler: (RecipientPickerActionHandler) -> Unit,
 ) {
-    Scaffold (
-        topBar = {
-            CanvasAppBar(
-                title = title,
-                navigationActionClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) },
-                navIconRes = R.drawable.ic_back_arrow,
-                navIconContentDescription = stringResource(R.string.a11y_closeRecipientPicker),
-                actions = {
-                    IconButton(
-                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.done),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(id = R.color.textDarkest),
+    LazyColumn(
+        Modifier
+            .fillMaxSize()
+    ) {
+        items(uiState.recipientsToShow) { recipient ->
+            RecipientRow(
+                recipient = recipient,
+                isSelected = uiState.selectedRecipients.contains(recipient),
+                onSelect = {
+                    actionHandler(
+                        RecipientPickerActionHandler.RecipientClicked(
+                            recipient
                         )
-                    }
+                    )
                 }
             )
-        },
-        content = { padding ->
-            LazyColumn(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(padding)
-            ) {
-                item {
-                    SearchField(uiState.searchValue, actionHandler)
-                }
-
-                items(uiState.recipientsToShow) { recipient ->
-                    RecipientRow(recipient = recipient, isSelected = uiState.selectedRecipients.contains(recipient), onSelect = {
-                        actionHandler(RecipientPickerActionHandler.RecipientClicked(recipient))
-                    })
-                }
-            }
-
         }
-    )
+    }
 }
 
 @Composable
 fun StateScreen(
-    title: String,
-    screenState: ScreenState,
-    actionHandler: (RecipientPickerActionHandler) -> Unit,
+    uiState: RecipientPickerUiState,
 ) {
-    Scaffold (
-        topBar = {
-            CanvasAppBar(
-                title = title,
-                navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                actions = {
-                    IconButton(
-                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.done),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(id = R.color.textDarkest),
-                        )
-                    }
-                }
-            )
-        },
-        content = { padding ->
-            when (screenState) {
-                is ScreenState.Loading -> {
+    LazyColumn(
+        Modifier.fillMaxSize()
+    ) {
+        when (uiState.screenState) {
+            is ScreenState.Loading -> {
+                item {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(padding)
                     ) {
                         Loading()
                     }
                 }
-                is ScreenState.Error -> {
+            }
+
+            is ScreenState.Error -> {
+                item {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(padding)
                     ) {
                         ErrorContent(errorMessage = stringResource(id = R.string.failedToLoadRecipients))
                     }
                 }
-                is ScreenState.Empty -> {
+            }
+
+            is ScreenState.Empty -> {
+                item {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(padding)
                     ) {
                         EmptyContent(
                             emptyMessage = stringResource(id = R.string.noRecipients),
@@ -273,10 +248,12 @@ fun StateScreen(
                         )
                     }
                 }
-                else -> { }
             }
+
+            else -> {}
         }
-    )
+    }
+
 }
 
 @Composable
@@ -393,6 +370,56 @@ private fun SearchField(
         }
 
         CanvasDivider()
+    }
+}
+
+@Composable
+private fun TopBar(
+    title: String,
+    uiState: RecipientPickerUiState,
+    actionHandler: (RecipientPickerActionHandler) -> Unit
+) {
+    when (uiState.screenOption) {
+        is RecipientPickerScreenOption.Roles -> {
+            CanvasAppBar(
+                title = title,
+                navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+                navIconRes = R.drawable.ic_back_arrow,
+                navIconContentDescription = stringResource(R.string.a11y_closeRecipientPicker),
+                actions = {
+                    IconButton(
+                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.done),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colorResource(id = R.color.textDarkest),
+                        )
+                    }
+                }
+            )
+        }
+        is RecipientPickerScreenOption.Recipients -> {
+            CanvasAppBar(
+                title = title,
+                navigationActionClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) },
+                navIconRes = R.drawable.ic_back_arrow,
+                navIconContentDescription = stringResource(R.string.a11y_backToRoles),
+                actions = {
+                    IconButton(
+                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.done),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colorResource(id = R.color.textDarkest),
+                        )
+                    }
+                }
+            )
+        }
     }
 }
 

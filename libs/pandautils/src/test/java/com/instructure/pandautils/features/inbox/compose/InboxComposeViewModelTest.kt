@@ -4,6 +4,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -35,7 +36,7 @@ class InboxComposeViewModelTest {
         assertEquals(uiState.sendIndividual, false)
         assertEquals(uiState.subject, TextFieldValue(""))
         assertEquals(uiState.body, TextFieldValue(""))
-        assertEquals(uiState.isSending, false)
+        assertEquals(uiState.screenState, ScreenState.Data)
     }
 
     @Test
@@ -57,7 +58,7 @@ class InboxComposeViewModelTest {
             Recipient(stringId = "3", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
             Recipient(stringId = "4", commonCourses = hashMapOf(courseId.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue())))
         )
-        coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns recipients
+        coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(recipients)
 
         viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = courseId)))
 

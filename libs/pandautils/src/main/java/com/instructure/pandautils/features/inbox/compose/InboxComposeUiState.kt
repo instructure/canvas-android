@@ -68,6 +68,7 @@ sealed class RecipientPickerActionHandler {
     data object RecipientBackClicked : RecipientPickerActionHandler()
     data class RecipientClicked(val recipient: Recipient) : RecipientPickerActionHandler()
     data object DoneClicked : RecipientPickerActionHandler()
+    data object RefreshCalled : RecipientPickerActionHandler()
     data class SearchValueChanged(val searchText: TextFieldValue) : RecipientPickerActionHandler()
 }
 
