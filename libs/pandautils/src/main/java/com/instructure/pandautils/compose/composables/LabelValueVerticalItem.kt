@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,13 +44,14 @@ fun LabelValueVerticalItem(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
+            modifier = Modifier.testTag("label"),
             text = label,
             style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.textDarkest))
         )
         value?.let {
             Text(
+                modifier = Modifier.padding(top = 4.dp).testTag("value"),
                 text = it,
-                modifier = Modifier.padding(top = 4.dp),
                 style = TextStyle(fontSize = 12.sp, color = colorResource(id = R.color.textDark))
             )
         }
