@@ -17,10 +17,16 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ParentInboxComposeRepositoryTest {
 
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
@@ -34,6 +40,12 @@ class ParentInboxComposeRepositoryTest {
         recipientAPI,
         inboxAPI,
     )
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        unmockkAll()
+    }
 
     @Test
     fun `Get courses successfully`() = runTest {

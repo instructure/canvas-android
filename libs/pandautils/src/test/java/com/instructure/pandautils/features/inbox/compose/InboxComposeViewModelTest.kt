@@ -10,11 +10,14 @@ import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -28,7 +31,19 @@ class InboxComposeViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
+
+        coEvery { inboxComposeRepository.canSendToAll(any()) } returns DataResult.Success(false)
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
     }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        unmockkAll()
+    }
+
     @Test
     fun `Test initial state`() {
         val viewmodel = getViewModel()
