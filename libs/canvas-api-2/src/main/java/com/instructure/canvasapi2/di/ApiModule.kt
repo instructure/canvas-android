@@ -1,9 +1,56 @@
 package com.instructure.canvasapi2.di
 
-import com.instructure.canvasapi2.apis.*
+import com.instructure.canvasapi2.apis.AnnouncementAPI
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.ConferencesApi
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.FileDownloadAPI
+import com.instructure.canvasapi2.apis.FileFolderAPI
+import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.HelpLinksAPI
+import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.apis.ObserverApi
+import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.ProgressAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.canvasapi2.apis.ThemeAPI
+import com.instructure.canvasapi2.apis.UnreadCountAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.managers.AccountNotificationManager
+import com.instructure.canvasapi2.managers.AnnouncementManager
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CalendarEventManager
+import com.instructure.canvasapi2.managers.CanvaDocsManager
+import com.instructure.canvasapi2.managers.CommunicationChannelsManager
+import com.instructure.canvasapi2.managers.ConferenceManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.DiscussionManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.ExternalToolManager
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.HelpLinksManager
+import com.instructure.canvasapi2.managers.NotificationPreferencesManager
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.managers.PlannerManager
+import com.instructure.canvasapi2.managers.QuizManager
+import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.TabManager
+import com.instructure.canvasapi2.managers.ToDoManager
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import dagger.Module
 import dagger.Provides
@@ -270,5 +317,10 @@ class ApiModule {
     @Provides
     fun provideUnreadCountApi(): UnreadCountAPI.UnreadCountsInterface {
         return RestBuilder().build(UnreadCountAPI.UnreadCountsInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideRecipientApi(): RecipientAPI.RecipientInterface {
+        return RestBuilder().build(RecipientAPI.RecipientInterface::class.java, RestParams())
     }
 }
