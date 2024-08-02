@@ -23,13 +23,13 @@ class SimpleWebViewScreen extends StatefulWidget {
   final String url;
   final String title;
   final String? infoText;
-  final Map<String, dynamic>? initialCookies;
+  final Map<dynamic, dynamic>? initialCookies;
 
   SimpleWebViewScreen(
     this.url,
     this.title, {
     String? infoText,
-    Map<String, dynamic>? initialCookies,
+    Map<dynamic, dynamic>? initialCookies,
   })  : this.infoText = infoText,
         this.initialCookies = initialCookies;
 
@@ -88,7 +88,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
 
   List<WebViewCookie> _getCookies() {
     return widget.initialCookies?.entries
-            .map((entry) => WebViewCookie(name: entry.key, value: entry.value.toString(), domain: _getDomain()))
+            .map((entry) => WebViewCookie(name: entry.key.toString(), value: entry.value.toString(), domain: _getDomain()))
             .toList() ??
         [];
   }
