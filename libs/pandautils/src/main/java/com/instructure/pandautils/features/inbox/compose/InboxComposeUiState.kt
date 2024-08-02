@@ -57,6 +57,7 @@ data class RecipientPickerUiState(
     var recipientsByRole: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java),
     var selectedRole: EnrollmentType? = null,
     var recipientsToShow: List<Recipient> = emptyList(),
+    var allRecipientsToShow: Recipient? = null,
     var selectedRecipients: List<Recipient> = emptyList(),
     var searchValue: TextFieldValue = TextFieldValue(""),
     var screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,

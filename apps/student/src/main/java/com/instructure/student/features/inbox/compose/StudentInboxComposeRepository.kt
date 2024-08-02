@@ -36,4 +36,8 @@ class StudentInboxComposeRepository: InboxComposeRepository {
     ): DataResult<List<Conversation>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun canSendToAll(context: CanvasContext): DataResult<Boolean> {
+        TODO("Not yet implemented")
+    }
 }

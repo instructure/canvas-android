@@ -191,10 +191,27 @@ private fun RecipientPickerRoleScreen(
                     })
             }
         } else {
+            uiState.allRecipientsToShow?.let {
+                item {
+                    RoleRow(
+                        name = it.name ?: "",
+                        roleCount = it.userCount,
+                        isSelected = uiState.selectedRecipients.contains(it),
+                    ) {
+                        actionHandler(
+                            RecipientPickerActionHandler.RecipientClicked(
+                                it
+                            )
+                        )
+                    }
+                }
+            }
+
             items(uiState.recipientsByRole.keys.toList()) { role ->
                 RoleRow(
                     name = role.displayText,
                     roleCount = uiState.recipientsByRole[role]?.size ?: 0,
+                    isSelected = false,
                     onSelect = {
                         actionHandler(RecipientPickerActionHandler.RoleClicked(role))
                     })
@@ -213,6 +230,21 @@ private fun RecipientPickerPeopleScreen(
         Modifier
             .fillMaxSize()
     ) {
+        uiState.allRecipientsToShow?.let {
+            item {
+                RoleRow(
+                    name = it.name ?: "",
+                    roleCount = it.userCount,
+                    isSelected = uiState.selectedRecipients.contains(it),
+                ) {
+                    actionHandler(
+                        RecipientPickerActionHandler.RecipientClicked(
+                            it
+                        )
+                    )
+                }
+            }
+        }
         items(uiState.recipientsToShow) { recipient ->
             RecipientRow(
                 recipient = recipient,
@@ -286,6 +318,7 @@ fun StateScreen(
 private fun RoleRow(
     name: String,
     roleCount: Int,
+    isSelected: Boolean,
     onSelect: () -> Unit,
 ) {
     Row(
@@ -322,6 +355,14 @@ private fun RoleRow(
         }
 
         Spacer(Modifier.weight(1f))
+
+        if (isSelected) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_checkmark),
+                contentDescription = stringResource(R.string.a11y_selected),
+                tint = colorResource(id = R.color.textDarkest),
+            )
+        }
     }
 }
 
@@ -618,6 +659,7 @@ fun RoleRowPreview() {
     RoleRow(
         name = "Teacher",
         roleCount = 5,
+        isSelected = false,
         onSelect = {}
     )
 }

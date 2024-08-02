@@ -7,6 +7,7 @@ import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -81,5 +82,15 @@ class ParentInboxComposeRepository @Inject constructor(
             isBulk = if (isIndividual) { 0 } else { 1 },
             params = restParams
         )
+    }
+
+    override suspend fun canSendToAll(context: CanvasContext): DataResult<Boolean> {
+        val restParams = RestParams()
+        val permissionResponse =  courseAPI.getCoursePermissions(context.id, listOf(CanvasContextPermission.SEND_MESSAGES_ALL), restParams)
+
+        val result = permissionResponse.dataOrNull ?: return DataResult.Fail()
+
+        //return DataResult.Success(result.send_messages_all)
+        return DataResult.Success(true)
     }
 }

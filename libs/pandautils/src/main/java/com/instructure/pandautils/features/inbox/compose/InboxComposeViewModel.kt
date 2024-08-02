@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.utils.isCourse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class InboxComposeViewModel @Inject constructor(
     private val inboxComposeRepository: InboxComposeRepository,
 ): ViewModel() {
+    private var canSendToAll = false
     private val _uiState = MutableStateFlow(
         InboxComposeUiState()
     )
@@ -100,6 +102,7 @@ class InboxComposeViewModel @Inject constructor(
                     screenOption = InboxComposeScreenOptions.None,
                     recipientPickerUiState = it.recipientPickerUiState.copy(
                         screenOption = RecipientPickerScreenOption.Roles,
+                        selectedRole = null
                     )
                 ) }
 
@@ -109,6 +112,7 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { uiState.value.copy(
                     recipientPickerUiState = it.recipientPickerUiState.copy(
                         screenOption = RecipientPickerScreenOption.Roles,
+                        selectedRole = null
                     )
                 ) }
 
@@ -120,7 +124,8 @@ class InboxComposeViewModel @Inject constructor(
                         recipientPickerUiState = it.recipientPickerUiState.copy(
                             screenOption = RecipientPickerScreenOption.Recipients,
                             selectedRole = action.role,
-                            recipientsToShow = it.recipientPickerUiState.recipientsByRole[action.role] ?: emptyList()
+                            recipientsToShow = it.recipientPickerUiState.recipientsByRole[action.role] ?: emptyList(),
+                            allRecipientsToShow = getAllRecipients(action.role)
                         ),
                     )
                 }
@@ -187,6 +192,8 @@ class InboxComposeViewModel @Inject constructor(
     private fun loadRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean = false) {
         viewModelScope.launch {
 
+            canSendToAll = inboxComposeRepository.canSendToAll(context).dataOrThrow
+
             var recipients: List<Recipient> = emptyList()
             var newState: ScreenState = ScreenState.Empty
             try {
@@ -229,7 +236,8 @@ class InboxComposeViewModel @Inject constructor(
                 recipientPickerUiState = it.recipientPickerUiState.copy(
                     recipientsByRole = roleRecipients,
                     screenState = newState,
-                    recipientsToShow = recipientsToShow
+                    recipientsToShow = recipientsToShow,
+                    allRecipientsToShow = getAllRecipients(roleRecipients = roleRecipients)
                 )
             ) }
         }
@@ -251,6 +259,39 @@ class InboxComposeViewModel @Inject constructor(
 
                 handleAction(InboxComposeActionHandler.Close)
             }
+        }
+    }
+
+    private fun getAllRecipients(selected: EnrollmentType? = null, roleRecipients: EnumMap<EnrollmentType, List<Recipient>>? = null): Recipient? {
+        if (!canSendToAll) return null
+
+        val recipientState = uiState.value.recipientPickerUiState
+        val selectedContext = uiState.value.contextPickerUiState.selectedContext
+        val selectedRole = selected ?: recipientState.selectedRole
+        val contextString = selectedContext?.contextId ?: ""
+        val recipientsString = getEnrollmentTypeString(selectedRole)
+        val allRecipientId = contextString + recipientsString
+        val allRecipientName = "All in ${selectedRole?.displayText ?: selectedContext?.name ?: ""}"
+        val allUserCount =
+            if (selectedRole == null)
+                (roleRecipients ?: recipientState.recipientsByRole).values.flatten().distinct().size
+            else
+                recipientState.recipientsByRole[selectedRole]?.size ?: 0
+
+        return Recipient(
+            stringId = allRecipientId,
+            name = allRecipientName,
+            userCount = allUserCount,
+        )
+    }
+
+    private fun getEnrollmentTypeString(enrollmentType: EnrollmentType?): String {
+        return when (enrollmentType) {
+            EnrollmentType.STUDENTENROLLMENT -> "_students"
+            EnrollmentType.TEACHERENROLLMENT -> "_teachers"
+            EnrollmentType.TAENROLLMENT -> "_tas"
+            EnrollmentType.OBSERVERENROLLMENT -> "_observers"
+            else -> ""
         }
     }
 }
