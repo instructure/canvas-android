@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -33,6 +34,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../network/utils/analytics.dart';
 import '../../utils/veneers/flutter_snackbar_veneer.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
@@ -183,6 +185,30 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
               ],
             ),
           ),
+          Divider(),
+          Padding(
+              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+              child: OutlinedButton(
+                  onPressed: () {
+                    _onSubmissionAndRubricClicked(assignment.htmlUrl, l10n.submission);
+                  },
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Text(
+                          l10n.submissionAndRubric,
+                          style: textTheme.titleMedium?.copyWith(color: ParentTheme.of(context)?.studentColor),
+                        ),
+                        SizedBox(width: 6),
+                        Icon(CanvasIconsSolid.arrow_open_right, color: ParentTheme.of(context)?.studentColor, size: 14)
+                      ])),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6.0),
+                    ),
+                    side: BorderSide(width: 0.5, color: ParentTheme.of(context)?.onSurfaceColor ?? Colors.grey),
+                  ))),
           if (!fullyLocked) ...[
             Divider(),
             ..._rowTile(
@@ -371,5 +397,17 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           widget.courseId, _currentStudent!.id, subject, postscript);
       locator.get<QuickNav>().push(context, screen);
     }
+  }
+
+  _onSubmissionAndRubricClicked(String? assignmentUrl, String title) {
+    if (assignmentUrl == null) return;
+    final parentId = ApiPrefs.getUser()?.id ?? 0;
+    final currentStudentId = _currentStudent?.id ?? 0;
+    locator<QuickNav>().pushRoute(context, PandaRouter.submissionWebViewRoute(
+        assignmentUrl,
+        title,
+        {"k5_observed_user_for_$parentId": "$currentStudentId"}
+    ));
+    locator<Analytics>().logEvent(AnalyticsEventConstants.SUBMISSION_AND_RUBRIC_INTERACTION);
   }
 }

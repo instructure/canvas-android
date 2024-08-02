@@ -25,20 +25,19 @@ import 'package:flutter_parent/screens/announcements/announcement_details_screen
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
-import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
-import 'package:flutter_parent/screens/settings/legal_screen.dart';
 import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/pairing/qr_pairing_screen.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
+import 'package:flutter_parent/screens/settings/legal_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
@@ -55,7 +54,6 @@ import '../utils/accessibility_utils.dart';
 import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
-import '../utils/test_helpers/mock_helpers.dart';
 import '../utils/test_helpers/mock_helpers.mocks.dart';
 
 final _analytics = MockAnalytics();
@@ -368,6 +366,18 @@ void main() {
       expect(widget, isA<CourseRoutingShellScreen>());
       expect((widget as CourseRoutingShellScreen).courseId, courseId);
       expect((widget).type, CourseShellType.frontPage);
+    });
+
+    test('submissionWebViewRoute returns SimpleWebViewScreen', () {
+      final url = 'https://test.instructure.com';
+      final title = 'Title';
+      final cookies = {'key': 'value'};
+      final widget = _getWidgetFromRoute(PandaRouter.submissionWebViewRoute(url, title, cookies)) as SimpleWebViewScreen;
+
+      expect(widget, isA<SimpleWebViewScreen>());
+      expect(widget.url, url);
+      expect(widget.title, title);
+      expect(widget.initialCookies, cookies);
     });
   });
 
