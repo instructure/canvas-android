@@ -88,4 +88,8 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     fun tapManageStudents() {
         onViewWithText(R.string.screenTitleManageStudents).click()
     }
+
+    fun tapSettings() {
+        onViewWithText(R.string.settings).click()
+    }
 }
