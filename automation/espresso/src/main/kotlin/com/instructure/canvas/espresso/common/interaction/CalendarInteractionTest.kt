@@ -346,7 +346,6 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
     }
 
     @Test
-    @StubTablet("Known issue, see MBL-17776")
     fun selectDiscussionOpensDiscussionDetails() {
         val data = initData()
 
