@@ -19,6 +19,9 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../service_locator.dart';
+import '../../url_launcher.dart';
+
 class SimpleWebViewScreen extends StatefulWidget {
   final String url;
   final String title;
@@ -69,6 +72,10 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
   }
 
   NavigationDecision _handleNavigation(NavigationRequest request) {
+    if (request.url.contains('/download?download_frd=')) {
+      locator<UrlLauncher>().launch(request.url);
+      return NavigationDecision.prevent;
+    }
     if (!request.isForMainFrame || widget.url.startsWith(request.url)) return NavigationDecision.navigate;
     return NavigationDecision.prevent;
   }
