@@ -60,7 +60,7 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
 
-    fun calendarEventRoute(contextType: CanvasContext.Type, contextId: Long, eventId: Long) = "$baseUrl/$contextType/$contextId/calendar_events/$eventId"
+    fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
     fun createEventRoute(initialDate: String?) = "$baseUrl/create-event/${Uri.encode(initialDate.orEmpty())}"
     fun updateEventRoute(scheduleItem: ScheduleItem) = "$baseUrl/update-event/${ScheduleItemParametersType.serializeAsValue(scheduleItem)}"
 
@@ -107,7 +107,7 @@ class Navigation(apiPrefs: ApiPrefs) {
             }
             fragment<EventFragment>(calendarEvent) {
                 argument(EventFragment.CONTEXT_TYPE) {
-                    type = NavType.EnumType(CanvasContext.Type::class.java)
+                    type = NavType.StringType
                     nullable = false
                 }
                 argument(EventFragment.CONTEXT_ID) {

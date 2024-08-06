@@ -43,7 +43,7 @@ class ParentCalendarRouter(
     }
 
     override fun openCalendarEvent(canvasContext: CanvasContext, eventId: Long) {
-        navigation.navigate(activity, navigation.calendarEventRoute(canvasContext.type, canvasContext.id, eventId))
+        navigation.navigate(activity, navigation.calendarEventRoute(canvasContext.type.apiString, canvasContext.id, eventId))
     }
 
     override fun openToDo(plannerItem: PlannerItem) {
@@ -58,6 +58,6 @@ class ParentCalendarRouter(
         navigation.navigate(activity, navigation.createEventRoute(initialDateString))
     }
 
-    // This is a no-op in the Parent app, navigation drawer is already handled in the Activity
+    // This is a no-op in the Parent app, navigation drawer is already handled in the DashboardFragment
     override fun attachNavigationDrawer() = Unit
 }

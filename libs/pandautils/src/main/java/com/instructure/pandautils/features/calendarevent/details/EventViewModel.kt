@@ -63,7 +63,7 @@ class EventViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val canvasContext: CanvasContext? = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT)
-    private val canvasContextType: CanvasContext.Type? = savedStateHandle.get<CanvasContext.Type>(EventFragment.CONTEXT_TYPE)
+    private val canvasContextType: String? = savedStateHandle.get<String>(EventFragment.CONTEXT_TYPE)
     private val canvasContextId: Long? = savedStateHandle.get<Long>(EventFragment.CONTEXT_ID)
     private val scheduleItemArg: ScheduleItem? = savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM)
     private val scheduleItemId: Long? = savedStateHandle.get<Long>(EventFragment.SCHEDULE_ITEM_ID)
@@ -201,9 +201,12 @@ class EventViewModel @Inject constructor(
     fun getCanvasContext(): CanvasContext? {
         return when {
             canvasContext != null -> canvasContext
-            canvasContextType != null && canvasContextId != null -> CanvasContext.fromContextCode(
-                CanvasContext.makeContextId(canvasContextType, canvasContextId)
-            )
+            canvasContextType != null && canvasContextId != null -> {
+                val type = CanvasContext.Type.entries.find { it.apiString == canvasContextType } ?: CanvasContext.Type.UNKNOWN
+                CanvasContext.fromContextCode(
+                    CanvasContext.makeContextId(type, canvasContextId)
+                )
+            }
             else -> null
         }
     }
