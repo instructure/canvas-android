@@ -153,11 +153,11 @@ class PandaRouter {
 
   static final String _simpleWebView = '/internal';
 
-  static String simpleWebViewRoute(String url, String infoText) =>
-      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=${Uri.encodeQueryComponent(infoText)}';
+  static String simpleWebViewRoute(String url, String infoText, bool limitWebAccess) =>
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=${Uri.encodeQueryComponent(infoText)}&${_RouterKeys.limitWebAccess}=${limitWebAccess}';
 
-  static String submissionWebViewRoute(String url, String title, Map<String, String> cookies) =>
-      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.title}=${Uri.encodeQueryComponent(title)}&${_RouterKeys.cookies}=${jsonEncode(cookies)}';
+  static String submissionWebViewRoute(String url, String title, Map<String, String> cookies, bool limitWebAccess) =>
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.title}=${Uri.encodeQueryComponent(title)}&${_RouterKeys.cookies}=${jsonEncode(cookies)}&${_RouterKeys.limitWebAccess}=${limitWebAccess}';
 
   static String settings() => '/settings';
 
@@ -384,7 +384,9 @@ class PandaRouter {
     final title = (titleParam == null || titleParam.isEmpty) ? url : titleParam;
     final cookiesParam = params[_RouterKeys.cookies]?.firstOrNull;
     final cookies = (cookiesParam == null || cookiesParam.isEmpty) ? {} : jsonDecode(cookiesParam);
-    return SimpleWebViewScreen(url, title, infoText: infoText == null || infoText == 'null' ? null : infoText, initialCookies: cookies);
+    final limitWebAccess = params[_RouterKeys.limitWebAccess]?.firstOrNull == 'true';
+    return SimpleWebViewScreen(url, title, limitWebAccess,
+        infoText: infoText == null || infoText == 'null' ? null : infoText, initialCookies: cookies);
   });
 
   static Handler _syllabusHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -469,7 +471,7 @@ class PandaRouter {
       final url = await _interactor.getAuthUrl(link);
       if (limitWebAccess) {
         // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
-        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage));
+        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage, true));
       } else if (await locator<UrlLauncher>().canLaunch(link) ?? false) {
         // No native route found, let's launch the url if possible, or show an error toast
         locator<UrlLauncher>().launch(url);
@@ -529,6 +531,7 @@ class _RouterKeys {
   static final infoText = 'infoText';
   static final title = 'title';
   static final cookies = 'cookies';
+  static final limitWebAccess = 'limitWebAccess';
   static final isCreatingAccount = 'isCreatingAccount';
   static final loginFlow = 'loginFlow';
   static final qrLoginUrl = 'qrLoginUrl';

@@ -406,7 +406,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     locator<QuickNav>().pushRoute(context, PandaRouter.submissionWebViewRoute(
         assignmentUrl,
         title,
-        {"k5_observed_user_for_$parentId": "$currentStudentId"}
+        {"k5_observed_user_for_$parentId": "$currentStudentId"},
+        false
     ));
     locator<Analytics>().logEvent(AnalyticsEventConstants.SUBMISSION_AND_RUBRIC_INTERACTION);
   }

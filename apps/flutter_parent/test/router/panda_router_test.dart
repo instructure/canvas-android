@@ -372,12 +372,13 @@ void main() {
       final url = 'https://test.instructure.com';
       final title = 'Title';
       final cookies = {'key': 'value'};
-      final widget = _getWidgetFromRoute(PandaRouter.submissionWebViewRoute(url, title, cookies)) as SimpleWebViewScreen;
+      final widget = _getWidgetFromRoute(PandaRouter.submissionWebViewRoute(url, title, cookies, false)) as SimpleWebViewScreen;
 
       expect(widget, isA<SimpleWebViewScreen>());
       expect(widget.url, url);
       expect(widget.title, title);
       expect(widget.initialCookies, cookies);
+      expect(widget.limitWebAccess, false);
     });
   });
 
@@ -594,7 +595,7 @@ void main() {
       );
 
       verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
-      verify(_mockNav.pushRoute(any, PandaRouter.simpleWebViewRoute(url, AppLocalizations().webAccessLimitedMessage)));
+      verify(_mockNav.pushRoute(any, PandaRouter.simpleWebViewRoute(url, AppLocalizations().webAccessLimitedMessage, true)));
     });
   });
 

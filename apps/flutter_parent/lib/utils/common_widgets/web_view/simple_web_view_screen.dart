@@ -27,10 +27,12 @@ class SimpleWebViewScreen extends StatefulWidget {
   final String title;
   final String? infoText;
   final Map<dynamic, dynamic>? initialCookies;
+  final bool limitWebAccess;
 
   SimpleWebViewScreen(
     this.url,
-    this.title, {
+    this.title,
+    this.limitWebAccess, {
     String? infoText,
     Map<dynamic, dynamic>? initialCookies,
   })  : this.infoText = infoText,
@@ -76,7 +78,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
       locator<UrlLauncher>().launch(request.url);
       return NavigationDecision.prevent;
     }
-    if (!request.isForMainFrame || widget.url.startsWith(request.url)) return NavigationDecision.navigate;
+    if (!request.isForMainFrame || widget.url.startsWith(request.url) || !widget.limitWebAccess) return NavigationDecision.navigate;
     return NavigationDecision.prevent;
   }
 
