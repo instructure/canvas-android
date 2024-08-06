@@ -15,10 +15,12 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.parentapp.features.calendarevent.ParentEventRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,11 +28,10 @@ import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class ToDoModule {
+class EventModule {
 
     @Provides
-    fun provideToDoRouter(activity: FragmentActivity): ToDoRouter {
-        // TODO: Implement
-        throw NotImplementedError()
+    fun provideEventRouter(activity: FragmentActivity, navigation: Navigation): EventRouter {
+        return ParentEventRouter(activity, navigation)
     }
 }

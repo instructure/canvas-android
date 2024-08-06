@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
