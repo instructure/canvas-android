@@ -1,18 +1,17 @@
 /*
  * Copyright (C) 2024 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
 package com.instructure.parentapp.features.calendar
 
@@ -25,7 +24,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Plannable
-import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -72,11 +70,11 @@ class ParentCalendarRepositoryTest {
     }
 
     @Test
-    fun `getPlannerItems returns correct items`() = runTest {
+    fun `getPlannerItems returns correct items sorted by date`() = runTest {
         val assignment = ScheduleItem(
             itemId = "123",
             title = "assignment",
-            assignment = Assignment(id = 123L, dueAt = LocalDateTime.now().toApiString()),
+            assignment = Assignment(id = 123L, dueAt = LocalDateTime.now().plusHours(1).toApiString()),
             itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
             contextCode = "course_1"
         )
@@ -85,7 +83,7 @@ class ParentCalendarRepositoryTest {
             itemId = "0",
             title = "calendar event",
             assignment = null,
-            startAt = LocalDateTime.now().toApiString(),
+            startAt = LocalDateTime.now().plusHours(2).toApiString(),
             endAt = LocalDateTime.now().toApiString(),
             itemType = ScheduleItem.Type.TYPE_CALENDAR,
             contextCode = "course_1"
@@ -128,9 +126,11 @@ class ParentCalendarRepositoryTest {
         val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
 
         assertEquals(3, result.size)
-        val assignmentResult = result.find { it.plannableType == PlannableType.ASSIGNMENT }!!
-        val calendarEventResult = result.find { it.plannableType == PlannableType.CALENDAR_EVENT }!!
-        val plannerNoteResult = result.find { it.plannableType == PlannableType.PLANNER_NOTE }!!
+        // Planner items should be sorted by date
+        val plannerNoteResult = result[0]
+        val assignmentResult = result[1]
+        val calendarEventResult = result[2]
+
         assertEquals(assignment.assignment?.id, assignmentResult.plannable.id)
         assertEquals(assignment.title, assignmentResult.plannable.title)
         assertEquals(assignment.contextCode, assignmentResult.canvasContext.contextId)

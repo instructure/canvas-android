@@ -187,7 +187,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     }
 }
 
-val PlannerItemParametersType = object : NavType<PlannerItem>(
+private val PlannerItemParametersType = object : NavType<PlannerItem>(
     isNullableAllowed = false
 ) {
     override fun put(bundle: Bundle, key: String, value: PlannerItem) {
@@ -207,7 +207,7 @@ val PlannerItemParametersType = object : NavType<PlannerItem>(
     }
 }
 
-val ScheduleItemParametersType = object : NavType<ScheduleItem>(
+private val ScheduleItemParametersType = object : NavType<ScheduleItem>(
     isNullableAllowed = false
 ) {
     override fun put(bundle: Bundle, key: String, value: ScheduleItem) {

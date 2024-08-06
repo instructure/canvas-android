@@ -19,7 +19,6 @@ package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -77,16 +76,12 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun handleDeeplink() {
-        try {
-            val uri = intent?.data
+        val uri = intent?.data
 
-            uri?.let {
-                viewModelScope.launch {
-                    _events.send(DashboardAction.NavigateDeepLink(it))
-                }
+        uri?.let {
+            viewModelScope.launch {
+                _events.send(DashboardAction.NavigateDeepLink(it))
             }
-        } catch (e: Exception) {
-            Log.e(this.javaClass.simpleName, e.message.orEmpty())
         }
     }
 

@@ -27,7 +27,7 @@ class ParentCalendarRouter(
     private val navigation: Navigation
 ) : CalendarRouter {
 
-    // This is a no-op in the Parent app, navigation drawer is already handled in the Activity
+    // This is a no-op in the Parent app, navigation drawer is already handled in the DashboardFragment
     override fun openNavigationDrawer() = Unit
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {

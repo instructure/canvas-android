@@ -35,6 +35,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
@@ -78,6 +79,9 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
     @Inject
     lateinit var calendarSharedEvents: CalendarSharedEvents
 
+    @Inject
+    lateinit var firebaseCrashlytics: FirebaseCrashlytics
+
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
 
@@ -98,7 +102,13 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private fun handleDashboardAction(dashboardAction: DashboardAction) {
         when (dashboardAction) {
-            is DashboardAction.NavigateDeepLink -> navController.navigate(dashboardAction.deepLinkUri)
+            is DashboardAction.NavigateDeepLink -> {
+                try {
+                    navController.navigate(dashboardAction.deepLinkUri)
+                } catch (e: Exception) {
+                    firebaseCrashlytics.recordException(e)
+                }
+            }
         }
     }
 
@@ -214,16 +224,16 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
         bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.courses -> {
-                    binding.todayButtonHolder.setGone()
-                    navigateWithPopBackStack(navigation.courses)
-                }
+                R.id.courses -> navigateWithPopBackStack(navigation.courses)
                 R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
-                R.id.alerts -> {
-                    binding.todayButtonHolder.setGone()
-                    navigateWithPopBackStack(navigation.alerts)
-                }
+                R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
                 else -> false
+            }
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.route == navigation.alerts || destination.route == navigation.courses) {
+                binding.todayButtonHolder.setGone()
             }
         }
 
