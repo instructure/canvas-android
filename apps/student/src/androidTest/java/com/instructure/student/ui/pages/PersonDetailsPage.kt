@@ -44,6 +44,10 @@ class PersonDetailsPage: BasePage(R.id.clickContainer) {
         userName.assertContainsText(user.name)
     }
 
+    fun assertIsPerson(userNameString: String) {
+        userName.assertContainsText(userNameString)
+    }
+
     //OfflineMethod
     fun assertComposeMessageIcon(visibility: ViewMatchers.Visibility) {
         onView(Matchers.allOf(withId(R.id.compose))).check(matches(withEffectiveVisibility(visibility)))
