@@ -39,17 +39,19 @@ class AssignmentOverrideView @JvmOverloads constructor(
 
     private val binding: ViewAssignmentOverrideBinding
 
-    private var mDueDateGroup: DueDateGroup by Delegates.notNull()
-    private val mDateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
-    private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(context) }
+    private var dueDateGroup: DueDateGroup by Delegates.notNull()
+    private val dateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
+    private val timeFormat by lazy { DateHelper.getPreferredTimeFormat(context) }
 
     // Default time to use if none is set; 11:59pm
-    private var mDefaultTime = Calendar.getInstance().apply { set(Calendar.HOUR_OF_DAY, 23); set(Calendar.MINUTE, 59) }
+    private var defaultTime = Calendar.getInstance().apply { set(Calendar.HOUR_OF_DAY, 23); set(Calendar.MINUTE, 59) }
+    // Default from time to use if none is set; 12:00am
+    private var defaultFromTime = Calendar.getInstance().apply { set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0) }
     // Default date to use if none is set; Defaults to today's date
-    private var mDefaultDate = Calendar.getInstance().apply { time = Date()}
+    private var defaultDate = Calendar.getInstance().apply { time = Date()}
 
     // Should only show remove if there is more than one assignment override
-    private var mShowRemove = true
+    private var showRemove = true
 
     init {
         binding = ViewAssignmentOverrideBinding.inflate(LayoutInflater.from(context), this, true)
@@ -86,19 +88,19 @@ class AssignmentOverrideView @JvmOverloads constructor(
             assigneeClickListener: () -> Unit
     ) = with(binding) {
 
-        mDueDateGroup = dueDateGroup
-        mShowRemove = showRemove
+        this@AssignmentOverrideView.dueDateGroup = dueDateGroup
+        this@AssignmentOverrideView.showRemove = showRemove
 
         // Setup views
         assignTo.setText(if (assigneesList.isNotEmpty()) assigneesList.joinTo(SpannableStringBuilder()) else " ")
 
         with(dueDateGroup.coreDates) {
-            binding.dueDate.setText(mDateFormat.formatOrDoubleDash(dueDate))
-            dueTime.setText(mTimeFormat.formatOrDoubleDash(dueDate))
-            toDate.setText(mDateFormat.formatOrDoubleDash(lockDate))
-            toTime.setText(mTimeFormat.formatOrDoubleDash(lockDate))
-            fromDate.setText(mDateFormat.formatOrDoubleDash(unlockDate))
-            fromTime.setText(mTimeFormat.formatOrDoubleDash(unlockDate))
+            binding.dueDate.setText(dateFormat.formatOrDoubleDash(dueDate))
+            dueTime.setText(timeFormat.formatOrDoubleDash(dueDate))
+            toDate.setText(dateFormat.formatOrDoubleDash(lockDate))
+            toTime.setText(timeFormat.formatOrDoubleDash(lockDate))
+            fromDate.setText(dateFormat.formatOrDoubleDash(unlockDate))
+            fromTime.setText(timeFormat.formatOrDoubleDash(unlockDate))
         }
 
         assignTo.setOnClickListener {
@@ -120,8 +122,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
             datePickerClickListener(dueDateGroup.coreDates.dueDate) { year, month, dayOfMonth ->
                 with(dueDateGroup.coreDates) {
                     val updatedDate = setupDateCalendar(year, month, dayOfMonth, dueDate)
-                    binding.dueDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
-                    dueTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
+                    binding.dueDate.setText(dateFormat.formatOrDoubleDash(updatedDate))
+                    dueTime.setText(timeFormat.formatOrDoubleDash(updatedDate))
                     dueDate = updatedDate
                 }
             }
@@ -132,8 +134,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
             timePickerClickListener(dueDateGroup.coreDates.dueDate) { hour, min ->
                 with(dueDateGroup.coreDates) {
                     val updatedDate = setupTimeCalendar(hour, min, dueDate)
-                    dueTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
-                    binding.dueDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
+                    dueTime.setText(timeFormat.formatOrDoubleDash(updatedDate))
+                    binding.dueDate.setText(dateFormat.formatOrDoubleDash(updatedDate))
                     dueDate = updatedDate
                 }
             }
@@ -144,8 +146,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
             datePickerClickListener(dueDateGroup.coreDates.lockDate) { year, month, dayOfMonth ->
                 with(dueDateGroup.coreDates) {
                     val updatedDate = setupDateCalendar(year, month, dayOfMonth, lockDate)
-                    toDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
-                    toTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
+                    toDate.setText(dateFormat.formatOrDoubleDash(updatedDate))
+                    toTime.setText(timeFormat.formatOrDoubleDash(updatedDate))
                     lockDate = updatedDate
                 }
             }
@@ -156,8 +158,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
             timePickerClickListener(dueDateGroup.coreDates.lockDate) { hour, min ->
                 with(dueDateGroup.coreDates) {
                     val updatedDate = setupTimeCalendar(hour, min, lockDate)
-                    toTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
-                    toDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
+                    toTime.setText(timeFormat.formatOrDoubleDash(updatedDate))
+                    toDate.setText(dateFormat.formatOrDoubleDash(updatedDate))
                     lockDate = updatedDate
                 }
             }
@@ -167,9 +169,10 @@ class AssignmentOverrideView @JvmOverloads constructor(
         fromDate.setOnClickListener {
             datePickerClickListener(dueDateGroup.coreDates.unlockDate) { year, month, dayOfMonth ->
                 with(dueDateGroup.coreDates) {
-                    val updatedDate = setupDateCalendar(year, month, dayOfMonth, unlockDate)
-                    fromDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
-                    fromTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
+                    val updatedDate =
+                        setupDateCalendar(year, month, dayOfMonth, unlockDate, defaultFromTime)
+                    fromDate.setText(dateFormat.formatOrDoubleDash(updatedDate))
+                    fromTime.setText(timeFormat.formatOrDoubleDash(updatedDate))
                     unlockDate = updatedDate
                 }
             }
@@ -180,8 +183,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
             timePickerClickListener(dueDateGroup.coreDates.unlockDate) { hour, min ->
                 with(dueDateGroup.coreDates) {
                     val updatedDate = setupTimeCalendar(hour, min, unlockDate)
-                    fromTime.setText(mTimeFormat.formatOrDoubleDash(updatedDate))
-                    fromDate.setText(mDateFormat.formatOrDoubleDash(updatedDate))
+                    fromTime.setText(timeFormat.formatOrDoubleDash(updatedDate))
+                    fromDate.setText(dateFormat.formatOrDoubleDash(updatedDate))
                     unlockDate = updatedDate
                 }
             }
@@ -205,7 +208,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
 
         // unlock date cannot be after due date
         // unlock date cannot be after lock date
-        with(mDueDateGroup.coreDates) {
+        with(dueDateGroup.coreDates) {
             //            unlockDate ?: 0 + ?: 0
             dueDate?.let {
                 if (unlockDate?.after(it) == true) {
@@ -234,7 +237,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         }
 
         // Make sure someone is assigned to this assignment
-        if (!mDueDateGroup.hasOverrideAssignees && !mDueDateGroup.isEveryone) {
+        if (!dueDateGroup.hasOverrideAssignees && !dueDateGroup.isEveryone) {
             assignToTextInput.error = context.getString(R.string.assignee_blank_error)
             saveError = true
         }
@@ -263,7 +266,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
      * @return The resulting date after updating it with the hour and minute
      */
     private fun setupTimeCalendar(hour: Int, min: Int, date: Date?): Date {
-        return Calendar.getInstance().apply { time = date ?: mDefaultDate.time; set(Calendar.HOUR_OF_DAY, hour); set(Calendar.MINUTE, min) }.time
+        return Calendar.getInstance().apply { time = date ?: defaultDate.time; set(Calendar.HOUR_OF_DAY, hour); set(Calendar.MINUTE, min) }.time
     }
 
     /**
@@ -271,7 +274,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
      *
      * @return The resulting date after updating it with the new year, month and day
      */
-    private fun setupDateCalendar(year: Int, month: Int, dayOfMonth: Int, date: Date?): Date {
-        return Calendar.getInstance().apply { time = date ?: mDefaultTime.time; set(year, month, dayOfMonth) }.time
+    private fun setupDateCalendar(year: Int, month: Int, dayOfMonth: Int, date: Date?, defaultTime: Calendar = this.defaultTime): Date {
+        return Calendar.getInstance().apply { time = date ?: defaultTime.time; set(year, month, dayOfMonth) }.time
     }
 }
