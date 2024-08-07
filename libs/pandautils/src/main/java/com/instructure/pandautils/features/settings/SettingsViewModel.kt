@@ -13,7 +13,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */    package com.instructure.pandautils.features.settings
+ */
+package com.instructure.pandautils.features.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
@@ -35,6 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     settingsBehaviour: SettingsBehaviour,
+    themePrefs: ThemePrefs,
     private val syncSettingsFacade: SyncSettingsFacade
 ) :
     ViewModel() {
@@ -62,7 +64,7 @@ class SettingsViewModel @Inject constructor(
                     }
             }
         }
-        val appTheme = AppTheme.fromIndex(ThemePrefs.appTheme)
+        val appTheme = AppTheme.fromIndex(themePrefs.appTheme)
         _uiState.update { it.copy(items = settingsBehaviour.settingsItems, appTheme = appTheme.themeNameRes) }
     }
 

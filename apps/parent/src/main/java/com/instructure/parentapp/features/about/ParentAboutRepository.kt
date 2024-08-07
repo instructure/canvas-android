@@ -17,9 +17,9 @@
 package com.instructure.parentapp.features.about
 
 import android.content.Context
-import com.caverock.androidsvg.BuildConfig
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.about.AboutRepository
+import com.instructure.parentapp.BuildConfig
 
 class ParentAboutRepository(context: Context, apiPrefs: ApiPrefs) :
     AboutRepository(context, apiPrefs) {

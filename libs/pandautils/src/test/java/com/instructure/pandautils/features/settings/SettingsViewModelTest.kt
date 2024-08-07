@@ -29,7 +29,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +57,7 @@ class SettingsViewModelTest {
 
     private val settingsBehaviour: SettingsBehaviour = mockk(relaxed = true)
     private val syncSettingsFacade: SyncSettingsFacade = mockk(relaxed = true)
+    private val themePrefs: ThemePrefs = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -84,8 +84,7 @@ class SettingsViewModelTest {
         )
         every { settingsBehaviour.settingsItems } returns items
 
-        mockkObject(ThemePrefs)
-        every { ThemePrefs.appTheme } returns 0
+        every { themePrefs.appTheme } returns 0
 
         val viewModel = createViewModel()
 
@@ -108,8 +107,7 @@ class SettingsViewModelTest {
         )
         every { settingsBehaviour.settingsItems } returns items
 
-        mockkObject(ThemePrefs)
-        every { ThemePrefs.appTheme } returns 0
+        every { themePrefs.appTheme } returns 0
 
         val viewModel = createViewModel()
 
@@ -134,8 +132,7 @@ class SettingsViewModelTest {
 
         every { settingsBehaviour.settingsItems } returns items
 
-        mockkObject(ThemePrefs)
-        every { ThemePrefs.appTheme } returns 0
+        every { themePrefs.appTheme } returns 0
 
         val viewModel = createViewModel()
 
@@ -163,8 +160,7 @@ class SettingsViewModelTest {
         )
         every { settingsBehaviour.settingsItems } returns items
 
-        mockkObject(ThemePrefs)
-        every { ThemePrefs.appTheme } returns 0
+        every { themePrefs.appTheme } returns 0
 
         val viewModel = createViewModel()
 
@@ -180,6 +176,6 @@ class SettingsViewModelTest {
 
 
     private fun createViewModel(): SettingsViewModel {
-        return SettingsViewModel(settingsBehaviour, syncSettingsFacade)
+        return SettingsViewModel(settingsBehaviour, themePrefs, syncSettingsFacade)
     }
 }

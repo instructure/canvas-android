@@ -63,41 +63,7 @@ fun SettingsScreen(
 }
 
 @Composable
-fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
-
-    @Composable
-    fun AppThemeItem() {
-        return LabelValueVerticalItem(
-            modifier = Modifier
-                .clickable {
-                    uiState.onClick(SettingsItem.APP_THEME)
-                }
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 4.dp
-                )
-                .testTag("settingsItem"),
-            label = stringResource(R.string.appThemeSettingsTitle),
-            value = uiState.appTheme?.let { stringResource(it) }
-        )
-    }
-
-    @Composable
-    fun OfflineSyncItem() {
-        return LabelValueVerticalItem(
-            modifier = Modifier
-                .clickable {
-                    uiState.onClick(SettingsItem.OFFLINE_SYNCHRONIZATION)
-                }
-                .padding(
-                    horizontal = 16.dp,
-                    vertical = 4.dp
-                )
-                .testTag("settingsItem"),
-            label = stringResource(R.string.offlineSyncSettingsTitle),
-            value = uiState.offlineState?.let { stringResource(it) }
-        )
-    }
+private fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
 
     LazyColumn(modifier = modifier) {
         uiState.items.onEachIndexed { index, entry ->
@@ -117,11 +83,11 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
             items(items) { settingsItem ->
                 when (settingsItem) {
                     SettingsItem.APP_THEME -> {
-                        AppThemeItem()
+                        AppThemeItem(uiState)
                     }
 
                     SettingsItem.OFFLINE_SYNCHRONIZATION -> {
-                        OfflineSyncItem()
+                        OfflineSyncItem(uiState)
                     }
 
                     else -> {
@@ -144,13 +110,48 @@ fun SettingsContent(uiState: SettingsUiState, modifier: Modifier = Modifier) {
             if (index < uiState.items.size - 1) {
                 item {
                     Divider(
-                        color = colorResource(id = R.color.rce_divider),
+                        color = colorResource(id = R.color.backgroundMedium),
+                        thickness = 0.5.dp,
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
             }
         }
     }
+}
+
+@Composable
+private fun AppThemeItem(uiState: SettingsUiState) {
+    return LabelValueVerticalItem(
+        modifier = Modifier
+            .clickable {
+                uiState.onClick(SettingsItem.APP_THEME)
+            }
+            .padding(
+                horizontal = 16.dp,
+                vertical = 4.dp
+            )
+            .testTag("settingsItem"),
+        label = stringResource(R.string.appThemeSettingsTitle),
+        value = uiState.appTheme?.let { stringResource(it) }
+    )
+}
+
+@Composable
+private fun OfflineSyncItem(uiState: SettingsUiState) {
+    return LabelValueVerticalItem(
+        modifier = Modifier
+            .clickable {
+                uiState.onClick(SettingsItem.OFFLINE_SYNCHRONIZATION)
+            }
+            .padding(
+                horizontal = 16.dp,
+                vertical = 4.dp
+            )
+            .testTag("settingsItem"),
+        label = stringResource(R.string.offlineSyncSettingsTitle),
+        value = uiState.offlineState?.let { stringResource(it) }
+    )
 }
 
 @Composable
