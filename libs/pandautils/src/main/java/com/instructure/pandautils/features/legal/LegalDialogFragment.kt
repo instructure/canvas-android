@@ -17,13 +17,9 @@ package com.instructure.pandautils.features.legal
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
@@ -33,12 +29,18 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.DialogLegalBinding
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.setVisible
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LegalDialogFragment : DialogFragment() {
+
+    @Inject
+    lateinit var legalRouter: LegalRouter
+
     private var termsJob: Job? = null
     private var html: String = ""
 
@@ -76,21 +78,17 @@ class LegalDialogFragment : DialogFragment() {
         val dialog = builder.create()
 
         binding.termsOfUse.setOnClickListener {
-            launchCustomTab("http://www.canvaslms.com/policies/terms-of-use")
+            legalRouter.routeToTermsOfService(html)
             dialog.dismiss()
         }
 
         binding.privacyPolicy.setOnClickListener {
-            launchCustomTab("https://www.instructure.com/policies/product-privacy-policy")
+            legalRouter.routeToPrivacyPolicy()
             dialog.dismiss()
         }
 
         binding.openSource.setOnClickListener {
-            val intent = Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse("https://github.com/instructure/canvas-android")
-            )
-            requireActivity().startActivity(intent)
+            legalRouter.routeToOpenSource()
             dialog.dismiss()
         }
 
@@ -107,31 +105,6 @@ class LegalDialogFragment : DialogFragment() {
     override fun onDestroy() {
         super.onDestroy()
         termsJob?.cancel()
-    }
-
-    private fun launchCustomTab(url: String) {
-        val uri = Uri.parse(url)
-            .buildUpon()
-            .appendQueryParameter("display", "borderless")
-            .appendQueryParameter("platform", "android")
-            .build()
-
-        val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ThemePrefs.primaryColor)
-            .build()
-
-        var intent = CustomTabsIntent.Builder()
-            .setDefaultColorSchemeParams(colorSchemeParams)
-            .setShowTitle(true)
-            .build()
-            .intent
-
-        intent.data = uri
-
-        // Exclude Instructure apps from chooser options
-        intent = intent.asChooserExcludingInstructure()
-
-        requireActivity().startActivity(intent)
     }
 
     companion object {
