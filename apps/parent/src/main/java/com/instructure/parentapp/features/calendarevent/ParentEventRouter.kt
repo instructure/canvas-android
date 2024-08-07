@@ -14,23 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package com.instructure.parentapp.di
+package com.instructure.parentapp.features.calendarevent
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import com.instructure.parentapp.util.navigation.Navigation
 
-@Module
-@InstallIn(FragmentComponent::class)
-class EventModule {
+class ParentEventRouter(private val activity: FragmentActivity, private val navigation: Navigation) : EventRouter {
 
-    @Provides
-    fun provideEventRouter(activity: FragmentActivity): EventRouter {
-        // TODO: Implement
-        throw NotImplementedError()
+    override fun openEditEvent(scheduleItem: ScheduleItem) {
+        navigation.navigate(activity, navigation.updateEventRoute(scheduleItem))
     }
 }

@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addUserCalendarEvent
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import org.junit.Test
@@ -176,7 +177,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedTitle() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -198,7 +199,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedDate() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -221,7 +222,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedFrom() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -250,7 +251,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedTo() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -278,7 +279,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedFrequency() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -300,7 +301,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedLocation() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -322,7 +323,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUpdatedAddress() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         val event = data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -344,7 +345,7 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     @Test
     fun assertUnsavedChangesDialog() {
         val data = initData()
-        val user = data.users.values.first()
+        val user = getLoggedInUser()
         data.addUserCalendarEvent(
             userId = user.id,
             date = Date().toApiString(),
@@ -367,4 +368,6 @@ abstract class CreateUpdateEventInteractionTest : CanvasComposeTest() {
     abstract fun goToEditEvent(data: MockCanvas)
 
     abstract fun initData(): MockCanvas
+
+    abstract fun getLoggedInUser(): User
 }

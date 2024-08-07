@@ -15,27 +15,27 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import android.content.Context
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.about.AboutRepository
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
+import com.instructure.parentapp.features.calendarevent.ParentCreateUpdateEventRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
+
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class AboutModule {
+class CreateUpdateEventModule {
 
     @Provides
-    fun provideAboutRepository(
-        @ApplicationContext context: Context,
+    fun provideCreateUpdateEventRepository(
+        calendarEventApi: CalendarEventAPI.CalendarEventInterface,
         apiPrefs: ApiPrefs
-    ): AboutRepository {
-        // TODO: Implement
-        throw NotImplementedError()
+    ): CreateUpdateEventRepository {
+        return ParentCreateUpdateEventRepository(calendarEventApi, apiPrefs)
     }
 }

@@ -48,10 +48,6 @@ class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
     }
 
-    fun assertTextColor(title: String, color: Int) {
-        composeTestRule.onNodeWithText(title).assertTextColor(Color(color))
-    }
-
     fun assertDate(context: Context, date: Date) {
         val dateTitle = date.let {
             val dateText = DateHelper.dayMonthDateFormat.format(it)

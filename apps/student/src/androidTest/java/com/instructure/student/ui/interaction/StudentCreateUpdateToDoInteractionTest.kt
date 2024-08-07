@@ -18,6 +18,7 @@ package com.instructure.student.ui.interaction
 import com.instructure.canvas.espresso.common.interaction.CreateUpdateToDoInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.User
 import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.DashboardPage
@@ -69,4 +70,6 @@ class StudentCreateUpdateToDoInteractionTest : CreateUpdateToDoInteractionTest()
             favoriteCourseCount = 1
         )
     }
+
+    override fun getLoggedInUser(): User = MockCanvas.data.students.first()
 }
