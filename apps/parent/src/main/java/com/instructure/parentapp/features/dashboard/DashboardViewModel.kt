@@ -159,6 +159,10 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    private fun addStudent() {
+
+    }
+
     private fun onStudentSelected(student: User) {
         parentPrefs.currentStudent = student
         currentUser?.let {

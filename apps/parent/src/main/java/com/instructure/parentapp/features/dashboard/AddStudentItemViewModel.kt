@@ -13,24 +13,16 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
+ */    package com.instructure.parentapp.features.dashboard
 
-package com.instructure.parentapp.features.dashboard
-
+import androidx.annotation.ColorInt
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.parentapp.R
 
-
-data class StudentItemViewModel(
-    val studentItemViewData: StudentItemViewData,
-    private val onStudentSelected: (Long) -> Unit
+class AddStudentItemViewModel(
+    @ColorInt val color: Int,
+    val onAddStudentClicked: () -> Unit
 ) : ItemViewModel {
-
-    override val viewType: Int = 0
-
-    override val layoutId = R.layout.item_student
-
-    fun onStudentClick() {
-        onStudentSelected(studentItemViewData.studentId)
-    }
+    override val viewType: Int = 1
+    override val layoutId = R.layout.item_add_student
 }
