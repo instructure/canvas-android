@@ -15,27 +15,30 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
 import android.content.Context
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.about.AboutRepository
-import com.instructure.parentapp.features.about.ParentAboutRepository
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.parentapp.features.courses.list.CourseGradeFormatter
+import com.instructure.parentapp.features.courses.list.CoursesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 
+
 @Module
 @InstallIn(ViewModelComponent::class)
-class AboutModule {
+class CoursesModule {
 
     @Provides
-    fun provideAboutRepository(
-        @ApplicationContext context: Context,
-        apiPrefs: ApiPrefs
-    ): AboutRepository {
-        return ParentAboutRepository(context, apiPrefs)
+    fun provideCoursesRepository(courseApi: CourseAPI.CoursesInterface): CoursesRepository {
+        return CoursesRepository(courseApi)
+    }
+
+    @Provides
+    fun provideCourseGradeFormatter(@ApplicationContext context: Context): CourseGradeFormatter {
+        return CourseGradeFormatter(context)
     }
 }

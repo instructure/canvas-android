@@ -13,13 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
-package com.instructure.pandautils.di
+package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
+import com.instructure.student.features.calendartodo.StudentCreateUpdateToDoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +35,6 @@ class CreateUpdateToDoModule {
         coursesApi: CourseAPI.CoursesInterface,
         @Named(PLANNER_API_SERIALIZE_NULLS) plannerApi: PlannerAPI.PlannerInterface
     ): CreateUpdateToDoRepository {
-        return CreateUpdateToDoRepository(coursesApi, plannerApi)
+        return StudentCreateUpdateToDoRepository(coursesApi, plannerApi)
     }
 }

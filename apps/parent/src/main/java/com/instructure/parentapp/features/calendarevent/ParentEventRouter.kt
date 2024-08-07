@@ -14,29 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.parentapp.features.calendarevent
 
-package com.instructure.parentapp.features.calendar
+import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.parentapp.util.navigation.Navigation
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.material.Text
-import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
+class ParentEventRouter(private val activity: FragmentActivity, private val navigation: Navigation) : EventRouter {
 
-
-class CalendarFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireActivity()).apply {
-            setContent {
-                Text(text = "Calendar")
-            }
-        }
+    override fun openEditEvent(scheduleItem: ScheduleItem) {
+        navigation.navigate(activity, navigation.updateEventRoute(scheduleItem))
     }
 }

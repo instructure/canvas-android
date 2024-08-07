@@ -14,44 +14,34 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.calendar.CalendarRepository
-import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
+import com.instructure.parentapp.features.calendarevent.ParentCreateUpdateEventRepository
+import com.instructure.parentapp.features.calendartodo.ParentCreateUpdateToDoRepository
+import com.instructure.parentapp.util.ParentPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
-
-@Module
-@InstallIn(FragmentComponent::class)
-class CalendarModule {
-
-    @Provides
-    fun provideCalendarRouter(activity: FragmentActivity): CalendarRouter {
-        // TODO: Implement
-        throw NotImplementedError()
-    }
-}
+import javax.inject.Named
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class CalendarViewModelModule {
+class CreateUpdateToDoModule {
 
     @Provides
-    fun provideCalendarRepository(
-        plannerApi: PlannerAPI.PlannerInterface,
+    fun provideCreateUpdateToDoRepository(
         coursesApi: CourseAPI.CoursesInterface,
-        groupsApi: GroupAPI.GroupInterface,
-        apiPrefs: ApiPrefs
-    ): CalendarRepository {
-        // TODO: Implement
-        throw NotImplementedError()
+        parentPrefs: ParentPrefs,
+        @Named(PLANNER_API_SERIALIZE_NULLS) plannerApi: PlannerAPI.PlannerInterface
+    ): CreateUpdateToDoRepository {
+        return ParentCreateUpdateToDoRepository(coursesApi, parentPrefs, plannerApi)
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,18 +12,14 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
+package com.instructure.pandautils.room.calendar
 
-package com.instructure.pandautils.room
+import com.instructure.pandautils.room.common.createMigration
 
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+val calendarDatabaseMigrations = arrayOf(
 
-fun createMigration(from: Int, to: Int, migrationBlock: (SupportSQLiteDatabase) -> Unit): Migration {
-    return object : Migration(from, to) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            migrationBlock(database)
-        }
+    createMigration(2, 3) { database ->
+        database.execSQL("ALTER TABLE calendar_filter ADD COLUMN observeeId INTEGER NOT NULL DEFAULT -1")
     }
-}
+)

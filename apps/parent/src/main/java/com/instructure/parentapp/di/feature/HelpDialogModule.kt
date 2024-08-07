@@ -15,29 +15,35 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.loginapi.login.LoginNavigation
-import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
-import com.instructure.parentapp.features.login.ParentLoginNavigation
+import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
+import com.instructure.pandautils.features.help.HelpLinkFilter
+import com.instructure.parentapp.features.help.ParentHelpDialogFragmentBehavior
+import com.instructure.parentapp.features.help.ParentHelpLinkFilter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(ActivityComponent::class)
-class LoginModule {
+@InstallIn(ViewModelComponent::class)
+class HelpDialogModule {
 
     @Provides
-    fun provideAcceptableUsePolicyRouter(activity: FragmentActivity): AcceptableUsePolicyRouter {
-        // TODO: Implement
-        throw NotImplementedError()
+    fun provideHelpLinkFilter(): HelpLinkFilter {
+        return ParentHelpLinkFilter()
     }
+}
+
+@Module
+@InstallIn(FragmentComponent::class)
+class HelpDialogFragmentModule {
 
     @Provides
-    fun provideLoginNavigation(activity: FragmentActivity): LoginNavigation {
-        return ParentLoginNavigation(activity)
+    fun provideHelpDialogFragmentBehavior(activity: FragmentActivity): HelpDialogFragmentBehavior {
+        return ParentHelpDialogFragmentBehavior(activity)
     }
 }

@@ -14,36 +14,28 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.teacher.di
 
-package com.instructure.parentapp.di
-
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
-import com.instructure.pandautils.features.help.HelpLinkFilter
-import com.instructure.parentapp.features.help.ParentHelpDialogFragmentBehavior
-import com.instructure.parentapp.features.help.ParentHelpLinkFilter
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
+import com.instructure.teacher.features.calendartodo.TeacherCreateUpdateToDoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
+import javax.inject.Named
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class HelpDialogModule {
+class CreateUpdateToDoModule {
 
     @Provides
-    fun provideHelpLinkFilter(): HelpLinkFilter {
-        return ParentHelpLinkFilter()
-    }
-}
-
-@Module
-@InstallIn(FragmentComponent::class)
-class HelpDialogFragmentModule {
-
-    @Provides
-    fun provideHelpDialogFragmentBehavior(activity: FragmentActivity): HelpDialogFragmentBehavior {
-        return ParentHelpDialogFragmentBehavior(activity)
+    fun provideCreateUpdateToDoRepository(
+        coursesApi: CourseAPI.CoursesInterface,
+        @Named(PLANNER_API_SERIALIZE_NULLS) plannerApi: PlannerAPI.PlannerInterface
+    ): CreateUpdateToDoRepository {
+        return TeacherCreateUpdateToDoRepository(coursesApi, plannerApi)
     }
 }

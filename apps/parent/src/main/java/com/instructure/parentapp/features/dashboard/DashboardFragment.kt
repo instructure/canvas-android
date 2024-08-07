@@ -17,11 +17,9 @@
 
 package com.instructure.parentapp.features.dashboard
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +27,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.BundleCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,18 +34,23 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
@@ -60,6 +62,7 @@ import com.instructure.parentapp.util.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 
@@ -72,6 +75,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     @Inject
     lateinit var navigation: Navigation
+
+    @Inject
+    lateinit var calendarSharedEvents: CalendarSharedEvents
+
+    @Inject
+    lateinit var firebaseCrashlytics: FirebaseCrashlytics
 
     private lateinit var navController: NavController
     private lateinit var headerLayoutBinding: NavigationDrawerHeaderLayoutBinding
@@ -86,13 +95,34 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(calendarSharedEvents.events, ::handleSharedCalendarAction)
         return binding.root
+    }
+
+    private fun handleDashboardAction(dashboardAction: DashboardAction) {
+        when (dashboardAction) {
+            is DashboardAction.NavigateDeepLink -> {
+                try {
+                    navController.navigate(dashboardAction.deepLinkUri)
+                } catch (e: Exception) {
+                    firebaseCrashlytics.recordException(e)
+                }
+            }
+        }
+    }
+
+    private fun handleSharedCalendarAction(sharedCalendarAction: SharedCalendarAction) {
+        if (sharedCalendarAction is SharedCalendarAction.TodayButtonVisible) {
+            binding.todayButtonHolder.setVisible(sharedCalendarAction.visible)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleDashboardAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
@@ -102,8 +132,6 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 updateAlertCount(it.alertCount)
             }
         }
-
-        handleDeeplink()
     }
 
     private fun updateAlertCount(alertCount: Int) {
@@ -141,27 +169,15 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         setupBottomNavigationView()
     }
 
-    private fun handleDeeplink() {
-        try {
-            val uri = BundleCompat.getParcelable(
-                arguments ?: return,
-                KEY_DEEP_LINK_INTENT,
-                Intent::class.java
-            )?.data
-
-            uri?.let {
-                navController.navigate(it)
-            }
-        } catch (e: Exception) {
-            Log.e(this.javaClass.simpleName, e.message.orEmpty())
-        }
-    }
-
     private fun setupToolbar() {
         binding.navigationButtonHolder.contentDescription = getString(R.string.navigation_drawer_open)
         binding.navigationButtonHolder.onClick {
             openNavigationDrawer()
         }
+        binding.todayButtonHolder.onClick {
+            calendarSharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.TodayButtonTapped)
+        }
+        binding.todayButtonText.text = LocalDate.now().dayOfMonth.toString()
     }
 
     private fun setupNavigationDrawer() {
@@ -212,6 +228,12 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
                 R.id.calendar -> navigateWithPopBackStack(navigation.calendar)
                 R.id.alerts -> navigateWithPopBackStack(navigation.alerts)
                 else -> false
+            }
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.route == navigation.alerts || destination.route == navigation.courses) {
+                binding.todayButtonHolder.setGone()
             }
         }
 

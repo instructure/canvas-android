@@ -15,22 +15,27 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import android.content.Context
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.about.AboutRepository
+import com.instructure.parentapp.features.about.ParentAboutRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
-@InstallIn(FragmentComponent::class)
-class ToDoModule {
+@InstallIn(ViewModelComponent::class)
+class AboutModule {
 
     @Provides
-    fun provideToDoRouter(activity: FragmentActivity): ToDoRouter {
-        // TODO: Implement
-        throw NotImplementedError()
+    fun provideAboutRepository(
+        @ApplicationContext context: Context,
+        apiPrefs: ApiPrefs
+    ): AboutRepository {
+        return ParentAboutRepository(context, apiPrefs)
     }
 }

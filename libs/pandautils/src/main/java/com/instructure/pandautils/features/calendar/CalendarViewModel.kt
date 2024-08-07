@@ -31,9 +31,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -63,7 +61,7 @@ class CalendarViewModel @Inject constructor(
     private val clock: Clock,
     private val calendarPrefs: CalendarPrefs,
     private val calendarStateMapper: CalendarStateMapper,
-    private val calendarFilterDao: CalendarFilterDao
+    private val calendarSharedEvents: CalendarSharedEvents
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now(clock)
@@ -117,7 +115,7 @@ class CalendarViewModel @Inject constructor(
                     userId = apiPrefs.user!!.id.toString(),
                     filters = contextIdFilters
                 )
-                calendarFilterDao.insert(filter)
+                calendarRepository.updateCalendarFilters(filter)
             } else if (calendarPrefs.firstStart) { // Case where we already have filters in the DB from the Flutter version, this can only happen in the student app
                 calendarPrefs.firstStart = false
                 if (contextIdFilters.isEmpty()) {
@@ -133,7 +131,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     private suspend fun initFiltersFromDb(): CalendarFilterEntity? {
-        val filters = calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+        val filters = calendarRepository.getCalendarFilters()
         if (filters != null) {
             contextIdFilters.clear()
             contextIdFilters.addAll(filters.filters)
@@ -278,16 +276,16 @@ class CalendarViewModel @Inject constructor(
                 contextIdFilters.contains(plannerItem.canvasContext.contextId)
             }
             ?.map {
-            EventUiState(
-                it.plannable.id,
-                contextName = getContextNameForPlannerItem(it),
-                canvasContext = it.canvasContext,
-                iconRes = getIconForPlannerItem(it),
-                name = it.plannable.title,
-                date = getDateForPlannerItem(it),
-                status = getStatusForPlannerItem(it)
-            )
-        } ?: emptyList()
+                EventUiState(
+                    it.plannable.id,
+                    contextName = getContextNameForPlannerItem(it),
+                    canvasContext = it.canvasContext,
+                    iconRes = getIconForPlannerItem(it),
+                    name = it.plannable.title,
+                    date = getDateForPlannerItem(it),
+                    status = getStatusForPlannerItem(it)
+                )
+            } ?: emptyList()
 
         return CalendarEventsPageUiState(
             date = date,
@@ -344,7 +342,7 @@ class CalendarViewModel @Inject constructor(
                     context.getString(R.string.calendarFromTo, dateText, startText, endText)
                 }
             } else null
-        } else  {
+        } else {
             plannerItem.plannable.dueAt?.let {
                 val dateText = DateHelper.dayMonthDateFormat.format(it)
                 val timeText = DateHelper.getFormattedTime(context, it)
@@ -433,6 +431,7 @@ class CalendarViewModel @Inject constructor(
     private suspend fun clearAndReloadCalendar() {
         eventsByDay.clear()
         loadedMonths.clear()
+        contextIdFilters.clear()
 
         _uiState.emit(createNewUiState(loadingMonths = true))
 
@@ -475,6 +474,7 @@ class CalendarViewModel @Inject constructor(
 
     private fun selectedDayChanged(newDay: LocalDate) {
         selectedDay = newDay
+        calendarSharedEvents.sendEvent(viewModelScope, SharedCalendarAction.TodayButtonVisible(selectedDay != LocalDate.now(clock)))
         viewModelScope.launch {
             _uiState.emit(createNewUiState())
         }

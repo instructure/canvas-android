@@ -15,28 +15,23 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.ThemeAPI
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.parentapp.features.splash.SplashRepository
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.parentapp.features.calendarevent.ParentEventRouter
+import com.instructure.parentapp.util.navigation.Navigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
-class SplashModule {
+@InstallIn(FragmentComponent::class)
+class EventModule {
 
     @Provides
-    fun provideSplashRepository(
-        userApi: UserAPI.UsersInterface,
-        themeApi: ThemeAPI.ThemeInterface,
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface
-    ): SplashRepository {
-        return SplashRepository(userApi, themeApi, enrollmentApi)
+    fun provideEventRouter(activity: FragmentActivity, navigation: Navigation): EventRouter {
+        return ParentEventRouter(activity, navigation)
     }
 }
