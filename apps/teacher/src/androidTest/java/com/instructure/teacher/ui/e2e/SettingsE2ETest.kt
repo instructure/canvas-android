@@ -30,6 +30,7 @@ import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.espresso.ViewUtils
+import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.ui.pages.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.openLeftSideMenu
@@ -61,7 +62,7 @@ class SettingsE2ETest : TeacherTest() {
         Log.d(STEP_TAG,"Enter domain: 'mobileqa.beta.instructure.com'.")
         loginFindSchoolPage.enterDomain("mobileqa.beta.instructure.com")
 
-        Log.d(PREPARATION_TAG,"Enroll 'pronounteacher' teacher to '${course.name}' course.")
+        Log.d(PREPARATION_TAG,"Enroll '${BuildConfig.PRONOUN_TEACHER_TEST_USER}' teacher to '${course.name}' course.")
         val pronounTeacherId: Long = 12594806
         EnrollmentsApi.enrollUserAsTeacher(course.id, pronounTeacherId)
 
@@ -69,7 +70,7 @@ class SettingsE2ETest : TeacherTest() {
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
         Log.d(STEP_TAG, "Log in with the dedicated teacher for testing the pronouns.")
-        loginSignInPage.loginAs("pronounteacher", "password")
+        loginSignInPage.loginAs(BuildConfig.PRONOUN_TEACHER_TEST_USER, BuildConfig.PRONOUN_TEACHER_TEST_PASSWORD)
         dashboardPage.waitForRender()
 
         Log.d(PREPARATION_TAG,"Seed an email from the '${student.name}' student to Pronoun Teacher.")

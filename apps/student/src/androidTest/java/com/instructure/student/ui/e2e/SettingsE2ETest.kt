@@ -32,6 +32,7 @@ import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.espresso.ViewUtils
+import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.ui.utils.IntentActionMatcher
 import com.instructure.student.ui.utils.StudentTest
@@ -314,7 +315,7 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG,"Enter domain: 'mobileqa.beta.instructure.com'.")
         loginFindSchoolPage.enterDomain("mobileqa.beta.instructure.com")
 
-        Log.d(PREPARATION_TAG,"Enroll 'pronounstudent' teacher to '${course.name}' course.")
+        Log.d(PREPARATION_TAG,"Enroll '${BuildConfig.PRONOUN_STUDENT_TEST_USER}' teacher to '${course.name}' course.")
         val pronounStudentId: Long = 12594913
         EnrollmentsApi.enrollUserAsTeacher(course.id, pronounStudentId)
 
@@ -322,7 +323,7 @@ class SettingsE2ETest : StudentTest() {
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
         Log.d(STEP_TAG, "Log in with the dedicated student for testing the pronouns.")
-        loginSignInPage.loginAs("pronounstudent", "password")
+        loginSignInPage.loginAs(BuildConfig.PRONOUN_STUDENT_TEST_USER, BuildConfig.PRONOUN_STUDENT_TEST_PASSWORD)
         dashboardPage.waitForRender()
 
         Log.d(PREPARATION_TAG,"Seed an email from the '${teacher.name}' teacher to Pronoun Student.")
