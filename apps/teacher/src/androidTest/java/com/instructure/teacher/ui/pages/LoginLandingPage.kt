@@ -6,7 +6,9 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 
 /**
@@ -80,6 +82,14 @@ class LoginLandingPage : BasePage() {
      */
     fun assertDisplaysPreviousLogins() {
         previousLoginTitleText.assertDisplayed()
+    }
+
+    /**
+     * Assert that the user with the given name is displayed among the previous logins.
+     * @param userName: The userName to assert.
+     */
+    fun assertPreviousLoginUserDisplayed(userName: String) {
+        onView(withText(userName)).assertDisplayed()
     }
 
     /**

@@ -21,9 +21,14 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers.allOf
@@ -74,6 +79,27 @@ open class PersonContextPage : BasePage(R.id.studentContextPage) {
      */
     fun assertPersonNameIsDisplayed(personName: String) {
         studentName.check(matches(withText(personName))).assertDisplayed()
+    }
+
+    /**
+     * Asserts that the person has the corresponding pronouns.
+     *
+     * @param pronounString The pronouns of the person to assert.
+     */
+    fun assertPersonPronouns(pronounString: String) {
+        studentName.assertContainsText(pronounString)
+    }
+
+    /**
+     * Asserts that the person has the corresponding pronouns on the Toolbar.
+     *
+     * @param personName The person name to assert.
+     * @param pronounString The pronouns of the person to assert.
+     */
+    fun assertPersonToolbarPronouns(personName: String, pronounString: String) {
+        onView(withText(personName) + withParent(com.instructure.pandautils.R.id.toolbar) + withAncestor(R.id.studentContextPage))
+            .assertDisplayed().
+            assertContainsText(pronounString)
     }
 
     /**

@@ -28,7 +28,11 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.dataseeding.api.ConversationsApi
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.espresso.ViewUtils
+import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.ui.utils.IntentActionMatcher
 import com.instructure.student.ui.utils.StudentTest
@@ -293,5 +297,70 @@ class SettingsE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Release Intents.")
         Intents.release()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testPronounsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(courses = 1, teachers = 1)
+        val course = data.coursesList[0]
+        val teacher = data.teachersList[0]
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG,"Enter domain: 'mobileqa.beta.instructure.com'.")
+        loginFindSchoolPage.enterDomain("mobileqa.beta.instructure.com")
+
+        Log.d(PREPARATION_TAG,"Enroll '${BuildConfig.PRONOUN_STUDENT_TEST_USER}' teacher to '${course.name}' course.")
+        val pronounStudentId: Long = 12594913
+        EnrollmentsApi.enrollUserAsTeacher(course.id, pronounStudentId)
+
+        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(STEP_TAG, "Log in with the dedicated student for testing the pronouns.")
+        loginSignInPage.loginAs(BuildConfig.PRONOUN_STUDENT_TEST_USER, BuildConfig.PRONOUN_STUDENT_TEST_PASSWORD)
+        dashboardPage.waitForRender()
+
+        Log.d(PREPARATION_TAG,"Seed an email from the '${teacher.name}' teacher to Pronoun Student.")
+        ConversationsApi.createConversation(teacher.token, listOf(pronounStudentId.toString()))[0]
+
+        Log.d(STEP_TAG, "Open the Left Side Menu.")
+        dashboardPage.openLeftSideMenu()
+
+        val testPronoun = "(She/Her)"
+        Log.d(STEP_TAG, "Assert that the corresponding user info, so does the 'Pronoun Student (She/Her)' as username and 'pronounstudent@gmail.com' as user email are displayed.")
+        leftSideNavigationDrawerPage.assertUserInfo("Pronoun Student $testPronoun", "pronounstudent@gmail.com")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Select '${course.name}' course and open 'People' tab.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectPeople()
+        peopleListPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Assert that the '$testPronoun' pronouns are displayed next to the 'Pronoun Student' user's name.")
+        peopleListPage.assertPersonPronouns("Pronoun Student", testPronoun)
+
+        Log.d(STEP_TAG, "Click on the 'Pronoun Student' user.")
+        peopleListPage.selectPerson("Pronoun Student $testPronoun")
+
+        Log.d(STEP_TAG, "Assert that the Person Context Page also displays the '$testPronoun' pronouns besides all the corresponding information about the user.")
+        personDetailsPage.assertIsPerson("Pronoun Student $testPronoun")
+
+        CoursesApi.concludeCourse(course.id) // Need to conclude the course because otherwise there would be too much course with time on the dedicated user's dashboard.
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
+        ViewUtils.pressBackButton(3)
+
+        Log.d(STEP_TAG, "Open the Left Side Menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Click on 'Change User' menu and assert on the Login Landing Page that the '$testPronoun' pronouns are displayed besides the 'Pronoun Student' user's name.")
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
+        loginLandingPage.assertPreviousLoginUserDisplayed("Pronoun Student $testPronoun")
     }
 }
