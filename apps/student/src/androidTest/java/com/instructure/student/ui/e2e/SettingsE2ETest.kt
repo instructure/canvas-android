@@ -315,9 +315,9 @@ class SettingsE2ETest : StudentTest() {
         Log.d(STEP_TAG,"Enter domain: 'mobileqa.beta.instructure.com'.")
         loginFindSchoolPage.enterDomain("mobileqa.beta.instructure.com")
 
-        Log.d(PREPARATION_TAG,"Enroll '${BuildConfig.PRONOUN_STUDENT_TEST_USER}' teacher to '${course.name}' course.")
+        Log.d(PREPARATION_TAG,"Enroll '${BuildConfig.PRONOUN_STUDENT_TEST_USER}' student to '${course.name}' course.")
         val pronounStudentId: Long = 12594913
-        EnrollmentsApi.enrollUserAsTeacher(course.id, pronounStudentId)
+        EnrollmentsApi.enrollUserAsStudent(course.id, pronounStudentId)
 
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
