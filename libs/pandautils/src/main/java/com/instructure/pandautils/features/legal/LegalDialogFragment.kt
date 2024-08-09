@@ -44,10 +44,6 @@ class LegalDialogFragment : DialogFragment() {
     private var termsJob: Job? = null
     private var html: String = ""
 
-    init {
-        retainInstance = true
-    }
-
     @SuppressLint("InflateParams") // Suppress lint warning about passing null during view inflation
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity()).setTitle(getString(R.string.legal))
