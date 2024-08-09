@@ -32,6 +32,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_APPLICATION_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.about.AboutFragment
+import com.instructure.pandautils.features.legal.LegalDialogFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
@@ -43,7 +44,6 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.databinding.FragmentApplicationSettingsBinding
-import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -112,7 +112,7 @@ class ApplicationSettingsFragment : ParentFragment() {
             accountPreferences.onClick { addFragment(AccountPreferencesFragment.newInstance()) }
         }
 
-        legal.onClickWithRequireNetwork { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
+        legal.onClickWithRequireNetwork { LegalDialogFragment().show(requireFragmentManager(), null) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
         if (ApiPrefs.canGeneratePairingCode == true) {

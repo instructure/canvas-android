@@ -29,7 +29,7 @@ import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
-import com.instructure.parentapp.features.settings.SettingsFragment
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.parentapp.features.splash.SplashFragment
 
 

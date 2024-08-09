@@ -14,29 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.pandautils.features.settings
 
-package com.instructure.parentapp.features.settings
+data class SettingsUiState(
+    val items: Map<Int, List<SettingsItem>> = emptyMap(),
+    val offlineState: Int? = null,
+    val appTheme: Int? = null,
+    val onClick: (SettingsItem) -> Unit
+)
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.material.Text
-import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.Fragment
-
-
-class SettingsFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireActivity()).apply {
-            setContent {
-                Text(text = "Settings")
-            }
-        }
-    }
+sealed class SettingsViewModelAction {
+    data class Navigate(val item: SettingsItem) : SettingsViewModelAction()
 }

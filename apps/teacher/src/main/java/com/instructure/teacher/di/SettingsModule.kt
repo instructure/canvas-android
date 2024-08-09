@@ -14,28 +14,26 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.teacher.di
 
-package com.instructure.parentapp.di.feature
-
-import android.content.Context
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.about.AboutRepository
-import com.instructure.parentapp.features.about.ParentAboutRepository
+import com.instructure.pandautils.features.settings.SettingsBehaviour
+import com.instructure.pandautils.features.settings.SettingsRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
-class AboutModule {
+@InstallIn(SingletonComponent::class)
+class SettingsModule {
 
     @Provides
-    fun provideAboutRepository(
-        @ApplicationContext context: Context,
-        apiPrefs: ApiPrefs
-    ): AboutRepository {
-        return ParentAboutRepository(context, apiPrefs)
+    fun provideSettingsRouter(): SettingsRouter {
+        throw NotImplementedError("Not implemented")
+    }
+
+    @Provides
+    fun provideSettingsBehavior(): SettingsBehaviour {
+        throw NotImplementedError("Not implemented")
     }
 }

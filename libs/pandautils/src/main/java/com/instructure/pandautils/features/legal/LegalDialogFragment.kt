@@ -1,53 +1,48 @@
 /*
-* Copyright (C) 2017 - present Instructure, Inc.
-*
-*     This program is free software: you can redistribute it and/or modify
-*     it under the terms of the GNU General Public License as published by
-*     the Free Software Foundation, version 3 of the License.
-*
-*     This program is distributed in the hope that it will be useful,
-*     but WITHOUT ANY WARRANTY; without even the implied warranty of
-*     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*     GNU General Public License for more details.
-*
-*     You should have received a copy of the GNU General Public License
-*     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*/
-package com.instructure.teacher.dialog
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+package com.instructure.pandautils.features.legal
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.analytics.SCREEN_VIEW_LEGAL
-import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.DialogLegalBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.teacher.R
-import com.instructure.teacher.activities.InternalWebViewActivity
-import com.instructure.teacher.databinding.DialogLegalBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import javax.inject.Inject
 
-@ScreenView(SCREEN_VIEW_LEGAL)
-class LegalDialog : AppCompatDialogFragment() {
+@AndroidEntryPoint
+class LegalDialogFragment : DialogFragment() {
+
+    @Inject
+    lateinit var legalRouter: LegalRouter
 
     private var termsJob: Job? = null
     private var html: String = ""
-
-    init {
-        retainInstance = true
-    }
 
     @SuppressLint("InflateParams") // Suppress lint warning about passing null during view inflation
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -79,31 +74,22 @@ class LegalDialog : AppCompatDialogFragment() {
         val dialog = builder.create()
 
         binding.termsOfUse.setOnClickListener {
-            val intent = InternalWebViewActivity.createIntent(requireActivity(), "http://www.canvaslms.com/policies/terms-of-use", html, getString(R.string.termsOfUse), false)
-            requireActivity().startActivity(intent)
+            legalRouter.routeToTermsOfService(html)
             dialog.dismiss()
         }
 
         binding.privacyPolicy.setOnClickListener {
-            val intent = InternalWebViewActivity.createIntent(requireActivity(), "https://www.instructure.com/policies/product-privacy-policy", getString(R.string.privacyPolicy), false)
-            requireActivity().startActivity(intent)
+            legalRouter.routeToPrivacyPolicy()
             dialog.dismiss()
         }
 
         binding.openSource.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
-            requireActivity().startActivity(intent)
+            legalRouter.routeToOpenSource()
             dialog.dismiss()
         }
 
         dialog.setCanceledOnTouchOutside(true)
         return dialog
-    }
-
-    override fun onDestroyView() {
-        if (retainInstance)
-            dialog?.setDismissMessage(null)
-        super.onDestroyView()
     }
 
     override fun onDestroy() {
@@ -115,4 +101,3 @@ class LegalDialog : AppCompatDialogFragment() {
         const val TAG = "legalDialog"
     }
 }
-

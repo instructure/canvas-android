@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,26 +12,23 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
+package com.instructure.student.di.feature
 
-package com.instructure.pandautils.features.about
+import android.app.Activity
+import com.instructure.pandautils.features.legal.LegalRouter
+import com.instructure.student.features.legal.StudentLegalRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
-import android.content.Context
-import com.instructure.canvasapi2.utils.ApiPrefs
+@Module
+@InstallIn(ActivityComponent::class)
+class LegalModule {
 
-abstract class AboutRepository(
-    context: Context,
-    apiPrefs: ApiPrefs
-) {
-
-    val appName = context.packageManager.getApplicationLabel(context.applicationInfo).toString()
-
-    val domain = apiPrefs.domain
-
-    val loginId = apiPrefs.user?.loginId.orEmpty()
-
-    val email = apiPrefs.user?.email ?: apiPrefs.user?.primaryEmail.orEmpty()
-
-    abstract val appVersion: String
+    @Provides
+    fun provideLegalRouter(activity: Activity): LegalRouter {
+        return StudentLegalRouter(activity)
+    }
 }

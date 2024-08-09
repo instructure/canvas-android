@@ -14,28 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.teacher.di
 
-package com.instructure.parentapp.di.feature
-
-import android.content.Context
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.about.AboutRepository
-import com.instructure.parentapp.features.about.ParentAboutRepository
+import android.app.Activity
+import com.instructure.pandautils.features.legal.LegalRouter
+import com.instructure.teacher.features.legal.TeacherLegalRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.components.ActivityComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
-class AboutModule {
+@InstallIn(ActivityComponent::class)
+class LegalModule {
 
     @Provides
-    fun provideAboutRepository(
-        @ApplicationContext context: Context,
-        apiPrefs: ApiPrefs
-    ): AboutRepository {
-        return ParentAboutRepository(context, apiPrefs)
+    fun provideLegalRouter(activity: Activity): LegalRouter {
+        return TeacherLegalRouter(activity)
     }
 }
