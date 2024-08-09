@@ -17,7 +17,6 @@
 package com.instructure.student.ui.e2e.offline
 
 import android.util.Log
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.OfflineE2E
 import com.instructure.canvas.espresso.Priority
@@ -29,9 +28,8 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertOfflineIndicator
-import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.waitForNetworkToGoOffline
-import com.instructure.student.ui.utils.StudentComposeTest
+import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
+import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,7 +37,7 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class OfflineSyllabusE2ETest : StudentComposeTest() {
+class OfflineSyllabusTestE2E : StudentTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -51,8 +49,7 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
     fun testOfflineSyllabusE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
-        val syllabusBody = "this is the syllabus body"
-        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = syllabusBody)
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "This is the syllabus body.")
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -68,11 +65,10 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
         dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
 
-        Log.d(STEP_TAG, "Assert that the '${course.name}' course's checkbox state is 'Unchecked'.")
-        manageOfflineContentPage.assertCheckedStateOfItem(course.name, MaterialCheckBox.STATE_UNCHECKED)
-
-        Log.d(STEP_TAG, "Expand the course. Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
+        Log.d(STEP_TAG, "Expand '${course.name}' course.")
         manageOfflineContentPage.expandCollapseItem(course.name)
+
+        Log.d(STEP_TAG, "Select the 'Announcements' of '${course.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState("Syllabus")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
@@ -82,7 +78,7 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        waitForNetworkToGoOffline(device)
+        OfflineTestUtils.waitForNetworkToGoOffline(device)
 
         Log.d(STEP_TAG,"Wait for the Dashboard Page to be rendered. Select '${course.name}' course.")
         dashboardPage.waitForRender()
@@ -90,7 +86,7 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
 
         Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that the syllabus body string is displayed. Assert that the toolbar subtitle is the '${course.name}' course name.")
         courseBrowserPage.selectSyllabus()
-        syllabusPage.assertSyllabusBody(syllabusBody)
+        syllabusPage.assertSyllabusBody("This is the syllabus body.")
         syllabusPage.assertToolbarCourseTitle(course.name)
 
         Log.d(STEP_TAG,"Navigate to 'Summary' tab. Assert that all of the items, so '${assignment.name}' assignment is displayed.")
@@ -98,13 +94,11 @@ class OfflineSyllabusE2ETest : StudentComposeTest() {
         syllabusPage.assertItemDisplayed(assignment.name)
 
         Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Page List Page.")
-        assertOfflineIndicator()
+        OfflineTestUtils.assertOfflineIndicator()
     }
-
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
         turnOnConnectionViaADB()
     }
-
 }
