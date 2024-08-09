@@ -92,12 +92,6 @@ class LegalDialogFragment : DialogFragment() {
         return dialog
     }
 
-    override fun onDestroyView() {
-        if (retainInstance)
-            dialog?.setDismissMessage(null)
-        super.onDestroyView()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         termsJob?.cancel()
