@@ -511,4 +511,5 @@
     <string name="all_recipients_in_selected_context">All in %1$s</string>
     <string name="person">Person</string>
     <string name="people">People</string>
+    <string name="failed_to_send_message">Failed to send message</string>
 </resources>

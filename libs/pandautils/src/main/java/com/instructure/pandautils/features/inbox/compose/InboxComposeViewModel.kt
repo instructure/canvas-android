@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -244,20 +246,27 @@ class InboxComposeViewModel @Inject constructor(
     }
 
     private fun createConversation() {
-        uiState.value.selectContextUiState.selectedCanvasContext?.let { context ->
+        uiState.value.selectContextUiState.selectedCanvasContext?.let { canvasContext ->
             viewModelScope.launch {
                 _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
 
-                inboxComposeRepository.createConversation(
-                    recipients = uiState.value.recipientPickerUiState.selectedRecipients,
-                    subject = uiState.value.subject.text,
-                    message = uiState.value.body.text,
-                    context = context,
-                    attachments = emptyList(),
-                    isIndividual = uiState.value.sendIndividual
-                )
+                try {
+                    inboxComposeRepository.createConversation(
+                        recipients = uiState.value.recipientPickerUiState.selectedRecipients,
+                        subject = uiState.value.subject.text,
+                        message = uiState.value.body.text,
+                        context = canvasContext,
+                        attachments = emptyList(),
+                        isIndividual = uiState.value.sendIndividual
+                    ).dataOrThrow
 
-                handleAction(InboxComposeActionHandler.Close)
+                    context.toast(context.getString(R.string.messageSentSuccessfully), Toast.LENGTH_LONG)
+
+                    handleAction(InboxComposeActionHandler.Close)
+
+                } catch (e: IllegalStateException) {
+                    context.toast(context.getString(R.string.failed_to_send_message), Toast.LENGTH_LONG)
+                }
             }
         }
     }

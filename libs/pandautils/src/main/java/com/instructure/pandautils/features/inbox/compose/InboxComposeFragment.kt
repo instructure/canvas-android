@@ -56,7 +56,7 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
     private fun handleAction(action: InboxComposeViewModelAction) {
         when (action) {
             is InboxComposeViewModelAction.NavigateBack -> {
-                activity?.onBackPressed()
+                activity?.supportFragmentManager?.popBackStack()
             }
         }
     }

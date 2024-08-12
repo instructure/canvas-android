@@ -18,7 +18,6 @@
 
 package com.instructure.pandautils.features.inbox.compose.composables
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -98,18 +97,6 @@ fun RecipientPickerScreen(
         val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
             actionHandler(RecipientPickerActionHandler.RefreshCalled)
         })
-
-        BackHandler {
-            when (uiState.screenOption) {
-                is RecipientPickerScreenOption.Recipients -> {
-                    actionHandler(RecipientPickerActionHandler.RecipientBackClicked)
-                }
-
-                is RecipientPickerScreenOption.Roles -> {
-                    actionHandler(RecipientPickerActionHandler.DoneClicked)
-                }
-            }
-        }
 
         CanvasTheme {
             Scaffold(
