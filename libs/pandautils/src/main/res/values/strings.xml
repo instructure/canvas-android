@@ -508,4 +508,7 @@
     <string name="noRecipientsAvailable">No recipients available</string>
     <string name="a11y_backToRoles">Back to roles</string>
     <string name="a11y_closeRecipientPicker">Close recipient picker</string>
+    <string name="all_recipients_in_selected_context">All in %1$s</string>
+    <string name="person">Person</string>
+    <string name="people">People</string>
 </resources>

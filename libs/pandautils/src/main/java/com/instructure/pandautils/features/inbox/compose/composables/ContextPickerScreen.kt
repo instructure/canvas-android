@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.inbox.compose.contextpicker
+package com.instructure.pandautils.features.inbox.compose.composables
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background

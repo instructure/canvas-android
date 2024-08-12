@@ -2,7 +2,6 @@ package com.instructure.parentapp.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.models.Conversation
@@ -15,7 +14,6 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
@@ -30,13 +28,11 @@ import org.junit.Test
 class ParentInboxComposeRepositoryTest {
 
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val groupAPI: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
 
     private val inboxComposeRepository: InboxComposeRepository = ParentInboxComposeRepository(
         courseAPI,
-        groupAPI,
         recipientAPI,
         inboxAPI,
     )
@@ -77,16 +73,16 @@ class ParentInboxComposeRepositoryTest {
 
     @Test
     fun `Test courses paging`() = runTest {
-        val expected = listOf(
-            Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_COMPLETED))),
-            Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_COMPLETED)))
-        )
+        val list1 = listOf(Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),)
+        val list2 = listOf(Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))),)
+        val expected = list1 + list2
 
-        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(expected, LinkHeaders(nextUrl = "next"))
+        coEvery { courseAPI.getCoursesByEnrollmentType(Enrollment.EnrollmentType.Observer.apiTypeString, any()) } returns DataResult.Success(list1, LinkHeaders(nextUrl = "next"))
+        coEvery { courseAPI.next(any(), any()) } returns DataResult.Success(list2)
 
-        inboxComposeRepository.getCourses().dataOrThrow
+        val result = inboxComposeRepository.getCourses().dataOrThrow
 
-        coVerify(exactly = 1) { courseAPI.next("next", any()) }
+        assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)

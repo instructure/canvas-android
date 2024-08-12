@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,10 +8,14 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.displayText
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.isCourse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.EnumMap
@@ -18,13 +23,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InboxComposeViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val inboxComposeRepository: InboxComposeRepository,
 ): ViewModel() {
     private var canSendToAll = false
-    private val _uiState = MutableStateFlow(
-        InboxComposeUiState()
-    )
+
+    private val _uiState = MutableStateFlow(InboxComposeUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _events = Channel<InboxComposeViewModelAction>()
+    val events = _events.receiveAsFlow()
 
     init {
         loadContexts()
@@ -38,7 +46,9 @@ class InboxComposeViewModel @Inject constructor(
                 ) }
             }
             is InboxComposeActionHandler.Close -> {
-                uiState.value.onDismiss()
+                viewModelScope.launch {
+                    _events.send(InboxComposeViewModelAction.NavigateBack)
+                }
             }
             is InboxComposeActionHandler.OpenContextPicker -> {
                 _uiState.update { it.copy(screenOption = InboxComposeScreenOptions.ContextPicker) }
@@ -175,7 +185,7 @@ class InboxComposeViewModel @Inject constructor(
                 courses = inboxComposeRepository.getCourses(forceRefresh).dataOrThrow
                 groups = inboxComposeRepository.getGroups(forceRefresh).dataOrThrow
 
-                if ((courses.isEmpty() && groups.isEmpty()).not()) { newState = ScreenState.Data }
+                if (courses.isNotEmpty() || groups.isNotEmpty()) { newState = ScreenState.Data }
             } catch (e: Exception) {
                 newState = ScreenState.Error
             }
@@ -271,7 +281,10 @@ class InboxComposeViewModel @Inject constructor(
         val contextString = selectedContext?.contextId ?: ""
         val recipientsString = getEnrollmentTypeString(selectedRole)
         val allRecipientId = contextString + recipientsString
-        val allRecipientName = "All in ${selectedRole?.displayText ?: selectedContext?.name ?: ""}"
+        val allRecipientName = context.getString(
+            R.string.all_recipients_in_selected_context,
+            selectedRole?.displayText ?: selectedContext?.name ?: ""
+        )
         val allUserCount =
             if (selectedRole == null)
                 (roleRecipients ?: recipientState.recipientsByRole).values.flatten().distinct().size

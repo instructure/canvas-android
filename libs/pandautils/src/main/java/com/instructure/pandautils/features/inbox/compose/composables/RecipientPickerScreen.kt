@@ -16,7 +16,7 @@
  */
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.instructure.pandautils.features.inbox.compose.recipientpicker
+package com.instructure.pandautils.features.inbox.compose.composables
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -348,7 +348,8 @@ private fun RoleRow(
             )
 
             Text(
-                text = roleCount.toString() + " " + if (roleCount == 1) "Person" else "People",
+                text = "$roleCount " +
+                        if (roleCount == 1) stringResource(R.string.person) else stringResource(R.string.people),
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.textDark),
             )
@@ -431,7 +432,7 @@ private fun SearchField(
                 value = value,
                 onValueChange = { actionHandler(RecipientPickerActionHandler.SearchValueChanged(it)) },
                 singleLine = true,
-                placeholder = "Search",
+                placeholder = stringResource(id = R.string.search),
                 modifier = Modifier.fillMaxWidth()
             )
         }

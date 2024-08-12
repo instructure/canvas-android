@@ -65,11 +65,7 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
             }
             fragment<InboxFragment>(inbox)
-            fragment<InboxComposeFragment>(inboxCompose) {
-                deepLink {
-                    uriPattern = inboxCompose
-                }
-            }
+            fragment<InboxComposeFragment>(inboxCompose)
             fragment<ManageStudentsFragment>(manageStudents)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {

@@ -97,7 +97,7 @@ fun InboxComposeScreen(
                 Column(
                    modifier = Modifier.fillMaxSize()
                 ) {
-                    ContentScreen(padding, subjectFocusRequester, bodyFocusRequester, uiState, actionHandler)
+                    InboxComposeScreenContent(padding, subjectFocusRequester, bodyFocusRequester, uiState, actionHandler)
                     Box(modifier = Modifier
                         .fillMaxSize()
                         .clickable(
@@ -114,7 +114,7 @@ fun InboxComposeScreen(
 }
 
 @Composable
-private fun ContentScreen(
+private fun InboxComposeScreenContent(
     padding: PaddingValues,
     subjectFocusRequester: FocusRequester,
     bodyFocusRequester: FocusRequester,

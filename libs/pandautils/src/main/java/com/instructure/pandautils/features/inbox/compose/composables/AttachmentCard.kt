@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -47,6 +46,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.iconRes
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -111,7 +111,7 @@ fun AttachmentCard(
 
             when (status) {
                 AttachmentStatus.UPLOADING -> {
-                    CircularProgressIndicator()
+                    Loading()
                 }
                 AttachmentStatus.UPLOADED -> {
                     Icon(

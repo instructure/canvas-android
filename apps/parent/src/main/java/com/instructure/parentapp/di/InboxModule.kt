@@ -63,10 +63,9 @@ class InboxModule {
     @Provides
     fun provideInboxComposeRepository(
         courseAPI: CourseAPI.CoursesInterface,
-        groupAPI: GroupAPI.GroupInterface,
         recipientAPI: RecipientAPI.RecipientInterface,
         inboxAPI: InboxApi.InboxInterface,
     ): InboxComposeRepository {
-        return ParentInboxComposeRepository(courseAPI, groupAPI, recipientAPI, inboxAPI)
+        return ParentInboxComposeRepository(courseAPI, recipientAPI, inboxAPI)
     }
 }

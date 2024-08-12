@@ -7,20 +7,23 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import java.util.EnumMap
 
 data class InboxComposeUiState(
-    var contextPickerUiState: ContextPickerUiState = ContextPickerUiState(),
-    var recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
-    var screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
-    var sendIndividual: Boolean = false,
-    var subject: TextFieldValue = TextFieldValue(""),
-    var body: TextFieldValue = TextFieldValue(""),
-    var screenState: ScreenState = ScreenState.Data,
-    var showConfirmationDialog: Boolean = false,
-    var onDismiss: () -> Unit = {},
+    val contextPickerUiState: ContextPickerUiState = ContextPickerUiState(),
+    val recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
+    val screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
+    val sendIndividual: Boolean = false,
+    val subject: TextFieldValue = TextFieldValue(""),
+    val body: TextFieldValue = TextFieldValue(""),
+    val screenState: ScreenState = ScreenState.Data,
+    val showConfirmationDialog: Boolean = false,
 ) {
     val isSendButtonEnabled: Boolean
         get() = contextPickerUiState.selectedContext != null &&
                     recipientPickerUiState.selectedRecipients.isNotEmpty() &&
                     subject.text.isNotEmpty() && body.text.isNotEmpty()
+}
+
+sealed class InboxComposeViewModelAction {
+    data object NavigateBack: InboxComposeViewModelAction()
 }
 
 sealed class InboxComposeActionHandler {
@@ -41,10 +44,10 @@ sealed class InboxComposeScreenOptions {
     data object RecipientPicker : InboxComposeScreenOptions()
 }
 data class ContextPickerUiState(
-    var courses: List<CanvasContext> = emptyList(),
-    var groups: List<CanvasContext> = emptyList(),
-    var selectedContext: CanvasContext? = null,
-    var screenState: ScreenState = ScreenState.Data,
+    val courses: List<CanvasContext> = emptyList(),
+    val groups: List<CanvasContext> = emptyList(),
+    val selectedContext: CanvasContext? = null,
+    val screenState: ScreenState = ScreenState.Data,
 )
 
 sealed class ContextPickerActionHandler {
@@ -54,14 +57,14 @@ sealed class ContextPickerActionHandler {
 }
 
 data class RecipientPickerUiState(
-    var recipientsByRole: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java),
-    var selectedRole: EnrollmentType? = null,
-    var recipientsToShow: List<Recipient> = emptyList(),
-    var allRecipientsToShow: Recipient? = null,
-    var selectedRecipients: List<Recipient> = emptyList(),
-    var searchValue: TextFieldValue = TextFieldValue(""),
-    var screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
-    var screenState: ScreenState = ScreenState.Data,
+    val recipientsByRole: EnumMap<EnrollmentType, List<Recipient>> = EnumMap(EnrollmentType::class.java),
+    val selectedRole: EnrollmentType? = null,
+    val recipientsToShow: List<Recipient> = emptyList(),
+    val allRecipientsToShow: Recipient? = null,
+    val selectedRecipients: List<Recipient> = emptyList(),
+    val searchValue: TextFieldValue = TextFieldValue(""),
+    val screenOption: RecipientPickerScreenOption = RecipientPickerScreenOption.Roles,
+    val screenState: ScreenState = ScreenState.Data,
 )
 
 sealed class RecipientPickerActionHandler {
