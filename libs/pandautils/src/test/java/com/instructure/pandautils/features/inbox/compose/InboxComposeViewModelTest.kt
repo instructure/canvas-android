@@ -185,15 +185,14 @@ class InboxComposeViewModelTest {
     @Test
     fun `Close action handler`() = runTest {
         val viewmodel = getViewModel()
+        viewmodel.handleAction(InboxComposeActionHandler.Close)
 
         val events = mutableListOf<InboxComposeViewModelAction>()
         backgroundScope.launch(testDispatcher) {
             viewmodel.events.toList(events)
         }
 
-        viewmodel.handleAction(InboxComposeActionHandler.Close)
-
-        assertEquals(InboxComposeViewModelAction.NavigateBack, events.last())
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events.lastOrNull())
     }
 
     @Test
