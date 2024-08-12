@@ -12,10 +12,13 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -180,12 +183,12 @@ class InboxComposeViewModelTest {
 
     //region Inbox Compose action handler
     @Test
-    fun `Close action handler`() {
+    fun `Close action handler`() = runTest {
         val viewmodel = getViewModel()
-        viewmodel.uiState.value.onDismiss = mockk(relaxed = true)
         viewmodel.handleAction(InboxComposeActionHandler.Close)
+        val state = viewmodel.events.first()
 
-        coVerify(exactly = 1) { viewmodel.uiState.value.onDismiss() }
+        assertTrue(state is InboxComposeViewModelAction.NavigateBack)
     }
 
     @Test
@@ -272,12 +275,10 @@ class InboxComposeViewModelTest {
     @Test
     fun `Send Message action handler`() {
         val viewmodel = getViewModel()
-        viewmodel.uiState.value.onDismiss = mockk(relaxed = true)
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(mockk(relaxed = true)))
 
         viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
 
-        coVerify(exactly = 1) { viewmodel.uiState.value.onDismiss() }
         coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
     }
     //endregion
@@ -394,6 +395,6 @@ class InboxComposeViewModelTest {
     //endregion
 
     private fun getViewModel(): InboxComposeViewModel {
-        return InboxComposeViewModel(inboxComposeRepository)
+        return InboxComposeViewModel(context, inboxComposeRepository)
     }
 }
