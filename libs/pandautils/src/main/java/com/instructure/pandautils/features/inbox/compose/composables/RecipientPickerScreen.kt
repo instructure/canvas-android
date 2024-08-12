@@ -447,48 +447,34 @@ private fun TopBar(
     uiState: RecipientPickerUiState,
     actionHandler: (RecipientPickerActionHandler) -> Unit
 ) {
-    when (uiState.screenOption) {
-        is RecipientPickerScreenOption.Roles -> {
-            CanvasAppBar(
-                title = title,
-                navigationActionClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                navIconRes = R.drawable.ic_back_arrow,
-                navIconContentDescription = stringResource(R.string.a11y_closeRecipientPicker),
-                actions = {
-                    IconButton(
-                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.done),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(id = R.color.textDarkest),
-                        )
-                    }
-                }
-            )
-        }
-        is RecipientPickerScreenOption.Recipients -> {
-            CanvasAppBar(
-                title = title,
-                navigationActionClick = { actionHandler(RecipientPickerActionHandler.RecipientBackClicked) },
-                navIconRes = R.drawable.ic_back_arrow,
-                navIconContentDescription = stringResource(R.string.a11y_backToRoles),
-                actions = {
-                    IconButton(
-                        onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.done),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(id = R.color.textDarkest),
-                        )
-                    }
-                }
-            )
-        }
+    val navigationAction = when (uiState.screenOption) {
+        is RecipientPickerScreenOption.Roles -> RecipientPickerActionHandler.DoneClicked
+        is RecipientPickerScreenOption.Recipients -> RecipientPickerActionHandler.RecipientBackClicked
     }
+
+    val navIconContextDescription = when (uiState.screenOption) {
+        is RecipientPickerScreenOption.Roles -> stringResource(R.string.a11y_closeRecipientPicker)
+        is RecipientPickerScreenOption.Recipients -> stringResource(R.string.a11y_backToRoles)
+    }
+
+    CanvasAppBar(
+        title = title,
+        navigationActionClick = { actionHandler(navigationAction) },
+        navIconRes = R.drawable.ic_back_arrow,
+        navIconContentDescription = navIconContextDescription,
+        actions = {
+            IconButton(
+                onClick = { actionHandler(RecipientPickerActionHandler.DoneClicked) },
+            ) {
+                Text(
+                    text = stringResource(id = R.string.done),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(id = R.color.textDarkest),
+                )
+            }
+        }
+    )
 }
 
 @Preview

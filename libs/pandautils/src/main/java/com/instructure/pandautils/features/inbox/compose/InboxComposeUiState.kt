@@ -4,10 +4,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.pandautils.compose.composables.SelectContextUiState
 import java.util.EnumMap
 
 data class InboxComposeUiState(
-    val contextPickerUiState: ContextPickerUiState = ContextPickerUiState(),
+    val selectContextUiState: SelectContextUiState = SelectContextUiState(),
     val recipientPickerUiState: RecipientPickerUiState = RecipientPickerUiState(),
     val screenOption: InboxComposeScreenOptions = InboxComposeScreenOptions.None,
     val sendIndividual: Boolean = false,
@@ -17,7 +18,7 @@ data class InboxComposeUiState(
     val showConfirmationDialog: Boolean = false,
 ) {
     val isSendButtonEnabled: Boolean
-        get() = contextPickerUiState.selectedContext != null &&
+        get() = selectContextUiState.selectedCanvasContext != null &&
                     recipientPickerUiState.selectedRecipients.isNotEmpty() &&
                     subject.text.isNotEmpty() && body.text.isNotEmpty()
 }

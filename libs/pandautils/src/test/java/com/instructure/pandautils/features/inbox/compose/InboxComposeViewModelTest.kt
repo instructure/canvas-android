@@ -52,7 +52,7 @@ class InboxComposeViewModelTest {
         val viewmodel = getViewModel()
         val uiState = viewmodel.uiState.value
 
-        assertEquals(null, uiState.contextPickerUiState.selectedContext)
+        assertEquals(null, uiState.selectContextUiState.selectedCanvasContext)
         assertEquals(emptyList<Recipient>(), uiState.recipientPickerUiState.selectedRecipients)
         assertEquals(InboxComposeScreenOptions.None, uiState.screenOption)
         assertEquals(false, uiState.sendIndividual)
@@ -308,7 +308,7 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.canSendToAll(any()) } returns DataResult.Success(false)
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(context))
 
-        assertEquals(context, viewmodel.uiState.value.contextPickerUiState.selectedContext)
+        assertEquals(context, viewmodel.uiState.value.selectContextUiState.selectedCanvasContext)
         assertEquals(InboxComposeScreenOptions.None, viewmodel.uiState.value.screenOption)
 
         coVerify(exactly = 1) { inboxComposeRepository.getRecipients(any(), context, any()) }

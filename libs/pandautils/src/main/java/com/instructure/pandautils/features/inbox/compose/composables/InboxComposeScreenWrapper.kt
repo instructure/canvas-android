@@ -22,11 +22,13 @@ import androidx.compose.ui.res.stringResource
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.animations.ScreenSlideBackTransition
 import com.instructure.pandautils.compose.animations.ScreenSlideTransition
+import com.instructure.pandautils.compose.composables.SelectContextScreen
 import com.instructure.pandautils.features.inbox.compose.ContextPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeActionHandler
 import com.instructure.pandautils.features.inbox.compose.InboxComposeScreenOptions
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
+import com.instructure.pandautils.utils.isGroup
 
 @Composable
 fun InboxComposeScreenWrapper(
@@ -65,11 +67,16 @@ fun InboxComposeScreenWrapper(
             }
 
             InboxComposeScreenOptions.ContextPicker -> {
-                ContextPickerScreen(
-                    uiState = uiState.contextPickerUiState
-                ) { action ->
-                    contextPickerActionHandler(action)
-                }
+                SelectContextScreen(
+                    title = if (uiState.selectContextUiState.canvasContexts.filter { it.isGroup }.isEmpty())
+                                stringResource(id = R.string.selectCourse)
+                            else
+                                stringResource(id = R.string.selectCourseOrGroup),
+                    uiState = uiState.selectContextUiState,
+                    onContextSelected = { contextPickerActionHandler(ContextPickerActionHandler.ContextClicked(it)) },
+                    navigationActionClick = { contextPickerActionHandler(ContextPickerActionHandler.DoneClicked) },
+                    navIconRes = R.drawable.ic_back_arrow
+                )
             }
 
             InboxComposeScreenOptions.RecipientPicker -> {

@@ -88,7 +88,7 @@ class InboxComposeViewModel @Inject constructor(
             }
             is ContextPickerActionHandler.ContextClicked -> {
                 _uiState.update { it.copy(
-                    contextPickerUiState = it.contextPickerUiState.copy(selectedContext = action.context),
+                    selectContextUiState = it.selectContextUiState.copy(selectedCanvasContext = action.context),
                     recipientPickerUiState = it.recipientPickerUiState.copy(
                         screenOption = RecipientPickerScreenOption.Roles,
                         selectedRole = null,
@@ -105,7 +105,7 @@ class InboxComposeViewModel @Inject constructor(
     fun handleAction(action: RecipientPickerActionHandler) {
         when (action) {
             is RecipientPickerActionHandler.RefreshCalled -> {
-                loadRecipients(uiState.value.recipientPickerUiState.searchValue.text, uiState.value.contextPickerUiState.selectedContext ?: return, forceRefresh = true)
+                loadRecipients(uiState.value.recipientPickerUiState.searchValue.text, uiState.value.selectContextUiState.selectedCanvasContext ?: return, forceRefresh = true)
             }
             is RecipientPickerActionHandler.DoneClicked -> {
                 _uiState.update { uiState.value.copy(
@@ -167,33 +167,23 @@ class InboxComposeViewModel @Inject constructor(
                     )
                 ) }
 
-                loadRecipients(action.searchText.text, uiState.value.contextPickerUiState.selectedContext ?: return)
+                loadRecipients(action.searchText.text, uiState.value.selectContextUiState.selectedCanvasContext ?: return)
             }
         }
     }
 
     private fun loadContexts(forceRefresh: Boolean = false) {
-        _uiState.update { it.copy(
-            contextPickerUiState = it.contextPickerUiState.copy(screenState = ScreenState.Loading)
-        ) }
 
         viewModelScope.launch {
-            var newState: ScreenState = ScreenState.Empty
             var courses: List<CanvasContext> = emptyList()
             var groups: List<CanvasContext> = emptyList()
             try {
                 courses = inboxComposeRepository.getCourses(forceRefresh).dataOrThrow
                 groups = inboxComposeRepository.getGroups(forceRefresh).dataOrThrow
-
-                if (courses.isNotEmpty() || groups.isNotEmpty()) { newState = ScreenState.Data }
-            } catch (e: Exception) {
-                newState = ScreenState.Error
-            }
+            } catch (_: Exception) { }
             _uiState.update { it.copy(
-                contextPickerUiState = it.contextPickerUiState.copy(
-                    courses = courses,
-                    groups = groups,
-                    screenState = newState
+                selectContextUiState = it.selectContextUiState.copy(
+                    canvasContexts = courses + groups
                 )
             ) }
         }
@@ -254,7 +244,7 @@ class InboxComposeViewModel @Inject constructor(
     }
 
     private fun createConversation() {
-        uiState.value.contextPickerUiState.selectedContext?.let { context ->
+        uiState.value.selectContextUiState.selectedCanvasContext?.let { context ->
             viewModelScope.launch {
                 _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
 
@@ -276,7 +266,7 @@ class InboxComposeViewModel @Inject constructor(
         if (!canSendToAll) return null
 
         val recipientState = uiState.value.recipientPickerUiState
-        val selectedContext = uiState.value.contextPickerUiState.selectedContext
+        val selectedContext = uiState.value.selectContextUiState.selectedCanvasContext
         val selectedRole = selected ?: recipientState.selectedRole
         val contextString = selectedContext?.contextId ?: ""
         val recipientsString = getEnrollmentTypeString(selectedRole)
