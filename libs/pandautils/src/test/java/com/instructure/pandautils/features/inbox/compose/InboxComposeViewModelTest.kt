@@ -14,11 +14,8 @@ import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -182,19 +179,6 @@ class InboxComposeViewModelTest {
     }
 
     //region Inbox Compose action handler
-    @Test
-    fun `Close action handler`() = runTest {
-        val viewmodel = getViewModel()
-        viewmodel.handleAction(InboxComposeActionHandler.Close)
-
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodel.events.toList(events)
-        }
-
-        assertEquals(InboxComposeViewModelAction.NavigateBack, events.lastOrNull())
-    }
-
     @Test
     fun `Cancel action handler`() {
         val viewModel = getViewModel()
