@@ -107,6 +107,9 @@ android {
 
             buildConfigField "String", "HEAP_APP_ID", "\"$heapStagingId\""
 
+            buildConfigField "String", "PRONOUN_TEACHER_TEST_USER", "\"$pronounTestTeacher\""
+            buildConfigField "String", "PRONOUN_TEACHER_TEST_PASSWORD", "\"$pronounTestTeacherPassword\""
+
             ext {
                 heapEnabled = true
             }

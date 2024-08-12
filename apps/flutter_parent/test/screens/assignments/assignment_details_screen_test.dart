@@ -33,6 +33,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
@@ -48,7 +49,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
-import '../../utils/test_helpers/mock_helpers.dart';
 import '../../utils/test_helpers/mock_helpers.mocks.dart';
 
 void main() {
@@ -620,5 +620,46 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
+  });
+
+  testWidgetsWithAccessibilityChecks('shows Submission & Rubric button', (tester) async {
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer((_) async => AssignmentDetails(assignment: assignment));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+      ),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+    ));
+
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
+
+    expect(find.text(AppLocalizations().submissionAndRubric), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Submission & Rubric button opens SimpleWebViewScreen', (tester) async {
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer((_) async => AssignmentDetails(assignment: assignment));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+      ),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initWebview: true),
+    ));
+
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
+
+    await tester.tap(find.text(AppLocalizations().submissionAndRubric));
+    await tester.pumpAndSettle();
+
+    // Check to make sure we're on the SimpleWebViewScreen screen
+    expect(find.byType(SimpleWebViewScreen), findsOneWidget);
+
+    // Check that we have the correct title
+    expect(find.text(AppLocalizations().submission), findsOneWidget);
   });
 }

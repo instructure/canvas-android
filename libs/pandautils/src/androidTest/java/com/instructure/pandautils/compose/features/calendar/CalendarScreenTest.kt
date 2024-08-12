@@ -66,6 +66,7 @@ class CalendarScreenTest {
                     )
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -100,6 +101,7 @@ class CalendarScreenTest {
                     )
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -136,6 +138,7 @@ class CalendarScreenTest {
                     )
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = { actions.add(it) },
                 navigationActionClick = {},
             )
@@ -164,6 +167,7 @@ class CalendarScreenTest {
                     )
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -193,6 +197,7 @@ class CalendarScreenTest {
                     )
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = {},
                 navigationActionClick = {},
             )
@@ -226,6 +231,7 @@ class CalendarScreenTest {
                     )
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = { actions.add(it) },
                 navigationActionClick = {},
             )
@@ -259,6 +265,7 @@ class CalendarScreenTest {
                     )
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = { actions.add(it) },
                 navigationActionClick = {},
             )
@@ -290,6 +297,7 @@ class CalendarScreenTest {
                     ), snackbarMessage = "Snackbar message"
                 ),
                 false,
+                showToolbar = true,
                 actionHandler = {},
                 navigationActionClick = {},
             )

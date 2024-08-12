@@ -74,6 +74,6 @@ class StudentCalendarRouter(private val activity: FragmentActivity) : CalendarRo
     }
 
     override fun attachNavigationDrawer() {
-        // This is a no-op in the Student app, navigation drawer is already handled in the Activty
+        // This is a no-op in the Student app, navigation drawer is already handled in the Activity
     }
 }

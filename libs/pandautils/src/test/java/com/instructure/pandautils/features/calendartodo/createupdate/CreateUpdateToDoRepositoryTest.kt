@@ -18,20 +18,17 @@
 package com.instructure.pandautils.features.calendartodo.createupdate
 
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.postmodels.PlannerNoteBody
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
@@ -40,45 +37,13 @@ class CreateUpdateToDoRepositoryTest {
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
 
-    private val createUpdateToDoRepository: CreateUpdateToDoRepository = CreateUpdateToDoRepository(coursesApi, plannerApi)
+    private val createUpdateToDoRepository: CreateUpdateToDoRepository = object : CreateUpdateToDoRepository(plannerApi) {
+        override suspend fun getCourses(): List<Course> {
+            return coursesApi.getFirstPageCoursesCalendar(RestParams()).dataOrThrow
+        }
+    }
 
     private val plannable = Plannable(1, "", null, null, null, null, null, null, null, null, null, null, null)
-
-    @Test
-    fun `Returns empty list when request fails`() = runTest {
-        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Fail()
-
-        val courses = createUpdateToDoRepository.getCourses()
-
-        Assert.assertEquals(emptyList<Course>(), courses)
-    }
-
-    @Test
-    fun `Returns courses filtered by enrollment state`() = runTest {
-        val courses = listOf(
-            Course(id = 1),
-            Course(id = 3, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE)))
-        )
-
-        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses)
-
-        val result = createUpdateToDoRepository.getCourses()
-
-        Assert.assertEquals(courses.takeLast(1), result)
-    }
-
-    @Test
-    fun `Returns depaginated result when has next page`() = runTest {
-        val courses1 = listOf(Course(id = 1, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
-        val courses2 = listOf(Course(id = 2, enrollments = mutableListOf(Enrollment(enrollmentState = EnrollmentAPI.STATE_ACTIVE))))
-
-        coEvery { coursesApi.getFirstPageCoursesCalendar(any()) } returns DataResult.Success(courses1, linkHeaders = LinkHeaders(nextUrl = "next"))
-        coEvery { coursesApi.next("next", any()) } returns DataResult.Success(courses2)
-
-        val result = createUpdateToDoRepository.getCourses()
-
-        Assert.assertEquals(courses1 + courses2, result)
-    }
 
     @Test(expected = IllegalStateException::class)
     fun `Throw exception when create todo fails`() = runTest {

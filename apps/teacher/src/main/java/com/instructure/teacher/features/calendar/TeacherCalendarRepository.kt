@@ -31,6 +31,9 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -40,7 +43,8 @@ class TeacherCalendarRepository(
     private val coursesApi: CourseAPI.CoursesInterface,
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
     private val apiPrefs: ApiPrefs,
-    private val featuresApi: FeaturesAPI.FeaturesInterface
+    private val featuresApi: FeaturesAPI.FeaturesInterface,
+    private val calendarFilterDao: CalendarFilterDao
 ) : CalendarRepository {
 
     private var canvasContexts: List<CanvasContext> = emptyList()
@@ -145,5 +149,13 @@ class TeacherCalendarRepository(
                 )
             }
         }
+    }
+
+    override suspend fun getCalendarFilters(): CalendarFilterEntity? {
+        return calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+    }
+
+    override suspend fun updateCalendarFilters(calendarFilterEntity: CalendarFilterEntity) {
+        calendarFilterDao.insertOrUpdate(calendarFilterEntity)
     }
 }
