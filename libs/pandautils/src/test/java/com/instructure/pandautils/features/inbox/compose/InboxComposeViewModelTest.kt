@@ -183,8 +183,10 @@ class InboxComposeViewModelTest {
     fun `Cancel action handler`() {
         val viewModel = getViewModel()
         assertEquals(false, viewModel.uiState.value.showConfirmationDialog)
+
         viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(true))
         assertEquals(true, viewModel.uiState.value.showConfirmationDialog)
+        
         viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(false))
         assertEquals(false, viewModel.uiState.value.showConfirmationDialog)
     }
