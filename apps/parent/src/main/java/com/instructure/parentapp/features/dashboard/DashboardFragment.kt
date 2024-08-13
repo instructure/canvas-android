@@ -47,6 +47,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.showThemed
@@ -54,6 +55,7 @@ import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
+import com.instructure.parentapp.features.dashboard.addstudent.AddStudentBottomSheetDialogFragment
 import com.instructure.parentapp.util.ParentLogoutTask
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -104,6 +106,16 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         }
 
         handleDeeplink()
+
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
+    }
+
+    private fun handleAction(action: DashboardViewModelAction) {
+        when (action) {
+            is DashboardViewModelAction.AddStudent -> {
+                AddStudentBottomSheetDialogFragment().show(childFragmentManager, AddStudentBottomSheetDialogFragment::class.java.simpleName)
+            }
+        }
     }
 
     private fun updateAlertCount(alertCount: Int) {

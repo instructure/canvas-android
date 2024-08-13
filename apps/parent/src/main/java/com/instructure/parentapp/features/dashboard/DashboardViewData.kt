@@ -19,21 +19,16 @@ package com.instructure.parentapp.features.dashboard
 
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.ColorKeeper
 
 
 data class DashboardViewData(
     val userViewData: UserViewData? = null,
     val studentSelectorExpanded: Boolean = false,
-    val studentItems: List<StudentItemViewModel> = emptyList(),
+    val studentItems: List<ItemViewModel> = emptyList(),
     val selectedStudent: User? = null,
     val unreadCount: Int = 0,
     val alertCount: Int = 0,
-) {
-    fun studentItems(): List<ItemViewModel> {
-        return studentItems + AddStudentItemViewModel(ColorKeeper.getOrGenerateColor(selectedStudent).backgroundColor()) {}
-    }
-}
+)
 
 data class StudentItemViewData(
     val studentId: Long,
@@ -48,3 +43,7 @@ data class UserViewData(
     val avatarUrl: String?,
     val email: String?
 )
+
+sealed class DashboardViewModelAction {
+    data object AddStudent : DashboardViewModelAction()
+}

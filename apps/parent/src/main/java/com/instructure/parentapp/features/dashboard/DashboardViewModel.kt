@@ -26,14 +26,17 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.backgroundColor
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,6 +60,9 @@ class DashboardViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<ViewState>(ViewState.Loading)
     val state = _state.asStateFlow()
+
+    private val _events = Channel<DashboardViewModelAction>()
+    val events = _events.receiveAsFlow()
 
     private val currentUser = previousUsersUtils.getSignedInUser(context, apiPrefs.domain, apiPrefs.user?.id.orDefault())
 
@@ -131,19 +137,24 @@ class DashboardViewModel @Inject constructor(
             selectedStudentHolder.updateSelectedStudent(it)
         }
 
+        val studentItems = students.map { user ->
+            StudentItemViewModel(
+                StudentItemViewData(
+                    user.id,
+                    user.shortName.orEmpty(),
+                    user.avatarUrl.orEmpty()
+                )
+            ) { userId ->
+                onStudentSelected(students.first { it.id == userId })
+            }
+        }
+
         _data.update { data ->
             data.copy(
-                studentItems = students.map { user ->
-                    StudentItemViewModel(
-                        StudentItemViewData(
-                            user.id,
-                            user.shortName.orEmpty(),
-                            user.avatarUrl.orEmpty()
-                        )
-                    ) { userId ->
-                        onStudentSelected(students.first { it.id == userId })
-                    }
-                },
+                studentItems = studentItems + AddStudentItemViewModel(
+                    selectedStudent.backgroundColor,
+                    ::addStudent
+                ),
                 selectedStudent = selectedStudent
             )
         }
@@ -160,7 +171,9 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun addStudent() {
-
+        viewModelScope.launch {
+            _events.send(DashboardViewModelAction.AddStudent)
+        }
     }
 
     private fun onStudentSelected(student: User) {

@@ -167,7 +167,7 @@
                     android:orientation="horizontal"
                     android:paddingHorizontal="8dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:recyclerViewItemViewModels="@{viewModel.data.studentItems()}" />
+                    app:recyclerViewItemViewModels="@{viewModel.data.studentItems}" />
 
                 <View
                     android:layout_width="match_parent"

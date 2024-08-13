@@ -1790,4 +1790,9 @@
     <string name="studentColorContentDescriptionOrange">Fire, Orange</string>
     <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
     <string name="addStudent">Add Student</string>
+    <string name="addStudentTitle">Add student with…</string>
+    <string name="addStudentQrCodeTitle">QR Code</string>
+    <string name="addStudentQrCodeExplanation">Students can generate a QR code using the Canvas Student app on their mobile device</string>
+    <string name="addStudentPairingCodeTitle">Pairing Code</string>
+    <string name="addStudentPairingCodeExplanation">Students can obtain a pairing code through the Canvas website</string>
 </resources>
