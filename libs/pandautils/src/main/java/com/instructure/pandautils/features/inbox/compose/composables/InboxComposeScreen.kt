@@ -51,6 +51,7 @@ import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.TextFieldWithHeader
@@ -76,19 +77,23 @@ fun InboxComposeScreen(
                     title = title,
                     navigationActionClick = { actionHandler(InboxComposeActionHandler.CancelDismissDialog(true)) },
                     actions = {
-                        IconButton(
-                            onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
-                            enabled = uiState.isSendButtonEnabled,
-                        ) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_send),
-                                contentDescription = stringResource(R.string.a11y_sendMessage),
-                                tint =
-                                if (uiState.isSendButtonEnabled)
-                                    colorResource(id = R.color.textDarkest)
-                                else
-                                    colorResource(id = R.color.textDarkest).copy(alpha = LocalContentAlpha.current),
-                            )
+                        if (uiState.screenState == ScreenState.Loading) {
+                            Loading()
+                        } else {
+                            IconButton(
+                                onClick = { actionHandler(InboxComposeActionHandler.SendClicked) },
+                                enabled = uiState.isSendButtonEnabled,
+                            ) {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_send),
+                                    contentDescription = stringResource(R.string.a11y_sendMessage),
+                                    tint =
+                                    if (uiState.isSendButtonEnabled)
+                                        colorResource(id = R.color.textDarkest)
+                                    else
+                                        colorResource(id = R.color.textDarkest).copy(alpha = LocalContentAlpha.current),
+                                )
+                            }
                         }
                     },
                 )

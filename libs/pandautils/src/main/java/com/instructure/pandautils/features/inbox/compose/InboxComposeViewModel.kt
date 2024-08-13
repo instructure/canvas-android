@@ -266,6 +266,8 @@ class InboxComposeViewModel @Inject constructor(
 
                 } catch (e: IllegalStateException) {
                     context.toast(context.getString(R.string.failed_to_send_message), Toast.LENGTH_LONG)
+                } finally {
+                    _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
                 }
             }
         }
