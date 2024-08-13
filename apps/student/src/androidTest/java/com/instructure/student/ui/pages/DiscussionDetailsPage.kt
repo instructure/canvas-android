@@ -28,6 +28,7 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.waitForWebElement
 import com.instructure.student.R
@@ -68,6 +69,13 @@ class DiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
 
     fun assertToolbarDiscussionTitle(discussionTitle: String) {
         onView(withText(discussionTitle) + withAncestor(withId(R.id.toolbar) + hasSibling(withId(R.id.discussionWebView)))).assertDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertDetailsNotAvailableOffline() {
+        onView(withId(R.id.notAvailableIcon) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
+        onView(withId(R.id.title) + withText(R.string.notAvailableOfflineScreenTitle) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
+        onView(withId(R.id.description) + withText(R.string.notAvailableOfflineDescriptionForTabs) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
     }
 
     fun waitForReplyButton() {
