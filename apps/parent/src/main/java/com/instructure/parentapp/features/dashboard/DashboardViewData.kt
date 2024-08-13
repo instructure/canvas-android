@@ -47,8 +47,5 @@ data class UserViewData(
 
 sealed class DashboardViewModelAction {
     data object AddStudent : DashboardViewModelAction()
-}
-
-sealed class DashboardAction {
-    data class NavigateDeepLink(val deepLinkUri: Uri) : DashboardAction()
+    data class NavigateDeepLink(val deepLinkUri: Uri) : DashboardViewModelAction()
 }

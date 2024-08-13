@@ -101,18 +101,6 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         return binding.root
     }
 
-    private fun handleDashboardAction(dashboardAction: DashboardAction) {
-        when (dashboardAction) {
-            is DashboardAction.NavigateDeepLink -> {
-                try {
-                    navController.navigate(dashboardAction.deepLinkUri)
-                } catch (e: Exception) {
-                    firebaseCrashlytics.recordException(e)
-                }
-            }
-        }
-    }
-
     private fun handleSharedCalendarAction(sharedCalendarAction: SharedCalendarAction) {
         if (sharedCalendarAction is SharedCalendarAction.TodayButtonVisible) {
             binding.todayButtonHolder.setVisible(sharedCalendarAction.visible)
@@ -123,7 +111,7 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         super.onViewCreated(view, savedInstanceState)
 
         setupNavigation()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleDashboardAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         lifecycleScope.launch {
             viewModel.data.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).collectLatest {
@@ -141,6 +129,13 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         when (action) {
             is DashboardViewModelAction.AddStudent -> {
                 AddStudentBottomSheetDialogFragment().show(childFragmentManager, AddStudentBottomSheetDialogFragment::class.java.simpleName)
+            }
+            is DashboardViewModelAction.NavigateDeepLink -> {
+                try {
+                    navController.navigate(action.deepLinkUri)
+                } catch (e: Exception) {
+                    firebaseCrashlytics.recordException(e)
+                }
             }
         }
     }

@@ -81,7 +81,7 @@ class DashboardViewModel @Inject constructor(
 
         uri?.let {
             viewModelScope.launch {
-                _events.send(DashboardAction.NavigateDeepLink(it))
+                _events.send(DashboardViewModelAction.NavigateDeepLink(it))
             }
         }
     }
