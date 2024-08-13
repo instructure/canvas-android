@@ -25,5 +25,6 @@ data class CalendarFilterEntity(
     @ColumnInfo(name = "_id") @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "user_domain") val userDomain: String,
     @ColumnInfo(name = "user_id") val userId: String,
+    val observeeId: Long = -1L,
     val filters: Set<String>
 )

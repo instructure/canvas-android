@@ -18,8 +18,11 @@
 package com.instructure.parentapp.features.dashboard
 
 import android.content.Context
+import android.content.Intent
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
@@ -52,7 +55,8 @@ class DashboardViewModel @Inject constructor(
     private val parentPrefs: ParentPrefs,
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
-    private val alertCountUpdater: AlertCountUpdater
+    private val alertCountUpdater: AlertCountUpdater,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _data = MutableStateFlow(DashboardViewData())
@@ -65,9 +69,21 @@ class DashboardViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private val currentUser = previousUsersUtils.getSignedInUser(context, apiPrefs.domain, apiPrefs.user?.id.orDefault())
+    private val intent = savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT)
 
     init {
+        handleDeeplink()
         loadData()
+    }
+
+    private fun handleDeeplink() {
+        val uri = intent?.data
+
+        uri?.let {
+            viewModelScope.launch {
+                _events.send(DashboardAction.NavigateDeepLink(it))
+            }
+        }
     }
 
     private fun loadData() {

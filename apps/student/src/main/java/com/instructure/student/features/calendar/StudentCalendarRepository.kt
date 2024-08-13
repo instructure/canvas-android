@@ -28,12 +28,16 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.orDefault
 
 class StudentCalendarRepository(
     private val plannerApi: PlannerAPI.PlannerInterface,
     private val coursesApi: CourseAPI.CoursesInterface,
     private val groupsApi: GroupAPI.GroupInterface,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val calendarFilterDao: CalendarFilterDao
 ) : CalendarRepository {
 
     override suspend fun getPlannerItems(
@@ -85,5 +89,13 @@ class StudentCalendarRepository(
 
     override suspend fun getCalendarFilterLimit(): Int {
         return -1
+    }
+
+    override suspend fun getCalendarFilters(): CalendarFilterEntity? {
+        return calendarFilterDao.findByUserIdAndDomain(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+    }
+
+    override suspend fun updateCalendarFilters(calendarFilterEntity: CalendarFilterEntity) {
+        calendarFilterDao.insertOrUpdate(calendarFilterEntity)
     }
 }

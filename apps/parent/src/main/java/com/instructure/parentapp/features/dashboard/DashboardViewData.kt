@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.dashboard
 
+import android.net.Uri
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.mvvm.ItemViewModel
 
@@ -46,4 +47,8 @@ data class UserViewData(
 
 sealed class DashboardViewModelAction {
     data object AddStudent : DashboardViewModelAction()
+}
+
+sealed class DashboardAction {
+    data class NavigateDeepLink(val deepLinkUri: Uri) : DashboardAction()
 }

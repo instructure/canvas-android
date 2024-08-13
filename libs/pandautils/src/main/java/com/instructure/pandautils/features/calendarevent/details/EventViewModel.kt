@@ -62,7 +62,9 @@ class EventViewModel @Inject constructor(
     private val _events = Channel<EventViewModelAction>()
     val events = _events.receiveAsFlow()
 
-    val canvasContext: CanvasContext? = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT)
+    private val canvasContext: CanvasContext? = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT)
+    private val canvasContextType: String? = savedStateHandle.get<String>(EventFragment.CONTEXT_TYPE)
+    private val canvasContextId: Long? = savedStateHandle.get<Long>(EventFragment.CONTEXT_ID)
     private val scheduleItemArg: ScheduleItem? = savedStateHandle.get<ScheduleItem>(EventFragment.SCHEDULE_ITEM)
     private val scheduleItemId: Long? = savedStateHandle.get<Long>(EventFragment.SCHEDULE_ITEM_ID)
 
@@ -110,7 +112,7 @@ class EventViewModel @Inject constructor(
     }
 
     private fun setToolbarColor() {
-        canvasContext?.backgroundColor?.let { color ->
+        getCanvasContext()?.backgroundColor?.let { color ->
             _uiState.update { it.copy(toolbarUiState = it.toolbarUiState.copy(toolbarColor = color)) }
         }
     }
@@ -193,6 +195,19 @@ class EventViewModel @Inject constructor(
                     _events.send(EventViewModelAction.OpenEditEvent(it))
                 }
             }
+        }
+    }
+
+    fun getCanvasContext(): CanvasContext? {
+        return when {
+            canvasContext != null -> canvasContext
+            canvasContextType != null && canvasContextId != null -> {
+                val type = CanvasContext.Type.entries.find { it.apiString == canvasContextType } ?: CanvasContext.Type.UNKNOWN
+                CanvasContext.fromContextCode(
+                    CanvasContext.makeContextId(type, canvasContextId)
+                )
+            }
+            else -> null
         }
     }
 }

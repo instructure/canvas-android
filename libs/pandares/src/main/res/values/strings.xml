@@ -1789,6 +1789,7 @@
     <string name="studentColorContentDescriptionRed">Raspberry, Red</string>
     <string name="studentColorContentDescriptionOrange">Fire, Orange</string>
     <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
+    <string name="featureFlags">Feature Flags</string>
     <string name="addStudent">Add Student</string>
     <string name="addStudentTitle">Add student with…</string>
     <string name="addStudentQrCodeTitle">QR Code</string>

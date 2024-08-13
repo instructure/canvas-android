@@ -37,6 +37,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val bottomNavigationView by OnViewWithId(R.id.bottom_nav)
     private val alertsItem by OnViewWithId(R.id.alerts)
+    private val calendarItem by OnViewWithId(R.id.calendar)
 
     fun assertObserverData(user: User) {
         onViewWithText(user.name).assertDisplayed()
@@ -85,7 +86,19 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
         alertsItem.click()
     }
 
+    fun clickCalendar() {
+        calendarItem.click()
+    }
+
+    fun clickTodayButton() {
+        onViewWithId(R.id.todayButtonHolder).click()
+    }
+
     fun tapManageStudents() {
         onViewWithText(R.string.screenTitleManageStudents).click()
+    }
+
+    fun tapSettings() {
+        onViewWithText(R.string.settings).click()
     }
 }

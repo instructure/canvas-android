@@ -21,8 +21,8 @@ import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
 
 abstract class AboutRepository(
-    private val context: Context,
-    private val apiPrefs: ApiPrefs
+    context: Context,
+    apiPrefs: ApiPrefs
 ) {
 
     val appName = context.packageManager.getApplicationLabel(context.applicationInfo).toString()

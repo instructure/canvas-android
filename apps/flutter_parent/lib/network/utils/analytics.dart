@@ -14,8 +14,8 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/network/api/heap_api.dart';
-import 'package:flutter_parent/utils/features_utils.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
+import 'package:flutter_parent/utils/features_utils.dart';
 
 /// Event names
 /// The naming scheme for the majority of these is found in a google doc so that we can be consistent
@@ -54,6 +54,7 @@ class AnalyticsEventConstants {
   static const USER_PROPERTY_BUILD_TYPE = 'build_type';
   static const USER_PROPERTY_OS_VERSION = 'os_version';
   static const VIEWED_OLD_REMINDER_MESSAGE = 'viewed_old_reminder_message';
+  static const SUBMISSION_AND_RUBRIC_INTERACTION = 'submission_and_rubric_interaction';
 }
 
 /// (Copied from canvas-api-2, make sure to stay in sync)
