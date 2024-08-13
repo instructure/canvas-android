@@ -64,7 +64,6 @@ class InboxComposeViewModelTest {
 
         coVerify(exactly = 1) { inboxComposeRepository.getCourses(any()) }
         coVerify(exactly = 1) { inboxComposeRepository.getGroups(any()) }
-
     }
 
     @Test
@@ -164,7 +163,7 @@ class InboxComposeViewModelTest {
         )
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(recipients)
         coEvery { inboxComposeRepository.canSendToAll(any()) } returns DataResult.Success(false)
-        viewModel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = courseId)))
+        viewModel.handleAction(ContextPickerActionHandler.ContextClicked(course))
 
         assertEquals(null, viewModel.uiState.value.recipientPickerUiState.allRecipientsToShow)
 
@@ -186,7 +185,7 @@ class InboxComposeViewModelTest {
 
         viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(true))
         assertEquals(true, viewModel.uiState.value.showConfirmationDialog)
-        
+
         viewModel.handleAction(InboxComposeActionHandler.CancelDismissDialog(false))
         assertEquals(false, viewModel.uiState.value.showConfirmationDialog)
     }
