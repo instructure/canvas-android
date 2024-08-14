@@ -14,14 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.features.dashboard.addstudent
+package com.instructure.parentapp.features.addstudent
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+
 
 class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
@@ -33,6 +37,23 @@ class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 AddStudentScreen()
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Landscape fix, make sure the bottom sheet is fully expanded
+        view.viewTreeObserver.addOnGlobalLayoutListener {
+            val dialog = dialog as? BottomSheetDialog
+            dialog?.let {
+                val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as? FrameLayout
+                bottomSheet?.let {
+                    val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    behavior.peekHeight = 0
+                }
             }
         }
     }

@@ -56,7 +56,7 @@ import com.instructure.pandautils.utils.toPx
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
-import com.instructure.parentapp.features.dashboard.addstudent.AddStudentBottomSheetDialogFragment
+import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
 import com.instructure.parentapp.util.ParentLogoutTask
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
