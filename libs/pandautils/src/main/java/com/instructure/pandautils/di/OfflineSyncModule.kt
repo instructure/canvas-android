@@ -18,7 +18,6 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
-import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
@@ -31,6 +30,7 @@ import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
@@ -41,7 +41,7 @@ import com.instructure.pandautils.features.offline.sync.AggregateProgressObserve
 import com.instructure.pandautils.features.offline.sync.CourseSync
 import com.instructure.pandautils.features.offline.sync.FileSync
 import com.instructure.pandautils.features.offline.sync.HtmlParser
-import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
+import com.instructure.pandautils.features.offline.sync.StudioSync
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -60,12 +60,10 @@ import com.instructure.pandautils.room.offline.facade.GroupFacade
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
 import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
-import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
 import com.instructure.pandautils.room.offline.facade.UserFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
@@ -180,5 +178,14 @@ class OfflineSyncModule {
             firebaseCrashlytics,
             fileSync
         )
+    }
+
+    @Provides
+    fun provideStudioSync(
+        @ApplicationContext context: Context,
+        launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
+        apiPrefs: ApiPrefs
+    ): StudioSync {
+        return StudioSync(context, launchDefinitionsApi, apiPrefs)
     }
 }

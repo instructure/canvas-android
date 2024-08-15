@@ -66,7 +66,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val fileFolderDao: FileFolderDao,
     private val localFileDao: LocalFileDao,
     private val syncRouter: SyncRouter,
-    private val courseSync: CourseSync
+    private val courseSync: CourseSync,
+    private val studioSync: StudioSync
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -139,6 +140,8 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         val courseProgresses = courseSyncProgressDao.findAll()
         val fileProgresses = fileSyncProgressDao.findAll()
+
+        studioSync.syncStudioVideos()
 
         if (courseProgresses.isNotEmpty() && fileProgresses.isNotEmpty()) {
             showNotification(

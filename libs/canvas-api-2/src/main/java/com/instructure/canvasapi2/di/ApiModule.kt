@@ -271,4 +271,9 @@ class ApiModule {
     fun provideUnreadCountApi(): UnreadCountAPI.UnreadCountsInterface {
         return RestBuilder().build(UnreadCountAPI.UnreadCountsInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideLaunchDefinitionsApi(): LaunchDefinitionsAPI.LaunchDefinitionsInterface {
+        return RestBuilder().build(LaunchDefinitionsAPI.LaunchDefinitionsInterface::class.java, RestParams())
+    }
 }

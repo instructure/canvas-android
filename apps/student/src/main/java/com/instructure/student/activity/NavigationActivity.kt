@@ -1170,8 +1170,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     //endregion
 
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {
-        val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._STUDIO_DOMAIN }
-        val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._GAUGE_DOMAIN }
+        val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+        val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
 
         val studio = findViewById<View>(R.id.navigationDrawerItem_studio)
         studio.visibility = if (studioLaunchDefinition != null) View.VISIBLE else View.GONE
