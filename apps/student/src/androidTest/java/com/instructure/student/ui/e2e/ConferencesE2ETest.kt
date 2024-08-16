@@ -20,14 +20,6 @@ class ConferencesE2ETest: StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    // Fairly basic test that we can create and view a conference with the app.
-    // I didn't attempt to actually start the conference because that goes through
-    // an external web browser and would be really gross (if not impossible) to
-    // test.
-    //
-    // Re-stubbing for now because the interface has changed from webview to native
-    // and this test no longer passes.  MBL-14127 is being tracked to re-write this
-    // test against the new native interface.
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CONFERENCES, TestCategory.E2E)
@@ -57,24 +49,40 @@ class ConferencesE2ETest: StudentTest() {
 
         val testConferenceTitle2 = "E2E test conference 2"
         val testConferenceDescription2 = "Nightly E2E Test conference description 2"
+        Log.d(PREPARATION_TAG,"Create a conference with '$testConferenceTitle2' title and '$testConferenceDescription2' description.")
         ConferencesApi.createCourseConference(course.id, teacher.token, testConferenceTitle2, testConferenceDescription2, longRunning = true, duration = 120, recipientUserIds = listOf(student.id))
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that $testConferenceTitle conference is displayed on the Conference List Page with the corresponding status.")
+        Log.d(STEP_TAG,"Refresh the page. Assert that $testConferenceTitle conference is displayed on the Conference List Page with the corresponding status and description.")
         refresh()
         conferenceListPage.assertConferenceDisplayed(testConferenceTitle)
         conferenceListPage.assertConferenceStatus(testConferenceTitle,"Not Started")
+        conferenceListPage.assertConferenceDescription(testConferenceTitle, testConferenceDescription)
 
-        Log.d(STEP_TAG,"Assert that $testConferenceTitle2 conference is displayed on the Conference List Page with the corresponding status.")
+        Log.d(STEP_TAG, "Assert that the toolbar title is 'Conferences' and there is the '${course.name}' course's name displayed as a subtitle.")
+        conferenceListPage.assertConferencesToolbarText(course.name)
+
+        Log.d(STEP_TAG, "Assert that the 'New Conferences' text is displayed as a conference group type on the Conferences List Page.")
+        conferenceListPage.assertNewConferencesDisplayed()
+
+        Log.d(STEP_TAG, "Assert that the 'Open Externally' icon (button) is displayed on the top-right corner of the Conferences List Page.")
+        conferenceListPage.assertOpenExternallyButtonDisplayed()
+
+        Log.d(STEP_TAG,"Assert that $testConferenceTitle2 conference is displayed on the Conference List Page with the corresponding status and description.")
         conferenceListPage.assertConferenceDisplayed(testConferenceTitle2)
         conferenceListPage.assertConferenceStatus(testConferenceTitle2,"Not Started")
+        conferenceListPage.assertConferenceDescription(testConferenceTitle2, testConferenceDescription2)
 
-        Log.d(STEP_TAG,"Open '$testConferenceTitle' conference details page.")
+        Log.d(STEP_TAG,"Open '$testConferenceTitle' conference's detailer page.")
         conferenceListPage.openConferenceDetails(testConferenceTitle)
 
-        Log.d(STEP_TAG,"Assert that the proper conference title '$testConferenceTitle', status and description '$testConferenceDescription' are displayed.")
-        conferenceDetailsPage.assertConferenceTitleDisplayed()
+        Log.d(STEP_TAG, "Assert that the toolbar title is 'Conference Details' and there is the '${course.name}' course's name displayed as a subtitle.")
+        conferenceDetailsPage.assertConferenceDetailsToolbarText(course.name)
+
+        Log.d(STEP_TAG,"Assert that the proper conference title '$testConferenceTitle', status ('Not Started') and description, '$testConferenceDescription' are displayed.")
+        conferenceDetailsPage.assertConferenceTitleDisplayed(testConferenceTitle)
         conferenceDetailsPage.assertConferenceStatus("Not Started")
         conferenceDetailsPage.assertDescription(testConferenceDescription)
 
     }
+
 }
