@@ -10,7 +10,6 @@ import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -37,8 +36,7 @@ class Navigation(apiPrefs: ApiPrefs) {
 
     private val baseUrl = apiPrefs.fullDomain
 
-    private val courseId = "course-id"
-    private val courseDetails = "$baseUrl/courses/{$courseId}"
+    private val courseDetails = "$baseUrl/courses/{$COURSE_ID}"
 
     val splash = "$baseUrl/splash"
     val notAParent = "$baseUrl/not-a-parent"
@@ -97,7 +95,7 @@ class Navigation(apiPrefs: ApiPrefs) {
             fragment<ManageStudentsFragment>(manageStudents)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {
-                argument(courseId) {
+                argument(COURSE_ID) {
                     type = NavType.LongType
                     nullable = false
                 }
@@ -184,6 +182,10 @@ class Navigation(apiPrefs: ApiPrefs) {
         } catch (e: Exception) {
             Log.e(this.javaClass.simpleName, e.message.orEmpty())
         }
+    }
+
+    companion object {
+        const val COURSE_ID = "course-id"
     }
 }
 

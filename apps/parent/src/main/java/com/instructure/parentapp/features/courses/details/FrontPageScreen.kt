@@ -14,22 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.parentapp.di
 
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.ObserverApi
-import com.instructure.parentapp.features.alerts.list.AlertsRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+package com.instructure.parentapp.features.courses.details
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class AlertsModule {
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 
-    @Provides
-    fun provideAlertsRepository(observerApi: ObserverApi, courseApi: CourseAPI.CoursesInterface): AlertsRepository {
-        return AlertsRepository(observerApi, courseApi)
-    }
+
+@Composable
+internal fun FrontPageScreen() {
+    Text(text = "Front Page")
 }

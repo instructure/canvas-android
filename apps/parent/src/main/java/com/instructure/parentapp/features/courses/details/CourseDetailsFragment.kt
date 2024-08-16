@@ -21,12 +21,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material.Text
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class CourseDetailsFragment : Fragment() {
+
+    private val viewModel: CourseDetailsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +42,10 @@ class CourseDetailsFragment : Fragment() {
     ): View {
         return ComposeView(requireActivity()).apply {
             setContent {
-                Text(text = "Course Details")
+                val uiState by viewModel.uiState.collectAsState()
+                CourseDetailsScreen(uiState) {
+                    findNavController().popBackStack()
+                }
             }
         }
     }

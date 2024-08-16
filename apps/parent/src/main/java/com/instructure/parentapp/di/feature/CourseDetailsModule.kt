@@ -15,11 +15,11 @@
  *
  */
 
-package com.instructure.parentapp.di
+package com.instructure.parentapp.di.feature
 
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.parentapp.features.managestudents.ManageStudentsRepository
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.parentapp.features.courses.details.CourseDetailsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,13 +28,13 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class ManageStudentsModule {
+class CourseDetailsModule {
 
     @Provides
-    fun provideManageStudentsRepository(
-        enrollmentsApi: EnrollmentAPI.EnrollmentInterface,
-        userApi: UserAPI.UsersInterface
-    ): ManageStudentsRepository {
-        return ManageStudentsRepository(enrollmentsApi, userApi)
+    fun provideCourseDetailsRepository(
+        courseApi: CourseAPI.CoursesInterface,
+        tabsInterface: TabAPI.TabsInterface
+    ): CourseDetailsRepository {
+        return CourseDetailsRepository(courseApi, tabsInterface)
     }
 }
