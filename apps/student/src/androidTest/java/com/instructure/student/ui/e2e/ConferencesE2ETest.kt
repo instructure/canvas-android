@@ -31,15 +31,15 @@ class ConferencesE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to ${course.name} course's Conferences Page.")
+        Log.d(STEP_TAG, "Navigate to ${course.name} course's Conferences Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectConferences()
 
-        Log.d(STEP_TAG,"Assert that the empty view is displayed since we did not make any conference yet.")
+        Log.d(STEP_TAG, "Assert that the empty view is displayed since we did not make any conference yet.")
         conferenceListPage.assertEmptyView()
 
         val testConferenceTitle = "E2E test conference"
@@ -52,7 +52,7 @@ class ConferencesE2ETest: StudentTest() {
         Log.d(PREPARATION_TAG,"Create a conference with '$testConferenceTitle2' title and '$testConferenceDescription2' description.")
         ConferencesApi.createCourseConference(course.id, teacher.token, testConferenceTitle2, testConferenceDescription2, longRunning = true, duration = 120, recipientUserIds = listOf(student.id))
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that $testConferenceTitle conference is displayed on the Conference List Page with the corresponding status and description.")
+        Log.d(STEP_TAG, "Refresh the page. Assert that '$testConferenceTitle' conference is displayed on the Conference List Page with the corresponding status and description.")
         refresh()
         conferenceListPage.assertConferenceDisplayed(testConferenceTitle)
         conferenceListPage.assertConferenceStatus(testConferenceTitle,"Not Started")
@@ -67,18 +67,18 @@ class ConferencesE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Assert that the 'Open Externally' icon (button) is displayed on the top-right corner of the Conferences List Page.")
         conferenceListPage.assertOpenExternallyButtonDisplayed()
 
-        Log.d(STEP_TAG,"Assert that $testConferenceTitle2 conference is displayed on the Conference List Page with the corresponding status and description.")
+        Log.d(STEP_TAG, "Assert that '$testConferenceTitle2' conference is displayed on the Conference List Page with the corresponding status and description.")
         conferenceListPage.assertConferenceDisplayed(testConferenceTitle2)
         conferenceListPage.assertConferenceStatus(testConferenceTitle2,"Not Started")
         conferenceListPage.assertConferenceDescription(testConferenceTitle2, testConferenceDescription2)
 
-        Log.d(STEP_TAG,"Open '$testConferenceTitle' conference's detailer page.")
+        Log.d(STEP_TAG, "Open '$testConferenceTitle' conference's detailer page.")
         conferenceListPage.openConferenceDetails(testConferenceTitle)
 
         Log.d(STEP_TAG, "Assert that the toolbar title is 'Conference Details' and there is the '${course.name}' course's name displayed as a subtitle.")
         conferenceDetailsPage.assertConferenceDetailsToolbarText(course.name)
 
-        Log.d(STEP_TAG,"Assert that the proper conference title '$testConferenceTitle', status ('Not Started') and description, '$testConferenceDescription' are displayed.")
+        Log.d(STEP_TAG, "Assert that the proper conference title '$testConferenceTitle', status ('Not Started') and description, '$testConferenceDescription' are displayed.")
         conferenceDetailsPage.assertConferenceTitleDisplayed(testConferenceTitle)
         conferenceDetailsPage.assertConferenceStatus("Not Started")
         conferenceDetailsPage.assertDescription(testConferenceDescription)
