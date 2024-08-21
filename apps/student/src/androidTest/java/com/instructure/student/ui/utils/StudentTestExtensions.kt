@@ -33,8 +33,21 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.api.*
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.api.SeedApi
+import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.api.UserApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.EnrollmentTypes
+import com.instructure.dataseeding.model.FileType
+import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.SubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
@@ -109,7 +122,8 @@ fun seedData(
     locked: Boolean = false,
     discussions: Int = 0,
     syllabusBody: String? = null,
-    gradingPeriods: Boolean = false
+    gradingPeriods: Boolean = false,
+    modules: Int = 0
 ): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest (
@@ -124,7 +138,8 @@ fun seedData(
             discussions = discussions,
             announcements = announcements,
             locked = locked,
-            syllabusBody = syllabusBody
+            syllabusBody = syllabusBody,
+            modules = modules
     )
     return SeedApi.seedData(request)
 }
