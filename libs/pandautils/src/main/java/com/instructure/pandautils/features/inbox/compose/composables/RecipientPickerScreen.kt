@@ -14,7 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@file:OptIn(ExperimentalMaterialApi::class)
 
 package com.instructure.pandautils.features.inbox.compose.composables
 
@@ -74,6 +73,7 @@ import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
 import com.instructure.pandautils.features.inbox.compose.ScreenState
 import java.util.EnumMap
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecipientPickerScreen(
     title: String,

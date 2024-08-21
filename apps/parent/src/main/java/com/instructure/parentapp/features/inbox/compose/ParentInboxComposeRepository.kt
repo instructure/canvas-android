@@ -12,7 +12,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
@@ -43,19 +42,12 @@ class ParentInboxComposeRepository(
 
     override suspend fun getRecipients(searchQuery: String, context: CanvasContext, forceRefresh: Boolean): DataResult<List<Recipient>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-        val recipientsResult =  recipientAPI.getFirstPageRecipientList(
+        return recipientAPI.getFirstPageRecipientList(
             searchQuery = searchQuery,
             context = context.apiContext(),
             restParams = params,
         ).depaginate {
             recipientAPI.getNextPageRecipientList(it, params)
-        }
-
-        return recipientsResult.map { recipients ->
-            recipients.filter {
-                val types = it.commonCourses?.get(context.id.toString())?.toList() ?: emptyList()
-                types.contains(EnrollmentType.TEACHERENROLLMENT.rawValue()) || types.contains(EnrollmentType.TAENROLLMENT.rawValue())
-            }
         }
     }
 

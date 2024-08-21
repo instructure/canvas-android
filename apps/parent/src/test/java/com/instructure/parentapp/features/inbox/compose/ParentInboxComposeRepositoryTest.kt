@@ -116,25 +116,6 @@ class ParentInboxComposeRepositoryTest {
         assertEquals(expected, result)
     }
 
-    @Test
-    fun `Test recipients filtering`() = runTest {
-        val course = Course(id = 1)
-        val recipients = listOf(
-            Recipient(stringId = "1", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue()))),
-            Recipient(stringId = "2", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.TAENROLLMENT.rawValue()))),
-            Recipient(stringId = "3", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue()))),
-            Recipient(stringId = "4", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.OBSERVERENROLLMENT.rawValue()))),
-            Recipient(stringId = "5", commonCourses = hashMapOf(course.id.toString() to arrayOf(EnrollmentType.DESIGNERENROLLMENT.rawValue()))),
-        )
-        val expected = recipients.subList(0, 2)
-
-        coEvery { recipientAPI.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(recipients)
-
-        val result = inboxComposeRepository.getRecipients("", course, true).dataOrThrow
-
-        assertEquals(expected, result)
-    }
-
     @Test(expected = IllegalStateException::class)
     fun `Get recipients with error`() = runTest {
         coEvery { recipientAPI.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Fail()
