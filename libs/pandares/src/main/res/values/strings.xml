@@ -409,6 +409,11 @@
     <string name="forwardMessage">Forward Message</string>
     <string name="addMorePeopleToMessage">Add another recipient. Messages addressed only to yourself cannot be sent.</string>
     <string name="selectRecipients">Select Recipients</string>
+    <string name="all_recipients_in_selected_context">All in %1$s</string>
+    <plurals name="people">
+        <item quantity="one">%d Person</item>
+        <item quantity="other">%d People</item>
+    </plurals>
 
     <plurals name="people_count">
         <item quantity="one">%d person</item>

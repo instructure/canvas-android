@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.SelectCalendarUiState
+import com.instructure.pandautils.compose.composables.SelectContextUiState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -93,7 +93,7 @@ class CreateUpdateEventViewModelTest {
 
         val expectedState = CreateUpdateEventUiState(
             date = LocalDate.of(2024, 4, 10),
-            selectCalendarUiState = SelectCalendarUiState(
+            selectContextUiState = SelectContextUiState(
                 selectedCanvasContext = User(1),
                 canvasContexts = listOf(User(1))
             ),
@@ -122,7 +122,7 @@ class CreateUpdateEventViewModelTest {
             title = "title",
             date = LocalDate.now(clock),
             startTime = LocalTime.now(clock),
-            selectCalendarUiState = SelectCalendarUiState(
+            selectContextUiState = SelectContextUiState(
                 selectedCanvasContext = User(1),
                 canvasContexts = listOf(User(1))
             ),
@@ -145,7 +145,7 @@ class CreateUpdateEventViewModelTest {
         val state = viewModel.uiState.value
 
         coVerify(exactly = 1) { repository.getCanvasContexts() }
-        Assert.assertEquals(canvasContexts, state.selectCalendarUiState.canvasContexts)
+        Assert.assertEquals(canvasContexts, state.selectContextUiState.canvasContexts)
     }
 
     @Test
@@ -329,10 +329,10 @@ class CreateUpdateEventViewModelTest {
         createViewModel()
 
         viewModel.handleAction(CreateUpdateEventAction.ShowSelectCalendarScreen)
-        Assert.assertTrue(viewModel.uiState.value.selectCalendarUiState.show)
+        Assert.assertTrue(viewModel.uiState.value.selectContextUiState.show)
 
         viewModel.onBackPressed()
-        Assert.assertFalse(viewModel.uiState.value.selectCalendarUiState.show)
+        Assert.assertFalse(viewModel.uiState.value.selectContextUiState.show)
     }
 
     @Test

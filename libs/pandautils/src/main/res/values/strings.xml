@@ -487,4 +487,26 @@
     <string name="a11y_markAsDoneWithName">%s Mark as done</string>
     <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+
+    <!-- Inbox -->
+    <string name="newMessage">New Message</string>
+    <string name="selectCourseOrGroup">Select a course or a group</string>
+    <string name="selectRecipients">Select recipients</string>
+    <string name="message">Message</string>
+    <string name="subject">Subject</string>
+    <string name="sendIndividualMessageToEachRecipient">Send individual message to each recipient</string>
+    <string name="a11y_sendMessage">Send message</string>
+    <string name="courses">Courses</string>
+    <string name="groups">Groups</string>
+    <string name="a11y_selected">Selected</string>
+    <string name="recipientsTo">To</string>
+    <string name="a11y_openCoursePicker">Open Course Picker</string>
+    <string name="a11y_closeCoursePicker">Close Course Picker</string>
+    <string name="a11y_cancelNewMessage">Cancel new message</string>
+    <string name="failedToLoadCoursesAndGroups">Failed to load Courses and Groups</string>
+    <string name="failedToLoadRecipients">Failed to load recipients</string>
+    <string name="noRecipientsAvailable">No recipients available</string>
+    <string name="a11y_backToRoles">Back to roles</string>
+    <string name="a11y_closeRecipientPicker">Close recipient picker</string>
+    <string name="failed_to_send_message">Failed to send message</string>
 </resources>
