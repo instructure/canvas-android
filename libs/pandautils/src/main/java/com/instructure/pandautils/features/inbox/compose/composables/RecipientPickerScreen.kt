@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -335,7 +336,7 @@ private fun RoleRow(
             )
 
             Text(
-                text = if (roleCount == 1) stringResource(R.string.person, roleCount) else stringResource(R.string.people, roleCount),
+                text = pluralStringResource(id = R.plurals.people, roleCount, roleCount),
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.textDark),
             )
