@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.ComposeView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.instructure.parentapp.features.addstudent.pairingcode.PairingCodeDialogFragment
 
 
 class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
@@ -36,9 +37,24 @@ class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                AddStudentScreen()
+                AddStudentScreen(
+                    this@AddStudentBottomSheetDialogFragment::onPairingCodeClick,
+                    this@AddStudentBottomSheetDialogFragment::onQrCodeClick
+                )
             }
         }
+    }
+
+    private fun onPairingCodeClick() {
+        PairingCodeDialogFragment().show(
+            requireActivity().supportFragmentManager,
+            PairingCodeDialogFragment::class.java.simpleName
+        )
+        dismiss()
+    }
+
+    private fun onQrCodeClick() {
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +64,8 @@ class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
         view.viewTreeObserver.addOnGlobalLayoutListener {
             val dialog = dialog as? BottomSheetDialog
             dialog?.let {
-                val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as? FrameLayout
+                val bottomSheet =
+                    dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as? FrameLayout
                 bottomSheet?.let {
                     val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED

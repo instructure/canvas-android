@@ -38,7 +38,10 @@ import androidx.compose.ui.unit.sp
 import com.instructure.parentapp.R
 
 @Composable
-fun AddStudentScreen() {
+fun AddStudentScreen(
+    onPairingCodeClick: () -> Unit,
+    onQrCodeClick: () -> Unit
+) {
     Column(modifier = Modifier.padding(vertical = 16.dp)) {
         Text(
             modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
@@ -51,15 +54,14 @@ fun AddStudentScreen() {
         AddStudentButton(
             title = R.string.addStudentPairingCodeTitle,
             explanation = R.string.addStudentPairingCodeExplanation,
-            icon = R.drawable.ic_keyboard_shortcut
-        ) {
-
-        }
+            icon = R.drawable.ic_keyboard_shortcut,
+            onClick = onPairingCodeClick
+        )
         AddStudentButton(
             title = R.string.addStudentQrCodeTitle,
             explanation = R.string.addStudentQrCodeExplanation,
             icon = R.drawable.ic_qr_code,
-            onClick = {}
+            onClick = onQrCodeClick
         )
     }
 }
@@ -108,5 +110,5 @@ private fun AddStudentButton(
 @Preview
 @Composable
 fun AddStudentScreenPreview() {
-    AddStudentScreen()
+    AddStudentScreen(onPairingCodeClick = {}, onQrCodeClick = {})
 }

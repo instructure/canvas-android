@@ -76,6 +76,10 @@ class DashboardViewModel @Inject constructor(
         loadData()
     }
 
+    fun reloadData() {
+        loadData()
+    }
+
     private fun handleDeeplink() {
         val uri = intent?.data
 

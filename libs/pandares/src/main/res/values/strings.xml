@@ -1796,4 +1796,9 @@
     <string name="addStudentQrCodeExplanation">Students can generate a QR code using the Canvas Student app on their mobile device</string>
     <string name="addStudentPairingCodeTitle">Pairing Code</string>
     <string name="addStudentPairingCodeExplanation">Students can obtain a pairing code through the Canvas website</string>
+    <string name="pairingCodeDialogTitle">Add Student</string>
+    <string name="pairingCodeDialogMessage">Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired.</string>
+    <string name="pairingCodeDialogLabel">Pairing Code</string>
+    <string name="pairingCodeDialogNegativeButton">Cancel</string>
+    <string name="pairingCodeDialogPositiveButton">Ok</string>
 </resources>

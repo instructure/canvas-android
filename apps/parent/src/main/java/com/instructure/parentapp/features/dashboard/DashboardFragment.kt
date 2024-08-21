@@ -29,12 +29,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -57,6 +59,8 @@ import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.FragmentDashboardBinding
 import com.instructure.parentapp.databinding.NavigationDrawerHeaderLayoutBinding
 import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialogFragment
+import com.instructure.parentapp.features.addstudent.AddStudentViewModel
+import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import com.instructure.parentapp.util.ParentLogoutTask
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -88,6 +92,8 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
 
     private var inboxBadge: TextView? = null
 
+    private val addStudentViewModel: AddStudentViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -98,7 +104,19 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         binding.lifecycleOwner = viewLifecycleOwner
 
         viewLifecycleOwner.lifecycleScope.collectOneOffEvents(calendarSharedEvents.events, ::handleSharedCalendarAction)
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(addStudentViewModel.events, ::handleAddStudentEvents)
         return binding.root
+    }
+
+    private fun handleAddStudentEvents(action: AddStudentViewModelAction) {
+        when (action) {
+            is AddStudentViewModelAction.PairStudentSuccess -> {
+                viewModel.reloadData()
+            }
+            is AddStudentViewModelAction.PairStudentFailure -> {
+                Snackbar.make(binding.root, "Erroroorororororor", Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun handleSharedCalendarAction(sharedCalendarAction: SharedCalendarAction) {
