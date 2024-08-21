@@ -29,11 +29,11 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
         savedInstanceState: Bundle?
     ): View {
         applyTheme()
+        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
                 InboxComposeScreenWrapper(uiState, viewModel::handleAction, viewModel::handleAction, viewModel::handleAction)
             }

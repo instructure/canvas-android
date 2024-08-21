@@ -93,7 +93,7 @@ fun InboxComposeScreenWrapper(
 
             InboxComposeScreenOptions.ContextPicker -> {
                 SelectContextScreen(
-                    title = if (uiState.selectContextUiState.canvasContexts.filter { it.isGroup }.isEmpty())
+                    title = if (uiState.selectContextUiState.canvasContexts.none { it.isGroup })
                                 stringResource(id = R.string.selectCourse)
                             else
                                 stringResource(id = R.string.selectCourseOrGroup),

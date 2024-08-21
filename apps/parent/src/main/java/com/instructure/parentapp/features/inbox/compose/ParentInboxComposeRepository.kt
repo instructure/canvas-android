@@ -51,14 +51,12 @@ class ParentInboxComposeRepository(
             recipientAPI.getNextPageRecipientList(it, params)
         }
 
-        val recipients = recipientsResult.dataOrNull ?: return recipientsResult
-
-        val filteredRecipients = recipients.filter {
-            val types = it.commonCourses?.get(context.id.toString())?.toList() ?: emptyList()
-            types.contains(EnrollmentType.TEACHERENROLLMENT.rawValue()) || types.contains(EnrollmentType.TAENROLLMENT.rawValue())
+        return recipientsResult.map { recipients ->
+            recipients.filter {
+                val types = it.commonCourses?.get(context.id.toString())?.toList() ?: emptyList()
+                types.contains(EnrollmentType.TEACHERENROLLMENT.rawValue()) || types.contains(EnrollmentType.TAENROLLMENT.rawValue())
+            }
         }
-
-        return DataResult.Success(filteredRecipients)
     }
 
     override suspend fun createConversation(
@@ -86,8 +84,8 @@ class ParentInboxComposeRepository(
         val restParams = RestParams()
         val permissionResponse =  courseAPI.getCoursePermissions(context.id, listOf(CanvasContextPermission.SEND_MESSAGES_ALL), restParams)
 
-        val result = permissionResponse.dataOrNull ?: return DataResult.Fail()
-
-        return DataResult.Success(result.send_messages_all)
+        return permissionResponse.map {
+            it.send_messages_all
+        }
     }
 }

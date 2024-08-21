@@ -44,12 +44,6 @@ sealed class InboxComposeScreenOptions {
     data object ContextPicker : InboxComposeScreenOptions()
     data object RecipientPicker : InboxComposeScreenOptions()
 }
-data class ContextPickerUiState(
-    val courses: List<CanvasContext> = emptyList(),
-    val groups: List<CanvasContext> = emptyList(),
-    val selectedContext: CanvasContext? = null,
-    val screenState: ScreenState = ScreenState.Data,
-)
 
 sealed class ContextPickerActionHandler {
     data class ContextClicked(val context: CanvasContext) : ContextPickerActionHandler()

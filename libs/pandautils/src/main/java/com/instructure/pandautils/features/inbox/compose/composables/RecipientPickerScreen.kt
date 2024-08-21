@@ -335,8 +335,7 @@ private fun RoleRow(
             )
 
             Text(
-                text = "$roleCount " +
-                        if (roleCount == 1) stringResource(R.string.person) else stringResource(R.string.people),
+                text = if (roleCount == 1) stringResource(R.string.person, roleCount) else stringResource(R.string.people, roleCount),
                 fontSize = 14.sp,
                 color = colorResource(id = R.color.textDark),
             )
