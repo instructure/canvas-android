@@ -17,14 +17,16 @@
 package com.instructure.parentapp.features.addstudent
 
 import androidx.annotation.ColorInt
+import com.instructure.pandautils.utils.ThemePrefs
 
 data class AddStudentUiState(
-    @ColorInt val color: Int,
+    @ColorInt val color: Int = ThemePrefs.primaryColor,
     val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val resetError: () -> Unit,
     val onStartPairing: (pairingCode: String) -> Unit
 )
 
 sealed class AddStudentViewModelAction {
     data object PairStudentSuccess : AddStudentViewModelAction()
-    data object PairStudentFailure : AddStudentViewModelAction()
 }

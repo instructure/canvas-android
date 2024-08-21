@@ -36,7 +36,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.User
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -112,9 +111,6 @@ class DashboardFragment : Fragment(), NavigationCallbacks {
         when (action) {
             is AddStudentViewModelAction.PairStudentSuccess -> {
                 viewModel.reloadData()
-            }
-            is AddStudentViewModelAction.PairStudentFailure -> {
-                Snackbar.make(binding.root, "Erroroorororororor", Snackbar.LENGTH_SHORT).show()
             }
         }
     }

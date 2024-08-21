@@ -18,13 +18,13 @@ package com.instructure.parentapp.features.addstudent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.pandautils.utils.backgroundColor
-import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,20 +32,26 @@ import javax.inject.Inject
 @HiltViewModel
 class AddStudentViewModel @Inject constructor(
     selectedStudentHolder: SelectedStudentHolder,
+    private val colorKeeper: ColorKeeper,
     private val repository: AddStudentRepository
 ) : ViewModel() {
 
     private val _uiState =
-        MutableStateFlow(
-            AddStudentUiState(
-                color = selectedStudentHolder.selectedStudentState.value?.backgroundColor.orDefault(),
-                onStartPairing = this::pairStudent
-            )
-        )
+        MutableStateFlow(AddStudentUiState(onStartPairing = this::pairStudent, resetError = this::resetError))
     val uiState = _uiState.asStateFlow()
 
     private val _events = Channel<AddStudentViewModelAction>()
     val events = _events.receiveAsFlow()
+
+    init {
+        viewModelScope.launch {
+            selectedStudentHolder.selectedStudentChangedFlow.collectLatest { user ->
+                _uiState.value = _uiState.value.copy(
+                    color = colorKeeper.getOrGenerateUserColor(user).textAndIconColor()
+                )
+            }
+        }
+    }
 
     private fun pairStudent(pairingCode: String) {
         viewModelScope.launch {
@@ -54,9 +60,12 @@ class AddStudentViewModel @Inject constructor(
                 _events.send(AddStudentViewModelAction.PairStudentSuccess)
             } catch (e: Exception) {
                 e.printStackTrace()
-                _events.send(AddStudentViewModelAction.PairStudentFailure)
+                _uiState.value = _uiState.value.copy(isLoading = false, isError = true)
             }
         }
+    }
 
+    private fun resetError() {
+        _uiState.value = _uiState.value.copy(isError = false)
     }
 }

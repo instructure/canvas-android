@@ -1801,4 +1801,5 @@
     <string name="pairingCodeDialogLabel">Pairing Code</string>
     <string name="pairingCodeDialogNegativeButton">Cancel</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
+    <string name="pairingCodeDialogError">Your code is incorrect or expired.</string>
 </resources>

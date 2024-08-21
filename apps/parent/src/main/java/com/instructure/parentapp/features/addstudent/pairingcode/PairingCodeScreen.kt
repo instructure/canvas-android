@@ -16,7 +16,6 @@
  */
 package com.instructure.parentapp.features.addstudent.pairingcode
 
-import android.graphics.Color
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,16 +24,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.AddStudentUiState
 
@@ -43,27 +50,79 @@ fun PairingCodeScreen(
     uiState: AddStudentUiState,
     onCancelClick: () -> Unit
 ) {
-    var pairingCode by remember { mutableStateOf("") }
 
     CanvasTheme {
-        Column(modifier = Modifier.padding(16.dp)) {
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                value = pairingCode,
-                onValueChange = { pairingCode = it },
-                label = { Text(text = stringResource(id = R.string.pairingCodeDialogLabel)) })
+        when {
+            uiState.isLoading -> {
+                Loading(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp))
+            }
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                TextButton(onClick = { onCancelClick() }) {
-                    Text(text = stringResource(id = R.string.pairingCodeDialogNegativeButton))
+            else -> {
+                PairingScreenContent(
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    uiState = uiState,
+                    onCancelClick = onCancelClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PairingScreenContent(
+    uiState: AddStudentUiState,
+    modifier: Modifier = Modifier,
+    onCancelClick: () -> Unit
+) {
+    var pairingCode by remember { mutableStateOf("") }
+    Column(modifier = modifier) {
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = pairingCode,
+            onValueChange = {
+                pairingCode = it
+                if (uiState.isError) {
+                    uiState.resetError()
                 }
-                TextButton(
-                    onClick = { uiState.onStartPairing(pairingCode) },
-                ) {
-                    Text(text = stringResource(id = R.string.pairingCodeDialogPositiveButton))
-                }
+            },
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = if (uiState.isError) {
+                    colorResource(id = R.color.textDanger)
+                } else {
+                    Color(uiState.color)
+                },
+                focusedLabelColor = Color(uiState.color),
+                cursorColor = Color(uiState.color),
+            ),
+            textStyle = TextStyle(fontSize = 16.sp),
+            label = {
+                Text(
+                    text = stringResource(id = R.string.pairingCodeDialogLabel)
+                )
+            })
+        if (uiState.isError) {
+            Text(
+                text = stringResource(id = R.string.pairingCodeDialogError),
+                style = TextStyle(color = colorResource(id = R.color.textDanger))
+            )
+        }
+
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            TextButton(onClick = { onCancelClick() }) {
+                Text(
+                    text = stringResource(id = R.string.pairingCodeDialogNegativeButton),
+                    style = TextStyle(color = Color(uiState.color))
+                )
+            }
+            TextButton(
+                onClick = { uiState.onStartPairing(pairingCode) },
+            ) {
+                Text(
+                    text = stringResource(id = R.string.pairingCodeDialogPositiveButton),
+                    style = TextStyle(color = Color(uiState.color))
+                )
             }
         }
     }
@@ -72,7 +131,17 @@ fun PairingCodeScreen(
 @Preview
 @Composable
 fun PairingCodeScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
     PairingCodeScreen(
-        uiState = AddStudentUiState(color = Color.BLUE) {},
+        uiState = AddStudentUiState(onStartPairing = {}, resetError = {}),
+        onCancelClick = {})
+}
+
+@Preview
+@Composable
+fun PairingScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    PairingCodeScreen(
+        uiState = AddStudentUiState(isLoading = true, onStartPairing = {}, resetError = {}),
         onCancelClick = {})
 }
