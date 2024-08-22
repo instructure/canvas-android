@@ -10,7 +10,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -21,6 +23,7 @@ import com.instructure.pandautils.features.inbox.compose.composables.InboxCompos
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 
 @AndroidEntryPoint
 class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogParent {
@@ -59,6 +62,16 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
 
     override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
         Log.d("InboxComposeFragment", "attachmentCallback: ${attachment?.name}")
+    }
+
+    override fun selectedUriStringsCallback(filePaths: List<String>) {
+        Log.d("InboxComposeFragment", "selectedUriStringsCallback: $filePaths")
+    }
+
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+        workInfoLiveData.observe(viewLifecycleOwner) { workInfo ->
+            viewModel.updateAttachments(uuid, workInfo)
+        }
     }
 
     private fun handleAction(action: InboxComposeViewModelAction) {

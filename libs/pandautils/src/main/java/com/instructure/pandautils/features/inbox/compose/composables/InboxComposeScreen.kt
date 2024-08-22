@@ -206,6 +206,17 @@ private fun InboxComposeScreenContent(
             modifier = Modifier
                 .defaultMinSize(minHeight = 100.dp)
         )
+
+        Column {
+            uiState.attachments.forEach { attachment ->
+                AttachmentCard(
+                    attachment = attachment,
+                    status = AttachmentStatus.UPLOADED,
+                    onRemove = { actionHandler(InboxComposeActionHandler.RemoveAttachment(attachment)) },
+                    context = LocalContext.current,
+                )
+            }
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import androidx.compose.ui.text.input.TextFieldValue
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
@@ -14,6 +15,7 @@ data class InboxComposeUiState(
     val sendIndividual: Boolean = false,
     val subject: TextFieldValue = TextFieldValue(""),
     val body: TextFieldValue = TextFieldValue(""),
+    val attachments: List<Attachment> = emptyList(),
     val screenState: ScreenState = ScreenState.Data,
     val showConfirmationDialog: Boolean = false,
 ) {
@@ -39,6 +41,7 @@ sealed class InboxComposeActionHandler {
     data class SubjectChanged(val subject: TextFieldValue) : InboxComposeActionHandler()
     data class BodyChanged(val body: TextFieldValue) : InboxComposeActionHandler()
     data object AddAttachmentSelected : InboxComposeActionHandler()
+    data class RemoveAttachment(val attachment: Attachment) : InboxComposeActionHandler()
 }
 
 sealed class InboxComposeScreenOptions {

@@ -5,11 +5,13 @@ import android.widget.Toast
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,12 +23,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.EnumMap
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class InboxComposeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val inboxComposeRepository: InboxComposeRepository,
+    private val attachmentDao: AttachmentDao
 ): ViewModel() {
     private var canSendToAll = false
 
@@ -38,6 +42,21 @@ class InboxComposeViewModel @Inject constructor(
 
     init {
         loadContexts()
+    }
+
+    fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
+        if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+            viewModelScope.launch {
+                uuid?.let { uuid ->
+                    val attachmentEntities = attachmentDao.findByParentId(uuid.toString())
+                    attachmentEntities?.let { attachmentList ->
+                        _uiState.update { it.copy(attachments = attachmentList.map { it.toApiModel() }) }
+                        attachmentDao.deleteAll(attachmentList)
+                    } ?: context.toast(R.string.errorUploadingFile)
+                } ?: context.toast(R.string.errorUploadingFile)
+
+            }
+        }
     }
 
     fun handleAction(action: InboxComposeActionHandler) {
@@ -81,6 +100,9 @@ class InboxComposeViewModel @Inject constructor(
                 viewModelScope.launch {
                     _events.send(InboxComposeViewModelAction.OpenAttachmentPicker)
                 }
+            }
+            is InboxComposeActionHandler.RemoveAttachment -> {
+                _uiState.update { it.copy(attachments = it.attachments - action.attachment) }
             }
         }
     }
