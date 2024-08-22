@@ -114,13 +114,14 @@ class CourseSync(
     private val additionalFileIdsToSync = mutableMapOf<Long, Set<Long>>()
     private val externalFilesToSync = mutableMapOf<Long, Set<String>>()
     private val failedTabsPerCourse = mutableMapOf<Long, Set<String>>()
+    val studioMediaIdsToSync = mutableSetOf<String>()
 
     private var isStopped = false
         set(value) = synchronized(this) {
             field = value
         }
 
-    suspend fun syncCourses(courseIds: List<Long>) {
+    suspend fun syncCourses(courseIds: Set<Long>) {
         coroutineScope {
             courseIds.map {
                 async { syncCourse(it) }
@@ -588,6 +589,7 @@ class CourseSync(
         externalFilesToSync[courseId]?.let {
             externalFilesToSync[courseId] = it + htmlParsingResult.externalFileUrls
         }
+        studioMediaIdsToSync.addAll(htmlParsingResult.studioMediaIds)
         return htmlParsingResult.htmlWithLocalFileLinks
     }
 

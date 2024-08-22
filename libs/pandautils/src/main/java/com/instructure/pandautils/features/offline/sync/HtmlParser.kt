@@ -39,14 +39,22 @@ class HtmlParser(
     private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
     private val fileLinkRegex = Regex("<a[^>]*class=\"instructure_file_link[^>]*href=\"([^\"]*)\"[^>]*>")
     private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
+    private val studioIframeRegex = Regex("<iframe[^>]*custom_arc_media_id%3D([^%]*)%[^>]*>[^<]*</iframe>")
+    // TODO Handle captions elsewhere
+    private val videoTagReplacement = """
+        <video controls playsinline preload="auto" poster="{posterPath}">
+          <source src="{srcPath}" type="video/mp4" />
+        </video>
+    """.trimIndent()
 
     suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long): HtmlParsingResult {
-        if (html == null) return HtmlParsingResult(null, emptySet(), emptySet())
+        if (html == null) return HtmlParsingResult(null, emptySet(), emptySet(), emptySet())
 
         val imageParsingResult = parseAndReplaceImageTags(html, courseId)
         val filesFromFileLinks = findFileIdsToSync(imageParsingResult.htmlWithLocalFileLinks ?: html)
+        val studioMediaResult = parseAndReplaceStudioVideos(imageParsingResult)
 
-        return imageParsingResult.copy(internalFileIds = imageParsingResult.internalFileIds + filesFromFileLinks)
+        return studioMediaResult.copy(internalFileIds = imageParsingResult.internalFileIds + filesFromFileLinks)
     }
 
     private suspend fun parseAndReplaceImageTags(originalHtml: String, courseId: Long): HtmlParsingResult {
@@ -72,7 +80,7 @@ class HtmlParser(
             }
         }
 
-        return HtmlParsingResult(resultHtml, internalFileIds, externalFileUrls)
+        return HtmlParsingResult(resultHtml, internalFileIds, externalFileUrls, emptySet())
     }
 
     private suspend fun replaceInternalFileUrl(html: String, courseId: Long, fileId: Long, imageUrl: String): Pair<String, Boolean> {
@@ -105,7 +113,7 @@ class HtmlParser(
         return downloadedFile.absolutePath
     }
 
-    private suspend fun createLocalFilePathForExternalFile(fileName: String, courseId: Long): String {
+    private fun createLocalFilePathForExternalFile(fileName: String, courseId: Long): String {
         val dir = File(context.filesDir, "${apiPrefs.user?.id.toString()}/external_$courseId")
 
         val downloadedFile = File(dir, fileName)
@@ -128,10 +136,49 @@ class HtmlParser(
 
         return internalFileIds
     }
+
+    private fun parseAndReplaceStudioVideos(htmlParsingResult: HtmlParsingResult): HtmlParsingResult {
+        var resultHtml: String = htmlParsingResult.htmlWithLocalFileLinks ?: return htmlParsingResult
+        val studioMediaIds = mutableSetOf<String>()
+
+        val matches = studioIframeRegex.findAll(resultHtml)
+        matches.forEach { match ->
+            val studioIframe = match.groupValues[0]
+            val studioMediaId = match.groupValues[1]
+            studioMediaIds.add(studioMediaId)
+
+            // TODO Get local path
+            resultHtml = resultHtml.replace(studioIframe, videoTagReplacement
+                .replace("{posterPath}", "https://${apiPrefs.domain}/media_objects/$studioMediaId/poster")
+                .replace("{srcPath}", "file://${getLocalPathForStudioMedia(studioMediaId).absolutePath}"))
+        }
+
+        return htmlParsingResult.copy(htmlWithLocalFileLinks = resultHtml, studioMediaIds = studioMediaIds)
+    }
+
+    private fun getLocalPathForStudioMedia(ltiLaunchId: String): File {
+        val userFilesDir = File(context.filesDir, ApiPrefs.user?.id.toString())
+        if (!userFilesDir.exists()) {
+            userFilesDir.mkdir()
+        }
+
+        val studioDir = File(userFilesDir, "studio")
+        if (!studioDir.exists()) {
+            studioDir.mkdir()
+        }
+
+        val videoDir = File(studioDir, ltiLaunchId)
+        if (!videoDir.exists()) {
+            videoDir.mkdir()
+        }
+
+        return File(videoDir, "${ltiLaunchId}.mp4") // TODO Handle this dinamically
+    }
 }
 
 data class HtmlParsingResult(
     val htmlWithLocalFileLinks: String?,
     val internalFileIds: Set<Long>,
-    val externalFileUrls: Set<String>
+    val externalFileUrls: Set<String>,
+    val studioMediaIds: Set<String>
 )

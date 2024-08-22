@@ -276,4 +276,9 @@ class ApiModule {
     fun provideLaunchDefinitionsApi(): LaunchDefinitionsAPI.LaunchDefinitionsInterface {
         return RestBuilder().build(LaunchDefinitionsAPI.LaunchDefinitionsInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideStudioApi(): StudioApi {
+        return RestBuilder().build(StudioApi::class.java, RestParams())
+    }
 }

@@ -18,30 +18,50 @@ package com.instructure.pandautils.features.offline.sync
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.DownloadState
+import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
+import com.instructure.canvasapi2.apis.StudioApi
+import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.StudioLoginSession
+import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.utils.poll
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
+import java.io.File
 import java.net.URL
 
 class StudioSync(
     private val context: Context,
     private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val studioApi: StudioApi,
+    private val fileSyncProgressDao: FileSyncProgressDao,
+    private val fileDownloadApi: FileDownloadAPI,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) {
 
-    public suspend fun syncStudioVideos() {
-        val studioSession = authenticateStudio()
-        Log.d("asdasd", "Studio session: $studioSession")
+    public suspend fun syncStudioVideos(courseIds: Set<Long>, mediaIdsToSync: Set<String>) {
+        val studioSession = authenticateStudio() ?: return
+        val allVideosMetaData = getAllVideosMetaData(courseIds, studioSession)
+        val videosToSync = allVideosMetaData.filter { mediaIdsToSync.contains(it.ltiLaunchId) }
+
+        // TODO Cleanup videos
+
+        downloadVideos(videosToSync)
     }
 
     private suspend fun authenticateStudio(): StudioLoginSession? {
@@ -71,6 +91,21 @@ class StudioSync(
         }
     }
 
+    private suspend fun getAllVideosMetaData(
+        courseIds: Set<Long>,
+        studioSession: StudioLoginSession
+    ) = coroutineScope {
+        courseIds.map { courseId ->
+            async {
+                // TODO We might improve this to be called only once, currently it's called with the Canvas token and then uses the Authenticator to call it with the correct token token
+                studioApi.getStudioMediaMetadata(
+                    "${studioSession.baseUrl}/api/public/v1/courses/$courseId/media",
+                    RestParams(isForceReadFromNetwork = true, studioToken = studioSession.accessToken)
+                ).dataOrNull.orEmpty()
+            }
+        }.awaitAll()
+    }.flatten().distinctBy { it.id }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun loadUrlIntoHeadlessWebView(context: Context, url: String): WebView = suspendCancellableCoroutine { continuation ->
         Handler(Looper.getMainLooper()).post {
@@ -89,7 +124,122 @@ class StudioSync(
             }
         }
     }
+
+    private suspend fun downloadVideos(videos: List<StudioMediaMetadata>) {
+        val syncData = mutableListOf<StudioVideoSyncData>()
+
+        videos.forEach {
+//            val progressId = createAndInsertProgress(it) // TODO Handle progress
+            syncData.add(StudioVideoSyncData(-1, it.id, it.ltiLaunchId, it.title, it.url))
+        }
+
+        val chunks = syncData.chunked(6)
+
+        coroutineScope {
+            chunks.forEach { chunk ->
+                chunk.map {
+                    async { downloadFile(it) }
+                }.awaitAll()
+            }
+        }
+    }
+
+    private suspend fun createAndInsertProgress(studioVideoMetadata: StudioMediaMetadata): Long {
+        val progress = FileSyncProgressEntity(
+            studioVideoMetadata.id,
+            -1,
+            studioVideoMetadata.title,
+            0,
+            studioVideoMetadata.size,
+            false, // TODO: Check if this is correct
+            ProgressState.IN_PROGRESS
+        )
+
+        val rowId = fileSyncProgressDao.insert(progress)
+        return fileSyncProgressDao.findByRowId(rowId)?.id ?: -1L
+    }
+
+    private suspend fun downloadFile(fileSyncData: StudioVideoSyncData) {
+        var downloadedFile = getDownloadFile(fileSyncData.ltiLaunchId)
+
+        try {
+            val downloadResult = fileDownloadApi.downloadFile(
+                fileSyncData.fileUrl,
+                RestParams(shouldIgnoreToken = true, isForceReadFromNetwork = true)
+            )
+
+            downloadResult
+                .dataOrThrow
+                .saveFile(downloadedFile)
+                .collect {
+                    when (it) {
+                        is DownloadState.InProgress -> {
+                            updateProgress(fileSyncData.progressId, it.progress, ProgressState.IN_PROGRESS)
+                        }
+
+                        is DownloadState.Success -> {
+                            if (downloadedFile.name.startsWith("temp_")) {
+                                downloadedFile = rewriteOriginalFile(downloadedFile)
+                            }
+                            updateProgress(fileSyncData.progressId, 100, ProgressState.COMPLETED)
+                        }
+
+                        is DownloadState.Failure -> {
+                            throw it.throwable
+                        }
+                    }
+                }
+        } catch (e: Exception) {
+            downloadedFile.delete()
+            updateProgress(fileSyncData.progressId, 0, ProgressState.ERROR)
+            firebaseCrashlytics.recordException(e)
+        }
+    }
+
+    private fun getDownloadFile(ltiLaunchId: String): File {
+        val userFilesDir = File(context.filesDir, ApiPrefs.user?.id.toString())
+        if (!userFilesDir.exists()) {
+            userFilesDir.mkdir()
+        }
+
+        val studioDir = File(userFilesDir, "studio")
+        if (!studioDir.exists()) {
+            studioDir.mkdir()
+        }
+
+        val videoDir = File(studioDir, ltiLaunchId)
+        if (!videoDir.exists()) {
+            videoDir.mkdir()
+        }
+
+        var downloadFile = File(videoDir, "${ltiLaunchId}.mp4") // TODO Handle this dinamically
+        if (downloadFile.exists()) {
+            downloadFile = File(userFilesDir, "temp_${ltiLaunchId}.mp4")
+        }
+        return downloadFile
+    }
+
+    private suspend fun updateProgress(progressId: Long, progress: Int, progressState: ProgressState) {
+        val newProgress = fileSyncProgressDao.findById(progressId)?.copy(progress = progress, progressState = progressState)
+        newProgress?.let { fileSyncProgressDao.update(it) }
+    }
+
+    private fun rewriteOriginalFile(tempFile: File): File {
+        val dir = tempFile.parentFile ?: return tempFile
+        val originalFile = File(dir, tempFile.name.substringAfter("temp_"))
+        originalFile.delete()
+        tempFile.renameTo(originalFile)
+        return originalFile
+    }
 }
+
+data class StudioVideoSyncData(
+    val progressId: Long,
+    val fileId: Long,
+    val ltiLaunchId: String,
+    val inputFileName: String,
+    val fileUrl: String,
+)
 
 @OptIn(ExperimentalCoroutinesApi::class)
 private suspend fun WebView.evaluateJavascriptSuspend(script: String): String = suspendCancellableCoroutine { continuation ->

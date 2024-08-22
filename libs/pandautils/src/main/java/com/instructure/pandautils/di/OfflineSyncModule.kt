@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
@@ -184,8 +185,12 @@ class OfflineSyncModule {
     fun provideStudioSync(
         @ApplicationContext context: Context,
         launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
-        apiPrefs: ApiPrefs
+        apiPrefs: ApiPrefs,
+        studioApi: StudioApi,
+        fileSyncProgressDao: FileSyncProgressDao,
+        fileDownloadApi: FileDownloadAPI,
+        firebaseCrashlytics: FirebaseCrashlytics
     ): StudioSync {
-        return StudioSync(context, launchDefinitionsApi, apiPrefs)
+        return StudioSync(context, launchDefinitionsApi, apiPrefs, studioApi, fileSyncProgressDao, fileDownloadApi, firebaseCrashlytics)
     }
 }

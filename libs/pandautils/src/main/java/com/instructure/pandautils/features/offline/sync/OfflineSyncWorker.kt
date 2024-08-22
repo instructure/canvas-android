@@ -136,12 +136,13 @@ class OfflineSyncWorker @AssistedInject constructor(
             courseSyncProgressDao.insertAll(it)
         }
 
-        courseSync.syncCourses(coursesToSync.map { it.courseId })
+        val courseIdsToSync = coursesToSync.map { it.courseId }.toSet()
+        courseSync.syncCourses(courseIdsToSync)
+
+        studioSync.syncStudioVideos(courseIdsToSync, courseSync.studioMediaIdsToSync)
 
         val courseProgresses = courseSyncProgressDao.findAll()
         val fileProgresses = fileSyncProgressDao.findAll()
-
-        studioSync.syncStudioVideos()
 
         if (courseProgresses.isNotEmpty() && fileProgresses.isNotEmpty()) {
             showNotification(
