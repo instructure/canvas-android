@@ -218,4 +218,7 @@ dependencies {
     implementation Libs.PLAY_IN_APP_UPDATES
 
     androidTestImplementation Libs.COMPOSE_UI_TEST
+
+    implementation (Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.JOURNEY_ZXING_CORE
 }

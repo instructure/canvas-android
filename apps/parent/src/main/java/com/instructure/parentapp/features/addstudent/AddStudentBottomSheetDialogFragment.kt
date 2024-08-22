@@ -26,9 +26,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.parentapp.features.addstudent.pairingcode.PairingCodeDialogFragment
+import com.instructure.parentapp.util.navigation.Navigation
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
+
+    @Inject
+    lateinit var navigation: Navigation
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,7 +60,8 @@ class AddStudentBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun onQrCodeClick() {
-
+        navigation.navigate(requireActivity(), navigation.qrPairing)
+        dismiss()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

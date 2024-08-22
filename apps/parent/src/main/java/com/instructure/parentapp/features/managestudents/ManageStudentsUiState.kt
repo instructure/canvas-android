@@ -63,4 +63,5 @@ sealed class ManageStudentsAction {
 
 sealed class ManageStudentsViewModelAction {
     data class NavigateToAlertSettings(val studentId: Long) : ManageStudentsViewModelAction()
+    data object AddStudent: ManageStudentsViewModelAction()
 }

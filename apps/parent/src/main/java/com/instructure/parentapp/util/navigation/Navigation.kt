@@ -10,7 +10,6 @@ import androidx.navigation.NavType
 import androidx.navigation.createGraph
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.fragment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -19,9 +18,11 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
+import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.R
+import com.instructure.parentapp.features.addstudent.qr.QrPairingFragment
 import com.instructure.parentapp.features.alerts.list.AlertsFragment
 import com.instructure.parentapp.features.calendar.ParentCalendarFragment
 import com.instructure.parentapp.features.courses.details.CourseDetailsFragment
@@ -29,7 +30,6 @@ import com.instructure.parentapp.features.courses.list.CoursesFragment
 import com.instructure.parentapp.features.dashboard.DashboardFragment
 import com.instructure.parentapp.features.managestudents.ManageStudentsFragment
 import com.instructure.parentapp.features.notaparent.NotAParentFragment
-import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.parentapp.features.splash.SplashFragment
 
 
@@ -47,6 +47,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     val alerts = "$baseUrl/alerts"
     val inbox = "$baseUrl/conversations"
     val manageStudents = "$baseUrl/manage-students"
+    val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
 
     private val calendarEvent =
@@ -95,6 +96,7 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
             }
             fragment<ManageStudentsFragment>(manageStudents)
+            fragment<QrPairingFragment>(qrPairing)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {
                 argument(courseId) {
