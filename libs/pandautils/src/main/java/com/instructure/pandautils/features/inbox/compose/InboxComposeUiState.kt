@@ -25,6 +25,7 @@ data class InboxComposeUiState(
 
 sealed class InboxComposeViewModelAction {
     data object NavigateBack: InboxComposeViewModelAction()
+    data object OpenAttachmentPicker: InboxComposeViewModelAction()
 }
 
 sealed class InboxComposeActionHandler {
@@ -37,6 +38,7 @@ sealed class InboxComposeActionHandler {
     data class SendIndividualChanged(val sendIndividual: Boolean) : InboxComposeActionHandler()
     data class SubjectChanged(val subject: TextFieldValue) : InboxComposeActionHandler()
     data class BodyChanged(val body: TextFieldValue) : InboxComposeActionHandler()
+    data object AddAttachmentSelected : InboxComposeActionHandler()
 }
 
 sealed class InboxComposeScreenOptions {

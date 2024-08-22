@@ -77,6 +77,11 @@ class InboxComposeViewModel @Inject constructor(
             is InboxComposeActionHandler.SendIndividualChanged -> {
                 _uiState.update { it.copy(sendIndividual = action.sendIndividual) }
             }
+            is InboxComposeActionHandler.AddAttachmentSelected -> {
+                viewModelScope.launch {
+                    _events.send(InboxComposeViewModelAction.OpenAttachmentPicker)
+                }
+            }
         }
     }
 

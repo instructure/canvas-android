@@ -1,6 +1,7 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +11,19 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
+import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreenWrapper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InboxComposeFragment : Fragment(), FragmentInteractions {
+class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogParent {
 
     private val viewModel: InboxComposeViewModel by viewModels()
 
@@ -53,10 +57,19 @@ class InboxComposeFragment : Fragment(), FragmentInteractions {
         return this
     }
 
+    override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
+        Log.d("InboxComposeFragment", "attachmentCallback: ${attachment?.name}")
+    }
+
     private fun handleAction(action: InboxComposeViewModelAction) {
         when (action) {
             is InboxComposeViewModelAction.NavigateBack -> {
                 activity?.supportFragmentManager?.popBackStack()
+            }
+            is InboxComposeViewModelAction.OpenAttachmentPicker -> {
+                val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
+                FileUploadDialogFragment.newInstance(bundle)
+                    .show(childFragmentManager, FileUploadDialogFragment.TAG)
             }
         }
     }

@@ -199,6 +199,9 @@ private fun InboxComposeScreenContent(
             onValueChange = {
                 actionHandler(InboxComposeActionHandler.BodyChanged(it))
             },
+            onIconClick = {
+                actionHandler(InboxComposeActionHandler.AddAttachmentSelected)
+            },
             focusRequester = bodyFocusRequester,
             modifier = Modifier
                 .defaultMinSize(minHeight = 100.dp)
