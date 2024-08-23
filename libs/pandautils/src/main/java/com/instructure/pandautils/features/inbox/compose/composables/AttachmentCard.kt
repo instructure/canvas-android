@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.inbox.compose.composables
 import android.content.Context
 import android.text.format.Formatter
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,6 +60,7 @@ import com.instructure.pandautils.utils.iconRes
 fun AttachmentCard(
     attachmentCardItem: AttachmentCardItem,
     context: Context,
+    onSelect: () -> Unit,
     onRemove: () -> Unit
 ) {
     val attachment = attachmentCardItem.attachment
@@ -70,6 +72,7 @@ fun AttachmentCard(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(vertical = 8.dp)
+            .clickable { onSelect() }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -93,6 +96,7 @@ fun AttachmentCard(
                         painter = painterResource(id = attachment.iconRes),
                         contentDescription = null,
                         tint = colorResource(id = R.color.textDark),
+                        modifier = Modifier.size(48.dp)
                     )
                 }
             }
@@ -148,7 +152,7 @@ fun AttachmentCard(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = null,
-                    tint = colorResource(id = R.color.textDark)
+                    tint = colorResource(id = R.color.textDark),
                 )
             }
         }
@@ -174,6 +178,7 @@ fun AttachmentCardPreview() {
             AttachmentStatus.UPLOADED
         ),
         context,
+        {},
         {}
     )
 }

@@ -509,4 +509,5 @@
     <string name="a11y_backToRoles">Back to roles</string>
     <string name="a11y_closeRecipientPicker">Close recipient picker</string>
     <string name="failed_to_send_message">Failed to send message</string>
+    <string name="failed_to_open_attachment">Failed to open attachment</string>
 </resources>

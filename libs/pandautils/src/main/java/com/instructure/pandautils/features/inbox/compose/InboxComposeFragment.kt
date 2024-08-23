@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -24,6 +26,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.UUID
+
 
 @AndroidEntryPoint
 class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogParent {
@@ -83,6 +86,13 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
                 val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())
                 FileUploadDialogFragment.newInstance(bundle)
                     .show(childFragmentManager, FileUploadDialogFragment.TAG)
+            }
+            is InboxComposeViewModelAction.OpenAttachment -> {
+                val fileURI = FileProvider.getUriForFile(requireContext(), requireContext().packageName + ".provider", action.file)
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.setDataAndType(fileURI, action.mimeType)
+                startActivity(intent)
             }
         }
     }

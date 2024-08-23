@@ -6,25 +6,33 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.Utils.getAttachmentsDirectory
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
 import java.util.EnumMap
 import java.util.UUID
 import javax.inject.Inject
+
 
 @HiltViewModel
 class InboxComposeViewModel @Inject constructor(
@@ -57,17 +65,6 @@ class InboxComposeViewModel @Inject constructor(
                 } ?: context.toast(R.string.errorUploadingFile)
 
             }
-        }
-    }
-
-    private fun WorkInfo.State.toAttachmentCardStatus(): AttachmentStatus {
-        return when (this) {
-            WorkInfo.State.SUCCEEDED -> AttachmentStatus.UPLOADED
-            WorkInfo.State.FAILED -> AttachmentStatus.FAILED
-            WorkInfo.State.ENQUEUED -> AttachmentStatus.UPLOADING
-            WorkInfo.State.RUNNING -> AttachmentStatus.UPLOADING
-            WorkInfo.State.BLOCKED -> AttachmentStatus.FAILED
-            WorkInfo.State.CANCELLED -> AttachmentStatus.FAILED
         }
     }
 
@@ -115,6 +112,13 @@ class InboxComposeViewModel @Inject constructor(
             }
             is InboxComposeActionHandler.RemoveAttachment -> {
                 _uiState.update { it.copy(attachments = it.attachments - action.attachment) }
+            }
+            is InboxComposeActionHandler.OpenAttachment -> {
+                viewModelScope.launch {
+                    val file = downloadFile(action.attachment.attachment)
+
+                    _events.send(InboxComposeViewModelAction.OpenAttachment(file, action.attachment.attachment.contentType))
+                }
             }
         }
     }
@@ -346,5 +350,40 @@ class InboxComposeViewModel @Inject constructor(
             EnrollmentType.OBSERVERENROLLMENT -> "_observers"
             else -> ""
         }
+    }
+
+    private fun WorkInfo.State.toAttachmentCardStatus(): AttachmentStatus {
+        return when (this) {
+            WorkInfo.State.SUCCEEDED -> AttachmentStatus.UPLOADED
+            WorkInfo.State.FAILED -> AttachmentStatus.FAILED
+            WorkInfo.State.ENQUEUED -> AttachmentStatus.UPLOADING
+            WorkInfo.State.RUNNING -> AttachmentStatus.UPLOADING
+            WorkInfo.State.BLOCKED -> AttachmentStatus.FAILED
+            WorkInfo.State.CANCELLED -> AttachmentStatus.FAILED
+        }
+    }
+
+    private suspend fun downloadFile(attachment: Attachment): File = withContext(Dispatchers.IO) {
+        val file = File(
+            getAttachmentsDirectory(context),
+            attachment.filename ?: ""
+        )
+
+        val fileBytes = URL(attachment.url).readBytes()
+
+        try {
+            file.parentFile?.mkdirs()
+            if (!file.exists()) {
+                file.createNewFile()
+            }
+            val fos = FileOutputStream(file)
+            fos.write(fileBytes)
+            fos.close()
+
+        } catch (e: java.lang.Exception) {
+            context.toast(context.getString(R.string.failed_to_open_attachment))
+        }
+
+        return@withContext file
     }
 }

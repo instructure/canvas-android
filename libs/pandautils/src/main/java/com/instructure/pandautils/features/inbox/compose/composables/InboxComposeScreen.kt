@@ -211,6 +211,7 @@ private fun InboxComposeScreenContent(
             uiState.attachments.forEach { attachment ->
                 AttachmentCard(
                     attachmentCardItem = attachment,
+                    onSelect = { actionHandler(InboxComposeActionHandler.OpenAttachment(attachment)) },
                     onRemove = { actionHandler(InboxComposeActionHandler.RemoveAttachment(attachment)) },
                     context = LocalContext.current,
                 )
