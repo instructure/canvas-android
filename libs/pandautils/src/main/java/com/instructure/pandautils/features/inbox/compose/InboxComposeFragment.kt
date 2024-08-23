@@ -2,7 +2,6 @@ package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.R
@@ -61,14 +59,6 @@ class InboxComposeFragment : Fragment(), FragmentInteractions, FileUploadDialogP
 
     override fun getFragment(): Fragment {
         return this
-    }
-
-    override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
-        Log.d("InboxComposeFragment", "attachmentCallback: ${attachment?.name}")
-    }
-
-    override fun selectedUriStringsCallback(filePaths: List<String>) {
-        Log.d("InboxComposeFragment", "selectedUriStringsCallback: $filePaths")
     }
 
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
