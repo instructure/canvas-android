@@ -7,6 +7,7 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -26,6 +27,7 @@ class InboxComposeViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
     private val inboxComposeRepository: InboxComposeRepository = mockk(relaxed = true)
+    private val attachmentDao: AttachmentDao = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -384,6 +386,6 @@ class InboxComposeViewModelTest {
     //endregion
 
     private fun getViewModel(): InboxComposeViewModel {
-        return InboxComposeViewModel(context, inboxComposeRepository)
+        return InboxComposeViewModel(context, inboxComposeRepository, attachmentDao)
     }
 }
