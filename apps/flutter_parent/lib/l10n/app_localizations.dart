@@ -1715,4 +1715,14 @@ class AppLocalizations {
 
   String get needToEnablePermission =>
       Intl.message('You need to enable exact alarm permission for this action', desc: 'Error message when the user tries to set a reminder without the permission');
+
+  String get submissionAndRubric => Intl.message(
+      'Submission & Rubric',
+      desc: 'Button text for Submission and Rubric on Assignment Details Screen'
+  );
+
+  String get submission => Intl.message(
+      'Submission',
+      desc: 'Title for WebView screen when opening submission'
+  );
 }

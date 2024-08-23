@@ -26,24 +26,8 @@ import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
 import com.instructure.canvasapi2.utils.isValidTerm
 
-class CreateUpdateToDoRepository(
-    private val coursesApi: CourseAPI.CoursesInterface,
-    private val plannerApi: PlannerAPI.PlannerInterface
-) {
-    suspend fun getCourses(): List<Course> {
-        val params = RestParams()
-        return coursesApi.getFirstPageCoursesCalendar(params)
-            .depaginate { nextUrl ->
-                coursesApi.next(nextUrl, params)
-            }
-            .map {
-                it.filter { course ->
-                    !course.accessRestrictedByDate && course.hasActiveEnrollment()
-                }
-            }
-            .dataOrNull
-            .orEmpty()
-    }
+abstract class CreateUpdateToDoRepository(private val plannerApi: PlannerAPI.PlannerInterface) {
+    abstract suspend fun getCourses(): List<Course>
 
     suspend fun createToDo(
         title: String,

@@ -52,7 +52,7 @@ class CoursesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            selectedStudentHolder.selectedStudentFlow.collect {
+            selectedStudentHolder.selectedStudentState.collect {
                 studentChanged(it)
             }
         }

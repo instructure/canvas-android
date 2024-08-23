@@ -20,12 +20,10 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendar.CalendarRepository
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.backgroundColor
@@ -52,8 +50,6 @@ import org.junit.Test
 class CalendarFilterViewModelTest {
 
     private val calendarRepository: CalendarRepository = mockk(relaxed = true)
-    private val calendarFilterDao: CalendarFilterDao = mockk(relaxed = true)
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarFilterViewModel
@@ -94,7 +90,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(group)
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -116,7 +112,7 @@ class CalendarFilterViewModelTest {
     @Test
     fun `Retry loads filters again`() {
         coEvery { calendarRepository.getCanvasContexts() } returns DataResult.Fail()
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -159,7 +155,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(group)
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -189,7 +185,7 @@ class CalendarFilterViewModelTest {
         )
 
         assertEquals(newExpectedUiState, newUiState)
-        coVerify { calendarFilterDao.insertOrUpdate(any()) }
+        coVerify { calendarRepository.updateCalendarFilters(any()) }
     }
 
     @Test
@@ -204,7 +200,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(group)
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -247,7 +243,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(Group(3, name = "Group"))
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -275,7 +271,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(Group(3, name = "Group"))
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -306,7 +302,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(group)
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1")
@@ -335,7 +331,7 @@ class CalendarFilterViewModelTest {
         )
 
         assertEquals(newExpectedUiState, newUiState)
-        coVerify { calendarFilterDao.insertOrUpdate(any()) }
+        coVerify { calendarRepository.updateCalendarFilters(any()) }
     }
 
     @Test
@@ -350,7 +346,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(group)
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf()
@@ -379,7 +375,7 @@ class CalendarFilterViewModelTest {
         )
 
         assertEquals(newExpectedUiState, newUiState)
-        coVerify { calendarFilterDao.insertOrUpdate(any()) }
+        coVerify { calendarRepository.updateCalendarFilters(any()) }
     }
 
     @Test
@@ -393,7 +389,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(group)
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -422,7 +418,7 @@ class CalendarFilterViewModelTest {
         )
 
         assertEquals(newExpectedUiState, newUiState)
-        coVerify { calendarFilterDao.insertOrUpdate(any()) }
+        coVerify { calendarRepository.updateCalendarFilters(any()) }
     }
 
     @Test
@@ -437,7 +433,7 @@ class CalendarFilterViewModelTest {
                 CanvasContext.Type.GROUP to listOf(group)
             )
         )
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns CalendarFilterEntity(
+        coEvery { calendarRepository.getCalendarFilters() } returns CalendarFilterEntity(
             userId = "1",
             userDomain = "domain.com",
             filters = setOf("course_1", "group_3")
@@ -458,6 +454,6 @@ class CalendarFilterViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = CalendarFilterViewModel(calendarRepository, calendarFilterDao, apiPrefs, resources)
+        viewModel = CalendarFilterViewModel(calendarRepository, resources)
     }
 }

@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:fluro/fluro.dart';
@@ -34,13 +35,13 @@ import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
-import 'package:flutter_parent/screens/settings/legal_screen.dart';
 import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/pairing/qr_pairing_screen.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
+import 'package:flutter_parent/screens/settings/legal_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
@@ -152,8 +153,11 @@ class PandaRouter {
 
   static final String _simpleWebView = '/internal';
 
-  static String simpleWebViewRoute(String url, String infoText) =>
-      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=${Uri.encodeQueryComponent(infoText)}';
+  static String simpleWebViewRoute(String url, String infoText, bool limitWebAccess) =>
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=${Uri.encodeQueryComponent(infoText)}&${_RouterKeys.limitWebAccess}=${limitWebAccess}';
+
+  static String submissionWebViewRoute(String url, String title, Map<String, String> cookies, bool limitWebAccess) =>
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.title}=${Uri.encodeQueryComponent(title)}&${_RouterKeys.cookies}=${jsonEncode(cookies)}&${_RouterKeys.limitWebAccess}=${limitWebAccess}';
 
   static String settings() => '/settings';
 
@@ -376,7 +380,13 @@ class PandaRouter {
   static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url]![0];
     final infoText = params[_RouterKeys.infoText]?.elementAt(0);
-    return SimpleWebViewScreen(url, url, infoText: infoText == null || infoText == 'null' ? null : infoText);
+    final titleParam = params[_RouterKeys.title]?.firstOrNull;
+    final title = (titleParam == null || titleParam.isEmpty) ? url : titleParam;
+    final cookiesParam = params[_RouterKeys.cookies]?.firstOrNull;
+    final cookies = (cookiesParam == null || cookiesParam.isEmpty) ? {} : jsonDecode(cookiesParam);
+    final limitWebAccess = params[_RouterKeys.limitWebAccess]?.firstOrNull == 'true';
+    return SimpleWebViewScreen(url, title, limitWebAccess,
+        infoText: infoText == null || infoText == 'null' ? null : infoText, initialCookies: cookies);
   });
 
   static Handler _syllabusHandler = Handler(handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
@@ -461,7 +471,7 @@ class PandaRouter {
       final url = await _interactor.getAuthUrl(link);
       if (limitWebAccess) {
         // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
-        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage));
+        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage, true));
       } else if (await locator<UrlLauncher>().canLaunch(link) ?? false) {
         // No native route found, let's launch the url if possible, or show an error toast
         locator<UrlLauncher>().launch(url);
@@ -519,6 +529,9 @@ class _RouterKeys {
   static final accountName = 'accountName';
   static final eventId = 'eventId';
   static final infoText = 'infoText';
+  static final title = 'title';
+  static final cookies = 'cookies';
+  static final limitWebAccess = 'limitWebAccess';
   static final isCreatingAccount = 'isCreatingAccount';
   static final loginFlow = 'loginFlow';
   static final qrLoginUrl = 'qrLoginUrl';

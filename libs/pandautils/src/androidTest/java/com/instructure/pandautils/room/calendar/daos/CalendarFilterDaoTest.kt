@@ -65,6 +65,22 @@ class CalendarFilterDaoTest {
     }
 
     @Test
+    fun insertAndFindingByUserIdAndDomainAndObserveeId() = runTest {
+        val calendarFilterEntity = CalendarFilterEntity(
+            userId = "1", userDomain = "domain.com", filters = setOf("course_1", "course_2"), observeeId = 55
+        )
+
+        val calendarFilterEntity2 = calendarFilterEntity.copy(userId = "1", userDomain = "domain.com", filters = setOf("course_3"), observeeId = 44)
+
+        calendarFilterDao.insert(calendarFilterEntity)
+        calendarFilterDao.insert(calendarFilterEntity2)
+
+        val foundEntity = calendarFilterDao.findByUserIdAndDomainAndObserveeId(1, "domain.com", 55)
+
+        assertEquals(calendarFilterEntity.copy(id = 1), foundEntity)
+    }
+
+    @Test
     fun testInsertReplace() = runTest {
         val calendarFilterEntity = CalendarFilterEntity(
             userId = "1", userDomain = "domain.com", filters = setOf("course_1", "course_2")

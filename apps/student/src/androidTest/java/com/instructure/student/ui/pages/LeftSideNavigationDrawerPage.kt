@@ -15,6 +15,7 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.ViewAlphaAssertion
+import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
@@ -140,6 +141,11 @@ class LeftSideNavigationDrawerPage : BasePage() {
         onView(hamburgerButtonMatcher).click()
         onViewWithText(userName).assertDisplayed()
         Espresso.pressBack()
+    }
+
+    fun assertUserInfo(shortName: String, email: String) {
+        userName.assertContainsText(shortName)
+        userEmail.assertContainsText(email)
     }
 
     fun assertMenuItems(isElementaryStudent: Boolean) {

@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -57,6 +58,15 @@ open class ProfileSettingsPage : BasePage(R.id.profileSettingsPage) {
      */
     fun assertUserNameIs(expectedName: String) {
         usersName.check(matches(withText(expectedName)))
+    }
+
+    /**
+     * Asserts that the user's name contains the given pronoun.
+     *
+     * @param pronounString The expected pronoun string of the user.
+     */
+    fun assertPronouns(pronounString: String) {
+        usersName.assertContainsText(pronounString)
     }
 
 }

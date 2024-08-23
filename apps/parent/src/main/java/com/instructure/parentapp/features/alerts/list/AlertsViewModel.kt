@@ -55,7 +55,7 @@ class AlertsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            selectedStudentHolder.selectedStudentFlow.collectLatest {
+            selectedStudentHolder.selectedStudentState.collectLatest {
                 studentChanged(it)
             }
         }
