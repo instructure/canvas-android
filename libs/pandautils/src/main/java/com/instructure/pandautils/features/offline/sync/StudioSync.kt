@@ -58,18 +58,8 @@ class StudioSync(
         val studioSession = authenticateStudio() ?: return
         val allVideosMetaData = getAllVideosMetaData(courseIds, studioSession)
         val videosToSync = allVideosMetaData.filter { mediaIdsToSync.contains(it.ltiLaunchId) }
-        cleanupAndCheckExistingVideos(videosToSync)
-        downloadVideos(videosToSync)
-    }
-
-    private fun cleanupAndCheckExistingVideos(videos: List<StudioMediaMetadata>) {
-        val studioDir = getStudioDir()
-        val existingVideoFolders = studioDir.listFiles()?.toList()?.filterNotNull() ?: emptyList()
-        existingVideoFolders.forEach { folder ->
-            if (videos.none { it.ltiLaunchId == folder.name }) {
-                folder.deleteRecursively()
-            }
-        }
+        val videosNeeded = cleanupAndCheckExistingVideos(videosToSync)
+        downloadVideos(videosNeeded)
     }
 
     private suspend fun authenticateStudio(): StudioLoginSession? {
@@ -99,21 +89,6 @@ class StudioSync(
         }
     }
 
-    private suspend fun getAllVideosMetaData(
-        courseIds: Set<Long>,
-        studioSession: StudioLoginSession
-    ) = coroutineScope {
-        courseIds.map { courseId ->
-            async {
-                // TODO We might improve this to be called only once, currently it's called with the Canvas token and then uses the Authenticator to call it with the correct token token
-                studioApi.getStudioMediaMetadata(
-                    "${studioSession.baseUrl}/api/public/v1/courses/$courseId/media",
-                    RestParams(isForceReadFromNetwork = true, studioToken = studioSession.accessToken)
-                ).dataOrNull.orEmpty()
-            }
-        }.awaitAll()
-    }.flatten().distinctBy { it.id }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun loadUrlIntoHeadlessWebView(context: Context, url: String): WebView = suspendCancellableCoroutine { continuation ->
         Handler(Looper.getMainLooper()).post {
@@ -132,6 +107,21 @@ class StudioSync(
             }
         }
     }
+
+    private suspend fun getAllVideosMetaData(
+        courseIds: Set<Long>,
+        studioSession: StudioLoginSession
+    ) = coroutineScope {
+        courseIds.map { courseId ->
+            async {
+                // TODO We might improve this to be called only once, currently it's called with the Canvas token and then uses the Authenticator to call it with the correct token token
+                studioApi.getStudioMediaMetadata(
+                    "${studioSession.baseUrl}/api/public/v1/courses/$courseId/media",
+                    RestParams(isForceReadFromNetwork = true, studioToken = studioSession.accessToken)
+                ).dataOrNull.orEmpty()
+            }
+        }.awaitAll()
+    }.flatten().distinctBy { it.id }
 
     private suspend fun downloadVideos(videos: List<StudioMediaMetadata>) {
         val syncData = mutableListOf<StudioVideoSyncData>()
@@ -165,6 +155,23 @@ class StudioSync(
 
         val rowId = fileSyncProgressDao.insert(progress)
         return fileSyncProgressDao.findByRowId(rowId)?.id ?: -1L
+    }
+
+    private fun cleanupAndCheckExistingVideos(videos: List<StudioMediaMetadata>): List<StudioMediaMetadata> {
+        val studioDir = getStudioDir()
+        val existingVideoFolders = studioDir.listFiles()?.toList()?.filterNotNull() ?: emptyList()
+
+        val downloadedVideosLaunchIds = mutableListOf<String>()
+        existingVideoFolders.forEach { folder ->
+            if (folder.listFiles()?.isNotEmpty() == true) {
+                downloadedVideosLaunchIds.add(folder.name)
+            }
+            if (videos.none { it.ltiLaunchId == folder.name }) {
+                folder.deleteRecursively()
+            }
+        }
+
+        return videos.filter { !downloadedVideosLaunchIds.contains(it.ltiLaunchId) }
     }
 
     private suspend fun downloadFile(fileSyncData: StudioVideoSyncData) {
