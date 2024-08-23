@@ -49,13 +49,25 @@ class InboxComposeViewModel @Inject constructor(
             viewModelScope.launch {
                 uuid?.let { uuid ->
                     val attachmentEntities = attachmentDao.findByParentId(uuid.toString())
+                    val status = workInfo.state.toAttachmentCardStatus()
                     attachmentEntities?.let { attachmentList ->
-                        _uiState.update { it.copy(attachments = attachmentList.map { it.toApiModel() }) }
+                        _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status) }) }
                         attachmentDao.deleteAll(attachmentList)
                     } ?: context.toast(R.string.errorUploadingFile)
                 } ?: context.toast(R.string.errorUploadingFile)
 
             }
+        }
+    }
+
+    private fun WorkInfo.State.toAttachmentCardStatus(): AttachmentStatus {
+        return when (this) {
+            WorkInfo.State.SUCCEEDED -> AttachmentStatus.UPLOADED
+            WorkInfo.State.FAILED -> AttachmentStatus.FAILED
+            WorkInfo.State.ENQUEUED -> AttachmentStatus.UPLOADING
+            WorkInfo.State.RUNNING -> AttachmentStatus.UPLOADING
+            WorkInfo.State.BLOCKED -> AttachmentStatus.FAILED
+            WorkInfo.State.CANCELLED -> AttachmentStatus.FAILED
         }
     }
 

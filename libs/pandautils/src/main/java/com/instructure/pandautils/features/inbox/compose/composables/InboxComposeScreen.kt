@@ -210,8 +210,7 @@ private fun InboxComposeScreenContent(
         Column {
             uiState.attachments.forEach { attachment ->
                 AttachmentCard(
-                    attachment = attachment,
-                    status = AttachmentStatus.UPLOADED,
+                    attachmentCardItem = attachment,
                     onRemove = { actionHandler(InboxComposeActionHandler.RemoveAttachment(attachment)) },
                     context = LocalContext.current,
                 )
