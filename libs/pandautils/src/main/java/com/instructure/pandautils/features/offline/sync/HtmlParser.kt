@@ -147,9 +147,8 @@ class HtmlParser(
             val studioMediaId = match.groupValues[1]
             studioMediaIds.add(studioMediaId)
 
-            // TODO Get local path
             resultHtml = resultHtml.replace(studioIframe, videoTagReplacement
-                .replace("{posterPath}", "https://${apiPrefs.domain}/media_objects/$studioMediaId/poster")
+                .replace("{posterPath}", "file://${getFileForStudioVideoDir(studioMediaId).absolutePath}/poster.jpg")
                 .replace("{srcPath}", "file://${getLocalPathForStudioMedia(studioMediaId).absolutePath}"))
         }
 
@@ -157,22 +156,13 @@ class HtmlParser(
     }
 
     private fun getLocalPathForStudioMedia(ltiLaunchId: String): File {
-        val userFilesDir = File(context.filesDir, ApiPrefs.user?.id.toString())
-        if (!userFilesDir.exists()) {
-            userFilesDir.mkdir()
-        }
+        return File(getFileForStudioVideoDir(ltiLaunchId), "${ltiLaunchId}.mp4") // TODO Handle this dinamically
+    }
 
+    private fun getFileForStudioVideoDir(ltiLaunchId: String): File {
+        val userFilesDir = File(context.filesDir, apiPrefs.user?.id.toString())
         val studioDir = File(userFilesDir, "studio")
-        if (!studioDir.exists()) {
-            studioDir.mkdir()
-        }
-
-        val videoDir = File(studioDir, ltiLaunchId)
-        if (!videoDir.exists()) {
-            videoDir.mkdir()
-        }
-
-        return File(videoDir, "${ltiLaunchId}.mp4") // TODO Handle this dinamically
+        return File(studioDir, ltiLaunchId)
     }
 }
 

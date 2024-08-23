@@ -16,8 +16,11 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.media.ThumbnailUtils
 import android.os.Handler
 import android.os.Looper
+import android.util.Size
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -42,7 +45,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.net.URL
+
 
 class StudioSync(
     private val context: Context,
@@ -196,6 +202,7 @@ class StudioSync(
                             if (downloadedFile.name.startsWith("temp_")) {
                                 downloadedFile = rewriteOriginalFile(downloadedFile)
                             }
+                            createThumbnail(downloadedFile)
                             updateProgress(fileSyncData.progressId, 100, ProgressState.COMPLETED)
                         }
 
@@ -237,6 +244,24 @@ class StudioSync(
         }
 
         return studioDir
+    }
+
+    private fun createThumbnail(downloadedFile: File) {
+        val thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(downloadedFile, Size(512, 512), null)
+        val thumbnail = File(downloadedFile.parentFile, "poster.jpg")
+        if (thumbnail.exists()) {
+            thumbnail.delete()
+        }
+
+        try {
+            FileOutputStream(thumbnail).use { out ->
+                thumbnailBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            }
+        } catch (e: IOException) {
+            firebaseCrashlytics.recordException(e)
+        } finally {
+            thumbnailBitmap.recycle()
+        }
     }
 
     private suspend fun updateProgress(progressId: Long, progress: Int, progressState: ProgressState) {
