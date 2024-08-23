@@ -20,8 +20,9 @@ data class InboxComposeUiState(
 ) {
     val isSendButtonEnabled: Boolean
         get() = selectContextUiState.selectedCanvasContext != null &&
-                    recipientPickerUiState.selectedRecipients.isNotEmpty() &&
-                    subject.text.isNotEmpty() && body.text.isNotEmpty()
+                recipientPickerUiState.selectedRecipients.isNotEmpty() &&
+                subject.text.isNotEmpty() && body.text.isNotEmpty() &&
+                attachments.all { it.status == AttachmentStatus.UPLOADED }
 }
 
 sealed class InboxComposeViewModelAction {

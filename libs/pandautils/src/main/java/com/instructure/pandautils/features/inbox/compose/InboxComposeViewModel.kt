@@ -295,7 +295,7 @@ class InboxComposeViewModel @Inject constructor(
                         subject = uiState.value.subject.text,
                         message = uiState.value.body.text,
                         context = canvasContext,
-                        attachments = emptyList(),
+                        attachments = uiState.value.attachments.map { it.attachment },
                         isIndividual = uiState.value.sendIndividual
                     ).dataOrThrow
 
