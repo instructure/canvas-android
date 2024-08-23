@@ -58,10 +58,18 @@ class StudioSync(
         val studioSession = authenticateStudio() ?: return
         val allVideosMetaData = getAllVideosMetaData(courseIds, studioSession)
         val videosToSync = allVideosMetaData.filter { mediaIdsToSync.contains(it.ltiLaunchId) }
-
-        // TODO Cleanup videos
-
+        cleanupAndCheckExistingVideos(videosToSync)
         downloadVideos(videosToSync)
+    }
+
+    private fun cleanupAndCheckExistingVideos(videos: List<StudioMediaMetadata>) {
+        val studioDir = getStudioDir()
+        val existingVideoFolders = studioDir.listFiles()?.toList()?.filterNotNull() ?: emptyList()
+        existingVideoFolders.forEach { folder ->
+            if (videos.none { it.ltiLaunchId == folder.name }) {
+                folder.deleteRecursively()
+            }
+        }
     }
 
     private suspend fun authenticateStudio(): StudioLoginSession? {
@@ -197,7 +205,21 @@ class StudioSync(
     }
 
     private fun getDownloadFile(ltiLaunchId: String): File {
-        val userFilesDir = File(context.filesDir, ApiPrefs.user?.id.toString())
+        val studioDir = getStudioDir()
+        val videoDir = File(studioDir, ltiLaunchId)
+        if (!videoDir.exists()) {
+            videoDir.mkdir()
+        }
+
+        var downloadFile = File(videoDir, "${ltiLaunchId}.mp4") // TODO Handle this dinamically
+        if (downloadFile.exists()) {
+            downloadFile = File(videoDir, "temp_${ltiLaunchId}.mp4")
+        }
+        return downloadFile
+    }
+
+    private fun getStudioDir(): File {
+        val userFilesDir = File(context.filesDir, apiPrefs.user?.id.toString())
         if (!userFilesDir.exists()) {
             userFilesDir.mkdir()
         }
@@ -207,16 +229,7 @@ class StudioSync(
             studioDir.mkdir()
         }
 
-        val videoDir = File(studioDir, ltiLaunchId)
-        if (!videoDir.exists()) {
-            videoDir.mkdir()
-        }
-
-        var downloadFile = File(videoDir, "${ltiLaunchId}.mp4") // TODO Handle this dinamically
-        if (downloadFile.exists()) {
-            downloadFile = File(userFilesDir, "temp_${ltiLaunchId}.mp4")
-        }
-        return downloadFile
+        return studioDir
     }
 
     private suspend fun updateProgress(progressId: Long, progress: Int, progressState: ProgressState) {
