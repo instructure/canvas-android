@@ -137,9 +137,10 @@ class OfflineSyncWorker @AssistedInject constructor(
         }
 
         val courseIdsToSync = coursesToSync.map { it.courseId }.toSet()
-        courseSync.syncCourses(courseIdsToSync)
+        val studioMetadata = studioSync.getStudioMetadata(courseIdsToSync)
+        courseSync.syncCourses(courseIdsToSync, studioMetadata)
 
-        studioSync.syncStudioVideos(courseIdsToSync, courseSync.studioMediaIdsToSync)
+        studioSync.syncStudioVideos(studioMetadata, courseSync.studioMediaIdsToSync)
 
         val courseProgresses = courseSyncProgressDao.findAll()
         val fileProgresses = fileSyncProgressDao.findAll()

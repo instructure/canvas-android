@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.StudioCaption
 import com.instructure.canvasapi2.models.StudioLoginSession
 import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -60,10 +61,13 @@ class StudioSync(
     private val firebaseCrashlytics: FirebaseCrashlytics
 ) {
 
-    public suspend fun syncStudioVideos(courseIds: Set<Long>, mediaIdsToSync: Set<String>) {
-        val studioSession = authenticateStudio() ?: return
-        val allVideosMetaData = getAllVideosMetaData(courseIds, studioSession)
-        val videosToSync = allVideosMetaData.filter { mediaIdsToSync.contains(it.ltiLaunchId) }
+    public suspend fun getStudioMetadata(courseIds: Set<Long>): List<StudioMediaMetadata> {
+        val studioSession = authenticateStudio() ?: return emptyList()
+        return getAllVideosMetaData(courseIds, studioSession)
+    }
+
+    public suspend fun syncStudioVideos(allVideosMetadata: List<StudioMediaMetadata>, mediaIdsToSync: Set<String>) {
+        val videosToSync = allVideosMetadata.filter { mediaIdsToSync.contains(it.ltiLaunchId) }
         val videosNeeded = cleanupAndCheckExistingVideos(videosToSync)
         downloadVideos(videosNeeded)
     }
@@ -134,7 +138,7 @@ class StudioSync(
 
         videos.forEach {
 //            val progressId = createAndInsertProgress(it) // TODO Handle progress
-            syncData.add(StudioVideoSyncData(-1, it.id, it.ltiLaunchId, it.title, it.url))
+            syncData.add(StudioVideoSyncData(-1, it.id, it.ltiLaunchId, it.title, it.url, it.captions))
         }
 
         val chunks = syncData.chunked(6)
@@ -203,6 +207,7 @@ class StudioSync(
                                 downloadedFile = rewriteOriginalFile(downloadedFile)
                             }
                             createThumbnail(downloadedFile)
+                            saveCaptions(fileSyncData.captions, downloadedFile)
                             updateProgress(fileSyncData.progressId, 100, ProgressState.COMPLETED)
                         }
 
@@ -225,7 +230,7 @@ class StudioSync(
             videoDir.mkdir()
         }
 
-        var downloadFile = File(videoDir, "${ltiLaunchId}.mp4") // TODO Handle this dinamically
+        var downloadFile = File(videoDir, "${ltiLaunchId}.mp4")
         if (downloadFile.exists()) {
             downloadFile = File(videoDir, "temp_${ltiLaunchId}.mp4")
         }
@@ -264,6 +269,26 @@ class StudioSync(
         }
     }
 
+    private fun saveCaptions(captions: List<StudioCaption>, downloadedFile: File) {
+        val captionsRegex = Regex("(?<=\\d{2}:\\d{2}:\\d{2}),(?=\\d{3})")
+        val videoDir = downloadedFile.parentFile ?: return
+        captions.forEach { caption ->
+            val captionFile = File(videoDir, "${caption.srcLang}.vtt")
+            if (captionFile.exists()) {
+                captionFile.delete()
+            }
+
+            try {
+                val correctedCaption = "WEBVTT\n\n${caption.data}".replace(captionsRegex, ".")
+                FileOutputStream(captionFile).use { out ->
+                    out.write(correctedCaption.toByteArray())
+                }
+            } catch (e: IOException) {
+                firebaseCrashlytics.recordException(e)
+            }
+        }
+    }
+
     private suspend fun updateProgress(progressId: Long, progress: Int, progressState: ProgressState) {
         val newProgress = fileSyncProgressDao.findById(progressId)?.copy(progress = progress, progressState = progressState)
         newProgress?.let { fileSyncProgressDao.update(it) }
@@ -284,6 +309,7 @@ data class StudioVideoSyncData(
     val ltiLaunchId: String,
     val inputFileName: String,
     val fileUrl: String,
+    val captions: List<StudioCaption> = emptyList()
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)

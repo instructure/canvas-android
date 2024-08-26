@@ -43,6 +43,7 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -114,6 +115,8 @@ class CourseSync(
     private val additionalFileIdsToSync = mutableMapOf<Long, Set<Long>>()
     private val externalFilesToSync = mutableMapOf<Long, Set<String>>()
     private val failedTabsPerCourse = mutableMapOf<Long, Set<String>>()
+
+    private var studioMetadata: List<StudioMediaMetadata> = emptyList()
     val studioMediaIdsToSync = mutableSetOf<String>()
 
     private var isStopped = false
@@ -121,7 +124,8 @@ class CourseSync(
             field = value
         }
 
-    suspend fun syncCourses(courseIds: Set<Long>) {
+    suspend fun syncCourses(courseIds: Set<Long>, studioMetadata: List<StudioMediaMetadata>) {
+        this.studioMetadata = studioMetadata
         coroutineScope {
             courseIds.map {
                 async { syncCourse(it) }
@@ -582,7 +586,7 @@ class CourseSync(
     }
 
     private suspend fun parseHtmlContent(htmlContent: String?, courseId: Long): String? {
-        val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(htmlContent, courseId)
+        val htmlParsingResult = htmlParser.createHtmlStringWithLocalFiles(htmlContent, courseId, studioMetadata)
         additionalFileIdsToSync[courseId]?.let {
             additionalFileIdsToSync[courseId] = it + htmlParsingResult.internalFileIds
         }
