@@ -18,6 +18,7 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.utils.fromJson
@@ -49,6 +50,9 @@ class Navigation(apiPrefs: ApiPrefs) {
     val inboxCompose = "$baseUrl/conversations/compose"
     val manageStudents = "$baseUrl/manage-students"
     val settings = "$baseUrl/settings"
+
+    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}"
+    fun inboxDetailsRoute(conversationId: Long) = "$baseUrl/conversations/$conversationId"
 
     private val calendarEvent =
         "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
@@ -92,6 +96,15 @@ class Navigation(apiPrefs: ApiPrefs) {
             }
             fragment<InboxFragment>(inbox)
             fragment<InboxComposeFragment>(inboxCompose)
+            fragment<InboxDetailsFragment>(inboxDetails) {
+                argument(InboxDetailsFragment.CONVERSATION_ID) {
+                    type = NavType.LongType
+                    nullable = false
+                }
+                deepLink {
+                    uriPattern = inboxDetails
+                }
+            }
             fragment<ManageStudentsFragment>(manageStudents)
             fragment<SettingsFragment>(settings)
             fragment<CourseDetailsFragment>(courseDetails) {

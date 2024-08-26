@@ -30,7 +30,7 @@ import org.greenrobot.eventbus.Subscribe
 class ParentInboxRouter(private val activity: FragmentActivity, private val navigation: Navigation) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
-        // TODO: Implement
+        navigation.navigate(activity, navigation.inboxDetailsRoute(conversation.id))
     }
 
     override fun attachNavigationIcon(toolbar: Toolbar) {
