@@ -52,7 +52,7 @@ class HtmlParser(
     """.trimIndent()
 
     private val captionsTemplate = """
-        <track kind="subtitles" src="{captionsFileSource}" srclang="{captionsSrcLang}" />
+        <track kind="captions" src="{captionsFileSource}" srclang="{captionsSrcLang}" />
     """.trimIndent()
 
     suspend fun createHtmlStringWithLocalFiles(html: String?, courseId: Long, studioMetadata: List<StudioMediaMetadata>): HtmlParsingResult {
