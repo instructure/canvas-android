@@ -5,7 +5,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.pandautils.compose.composables.SelectContextUiState
-import java.io.File
 import java.util.EnumMap
 
 data class InboxComposeUiState(
@@ -29,7 +28,6 @@ data class InboxComposeUiState(
 sealed class InboxComposeViewModelAction {
     data object NavigateBack: InboxComposeViewModelAction()
     data object OpenAttachmentPicker: InboxComposeViewModelAction()
-    data class OpenAttachment(val file: File, val mimeType: String?): InboxComposeViewModelAction()
 }
 
 sealed class InboxComposeActionHandler {

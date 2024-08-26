@@ -1,6 +1,9 @@
 package com.instructure.pandautils.features.inbox.compose
 
+import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import android.widget.Toast
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -13,22 +16,16 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
-import com.instructure.pandautils.utils.Utils.getAttachmentsDirectory
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
-import java.net.URL
 import java.util.EnumMap
 import java.util.UUID
 import javax.inject.Inject
@@ -115,9 +112,7 @@ class InboxComposeViewModel @Inject constructor(
             }
             is InboxComposeActionHandler.OpenAttachment -> {
                 viewModelScope.launch {
-                    val file = downloadFile(action.attachment.attachment)
-
-                    _events.send(InboxComposeViewModelAction.OpenAttachment(file, action.attachment.attachment.contentType))
+                    downloadFileToDevice(action.attachment.attachment)
                 }
             }
         }
@@ -363,27 +358,16 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun downloadFile(attachment: Attachment): File = withContext(Dispatchers.IO) {
-        val file = File(
-            getAttachmentsDirectory(context),
-            attachment.filename ?: ""
-        )
+    private fun downloadFileToDevice(attachment: Attachment) {
+        val downloadManager = context.getSystemService(DownloadManager::class.java)
 
-        val fileBytes = URL(attachment.url).readBytes()
+        val request = DownloadManager.Request(Uri.parse(attachment.url))
+        request
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setTitle(attachment.filename)
+            .setMimeType(attachment.contentType)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${attachment.filename}")
 
-        try {
-            file.parentFile?.mkdirs()
-            if (!file.exists()) {
-                file.createNewFile()
-            }
-            val fos = FileOutputStream(file)
-            fos.write(fileBytes)
-            fos.close()
-
-        } catch (e: java.lang.Exception) {
-            context.toast(context.getString(R.string.failed_to_open_attachment))
-        }
-
-        return@withContext file
+        downloadManager.enqueue(request)
     }
 }
