@@ -4,7 +4,8 @@ import com.instructure.canvasapi2.models.Conversation
 
 data class InboxDetailsUiState(
     val conversationId: Long? = null,
-    val conversations: List<Conversation> = emptyList(),
+    val conversation: Conversation? = null,
+    val state: ScreenState = ScreenState.Loading
 )
 
 sealed class InboxDetailsFragmentAction {
@@ -13,4 +14,12 @@ sealed class InboxDetailsFragmentAction {
 
 sealed class InboxDetailsAction {
     data object CloseFragment : InboxDetailsAction()
+    data object RefreshCalled : InboxDetailsAction()
+}
+
+sealed class ScreenState {
+    data object Loading : ScreenState()
+    data object Error : ScreenState()
+    data object Empty : ScreenState()
+    data object Success : ScreenState()
 }

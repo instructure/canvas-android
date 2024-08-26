@@ -487,4 +487,6 @@
     <string name="a11y_markAsDoneWithName">%s Mark as done</string>
     <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="failed_to_load_conversation">Failed to load conversation</string>
+    <string name="no_messages_found">No messages found</string>
 </resources>

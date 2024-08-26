@@ -89,6 +89,9 @@ object InboxApi {
         @GET("conversations/{conversationId}?include[]=participant_avatars")
         fun getConversation(@Path("conversationId") conversationId: Long, @Query("auto_mark_as_read") markAsRead: Boolean): Call<Conversation>
 
+        @GET("conversations/{conversationId}?include[]=participant_avatars")
+        suspend fun getConversation(@Path("conversationId") conversationId: Long, @Query("auto_mark_as_read") markAsRead: Boolean, @Tag params: RestParams): DataResult<Conversation>
+
         @PUT("conversations/{conversationId}")
         fun updateConversation(@Path("conversationId") conversationId: Long, @Query("conversation[workflow_state]") workflowState: String, @Query("conversation[starred]") isStarred: Boolean?): Call<Conversation>
 
