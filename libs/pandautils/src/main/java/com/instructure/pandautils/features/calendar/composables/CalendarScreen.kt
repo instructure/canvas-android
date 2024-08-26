@@ -68,6 +68,7 @@ import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -126,15 +127,14 @@ fun CalendarScreen(
                                     )
                                 }
                             }
-                        }
-                    },
+                        },
                     navigationActionClick = navigationActionClick,
                     navIconRes = R.drawable.ic_hamburger,
                     navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                     modifier = Modifier
                         .focusable()
                         .focusRequester(focusRequester)
-                )
+                )}
                 // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
                 LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
                     focusRequester.requestFocus()
