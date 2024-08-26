@@ -92,6 +92,10 @@ class PeopleListPage: BasePage(R.id.peopleListPage) {
         onView(matcher).click()
     }
 
+    fun selectPerson(userName: String) {
+        onView(withText(userName) + withAncestor(R.id.peopleListPage)).click()
+    }
+
     private fun scrollToMatch(matcher: Matcher<View>) {
         onView(allOf(withId(R.id.listView), isDisplayed(), withAncestor(R.id.peopleListPage)))
                 .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(matcher)))
@@ -108,6 +112,10 @@ class PeopleListPage: BasePage(R.id.peopleListPage) {
 
     fun waitForPage() {
         waitForView(withText(R.string.coursePeople))
+    }
+
+    fun assertPersonPronouns(personName: String, pronounString: String) {
+        onView(withId(R.id.title) + withAncestor(R.id.peopleListPage) + withText("$personName $pronounString")).assertDisplayed()
     }
 
 }

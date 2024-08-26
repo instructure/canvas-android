@@ -17,7 +17,6 @@ package com.instructure.teacher.features.assignment.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
@@ -62,7 +61,6 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListPresenter
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment

@@ -22,7 +22,10 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
@@ -44,6 +47,10 @@ open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
         onView(allOf(withId(R.id.title), withText(conferenceTitle))).assertDisplayed()
     }
 
+    fun assertConferenceDescription(conferenceTitle: String, expectedDescription: String) {
+        onView(allOf(withId(R.id.subtitle), withText(expectedDescription), hasSibling(allOf(withId(R.id.title), withText(conferenceTitle)))))
+    }
+
     fun clickOnOpenExternallyButton() {
         onView(withId(R.id.openExternallyButton)).click()
     }
@@ -52,8 +59,20 @@ open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
         onView(withId(R.id.openExternallyButton)).check(doesNotExist())
     }
 
+    fun assertOpenExternallyButtonDisplayed() {
+        onView(withId(R.id.openExternallyButton)).assertDisplayed()
+    }
+
     fun openConferenceDetails(conferenceTitle: String) {
         onView(withText(conferenceTitle)).click()
     }
 
+    fun assertConferencesToolbarText(courseName: String) {
+        onView(withText(R.string.conferences) + withParent(R.id.toolbar) + withAncestor(R.id.conferenceListPage)).assertDisplayed()
+        onView(withText(courseName) + withParent(R.id.toolbar) + withAncestor(R.id.conferenceListPage)).assertDisplayed()
+    }
+
+    fun assertNewConferencesDisplayed() {
+        onView(withId(R.id.title) + withText(R.string.newConferences) + withAncestor(R.id.conferenceListPage)).assertDisplayed()
+    }
 }

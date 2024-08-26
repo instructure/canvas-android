@@ -28,6 +28,8 @@ import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
+import com.instructure.teacher.features.assignment.list.AssignmentListFragment
+import com.instructure.teacher.fragments.DiscussionsListFragment
 import com.instructure.teacher.router.RouteMatcher
 
 class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
@@ -36,11 +38,11 @@ class TeacherCalendarRouter(val activity: FragmentActivity) : CalendarRouter {
     }
 
     override fun openAssignment(canvasContext: CanvasContext, assignmentId: Long) {
-        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
+        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId).copy(primaryClass = AssignmentListFragment::class.java))
     }
 
     override fun openDiscussion(canvasContext: CanvasContext, discussionId: Long) {
-        val route = DiscussionRouterFragment.makeRoute(canvasContext, discussionId)
+        val route = DiscussionRouterFragment.makeRoute(canvasContext, discussionId).copy(primaryClass = DiscussionsListFragment::class.java)
         RouteMatcher.route(activity, route)
     }
 

@@ -346,7 +346,6 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
     }
 
     @Test
-    @StubTablet("Known issue, see MBL-17776")
     fun selectDiscussionOpensDiscussionDetails() {
         val data = initData()
 
@@ -406,7 +405,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         calendarScreenPage.assertItemNotDisplayed(event.title!!)
         calendarScreenPage.assertItemNotDisplayed(todo.plannable.title)
 
-        calendarScreenPage.clickTodayButton()
+        clickTodayButton()
 
         calendarScreenPage.assertItemDetails(event.title!!, course.name)
         calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To Do")
@@ -423,4 +422,6 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
     abstract fun assertAssignmentDetailsTitle(title: String)
 
     abstract fun assertDiscussionDetailsTitle(title: String)
+    
+    abstract fun clickTodayButton()
 }

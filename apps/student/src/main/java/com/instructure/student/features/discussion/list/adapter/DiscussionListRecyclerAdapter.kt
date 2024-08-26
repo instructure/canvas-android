@@ -33,6 +33,7 @@ import com.instructure.student.features.discussion.list.DiscussionListRepository
 import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.NoViewholder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -107,6 +108,8 @@ open class DiscussionListRecyclerAdapter(
             try {
                 discussions = repository.getDiscussionTopicHeaders(canvasContext, !isDiscussions, isRefresh)
                 populateData()
+            } catch (e: CancellationException) {
+                callback.onRefreshFinished()
             } catch (e: Exception) {
                 callback.onRefreshFinished()
                 context.toast(R.string.errorOccurred)

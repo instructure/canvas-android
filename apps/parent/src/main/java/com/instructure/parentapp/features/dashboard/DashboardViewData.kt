@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.dashboard
 
+import android.net.Uri
 import com.instructure.canvasapi2.models.User
 
 
@@ -42,3 +43,7 @@ data class UserViewData(
     val avatarUrl: String?,
     val email: String?
 )
+
+sealed class DashboardAction {
+    data class NavigateDeepLink(val deepLinkUri: Uri) : DashboardAction()
+}

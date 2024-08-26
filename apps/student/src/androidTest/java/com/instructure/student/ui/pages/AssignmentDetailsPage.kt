@@ -77,6 +77,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(allOf(withText(R.string.assignmentDetails), withParent(R.id.toolbar))).assertDisplayed()
     }
 
+    fun assertDisplayToolbarTitle(toolbarTitle: String) {
+        onView(allOf(withText(toolbarTitle), withParent(R.id.toolbar))).assertDisplayed()
+    }
+
     fun assertDisplayToolbarSubtitle(courseNameText: String) {
         onView(allOf(withText(courseNameText), withParent(R.id.toolbar))).assertDisplayed()
     }
@@ -309,6 +313,13 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun clickDone() {
         onView(withText(R.string.done)).click()
+    }
+
+    //OfflineMethod
+    fun assertDetailsNotAvailableOffline() {
+        onView(withId(R.id.notAvailableIcon) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
+        onView(withId(R.id.title) + withText(R.string.notAvailableOfflineScreenTitle) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
+        onView(withId(R.id.description) + withText(R.string.notAvailableOfflineDescriptionForTabs) + withParent(R.id.textViews) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
     }
 }
 

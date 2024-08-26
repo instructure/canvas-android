@@ -117,7 +117,7 @@ class ToDoFragment : Fragment(), NavigationCallbacks, FragmentInteractions {
     }
 
     companion object {
-        internal const val PLANNER_ITEM = "PLANNER_ITEM"
+        const val PLANNER_ITEM = "PLANNER_ITEM"
         fun newInstance(route: Route) = ToDoFragment().withArgs(route.arguments)
 
         fun makeRoute(plannerItem: PlannerItem): Route {

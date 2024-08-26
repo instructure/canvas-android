@@ -71,4 +71,8 @@ class StudentCalendarInteractionTest : CalendarInteractionTest() {
     override fun assertDiscussionDetailsTitle(title: String) {
         discussionDetailsPage.assertToolbarDiscussionTitle(title)
     }
+
+    override fun clickTodayButton() {
+        calendarScreenPage.clickTodayButton()
+    }
 }
