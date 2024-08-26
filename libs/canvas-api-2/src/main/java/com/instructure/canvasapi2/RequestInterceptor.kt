@@ -16,6 +16,7 @@
  */
 package com.instructure.canvasapi2
 
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -62,6 +63,10 @@ class RequestInterceptor : Interceptor {
         // Authenticate if possible
         if (!params.shouldIgnoreToken && token != "") {
             builder.addHeader("Authorization", "Bearer $token")
+        }
+
+        if (params.studioToken != null) {
+            builder.addHeader("Authorization", OAuthAPI.authBearer(params.studioToken))
         }
 
         // Add Accept-Language header for a11y

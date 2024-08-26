@@ -17,7 +17,6 @@ package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
 import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
 import okhttp3.Authenticator
@@ -49,19 +48,6 @@ class CanvasAuthenticator : Authenticator {
             EventBus.getDefault().post(CanvasAuthError("No client id or secret for refresh token"))
             return null // Indicate authentication was not successful
         }
-
-        val params = if (response.request.tag(RestParams::class.java) != null) {
-            response.request.tag(RestParams::class.java) ?: RestParams()
-        } else {
-            RestParams()
-        }
-
-        if (params.studioToken != null) {
-            return response.request.newBuilder()
-                .header(AUTH_HEADER, OAuthAPI.authBearer(params.studioToken))
-                .build()
-        }
-
         val refreshTokenResponse =  OAuthManager.refreshToken()
 
         refreshTokenResponse.onSuccess {

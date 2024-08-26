@@ -124,10 +124,9 @@ class StudioSync(
     ) = coroutineScope {
         courseIds.map { courseId ->
             async {
-                // TODO We might improve this to be called only once, currently it's called with the Canvas token and then uses the Authenticator to call it with the correct token token
                 studioApi.getStudioMediaMetadata(
                     "${studioSession.baseUrl}/api/public/v1/courses/$courseId/media",
-                    RestParams(isForceReadFromNetwork = true, studioToken = studioSession.accessToken)
+                    RestParams(isForceReadFromNetwork = true, studioToken = studioSession.accessToken, shouldIgnoreToken = true)
                 ).dataOrNull.orEmpty()
             }
         }.awaitAll()
