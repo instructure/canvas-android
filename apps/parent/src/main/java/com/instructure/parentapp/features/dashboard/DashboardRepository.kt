@@ -30,8 +30,8 @@ class DashboardRepository(
     private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface
 ) {
 
-    suspend fun getStudents(): List<User> {
-        val params = RestParams(usePerPageQueryParam = true)
+    suspend fun getStudents(forceNetwork: Boolean): List<User> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
         return enrollmentApi.firstPageObserveeEnrollmentsParent(params).depaginate {
             enrollmentApi.getNextPage(it, params)
         }.dataOrNull

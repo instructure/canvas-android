@@ -18,7 +18,9 @@ package com.instructure.parentapp.features.addstudent.pairingcode
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.runtime.collectAsState
@@ -27,12 +29,11 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -40,16 +41,13 @@ class PairingCodeDialogFragment : DialogFragment() {
 
     private val addStudentViewModel: AddStudentViewModel by activityViewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        lifecycleScope.launch {
-            addStudentViewModel.events.collectLatest { action ->
-                action?.let {
-                    handleAddStudentAction(it)
-                }
-            }
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        lifecycleScope.collectOneOffEvents(addStudentViewModel.events, ::handleAddStudentAction)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun handleAddStudentAction(action: AddStudentViewModelAction) {

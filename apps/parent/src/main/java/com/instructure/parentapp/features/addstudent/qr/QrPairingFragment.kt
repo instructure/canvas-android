@@ -22,17 +22,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.loginapi.login.R
+import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -58,7 +60,9 @@ class QrPairingFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+                val uiState by viewModel.uiState.collectAsState()
                 QrPairingScreen(
+                    uiState = uiState,
                     onNextClicked = this@QrPairingFragment::onNextClicked,
                     onBackClicked = { requireActivity().onBackPressed() })
             }
@@ -68,13 +72,7 @@ class QrPairingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            viewModel.events.collectLatest { action ->
-                action?.let {
-                    handleAddStudentAction(it)
-                }
-            }
-        }
+        lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAddStudentAction)
     }
 
     private fun handleAddStudentAction(action: AddStudentViewModelAction) {

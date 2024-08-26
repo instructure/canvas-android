@@ -36,8 +36,6 @@ import com.instructure.parentapp.features.addstudent.AddStudentBottomSheetDialog
 import com.instructure.parentapp.features.addstudent.AddStudentViewModel
 import com.instructure.parentapp.features.addstudent.AddStudentViewModelAction
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -54,13 +52,7 @@ class ManageStudentsFragment : Fragment() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
 
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
-        lifecycleScope.launch {
-            addStudentViewModel.events.collectLatest { action ->
-                action?.let {
-                    handleAddStudentAction(it)
-                }
-            }
-        }
+        lifecycleScope.collectOneOffEvents(addStudentViewModel.events, ::handleAddStudentAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {

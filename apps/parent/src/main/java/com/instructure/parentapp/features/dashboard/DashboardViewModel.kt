@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.features.dashboard
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@SuppressLint("StaticFieldLeak")
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -77,7 +79,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun reloadData() {
-        loadData()
+        loadData(true)
     }
 
     private fun handleDeeplink() {
@@ -90,7 +92,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private fun loadData() {
+    private fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
             inboxCountUpdater.shouldRefreshInboxCountFlow.collect { shouldUpdate ->
                 if (shouldUpdate) {
@@ -113,7 +115,7 @@ class DashboardViewModel @Inject constructor(
             _state.value = ViewState.Loading
 
             setupUserInfo()
-            loadStudents()
+            loadStudents(forceNetwork)
             updateUnreadCount()
             updateAlertCount()
 
@@ -149,8 +151,8 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadStudents() {
-        val students = repository.getStudents()
+    private suspend fun loadStudents(forceNetwork: Boolean) {
+        val students = repository.getStudents(forceNetwork)
         val selectedStudent = students.find { it.id == currentUser?.selectedStudentId } ?: students.firstOrNull()
         parentPrefs.currentStudent = selectedStudent
         selectedStudent?.let {

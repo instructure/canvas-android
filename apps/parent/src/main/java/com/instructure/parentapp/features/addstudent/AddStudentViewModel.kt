@@ -21,7 +21,9 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -38,8 +40,8 @@ class AddStudentViewModel @Inject constructor(
         MutableStateFlow(AddStudentUiState(onStartPairing = this::pairStudent, resetError = this::resetError))
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableStateFlow<AddStudentViewModelAction?>(null)
-    val events = _events.asStateFlow()
+    private val _events = MutableSharedFlow<AddStudentViewModelAction>()
+    val events = _events.asSharedFlow()
 
     init {
         viewModelScope.launch {
