@@ -381,7 +381,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         scheduleAlarms()
 
         if (ApiPrefs.isFirstMasqueradingStart) {
-          //  loadAuthenticatedSession()
+            loadAuthenticatedSession()
             ApiPrefs.isFirstMasqueradingStart = false
         }
     }

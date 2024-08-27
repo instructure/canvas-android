@@ -74,8 +74,8 @@ class CourseInteractionTest : StudentTest() {
 
         // Click the link inside the webview
         onWebView(withId(R.id.contentWebView))
-                .withElement(findElement(Locator.ID, course2LinkElementId))
-                .perform(webClick())
+            .withElement(findElement(Locator.ID, course2LinkElementId))
+            .perform(webClick())
 
         // Make sure that you have navigated to course2
         courseBrowserPage.assertTitleCorrect(course2)
