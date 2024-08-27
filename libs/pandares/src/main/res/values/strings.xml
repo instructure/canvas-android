@@ -1789,4 +1789,5 @@
     <string name="studentColorContentDescriptionRed">Raspberry, Red</string>
     <string name="studentColorContentDescriptionOrange">Fire, Orange</string>
     <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
+    <string name="offlineSyncInProgressNotification">Offline sync in progress</string>
 </resources>
