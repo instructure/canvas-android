@@ -25,6 +25,7 @@ import android.net.Uri
 import android.widget.Toast
 import com.instructure.canvasapi2.utils.ApiPrefs.domain
 import com.instructure.pandautils.R
+import com.instructure.pandautils.views.CanvasWebView
 import java.io.File
 
 object Utils {
@@ -78,5 +79,12 @@ object Utils {
 
         // Let the user know
         Toast.makeText(context, context.getString(R.string.linkCopied), Toast.LENGTH_SHORT).show()
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    fun loadUrlIntoHeadlessWebView(context: Context, url: String) {
+        val webView = CanvasWebView(context)
+        webView.settings.javaScriptEnabled = true
+        webView.loadUrl(url)
     }
 }
