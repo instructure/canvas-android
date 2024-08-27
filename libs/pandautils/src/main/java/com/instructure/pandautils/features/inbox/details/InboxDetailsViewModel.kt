@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
-import com.instructure.pandautils.features.inbox.InboxMessageUiState
+import com.instructure.pandautils.features.inbox.util.InboxMessageUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,17 +43,17 @@ class InboxDetailsViewModel @Inject constructor(
             }
 
             InboxDetailsAction.RefreshCalled -> {
-                getConversation()
+                getConversation(true)
             }
         }
     }
 
-    private fun getConversation() {
+    private fun getConversation(forceRefresh: Boolean = false) {
         conversationId?.let {
             viewModelScope.launch {
                 _uiState.update { it.copy(state = ScreenState.Loading) }
 
-                val conversationResult = repository.getConversation(conversationId)
+                val conversationResult = repository.getConversation(conversationId, forceRefresh)
 
                 try {
                     val conversation = conversationResult.dataOrThrow

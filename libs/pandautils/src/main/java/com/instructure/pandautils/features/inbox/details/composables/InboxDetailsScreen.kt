@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
@@ -46,10 +45,10 @@ import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.pandautils.features.inbox.InboxMessageView
 import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
 import com.instructure.pandautils.features.inbox.details.ScreenState
+import com.instructure.pandautils.features.inbox.util.InboxMessageView
 
 @Composable
 fun InboxDetailsScreen(
@@ -94,6 +93,29 @@ private fun InboxDetailsScreenContent(
             .pullRefresh(pullToRefreshState)
             .padding(padding)
     ) {
+
+        LazyColumn {
+            item {
+                when (uiState.state) {
+                    is ScreenState.Loading -> {
+                        InboxDetailsLoading()
+                    }
+
+                    is ScreenState.Error -> {
+                        InboxDetailsError(actionHandler)
+                    }
+
+                    is ScreenState.Empty -> {
+                        InboxDetailsEmpty(actionHandler)
+                    }
+
+                    is ScreenState.Success -> {
+                        InboxDetailsContentView(uiState, actionHandler)
+                    }
+                }
+            }
+        }
+
         PullRefreshIndicator(
             refreshing = uiState.state == ScreenState.Loading,
             state = pullToRefreshState,
@@ -101,21 +123,6 @@ private fun InboxDetailsScreenContent(
                 .align(Alignment.TopCenter)
                 .testTag("pullRefreshIndicator"),
         )
-    }
-
-    when (uiState.state) {
-        is ScreenState.Loading -> {
-            InboxDetailsLoading()
-        }
-        is ScreenState.Error -> {
-            InboxDetailsError(actionHandler)
-        }
-        is ScreenState.Empty -> {
-            InboxDetailsEmpty(actionHandler)
-        }
-        is ScreenState.Success -> {
-            InboxDetailsContentView(uiState, actionHandler)
-        }
     }
 }
 
@@ -163,21 +170,17 @@ private fun InboxDetailsContentView(
         return
     }
 
-    LazyColumn {
-        item {
-            Text(
-                text = conversation.subject ?: stringResource(id = R.string.message),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
-            )
-        }
+    Column {
+        Text(
+            text = conversation.subject ?: stringResource(id = R.string.message),
+            fontSize = 22.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
+        )
 
-        item {
-            Divider()
-        }
+        Divider()
 
-        items(messages) { messageState ->
+        messages.forEach { messageState ->
             InboxMessageView(messageState, {}, modifier = Modifier.padding(16.dp))
 
             Divider()

@@ -1,6 +1,8 @@
-package com.instructure.pandautils.features.inbox
+package com.instructure.pandautils.features.inbox.util
 
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 
 data class InboxMessageUiState(
@@ -14,4 +16,7 @@ sealed class MessageAction {
     data object Reply : MessageAction()
     data object ReplyAll : MessageAction()
     data object Forward : MessageAction()
+    data class DeleteMessage(val message: Message) : MessageAction()
+    data class DeleteConversation(val conversation: Conversation) : MessageAction()
+    data class OpenAttachment(val attachment: Attachment) : MessageAction()
 }

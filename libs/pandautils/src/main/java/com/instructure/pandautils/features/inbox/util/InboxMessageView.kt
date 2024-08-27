@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.inbox
+package com.instructure.pandautils.features.inbox.util
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,11 +35,12 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -73,25 +74,30 @@ fun InboxMessageView(
             fontSize = 16.sp,
         )
 
+        messageState.message?.attachments?.forEach { attachment ->
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, true)
+            AttachmentCard(attachmentCardItem, LocalContext.current, onSelect = {actionHandler(MessageAction.OpenAttachment(attachment))}, onRemove = {})
+        }
+
         if (messageState.enabledActions) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row {
-                TextButton(
-                    onClick = { actionHandler(MessageAction.Reply) },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = colorResource(id = R.color.backgroundLightest),
-                        contentColor = Color(ThemePrefs.brandColor)
-                    ),
-                    contentPadding = PaddingValues(start = 0.dp, top = 8.dp, end = 16.dp, bottom = 8.dp),
-                    content = {
-                        Text(
-                            text = stringResource(id = R.string.reply),
-                            modifier = Modifier.offset(x = (-4).dp) // Remove button's default padding
-                        )
-                    },
-                )
-            }
+            TextButton(
+                onClick = { actionHandler(MessageAction.Reply) },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.backgroundLightest),
+                    contentColor = Color(ThemePrefs.brandColor)
+                ),
+                contentPadding = PaddingValues(start = 0.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+                content = {
+                    Text(
+                        text = stringResource(id = R.string.reply),
+                        modifier = Modifier.offset(x = (-8).dp) // Remove button's default padding
+                    )
+                },
+            )
         }
     }
 }
@@ -104,7 +110,7 @@ private fun InboxMessageAuthorView(
     val author = messageState.author
     val message = messageState.message
 
-    var recipientsExpanded by remember { mutableStateOf(false) }
+    var recipientsExpanded by rememberSaveable { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
