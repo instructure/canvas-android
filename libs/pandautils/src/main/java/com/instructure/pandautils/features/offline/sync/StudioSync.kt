@@ -137,7 +137,7 @@ class StudioSync(
 
         videos.forEach {
 //            val progressId = createAndInsertProgress(it) // TODO Handle progress
-            syncData.add(StudioVideoSyncData(-1, it.id, it.ltiLaunchId, it.title, it.url, it.captions))
+            syncData.add(StudioVideoSyncData(-1, it.id, it.ltiLaunchId, it.title, it.url, it.captions, it.mimeType))
         }
 
         val chunks = syncData.chunked(6)
@@ -205,7 +205,9 @@ class StudioSync(
                             if (downloadedFile.name.startsWith("temp_")) {
                                 downloadedFile = rewriteOriginalFile(downloadedFile)
                             }
-                            createThumbnail(downloadedFile)
+                            if (fileSyncData.mimeType.contains("video")) {
+                                createThumbnail(downloadedFile)
+                            }
                             saveCaptions(fileSyncData.captions, downloadedFile)
                             updateProgress(fileSyncData.progressId, 100, ProgressState.COMPLETED)
                         }
@@ -251,20 +253,20 @@ class StudioSync(
     }
 
     private fun createThumbnail(downloadedFile: File) {
-        val thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(downloadedFile, Size(512, 512), null)
-        val thumbnail = File(downloadedFile.parentFile, "poster.jpg")
-        if (thumbnail.exists()) {
-            thumbnail.delete()
-        }
-
+        var thumbnailBitmap: Bitmap? = null
         try {
+            thumbnailBitmap = ThumbnailUtils.createVideoThumbnail(downloadedFile, Size(512, 512), null)
+            val thumbnail = File(downloadedFile.parentFile, "poster.jpg")
+            if (thumbnail.exists()) {
+                thumbnail.delete()
+            }
             FileOutputStream(thumbnail).use { out ->
                 thumbnailBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
             }
         } catch (e: IOException) {
             firebaseCrashlytics.recordException(e)
         } finally {
-            thumbnailBitmap.recycle()
+            thumbnailBitmap?.recycle()
         }
     }
 
@@ -308,7 +310,8 @@ data class StudioVideoSyncData(
     val ltiLaunchId: String,
     val inputFileName: String,
     val fileUrl: String,
-    val captions: List<StudioCaption> = emptyList()
+    val captions: List<StudioCaption> = emptyList(),
+    val mimeType: String
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
