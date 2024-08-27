@@ -33,6 +33,7 @@ import com.instructure.pandautils.R
 fun OverflowMenu(
     modifier: Modifier = Modifier,
     showMenu: Boolean,
+    tint: Color = Color.White,
     onDismissRequest: () -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -42,7 +43,7 @@ fun OverflowMenu(
         Icon(
             imageVector = Icons.Outlined.MoreVert,
             contentDescription = stringResource(R.string.utils_contentDescriptionDiscussionsOverflow),
-            tint = Color.White
+            tint = tint
         )
     }
     DropdownMenu(

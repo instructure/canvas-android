@@ -101,8 +101,14 @@ object InboxApi {
         @DELETE("conversations/{conversationId}")
         fun deleteConversation(@Path("conversationId") conversationId: Long): Call<Conversation>
 
+        @DELETE("conversations/{conversationId}")
+        suspend fun deleteConversation(@Path("conversationId") conversationId: Long, @Tag params: RestParams): DataResult<Conversation>
+
         @POST("conversations/{conversationId}/remove_messages")
         fun deleteMessages(@Path("conversationId") conversationId: Long, @Query("remove[]") messageIds: List<Long>): Call<Conversation>
+
+        @POST("conversations/{conversationId}/remove_messages")
+        suspend fun deleteMessages(@Path("conversationId") conversationId: Long, @Query("remove[]") messageIds: List<Long>, @Tag params: RestParams): DataResult<Conversation>
 
         @FormUrlEncoded
         @POST("conversations/{conversationId}/add_message?group_conversation=true")

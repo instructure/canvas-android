@@ -35,7 +35,7 @@ class InboxDetailsFragment : Fragment(), FragmentInteractions {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
 
-                InboxDetailsScreen(title(), uiState, viewModel::handleAction)
+                InboxDetailsScreen(title(), uiState,  viewModel::messageActionHandler, viewModel::handleAction)
             }
         }
     }

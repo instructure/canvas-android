@@ -16,44 +16,61 @@
  */
 package com.instructure.pandautils.features.inbox.details.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
 import com.instructure.pandautils.features.inbox.details.ScreenState
 import com.instructure.pandautils.features.inbox.util.InboxMessageView
+import com.instructure.pandautils.features.inbox.util.MessageAction
 
 @Composable
 fun InboxDetailsScreen(
     title: String,
     uiState: InboxDetailsUiState,
+    messageActionHandler: (MessageAction) -> Unit,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
     CanvasTheme {
@@ -66,11 +83,12 @@ fun InboxDetailsScreen(
                     navIconContentDescription = stringResource(id = R.string.contentDescription_back),
                     navigationActionClick = { actionHandler(InboxDetailsAction.CloseFragment) },
                     actions = {
+                        AppBarMenu(uiState.conversation, actionHandler)
                     },
                 )
             },
             content = { padding ->
-                InboxDetailsScreenContent(padding, uiState, actionHandler)
+                InboxDetailsScreenContent(padding, uiState, messageActionHandler, actionHandler)
             }
         )
     }
@@ -81,6 +99,7 @@ fun InboxDetailsScreen(
 private fun InboxDetailsScreenContent(
     padding: PaddingValues,
     uiState: InboxDetailsUiState,
+    messageActionHandler: (MessageAction) -> Unit,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
     val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
@@ -110,7 +129,7 @@ private fun InboxDetailsScreenContent(
                     }
 
                     is ScreenState.Success -> {
-                        InboxDetailsContentView(uiState, actionHandler)
+                        InboxDetailsContentView(uiState, actionHandler, messageActionHandler)
                     }
                 }
             }
@@ -161,7 +180,8 @@ private fun InboxDetailsEmpty(actionHandler: (InboxDetailsAction) -> Unit) {
 @Composable
 private fun InboxDetailsContentView(
     uiState: InboxDetailsUiState,
-    actionHandler: (InboxDetailsAction) -> Unit
+    actionHandler: (InboxDetailsAction) -> Unit,
+    messageActionHandler: (MessageAction) -> Unit,
 ) {
     val conversation = uiState.conversation
     val messages = uiState.messageStates
@@ -171,19 +191,134 @@ private fun InboxDetailsContentView(
     }
 
     Column {
-        Text(
-            text = conversation.subject ?: stringResource(id = R.string.message),
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = conversation.subject ?: stringResource(id = R.string.message),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(16.dp)
+            )
+
+            Spacer(Modifier.width(8.dp))
+
+            IconButton(onClick = { actionHandler(InboxDetailsAction.UpdateStarred(conversation.id, !conversation.isStarred)) }) {
+                Icon(
+                    painter = if (conversation.isStarred) painterResource(id = R.drawable.ic_star_filled) else painterResource(id = R.drawable.ic_star_outline),
+                    contentDescription = if (conversation.isStarred) stringResource(id = R.string.unstarSelected) else stringResource(id = R.string.starSelected),
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                )
+            }
+        }
 
         Divider()
 
         messages.forEach { messageState ->
-            InboxMessageView(messageState, {}, modifier = Modifier.padding(16.dp))
+            InboxMessageView(messageState, messageActionHandler, modifier = Modifier.padding(16.dp))
 
             Divider()
         }
     }
 }
+
+@Composable
+private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetailsAction) -> Unit) {
+    var showMenu by rememberSaveable { mutableStateOf(false) }
+    OverflowMenu(
+        modifier = Modifier
+            .background(color = colorResource(id = R.color.backgroundLightestElevated))
+            .testTag("overFlowMenu"),
+        showMenu = showMenu,
+        tint = colorResource(id = R.color.textDarkest),
+        onDismissRequest = {
+            showMenu = !showMenu
+        }
+    ) {
+        DropdownMenuItem(
+            onClick = {
+                showMenu = !showMenu
+                actionHandler(InboxDetailsAction.Reply)
+            }
+        ) {
+            MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
+        }
+
+        DropdownMenuItem(
+            onClick = {
+                showMenu = !showMenu
+                actionHandler(InboxDetailsAction.ReplyAll)
+            }
+        ) {
+            MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
+        }
+
+        DropdownMenuItem(
+            onClick = {
+                showMenu = !showMenu
+                actionHandler(InboxDetailsAction.Forward)
+            }
+        ) {
+            MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
+        }
+
+        if (conversation?.workflowState == Conversation.WorkflowState.READ) {
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.UNREAD))
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_mark_as_unread, stringResource(id = R.string.markAsUnread))
+            }
+        }
+
+        if (conversation?.workflowState == Conversation.WorkflowState.UNREAD) {
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.READ))
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_mark_as_read, stringResource(id = R.string.markAsRead))
+            }
+        }
+
+        if (conversation != null && conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.ARCHIVED))
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
+            }
+        } else if (conversation != null) {
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(InboxDetailsAction.UpdateState(conversation.id, Conversation.WorkflowState.READ))
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_unarchive, stringResource(id = R.string.unarchive))
+            }
+        }
+
+        conversation?.let {
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(InboxDetailsAction.DeleteConversation(conversation.id))
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
+            }
+        }
+
+    }
+}
+

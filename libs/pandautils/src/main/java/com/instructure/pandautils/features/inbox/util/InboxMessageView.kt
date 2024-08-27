@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.inbox.util
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -41,13 +43,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
+import com.instructure.pandautils.features.inbox.details.composables.MessageMenuItem
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.toLocalString
 import java.time.ZonedDateTime
@@ -130,6 +138,7 @@ private fun InboxMessageAuthorView(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .weight(1f)
+                .clickable { recipientsExpanded = !recipientsExpanded }
         ) {
             val recipientText = if (recipientsExpanded) {
                 messageState.recipients.map { it.name }.joinToString(", ")
@@ -140,11 +149,10 @@ private fun InboxMessageAuthorView(
                     messageState.recipients[0].name
                 }
             }
+
             Text(
                 text = "${author?.name} to $recipientText",
                 fontSize = 16.sp,
-                modifier = Modifier
-                    .clickable { recipientsExpanded = !recipientsExpanded }
             )
 
             val date = ZonedDateTime.parse(message?.createdAt ?: "")
@@ -171,5 +179,57 @@ private fun InboxMessageAuthorView(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit) {
+    var showMenu by rememberSaveable { mutableStateOf(false) }
+    OverflowMenu(
+        modifier = Modifier
+            .background(color = colorResource(id = R.color.backgroundLightestElevated))
+            .testTag("overFlowMenu"),
+        showMenu = showMenu,
+        tint = colorResource(id = R.color.textDarkest),
+        onDismissRequest = {
+            showMenu = !showMenu
+        }
+    ) {
+        DropdownMenuItem(
+            onClick = {
+                showMenu = !showMenu
+                actionHandler(MessageAction.Reply)
+            }
+        ) {
+            MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
+        }
+
+        DropdownMenuItem(
+            onClick = {
+                showMenu = !showMenu
+                actionHandler(MessageAction.ReplyAll)
+            }
+        ) {
+            MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
+        }
+
+        DropdownMenuItem(
+            onClick = {
+                showMenu = !showMenu
+                actionHandler(MessageAction.Forward)
+            }
+        ) {
+            MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
+        }
+
+        DropdownMenuItem(
+            onClick = {
+                showMenu = !showMenu
+                actionHandler(MessageAction.DeleteMessage(message))
+            }
+        ) {
+            MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
+        }
+
     }
 }

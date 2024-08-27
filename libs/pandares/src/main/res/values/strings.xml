@@ -339,6 +339,7 @@
     <string name="addToHomescreen">Add to Home</string>
     <string name="archive">Archive</string>
     <string name="moveToInbox">Move to Inbox</string>
+    <string name="markAsRead">Mark as Read</string>
     <string name="markAsUnread">Mark as Unread</string>
     <string name="selectPeopleInbox">Select People</string>
     <string name="delete">Delete</string>
@@ -403,6 +404,10 @@
     <string name="conversationArchived">Conversation archived</string>
     <string name="conversationUnarchived">Conversation unarchived</string>
     <string name="messageDeleted">Message deleted</string>
+    <string name="messageDeletedFailed">Failed to delete message</string>
+    <string name="conversationDeleted">Conversation deleted</string>
+    <string name="conversationDeletedFailed">Failed to delete conversation</string>
+    <string name="conversationUpdateFailed">Failed to update conversation</string>
     <string name="sendIndividualMessage">Send individual message to each recipient</string>
     <string name="invalidRecipients">You are not allowed to send messages to one or more of the selected recipients.</string>
     <string name="newMessage">New Message</string>
