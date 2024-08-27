@@ -87,10 +87,10 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -271,7 +271,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 ApiPrefs.fullDomain,
                 RestParams(isForceReadFromNetwork = true)
             ).dataOrNull?.sessionUrl?.let {
-                Utils.loadUrlIntoHeadlessWebView(this@InitActivity, it)
+                loadUrlIntoHeadlessWebView(this@InitActivity, it)
             }
         }
     }

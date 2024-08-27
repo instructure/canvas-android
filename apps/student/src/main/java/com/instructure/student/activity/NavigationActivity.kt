@@ -104,11 +104,11 @@ import com.instructure.pandautils.utils.RequestCodes.CAMERA_PIC_REQUEST
 import com.instructure.pandautils.utils.RequestCodes.PICK_FILE_FROM_DEVICE
 import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.loadUrlIntoHeadlessWebView
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.post
 import com.instructure.pandautils.utils.postSticky
@@ -396,7 +396,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 ApiPrefs.fullDomain,
                 RestParams(isForceReadFromNetwork = true)
             ).dataOrNull?.sessionUrl?.let {
-                Utils.loadUrlIntoHeadlessWebView(this@NavigationActivity, it)
+                loadUrlIntoHeadlessWebView(this@NavigationActivity, it)
             }
         }
     }
