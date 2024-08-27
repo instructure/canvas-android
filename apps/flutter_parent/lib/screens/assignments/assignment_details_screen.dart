@@ -24,6 +24,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -399,12 +400,12 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     }
   }
 
-  _onSubmissionAndRubricClicked(String? assignmentUrl, String title) {
+  _onSubmissionAndRubricClicked(String? assignmentUrl, String title) async {
     if (assignmentUrl == null) return;
     final parentId = ApiPrefs.getUser()?.id ?? 0;
     final currentStudentId = _currentStudent?.id ?? 0;
     locator<QuickNav>().pushRoute(context, PandaRouter.submissionWebViewRoute(
-        assignmentUrl,
+        await locator<WebContentInteractor>().getAuthUrl(assignmentUrl),
         title,
         {"k5_observed_user_for_$parentId": "$currentStudentId"},
         false
