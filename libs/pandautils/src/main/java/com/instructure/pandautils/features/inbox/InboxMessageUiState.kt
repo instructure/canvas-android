@@ -6,7 +6,8 @@ import com.instructure.canvasapi2.models.Message
 data class InboxMessageUiState(
     val message: Message? = null,
     val author: BasicUser? = null,
-    val enabledActions: List<MessageAction> = emptyList()
+    val recipients: List<BasicUser> = emptyList(),
+    val enabledActions: Boolean = true
 )
 
 sealed class MessageAction {

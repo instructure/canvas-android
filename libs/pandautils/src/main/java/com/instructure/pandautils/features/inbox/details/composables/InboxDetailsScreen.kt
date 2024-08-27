@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -36,7 +37,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
@@ -160,17 +163,24 @@ private fun InboxDetailsContentView(
         return
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
+    LazyColumn {
         item {
-            Text(text = conversation.subject ?: stringResource(id = R.string.message))
+            Text(
+                text = conversation.subject ?: stringResource(id = R.string.message),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(vertical = 24.dp, horizontal = 16.dp)
+            )
         }
-        items(messages) { messageState ->
-            InboxMessageView(messageState) {
 
-            }
+        item {
+            Divider()
+        }
+
+        items(messages) { messageState ->
+            InboxMessageView(messageState, {}, modifier = Modifier.padding(16.dp))
+
+            Divider()
         }
     }
 }

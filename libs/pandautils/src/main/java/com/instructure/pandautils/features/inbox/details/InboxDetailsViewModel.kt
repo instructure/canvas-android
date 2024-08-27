@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.features.inbox.InboxMessageUiState
-import com.instructure.pandautils.features.inbox.MessageAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,14 +75,12 @@ class InboxDetailsViewModel @Inject constructor(
 
     private fun getMessageViewState(conversation: Conversation, message: Message): InboxMessageUiState {
         val author = conversation.participants.find { it.id == message.authorId }
+        val recipients = conversation.participants.filter { it.id != message.authorId }
         return InboxMessageUiState(
             message = message,
             author = author,
-            enabledActions = listOf(
-                MessageAction.Reply,
-                MessageAction.ReplyAll,
-                MessageAction.Forward
-            )
+            recipients = recipients,
+            enabledActions = true,
         )
     }
 }
