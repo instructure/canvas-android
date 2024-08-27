@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
@@ -40,12 +39,24 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.models.CanvasColor
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseNickname
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -53,7 +64,6 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.Identity
 import com.instructure.interactions.InitActivityInteractions
 import com.instructure.interactions.router.Route
-import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
@@ -70,7 +80,19 @@ import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AppType
+import com.instructure.pandautils.utils.CanvasFont
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.items
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ActivityInitBinding
@@ -79,7 +101,13 @@ import com.instructure.teacher.dialog.ColorPickerDialog
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory
-import com.instructure.teacher.fragments.*
+import com.instructure.teacher.fragments.CourseBrowserFragment
+import com.instructure.teacher.fragments.DashboardFragment
+import com.instructure.teacher.fragments.EmptyFragment
+import com.instructure.teacher.fragments.FileListFragment
+import com.instructure.teacher.fragments.LtiLaunchFragment
+import com.instructure.teacher.fragments.SettingsFragment
+import com.instructure.teacher.fragments.ToDoFragment
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
@@ -226,6 +254,22 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         fetchFeatureFlags()
 
         requestNotificationsPermission()
+
+        if (ApiPrefs.isFirstMasqueradingStart) {
+            loadAuthenticatedSession()
+            ApiPrefs.isFirstMasqueradingStart = false
+        }
+    }
+
+    private fun loadAuthenticatedSession() {
+        lifecycleScope.launch {
+            val authResult = apiAsync { OAuthManager.getAuthenticatedSession(ApiPrefs.fullDomain, it) }.await()
+            if (authResult.isSuccess) {
+                authResult.dataOrNull?.sessionUrl?.let {
+                    binding.dummyWebView.loadUrl(it)
+                }
+            }
+        }
     }
 
     private fun requestNotificationsPermission() {
