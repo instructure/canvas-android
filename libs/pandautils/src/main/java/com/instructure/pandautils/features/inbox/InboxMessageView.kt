@@ -34,6 +34,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.utils.toLocalString
+import java.time.ZonedDateTime
+import java.time.format.FormatStyle
 
 @Composable
 fun InboxMessageView(
@@ -42,7 +45,7 @@ fun InboxMessageView(
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -66,8 +69,8 @@ private fun InboxMessageAuthorView(
             .fillMaxWidth()
     ) {
         UserAvatar(
-            imageUrl = author?.avatarImageUrl,
-            name = author?.displayName ?: "",
+            imageUrl = author?.avatarUrl,
+            name = author?.name ?: "",
             modifier = Modifier.size(48.dp)
         )
 
@@ -79,9 +82,10 @@ private fun InboxMessageAuthorView(
             modifier = Modifier
                 .weight(1f)
         ) {
-            Text(author?.displayName ?: "")
+            Text(author?.name ?: "")
 
-            Text(message?.createdAt ?: "")
+            val date = ZonedDateTime.parse(message?.createdAt ?: "")
+            Text(date.toLocalString(FormatStyle.MEDIUM))
         }
 
         if (messageState.enabledActions.contains(MessageAction.Reply)) {

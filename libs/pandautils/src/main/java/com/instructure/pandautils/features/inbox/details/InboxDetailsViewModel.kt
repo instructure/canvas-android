@@ -3,6 +3,10 @@ package com.instructure.pandautils.features.inbox.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Message
+import com.instructure.pandautils.features.inbox.InboxMessageUiState
+import com.instructure.pandautils.features.inbox.MessageAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,12 +61,29 @@ class InboxDetailsViewModel @Inject constructor(
                     if (conversation.messages.isEmpty()) {
                         _uiState.update { it.copy(state = ScreenState.Empty, conversation =  conversation) }
                     } else {
-                        _uiState.update { it.copy(state = ScreenState.Success, conversation =  conversation) }
+                        _uiState.update { uiState -> uiState.copy(
+                            state = ScreenState.Success,
+                            conversation =  conversation,
+                            messageStates = conversation.messages.map { getMessageViewState(conversation, it) }
+                        ) }
                     }
                 } catch (e: Exception) {
                     _uiState.update { it.copy(state = ScreenState.Error) }
                 }
             }
         }
+    }
+
+    private fun getMessageViewState(conversation: Conversation, message: Message): InboxMessageUiState {
+        val author = conversation.participants.find { it.id == message.authorId }
+        return InboxMessageUiState(
+            message = message,
+            author = author,
+            enabledActions = listOf(
+                MessageAction.Reply,
+                MessageAction.ReplyAll,
+                MessageAction.Forward
+            )
+        )
     }
 }

@@ -36,13 +36,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.pandautils.features.inbox.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.InboxMessageView
 import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
@@ -154,18 +154,21 @@ private fun InboxDetailsContentView(
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
     val conversation = uiState.conversation
+    val messages = uiState.messageStates
     if (conversation == null) {
         InboxDetailsError(actionHandler)
         return
     }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .padding(16.dp)
+    ) {
         item {
             Text(text = conversation.subject ?: stringResource(id = R.string.message))
         }
-        items(conversation.messages) { message ->
-            val messageState = InboxMessageUiState(message = message)
-            InboxMessageView(messageState = messageState) {
+        items(messages) { messageState ->
+            InboxMessageView(messageState) {
 
             }
         }

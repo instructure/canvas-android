@@ -1,10 +1,12 @@
 package com.instructure.pandautils.features.inbox.details
 
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.pandautils.features.inbox.InboxMessageUiState
 
 data class InboxDetailsUiState(
     val conversationId: Long? = null,
     val conversation: Conversation? = null,
+    val messageStates: List<InboxMessageUiState> = emptyList(),
     val state: ScreenState = ScreenState.Loading
 )
 

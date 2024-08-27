@@ -18,7 +18,6 @@ package com.instructure.pandautils.di
 
 import android.content.Context
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.inbox.details.InboxDetailsRepository
 import com.instructure.pandautils.features.inbox.details.InboxDetailsRepositoryImpl
@@ -39,7 +38,7 @@ class InboxModule {
     }
 
     @Provides
-    fun provideInboxDetailsRepository(inboxAPI: InboxApi.InboxInterface, userAPI: UserAPI.UsersInterface): InboxDetailsRepository {
-        return InboxDetailsRepositoryImpl(inboxAPI, userAPI)
+    fun provideInboxDetailsRepository(inboxAPI: InboxApi.InboxInterface): InboxDetailsRepository {
+        return InboxDetailsRepositoryImpl(inboxAPI)
     }
 }
