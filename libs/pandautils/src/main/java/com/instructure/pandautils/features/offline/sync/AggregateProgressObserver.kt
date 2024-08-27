@@ -19,6 +19,8 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -58,11 +60,13 @@ class AggregateProgressObserver(
     }
 
     init {
-        courseProgressLiveData = courseSyncProgressDao.findAllLiveData()
-        courseProgressLiveData?.observeForever(courseProgressObserver)
+        Handler(Looper.getMainLooper()).post {
+            courseProgressLiveData = courseSyncProgressDao.findAllLiveData()
+            courseProgressLiveData?.observeForever(courseProgressObserver)
 
-        fileProgressLiveData = fileSyncProgressDao.findAllLiveData()
-        fileProgressLiveData?.observeForever(fileProgressObserver)
+            fileProgressLiveData = fileSyncProgressDao.findAllLiveData()
+            fileProgressLiveData?.observeForever(fileProgressObserver)
+        }
     }
 
     private fun calculateProgress() {

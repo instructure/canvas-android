@@ -20,9 +20,13 @@ package com.instructure.pandautils.features.offline.sync
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
+import androidx.lifecycle.Observer
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -45,6 +49,8 @@ import com.instructure.pandautils.room.offline.entities.EnrollmentState
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import kotlin.random.Random
 
@@ -67,13 +73,28 @@ class OfflineSyncWorker @AssistedInject constructor(
     private val localFileDao: LocalFileDao,
     private val syncRouter: SyncRouter,
     private val courseSync: CourseSync,
-    private val studioSync: StudioSync
+    private val studioSync: StudioSync,
+    private val aggregateProgressObserver: AggregateProgressObserver
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val notificationId = Random.nextInt()
+    private val progressNotificationId = Random.nextInt()
+
+    private val progressObserver = Observer<AggregateProgressViewData?> { aggregateProgressViewData ->
+        if (aggregateProgressViewData?.progressState == ProgressState.IN_PROGRESS) {
+            val foregroundInfo = createForegroundInfo(aggregateProgressViewData.progress)
+            notificationManager.notify(progressNotificationId, foregroundInfo.notification)
+        }
+    }
 
     override suspend fun doWork(): Result {
+        setForeground(createForegroundInfo())
+
+        withContext(Dispatchers.Main) {
+            aggregateProgressObserver.progressData.observeForever(progressObserver)
+        }
+
         courseSyncProgressDao.deleteAll()
         fileSyncProgressDao.deleteAll()
 
@@ -145,6 +166,11 @@ class OfflineSyncWorker @AssistedInject constructor(
         val courseProgresses = courseSyncProgressDao.findAll()
         val fileProgresses = fileSyncProgressDao.findAll()
 
+        withContext(Dispatchers.Main) {
+            aggregateProgressObserver.progressData.removeObserver(progressObserver)
+            aggregateProgressObserver.onCleared()
+        }
+
         if (courseProgresses.isNotEmpty() && fileProgresses.isNotEmpty()) {
             showNotification(
                 courseProgresses.size,
@@ -153,6 +179,31 @@ class OfflineSyncWorker @AssistedInject constructor(
         }
 
         return Result.success()
+    }
+
+    private fun createForegroundInfo(progress: Int = 0): ForegroundInfo {
+        val pendingIntent = syncRouter.routeToSyncProgress(context)
+
+        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+            .setContentTitle(context.getString(R.string.offlineSyncInProgressNotification))
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+
+        if (progress > 0) {
+            notificationBuilder.setProgress(100, progress, false)
+        } else {
+            notificationBuilder.setProgress(0, 0, true)
+        }
+
+        val notification = notificationBuilder.build()
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ForegroundInfo(progressNotificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            ForegroundInfo(progressNotificationId, notification)
+        }
     }
 
     private fun showNotification(itemCount: Int, success: Boolean) {
