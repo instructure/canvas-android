@@ -2,12 +2,15 @@ package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.work.WorkInfo
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.FileDownloader
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -15,12 +18,16 @@ import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class InboxComposeViewModelTest {
@@ -272,6 +279,63 @@ class InboxComposeViewModelTest {
 
         coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
     }
+
+    @Test
+    fun `Close Compose Screen`() = runTest {
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(InboxComposeActionHandler.Close)
+
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events.last())
+    }
+
+    @Test
+    fun `Attachment selector dialog opens`() = runTest {
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(InboxComposeActionHandler.AddAttachmentSelected)
+
+        assertEquals(InboxComposeViewModelAction.OpenAttachmentPicker, events.last())
+    }
+
+    @Test
+    fun `Attachment removed`() {
+        val viewmodel = getViewModel()
+        val attachment = Attachment()
+        val attachmentEntity = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment)
+        val attachmentCardItem = AttachmentCardItem(Attachment(), AttachmentStatus.UPLOADED)
+        val uuid = UUID.randomUUID()
+        coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
+        viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        assertEquals(1, viewmodel.uiState.value.attachments.size)
+
+        viewmodel.handleAction(InboxComposeActionHandler.RemoveAttachment(attachmentCardItem))
+
+        assertEquals(0, viewmodel.uiState.value.attachments.size)
+    }
+
+    @Test
+    fun `Download attachment on selection`() {
+        val fileDownloader: FileDownloader = mockk(relaxed = true)
+        val viewModel = getViewModel(fileDownloader)
+        val attachment = Attachment()
+        val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED)
+
+        viewModel.handleAction(InboxComposeActionHandler.OpenAttachment(attachmentCardItem))
+
+        coVerify(exactly = 1) { fileDownloader.downloadFileToDevice(attachment) }
+    }
     //endregion
 
     //region Context Picker action handler
@@ -385,7 +449,7 @@ class InboxComposeViewModelTest {
     }
     //endregion
 
-    private fun getViewModel(): InboxComposeViewModel {
-        return InboxComposeViewModel(context, inboxComposeRepository, attachmentDao)
+    private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
+        return InboxComposeViewModel(context, fileDownloader, inboxComposeRepository, attachmentDao)
     }
 }

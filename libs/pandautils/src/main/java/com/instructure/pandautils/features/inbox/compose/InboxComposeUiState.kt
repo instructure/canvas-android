@@ -28,6 +28,7 @@ data class InboxComposeUiState(
 sealed class InboxComposeViewModelAction {
     data object NavigateBack: InboxComposeViewModelAction()
     data object OpenAttachmentPicker: InboxComposeViewModelAction()
+    data class ShowScreenResult(val message: String): InboxComposeViewModelAction()
 }
 
 sealed class InboxComposeActionHandler {

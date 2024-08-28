@@ -1,23 +1,18 @@
 package com.instructure.pandautils.features.inbox.compose
 
-import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
-import android.os.Environment
-import android.widget.Toast
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
-import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.displayText
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.isCourse
-import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -34,6 +29,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InboxComposeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val fileDownloader: FileDownloader,
     private val inboxComposeRepository: InboxComposeRepository,
     private val attachmentDao: AttachmentDao
 ): ViewModel() {
@@ -58,8 +54,8 @@ class InboxComposeViewModel @Inject constructor(
                     attachmentEntities?.let { attachmentList ->
                         _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status) }) }
                         attachmentDao.deleteAll(attachmentList)
-                    } ?: context.toast(R.string.errorUploadingFile)
-                } ?: context.toast(R.string.errorUploadingFile)
+                    } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
+                } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
 
             }
         }
@@ -112,7 +108,7 @@ class InboxComposeViewModel @Inject constructor(
             }
             is InboxComposeActionHandler.OpenAttachment -> {
                 viewModelScope.launch {
-                    downloadFileToDevice(action.attachment.attachment)
+                    fileDownloader.downloadFileToDevice(action.attachment.attachment)
                 }
             }
         }
@@ -298,12 +294,12 @@ class InboxComposeViewModel @Inject constructor(
                         isIndividual = uiState.value.sendIndividual
                     ).dataOrThrow
 
-                    context.toast(context.getString(R.string.messageSentSuccessfully), Toast.LENGTH_LONG)
+                    sendScreenResult(context.getString(R.string.messageSentSuccessfully))
 
                     handleAction(InboxComposeActionHandler.Close)
 
                 } catch (e: IllegalStateException) {
-                    context.toast(context.getString(R.string.failed_to_send_message), Toast.LENGTH_LONG)
+                    sendScreenResult(context.getString(R.string.failed_to_send_message))
                 } finally {
                     _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
                 }
@@ -357,17 +353,10 @@ class InboxComposeViewModel @Inject constructor(
             WorkInfo.State.CANCELLED -> AttachmentStatus.FAILED
         }
     }
-
-    private fun downloadFileToDevice(attachment: Attachment) {
-        val downloadManager = context.getSystemService(DownloadManager::class.java)
-
-        val request = DownloadManager.Request(Uri.parse(attachment.url))
-        request
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setTitle(attachment.filename)
-            .setMimeType(attachment.contentType)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "${attachment.filename}")
-
-        downloadManager.enqueue(request)
+    
+    private fun sendScreenResult(message: String) {
+        viewModelScope.launch {
+            _events.send(InboxComposeViewModelAction.ShowScreenResult(message))
+        }
     }
 }
