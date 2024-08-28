@@ -64,8 +64,8 @@ import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
 import com.instructure.pandautils.features.inbox.details.ScreenState
-import com.instructure.pandautils.features.inbox.util.InboxMessageView
-import com.instructure.pandautils.features.inbox.util.MessageAction
+import com.instructure.pandautils.features.inbox.utils.InboxMessageView
+import com.instructure.pandautils.features.inbox.utils.MessageAction
 
 @Composable
 fun InboxDetailsScreen(

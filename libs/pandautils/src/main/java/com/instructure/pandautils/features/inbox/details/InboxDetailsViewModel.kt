@@ -11,8 +11,8 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandares.R
-import com.instructure.pandautils.features.inbox.util.InboxMessageUiState
-import com.instructure.pandautils.features.inbox.util.MessageAction
+import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
+import com.instructure.pandautils.features.inbox.utils.MessageAction
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

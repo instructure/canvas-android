@@ -1,4 +1,4 @@
-package com.instructure.pandautils.features.inbox.util
+package com.instructure.pandautils.features.inbox.utils
 
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser

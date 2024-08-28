@@ -1,4 +1,4 @@
-package com.instructure.pandautils.features.inbox.util
+package com.instructure.pandautils.features.inbox.utils
 
 import android.text.format.Formatter
 import androidx.compose.foundation.BorderStroke

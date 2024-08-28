@@ -2,7 +2,7 @@ package com.instructure.pandautils.features.inbox.details
 
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
-import com.instructure.pandautils.features.inbox.util.InboxMessageUiState
+import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 
 data class InboxDetailsUiState(
     val conversationId: Long? = null,
