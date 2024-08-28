@@ -182,6 +182,8 @@ class OfflineSyncWorker @AssistedInject constructor(
     }
 
     private fun createForegroundInfo(progress: Int = 0): ForegroundInfo {
+        registerNotificationChannel(context)
+
         val pendingIntent = syncRouter.routeToSyncProgress(context)
 
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
