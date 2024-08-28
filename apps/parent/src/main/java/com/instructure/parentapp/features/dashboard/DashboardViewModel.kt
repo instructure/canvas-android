@@ -30,7 +30,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.backgroundColor
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
@@ -58,6 +58,7 @@ class DashboardViewModel @Inject constructor(
     private val selectedStudentHolder: SelectedStudentHolder,
     private val inboxCountUpdater: InboxCountUpdater,
     private val alertCountUpdater: AlertCountUpdater,
+    private val colorKeeper: ColorKeeper,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -171,12 +172,18 @@ class DashboardViewModel @Inject constructor(
             }
         }
 
+        val studentItemsWithAddStudent = if (studentItems.isNotEmpty()) {
+            studentItems + AddStudentItemViewModel(
+                colorKeeper.getOrGenerateUserColor(selectedStudent).textAndIconColor(),
+                ::addStudent
+            )
+        } else {
+            studentItems
+        }
+
         _data.update { data ->
             data.copy(
-                studentItems = studentItems + AddStudentItemViewModel(
-                    selectedStudent.backgroundColor,
-                    ::addStudent
-                ),
+                studentItems = studentItemsWithAddStudent,
                 selectedStudent = selectedStudent
             )
         }
@@ -206,7 +213,14 @@ class DashboardViewModel @Inject constructor(
         _data.update {
             it.copy(
                 studentSelectorExpanded = false,
-                selectedStudent = student
+                selectedStudent = student,
+                studentItems = it.studentItems.map { item ->
+                    if (item is AddStudentItemViewModel) {
+                        item.copy(color = colorKeeper.getOrGenerateUserColor(student).textAndIconColor())
+                    } else {
+                        item
+                    }
+                }
             )
         }
         viewModelScope.launch {

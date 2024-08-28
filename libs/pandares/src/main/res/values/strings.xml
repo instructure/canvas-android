@@ -1805,4 +1805,5 @@
     <string name="qrPairingTitle">Open Canvas Student</string>
     <string name="qrPairingDescription">You\'ll need to open your student\'s Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.></string>
     <string name="qrCodePairingPrompt">Scan a QR code from Canvas Student to pair</string>
+    <string name="a11y_addStudentContentDescription">Add Student</string>
 </resources>

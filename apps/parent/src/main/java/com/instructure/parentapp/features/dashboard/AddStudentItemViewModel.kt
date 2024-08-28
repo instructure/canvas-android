@@ -19,7 +19,7 @@ import androidx.annotation.ColorInt
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.parentapp.R
 
-class AddStudentItemViewModel(
+data class AddStudentItemViewModel(
     @ColorInt val color: Int,
     val onAddStudentClicked: () -> Unit
 ) : ItemViewModel {

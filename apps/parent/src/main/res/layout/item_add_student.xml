@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             app:fabCustomSize="50dp"
             app:backgroundTint="@color/white"
-            android:contentDescription="@null"
+            android:contentDescription="@string/a11y_addStudentContentDescription"
             android:padding="10dp"
             android:src="@drawable/ic_add"
             android:onClick="@{() -> itemViewModel.onAddStudentClicked.invoke()}"
