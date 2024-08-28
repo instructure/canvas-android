@@ -1,6 +1,5 @@
 package com.instructure.pandautils.features.inbox.util
 
-import android.content.Context
 import android.text.format.Formatter
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -41,7 +40,6 @@ import com.instructure.pandautils.utils.iconRes
 @Composable
 fun AttachmentCard(
     attachmentCardItem: AttachmentCardItem,
-    context: Context,
     onSelect: () -> Unit,
     onRemove: () -> Unit,
     modifier: Modifier = Modifier
@@ -109,7 +107,7 @@ fun AttachmentCard(
                 Spacer(Modifier.height(8.dp))
 
                 Text(
-                    Formatter.formatFileSize(context, attachment.size),
+                    Formatter.formatFileSize(LocalContext.current, attachment.size),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 14.sp,
                 )
@@ -173,7 +171,6 @@ fun AttachmentCardPreview() {
             AttachmentStatus.UPLOADED,
             false
         ),
-        context,
         {},
         {},
     )
