@@ -60,6 +60,7 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
+import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.InboxDetailsUiState
 import com.instructure.pandautils.features.inbox.details.ScreenState
@@ -185,9 +186,21 @@ private fun InboxDetailsContentView(
 ) {
     val conversation = uiState.conversation
     val messages = uiState.messageStates
+
     if (conversation == null) {
         InboxDetailsError(actionHandler)
         return
+    }
+
+    if (uiState.alertDialogState.showDialog) {
+        SimpleAlertDialog(
+            dialogTitle = uiState.alertDialogState.title,
+            dialogText = uiState.alertDialogState.message,
+            dismissButtonText = uiState.alertDialogState.negativeButton,
+            confirmationButtonText = uiState.alertDialogState.positiveButton,
+            onDismissRequest = uiState.alertDialogState.onNegativeButtonClick,
+            onConfirmation = uiState.alertDialogState.onPositiveButtonClick
+        )
     }
 
     Column {
@@ -214,12 +227,14 @@ private fun InboxDetailsContentView(
                         .padding(vertical = 16.dp)
                 )
             }
+
+            Spacer(Modifier.width(4.dp))
         }
 
         Divider()
 
         messages.forEach { messageState ->
-            InboxMessageView(messageState, messageActionHandler, modifier = Modifier.padding(16.dp))
+            InboxMessageView(messageState, messageActionHandler)
 
             Divider()
         }

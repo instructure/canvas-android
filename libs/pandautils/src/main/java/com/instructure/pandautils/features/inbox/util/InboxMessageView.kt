@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.inbox.util
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
@@ -66,15 +68,30 @@ fun InboxMessageView(
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start,
         modifier = modifier
             .fillMaxWidth()
+            .padding(vertical = 16.dp)
     ) {
         InboxMessageAuthorView(messageState, actionHandler)
 
         Spacer(Modifier.height(16.dp))
 
+        InboxMessageDetailsView(messageState, actionHandler)
+    }
+}
+
+@Composable
+private fun InboxMessageDetailsView(
+    messageState: InboxMessageUiState,
+    actionHandler: (MessageAction) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
         Text(
             text = messageState.message?.body ?: "",
             fontSize = 16.sp,
@@ -84,7 +101,11 @@ fun InboxMessageView(
             Spacer(modifier = Modifier.height(16.dp))
 
             val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, true)
-            AttachmentCard(attachmentCardItem, LocalContext.current, onSelect = {actionHandler(MessageAction.OpenAttachment(attachment))}, onRemove = {})
+            AttachmentCard(
+                attachmentCardItem,
+                LocalContext.current,
+                onSelect = { actionHandler(MessageAction.OpenAttachment(attachment)) },
+                onRemove = {})
         }
 
         if (messageState.enabledActions) {
@@ -122,6 +143,7 @@ private fun InboxMessageAuthorView(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .padding(start = 16.dp, end = 4.dp)
     ) {
         UserAvatar(
             imageUrl = author?.avatarUrl,
@@ -180,51 +202,55 @@ private fun InboxMessageAuthorView(
 @Composable
 private fun MessageMenu(message: Message, actionHandler: (MessageAction) -> Unit) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
-    OverflowMenu(
-        modifier = Modifier
-            .background(color = colorResource(id = R.color.backgroundLightestElevated))
-            .testTag("overFlowMenu"),
-        showMenu = showMenu,
-        tint = colorResource(id = R.color.textDarkest),
-        onDismissRequest = {
-            showMenu = !showMenu
-        }
-    ) {
-        DropdownMenuItem(
-            onClick = {
+    Box(
+        contentAlignment = Alignment.CenterEnd,
+    ){
+        OverflowMenu(
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.backgroundLightestElevated))
+                .testTag("overFlowMenu"),
+            showMenu = showMenu,
+            tint = colorResource(id = R.color.textDarkest),
+            onDismissRequest = {
                 showMenu = !showMenu
-                actionHandler(MessageAction.Reply)
             }
         ) {
-            MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
-        }
-
-        DropdownMenuItem(
-            onClick = {
-                showMenu = !showMenu
-                actionHandler(MessageAction.ReplyAll)
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(MessageAction.Reply)
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
             }
-        ) {
-            MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
-        }
 
-        DropdownMenuItem(
-            onClick = {
-                showMenu = !showMenu
-                actionHandler(MessageAction.Forward)
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(MessageAction.ReplyAll)
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
             }
-        ) {
-            MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
-        }
 
-        DropdownMenuItem(
-            onClick = {
-                showMenu = !showMenu
-                actionHandler(MessageAction.DeleteMessage(message))
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(MessageAction.Forward)
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
             }
-        ) {
-            MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
-        }
 
+            DropdownMenuItem(
+                onClick = {
+                    showMenu = !showMenu
+                    actionHandler(MessageAction.DeleteMessage(message))
+                }
+            ) {
+                MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
+            }
+
+        }
     }
 }

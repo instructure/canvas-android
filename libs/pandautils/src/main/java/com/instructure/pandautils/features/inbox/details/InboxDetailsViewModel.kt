@@ -66,8 +66,34 @@ class InboxDetailsViewModel @Inject constructor(
                 getConversation(true)
             }
 
-            is InboxDetailsAction.DeleteConversation -> deleteConversation(action.conversationId)
-            is InboxDetailsAction.DeleteMessage -> deleteMessage(action.conversationId, action.message)
+            is InboxDetailsAction.DeleteConversation -> _uiState.update { it.copy(alertDialogState = AlertDialogState(
+                showDialog = true,
+                title = context.getString(R.string.deleteConversation),
+                message = context.getString(R.string.confirmDeleteConversation),
+                positiveButton = context.getString(R.string.delete),
+                negativeButton = context.getString(R.string.cancel),
+                onPositiveButtonClick = {
+                    deleteConversation(action.conversationId)
+                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                },
+                onNegativeButtonClick = {
+                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                }
+            )) }
+            is InboxDetailsAction.DeleteMessage -> _uiState.update { it.copy(alertDialogState = AlertDialogState(
+                showDialog = true,
+                title = context.getString(R.string.deleteMessage),
+                message = context.getString(R.string.confirmDeleteMessage),
+                positiveButton = context.getString(R.string.delete),
+                negativeButton = context.getString(R.string.cancel),
+                onPositiveButtonClick = {
+                    deleteMessage(action.conversationId, action.message)
+                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                },
+                onNegativeButtonClick = {
+                    _uiState.update { it.copy(alertDialogState = AlertDialogState()) }
+                }
+            )) }
             is InboxDetailsAction.Forward -> TODO()
             is InboxDetailsAction.Reply -> TODO()
             is InboxDetailsAction.ReplyAll -> TODO()
@@ -81,7 +107,7 @@ class InboxDetailsViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.update { it.copy(state = ScreenState.Loading) }
 
-                val conversationResult = repository.getConversation(conversationId, forceRefresh)
+                val conversationResult = repository.getConversation(conversationId, true, forceRefresh)
 
                 try {
                     val conversation = conversationResult.dataOrThrow
@@ -127,10 +153,11 @@ class InboxDetailsViewModel @Inject constructor(
     private fun deleteMessage(conversationId: Long, message: Message) {
         viewModelScope.launch {
             val result = repository.deleteMessage(conversationId, listOf(message.id))
+            val conversationResult = repository.getConversation(conversationId, true, true)
             if (result.isSuccess) {
                 context.toast(context.getString(R.string.messageDeleted))
 
-                val conversation = result.dataOrNull
+                val conversation = conversationResult.dataOrNull
 
                 _uiState.update {
                     it.copy(

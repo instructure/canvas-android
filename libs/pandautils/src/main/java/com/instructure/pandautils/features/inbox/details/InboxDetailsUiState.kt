@@ -8,7 +8,19 @@ data class InboxDetailsUiState(
     val conversationId: Long? = null,
     val conversation: Conversation? = null,
     val messageStates: List<InboxMessageUiState> = emptyList(),
-    val state: ScreenState = ScreenState.Loading
+    val state: ScreenState = ScreenState.Loading,
+    val alertDialogState: AlertDialogState = AlertDialogState()
+)
+
+data class AlertDialogState(
+    val showDialog: Boolean = false,
+    val title: String = "",
+    val message: String = "",
+    val positiveButton: String = "",
+    val negativeButton: String = "",
+    val onPositiveButtonClick: () -> Unit = {},
+    val onNegativeButtonClick: () -> Unit = {}
+
 )
 
 sealed class InboxDetailsFragmentAction {

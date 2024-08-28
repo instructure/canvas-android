@@ -385,6 +385,7 @@
     <string name="with">with</string>
     <string name="starConversation">Star Conversation</string>
     <string name="deleteConversation">Delete Conversation</string>
+    <string name="deleteMessage">Delete Message</string>
     <string name="sharedWith">Shared with \u0020</string>
     <string name="sharedWithYou">Shared with you</string>
     <string name="inboxEmptyMessage">Tap the \"+\" to create a new conversation.</string>
