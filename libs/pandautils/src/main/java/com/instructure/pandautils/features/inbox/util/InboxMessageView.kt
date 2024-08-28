@@ -49,12 +49,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.UserAvatar
-import com.instructure.pandautils.features.inbox.details.InboxDetailsAction
 import com.instructure.pandautils.features.inbox.details.composables.MessageMenuItem
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.toLocalString
@@ -172,11 +170,8 @@ private fun InboxMessageAuthorView(
                 )
             }
 
-            IconButton(onClick = { actionHandler(MessageAction.Reply) }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_overflow),
-                    contentDescription = stringResource(id = R.string.reply)
-                )
+            message?.let {
+                MessageMenu(it, actionHandler)
             }
         }
     }
