@@ -17,10 +17,9 @@
 package com.instructure.parentapp.features.addstudent
 
 import androidx.annotation.ColorInt
-import com.instructure.pandautils.utils.ThemePrefs
 
 data class AddStudentUiState(
-    @ColorInt val color: Int = ThemePrefs.primaryColor,
+    @ColorInt val color: Int,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val resetError: () -> Unit,

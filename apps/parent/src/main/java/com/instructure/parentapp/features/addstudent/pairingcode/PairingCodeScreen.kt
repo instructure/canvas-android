@@ -133,7 +133,7 @@ private fun PairingScreenContent(
 fun PairingCodeScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     PairingCodeScreen(
-        uiState = AddStudentUiState(onStartPairing = {}, resetError = {}),
+        uiState = AddStudentUiState(color = android.graphics.Color.BLUE, onStartPairing = {}, resetError = {}),
         onCancelClick = {})
 }
 
@@ -142,6 +142,6 @@ fun PairingCodeScreenPreview() {
 fun PairingScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     PairingCodeScreen(
-        uiState = AddStudentUiState(isLoading = true, onStartPairing = {}, resetError = {}),
+        uiState = AddStudentUiState(color = android.graphics.Color.BLUE, isLoading = true, onStartPairing = {}, resetError = {}),
         onCancelClick = {})
 }

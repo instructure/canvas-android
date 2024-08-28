@@ -139,7 +139,7 @@ private fun QrPairingContent() {
 @Composable
 fun QrPairingScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    QrPairingScreen(uiState = AddStudentUiState(resetError = {}, onStartPairing = {}), {}, {})
+    QrPairingScreen(uiState = AddStudentUiState(color = android.graphics.Color.BLUE, resetError = {}, onStartPairing = {}), {}, {})
 }
 
 @Preview
@@ -148,6 +148,7 @@ fun QrPairingScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     QrPairingScreen(
         uiState = AddStudentUiState(
+            color = android.graphics.Color.BLUE,
             isLoading = true,
             resetError = {},
             onStartPairing = {}), {}, {})

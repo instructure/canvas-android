@@ -37,7 +37,15 @@ class AddStudentViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState =
-        MutableStateFlow(AddStudentUiState(onStartPairing = this::pairStudent, resetError = this::resetError))
+        MutableStateFlow(
+            AddStudentUiState(
+                color = colorKeeper.getOrGenerateUserColor(
+                    selectedStudentHolder.selectedStudentState.value
+                ).textAndIconColor(),
+                onStartPairing = this::pairStudent,
+                resetError = this::resetError
+            )
+        )
     val uiState = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<AddStudentViewModelAction>()
