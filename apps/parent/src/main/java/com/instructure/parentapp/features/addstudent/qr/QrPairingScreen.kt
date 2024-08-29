@@ -65,6 +65,7 @@ fun QrPairingScreen(
     }
     CanvasTheme {
         Scaffold(
+            backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasAppBar(
                     title = stringResource(id = R.string.qrPairingTitle),

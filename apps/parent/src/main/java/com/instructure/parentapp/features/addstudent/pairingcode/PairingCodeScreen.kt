@@ -97,6 +97,9 @@ private fun PairingScreenContent(
                 },
                 focusedLabelColor = Color(uiState.color),
                 cursorColor = Color(uiState.color),
+                textColor = colorResource(id = R.color.textDarkest),
+                unfocusedLabelColor = colorResource(id = R.color.textDark),
+                unfocusedIndicatorColor = colorResource(id = R.color.textDark)
             ),
             textStyle = TextStyle(fontSize = 16.sp),
             label = {
